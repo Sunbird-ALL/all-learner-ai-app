@@ -64,13 +64,21 @@ const SpeakSentenceComponent = () => {
   useEffect(() => {
     if (!(localStorage.getItem("contentSessionId") !== null)) {
       (async () => {
-        const sessionId = getLocalData("sessionId");
-        const virtualId = getLocalData("virtualId");
-        const lang = getLocalData("lang");
-        const getPointersDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
-        );
-        setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+        try {
+          const sessionId = getLocalData("sessionId");
+          const virtualId = getLocalData("virtualId");
+          const lang = getLocalData("lang");
+          const getPointersDetails = await axios.get(
+            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
+          );
+          setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+        } catch (error) {
+          setOpenMessageDialog({
+            message: "Error retrieving local data",
+            isError: true,
+            dontShowHeader: true,
+          });
+        }
       })();
     }
   }, []);
@@ -274,7 +282,11 @@ const SpeakSentenceComponent = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      setOpenMessageDialog({
+        message: "An error occurred. Please try again later.",
+        isError: true,
+        dontShowHeader: true,
+      });
     }
   };
 
@@ -300,6 +312,15 @@ const SpeakSentenceComponent = () => {
           (elem) => elem.category === "Sentence"
         );
 
+        if (!sentences) {
+          setOpenMessageDialog({
+            message: "No sentences found in assessment data",
+            isError: true,
+            dontShowHeader: true,
+          });
+          return;
+        }
+
         const resPagination = await axios.get(
           `${process.env.REACT_APP_CONTENT_SERVICE_APP_HOST}/${config.URLS.GET_PAGINATION}?page=1&limit=5&collectionId=${sentences?.collectionId}`
         );
@@ -314,7 +335,12 @@ const SpeakSentenceComponent = () => {
         console.log("quesArr", quesArr);
         setQuestions(quesArr);
       } catch (error) {
-        console.log("err", error);
+        setOpenMessageDialog({
+          message: "Error fetching assessment",
+          isError: true,
+          dontShowHeader: true,
+        });
+        return;
       }
     })();
   }, []);

@@ -8,12 +8,9 @@ import back from "../../assets/images/back-arrow.svg";
 import discoverEndLeft from "../../assets/images/discover-end-left.svg";
 import discoverEndRight from "../../assets/images/discover-end-right.svg";
 import textureImage from "../../assets/images/textureImage.png";
-import {
-  LetsStart,
-  getLocalData,
-  setLocalData,
-} from "../../utils/constants";
-import config from '../../utils/urlConstants.json';
+import { LetsStart, getLocalData, setLocalData } from "../../utils/constants";
+import config from "../../utils/urlConstants.json";
+import { MessageDialog } from "../Assesment/Assesment";
 
 const sectionStyle = {
   backgroundImage: `url(${textureImage})`,
@@ -32,20 +29,28 @@ const sectionStyle = {
 const SpeakSentenceComponent = () => {
   const [shake, setShake] = useState(true);
   const [level, setLevel] = useState("");
+  const [openMessageDialog, setOpenMessageDialog] = useState("");
 
   useEffect(() => {
-    
     (async () => {
       let audio = new Audio(LevelCompleteAudio);
       audio.play();
       const virtualId = getLocalData("virtualId");
       const lang = getLocalData("lang");
-      const getMilestoneDetails = await axios.get(
-        `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${virtualId}?language=${lang}`
-      );
-      const { data } = getMilestoneDetails;
-      setLevel(data.data.milestone_level);
-      setLocalData("userLevel", data.data.milestone_level?.replace("m", ""));
+      try {
+        const getMilestoneDetails = await axios.get(
+          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${virtualId}?language=${lang}`
+        );
+        const { data } = getMilestoneDetails;
+        setLevel(data.data.milestone_level);
+        setLocalData("userLevel", data.data.milestone_level?.replace("m", ""));
+      } catch (error) {
+        setOpenMessageDialog({
+          message: "An error occurred. Please try again later.",
+          isError: true,
+          dontShowHeader: true,
+        });
+      }
     })();
     setTimeout(() => {
       setShake(false);
@@ -54,10 +59,10 @@ const SpeakSentenceComponent = () => {
 
   const handleProfileBack = () => {
     try {
-      if (process.env.REACT_APP_IS_APP_IFRAME === 'true') {
-        navigate("/")
+      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        navigate("/");
       } else {
-        navigate("/discover-start")
+        navigate("/discover-start");
       }
     } catch (error) {
       console.error("Error posting message:", error);
@@ -68,84 +73,99 @@ const SpeakSentenceComponent = () => {
   const navigate = useNavigate();
 
   return (
-    <Box
-      sx={{
-        background: "linear-gradient(45deg, #5FDF9A 30%, #35C57C 90%)",
-        minHeight: "100vh",
-        padding: "20px 100px",
-        boxSizing: "border-box",
-      }}
-    >
-      <IconButton>
-        <img src={back} alt="back" style={{ height: "30px" }} />
-      </IconButton>
-      <Card sx={sectionStyle}>
-        <Box sx={{ position: "absolute", left: "3px", bottom: "0px" }}>
-          <img
-            src={discoverEndLeft}
-            alt="timer"
-            className={shake && "shakeImage"}
-          />
-        </Box>
-        <Box sx={{ position: "absolute", right: "3px", bottom: "0px" }}>
-          <img
-            src={discoverEndRight}
-            alt="timer"
-            className={shake && "shakeImage"}
-          />
-        </Box>
-        <Box>
-          {/* {!shake && <img src={discoverEndTop} alt="timer" className={shake && 'shakeImage'} />} */}
-          {shake && <Confetti width={width} height={"600px"} />}
-        </Box>
-        <CardContent>
-          <Typography
-            className="successHeader"
-            sx={{
-              mb: 4,
-              mt: 5,
-              textAlign: "center",
-            }}
-          >
-            Hurray!!!
-          </Typography>
-          <Typography
-            variant="h4"
-            component="p"
-            sx={{
-              mb: 4,
-              color: "#50507D",
-              textAlign: "center",
-              fontSize: "18px",
-              width: "60%",
-              margin: "0 auto",
-              fontWeight: 600,
-              fontFamily: "Quicksand",
-              letterSpacing: "0.56px",
-            }}
-          >
-            {`You have good language skills. You can start from Level ${level.replace(
-              "m",
-              ""
-            )}. Let the learning journey begin!`}
-            <br /> <br />
-          </Typography>
-
-          <Box
-           onClick={() => handleProfileBack()}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: "60%",
-              margin: "0 auto",
-              cursor: "pointer",
-            }}
-          >
-            <LetsStart />
+    <>
+      {!!openMessageDialog && (
+        <MessageDialog
+          message={openMessageDialog.message}
+          closeDialog={() => {
+            setOpenMessageDialog("");
+            if (openMessageDialog.isError) {
+              window.location.reload();
+            }
+          }}
+          isError={openMessageDialog.isError}
+          dontShowHeader={openMessageDialog.dontShowHeader}
+        />
+      )}
+      <Box
+        sx={{
+          background: "linear-gradient(45deg, #5FDF9A 30%, #35C57C 90%)",
+          minHeight: "100vh",
+          padding: "20px 100px",
+          boxSizing: "border-box",
+        }}
+      >
+        <IconButton>
+          <img src={back} alt="back" style={{ height: "30px" }} />
+        </IconButton>
+        <Card sx={sectionStyle}>
+          <Box sx={{ position: "absolute", left: "3px", bottom: "0px" }}>
+            <img
+              src={discoverEndLeft}
+              alt="timer"
+              className={shake && "shakeImage"}
+            />
           </Box>
-        </CardContent>
-      </Card>
-    </Box>
+          <Box sx={{ position: "absolute", right: "3px", bottom: "0px" }}>
+            <img
+              src={discoverEndRight}
+              alt="timer"
+              className={shake && "shakeImage"}
+            />
+          </Box>
+          <Box>
+            {/* {!shake && <img src={discoverEndTop} alt="timer" className={shake && 'shakeImage'} />} */}
+            {shake && <Confetti width={width} height={"600px"} />}
+          </Box>
+          <CardContent>
+            <Typography
+              className="successHeader"
+              sx={{
+                mb: 4,
+                mt: 5,
+                textAlign: "center",
+              }}
+            >
+              Hurray!!!
+            </Typography>
+            <Typography
+              variant="h4"
+              component="p"
+              sx={{
+                mb: 4,
+                color: "#50507D",
+                textAlign: "center",
+                fontSize: "18px",
+                width: "60%",
+                margin: "0 auto",
+                fontWeight: 600,
+                fontFamily: "Quicksand",
+                letterSpacing: "0.56px",
+              }}
+            >
+              {`You have good language skills. You can start from Level ${level.replace(
+                "m",
+                ""
+              )}. Let the learning journey begin!`}
+              <br /> <br />
+            </Typography>
+
+            <Box
+              onClick={() => handleProfileBack()}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                width: "60%",
+                margin: "0 auto",
+                cursor: "pointer",
+              }}
+            >
+              <LetsStart />
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
+    </>
   );
 };
 

@@ -566,68 +566,88 @@ const Assesment = ({ discoverStart }) => {
     localStorage.setItem("sessionId", contentSessionId);
     if (discoverStart && username && !localStorage.getItem("virtualId")) {
       (async () => {
-        setLocalData("profileName", username);
-        const usernameDetails = await axios.post(
-          `${process.env.REACT_APP_VIRTUAL_ID_HOST}/${config.URLS.GET_VIRTUAL_ID}?username=${username}`
-        );
-        const getMilestoneDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${usernameDetails?.data?.result?.virtualID}?language=${lang}`
-        );
+        try {
+          setLocalData("profileName", username);
+          const usernameDetails = await axios.post(
+            `${process.env.REACT_APP_VIRTUAL_ID_HOST}/${config.URLS.GET_VIRTUAL_ID}?username=${username}`
+          );
+          const getMilestoneDetails = await axios.get(
+            `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${usernameDetails?.data?.result?.virtualID}?language=${lang}`
+          );
 
-        localStorage.setItem(
-          "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails.data })
-        );
-        setLevel(
-          getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
-        );
-        localStorage.setItem(
-          "virtualId",
-          usernameDetails?.data?.result?.virtualID
-        );
-        let session_id = localStorage.getItem("sessionId");
+          localStorage.setItem(
+            "getMilestone",
+            JSON.stringify({ ...getMilestoneDetails.data })
+          );
+          setLevel(
+            getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
+          );
+          localStorage.setItem(
+            "virtualId",
+            usernameDetails?.data?.result?.virtualID
+          );
+          let session_id = localStorage.getItem("sessionId");
+          if (!session_id) {
+            session_id = uniqueId();
+            localStorage.setItem("sessionId", session_id);
+          }
 
-        if (!session_id) {
-          session_id = uniqueId();
-          localStorage.setItem("sessionId", session_id);
+          localStorage.setItem("lang", lang || "ta");
+          const getPointersDetails = await axios.get(
+            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${usernameDetails?.data?.result?.virtualID}/${session_id}?language=${lang}`
+          );
+          setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+
+          dispatch(setVirtualId(usernameDetails?.data?.result?.virtualID));
+        } catch (error) {
+          setOpenMessageDialog({
+            message: "An error occurred. Please try again later.",
+            isError: true,
+            dontShowHeader: true,
+          });
         }
-
-        localStorage.setItem("lang", lang || "ta");
-        const getPointersDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${usernameDetails?.data?.result?.virtualID}/${session_id}?language=${lang}`
-        );
-        setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
-
-        dispatch(setVirtualId(usernameDetails?.data?.result?.virtualID));
       })();
     } else {
       (async () => {
-        const virtualId = getLocalData("virtualId");
-        const language = lang;
-        const getMilestoneDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${virtualId}?language=${language}`
-        );
-        localStorage.setItem(
-          "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails.data })
-        );
-        setLevel(
-          Number(
-            getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
-          )
-        );
-        let sessionId = getLocalData("sessionId");
+        try {
+          const virtualId = getLocalData("virtualId");
+          const language = lang;
 
-        if (!sessionId || sessionId === "null") {
-          sessionId = uniqueId();
-          localStorage.setItem("sessionId", sessionId);
-        }
-
-        if (virtualId) {
-          const getPointersDetails = await axios.get(
-            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
+          const getMilestoneDetails = await axios.get(
+            `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${virtualId}?language=${language}`
           );
-          setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+
+          localStorage.setItem(
+            "getMilestone",
+            JSON.stringify({ ...getMilestoneDetails.data })
+          );
+
+          setLevel(
+            Number(
+              getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
+            )
+          );
+
+          let sessionId = getLocalData("sessionId");
+          if (!sessionId || sessionId === "null") {
+            sessionId = uniqueId();
+            localStorage.setItem("sessionId", sessionId);
+          }
+
+          if (virtualId) {
+            const getPointersDetails = await axios.get(
+              `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
+            );
+            setPoints(
+              getPointersDetails?.data?.result?.totalLanguagePoints || 0
+            );
+          }
+        } catch (error) {
+          setOpenMessageDialog({
+            message: "An error occurred. Please try again later.",
+            isError: true,
+            dontShowHeader: true,
+          });
         }
       })();
     }
