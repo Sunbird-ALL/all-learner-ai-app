@@ -264,8 +264,12 @@ const Practice = () => {
               );
               gameOver({ link: "/assesment-end" }, true);
               return;
-            } catch (e) {
-              // catch error
+            } catch (err) {
+              setOpenMessageDialog({
+                message: "Error posting lesson progress data",
+                isError: true,
+                dontShowHeader: true,
+              });
             }
           }
         }
@@ -346,7 +350,11 @@ const Practice = () => {
         setProgressData(practiceProgress[virtualId]);
       }
     } catch (error) {
-      console.log(error);
+      setOpenMessageDialog({
+        message: "Error posting lesson progress data",
+        isError: true,
+        dontShowHeader: true,
+      });
     }
   };
 
@@ -479,7 +487,11 @@ const Practice = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log("err", error);
+      setOpenMessageDialog({
+        message: "Content Unavailable",
+        isError: true,
+        dontShowHeader: true,
+      });
     }
   };
 
@@ -504,50 +516,58 @@ const Practice = () => {
         currentPracticeStep: newCurrentPracticeStep,
         fromBack: true,
       };
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
+          {
+            userId: virtualId,
+            sessionId: sessionId,
+            milestone: "practice",
+            lesson: newCurrentPracticeStep,
+            progress: (newCurrentPracticeStep / practiceSteps.length) * 100,
+            language: lang,
+            milestoneLevel: `m${level}`,
+          }
+        );
 
-      await axios.post(
-        `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
-        {
-          userId: virtualId,
-          sessionId: sessionId,
-          milestone: "practice",
-          lesson: newCurrentPracticeStep,
-          progress: (newCurrentPracticeStep / practiceSteps.length) * 100,
-          language: lang,
-          milestoneLevel: `m${level}`,
-        }
-      );
+        setProgressData(practiceProgress[virtualId]);
 
-      setProgressData(practiceProgress[virtualId]);
+        const currentGetContent = levelGetContent?.[level]?.find(
+          (elem) => elem.title === practiceSteps?.[newCurrentPracticeStep].name
+        );
+        let quesArr = [];
+        const resWord = await axios.get(
+          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`
+        );
+        setTotalSyllableCount(resWord?.data?.totalSyllableCount);
+        setLivesData({
+          ...livesData,
+          totalTargets: resWord?.data?.totalSyllableCount,
+          targetsForLives:
+            resWord?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE,
+          targetPerLive:
+            (resWord?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE) /
+            LIVES,
+        });
+        quesArr = [...quesArr, ...(resWord?.data?.content || [])];
+        setCurrentContentType(currentGetContent.criteria);
+        setCurrentCollectionId(resWord?.data?.content?.[0]?.collectionId);
+        setAssessmentResponse(resWord);
 
-      const currentGetContent = levelGetContent?.[level]?.find(
-        (elem) => elem.title === practiceSteps?.[newCurrentPracticeStep].name
-      );
-      let quesArr = [];
-      const resWord = await axios.get(
-        `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`
-      );
-      setTotalSyllableCount(resWord?.data?.totalSyllableCount);
-      setLivesData({
-        ...livesData,
-        totalTargets: resWord?.data?.totalSyllableCount,
-        targetsForLives:
-          resWord?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE,
-        targetPerLive:
-          (resWord?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
-      });
-      quesArr = [...quesArr, ...(resWord?.data?.content || [])];
-      setCurrentContentType(currentGetContent.criteria);
-      setCurrentCollectionId(resWord?.data?.content?.[0]?.collectionId);
-      setAssessmentResponse(resWord);
-
-      localStorage.setItem("storyTitle", resWord?.name);
-      setQuestions(quesArr);
-      setTimeout(() => {
-        setMechanism(currentGetContent.mechanism);
-      }, 1000);
-      setCurrentQuestion(practiceProgress[virtualId]?.currentQuestion || 0);
-      setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        localStorage.setItem("storyTitle", resWord?.name);
+        setQuestions(quesArr);
+        setTimeout(() => {
+          setMechanism(currentGetContent.mechanism);
+        }, 1000);
+        setCurrentQuestion(practiceProgress[virtualId]?.currentQuestion || 0);
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+      } catch (err) {
+        setOpenMessageDialog({
+          message: "Error posting lesson progress data",
+          isError: true,
+          dontShowHeader: true,
+        });
+      }
     } else {
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
         navigate("/");

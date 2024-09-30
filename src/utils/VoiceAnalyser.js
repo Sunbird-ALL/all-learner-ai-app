@@ -392,7 +392,13 @@ function VoiceAnalyser(props) {
         });
         try {
           const response = await S3Client.send(command);
-        } catch (err) {}
+        } catch (err) {
+          props.setOpenMessageDialog({
+            message: "Audio is not sent to s3 Bucket. Please try again.",
+            isError: true,
+            dontShowHeader: true,
+          });
+        }
       }
 
       response(
@@ -432,6 +438,11 @@ function VoiceAnalyser(props) {
       }
     } catch (error) {
       setLoader(false);
+      props.setOpenMessageDialog({
+        message: "Error fetching update learner profile details:",
+        isError: true,
+        dontShowHeader: true,
+      });
       if (props.handleNext) {
         props.handleNext();
       }
