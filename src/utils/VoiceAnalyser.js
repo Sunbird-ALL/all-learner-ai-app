@@ -94,7 +94,10 @@ function VoiceAnalyser(props) {
       set_temp_audio(audio);
       setPauseAudio(val);
     } catch (err) {
-      console.log(err);
+      props?.setOpenMessageDialog({
+        message: "Audio not available",
+        isError: true,
+      });
     }
   };
 
@@ -215,42 +218,6 @@ function VoiceAnalyser(props) {
   }, [apiResponse]);
 
   const fetchASROutput = async (sourceLanguage, base64Data) => {
-    // let samplingrate = 30000;
-    // var myHeaders = new Headers();
-    // myHeaders.append('Content-Type', 'application/json');
-    // var payload = JSON.stringify({
-    //     config: {
-    //         language: {
-    //             sourceLanguage: sourceLanguage,
-    //         },
-    //         transcriptionFormat: {
-    //             value: 'transcript',
-    //         },
-    //         audioFormat: 'wav',
-    //         samplingRate: samplingrate,
-    //         postProcessors: null,
-    //     },
-    //     audio: [
-    //         {
-    //             audioContent: base64Data,
-    //         },
-    //     ],
-    // });
-    // var requestOptions = {
-    //     method: 'POST',
-    //     headers: myHeaders,
-    //     body: payload,
-    //     redirect: 'follow',
-    // };
-    // const apiURL = `https://asr-api.apiResponse.org/asr/v1/recognize/en`;
-    // fetch(apiURL, requestOptions)
-    //     .then((response) => response.text())
-    //     .then((result) => {
-    //         var apiResponse = JSON.parse(result);
-    //         setApiResponse(apiResponse['output'][0]['source'] != '' ? apiResponse['output'][0]['source'] : '-');
-    //         setLoader(false);
-    //     });
-
     try {
       const lang = getLocalData("lang");
       const virtualId = getLocalData("virtualId");
@@ -295,25 +262,31 @@ function VoiceAnalyser(props) {
           const loadToMicStartDuration = (micStart - loadStart) / 1000; // in seconds
           const micDuration = (micStop - micStart) / 1000; // in seconds
 
-          const { data: updateLearnerData } = await axios.post(
-            `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
-            {
-              original_text: originalText,
-              audio: base64Data,
-              user_id: virtualId,
-              session_id: sessionId,
-              language: lang,
-              date: new Date(),
-              sub_session_id,
-              contentId,
-              contentType,
-              practice_duration: parseFloat(loadToMicStartDuration.toFixed(2)),
-              read_duration: parseFloat(micDuration.toFixed(2)),
-              retry_count: parseInt(retryCount),
-            }
-          );
+          try {
+            const { data: updateLearnerData } = await axios.post(
+              `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
+              {
+                original_text: originalText,
+                audio: base64Data,
+                user_id: virtualId,
+                session_id: sessionId,
+                language: lang,
+                date: new Date(),
+                sub_session_id,
+                contentId,
+                contentType,
+                practice_duration: parseFloat(
+                  loadToMicStartDuration.toFixed(2)
+                ),
+                read_duration: parseFloat(micDuration.toFixed(2)),
+                retry_count: parseInt(retryCount),
+              }
+            );
+            data = updateLearnerData;
+          } catch (error) {
+            console.error("Error in updating learner profile:");
+          }
 
-          data = updateLearnerData;
           responseText = data.responseText;
           profanityWord = await filterBadWords(data.responseText, lang);
           if (profanityWord !== data.responseText) {
@@ -335,8 +308,7 @@ function VoiceAnalyser(props) {
           }
         } catch (error) {
           console.error(
-            "Error retrieving duration data or updating learner profile:",
-            error
+            "Error retrieving duration data or updating learner profile"
           );
         }
       }
@@ -373,99 +345,110 @@ function VoiceAnalyser(props) {
       let wrong_words = 0;
       let correct_words = 0;
       let result_per_words = 0;
-      let result_per_words1 = 0;
-      let occuracy_percentage = 0;
 
-      let word_result_array = compareArrays(teacherTextArray, studentTextArray);
+      try {
+        let word_result_array = compareArrays(
+          teacherTextArray,
+          studentTextArray
+        );
 
-      for (let i = 0; i < studentTextArray.length; i++) {
-        if (teacherTextArray.includes(studentTextArray[i])) {
-          correct_words++;
-          student_correct_words_result.push(studentTextArray[i]);
+        for (let i = 0; i < studentTextArray.length; i++) {
+          if (teacherTextArray.includes(studentTextArray[i])) {
+            correct_words++;
+            student_correct_words_result.push(studentTextArray[i]);
+          } else {
+            wrong_words++;
+            student_incorrect_words_result.push(studentTextArray[i]);
+          }
+        }
+
+        //calculation method
+        if (originalwords >= studentswords) {
+          result_per_words = Math.round(
+            Number((correct_words / originalwords) * 100)
+          );
         } else {
-          wrong_words++;
-          student_incorrect_words_result.push(studentTextArray[i]);
+          result_per_words = Math.round(
+            Number((correct_words / studentswords) * 100)
+          );
         }
-      }
-      //calculation method
-      if (originalwords >= studentswords) {
-        result_per_words = Math.round(
-          Number((correct_words / originalwords) * 100)
-        );
-      } else {
-        result_per_words = Math.round(
-          Number((correct_words / studentswords) * 100)
-        );
-      }
 
-      const errorRate = calcCER(responseText, tempteacherText);
-      let finalScore = 100 - errorRate * 100;
+        const errorRate = calcCER(responseText, tempteacherText);
+        let finalScore = 100 - errorRate * 100;
 
-      finalScore = finalScore < 0 ? 0 : finalScore;
+        finalScore = finalScore < 0 ? 0 : finalScore;
 
-      let word_result = finalScore === 100 ? "correct" : "incorrect";
+        let word_result = finalScore === 100 ? "correct" : "incorrect";
 
-      // TODO: Remove false when REACT_APP_AWS_S3_BUCKET_NAME and keys added
-      var audioFileName = "";
-      if (process.env.REACT_APP_CAPTURE_AUDIO === "true") {
-        let getContentId = currentLine;
-        audioFileName = `${
-          process.env.REACT_APP_CHANNEL
-        }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+        // TODO: Remove false when REACT_APP_AWS_S3_BUCKET_NAME and keys added
+        var audioFileName = "";
+        if (process.env.REACT_APP_CAPTURE_AUDIO === "true") {
+          let getContentId = currentLine;
+          audioFileName = `${
+            process.env.REACT_APP_CHANNEL
+          }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-        const command = new PutObjectCommand({
-          Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-          Key: audioFileName,
-          Body: Uint8Array.from(window.atob(base64Data), (c) =>
-            c.charCodeAt(0)
-          ),
-          ContentType: "audio/wav",
-        });
-        try {
-          const response = await S3Client.send(command);
-        } catch (err) {
-          props.setOpenMessageDialog({
-            message: "Audio is not sent to s3 Bucket. Please try again.",
-            isError: true,
-            dontShowHeader: true,
+          const command = new PutObjectCommand({
+            Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
+            Key: audioFileName,
+            Body: Uint8Array.from(window.atob(base64Data), (c) =>
+              c.charCodeAt(0)
+            ),
+            ContentType: "audio/wav",
           });
+          try {
+            const response = await S3Client.send(command);
+          } catch (err) {
+            props.setOpenMessageDialog({
+              message: "Audio is not sent to s3 Bucket. Please try again.",
+              isError: true,
+              dontShowHeader: true,
+            });
+          }
         }
-      }
 
-      response(
-        {
-          // Required
-          target:
-            process.env.REACT_APP_CAPTURE_AUDIO === "true"
-              ? `${audioFileName}`
-              : "", // Required. Target of the response
-          //"qid": "", // Required. Unique assessment/question id
-          type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
-          values: [
-            { original_text: originalText },
-            { response_text: responseText },
-            { response_correct_words_array: student_correct_words_result },
-            { response_incorrect_words_array: student_incorrect_words_result },
-            { response_word_array_result: word_result_array },
-            { response_word_result: word_result },
-            { accuracy_percentage: finalScore },
-            { duration: responseDuration },
-          ],
-        },
-        "ET"
-      );
+        response(
+          {
+            // Required
+            target:
+              process.env.REACT_APP_CAPTURE_AUDIO === "true"
+                ? `${audioFileName}`
+                : "", // Required. Target of the response
+            //"qid": "", // Required. Unique assessment/question id
+            type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
+            values: [
+              { original_text: originalText },
+              { response_text: responseText },
+              { response_correct_words_array: student_correct_words_result },
+              {
+                response_incorrect_words_array: student_incorrect_words_result,
+              },
+              { response_word_array_result: word_result_array },
+              { response_word_result: word_result },
+              { accuracy_percentage: finalScore },
+              { duration: responseDuration },
+            ],
+          },
+          "ET"
+        );
 
-      setApiResponse(callUpdateLearner ? data.status : "success");
-      if (props.handleNext) {
-        props.handleNext();
-        if (temp_audio !== null) {
-          temp_audio.pause();
-          setPauseAudio(false);
+        setApiResponse(callUpdateLearner ? data.status : "success");
+        if (props.handleNext) {
+          props.handleNext();
+          if (temp_audio !== null) {
+            temp_audio.pause();
+            setPauseAudio(false);
+          }
         }
-      }
-      setLoader(false);
-      if (props.setIsNextButtonCalled) {
-        props.setIsNextButtonCalled(false);
+        setLoader(false);
+        if (props.setIsNextButtonCalled) {
+          props.setIsNextButtonCalled(false);
+        }
+      } catch (error) {
+        console.error(
+          "Error in processing word comparison or uploading audio:",
+          error
+        );
       }
     } catch (error) {
       setLoader(false);

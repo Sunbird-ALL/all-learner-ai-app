@@ -46,7 +46,7 @@ const SpeakSentenceComponent = () => {
         setLocalData("userLevel", data.data.milestone_level?.replace("m", ""));
       } catch (error) {
         setOpenMessageDialog({
-          message: "An error occurred. Please try again later.",
+          message: "Error while fetching milestone",
           isError: true,
           dontShowHeader: true,
         });

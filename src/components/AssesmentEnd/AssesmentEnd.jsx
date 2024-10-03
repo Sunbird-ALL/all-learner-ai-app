@@ -53,7 +53,7 @@ const AssesmentEnd = () => {
         setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
       } catch (error) {
         setOpenMessageDialog({
-          message: "Error fetching data",
+          message: "Error fetching points",
           isError: true,
           dontShowHeader: true,
         });

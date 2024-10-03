@@ -275,7 +275,6 @@ export const MessageDialog = ({
           display={"flex"}
           flexWrap={"wrap"}
           padding={"0px 10px 0px 10px"}
-          width={"80%"}
         >
           <span
             style={{
@@ -601,7 +600,7 @@ const Assesment = ({ discoverStart }) => {
           dispatch(setVirtualId(usernameDetails?.data?.result?.virtualID));
         } catch (error) {
           setOpenMessageDialog({
-            message: "An error occurred. Please try again later.",
+            message: "Error while fetching points.",
             isError: true,
             dontShowHeader: true,
           });
@@ -644,7 +643,7 @@ const Assesment = ({ discoverStart }) => {
           }
         } catch (error) {
           setOpenMessageDialog({
-            message: "An error occurred. Please try again later.",
+            message: "Error while fetching points.",
             isError: true,
             dontShowHeader: true,
           });
