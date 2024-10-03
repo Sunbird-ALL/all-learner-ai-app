@@ -64,13 +64,21 @@ const SpeakSentenceComponent = () => {
   useEffect(() => {
     if (!(localStorage.getItem("contentSessionId") !== null)) {
       (async () => {
-        const sessionId = getLocalData("sessionId");
-        const virtualId = getLocalData("virtualId");
-        const lang = getLocalData("lang");
-        const getPointersDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
-        );
-        setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+        try {
+          const sessionId = getLocalData("sessionId");
+          const virtualId = getLocalData("virtualId");
+          const lang = getLocalData("lang");
+          const getPointersDetails = await axios.get(
+            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
+          );
+          setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+        } catch (error) {
+          setOpenMessageDialog({
+            message: "Error while fetching points",
+            isError: true,
+            dontShowHeader: true,
+          });
+        }
       })();
     }
   }, []);
@@ -144,34 +152,49 @@ const SpeakSentenceComponent = () => {
       const lang = getLocalData("lang");
 
       if (!(localStorage.getItem("contentSessionId") !== null)) {
-        const pointsRes = await axios.post(
-          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_POINTER}`,
-          {
-            userId: localStorage.getItem("virtualId"),
-            sessionId: localStorage.getItem("sessionId"),
-            points: 1,
-            language: lang,
-            milestone: "m0",
-          }
-        );
-        setPoints(pointsRes?.data?.result?.totalLanguagePoints || 0);
+        try {
+          const pointsRes = await axios.post(
+            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_POINTER}`,
+            {
+              userId: localStorage.getItem("virtualId"),
+              sessionId: localStorage.getItem("sessionId"),
+              points: 1,
+              language: lang,
+              milestone: "m0",
+            }
+          );
+          setPoints(pointsRes?.data?.result?.totalLanguagePoints || 0);
+        } catch (err) {
+          setOpenMessageDialog({
+            message: "Error while adding points",
+            isError: true,
+            dontShowHeader: true,
+          });
+        }
       } else {
         send(1);
         // setPoints(localStorage.getItem("currentLessonScoreCount"));
       }
-
-      await axios.post(
-        `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
-        {
-          userId: localStorage.getItem("virtualId"),
-          sessionId: localStorage.getItem("sessionId"),
-          milestone: `discoveryList/discovery/${currentCollectionId}`,
-          lesson: localStorage.getItem("storyTitle"),
-          progress: ((currentQuestion + 1) * 100) / questions.length,
-          language: lang,
-          milestoneLevel: "m0",
-        }
-      );
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
+          {
+            userId: localStorage.getItem("virtualId"),
+            sessionId: localStorage.getItem("sessionId"),
+            milestone: `discoveryList/discovery/${currentCollectionId}`,
+            lesson: localStorage.getItem("storyTitle"),
+            progress: ((currentQuestion + 1) * 100) / questions.length,
+            language: lang,
+            milestoneLevel: "m0",
+          }
+        );
+      } catch (err) {
+        setOpenMessageDialog({
+          message: "Error while adding lesson",
+          isError: true,
+          dontShowHeader: true,
+        });
+      }
 
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
@@ -217,20 +240,29 @@ const SpeakSentenceComponent = () => {
           const sentences = assessmentResponse?.data?.data?.filter(
             (elem) => elem.category === "Sentence"
           );
-          const resSentencesPagination = await axios.get(
-            `${process.env.REACT_APP_CONTENT_SERVICE_APP_HOST}/${config.URLS.GET_PAGINATION}?page=1&limit=5&collectionId=${sentences?.[newSentencePassedCounter]?.collectionId}`
-          );
-          setCurrentContentType("Sentence");
-          setTotalSyllableCount(
-            resSentencesPagination?.data?.totalSyllableCount
-          );
-          setCurrentCollectionId(
-            sentences?.[newSentencePassedCounter]?.collectionId
-          );
-          let quesArr = [...(resSentencesPagination?.data?.data || [])];
-          setCurrentQuestion(0);
-          setSentencePassedCounter(newSentencePassedCounter);
-          setQuestions(quesArr);
+          let resSentencesPagination;
+          try {
+            resSentencesPagination = await axios.get(
+              `${process.env.REACT_APP_CONTENT_SERVICE_APP_HOST}/${config.URLS.GET_PAGINATION}?page=1&limit=5&collectionId=${sentences?.[newSentencePassedCounter]?.collectionId}`
+            );
+            setCurrentContentType("Sentence");
+            setTotalSyllableCount(
+              resSentencesPagination?.data?.totalSyllableCount
+            );
+            setCurrentCollectionId(
+              sentences?.[newSentencePassedCounter]?.collectionId
+            );
+            let quesArr = [...(resSentencesPagination?.data?.data || [])];
+            setCurrentQuestion(0);
+            setSentencePassedCounter(newSentencePassedCounter);
+            setQuestions(quesArr);
+          } catch (err) {
+            setOpenMessageDialog({
+              message: "Error fetching content",
+              isError: true,
+              dontShowHeader: true,
+            });
+          }
         } else if (getSetData.data.sessionResult === "pass") {
           navigate("/discover-end");
         } else if (
@@ -243,15 +275,25 @@ const SpeakSentenceComponent = () => {
           const words = assessmentResponse?.data?.data?.find(
             (elem) => elem.category === "Word"
           );
-          const resWordsPagination = await axios.get(
-            `${process.env.REACT_APP_CONTENT_SERVICE_APP_HOST}/${config.URLS.GET_PAGINATION}?page=1&limit=5&collectionId=${words?.collectionId}`
-          );
-          setCurrentContentType("Word");
-          setTotalSyllableCount(resWordsPagination?.data?.totalSyllableCount);
-          setCurrentCollectionId(words?.collectionId);
-          let quesArr = [...(resWordsPagination?.data?.data || [])];
-          setCurrentQuestion(0);
-          setQuestions(quesArr);
+
+          let resWordsPagination;
+          try {
+            resWordsPagination = await axios.get(
+              `${process.env.REACT_APP_CONTENT_SERVICE_APP_HOST}/${config.URLS.GET_PAGINATION}?page=1&limit=5&collectionId=${words?.collectionId}`
+            );
+            setCurrentContentType("Word");
+            setTotalSyllableCount(resWordsPagination?.data?.totalSyllableCount);
+            setCurrentCollectionId(words?.collectionId);
+            let quesArr = [...(resWordsPagination?.data?.data || [])];
+            setCurrentQuestion(0);
+            setQuestions(quesArr);
+          } catch (err) {
+            setOpenMessageDialog({
+              message: "Error fetching content",
+              isError: true,
+              dontShowHeader: true,
+            });
+          }
         } else if (
           getSetData.data.sessionResult === "fail" &&
           currentContentType === "Word"
@@ -274,7 +316,11 @@ const SpeakSentenceComponent = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      setOpenMessageDialog({
+        message: "Error while getting Result.",
+        isError: true,
+        dontShowHeader: true,
+      });
     }
   };
 
@@ -300,21 +346,44 @@ const SpeakSentenceComponent = () => {
           (elem) => elem.category === "Sentence"
         );
 
-        const resPagination = await axios.get(
-          `${process.env.REACT_APP_CONTENT_SERVICE_APP_HOST}/${config.URLS.GET_PAGINATION}?page=1&limit=5&collectionId=${sentences?.collectionId}`
-        );
-        setCurrentContentType("Sentence");
-        setTotalSyllableCount(resPagination?.data?.totalSyllableCount);
-        setCurrentCollectionId(sentences?.collectionId);
-        setAssessmentResponse(resAssessment);
-        localStorage.setItem("storyTitle", sentences?.name);
-        quesArr = [...quesArr, ...(resPagination?.data?.data || [])];
-        // quesArr[1].contentType = 'image';
-        // quesArr[0].contentType = 'phonics';
-        console.log("quesArr", quesArr);
-        setQuestions(quesArr);
+        if (!sentences) {
+          setOpenMessageDialog({
+            message: "No sentences found in assessment data",
+            isError: true,
+            dontShowHeader: true,
+          });
+          return;
+        }
+
+        let resPagination;
+        try {
+          resPagination = await axios.get(
+            `${process.env.REACT_APP_CONTENT_SERVICE_APP_HOST}/${config.URLS.GET_PAGINATION}?page=1&limit=5&collectionId=${sentences?.collectionId}`
+          );
+          setCurrentContentType("Sentence");
+          setTotalSyllableCount(resPagination?.data?.totalSyllableCount);
+          setCurrentCollectionId(sentences?.collectionId);
+          setAssessmentResponse(resAssessment);
+          localStorage.setItem("storyTitle", sentences?.name);
+          quesArr = [...quesArr, ...(resPagination?.data?.data || [])];
+          // quesArr[1].contentType = 'image';
+          // quesArr[0].contentType = 'phonics';
+          console.log("quesArr", quesArr);
+          setQuestions(quesArr);
+        } catch (err) {
+          setOpenMessageDialog({
+            message: "Error while fetching content",
+            isError: true,
+            dontShowHeader: true,
+          });
+        }
       } catch (error) {
-        console.log("err", error);
+        setOpenMessageDialog({
+          message: "Error fetching assessment",
+          isError: true,
+          dontShowHeader: true,
+        });
+        return;
       }
     })();
   }, []);

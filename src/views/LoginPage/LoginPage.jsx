@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { Container, Typography, TextField, Button, Grid } from '@mui/material';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Container, Typography, TextField, Button, Grid } from "@mui/material";
 import config from "../../utils/urlConstants.json";
-import './LoginPage.css'; // Import the CSS file
+import "./LoginPage.css"; // Import the CSS file
+import { MessageDialog } from "../../components/Assesment/Assesment";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [openMessageDialog, setOpenMessageDialog] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,55 +27,78 @@ const LoginPage = () => {
 
       if (usernameDetails?.data?.result?.virtualID) {
         localStorage.setItem("profileName", username);
-        localStorage.setItem("virtualId", usernameDetails?.data?.result?.virtualID);
+        localStorage.setItem(
+          "virtualId",
+          usernameDetails?.data?.result?.virtualID
+        );
         navigate("/discover-start");
       } else {
         alert("Enter correct username and password");
       }
     } catch (error) {
-      console.error("Error occurred:", error);
-      alert("An error occurred. Please try again later.");
+      setOpenMessageDialog({
+        message: "Login Failed. Please try again later.",
+        isError: true,
+        dontShowHeader: true,
+      });
     }
   };
 
   return (
-    <Container className="container">
-      <div className="loginBox">
-        <Typography variant="h4" align="center" gutterBottom>
-          Login
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                className="textField"
-                label="Username"
-                variant="outlined"
-                fullWidth
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
+    <>
+      {!!openMessageDialog && (
+        <MessageDialog
+          message={openMessageDialog.message}
+          closeDialog={() => {
+            setOpenMessageDialog("");
+          }}
+          isError={openMessageDialog.isError}
+          dontShowHeader={openMessageDialog.dontShowHeader}
+        />
+      )}
+      <Container className="container">
+        <div className="loginBox">
+          <Typography variant="h4" align="center" gutterBottom>
+            Login
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  className="textField"
+                  label="Username"
+                  variant="outlined"
+                  fullWidth
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className="textField"
+                  label="Password"
+                  variant="outlined"
+                  type="password"
+                  fullWidth
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Login
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                className="textField"
-                label="Password"
-                variant="outlined"
-                type="password"
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary" fullWidth>
-                Login
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+          </form>
+        </div>
+      </Container>
+    </>
   );
 };
 
