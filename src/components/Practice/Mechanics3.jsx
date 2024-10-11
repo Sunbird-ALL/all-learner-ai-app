@@ -300,6 +300,34 @@ const Mechanics2 = ({
           </Box>
         ) : (
           <>
+            <Box
+              sx={{
+                position: "absolute",
+                left: 0,
+                marginTop: "40px",
+                marginLeft: "80px",
+                // Add responsiveness
+                width: "100%", // Full width on smaller screens
+                maxWidth: "500px", // Limit width on larger screens
+                "@media (max-width: 600px)": {
+                  position: "relative",
+                  marginTop: "20px", // Adjust margin on small screens
+                  marginLeft: "20px", // Adjust margin on small screens
+                  width: "70%", // Adjust width for smaller devices
+                },
+                "@media (min-width: 600px)": {
+                  marginTop: "30px",
+                  marginLeft: "50px",
+                },
+              }}
+            >
+              <img
+                src={image}
+                placeholder="image"
+                style={{ width: "100%", height: "auto", maxWidth: "200px" }}
+              />
+            </Box>
+
             {sentences?.map((elem, index) => (
               <React.Fragment key={index}>
                 {elem === "dash" ? (
@@ -443,15 +471,18 @@ const Mechanics2 = ({
           </Box>
         ))}
       </Box>
-      {selectedWord === wordToCheck && type === "fillInTheBlank" && (
+      {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <VoiceAnalyser
             setVoiceText={setVoiceText}
             setRecordedAudio={setRecordedAudio}
             setVoiceAnimate={setVoiceAnimate}
             storyLine={storyLine}
+            dontShowListen={type === "image" || isDiscover}
             // updateStory={updateStory}
             originalText={parentWords}
+            enableNext={getEnableButton()}
+            handleNext={handleNext}
             {...{
               contentId,
               contentType,
@@ -460,11 +491,12 @@ const Mechanics2 = ({
               callUpdateLearner,
               isShowCase,
               setEnableNext,
+              showOnlyListen: selectedWord != wordToCheck,
               setOpenMessageDialog,
             }}
           />
         </Box>
-      )}
+      }
       {/* <Box
         sx={{
           display: "flex",
