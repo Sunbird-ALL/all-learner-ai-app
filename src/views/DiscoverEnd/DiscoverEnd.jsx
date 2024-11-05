@@ -1,8 +1,10 @@
-import React from 'react';
-import DiscoverEndPage from '../../components/DiscoverEnd/DiscoverEnd';
+import React from "react";
+const DiscoverEndPage = React.lazy(() =>
+  import("../../components/DiscoverEnd/DiscoverEnd")
+);
 
 const DiscoverEnd = () => {
-    return <DiscoverEndPage />;
+  return <DiscoverEndPage />;
 };
 
 export default DiscoverEnd;

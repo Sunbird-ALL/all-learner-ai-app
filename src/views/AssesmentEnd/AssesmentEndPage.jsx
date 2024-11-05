@@ -1,8 +1,10 @@
-import React from 'react';
-import AssesmentEnd from '../../components/AssesmentEnd/AssesmentEnd';
+import React from "react";
+const AssesmentEnd = React.lazy(() =>
+  import("../../components/AssesmentEnd/AssesmentEnd")
+);
 
 const AssesmentEndPage = () => {
-    return <AssesmentEnd />;
+  return <AssesmentEnd />;
 };
 
 export default AssesmentEndPage;
