@@ -747,7 +747,7 @@ VoiceAnalyser.propTypes = {
   enableNext: PropTypes.bool.isRequired,
   setIsNextButtonCalled: PropTypes.func,
   handleNext: PropTypes.func.isRequired,
-  originalText: PropTypes.string,
+  originalText: PropTypes.string.isRequired,
   isShowCase: PropTypes.bool,
   dontShowListen: PropTypes.bool,
   setEnableNext: PropTypes.func.isRequired,
@@ -761,7 +761,7 @@ VoiceAnalyser.propTypes = {
   setVoiceText: PropTypes.func.isRequired,
   livesData: PropTypes.object,
   contentId: PropTypes.string,
-  updateStoredData: PropTypes.func.isRequired,
+  updateStoredData: PropTypes.any,
   pageName: PropTypes.string,
 };
 

@@ -39,8 +39,6 @@ const Mechanics5 = ({
   callUpdateLearner,
   isShowCase,
   setEnableNext,
-  selectedWord,
-  wordToCheck,
   setOpenMessageDialog,
   startShowCase,
   setStartShowCase,
@@ -451,7 +449,6 @@ Mechanics5.propTypes = {
   setIsNextButtonCalled: PropTypes.func,
   background: PropTypes.bool,
   type: PropTypes.any,
-  words: PropTypes.any,
   storyLine: PropTypes.number,
   steps: PropTypes.number,
   contentId: PropTypes.any,
@@ -461,8 +458,11 @@ Mechanics5.propTypes = {
   playTeacherAudio: PropTypes.func,
   livesData: PropTypes.any,
   gameOverData: PropTypes.any,
-  highlightWords: PropTypes.func,
-  matchedChar: PropTypes.any,
+  question_audio: PropTypes.string.isRequired,
+  parentWords: PropTypes.string.isRequired,
+  options: PropTypes.any,
+  correctness: PropTypes.bool.isRequired,
+  audio: PropTypes.string,
 };
 
 export default Mechanics5;
