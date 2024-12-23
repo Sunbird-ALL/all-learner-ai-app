@@ -230,11 +230,16 @@ const MainLayout = (props) => {
 
   useEffect(() => {
     if (isShowCase && gameOverData) {
-      setShake(gameOverData ? gameOverData.userWon : true);
+      setShake(gameOverData.userWon ?? true);
 
-      const audioSrc = gameOverData
-        ? audioCache[gameOverData.userWon ? LevelCompleteAudio : gameLoseAudio]
-        : audioCache[LevelCompleteAudio];
+      let audioSrc;
+      if (gameOverData) {
+        audioSrc = gameOverData.userWon
+          ? audioCache[LevelCompleteAudio]
+          : audioCache[gameLoseAudio];
+      } else {
+        audioSrc = audioCache[LevelCompleteAudio];
+      }
 
       if (audioSrc) {
         const audio = new Audio(audioSrc);
@@ -1272,6 +1277,9 @@ MainLayout.propTypes = {
   storedData: PropTypes.array,
   resetStoredData: PropTypes.func,
   pageName: PropTypes.string,
+  gameOverData: PropTypes.shape({
+    userWon: PropTypes.bool,
+  }),
 };
 
 export default MainLayout;
