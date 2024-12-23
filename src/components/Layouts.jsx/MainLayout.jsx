@@ -18,6 +18,7 @@ import textureImage from "../../assets/images/textureImage.png";
 import timer from "../../assets/images/timer.svg";
 import playButton from "../../assets/listen.png";
 import pauseButton from "../../assets/pause.png";
+import { useMediaCache } from "../Hooks/useMediaCache";
 import {
   GreenTick,
   HeartBlack,
@@ -46,55 +47,88 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const MainLayout = (props) => {
+  const [mediaUrls, setMediaUrls] = useState({});
+  const { cacheMedia } = useMediaCache();
+
+  const mediaFiles = [
+    { key: "practicebgstone", url: practicebgstone },
+    { key: "practicebgstone2", url: practicebgstone2 },
+    { key: "practicebgstone3", url: practicebgstone3 },
+    { key: "practicebg", url: practicebg },
+    { key: "practicebg2", url: practicebg2 },
+    { key: "practicebg3", url: practicebg3 },
+    { key: "gameWon", url: gameWon },
+    { key: "gameLost", url: gameLost },
+    { key: "textureImage", url: textureImage },
+    { key: "timer", url: timer },
+    { key: "playButton", url: playButton },
+    { key: "playButton", url: playButton },
+    { key: "clouds", url: clouds },
+    { key: "catLoading", url: catLoading },
+  ];
+
+  useEffect(() => {
+    const cacheAllMedia = async () => {
+      const urls = {};
+      for (const media of mediaFiles) {
+        const cachedUrl = await cacheMedia(media.key, media.url);
+        urls[media.key] = cachedUrl;
+      }
+      setMediaUrls(urls);
+    };
+
+    cacheAllMedia();
+  }, []);
+
   const levelsImages = {
     1: {
       milestone: <LevelOne />,
-      backgroundAddOn: practicebgstone,
+      backgroundAddOn: mediaUrls.practicebgstone,
       background: practicebg,
     },
     2: {
       milestone: <LevelTwo />,
-      backgroundAddOn: practicebgstone2,
+      backgroundAddOn: mediaUrls.practicebgstone2,
       background: practicebg2,
     },
     3: {
       milestone: <LevelThree />,
-      backgroundAddOn: practicebgstone3,
+      backgroundAddOn: mediaUrls.practicebgstone3,
       background: practicebg3,
     },
     4: {
       milestone: <LevelFour />,
-      backgroundAddOn: practicebgstone,
+      backgroundAddOn: mediaUrls.practicebgstone,
       background: practicebg3,
       backgroundColor: `${levelConfig[4].color}60`,
     },
     5: {
       milestone: <LevelFive />,
-      backgroundAddOn: practicebgstone3,
+      backgroundAddOn: mediaUrls.practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[5].color}60`,
     },
     6: {
       milestone: <LevelSix />,
-      backgroundAddOn: practicebgstone3,
+      backgroundAddOn: mediaUrls.practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[6].color}60`,
     },
     7: {
       milestone: <LevelSeven />,
-      backgroundAddOn: practicebgstone3,
+      backgroundAddOn: mediaUrls.practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[7].color}60`,
     },
     8: {
       milestone: <LevelEight />,
-      backgroundAddOn: practicebgstone3,
+      backgroundAddOn: mediaUrls.practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[8].color}60`,
     },
     9: {
       milestone: <LevelNine />,
-      backgroundAddOn: practicebgstone3,
+      backgroundAddOn: mediaUrls.practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
@@ -163,27 +197,65 @@ const MainLayout = (props) => {
     }
   };
 
+  const [audioCache, setAudioCache] = useState({});
+
+  useEffect(() => {
+    const preloadAudio = async () => {
+      try {
+        const urls = [LevelCompleteAudio, gameLoseAudio];
+        const cache = {};
+
+        for (const url of urls) {
+          const response = await fetch(url);
+          const audioBlob = await response.blob();
+          const audioUrl = URL.createObjectURL(audioBlob);
+          cache[url] = audioUrl;
+        }
+
+        setAudioCache(cache);
+      } catch (error) {
+        console.error("Error preloading audio:", error);
+      }
+    };
+
+    preloadAudio();
+
+    // Cleanup cached audio URLs on unmount
+    return () => {
+      Object.values(audioCache).forEach((audioUrl) =>
+        URL.revokeObjectURL(audioUrl)
+      );
+    };
+  }, []);
+
   useEffect(() => {
     if (isShowCase && gameOverData) {
       setShake(gameOverData ? gameOverData.userWon : true);
 
-      let audio = "";
-      if (gameOverData) {
-        audio = new Audio(
-          gameOverData.userWon ? LevelCompleteAudio : gameLoseAudio
-        );
+      const audioSrc = gameOverData
+        ? audioCache[gameOverData.userWon ? LevelCompleteAudio : gameLoseAudio]
+        : audioCache[LevelCompleteAudio];
+
+      if (audioSrc) {
+        const audio = new Audio(audioSrc);
+        audio.play().catch((error) => {
+          console.error("Error playing audio:", error);
+        });
+
         if (!gameOverData?.userWon) {
           callConfettiSnow();
         }
-      } else {
-        audio = new Audio(LevelCompleteAudio);
       }
-      audio.play();
-      setTimeout(() => {
+
+      const shakeTimeout = setTimeout(() => {
         setShake(false);
       }, 4000);
+
+      return () => {
+        clearTimeout(shakeTimeout);
+      };
     }
-  }, [startShowCase, isShowCase, gameOverData]);
+  }, [startShowCase, isShowCase, gameOverData, audioCache]);
 
   let currentPracticeStep = progressData?.currentPracticeStep;
   let currentPracticeProgress = progressData?.currentPracticeProgress || 0;
@@ -284,7 +356,7 @@ const MainLayout = (props) => {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            backgroundImage: `url(${cardBackground || textureImage})`,
+            backgroundImage: `url(${cardBackground || mediaUrls.textureImage})`,
             backgroundSize: "contain",
             backgroundRepeat: "round",
             boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
@@ -294,7 +366,7 @@ const MainLayout = (props) => {
         >
           <Box>
             <img
-              src={catLoading}
+              src={mediaUrls?.catLoading}
               alt="catLoading"
               // sx={{ height: "58px", width: "58px" }}
             />
@@ -313,7 +385,9 @@ const MainLayout = (props) => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                backgroundImage: `url(${cardBackground || textureImage})`,
+                backgroundImage: `url(${
+                  cardBackground || mediaUrls?.textureImage
+                })`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
@@ -331,7 +405,7 @@ const MainLayout = (props) => {
                 {showTimer && (
                   <Box sx={{ position: "absolute" }}>
                     <img
-                      src={timer}
+                      src={mediaUrls?.timer}
                       alt="timer"
                       style={{ height: "58px", width: "58px" }}
                     />
@@ -663,7 +737,9 @@ const MainLayout = (props) => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                backgroundImage: `url(${cardBackground || textureImage})`,
+                backgroundImage: `url(${
+                  cardBackground || mediaUrls.textureImage
+                })`,
                 backgroundSize: "contain",
                 backgroundRepeat: "round",
                 boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
@@ -723,7 +799,7 @@ const MainLayout = (props) => {
                     >
                       {!gameOverData?.userWon && (
                         <img
-                          src={clouds}
+                          src={mediaUrls?.clouds}
                           alt="clouds"
                           style={{ zIndex: -999 }}
                         />
@@ -739,7 +815,7 @@ const MainLayout = (props) => {
                     >
                       {gameOverData?.userWon ? (
                         <img
-                          src={gameWon}
+                          src={mediaUrls?.gameWon}
                           alt="gameWon"
                           style={{ zIndex: 9999, height: 340 }}
                         />
@@ -752,7 +828,7 @@ const MainLayout = (props) => {
                         >
                           <Stack justifyContent="center" alignItems="center">
                             <img
-                              src={gameLost}
+                              src={mediaUrls?.gameLost}
                               alt="gameLost"
                               style={{ height: 340 }}
                             />

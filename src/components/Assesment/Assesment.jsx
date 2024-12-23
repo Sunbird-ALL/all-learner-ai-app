@@ -49,6 +49,7 @@ import panda from "../../assets/images/panda.svg";
 import cryPanda from "../../assets/images/cryPanda.svg";
 import { uniqueId } from "../../services/utilService";
 import { end } from "../../services/telementryService";
+import { useMediaCache } from "../Hooks/useMediaCache";
 
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
@@ -552,6 +553,36 @@ const Assesment = ({ discoverStart }) => {
     username = userDetails.student_name;
     setLocalData("profileName", username);
   }
+
+  const { cacheMedia } = useMediaCache();
+  const [mediaUrls, setMediaUrls] = useState({});
+  const mediaFiles = [
+    { key: "desktopLevel1", url: desktopLevel1 },
+    { key: "desktopLevel2", url: desktopLevel2 },
+    { key: "desktopLevel3", url: desktopLevel3 },
+    { key: "desktopLevel4", url: desktopLevel4 },
+    { key: "desktopLevel5", url: desktopLevel5 },
+    { key: "desktopLevel6", url: desktopLevel6 },
+    { key: "desktopLevel7", url: desktopLevel7 },
+    { key: "desktopLevel8", url: desktopLevel8 },
+    { key: "desktopLevel9", url: desktopLevel9 },
+    { key: "assessmentBackground", url: assessmentBackground },
+    { key: "HelpLogo", url: HelpLogo },
+  ];
+
+  useEffect(() => {
+    const cacheAllMedia = async () => {
+      const urls = {};
+      for (const media of mediaFiles) {
+        const cachedUrl = await cacheMedia(media.key, media.url);
+        urls[media.key] = cachedUrl;
+      }
+      setMediaUrls(urls);
+    };
+
+    cacheAllMedia();
+  }, []);
+
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [profileName, setProfileName] = useState(username);
   const [openMessageDialog, setOpenMessageDialog] = useState("");
@@ -714,7 +745,7 @@ const Assesment = ({ discoverStart }) => {
   const sectionStyle = {
     width: "100vw",
     height: "100vh",
-    backgroundImage: `url(${images?.[`desktopLevel${level || 1}`]})`,
+    backgroundImage: `url(${mediaUrls?.desktopLevel1})`,
     backgroundRepeat: "round",
     backgroundSize: "auto",
     position: "relative",
@@ -803,7 +834,7 @@ const Assesment = ({ discoverStart }) => {
         <MainLayout
           showNext={false}
           showTimer={false}
-          cardBackground={assessmentBackground}
+          cardBackground={mediaUrls?.assessmentBackground}
           backgroundImage={practicebg}
           {...{
             setOpenLangModal,
@@ -865,7 +896,7 @@ const Assesment = ({ discoverStart }) => {
                     textAlign: "center",
                   }}
                 >
-                  <img src={HelpLogo} alt="help_video_link" />
+                  <img src={mediaUrls?.HelpLogo} alt="help_video_link" />
                 </Box>
               )}
               <Box
