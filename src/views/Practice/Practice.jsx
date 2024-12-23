@@ -98,7 +98,6 @@ const Practice = () => {
       const audio = new Audio(audioSrc);
       audio.play();
     } else {
-      // Fallback to LevelCompleteAudio if preloaded audio is not available
       const fallbackAudio = new Audio(LevelCompleteAudio);
       fallbackAudio.play();
     }
