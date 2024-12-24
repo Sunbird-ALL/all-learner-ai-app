@@ -55,7 +55,6 @@ const SpeakSentenceComponent = () => {
     (async () => {
       if (audioSrc) {
         let audio = new Audio(audioSrc);
-        console.log(audioSrc);
         audio.play();
       }
       const virtualId = getLocalData("virtualId");

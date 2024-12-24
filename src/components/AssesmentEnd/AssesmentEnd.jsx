@@ -50,8 +50,10 @@ const AssesmentEnd = () => {
 
   useEffect(() => {
     (async () => {
-      let audio = new Audio(audioSrc);
-      audio.play();
+      if (audioSrc) {
+        let audio = new Audio(audioSrc);
+        audio.play();
+      }
       const virtualId = getLocalData("virtualId");
       const lang = getLocalData("lang");
       const previous_level = getLocalData("previous_level");
@@ -75,7 +77,7 @@ const AssesmentEnd = () => {
     setTimeout(() => {
       setShake(false);
     }, 4000);
-  }, []);
+  }, [audioSrc]);
 
   const navigate = useNavigate();
   let newLevel = level.replace("m", "");
