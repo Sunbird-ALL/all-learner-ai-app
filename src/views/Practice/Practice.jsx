@@ -14,7 +14,6 @@ import {
 import axios from "axios";
 import WordsOrImage from "../../components/Mechanism/WordsOrImage";
 import { uniqueId } from "../../services/utilService";
-import useSound from "use-sound";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import { splitGraphemes } from "split-graphemes";
 import { Typography } from "@mui/material";
