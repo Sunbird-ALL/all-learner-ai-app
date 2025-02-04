@@ -51,7 +51,6 @@ export const fetchGetSetResult = async (
   const user_id = localStorage.getItem("virtualId");
   const lang = getLocalData("lang");
 
-  debugger;
   try {
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
@@ -87,7 +86,6 @@ export const getSetResultPractice = async ({
   mechanism,
 }) => {
   try {
-    debugger;
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
       {

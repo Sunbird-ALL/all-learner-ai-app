@@ -70,7 +70,7 @@ export const createLearnerProgress = async (
   const userId = localStorage.getItem("virtualId");
   const sessionId = localStorage.getItem("sessionId");
   const language = localStorage.getItem("lang");
-  debugger;
+
   try {
     const requestBody = {
       userId: userId,
@@ -86,7 +86,6 @@ export const createLearnerProgress = async (
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.CREATE_LEARNER_PROGRESS}`,
       requestBody
     );
-    debugger;
     return response.data;
   } catch (error) {
     console.error("Error creating learner progress:", error);
