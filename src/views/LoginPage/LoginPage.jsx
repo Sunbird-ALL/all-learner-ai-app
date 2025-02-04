@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Typography, TextField, Button, Grid } from "@mui/material";
-import config from "../../utils/urlConstants.json";
 import "./LoginPage.css"; // Import the CSS file
+import { fetchVirtualId } from "../../services/userservice/userService";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -19,22 +18,16 @@ const LoginPage = () => {
     localStorage.clear();
 
     try {
-      const usernameDetails = await axios.post(
-        `${process.env.REACT_APP_VIRTUAL_ID_HOST}/${config.URLS.GET_VIRTUAL_ID}?username=${username}`
-      );
+      const usernameDetails = await fetchVirtualId(username);
 
-      if (usernameDetails?.data?.result?.virtualID) {
+      if (usernameDetails?.result?.virtualID) {
         localStorage.setItem("profileName", username);
-        localStorage.setItem(
-          "virtualId",
-          usernameDetails?.data?.result?.virtualID
-        );
+        localStorage.setItem("virtualId", usernameDetails.result.virtualID);
         navigate("/discover-start");
       } else {
         alert("Enter correct username and password");
       }
     } catch (error) {
-      console.error("Error occurred:", error);
       alert("An error occurred. Please try again later.");
     }
   };

@@ -26,6 +26,19 @@ import * as Assets from "../../utils/imageAudioLinks";
 import { PutBucketInventoryConfigurationRequestFilterSensitiveLog } from "@aws-sdk/client-s3";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 
+import {
+  addLesson,
+  addPointer,
+  fetchUserPoints,
+  createLearnerProgress,
+  getLessonProgressByID,
+} from "../../services/orchestration/orchestrationService";
+import {
+  getContent,
+  getFetchMilestoneDetails,
+  getSetResultPractice,
+} from "../../services/learnerAi/learnerAiService";
+
 const Practice = () => {
   const [page, setPage] = useState("");
   const [recordedAudio, setRecordedAudio] = useState("");
@@ -477,66 +490,47 @@ const Practice = () => {
             send(5);
           }
         } else {
-          const pointsRes = await axios.post(
-            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_POINTER}`,
-            {
-              userId: localStorage.getItem("virtualId"),
-              sessionId: localStorage.getItem("sessionId"),
-              points: 1,
-              language: lang,
-              milestone: `m${level}`,
-            }
-          );
-          setPoints(pointsRes?.data?.result?.totalLanguagePoints || 0);
+          let points = 1;
+          let milestone = `m${level}`;
+          const result = await addPointer(points, milestone);
+          setPoints(result?.result?.totalLanguagePoints || 0);
         }
 
         if (isShowCase || isGameOver) {
           const sub_session_id = getLocalData("sub_session_id");
-          const getSetResultRes = await axios.post(
-            `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
-            {
-              sub_session_id: sub_session_id,
-              contentType: currentContentType,
-              session_id: sessionId,
-              user_id: virtualId,
-              totalSyllableCount: totalSyllableCount,
-              language: localStorage.getItem("lang"),
-              is_mechanics: mechanism && mechanism?.id ? true : false,
-            }
-          );
+          const getSetResultRes = await getSetResultPractice({
+            subSessionId: sub_session_id,
+            currentContentType,
+            sessionId,
+            virtualId,
+            totalSyllableCount,
+            mechanism,
+          });
           const { data: getSetData } = getSetResultRes;
-          const data = JSON.stringify(getSetData?.data);
+
+          const data = JSON.stringify(getSetData);
           Log(data, "practice", "ET");
-          setPercentage(getSetData?.data?.percentage);
-          checkFluency(currentContentType, getSetData?.data?.fluency);
+          setPercentage(getSetData?.percentage);
+          checkFluency(currentContentType, getSetData?.fluency);
           if (process.env.REACT_APP_POST_LEARNER_PROGRESS === "true") {
-            await axios.post(
-              `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.CREATE_LEARNER_PROGRESS}`,
-              {
-                userId: virtualId,
-                sessionId: sessionId,
-                subSessionId: sub_session_id,
-                milestoneLevel: getSetData?.data?.currentLevel,
-                totalSyllableCount: totalSyllableCount,
-                language: localStorage.getItem("lang"),
-              }
+            await createLearnerProgress(
+              sub_session_id,
+              getSetData?.currentLevel,
+              totalSyllableCount
             );
           }
-          setLocalData("previous_level", getSetData.data.previous_level);
-          if (getSetData.data.sessionResult === "pass") {
+          setLocalData("previous_level", getSetData.previous_level);
+          if (getSetData.sessionResult === "pass") {
             try {
-              await axios.post(
-                `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
-                {
-                  userId: virtualId,
-                  sessionId: sessionId,
-                  milestone: `practice`,
-                  lesson: "0",
-                  progress: 0,
-                  language: lang,
-                  milestoneLevel: getSetData.data.currentLevel,
-                }
-              );
+              await addLesson({
+                userId: virtualId,
+                sessionId,
+                milestone: `practice`,
+                lesson: "0",
+                progress: 0,
+                language: lang,
+                milestoneLevel: getSetData.currentLevel,
+              });
               gameOver({ link: "/assesment-end" }, true);
               return;
             } catch (e) {
@@ -551,61 +545,54 @@ const Practice = () => {
           newPracticeStep = 0;
           currentPracticeProgress = 0;
         }
-
-        await axios.post(
-          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
-          {
-            userId: virtualId,
-            sessionId: sessionId,
-            milestone: `practice`,
-            lesson: newPracticeStep,
-            progress: currentPracticeProgress,
-            language: lang,
-            milestoneLevel: `m${level}`,
-          }
-        );
+        await addLesson({
+          userId: virtualId,
+          sessionId: sessionId,
+          milestone: `practice`,
+          lesson: newPracticeStep,
+          progress: currentPracticeProgress,
+          language: lang,
+          milestoneLevel: `m${level}`,
+        });
 
         if (newPracticeStep === 0 || newPracticeStep === 5 || isGameOver) {
           gameOver();
           return;
         }
-        const resGetContent = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-            (currentGetContent?.mechanism?.id
-              ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
-              : "") +
-            (currentGetContent?.competency
-              ? `&level_competency=${currentGetContent?.competency}`
-              : "") +
-            (currentGetContent?.tags
-              ? `&tags=${currentGetContent?.tags}`
-              : "") +
-            (currentGetContent?.storyMode
-              ? `&story_mode=${currentGetContent?.storyMode}`
-              : "")
+
+        const resGetContent = await getContent(
+          currentGetContent.criteria,
+          virtualId,
+          lang,
+          limit,
+          {
+            mechanismId: currentGetContent?.mechanism?.id,
+            competency: currentGetContent?.competency,
+            tags: currentGetContent?.tags,
+            storyMode: currentGetContent?.storyMode,
+          }
         );
 
         //TODO: required only for S1 and S2
 
-        setTotalSyllableCount(resGetContent?.data?.totalSyllableCount);
+        setTotalSyllableCount(resGetContent?.totalSyllableCount);
         setLivesData({
           ...livesData,
-          totalTargets: resGetContent?.data?.totalSyllableCount,
+          totalTargets: resGetContent?.totalSyllableCount,
           targetsForLives:
-            resGetContent?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE,
+            resGetContent?.subsessionTargetsCount * TARGETS_PERCENTAGE,
           targetPerLive:
-            (resGetContent?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE) /
+            (resGetContent?.subsessionTargetsCount * TARGETS_PERCENTAGE) /
             LIVES,
         });
 
         let showcaseLevel =
           currentPracticeStep === 3 || currentPracticeStep === 8;
         setIsShowCase(showcaseLevel);
-
         // TODO: API returns contents if 200 status
-        quesArr = [...quesArr, ...(resGetContent?.data?.content || [])];
-        setCurrentContentType(resGetContent?.data?.content?.[0]?.contentType);
-        setCurrentCollectionId(resGetContent?.data?.content?.[0]?.collectionId);
+        quesArr = [...quesArr, ...(resGetContent?.content || [])];
+        setCurrentContentType(resGetContent?.content?.[0]?.contentType);
+        setCurrentCollectionId(resGetContent?.content?.[0]?.collectionId);
 
         // TODO: not required - not using this anywhere
         setAssessmentResponse(resGetContent);
@@ -685,28 +672,22 @@ const Practice = () => {
         sessionId = uniqueId();
         localStorage.setItem("sessionId", sessionId);
       }
-
-      const getMilestoneDetails = await axios.get(
-        `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${virtualId}?language=${lang}`
+      const getMilestoneDetails = await getFetchMilestoneDetails(
+        virtualId,
+        lang
       );
 
       // TODO: validate the getMilestoneDetails API return
 
-      setLocalData(
-        "getMilestone",
-        JSON.stringify({ ...getMilestoneDetails.data })
-      );
+      setLocalData("getMilestone", JSON.stringify({ ...getMilestoneDetails }));
 
       let level =
-        Number(
-          getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
-        ) || 1;
+        Number(getMilestoneDetails?.data?.milestone_level?.replace("m", "")) ||
+        1;
 
       setLevel(level);
 
-      const resLessons = await axios.get(
-        `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_LESSON_PROGRESS_BY_ID}/${virtualId}?language=${lang}`
-      );
+      const resLessons = await getLessonProgressByID(virtualId, lang);
 
       // TODO: Handle Error for lessons - no lesson progress - starting point should be P1
 
@@ -714,18 +695,15 @@ const Practice = () => {
         process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
         localStorage.getItem("contentSessionId") !== null
       ) {
-        const getPointersDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
-        );
-
-        // TODO: Just Opss icon - we are trying to fetch the score for you
-        setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+        fetchUserPoints().then((points) => {
+          setPoints(points);
+        });
       }
 
       let userState = Number.isInteger(
-        Number(resLessons.data?.result?.result?.lesson)
+        Number(resLessons?.result?.result?.lesson)
       )
-        ? Number(resLessons.data?.result?.result?.lesson)
+        ? Number(resLessons.result?.result?.lesson)
         : 0;
 
       // TODO: revisit this - looks like not required
@@ -744,35 +722,32 @@ const Practice = () => {
         (elem) => elem.title === practiceSteps?.[userState].name
       );
 
-      const resWord = await axios.get(
-        `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-          (currentGetContent?.mechanism?.id
-            ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
-            : "") +
-          (currentGetContent?.competency
-            ? `&level_competency=${currentGetContent?.competency}`
-            : "") +
-          (currentGetContent?.tags ? `&tags=${currentGetContent?.tags}` : "") +
-          (currentGetContent?.storyMode
-            ? `&story_mode=${currentGetContent?.storyMode}`
-            : "")
+      const resWord = await getContent(
+        currentGetContent.criteria,
+        virtualId,
+        lang,
+        limit,
+        {
+          mechanismId: currentGetContent?.mechanism?.id,
+          competency: currentGetContent?.competency,
+          tags: currentGetContent?.tags,
+          storyMode: currentGetContent?.storyMode,
+        }
       );
-
       // TODO: handle error if resWord is empty
 
-      setTotalSyllableCount(resWord?.data?.totalSyllableCount);
+      setTotalSyllableCount(resWord?.totalSyllableCount);
       setLivesData({
         ...livesData,
-        totalTargets: resWord?.data?.totalSyllableCount,
-        targetsForLives:
-          resWord?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE,
+        totalTargets: resWord?.totalSyllableCount,
+        targetsForLives: resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE,
         targetPerLive:
-          (resWord?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
+          (resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
       });
-      quesArr = [...quesArr, ...(resWord?.data?.content || [])];
+      quesArr = [...quesArr, ...(resWord?.content || [])];
       setCurrentContentType(currentGetContent.criteria);
 
-      setCurrentCollectionId(resWord?.data?.content?.[0]?.collectionId);
+      setCurrentCollectionId(resWord?.content?.[0]?.collectionId);
       setAssessmentResponse(resWord);
 
       localStorage.setItem("storyTitle", resWord?.name);
@@ -783,18 +758,15 @@ const Practice = () => {
       let showcaseLevel = userState === 4 || userState === 9;
       setIsShowCase(showcaseLevel);
       if (showcaseLevel) {
-        await axios.post(
-          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
-          {
-            userId: virtualId,
-            sessionId: sessionId,
-            milestone: "showcase",
-            lesson: userState,
-            progress: 0,
-            language: lang,
-            milestoneLevel: `m${level}`,
-          }
-        );
+        await addLesson({
+          userId: virtualId,
+          sessionId: sessionId,
+          milestone: "showcase",
+          lesson: userState,
+          progress: 0,
+          language: lang,
+          milestoneLevel: `m${level}`,
+        });
       }
 
       setCurrentQuestion(practiceProgress[virtualId]?.currentQuestion || 0);
@@ -832,19 +804,15 @@ const Practice = () => {
         currentPracticeStep: newCurrentPracticeStep,
         fromBack: true,
       };
-
-      await axios.post(
-        `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
-        {
-          userId: virtualId,
-          sessionId: sessionId,
-          milestone: "practice",
-          lesson: newCurrentPracticeStep,
-          progress: (newCurrentPracticeStep / practiceSteps.length) * 100,
-          language: lang,
-          milestoneLevel: `m${level}`,
-        }
-      );
+      await addLesson({
+        userId: virtualId,
+        sessionId: sessionId,
+        milestone: "practice",
+        lesson: newCurrentPracticeStep,
+        progress: (newCurrentPracticeStep / practiceSteps.length) * 100,
+        language: lang,
+        milestoneLevel: `m${level}`,
+      });
 
       setProgressData(practiceProgress[virtualId]);
 
@@ -853,32 +821,32 @@ const Practice = () => {
       ]?.[level]?.find(
         (elem) => elem.title === practiceSteps?.[newCurrentPracticeStep].name
       );
+
       let quesArr = [];
-      const resWord = await axios.get(
-        `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-          (currentGetContent?.mechanism?.id
-            ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
-            : "") +
-          (currentGetContent?.competency
-            ? `&level_competency=${currentGetContent?.competency}`
-            : "") +
-          (currentGetContent?.tags ? `&tags=${currentGetContent?.tags}` : "") +
-          (currentGetContent?.storyMode
-            ? `&story_mode=${currentGetContent?.storyMode}`
-            : "")
+
+      const resWord = await getContent(
+        currentGetContent.criteria,
+        virtualId,
+        lang,
+        limit,
+        {
+          mechanismId: currentGetContent?.mechanism?.id,
+          competency: currentGetContent?.competency,
+          tags: currentGetContent?.tags,
+          storyMode: currentGetContent?.storyMode,
+        }
       );
-      setTotalSyllableCount(resWord?.data?.totalSyllableCount);
+      setTotalSyllableCount(resWord?.totalSyllableCount);
       setLivesData({
         ...livesData,
-        totalTargets: resWord?.data?.totalSyllableCount,
-        targetsForLives:
-          resWord?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE,
+        totalTargets: resWord?.totalSyllableCount,
+        targetsForLives: resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE,
         targetPerLive:
-          (resWord?.data?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
+          (resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
       });
-      quesArr = [...quesArr, ...(resWord?.data?.content || [])];
+      quesArr = [...quesArr, ...(resWord?.content || [])];
       setCurrentContentType(currentGetContent.criteria);
-      setCurrentCollectionId(resWord?.data?.content?.[0]?.collectionId);
+      setCurrentCollectionId(resWord?.content?.[0]?.collectionId);
       setAssessmentResponse(resWord);
 
       localStorage.setItem("storyTitle", resWord?.name);

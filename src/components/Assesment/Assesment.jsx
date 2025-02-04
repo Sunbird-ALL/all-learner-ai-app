@@ -49,6 +49,9 @@ import panda from "../../assets/images/panda.svg";
 import cryPanda from "../../assets/images/cryPanda.svg";
 import { uniqueId } from "../../services/utilService";
 import { end } from "../../services/telementryService";
+import { fetchUserPoints } from "../../services/orchestration/orchestrationService";
+import { fetchVirtualId } from "../../services/userservice/userService";
+import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
@@ -572,24 +575,18 @@ const Assesment = ({ discoverStart }) => {
     if (discoverStart && username && !localStorage.getItem("virtualId")) {
       (async () => {
         setLocalData("profileName", username);
-        const usernameDetails = await axios.post(
-          `${process.env.REACT_APP_VIRTUAL_ID_HOST}/${config.URLS.GET_VIRTUAL_ID}?username=${username}`
-        );
-        const getMilestoneDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${usernameDetails?.data?.result?.virtualID}?language=${lang}`
+        const usernameDetails = await fetchVirtualId(username);
+        const getMilestoneDetails = await getFetchMilestoneDetails(
+          usernameDetails?.result?.virtualID,
+          lang
         );
 
         localStorage.setItem(
           "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails.data })
+          JSON.stringify({ ...getMilestoneDetails })
         );
-        setLevel(
-          getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
-        );
-        localStorage.setItem(
-          "virtualId",
-          usernameDetails?.data?.result?.virtualID
-        );
+        setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
+        localStorage.setItem("virtualId", usernameDetails?.result?.virtualID);
         let session_id = localStorage.getItem("sessionId");
 
         if (!session_id) {
@@ -602,13 +599,12 @@ const Assesment = ({ discoverStart }) => {
           process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
           localStorage.getItem("contentSessionId") !== null
         ) {
-          const getPointersDetails = await axios.get(
-            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${usernameDetails?.data?.result?.virtualID}/${session_id}?language=${lang}`
-          );
-          setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+          fetchUserPoints().then((points) => {
+            setPoints(points);
+          });
         }
 
-        dispatch(setVirtualId(usernameDetails?.data?.result?.virtualID));
+        dispatch(setVirtualId(usernameDetails?.result?.virtualID));
       })();
     } else {
       (async () => {
@@ -621,17 +617,16 @@ const Assesment = ({ discoverStart }) => {
         }
         localStorage.setItem("virtualId", virtualId);
         const language = lang;
-        const getMilestoneDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${virtualId}?language=${language}`
+        const getMilestoneDetails = await getFetchMilestoneDetails(
+          virtualId,
+          language
         );
         localStorage.setItem(
           "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails.data })
+          JSON.stringify({ ...getMilestoneDetails })
         );
         setLevel(
-          Number(
-            getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
-          )
+          Number(getMilestoneDetails?.data?.milestone_level?.replace("m", ""))
         );
         let sessionId = getLocalData("sessionId");
 
@@ -645,10 +640,9 @@ const Assesment = ({ discoverStart }) => {
           virtualId &&
           localStorage.getItem("contentSessionId") !== null
         ) {
-          const getPointersDetails = await axios.get(
-            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
-          );
-          setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+          fetchUserPoints().then((points) => {
+            setPoints(points);
+          });
         }
       })();
     }

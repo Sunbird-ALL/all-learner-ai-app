@@ -15,8 +15,6 @@ const AudioRecorder = (props) => {
   const mediaStreamRef = useRef(null);
   const [showLoader, setShowLoader] = useState(false);
 
-  console.log("pageName", props.pageName);
-
   useEffect(() => {
     // Cleanup when component unmounts
     return () => {
