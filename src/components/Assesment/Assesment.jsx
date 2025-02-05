@@ -572,21 +572,24 @@ const Assesment = ({ discoverStart }) => {
     dispatch(setVirtualId(localStorage.getItem("virtualId")));
     let contentSessionId = localStorage.getItem("contentSessionId");
     localStorage.setItem("sessionId", contentSessionId);
-    if (discoverStart && username && !localStorage.getItem("virtualId")) {
+    const TOKEN = localStorage.getItem("apiToken");
+    let virtualId;
+    if (TOKEN) {
+      const tokenDetails = jwtDecode(TOKEN);
+      virtualId = tokenDetails?.virtual_id;
+    }
+
+    if (discoverStart && username && !virtualId) {
       (async () => {
         setLocalData("profileName", username);
         const usernameDetails = await fetchVirtualId(username);
-        const getMilestoneDetails = await getFetchMilestoneDetails(
-          usernameDetails?.result?.virtualID,
-          lang
-        );
+        const getMilestoneDetails = await getFetchMilestoneDetails(lang);
 
         localStorage.setItem(
           "getMilestone",
           JSON.stringify({ ...getMilestoneDetails })
         );
         setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
-        localStorage.setItem("virtualId", usernameDetails?.result?.virtualID);
         let session_id = localStorage.getItem("sessionId");
 
         if (!session_id) {
@@ -604,23 +607,12 @@ const Assesment = ({ discoverStart }) => {
           });
         }
 
-        dispatch(setVirtualId(usernameDetails?.result?.virtualID));
+        dispatch(setVirtualId(virtualId));
       })();
     } else {
       (async () => {
-        let virtualId;
-
-        if (getParameter("virtualId", window.location.search)) {
-          virtualId = getParameter("virtualId", window.location.search);
-        } else {
-          virtualId = localStorage.getItem("virtualId");
-        }
-        localStorage.setItem("virtualId", virtualId);
         const language = lang;
-        const getMilestoneDetails = await getFetchMilestoneDetails(
-          virtualId,
-          language
-        );
+        const getMilestoneDetails = await getFetchMilestoneDetails(language);
         localStorage.setItem(
           "getMilestone",
           JSON.stringify({ ...getMilestoneDetails })
@@ -648,7 +640,12 @@ const Assesment = ({ discoverStart }) => {
     }
   }, [lang]);
 
-  const { virtualId } = useSelector((state) => state.user);
+  const TOKEN = localStorage.getItem("apiToken");
+  let virtualId;
+  if (TOKEN) {
+    const tokenDetails = jwtDecode(TOKEN);
+    virtualId = JSON.stringify(tokenDetails?.virtual_id);
+  }
 
   const handleOpenVideo = () => {
     if (process.env.REACT_APP_SHOW_HELP_VIDEO === "true") {

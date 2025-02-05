@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Typography, TextField, Button, Grid } from "@mui/material";
 import "./LoginPage.css"; // Import the CSS file
 import { fetchVirtualId } from "../../services/userservice/userService";
+import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -19,10 +20,10 @@ const LoginPage = () => {
 
     try {
       const usernameDetails = await fetchVirtualId(username);
-
-      if (usernameDetails?.result?.virtualID) {
+      const tokenDetails = jwtDecode(usernameDetails?.result?.token);
+      localStorage.setItem("apiToken", usernameDetails?.result?.token);
+      if (tokenDetails?.virtual_id) {
         localStorage.setItem("profileName", username);
-        localStorage.setItem("virtualId", usernameDetails.result.virtualID);
         navigate("/discover-start");
       } else {
         alert("Enter correct username and password");

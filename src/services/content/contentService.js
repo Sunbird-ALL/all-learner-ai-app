@@ -1,10 +1,19 @@
 import axios from "axios";
 import config from "../../utils/urlConstants.json";
+import { getLocalData } from "../../utils/constants";
 
 const API_BASE_URL_CONTENT_SERVICE =
   process.env.REACT_APP_CONTENT_SERVICE_APP_HOST;
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJ2aXJ0dWFsX2lkIjo1ODU5NDk5OTc5fQ.58zZunu96NzTU-0qOL-I86nVaafUdXyX5Dw78v6E2sQ";
+
+const getHeaders = () => {
+  const token = getLocalData("apiToken");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+};
 
 export const fetchAssessmentData = async (lang) => {
   try {
@@ -14,17 +23,12 @@ export const fetchAssessmentData = async (lang) => {
         tags: ["ASER"],
         language: lang,
       },
-      {
-        headers: {
-          authorization: `Bearer ${TOKEN}`,
-          "Content-Type": "application/json",
-        },
-      }
+      getHeaders()
     );
     return response.data;
   } catch (error) {
     console.error("Error fetching assessment:", error);
-    throw error; // Rethrow the error for handling in the calling function
+    throw error;
   }
 };
 
@@ -35,7 +39,8 @@ export const fetchPaginatedContent = async (
 ) => {
   try {
     const response = await axios.get(
-      `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_PAGINATION}?page=${page}&limit=${limit}&collectionId=${collectionId}`
+      `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_PAGINATION}?page=${page}&limit=${limit}&collectionId=${collectionId}`,
+      getHeaders()
     );
     return response.data;
   } catch (error) {

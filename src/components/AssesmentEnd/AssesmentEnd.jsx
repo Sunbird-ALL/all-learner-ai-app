@@ -39,10 +39,7 @@ const AssesmentEnd = () => {
       const lang = getLocalData("lang");
       const previous_level = getLocalData("previous_level");
       setPreviousLevel(previous_level?.replace("m", ""));
-      const getMilestoneDetails = await getFetchMilestoneDetails(
-        virtualId,
-        lang
-      );
+      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
       const { data } = getMilestoneDetails;
       setLevel(data.milestone_level);
       setLocalData("userLevel", data.milestone_level?.replace("m", ""));

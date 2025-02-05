@@ -1,14 +1,32 @@
 import axios from "axios";
 import { getLocalData } from "../../utils/constants";
 import config from "../../utils/urlConstants.json";
+import { jwtDecode } from "jwt-decode";
 
 const API_BASE_URL_ORCHESTRATION =
   process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST;
+const TOKEN = localStorage.getItem("apiToken");
+let virtualId;
+if (TOKEN) {
+  const tokenDetails = jwtDecode(TOKEN);
+  virtualId = JSON.stringify(tokenDetails?.virtual_id);
+}
 
-export const getLessonProgressByID = async (virtualId, lang) => {
+const getHeaders = () => {
+  const token = getLocalData("apiToken");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+};
+
+export const getLessonProgressByID = async (lang) => {
   try {
     const response = await axios.get(
-      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_LESSON_PROGRESS_BY_ID}/${virtualId}?language=${lang}`
+      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_LESSON_PROGRESS_BY_ID}?language=${lang}`,
+      getHeaders()
     );
     return response.data;
   } catch (error) {
@@ -20,11 +38,11 @@ export const getLessonProgressByID = async (virtualId, lang) => {
 export const fetchUserPoints = async () => {
   try {
     const sessionId = getLocalData("sessionId");
-    const virtualId = getLocalData("virtualId");
     const lang = getLocalData("lang");
 
     const response = await axios.get(
-      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
+      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_POINTER}/${sessionId}?language=${lang}`,
+      getHeaders()
     );
     return response?.data?.result?.totalLanguagePoints || 0;
   } catch (error) {
@@ -34,7 +52,6 @@ export const fetchUserPoints = async () => {
 };
 
 export const addPointer = async (points, milestone) => {
-  const userId = localStorage.getItem("virtualId");
   const sessionId = localStorage.getItem("sessionId");
   const lang = getLocalData("lang");
 
@@ -42,18 +59,13 @@ export const addPointer = async (points, milestone) => {
     const response = await axios.post(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.ADD_POINTER}`,
       {
-        userId: userId,
+        userId: virtualId,
         sessionId: sessionId,
         points: points,
         language: lang,
         milestone: milestone,
       },
-      {
-        // headers: {
-        //   'Authorization': `Bearer ${token}`,
-        //   'Content-Type': 'application/json',
-        // }
-      }
+      getHeaders()
     );
     return response.data;
   } catch (error) {
@@ -67,13 +79,12 @@ export const createLearnerProgress = async (
   milestoneLevel,
   totalSyllableCount
 ) => {
-  const userId = localStorage.getItem("virtualId");
   const sessionId = localStorage.getItem("sessionId");
   const language = localStorage.getItem("lang");
 
   try {
     const requestBody = {
-      userId: userId,
+      userId: virtualId,
       sessionId: sessionId,
       subSessionId: subSessionId,
       milestoneLevel: milestoneLevel,
@@ -84,7 +95,8 @@ export const createLearnerProgress = async (
     }
     const response = await axios.post(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.CREATE_LEARNER_PROGRESS}`,
-      requestBody
+      requestBody,
+      getHeaders()
     );
     return response.data;
   } catch (error) {
@@ -94,7 +106,6 @@ export const createLearnerProgress = async (
 };
 
 export const addLesson = async ({
-  userId,
   sessionId,
   milestone = "practice",
   lesson = "0",
@@ -106,14 +117,15 @@ export const addLesson = async ({
     const response = await axios.post(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.ADD_LESSON}`,
       {
-        userId: userId,
+        userId: virtualId,
         sessionId: sessionId,
         milestone: milestone,
         lesson: lesson,
         progress: progress,
         language: language,
         milestoneLevel: milestoneLevel,
-      }
+      },
+      getHeaders()
     );
     return response.data;
   } catch (error) {

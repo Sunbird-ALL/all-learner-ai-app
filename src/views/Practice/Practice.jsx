@@ -502,7 +502,6 @@ const Practice = () => {
             subSessionId: sub_session_id,
             currentContentType,
             sessionId,
-            virtualId,
             totalSyllableCount,
             mechanism,
           });
@@ -523,7 +522,6 @@ const Practice = () => {
           if (getSetData.sessionResult === "pass") {
             try {
               await addLesson({
-                userId: virtualId,
                 sessionId,
                 milestone: `practice`,
                 lesson: "0",
@@ -546,7 +544,6 @@ const Practice = () => {
           currentPracticeProgress = 0;
         }
         await addLesson({
-          userId: virtualId,
           sessionId: sessionId,
           milestone: `practice`,
           lesson: newPracticeStep,
@@ -562,7 +559,6 @@ const Practice = () => {
 
         const resGetContent = await getContent(
           currentGetContent.criteria,
-          virtualId,
           lang,
           limit,
           {
@@ -672,10 +668,7 @@ const Practice = () => {
         sessionId = uniqueId();
         localStorage.setItem("sessionId", sessionId);
       }
-      const getMilestoneDetails = await getFetchMilestoneDetails(
-        virtualId,
-        lang
-      );
+      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
 
       // TODO: validate the getMilestoneDetails API return
 
@@ -687,7 +680,7 @@ const Practice = () => {
 
       setLevel(level);
 
-      const resLessons = await getLessonProgressByID(virtualId, lang);
+      const resLessons = await getLessonProgressByID(lang);
 
       // TODO: Handle Error for lessons - no lesson progress - starting point should be P1
 
@@ -724,7 +717,6 @@ const Practice = () => {
 
       const resWord = await getContent(
         currentGetContent.criteria,
-        virtualId,
         lang,
         limit,
         {
@@ -759,7 +751,6 @@ const Practice = () => {
       setIsShowCase(showcaseLevel);
       if (showcaseLevel) {
         await addLesson({
-          userId: virtualId,
           sessionId: sessionId,
           milestone: "showcase",
           lesson: userState,
@@ -805,7 +796,6 @@ const Practice = () => {
         fromBack: true,
       };
       await addLesson({
-        userId: virtualId,
         sessionId: sessionId,
         milestone: "practice",
         lesson: newCurrentPracticeStep,
@@ -826,7 +816,6 @@ const Practice = () => {
 
       const resWord = await getContent(
         currentGetContent.criteria,
-        virtualId,
         lang,
         limit,
         {

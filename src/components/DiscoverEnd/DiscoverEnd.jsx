@@ -40,10 +40,7 @@ const SpeakSentenceComponent = () => {
       }
       const virtualId = getLocalData("virtualId");
       const lang = getLocalData("lang");
-      const getMilestoneDetails = await getFetchMilestoneDetails(
-        virtualId,
-        lang
-      );
+      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
       const { data } = getMilestoneDetails;
       setLevel(data.milestone_level);
       setLocalData("userLevel", data.milestone_level?.replace("m", ""));
