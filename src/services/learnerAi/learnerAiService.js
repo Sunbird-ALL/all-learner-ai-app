@@ -4,6 +4,7 @@ import { getLocalData } from "../../utils/constants";
 import { getVirtualId } from "../userservice/userService";
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
+const API_HOST_VERSION_NAME = process.env.REACT_APP_VERSION_NAME;
 
 const getHeaders = () => {
   const token = localStorage.getItem("apiToken");
@@ -17,7 +18,7 @@ const getHeaders = () => {
 
 export const getContent = async (criteria, lang, limit, options = {}) => {
   try {
-    let url = `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${criteria}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`;
+    let url = `${API_LEARNER_AI_APP_HOST}/${API_HOST_VERSION_NAME}/${config.URLS.GET_CONTENT}/${criteria}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`;
 
     if (options.mechanismId) url += `&mechanics_id=${options.mechanismId}`;
     if (options.competency) url += `&level_competency=${options.competency}`;
@@ -36,7 +37,7 @@ export const getFetchMilestoneDetails = async (lang) => {
   if (localStorage.getItem("apiToken")) {
     try {
       const response = await axios.get(
-        `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}?language=${lang}`,
+        `${API_LEARNER_AI_APP_HOST}/${API_HOST_VERSION_NAME}/${config.URLS.GET_MILESTONE}/user?language=${lang}`,
         getHeaders()
       );
       return response.data;
@@ -58,7 +59,7 @@ export const fetchGetSetResult = async (
 
   try {
     const response = await axios.post(
-      `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
+      `${API_LEARNER_AI_APP_HOST}/${API_HOST_VERSION_NAME}/${config.URLS.GET_SET_RESULT}`,
       {
         sub_session_id: subSessionId,
         contentType: currentContentType,
@@ -85,7 +86,7 @@ export const getSetResultPractice = async ({
 }) => {
   try {
     const response = await axios.post(
-      `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
+      `${API_LEARNER_AI_APP_HOST}/${API_HOST_VERSION_NAME}/${config.URLS.GET_SET_RESULT}`,
       {
         sub_session_id: subSessionId,
         contentType: currentContentType,
@@ -106,7 +107,7 @@ export const getSetResultPractice = async ({
 export const updateLearnerProfile = async (lang, requestBody) => {
   try {
     const response = await axios.post(
-      `${API_LEARNER_AI_APP_HOST}/${config.URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
+      `${API_LEARNER_AI_APP_HOST}/${API_HOST_VERSION_NAME}/${config.URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
       requestBody,
       getHeaders()
     );

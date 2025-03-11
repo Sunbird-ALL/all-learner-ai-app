@@ -5,6 +5,7 @@ import { getVirtualId } from "../userservice/userService";
 
 const API_BASE_URL_ORCHESTRATION =
   process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST;
+const API_HOST_VERSION_NAME = process.env.REACT_APP_VERSION_NAME;
 
 const getHeaders = () => {
   const token = localStorage.getItem("apiToken");
@@ -19,7 +20,7 @@ const getHeaders = () => {
 export const getLessonProgressByID = async (lang) => {
   try {
     const response = await axios.get(
-      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_LESSON_PROGRESS_BY_ID}?language=${lang}`,
+      `${API_BASE_URL_ORCHESTRATION}/${API_HOST_VERSION_NAME}/${config.URLS.GET_LESSON_PROGRESS_BY_ID}?language=${lang}`,
       getHeaders()
     );
     return response.data;
@@ -35,7 +36,7 @@ export const fetchUserPoints = async () => {
     const lang = getLocalData("lang");
 
     const response = await axios.get(
-      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_POINTER}/${sessionId}?language=${lang}`,
+      `${API_BASE_URL_ORCHESTRATION}/${API_HOST_VERSION_NAME}/${config.URLS.GET_POINTER}/${sessionId}?language=${lang}`,
       getHeaders()
     );
     return response?.data?.result?.totalLanguagePoints || 0;
@@ -51,7 +52,7 @@ export const addPointer = async (points, milestone) => {
 
   try {
     const response = await axios.post(
-      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.ADD_POINTER}`,
+      `${API_BASE_URL_ORCHESTRATION}/${API_HOST_VERSION_NAME}/${config.URLS.ADD_POINTER}`,
       {
         sessionId: sessionId,
         points: points,
@@ -86,7 +87,7 @@ export const createLearnerProgress = async (
       requestBody.totalSyllableCount = totalSyllableCount;
     }
     const response = await axios.post(
-      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.CREATE_LEARNER_PROGRESS}`,
+      `${API_BASE_URL_ORCHESTRATION}/${API_HOST_VERSION_NAME}/${config.URLS.CREATE_LEARNER_PROGRESS}`,
       requestBody,
       getHeaders()
     );
@@ -107,7 +108,7 @@ export const addLesson = async ({
 }) => {
   try {
     const response = await axios.post(
-      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.ADD_LESSON}`,
+      `${API_BASE_URL_ORCHESTRATION}/${API_HOST_VERSION_NAME}/${config.URLS.ADD_LESSON}`,
       {
         sessionId: sessionId,
         milestone: milestone,

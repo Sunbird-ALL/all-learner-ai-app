@@ -4,6 +4,7 @@ import { getLocalData } from "../../utils/constants";
 
 const API_BASE_URL_CONTENT_SERVICE =
   process.env.REACT_APP_CONTENT_SERVICE_APP_HOST;
+const API_HOST_VERSION_NAME = process.env.REACT_APP_VERSION_NAME;
 
 const getHeaders = () => {
   const token = localStorage.getItem("apiToken");
@@ -18,7 +19,7 @@ const getHeaders = () => {
 export const fetchAssessmentData = async (lang) => {
   try {
     const response = await axios.post(
-      `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_ASSESSMENT}`,
+      `${API_BASE_URL_CONTENT_SERVICE}/${API_HOST_VERSION_NAME}/${config.URLS.GET_ASSESSMENT}`,
       {
         tags: ["ASER"],
         language: lang,
@@ -39,7 +40,7 @@ export const fetchPaginatedContent = async (
 ) => {
   try {
     const response = await axios.get(
-      `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_PAGINATION}?page=${page}&limit=${limit}&collectionId=${collectionId}`,
+      `${API_BASE_URL_CONTENT_SERVICE}/${API_HOST_VERSION_NAME}/${config.URLS.GET_PAGINATION}?page=${page}&limit=${limit}&collectionId=${collectionId}`,
       getHeaders()
     );
     return response.data;
