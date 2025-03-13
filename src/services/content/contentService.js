@@ -6,13 +6,17 @@ const API_BASE_URL_CONTENT_SERVICE =
   process.env.REACT_APP_CONTENT_SERVICE_APP_HOST;
 
 const getHeaders = () => {
-  const token = localStorage.getItem("apiToken");
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  };
+  const token = localStorage.getItem("apiToken"); // Fetch token for V2
+  if (token) {
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+  } else {
+    return {}; // No headers for V1
+  }
 };
 
 export const fetchAssessmentData = async (lang) => {

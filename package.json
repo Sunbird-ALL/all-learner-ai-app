@@ -53,7 +53,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:tn-staging": "env-cmd -f .env.tn-staging react-scripts start",
+    "start:tn-dev": "env-cmd -f .env.tn-dev react-scripts start",
+    "start:testrig-dev": "env-cmd -f .env.testrig-dev react-scripts start",
     "build": "react-scripts build",
+    "build:tn-staging": "env-cmd -f .env.tn-staging react-scripts build",
+    "build:tn-dev": "env-cmd -f .env.tn-dev react-scripts build",
+    "build:testrig-dev": "env-cmd -f .env.testrig-dev react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettier:cli": "prettier \"src/**/*.js\" \"**/*.json\"",
@@ -91,6 +97,7 @@
   },
   "devDependencies": {
     "@mui/styles": "^5.15.10",
+    "env-cmd": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",

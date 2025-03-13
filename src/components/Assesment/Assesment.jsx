@@ -568,6 +568,8 @@ const Assesment = ({ discoverStart }) => {
   const [openLangModal, setOpenLangModal] = useState(false);
   const [lang, setLang] = useState(getLocalData("lang") || "en");
   const [points, setPoints] = useState(0);
+  const TOKEN =
+    localStorage.getItem("apiToken") || localStorage.getItem("virtualId");
 
   useEffect(() => {
     // const level = getLocalData('userLevel');
@@ -653,7 +655,6 @@ const Assesment = ({ discoverStart }) => {
     }
   }, [lang]);
 
-  const TOKEN = localStorage.getItem("apiToken");
   let virtualId;
   // if (TOKEN) {
   //   const tokenDetails = jwtDecode(TOKEN);

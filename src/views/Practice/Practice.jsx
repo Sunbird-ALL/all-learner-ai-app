@@ -155,7 +155,7 @@ const Practice = () => {
     try {
       const lang = getLocalData("lang");
 
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const sessionId = getLocalData("sessionId");
 
       let practiceProgress = getLocalData("practiceProgress");
@@ -367,7 +367,7 @@ const Practice = () => {
     try {
       setLoading(true);
       const lang = getLocalData("lang");
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       let sessionId = getLocalData("sessionId");
 
       if (!sessionId) {
@@ -490,7 +490,7 @@ const Practice = () => {
 
   const handleBack = async () => {
     if (progressData.currentPracticeStep > 0) {
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const sessionId = getLocalData("sessionId");
       const lang = getLocalData("lang");
       let practiceProgress = {};

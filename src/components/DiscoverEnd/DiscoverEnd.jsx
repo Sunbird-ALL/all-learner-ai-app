@@ -36,7 +36,7 @@ const SpeakSentenceComponent = () => {
         let audio = new Audio(levelCompleteAudioSrc);
         audio.play();
       }
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const lang = getLocalData("lang");
       const getMilestoneDetails = await getFetchMilestoneDetails(lang);
       const { data } = getMilestoneDetails;

@@ -343,7 +343,7 @@ function VoiceAnalyser(props) {
 
     try {
       const lang = getLocalData("lang");
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const sessionId = getLocalData("sessionId");
       const sub_session_id = getLocalData("sub_session_id");
       const { originalText, contentType, contentId, currentLine } = props;

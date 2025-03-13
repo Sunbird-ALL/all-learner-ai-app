@@ -4330,7 +4330,8 @@ export const randomizeArray = (arr) => {
 };
 
 export function handleEncrypt(value) {
-  const API_SECRET_KEY = localStorage.getItem("apiToken");
+  const API_SECRET_KEY =
+    localStorage.getItem("apiToken") || localStorage.getItem("virtualId");
   try {
     var ciphertext = CryptoJS.AES.encrypt(
       JSON.stringify(value),
@@ -4344,7 +4345,8 @@ export function handleEncrypt(value) {
 }
 
 export function handleDecrypt(value) {
-  const API_SECRET_KEY = localStorage.getItem("apiToken");
+  const API_SECRET_KEY =
+    localStorage.getItem("apiToken") || localStorage.getItem("virtualId");
   try {
     var bytes = CryptoJS.AES.decrypt(value, API_SECRET_KEY);
     var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));

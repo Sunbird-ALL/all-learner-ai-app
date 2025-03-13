@@ -35,7 +35,7 @@ const AssesmentEnd = () => {
         let audio = new Audio(levelCompleteAudioSrc);
         audio.play();
       }
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const lang = getLocalData("lang");
       const previous_level = getLocalData("previous_level");
       setPreviousLevel(previous_level?.replace("m", ""));
