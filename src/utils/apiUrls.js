@@ -1,5 +1,5 @@
 const API_CONFIG = {
-  DEFAULT: {
+  public: {
     GET_VIRTUAL_ID: "api/virtualId/generateVirtualID",
     GET_MILESTONE: "scores/getMilestone/user",
     GET_POINTER: "api/pointer/getPoints",
@@ -44,6 +44,6 @@ const API_CONFIG = {
 };
 
 // Load the correct version based on environment variable (default to v1)
-const API_URLS = API_CONFIG[process.env.REACT_APP_VERSION_NAME || "v1"];
+const API_URLS = API_CONFIG[process.env.REACT_APP_VERSION_NAME || "public"];
 
 export default API_URLS;
