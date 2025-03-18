@@ -348,7 +348,7 @@ function VoiceAnalyser(props) {
       const virtualId = getLocalData("virtualId");
       const sessionId = userJourney?.sessionId || getLocalData("sessionId");
       const sub_session_id =
-        userJourney?.subSessionIid || getLocalData("sub_session_id");
+        userJourney?.subSessionId || getLocalData("sub_session_id");
       const { originalText, contentType, contentId, currentLine } = props;
       const responseStartTime = new Date().getTime();
       let responseText = "";

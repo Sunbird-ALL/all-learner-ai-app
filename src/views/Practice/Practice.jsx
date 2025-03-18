@@ -39,7 +39,7 @@ import {
   setGetMilestone,
   setMechanismId,
   setPracticeProgress,
-  setPreviousLevel,
+  setPreviousLevelData,
   setSessionId,
   setSubSessionId,
 } from "../../store/slices/userJourney.slice";
@@ -220,7 +220,7 @@ const Practice = () => {
 
         if (isShowCase || isGameOver) {
           const sub_session_id =
-            userJourney?.subSessionIid || getLocalData("sub_session_id");
+            userJourney?.subSessionId || getLocalData("sub_session_id");
           const getSetResultRes = await getSetResultPractice({
             subSessionId: sub_session_id,
             currentContentType,
@@ -252,7 +252,7 @@ const Practice = () => {
               sessionId
             );
           }
-          dispatch(setPreviousLevel(getSetData.previous_level));
+          dispatch(setPreviousLevelData(getSetData.previous_level));
           if (getSetData.sessionResult === "pass") {
             try {
               await addLesson({

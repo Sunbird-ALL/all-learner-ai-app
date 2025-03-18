@@ -22,6 +22,7 @@ import { fetchUserPoints } from "../../services/orchestration/orchestrationServi
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setPreviousLevelData,
   setSessionId,
   setUserLevel,
 } from "../../store/slices/userJourney.slice";
@@ -45,7 +46,7 @@ const AssesmentEnd = () => {
       const lang = userJourney.language;
       const previous_level =
         userJourney?.previousLevel || getLocalData("previous_level");
-      dispatch(setPreviousLevel(previous_level?.replace("m", "")));
+      dispatch(setPreviousLevelData(previous_level?.replace("m", "")));
       const getMilestoneDetails = await getFetchMilestoneDetails(
         lang,
         userJourney.token

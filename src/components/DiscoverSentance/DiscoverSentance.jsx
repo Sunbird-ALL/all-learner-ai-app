@@ -145,7 +145,7 @@ const SpeakSentenceComponent = () => {
         setCurrentQuestion(currentQuestion + 1);
       } else if (currentQuestion === questions.length - 1) {
         const sub_session_id =
-          userJourney?.subSessionIid || getLocalData("sub_session_id");
+          userJourney?.subSessionId || getLocalData("sub_session_id");
         const getSetResultRes = await fetchGetSetResult(
           sub_session_id,
           currentContentType,

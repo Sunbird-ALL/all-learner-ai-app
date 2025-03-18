@@ -12,7 +12,7 @@ const userJourneySlice = createSlice({
     mechanism_id: "",
     sessionId: "",
     storyTitle: "",
-    subSessionIid: "",
+    subSessionId: "",
     userLevel: "",
     previousLevel: "",
   },
@@ -45,12 +45,12 @@ const userJourneySlice = createSlice({
       state.storyTitle = action.payload;
     },
     setSubSessionId(state, action) {
-      state.subSessionIid = action.payload;
+      state.subSessionId = action.payload;
     },
     setUserLevel(state, action) {
       state.userLevel = action.payload;
     },
-    setPreviousLevel(state, action) {
+    setPreviousLevelData(state, action) {
       state.previousLevel = action.payload;
     },
   },
@@ -68,7 +68,7 @@ export const {
   setStoryTitle,
   setSubSessionId,
   setUserLevel,
-  setPreviousLevel,
+  setPreviousLevelData,
 } = userJourneySlice.actions;
 
 export default userJourneySlice.reducer;
