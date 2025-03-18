@@ -19,6 +19,7 @@ import { Modal } from "@mui/material";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import CloseIcon from "@mui/icons-material/Close";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
+import { useSelector } from "react-redux";
 
 // TODO: update it as per File name OR update file name as per export variable name
 const Mechanics2 = ({
@@ -57,8 +58,9 @@ const Mechanics2 = ({
   options,
   audio,
   isNextButtonCalled,
-  setIsNextButtonCalled
+  setIsNextButtonCalled,
 }) => {
+  const userJourney = useSelector((state) => state.userJourney);
   const [words, setWords] = useState([]);
   const [sentences, setSentences] = useState([]);
   const [zoomOpen, setZoomOpen] = useState(false);
@@ -77,7 +79,7 @@ const Mechanics2 = ({
     isAns: false,
   });
 
-  const lang = getLocalData("lang");
+  const lang = userJourney?.language;
 
   //console.log('Mechanics3', answer);
 
@@ -514,7 +516,7 @@ const Mechanics2 = ({
               showOnlyListen: !answer?.isAns,
               setOpenMessageDialog,
               isNextButtonCalled,
-              setIsNextButtonCalled
+              setIsNextButtonCalled,
             }}
           />
         </Box>

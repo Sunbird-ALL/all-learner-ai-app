@@ -6,7 +6,6 @@ import {
   BadMood,
   GoodMood,
   getLocalData,
-  setLocalData,
 } from "../../utils/constants";
 import homeBackground from "../../assets/images/homeBackground.png";
 import { Typography } from "../../../node_modules/@mui/material/index";
@@ -21,8 +20,15 @@ import { uniqueId } from "../../services/utilService";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import { fetchUserPoints } from "../../services/orchestration/orchestrationService";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setSessionId,
+  setUserLevel,
+} from "../../store/slices/userJourney.slice";
 
 const AssesmentEnd = () => {
+  const dispatch = useDispatch();
+  const userJourney = useSelector((state) => state.userJourney);
   const [shake, setShake] = useState(true);
   const [level, setLevel] = useState("");
   const [previousLevel, setPreviousLevel] = useState("");
@@ -36,23 +42,28 @@ const AssesmentEnd = () => {
         audio.play();
       }
       const virtualId = getLocalData("virtualId");
-      const lang = getLocalData("lang");
-      const previous_level = getLocalData("previous_level");
-      setPreviousLevel(previous_level?.replace("m", ""));
-      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+      const lang = userJourney.language;
+      const previous_level =
+        userJourney?.previousLevel || getLocalData("previous_level");
+      dispatch(setPreviousLevel(previous_level?.replace("m", "")));
+      const getMilestoneDetails = await getFetchMilestoneDetails(
+        lang,
+        userJourney.token
+      );
       const { data } = getMilestoneDetails;
       setLevel(data.milestone_level);
-      setLocalData("userLevel", data.milestone_level?.replace("m", ""));
-      let sessionId = getLocalData("sessionId");
+
+      dispatch(setUserLevel(data.milestone_level?.replace("m", "")));
+      let sessionId = userJourney?.sessionId || getLocalData("sessionId");
       if (!sessionId) {
         sessionId = uniqueId();
-        setLocalData("sessionId", sessionId);
+        dispatch(setSessionId(sessionId));
       }
       if (
         process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
         localStorage.getItem("contentSessionId") !== null
       ) {
-        fetchUserPoints()
+        fetchUserPoints(userJourney?.token, userJourney?.language, sessionId)
           .then((points) => {
             setPoints(points);
           })

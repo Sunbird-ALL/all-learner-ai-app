@@ -26,8 +26,12 @@ import {
   fetchAssessmentData,
   fetchPaginatedContent,
 } from "../../services/content/contentService";
+import { useDispatch, useSelector } from "react-redux";
+import { setSubSessionId } from "../../store/slices/userJourney.slice";
 
 const SpeakSentenceComponent = () => {
+  const dispatch = useDispatch();
+  const userJourney = useSelector((state) => state.userJourney);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const navigate = useNavigate();
   const [recordedAudio, setRecordedAudio] = useState("");
@@ -79,7 +83,11 @@ const SpeakSentenceComponent = () => {
 
   useEffect(() => {
     if (!localStorage.getItem("contentSessionId")) {
-      fetchUserPoints()
+      fetchUserPoints(
+        userJourney?.token,
+        userJourney?.language,
+        userJourney?.sessionId
+      )
         .then((points) => {
           setPoints(points);
         })
@@ -92,7 +100,7 @@ const SpeakSentenceComponent = () => {
 
   useEffect(() => {
     if (questions?.length) {
-      setLocalData("sub_session_id", uniqueId());
+      dispatch(setSubSessionId(uniqueId()));
     }
   }, [questions]);
 
@@ -118,7 +126,7 @@ const SpeakSentenceComponent = () => {
     setEnableNext(false);
 
     try {
-      const lang = getLocalData("lang");
+      const lang = userJourney.language;
 
       // await axios.post(
       //   `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
@@ -136,18 +144,28 @@ const SpeakSentenceComponent = () => {
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       } else if (currentQuestion === questions.length - 1) {
-        const sub_session_id = getLocalData("sub_session_id");
+        const sub_session_id =
+          userJourney?.subSessionIid || getLocalData("sub_session_id");
         const getSetResultRes = await fetchGetSetResult(
           sub_session_id,
           currentContentType,
           currentCollectionId,
-          totalSyllableCount
+          totalSyllableCount,
+          userJourney?.token,
+          userJourney?.language,
+          sub_session_id
         );
         if (!(localStorage.getItem("contentSessionId") !== null)) {
           let point = 1;
           let milestone = "m0";
           try {
-            const result = await addPointer(point, milestone);
+            const result = await addPointer(
+              point,
+              milestone,
+              userJourney?.token,
+              userJourney?.language,
+              sub_session_id
+            );
             setPoints(result?.result?.totalLanguagePoints || 0);
           } catch (error) {
             setPoints(0);
@@ -161,13 +179,16 @@ const SpeakSentenceComponent = () => {
         setInitialAssesment(false);
         const { data: getSetData } = getSetResultRes;
         const data = JSON.stringify(getSetData);
-        Log(data, "discovery", "ET");
+        Log(data, "discovery", "ET", userJourney?.language, userJourney?.token);
         if (process.env.REACT_APP_POST_LEARNER_PROGRESS === "true") {
           try {
             const milestoneLevel = getSetData?.currentLevel;
             const result = await createLearnerProgress(
               sub_session_id,
-              milestoneLevel
+              milestoneLevel,
+              userJourney?.token,
+              userJourney?.language,
+              userJourney?.sessionId
             );
           } catch (error) {
             console.error("Error creating learner progress:", error);
@@ -186,7 +207,10 @@ const SpeakSentenceComponent = () => {
             (elem) => elem.category === "Sentence"
           );
           const resSentencesPagination = await fetchPaginatedContent(
-            sentences?.[newSentencePassedCounter]?.collectionId
+            sentences?.[newSentencePassedCounter]?.collectionId,
+            1,
+            5,
+            userJourney?.token
           );
           setCurrentContentType("Sentence");
           setTotalSyllableCount(resSentencesPagination?.totalSyllableCount);
@@ -210,7 +234,10 @@ const SpeakSentenceComponent = () => {
             (elem) => elem.category === "Word"
           );
           const resWordsPagination = await fetchPaginatedContent(
-            words?.collectionId
+            words?.collectionId,
+            1,
+            5,
+            userJourney?.token
           );
           setCurrentContentType("Word");
           setTotalSyllableCount(resWordsPagination?.totalSyllableCount);
@@ -248,9 +275,12 @@ const SpeakSentenceComponent = () => {
     (async () => {
       let quesArr = [];
       try {
-        const lang = getLocalData("lang");
+        const lang = userJourney?.language;
         // Fetch assessment data
-        const resAssessment = await fetchAssessmentData(lang);
+        const resAssessment = await fetchAssessmentData(
+          lang,
+          userJourney?.token
+        );
         const sentences = resAssessment?.data?.find(
           (elem) => elem.category === "Sentence"
         );
@@ -261,7 +291,10 @@ const SpeakSentenceComponent = () => {
         }
         // Fetch paginated content
         const resPagination = await fetchPaginatedContent(
-          sentences.collectionId
+          sentences.collectionId,
+          1,
+          5,
+          userJourney?.token
         );
 
         // Update state

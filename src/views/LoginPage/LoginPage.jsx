@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Typography, TextField, Button, Grid } from "@mui/material";
 import { fetchVirtualId } from "../../services/userservice/userService";
-import { jwtDecode } from "jwt-decode";
 import "./LoginPage.css"; // Import the CSS file
-import { setLocalData } from "../../utils/constants";
+import { setProfileName, setToken } from "../../store/slices/userJourney.slice";
+import { useDispatch } from "react-redux";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,10 +24,12 @@ const LoginPage = () => {
       const usernameDetails = await fetchVirtualId(username);
       let token = usernameDetails?.result?.token;
 
-      localStorage.setItem("apiToken", token);
+      // localStorage.setItem("apiToken", token);
+      localStorage.setItem("isLogin", true);
       // const tokenDetails = jwtDecode(token);
       if (token) {
-        setLocalData("profileName", username);
+        dispatch(setToken(token));
+        dispatch(setProfileName(username));
         navigate("/discover-start");
       } else {
         alert("Enter correct username and password");

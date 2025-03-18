@@ -10,8 +10,10 @@ import { initialize, end } from "./services/telementryService";
 import { startEvent } from "./services/callTelemetryIntract";
 import "@tekdi/all-telemetry-sdk/index.js";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const App = () => {
+  const userJourney = useSelector((state) => state.userJourney);
   const navigate = useNavigate();
   const ranonce = useRef(false);
   useEffect(() => {
@@ -46,7 +48,7 @@ const App = () => {
       });
       if (!ranonce.current) {
         if (localStorage.getItem("contentSessionId") === null) {
-          startEvent();
+          startEvent(userJourney?.languages, userJourney?.token);
         }
         ranonce.current = true;
       }

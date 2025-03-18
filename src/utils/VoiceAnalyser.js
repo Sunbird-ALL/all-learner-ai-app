@@ -35,6 +35,7 @@ import S3Client from "../config/awsS3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import usePreloadAudio from "../hooks/usePreloadAudio";
 import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
+import { useSelector } from "react-redux";
 /* eslint-disable */
 
 const AudioPath = {
@@ -60,6 +61,7 @@ const AudioPath = {
 };
 const currentIndex = localStorage.getItem("index") || 1;
 function VoiceAnalyser(props) {
+  const userJourney = useSelector((state) => state.userJourney);
   const [loadCnt, setLoadCnt] = useState(0);
   const [loader, setLoader] = useState(false);
   const [pauseAudio, setPauseAudio] = useState(false);
@@ -73,7 +75,7 @@ function VoiceAnalyser(props) {
   const [isStudentAudioPlaying, setIsStudentAudioPlaying] = useState(false);
   const [temp_Student_audio, set_temp_Student_audio] = useState(null);
   const { callUpdateLearner } = props;
-  const lang = getLocalData("lang");
+  const lang = userJourney?.language;
   const { livesData, setLivesData } = props;
   const [isAudioPreprocessing, setIsAudioPreprocessing] = useState(
     process.env.REACT_APP_IS_AUDIOPREPROCESSING === "true"
@@ -276,7 +278,7 @@ function VoiceAnalyser(props) {
   useEffect(() => {
     if (props.isNextButtonCalled) {
       if (recordedAudioBase64 !== "") {
-        const lang = getLocalData("lang") || "ta";
+        const lang = userJourney.language || "ta";
         fetchASROutput(lang, recordedAudioBase64);
         setLoader(true);
         setEnableAfterLoad(false);
@@ -342,10 +344,11 @@ function VoiceAnalyser(props) {
     //     });
 
     try {
-      const lang = getLocalData("lang");
+      const lang = userJourney.language;
       const virtualId = getLocalData("virtualId");
-      const sessionId = getLocalData("sessionId");
-      const sub_session_id = getLocalData("sub_session_id");
+      const sessionId = userJourney?.sessionId || getLocalData("sessionId");
+      const sub_session_id =
+        userJourney?.subSessionIid || getLocalData("sub_session_id");
       const { originalText, contentType, contentId, currentLine } = props;
       const responseStartTime = new Date().getTime();
       let responseText = "";
@@ -363,7 +366,8 @@ function VoiceAnalyser(props) {
         sub_session_id,
         contentId,
         contentType,
-        mechanics_id: getLocalData("mechanism_id") || "",
+        mechanics_id:
+          userJourney?.mechanism_id || getLocalData("mechanism_id") || "",
       };
 
       if (props.selectedOption) {
@@ -375,7 +379,11 @@ function VoiceAnalyser(props) {
       }
 
       if (callUpdateLearner) {
-        const updateLearnerData = await updateLearnerProfile(lang, requestBody);
+        const updateLearnerData = await updateLearnerProfile(
+          lang,
+          requestBody,
+          userJourney.token
+        );
         //TODO: handle  Errors
         data = updateLearnerData;
         responseText = data.responseText;
@@ -508,7 +516,9 @@ function VoiceAnalyser(props) {
             { duration: responseDuration },
           ],
         },
-        "ET"
+        "ET",
+        userJourney?.language,
+        userJourney?.token
       );
 
       setApiResponse(callUpdateLearner ? data.status : "success");

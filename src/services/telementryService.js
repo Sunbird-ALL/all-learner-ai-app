@@ -68,11 +68,11 @@ export const initialize = async ({ context, config, metadata }) => {
   }
 };
 
-export const start = (duration) => {
+export const start = (duration, languages, token) => {
   try {
     startTime = Date.now(); // Record the start time
     CsTelemetryModule.instance.telemetryService.raiseStartTelemetry({
-      options: getEventOptions(),
+      options: getEventOptions(languages, token),
       edata: {
         type: "content",
         mode: "play",
@@ -86,22 +86,22 @@ export const start = (duration) => {
   }
 };
 
-export const response = (context, telemetryMode) => {
+export const response = (context, telemetryMode, language, token) => {
   if (checkTelemetryMode(telemetryMode)) {
     CsTelemetryModule.instance.telemetryService.raiseResponseTelemetry(
       {
         ...context,
       },
-      getEventOptions()
+      getEventOptions(language, token)
     );
   }
 };
 
-export const Log = (context, pageid, telemetryMode) => {
+export const Log = (context, pageid, telemetryMode, language, token) => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
       CsTelemetryModule.instance.telemetryService.raiseLogTelemetry({
-        options: getEventOptions(),
+        options: getEventOptions(language, token),
         edata: {
           type: "api_call",
           level: "TRACE",
@@ -224,7 +224,7 @@ const getVirtualId = () => {
   return TOKEN;
 };
 
-export const getEventOptions = () => {
+export const getEventOptions = (languages, token) => {
   var emis_username = "anonymous";
   var buddyUserId = "";
 
@@ -267,14 +267,14 @@ export const getEventOptions = () => {
         },
         { id: playSessionId, type: "PlaySession" },
         { id: userId, type: userType },
-        { id: getLocalData("lang") || "ta", type: "language" },
+        { id: languages || "ta", type: "language" },
         { id: userDetails?.school_name, type: "school_name" },
         {
           id: userDetails?.class_studying_id,
           type: "class_studying_id",
         },
         { id: userDetails?.udise_code, type: "udise_code" },
-        { id: getVirtualId() || null, type: "virtualId" },
+        { id: token || null, type: "virtualId" },
       ],
       rollup: {},
     },
