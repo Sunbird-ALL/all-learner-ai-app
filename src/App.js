@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 const App = () => {
   const userJourney = useSelector((state) => state.userJourney);
   const navigate = useNavigate();
+  const TOKEN = userJourney?.token || localStorage.getItem("apiToken");
   const ranonce = useRef(false);
   useEffect(() => {
     const initService = async (visitorId) => {
@@ -48,7 +49,7 @@ const App = () => {
       });
       if (!ranonce.current) {
         if (localStorage.getItem("contentSessionId") === null) {
-          startEvent(userJourney?.languages, userJourney?.token);
+          startEvent(userJourney?.languages, TOKEN);
         }
         ranonce.current = true;
       }

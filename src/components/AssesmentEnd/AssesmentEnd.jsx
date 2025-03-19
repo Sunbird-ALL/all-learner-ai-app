@@ -35,10 +35,10 @@ const AssesmentEnd = () => {
   const [previousLevel, setPreviousLevel] = useState("");
   const [points, setPoints] = useState(0);
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
+  const token = userJourney.token || localStorage.getItem("apiToken");
 
   useEffect(() => {
     (async () => {
-      const token = userJourney.token || localStorage.getItem("apiToken");
       if (levelCompleteAudioSrc) {
         let audio = new Audio(levelCompleteAudioSrc);
         audio.play();
@@ -62,7 +62,7 @@ const AssesmentEnd = () => {
         process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
         localStorage.getItem("contentSessionId") !== null
       ) {
-        fetchUserPoints(userJourney?.token, userJourney?.language, sessionId)
+        fetchUserPoints(token, userJourney?.language, sessionId)
           .then((points) => {
             setPoints(points);
           })
