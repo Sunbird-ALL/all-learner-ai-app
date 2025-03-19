@@ -344,6 +344,8 @@ function VoiceAnalyser(props) {
     //     });
 
     try {
+      const token = userJourney.token || localStorage.getItem("apiToken");
+
       const lang = userJourney.language;
       const virtualId = getLocalData("virtualId");
       const sessionId = userJourney?.sessionId || getLocalData("sessionId");
@@ -382,7 +384,7 @@ function VoiceAnalyser(props) {
         const updateLearnerData = await updateLearnerProfile(
           lang,
           requestBody,
-          userJourney.token
+          token
         );
         //TODO: handle  Errors
         data = updateLearnerData;
@@ -518,7 +520,7 @@ function VoiceAnalyser(props) {
         },
         "ET",
         userJourney?.language,
-        userJourney?.token
+        token
       );
 
       setApiResponse(callUpdateLearner ? data.status : "success");

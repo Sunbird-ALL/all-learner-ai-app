@@ -37,16 +37,14 @@ const SpeakSentenceComponent = () => {
 
   useEffect(() => {
     (async () => {
+      const token = userJourney.token || localStorage.getItem("apiToken");
       if (levelCompleteAudioSrc) {
         let audio = new Audio(levelCompleteAudioSrc);
         audio.play();
       }
       const virtualId = getLocalData("virtualId");
       const lang = userJourney?.language;
-      const getMilestoneDetails = await getFetchMilestoneDetails(
-        lang,
-        userJourney.token
-      );
+      const getMilestoneDetails = await getFetchMilestoneDetails(lang, token);
       const { data } = getMilestoneDetails;
       setLevel(data.milestone_level);
       dispatch(setUserLevel(data.milestone_level?.replace("m", "")));

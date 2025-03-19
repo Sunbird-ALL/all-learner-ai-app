@@ -79,6 +79,7 @@ const Practice = () => {
   const [percentage, setPercentage] = useState("");
   const [fluency, setFluency] = useState(false);
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
+  const token = userJourney.token || localStorage.getItem("apiToken");
 
   const gameOver = (data, isUserPass) => {
     const userWon = isUserPass;
@@ -211,7 +212,7 @@ const Practice = () => {
           const result = await addPointer(
             points,
             milestone,
-            userJourney.token,
+            token,
             userJourney.language,
             sessionId
           );
@@ -227,19 +228,13 @@ const Practice = () => {
             sessionId,
             totalSyllableCount,
             mechanism,
-            token: userJourney.token,
+            token: token,
             lang: userJourney.language,
           });
           const { data: getSetData } = getSetResultRes;
 
           const data = JSON.stringify(getSetData);
-          Log(
-            data,
-            "practice",
-            "ET",
-            userJourney?.language,
-            userJourney?.token
-          );
+          Log(data, "practice", "ET", userJourney?.language, token);
           setPercentage(getSetData?.percentage);
           checkFluency(currentContentType, getSetData?.fluency);
           if (process.env.REACT_APP_POST_LEARNER_PROGRESS === "true") {
@@ -247,7 +242,7 @@ const Practice = () => {
               sub_session_id,
               getSetData?.currentLevel,
               totalSyllableCount,
-              userJourney?.token,
+              token,
               userJourney?.language,
               sessionId
             );
@@ -262,7 +257,7 @@ const Practice = () => {
                 progress: 0,
                 language: lang,
                 milestoneLevel: getSetData.currentLevel,
-                token: userJourney.token,
+                token: token,
               });
               gameOver({ link: "/assesment-end" }, true);
               return;
@@ -285,7 +280,7 @@ const Practice = () => {
           progress: currentPracticeProgress,
           language: lang,
           milestoneLevel: `m${level}`,
-          token: userJourney.token,
+          token: token,
         });
 
         if (newPracticeStep === 0 || newPracticeStep === 5 || isGameOver) {
@@ -303,7 +298,7 @@ const Practice = () => {
             tags: currentGetContent?.tags,
             storyMode: currentGetContent?.storyMode,
           },
-          userJourney.token
+          token
         );
 
         //TODO: required only for S1 and S2
@@ -407,7 +402,7 @@ const Practice = () => {
       }
       const getMilestoneDetails = await getFetchMilestoneDetails(
         userJourney.language,
-        userJourney.token
+        token
       );
 
       // TODO: validate the getMilestoneDetails API return
@@ -421,7 +416,7 @@ const Practice = () => {
 
       const resLessons = await getLessonProgressByID(
         userJourney.language,
-        userJourney.token
+        token
       );
 
       // TODO: Handle Error for lessons - no lesson progress - starting point should be P1
@@ -430,11 +425,7 @@ const Practice = () => {
         process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
         localStorage.getItem("contentSessionId") !== null
       ) {
-        fetchUserPoints(
-          userJourney.token,
-          userJourney.language,
-          userJourney?.sessionId
-        )
+        fetchUserPoints(token, userJourney.language, userJourney?.sessionId)
           .then((points) => {
             setPoints(points);
           })
@@ -472,7 +463,7 @@ const Practice = () => {
           tags: currentGetContent?.tags,
           storyMode: currentGetContent?.storyMode,
         },
-        userJourney.token
+        token
       );
       // TODO: handle error if resWord is empty
 
@@ -505,7 +496,7 @@ const Practice = () => {
           progress: 0,
           language: lang,
           milestoneLevel: `m${level}`,
-          token: userJourney.token,
+          token: token,
         });
       }
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
@@ -557,7 +548,7 @@ const Practice = () => {
         progress: (newCurrentPracticeStep / practiceSteps.length) * 100,
         language: lang,
         milestoneLevel: `m${level}`,
-        token: userJourney.token,
+        token: token,
       });
 
       setProgressData(practiceProgress);
@@ -576,7 +567,7 @@ const Practice = () => {
           tags: currentGetContent?.tags,
           storyMode: currentGetContent?.storyMode,
         },
-        userJourney.token
+        token
       );
       setTotalSyllableCount(resWord?.totalSyllableCount);
       setLivesData({

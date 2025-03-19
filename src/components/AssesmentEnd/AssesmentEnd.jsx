@@ -38,6 +38,7 @@ const AssesmentEnd = () => {
 
   useEffect(() => {
     (async () => {
+      const token = userJourney.token || localStorage.getItem("apiToken");
       if (levelCompleteAudioSrc) {
         let audio = new Audio(levelCompleteAudioSrc);
         audio.play();
@@ -47,10 +48,7 @@ const AssesmentEnd = () => {
       const previous_level =
         userJourney?.previousLevel || getLocalData("previous_level");
       dispatch(setPreviousLevelData(previous_level?.replace("m", "")));
-      const getMilestoneDetails = await getFetchMilestoneDetails(
-        lang,
-        userJourney.token
-      );
+      const getMilestoneDetails = await getFetchMilestoneDetails(lang, token);
       const { data } = getMilestoneDetails;
       setLevel(data.milestone_level);
 

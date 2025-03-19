@@ -570,6 +570,7 @@ const Assesment = ({ discoverStart }) => {
   const [openLangModal, setOpenLangModal] = useState(false);
   const [lang, setLang] = useState(userJourney?.language || "en");
   const [points, setPoints] = useState(0);
+  const TOKEN = userJourney?.token || localStorage.getItem("apiToken");
 
   useEffect(() => {
     // const level = getLocalData('userLevel');
@@ -588,10 +589,7 @@ const Assesment = ({ discoverStart }) => {
       (async () => {
         dispatch(setProfileName(username));
         const usernameDetails = await fetchVirtualId(username);
-        const getMilestoneDetails = await getFetchMilestoneDetails(
-          lang,
-          userJourney.token
-        );
+        const getMilestoneDetails = await getFetchMilestoneDetails(lang, TOKEN);
 
         dispatch(setGetMilestone(...getMilestoneDetails));
         setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
@@ -606,7 +604,7 @@ const Assesment = ({ discoverStart }) => {
           process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
           localStorage.getItem("contentSessionId") !== null
         ) {
-          fetchUserPoints(userJourney?.token, userJourney?.language, session_id)
+          fetchUserPoints(TOKEN, userJourney?.language, session_id)
             .then((points) => {
               setPoints(points);
             })
@@ -623,7 +621,7 @@ const Assesment = ({ discoverStart }) => {
         const language = lang;
         const getMilestoneDetails = await getFetchMilestoneDetails(
           language,
-          userJourney.token
+          TOKEN
         );
         dispatch(setGetMilestone(getMilestoneDetails));
         setLevel(
@@ -641,7 +639,7 @@ const Assesment = ({ discoverStart }) => {
           TOKEN &&
           localStorage.getItem("contentSessionId") !== null
         ) {
-          fetchUserPoints(userJourney.token, userJourney.language, sessionId)
+          fetchUserPoints(TOKEN, userJourney.language, sessionId)
             .then((points) => {
               setPoints(points);
             })
@@ -654,7 +652,6 @@ const Assesment = ({ discoverStart }) => {
     }
   }, [lang]);
 
-  const TOKEN = userJourney?.token || localStorage.getItem("apiToken");
   let virtualId;
   // if (TOKEN) {
   //   const tokenDetails = jwtDecode(TOKEN);

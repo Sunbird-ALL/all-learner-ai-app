@@ -52,6 +52,7 @@ const SpeakSentenceComponent = () => {
   const [openMessageDialog, setOpenMessageDialog] = useState("");
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
+  const token = userJourney.token || localStorage.getItem("apiToken");
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
 
@@ -83,11 +84,7 @@ const SpeakSentenceComponent = () => {
 
   useEffect(() => {
     if (!localStorage.getItem("contentSessionId")) {
-      fetchUserPoints(
-        userJourney?.token,
-        userJourney?.language,
-        userJourney?.sessionId
-      )
+      fetchUserPoints(token, userJourney?.language, userJourney?.sessionId)
         .then((points) => {
           setPoints(points);
         })
@@ -151,7 +148,7 @@ const SpeakSentenceComponent = () => {
           currentContentType,
           currentCollectionId,
           totalSyllableCount,
-          userJourney?.token,
+          token,
           userJourney?.language,
           sub_session_id
         );
@@ -162,7 +159,7 @@ const SpeakSentenceComponent = () => {
             const result = await addPointer(
               point,
               milestone,
-              userJourney?.token,
+              token,
               userJourney?.language,
               sub_session_id
             );
@@ -179,14 +176,14 @@ const SpeakSentenceComponent = () => {
         setInitialAssesment(false);
         const { data: getSetData } = getSetResultRes;
         const data = JSON.stringify(getSetData);
-        Log(data, "discovery", "ET", userJourney?.language, userJourney?.token);
+        Log(data, "discovery", "ET", userJourney?.language, token);
         if (process.env.REACT_APP_POST_LEARNER_PROGRESS === "true") {
           try {
             const milestoneLevel = getSetData?.currentLevel;
             const result = await createLearnerProgress(
               sub_session_id,
               milestoneLevel,
-              userJourney?.token,
+              token,
               userJourney?.language,
               userJourney?.sessionId
             );
@@ -210,7 +207,7 @@ const SpeakSentenceComponent = () => {
             sentences?.[newSentencePassedCounter]?.collectionId,
             1,
             5,
-            userJourney?.token
+            token
           );
           setCurrentContentType("Sentence");
           setTotalSyllableCount(resSentencesPagination?.totalSyllableCount);
@@ -237,7 +234,7 @@ const SpeakSentenceComponent = () => {
             words?.collectionId,
             1,
             5,
-            userJourney?.token
+            token
           );
           setCurrentContentType("Word");
           setTotalSyllableCount(resWordsPagination?.totalSyllableCount);
@@ -277,10 +274,7 @@ const SpeakSentenceComponent = () => {
       try {
         const lang = userJourney?.language;
         // Fetch assessment data
-        const resAssessment = await fetchAssessmentData(
-          lang,
-          userJourney?.token
-        );
+        const resAssessment = await fetchAssessmentData(lang, token);
         const sentences = resAssessment?.data?.find(
           (elem) => elem.category === "Sentence"
         );
@@ -294,7 +288,7 @@ const SpeakSentenceComponent = () => {
           sentences.collectionId,
           1,
           5,
-          userJourney?.token
+          token
         );
 
         // Update state
