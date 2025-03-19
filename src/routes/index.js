@@ -68,7 +68,9 @@ const routData = [
   },
 ];
 // add login route for test rig
-const TOKEN = localStorage.getItem("apiToken");
+const TOKEN =
+  localStorage.getItem("isLogin") === "true" ||
+  localStorage.getItem("apiToken");
 // let virtualId;
 // if (TOKEN) {
 //   const tokenDetails = jwtDecode(TOKEN);

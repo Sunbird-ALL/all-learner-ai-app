@@ -12,13 +12,11 @@ import {
   sendTestRigScore,
   setLocalData,
 } from "../../utils/constants";
-import axios from "axios";
 import WordsOrImage from "../../components/Mechanism/WordsOrImage";
 import { uniqueId } from "../../services/utilService";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import { splitGraphemes } from "split-graphemes";
 import { Typography } from "@mui/material";
-import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../../components/Assesment/Assesment";
 import { Log } from "../../services/telementryService";
 import Mechanics6 from "../../components/Practice/Mechanics6";
@@ -36,8 +34,19 @@ import {
   getFetchMilestoneDetails,
   getSetResultPractice,
 } from "../../services/learnerAi/learnerAiService";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setGetMilestone,
+  setMechanismId,
+  setPracticeProgress,
+  setPreviousLevelData,
+  setSessionId,
+  setSubSessionId,
+} from "../../store/slices/userJourney.slice";
 
 const Practice = () => {
+  const dispatch = useDispatch();
+  const userJourney = useSelector((state) => state.userJourney);
   const [page, setPage] = useState("");
   const [recordedAudio, setRecordedAudio] = useState("");
   const [voiceText, setVoiceText] = useState("");
@@ -65,11 +74,12 @@ const Practice = () => {
   const LIVES = 5;
   const TARGETS_PERCENTAGE = 0.3;
   const [openMessageDialog, setOpenMessageDialog] = useState("");
-  const lang = getLocalData("lang");
+  const lang = userJourney.language;
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
   const [percentage, setPercentage] = useState("");
   const [fluency, setFluency] = useState(false);
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
+  const token = userJourney.token || localStorage.getItem("apiToken");
 
   const gameOver = (data, isUserPass) => {
     const userWon = isUserPass;
@@ -114,7 +124,7 @@ const Practice = () => {
 
   useEffect(() => {
     if (isShowCase) {
-      setLocalData("sub_session_id", uniqueId());
+      dispatch(setSubSessionId(uniqueId()));
     }
   }, [isShowCase]);
 
@@ -153,14 +163,15 @@ const Practice = () => {
     setEnableNext(false);
 
     try {
-      const lang = getLocalData("lang");
+      const lang = userJourney.language;
 
       const virtualId = getLocalData("virtualId");
-      const sessionId = getLocalData("sessionId");
+      const sessionId = userJourney?.sessionId || getLocalData("sessionId");
 
-      let practiceProgress = getLocalData("practiceProgress");
-
-      practiceProgress = practiceProgress ? JSON.parse(practiceProgress) : {};
+      let practiceProgress =
+        userJourney?.practiceProgress ||
+        JSON.parse(getLocalData("practiceProgress")) ||
+        {};
 
       let currentPracticeStep = "";
       let currentPracticeProgress = "";
@@ -198,33 +209,45 @@ const Practice = () => {
         } else {
           let points = 1;
           let milestone = `m${level}`;
-          const result = await addPointer(points, milestone);
+          const result = await addPointer(
+            points,
+            milestone,
+            token,
+            userJourney.language,
+            sessionId
+          );
           setPoints(result?.result?.totalLanguagePoints || 0);
         }
 
         if (isShowCase || isGameOver) {
-          const sub_session_id = getLocalData("sub_session_id");
+          const sub_session_id =
+            userJourney?.subSessionId || getLocalData("sub_session_id");
           const getSetResultRes = await getSetResultPractice({
             subSessionId: sub_session_id,
             currentContentType,
             sessionId,
             totalSyllableCount,
             mechanism,
+            token: token,
+            lang: userJourney.language,
           });
           const { data: getSetData } = getSetResultRes;
 
           const data = JSON.stringify(getSetData);
-          Log(data, "practice", "ET");
+          Log(data, "practice", "ET", userJourney?.language, token);
           setPercentage(getSetData?.percentage);
           checkFluency(currentContentType, getSetData?.fluency);
           if (process.env.REACT_APP_POST_LEARNER_PROGRESS === "true") {
             await createLearnerProgress(
               sub_session_id,
               getSetData?.currentLevel,
-              totalSyllableCount
+              totalSyllableCount,
+              token,
+              userJourney?.language,
+              sessionId
             );
           }
-          setLocalData("previous_level", getSetData.previous_level);
+          dispatch(setPreviousLevelData(getSetData.previous_level));
           if (getSetData.sessionResult === "pass") {
             try {
               await addLesson({
@@ -234,6 +257,7 @@ const Practice = () => {
                 progress: 0,
                 language: lang,
                 milestoneLevel: getSetData.currentLevel,
+                token: token,
               });
               gameOver({ link: "/assesment-end" }, true);
               return;
@@ -256,6 +280,7 @@ const Practice = () => {
           progress: currentPracticeProgress,
           language: lang,
           milestoneLevel: `m${level}`,
+          token: token,
         });
 
         if (newPracticeStep === 0 || newPracticeStep === 5 || isGameOver) {
@@ -272,7 +297,8 @@ const Practice = () => {
             competency: currentGetContent?.competency,
             tags: currentGetContent?.tags,
             storyMode: currentGetContent?.storyMode,
-          }
+          },
+          token
         );
 
         //TODO: required only for S1 and S2
@@ -307,7 +333,7 @@ const Practice = () => {
           currentPracticeProgress,
           currentPracticeStep: newPracticeStep,
         };
-        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        dispatch(setPracticeProgress(practiceProgress));
         setProgressData(practiceProgress);
         setLocalData("storyTitle", resGetContent?.name);
 
@@ -325,7 +351,7 @@ const Practice = () => {
           currentPracticeProgress,
           currentPracticeStep: newPracticeStep,
         };
-        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        dispatch(setPracticeProgress(practiceProgress));
         setProgressData(practiceProgress);
       }
     } catch (error) {
@@ -366,18 +392,21 @@ const Practice = () => {
     let quesArr = [];
     try {
       setLoading(true);
-      const lang = getLocalData("lang");
+      const lang = userJourney.language;
       const virtualId = getLocalData("virtualId");
-      let sessionId = getLocalData("sessionId");
+      let sessionId = userJourney?.sessionId || getLocalData("sessionId");
 
       if (!sessionId) {
         sessionId = uniqueId();
-        setLocalData("sessionId", sessionId);
+        dispatch(setSessionId(sessionId));
       }
-      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+      const getMilestoneDetails = await getFetchMilestoneDetails(
+        userJourney.language,
+        token
+      );
 
       // TODO: validate the getMilestoneDetails API return
-      setLocalData("getMilestone", JSON.stringify({ ...getMilestoneDetails }));
+      dispatch(setGetMilestone(getMilestoneDetails));
 
       let level =
         Number(getMilestoneDetails?.data?.milestone_level?.replace("m", "")) ||
@@ -385,7 +414,10 @@ const Practice = () => {
 
       setLevel(level);
 
-      const resLessons = await getLessonProgressByID(lang);
+      const resLessons = await getLessonProgressByID(
+        userJourney.language,
+        token
+      );
 
       // TODO: Handle Error for lessons - no lesson progress - starting point should be P1
 
@@ -393,7 +425,7 @@ const Practice = () => {
         process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
         localStorage.getItem("contentSessionId") !== null
       ) {
-        fetchUserPoints()
+        fetchUserPoints(token, userJourney.language, userJourney?.sessionId)
           .then((points) => {
             setPoints(points);
           })
@@ -408,8 +440,10 @@ const Practice = () => {
         : 0;
 
       // TODO: revisit this - looks like not required
-      let practiceProgress = getLocalData("practiceProgress");
-      practiceProgress = practiceProgress ? JSON.parse(practiceProgress) : {};
+      let practiceProgress =
+        userJourney?.practiceProgress ||
+        JSON.parse(getLocalData("practiceProgress")) ||
+        {};
 
       practiceProgress = {
         currentQuestion: 0,
@@ -428,7 +462,8 @@ const Practice = () => {
           competency: currentGetContent?.competency,
           tags: currentGetContent?.tags,
           storyMode: currentGetContent?.storyMode,
-        }
+        },
+        token
       );
       // TODO: handle error if resWord is empty
 
@@ -461,10 +496,11 @@ const Practice = () => {
           progress: 0,
           language: lang,
           milestoneLevel: `m${level}`,
+          token: token,
         });
       }
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
-      setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+      dispatch(setPracticeProgress(practiceProgress));
       setProgressData(practiceProgress);
       setLoading(false);
     } catch (error) {
@@ -478,11 +514,11 @@ const Practice = () => {
   }, []);
 
   useEffect(() => {
-    setLocalData("mechanism_id", (mechanism && mechanism.id) || "");
+    dispatch(setMechanismId((mechanism && mechanism.id) || ""));
   }, [mechanism]);
 
   const getCurrentContent = (stepKey) => {
-    const lang = getLocalData("lang") || "en";
+    const lang = userJourney.language || "en";
     return levelGetContent[lang]?.[level]?.find(
       (elem) => elem.title === practiceSteps?.[stepKey]?.name
     );
@@ -491,8 +527,8 @@ const Practice = () => {
   const handleBack = async () => {
     if (progressData.currentPracticeStep > 0) {
       const virtualId = getLocalData("virtualId");
-      const sessionId = getLocalData("sessionId");
-      const lang = getLocalData("lang");
+      const sessionId = userJourney?.sessionId || getLocalData("sessionId");
+      const lang = userJourney.language;
       let practiceProgress = {};
       let newCurrentPracticeStep =
         progressData.currentPracticeStep === 5
@@ -512,6 +548,7 @@ const Practice = () => {
         progress: (newCurrentPracticeStep / practiceSteps.length) * 100,
         language: lang,
         milestoneLevel: `m${level}`,
+        token: token,
       });
 
       setProgressData(practiceProgress);
@@ -529,7 +566,8 @@ const Practice = () => {
           competency: currentGetContent?.competency,
           tags: currentGetContent?.tags,
           storyMode: currentGetContent?.storyMode,
-        }
+        },
+        token
       );
       setTotalSyllableCount(resWord?.totalSyllableCount);
       setLivesData({
@@ -550,7 +588,7 @@ const Practice = () => {
         setMechanism(currentGetContent.mechanism);
       }, 1000);
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
-      setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+      dispatch(setPracticeProgress(practiceProgress));
     } else {
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
         navigate("/");

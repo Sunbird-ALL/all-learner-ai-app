@@ -14,6 +14,7 @@ import MainLayout from "../Layouts.jsx/MainLayout";
 import correctSound from "../../assets/audio/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
+import { useSelector } from "react-redux";
 
 const Mechanics2 = ({
   page,
@@ -49,6 +50,7 @@ const Mechanics2 = ({
   loading,
   setOpenMessageDialog,
 }) => {
+  const userJourney = useSelector((state) => state.userJourney);
   const [words, setWords] = useState([]);
   const [sentences, setSentences] = useState([]);
 
@@ -57,7 +59,7 @@ const Mechanics2 = ({
   const [shake, setShake] = useState(false);
   const [wordToFill, setWordToFill] = useState("");
   const [disabledWords, setDisabledWords] = useState(false);
-  const lang = getLocalData("lang");
+  const lang = userJourney?.language;
   let wordToCheck = type === "audio" ? parentWords : wordToFill;
 
   useEffect(() => {
@@ -97,7 +99,7 @@ const Mechanics2 = ({
   //console.log('Mechanics6');
 
   const getSimilarWords = async (wordForFindingHomophones) => {
-    const lang = getLocalData("lang");
+    const lang = userJourney?.language;
     // const isFillInTheBlanks = type === "fillInTheBlank";
     const wordToSimilar = wordForFindingHomophones
       ? wordForFindingHomophones

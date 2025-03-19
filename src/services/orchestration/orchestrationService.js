@@ -1,26 +1,25 @@
 import axios from "axios";
 import { getLocalData } from "../../utils/constants";
 import config from "../../utils/urlConstants.json";
-import { getVirtualId } from "../userservice/userService";
 
 const API_BASE_URL_ORCHESTRATION =
   process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST;
 
-const getHeaders = () => {
-  const token = localStorage.getItem("apiToken");
+const getHeaders = (token) => {
+  const apiToken = token ? token : localStorage.getItem("apiToken");
   return {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${apiToken}`,
       "Content-Type": "application/json",
     },
   };
 };
 
-export const getLessonProgressByID = async (lang) => {
+export const getLessonProgressByID = async (lang, token) => {
   try {
     const response = await axios.get(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_LESSON_PROGRESS_BY_ID}?language=${lang}`,
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {
@@ -29,14 +28,11 @@ export const getLessonProgressByID = async (lang) => {
   }
 };
 
-export const fetchUserPoints = async () => {
+export const fetchUserPoints = async (token, lang, sessionId) => {
   try {
-    const sessionId = getLocalData("sessionId");
-    const lang = getLocalData("lang");
-
     const response = await axios.get(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_POINTER}/${sessionId}?language=${lang}`,
-      getHeaders()
+      getHeaders(token)
     );
     return response?.data?.result?.totalLanguagePoints || 0;
   } catch (error) {
@@ -45,10 +41,7 @@ export const fetchUserPoints = async () => {
   }
 };
 
-export const addPointer = async (points, milestone) => {
-  const sessionId = getLocalData("sessionId");
-  const lang = getLocalData("lang");
-
+export const addPointer = async (points, milestone, token, lang, sessionId) => {
   try {
     const response = await axios.post(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.ADD_POINTER}`,
@@ -58,7 +51,7 @@ export const addPointer = async (points, milestone) => {
         language: lang,
         milestone: milestone,
       },
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {
@@ -70,17 +63,17 @@ export const addPointer = async (points, milestone) => {
 export const createLearnerProgress = async (
   subSessionId,
   milestoneLevel,
-  totalSyllableCount
+  totalSyllableCount,
+  token,
+  lang,
+  sessionId
 ) => {
-  const sessionId = getLocalData("sessionId");
-  const language = getLocalData("lang");
-
   try {
     const requestBody = {
       sessionId: sessionId,
       subSessionId: subSessionId,
       milestoneLevel: milestoneLevel,
-      language: language,
+      language: lang,
     };
     if (totalSyllableCount !== undefined) {
       requestBody.totalSyllableCount = totalSyllableCount;
@@ -88,7 +81,7 @@ export const createLearnerProgress = async (
     const response = await axios.post(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.CREATE_LEARNER_PROGRESS}`,
       requestBody,
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {
@@ -104,6 +97,7 @@ export const addLesson = async ({
   progress = 0,
   language,
   milestoneLevel,
+  token,
 }) => {
   try {
     const response = await axios.post(
@@ -116,7 +110,7 @@ export const addLesson = async ({
         language: language,
         milestoneLevel: milestoneLevel,
       },
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {

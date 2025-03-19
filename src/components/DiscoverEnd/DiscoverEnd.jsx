@@ -7,9 +7,11 @@ import back from "../../assets/images/back-arrow.svg";
 import discoverEndLeft from "../../assets/images/discover-end-left.svg";
 import discoverEndRight from "../../assets/images/discover-end-right.svg";
 import textureImage from "../../assets/images/textureImage.png";
-import { LetsStart, getLocalData, setLocalData } from "../../utils/constants";
+import { LetsStart, getLocalData } from "../../utils/constants";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserLevel } from "../../store/slices/userJourney.slice";
 
 const sectionStyle = {
   backgroundImage: `url(${textureImage})`,
@@ -26,22 +28,26 @@ const sectionStyle = {
 };
 
 const SpeakSentenceComponent = () => {
+  const dispatch = useDispatch();
+  const userJourney = useSelector((state) => state.userJourney);
+
   const [shake, setShake] = useState(true);
   const [level, setLevel] = useState("");
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
 
   useEffect(() => {
     (async () => {
+      const token = userJourney.token || localStorage.getItem("apiToken");
       if (levelCompleteAudioSrc) {
         let audio = new Audio(levelCompleteAudioSrc);
         audio.play();
       }
       const virtualId = getLocalData("virtualId");
-      const lang = getLocalData("lang");
-      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+      const lang = userJourney?.language;
+      const getMilestoneDetails = await getFetchMilestoneDetails(lang, token);
       const { data } = getMilestoneDetails;
       setLevel(data.milestone_level);
-      setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+      dispatch(setUserLevel(data.milestone_level?.replace("m", "")));
     })();
     setTimeout(() => {
       setShake(false);

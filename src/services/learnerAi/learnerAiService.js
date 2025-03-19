@@ -1,21 +1,26 @@
 import axios from "axios";
 import config from "../../utils/urlConstants.json";
 import { getLocalData } from "../../utils/constants";
-import { getVirtualId } from "../userservice/userService";
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
 
-const getHeaders = () => {
-  const token = localStorage.getItem("apiToken");
+const getHeaders = (token) => {
+  const apiToken = token ? token : localStorage.getItem("apiToken");
   return {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${apiToken}`,
       "Content-Type": "application/json",
     },
   };
 };
 
-export const getContent = async (criteria, lang, limit, options = {}) => {
+export const getContent = async (
+  criteria,
+  lang,
+  limit,
+  options = {},
+  token
+) => {
   try {
     let url = `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${criteria}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`;
 
@@ -24,7 +29,7 @@ export const getContent = async (criteria, lang, limit, options = {}) => {
     if (options.tags) url += `&tags=${options.tags}`;
     if (options.storyMode) url += `&story_mode=${options.storyMode}`;
 
-    const response = await axios.get(url, getHeaders());
+    const response = await axios.get(url, getHeaders(token));
     return response.data;
   } catch (error) {
     console.error("Error fetching content:", error);
@@ -32,12 +37,12 @@ export const getContent = async (criteria, lang, limit, options = {}) => {
   }
 };
 
-export const getFetchMilestoneDetails = async (lang) => {
-  if (localStorage.getItem("apiToken")) {
+export const getFetchMilestoneDetails = async (lang, token) => {
+  if (token) {
     try {
       const response = await axios.get(
         `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}?language=${lang}`,
-        getHeaders()
+        getHeaders(token)
       );
       return response.data;
     } catch (error) {
@@ -51,11 +56,11 @@ export const fetchGetSetResult = async (
   subSessionId,
   currentContentType,
   currentCollectionId,
-  totalSyllableCount
+  totalSyllableCount,
+  token,
+  lang,
+  session_id
 ) => {
-  const session_id = getLocalData("sessionId");
-  const lang = getLocalData("lang");
-
   try {
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
@@ -67,7 +72,7 @@ export const fetchGetSetResult = async (
         totalSyllableCount: totalSyllableCount,
         language: lang,
       },
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {
@@ -82,6 +87,8 @@ export const getSetResultPractice = async ({
   sessionId,
   totalSyllableCount,
   mechanism,
+  token,
+  lang,
 }) => {
   try {
     const response = await axios.post(
@@ -91,10 +98,10 @@ export const getSetResultPractice = async ({
         contentType: currentContentType,
         session_id: sessionId,
         totalSyllableCount: totalSyllableCount,
-        language: getLocalData("lang"),
+        language: lang,
         is_mechanics: mechanism && mechanism?.id ? true : false,
       },
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {
@@ -103,12 +110,12 @@ export const getSetResultPractice = async ({
   }
 };
 
-export const updateLearnerProfile = async (lang, requestBody) => {
+export const updateLearnerProfile = async (lang, requestBody, token) => {
   try {
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
       requestBody,
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {

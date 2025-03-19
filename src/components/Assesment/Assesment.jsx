@@ -15,19 +15,13 @@ import {
   SelectLanguageButton,
   StartAssessmentButton,
   getLocalData,
-  getParameter,
   languages,
   levelConfig,
-  setLocalData,
 } from "../../utils/constants";
 import practicebg from "../../assets/images/practice-bg.svg";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 import { useEffect, useState } from "react";
 import HelpLogo from "../../assets/help.png";
-import CloseIcon from "@mui/icons-material/Close";
-
-import axios from "../../../node_modules/axios/index";
-// import { useDispatch } from 'react-redux';
 import { setVirtualId } from "../../store/slices/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
@@ -44,7 +38,6 @@ import profilePic from "../../assets/images/profile_url.png";
 import textureImage from "../../assets/images/textureImage.png";
 import back from "../../assets/images/back-arrow.png";
 import { jwtDecode } from "jwt-decode";
-import config from "../../utils/urlConstants.json";
 import panda from "../../assets/images/panda.svg";
 import cryPanda from "../../assets/images/cryPanda.svg";
 import { uniqueId } from "../../services/utilService";
@@ -52,6 +45,12 @@ import { end } from "../../services/telementryService";
 import { fetchUserPoints } from "../../services/orchestration/orchestrationService";
 import { fetchVirtualId } from "../../services/userservice/userService";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
+import {
+  setGetMilestone,
+  setLanguage,
+  setProfileName,
+  setSessionId,
+} from "../../store/slices/userJourney.slice";
 
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
@@ -344,8 +343,10 @@ export const ProfileHeader = ({
   points = 0,
   handleBack,
 }) => {
-  const language = lang || getLocalData("lang");
-  const username = profileName || getLocalData("profileName");
+  const userJourney = useSelector((state) => state.userJourney);
+  const language = lang || userJourney?.language;
+  const username =
+    profileName || userJourney?.profileName || getLocalData("profileName");
   const navigate = useNavigate();
   const [openMessageDialog, setOpenMessageDialog] = useState("");
 
@@ -552,29 +553,31 @@ export const ProfileHeader = ({
 };
 
 const Assesment = ({ discoverStart }) => {
+  const userJourney = useSelector((state) => state.userJourney);
+  const dispatch = useDispatch();
   let username;
   if (localStorage.getItem("token") !== null) {
     let jwtToken = localStorage.getItem("token");
     var userDetails = jwtDecode(jwtToken);
     username = userDetails.student_name;
-    setLocalData("profileName", username);
+    dispatch(setProfileName(username));
   }
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [profileName, setProfileName] = useState(username);
   const [openMessageDialog, setOpenMessageDialog] = useState("");
   // let lang = searchParams.get("lang") || "ta";
   const [level, setLevel] = useState("");
-  const dispatch = useDispatch();
   const [openLangModal, setOpenLangModal] = useState(false);
-  const [lang, setLang] = useState(getLocalData("lang") || "en");
+  const [lang, setLang] = useState(userJourney?.language || "en");
   const [points, setPoints] = useState(0);
+  const TOKEN = userJourney?.token || localStorage.getItem("apiToken");
 
   useEffect(() => {
     // const level = getLocalData('userLevel');
     // setLevel(level);
-    setLocalData("lang", lang);
+    dispatch(setLanguage(lang));
     let contentSessionId = localStorage.getItem("contentSessionId");
-    setLocalData("sessionId", contentSessionId);
+    dispatch(setSessionId(contentSessionId));
     // const TOKEN = localStorage.getItem("apiToken");
     // let virtualId;
     // if (TOKEN) {
@@ -584,28 +587,24 @@ const Assesment = ({ discoverStart }) => {
 
     if (discoverStart && username && !TOKEN) {
       (async () => {
-        setLocalData("profileName", username);
+        dispatch(setProfileName(username));
         const usernameDetails = await fetchVirtualId(username);
-        const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+        const getMilestoneDetails = await getFetchMilestoneDetails(lang, TOKEN);
 
-        setLocalData(
-          "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails })
-        );
+        dispatch(setGetMilestone(getMilestoneDetails));
         setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
-        let session_id = getLocalData("sessionId");
+        let session_id = userJourney?.sessionId || getLocalData("sessionId");
 
         if (!session_id) {
           session_id = uniqueId();
-          setLocalData("sessionId", session_id);
+          dispatch(setSessionId(session_id));
         }
-
-        setLocalData("lang", lang || "ta");
+        dispatch(setLanguage(lang || "ta"));
         if (
           process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
           localStorage.getItem("contentSessionId") !== null
         ) {
-          fetchUserPoints()
+          fetchUserPoints(TOKEN, userJourney?.language, session_id)
             .then((points) => {
               setPoints(points);
             })
@@ -620,19 +619,19 @@ const Assesment = ({ discoverStart }) => {
     } else {
       (async () => {
         const language = lang;
-        const getMilestoneDetails = await getFetchMilestoneDetails(language);
-        setLocalData(
-          "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails })
+        const getMilestoneDetails = await getFetchMilestoneDetails(
+          language,
+          TOKEN
         );
+        dispatch(setGetMilestone(getMilestoneDetails));
         setLevel(
           Number(getMilestoneDetails?.data?.milestone_level?.replace("m", ""))
         );
-        let sessionId = getLocalData("sessionId");
+        let sessionId = userJourney?.sessionId || getLocalData("sessionId");
 
         if (!sessionId || sessionId === "null") {
           sessionId = uniqueId();
-          setLocalData("sessionId", sessionId);
+          dispatch(setSessionId(sessionId));
         }
 
         if (
@@ -640,7 +639,7 @@ const Assesment = ({ discoverStart }) => {
           TOKEN &&
           localStorage.getItem("contentSessionId") !== null
         ) {
-          fetchUserPoints()
+          fetchUserPoints(TOKEN, userJourney.language, sessionId)
             .then((points) => {
               setPoints(points);
             })
@@ -653,7 +652,6 @@ const Assesment = ({ discoverStart }) => {
     }
   }, [lang]);
 
-  const TOKEN = localStorage.getItem("apiToken");
   let virtualId;
   // if (TOKEN) {
   //   const tokenDetails = jwtDecode(TOKEN);
@@ -696,7 +694,7 @@ const Assesment = ({ discoverStart }) => {
 
   const navigate = useNavigate();
   const handleRedirect = () => {
-    const profileName = getLocalData("profileName");
+    const profileName = userJourney?.profileName || getLocalData("profileName");
     if (!username && !profileName && !TOKEN && level === 0) {
       // alert("please add username in query param");
       setOpenMessageDialog({

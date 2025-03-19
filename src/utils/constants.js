@@ -3000,7 +3000,7 @@ export const AssesmentCompletePlane = (props) => (
 
 export const Diamond = (props) => {
   const milestone =
-    JSON.parse(getLocalData("getMilestone")).data?.milestone_level || "m1";
+    props?.userJourney?.getMilestone?.data.milestone_level || "m1";
 
   // Define color mapping for each milestone
   const colorMap = {
@@ -4330,7 +4330,7 @@ export const randomizeArray = (arr) => {
 };
 
 export function handleEncrypt(value) {
-  const API_SECRET_KEY = localStorage.getItem("apiToken");
+  const API_SECRET_KEY = process.env.REACT_APP_VIRTUAL_ID_HOST;
   try {
     var ciphertext = CryptoJS.AES.encrypt(
       JSON.stringify(value),
@@ -4344,7 +4344,7 @@ export function handleEncrypt(value) {
 }
 
 export function handleDecrypt(value) {
-  const API_SECRET_KEY = localStorage.getItem("apiToken");
+  const API_SECRET_KEY = process.env.REACT_APP_VIRTUAL_ID_HOST;
   try {
     var bytes = CryptoJS.AES.decrypt(value, API_SECRET_KEY);
     var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));

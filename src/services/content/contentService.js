@@ -1,21 +1,20 @@
 import axios from "axios";
 import config from "../../utils/urlConstants.json";
-import { getLocalData } from "../../utils/constants";
 
 const API_BASE_URL_CONTENT_SERVICE =
   process.env.REACT_APP_CONTENT_SERVICE_APP_HOST;
 
-const getHeaders = () => {
-  const token = localStorage.getItem("apiToken");
+const getHeaders = (token) => {
+  const apiToken = token ? token : localStorage.getItem("apiToken");
   return {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${apiToken}`,
       "Content-Type": "application/json",
     },
   };
 };
 
-export const fetchAssessmentData = async (lang) => {
+export const fetchAssessmentData = async (lang, token) => {
   try {
     const response = await axios.post(
       `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_ASSESSMENT}`,
@@ -23,7 +22,7 @@ export const fetchAssessmentData = async (lang) => {
         tags: ["ASER"],
         language: lang,
       },
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {
@@ -35,12 +34,13 @@ export const fetchAssessmentData = async (lang) => {
 export const fetchPaginatedContent = async (
   collectionId,
   page = 1,
-  limit = 5
+  limit = 5,
+  token
 ) => {
   try {
     const response = await axios.get(
       `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_PAGINATION}?page=${page}&limit=${limit}&collectionId=${collectionId}`,
-      getHeaders()
+      getHeaders(token)
     );
     return response.data;
   } catch (error) {

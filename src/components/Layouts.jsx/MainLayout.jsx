@@ -44,6 +44,7 @@ import gameLoseAudio from "../../assets/audio/gameLose.wav";
 
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const MainLayout = (props) => {
   const levelsImages = {
@@ -129,7 +130,7 @@ const MainLayout = (props) => {
     storedData,
     resetStoredData,
   } = props;
-
+  const userJourney = useSelector((state) => state.userJourney);
   const [shake, setShake] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(null);
   const audioRefs = useRef([]);
@@ -420,7 +421,7 @@ const MainLayout = (props) => {
                     <Box display={"flex"}>
                       {[...Array(Math.max(0, redLivesToShow) || 0).keys()]?.map(
                         (elem) => (
-                          <Diamond />
+                          <Diamond userJourney={userJourney} />
                         )
                       )}
 
