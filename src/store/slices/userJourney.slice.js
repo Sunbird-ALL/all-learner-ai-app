@@ -1,21 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  token: "",
+  profileName: "",
+  practiceProgress: {},
+  allAppContentSessionId: "",
+  getMilestone: {},
+  language: "en",
+  mechanism_id: "",
+  sessionId: "",
+  storyTitle: "",
+  subSessionId: "",
+  userLevel: "",
+  previousLevel: "",
+};
+
 const userJourneySlice = createSlice({
   name: "userJourney",
-  initialState: {
-    token: "",
-    profileName: "",
-    practiceProgress: {},
-    allAppContentSessionId: "",
-    getMilestone: {},
-    language: "en",
-    mechanism_id: "",
-    sessionId: "",
-    storyTitle: "",
-    subSessionId: "",
-    userLevel: "",
-    previousLevel: "",
-  },
+  initialState,
   reducers: {
     setToken(state, action) {
       state.token = action.payload;
@@ -53,6 +55,9 @@ const userJourneySlice = createSlice({
     setPreviousLevelData(state, action) {
       state.previousLevel = action.payload;
     },
+    resetState: (state) => {
+      Object.assign(state, initialState);
+    },
   },
 });
 
@@ -69,6 +74,7 @@ export const {
   setSubSessionId,
   setUserLevel,
   setPreviousLevelData,
+  resetState,
 } = userJourneySlice.actions;
 
 export default userJourneySlice.reducer;

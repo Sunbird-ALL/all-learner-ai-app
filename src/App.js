@@ -10,12 +10,14 @@ import { initialize, end } from "./services/telementryService";
 import { startEvent } from "./services/callTelemetryIntract";
 import "@tekdi/all-telemetry-sdk/index.js";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { resetState } from "./store/slices/userJourney.slice";
 
 const App = () => {
   const userJourney = useSelector((state) => state.userJourney);
   const navigate = useNavigate();
   const TOKEN = userJourney?.token || localStorage.getItem("apiToken");
+  const dispatch = useDispatch();
   const ranonce = useRef(false);
   useEffect(() => {
     const initService = async (visitorId) => {
@@ -93,6 +95,7 @@ const App = () => {
             localStorage.getItem("contentSessionId") &&
             process.env.REACT_APP_IS_APP_IFRAME === "true"
           ) {
+            dispatch(resetState());
             window.parent.postMessage(
               {
                 message: "Unauthorized",
@@ -103,6 +106,7 @@ const App = () => {
           } else {
             localStorage.clear();
             sessionStorage.clear();
+            dispatch(resetState());
             navigate("/login");
           }
         }
