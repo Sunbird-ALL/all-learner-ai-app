@@ -183,6 +183,7 @@ const SpeakSentenceComponent = () => {
             const result = await createLearnerProgress(
               sub_session_id,
               milestoneLevel,
+              totalSyllableCount,
               token,
               userJourney?.language,
               userJourney?.sessionId

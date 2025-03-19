@@ -591,7 +591,7 @@ const Assesment = ({ discoverStart }) => {
         const usernameDetails = await fetchVirtualId(username);
         const getMilestoneDetails = await getFetchMilestoneDetails(lang, TOKEN);
 
-        dispatch(setGetMilestone(...getMilestoneDetails));
+        dispatch(setGetMilestone(getMilestoneDetails));
         setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
         let session_id = userJourney?.sessionId || getLocalData("sessionId");
 
