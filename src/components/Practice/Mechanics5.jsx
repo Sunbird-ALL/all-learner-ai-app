@@ -65,14 +65,19 @@ const Mechanics5 = ({
 
   const [storedData, setStoredData] = useState([]);
 
-  const updateStoredData = (audios, isCorrect) => {
+  const updateStoredData = (audios) => {
     if (audios) {
+      let selectedAnswer =
+        options && options.length > 0 && options[selectedOption]?.text;
+      let correctOption = options?.find(
+        (option) => option?.isAns === true
+      )?.text;
+
       const newEntry = {
-        selectedAnswer:
-          options && options.length > 0 && options[selectedOption]?.text,
-        correctOption: options?.find((option) => option?.isAns === true)?.text,
+        selectedAnswer: selectedAnswer,
+        correctOption: correctOption,
         audioUrl: audios,
-        correctAnswer: isCorrect,
+        correctAnswer: selectedAnswer === correctOption,
       };
 
       setStoredData((prevData) => [...prevData, newEntry]);

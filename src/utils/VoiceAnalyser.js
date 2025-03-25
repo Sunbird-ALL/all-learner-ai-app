@@ -521,14 +521,15 @@ function VoiceAnalyser(props) {
 
       setApiResponse(callUpdateLearner ? data.status : "success");
 
-      if (
-        callUpdateLearner &&
-        (props.pageName === "wordsorimage" || props.pageName === "m5")
-      ) {
+      if (callUpdateLearner && props.pageName === "wordsorimage") {
         const isMatching =
           data?.createScoreData?.session?.error_rate?.character === 0;
         if (typeof props.updateStoredData === "function") {
           props.updateStoredData(recordedAudio, isMatching);
+        }
+      } else if (props.pageName === "m5") {
+        if (typeof props.updateStoredData === "function") {
+          props.updateStoredData(recordedAudio);
         }
       }
       if (props.handleNext) {
