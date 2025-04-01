@@ -44,7 +44,6 @@ import profilePic from "../../assets/images/profile_url.png";
 import textureImage from "../../assets/images/textureImage.png";
 import back from "../../assets/images/back-arrow.png";
 import { jwtDecode } from "jwt-decode";
-import config from "../../utils/urlConstants.json";
 import panda from "../../assets/images/panda.svg";
 import cryPanda from "../../assets/images/cryPanda.svg";
 import { uniqueId } from "../../services/utilService";

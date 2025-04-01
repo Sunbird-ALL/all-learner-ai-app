@@ -18,7 +18,6 @@ import { uniqueId } from "../../services/utilService";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import { splitGraphemes } from "split-graphemes";
 import { Typography } from "@mui/material";
-import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../../components/Assesment/Assesment";
 import { Log } from "../../services/telementryService";
 import Mechanics6 from "../../components/Practice/Mechanics6";

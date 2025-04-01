@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import { ProfileHeader } from "../Assesment/Assesment";
 import desktopLevel5 from "../../assets/images/assesmentComplete.png";
-import config from "../../utils/urlConstants.json";
 import { uniqueId } from "../../services/utilService";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import { fetchUserPoints } from "../../services/orchestration/orchestrationService";
