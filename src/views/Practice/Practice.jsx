@@ -18,7 +18,6 @@ import { uniqueId } from "../../services/utilService";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import { splitGraphemes } from "split-graphemes";
 import { Typography } from "@mui/material";
-import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../../components/Assesment/Assesment";
 import { Log } from "../../services/telementryService";
 import Mechanics6 from "../../components/Practice/Mechanics6";
@@ -155,7 +154,7 @@ const Practice = () => {
     try {
       const lang = getLocalData("lang");
 
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const sessionId = getLocalData("sessionId");
 
       let practiceProgress = getLocalData("practiceProgress");
@@ -367,7 +366,7 @@ const Practice = () => {
     try {
       setLoading(true);
       const lang = getLocalData("lang");
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       let sessionId = getLocalData("sessionId");
 
       if (!sessionId) {
@@ -490,7 +489,7 @@ const Practice = () => {
 
   const handleBack = async () => {
     if (progressData.currentPracticeStep > 0) {
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const sessionId = getLocalData("sessionId");
       const lang = getLocalData("lang");
       let practiceProgress = {};

@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import { ProfileHeader } from "../Assesment/Assesment";
 import desktopLevel5 from "../../assets/images/assesmentComplete.png";
-import config from "../../utils/urlConstants.json";
 import { uniqueId } from "../../services/utilService";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import { fetchUserPoints } from "../../services/orchestration/orchestrationService";
@@ -35,7 +34,7 @@ const AssesmentEnd = () => {
         let audio = new Audio(levelCompleteAudioSrc);
         audio.play();
       }
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const lang = getLocalData("lang");
       const previous_level = getLocalData("previous_level");
       setPreviousLevel(previous_level?.replace("m", ""));

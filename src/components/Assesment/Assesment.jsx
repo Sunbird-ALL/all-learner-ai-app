@@ -44,7 +44,6 @@ import profilePic from "../../assets/images/profile_url.png";
 import textureImage from "../../assets/images/textureImage.png";
 import back from "../../assets/images/back-arrow.png";
 import { jwtDecode } from "jwt-decode";
-import config from "../../utils/urlConstants.json";
 import panda from "../../assets/images/panda.svg";
 import cryPanda from "../../assets/images/cryPanda.svg";
 import { uniqueId } from "../../services/utilService";
@@ -568,6 +567,8 @@ const Assesment = ({ discoverStart }) => {
   const [openLangModal, setOpenLangModal] = useState(false);
   const [lang, setLang] = useState(getLocalData("lang") || "en");
   const [points, setPoints] = useState(0);
+  const TOKEN =
+    localStorage.getItem("apiToken") || localStorage.getItem("virtualId");
 
   useEffect(() => {
     // const level = getLocalData('userLevel');
@@ -653,7 +654,6 @@ const Assesment = ({ discoverStart }) => {
     }
   }, [lang]);
 
-  const TOKEN = localStorage.getItem("apiToken");
   let virtualId;
   // if (TOKEN) {
   //   const tokenDetails = jwtDecode(TOKEN);

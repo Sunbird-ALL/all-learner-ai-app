@@ -1,23 +1,37 @@
 import axios from "axios";
-import config from "../../utils/urlConstants.json";
+import API_URLS from "../../utils/apiUrls";
 import { getLocalData } from "../../utils/constants";
-import { getVirtualId } from "../userservice/userService";
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
 
 const getHeaders = () => {
-  const token = localStorage.getItem("apiToken");
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  };
+  const token = localStorage.getItem("apiToken"); // Fetch token for V2
+  if (token) {
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+  } else {
+    return {}; // No headers for V1
+  }
 };
 
 export const getContent = async (criteria, lang, limit, options = {}) => {
+  const virtualId = localStorage.getItem("virtualId");
+
   try {
-    let url = `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${criteria}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`;
+    let url = `${API_LEARNER_AI_APP_HOST}/${API_URLS.GET_CONTENT}/${criteria}`;
+
+    if (options.contentId) {
+      url += `/${options.contentId}`;
+    }
+
+    if (virtualId) {
+      url += `/${virtualId}`;
+    }
+    url += `?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`;
 
     if (options.mechanismId) url += `&mechanics_id=${options.mechanismId}`;
     if (options.competency) url += `&level_competency=${options.competency}`;
@@ -33,10 +47,13 @@ export const getContent = async (criteria, lang, limit, options = {}) => {
 };
 
 export const getFetchMilestoneDetails = async (lang) => {
-  if (localStorage.getItem("apiToken")) {
+  const virtualId = localStorage.getItem("virtualId");
+  if (localStorage.getItem("apiToken") || virtualId) {
     try {
       const response = await axios.get(
-        `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}?language=${lang}`,
+        `${API_LEARNER_AI_APP_HOST}/${API_URLS.GET_MILESTONE}${
+          virtualId ? "/" + virtualId : ""
+        }?language=${lang}`,
         getHeaders()
       );
       return response.data;
@@ -55,18 +72,25 @@ export const fetchGetSetResult = async (
 ) => {
   const session_id = getLocalData("sessionId");
   const lang = getLocalData("lang");
+  const virtualId = localStorage.getItem("virtualId");
 
   try {
+    const requestBody = {
+      sub_session_id: subSessionId,
+      contentType: currentContentType,
+      session_id,
+      collectionId: currentCollectionId,
+      totalSyllableCount,
+      language: lang,
+    };
+
+    if (virtualId) {
+      requestBody.userId = virtualId;
+    }
+
     const response = await axios.post(
-      `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
-      {
-        sub_session_id: subSessionId,
-        contentType: currentContentType,
-        session_id: session_id,
-        collectionId: currentCollectionId,
-        totalSyllableCount: totalSyllableCount,
-        language: lang,
-      },
+      `${API_LEARNER_AI_APP_HOST}/${API_URLS.GET_SET_RESULT}`,
+      requestBody,
       getHeaders()
     );
     return response.data;
@@ -83,17 +107,25 @@ export const getSetResultPractice = async ({
   totalSyllableCount,
   mechanism,
 }) => {
+  const virtualId = localStorage.getItem("virtualId");
+
   try {
+    const requestBody = {
+      sub_session_id: subSessionId,
+      contentType: currentContentType,
+      session_id: sessionId,
+      totalSyllableCount,
+      language: getLocalData("lang"),
+      is_mechanics: mechanism && mechanism?.id ? true : false,
+    };
+
+    if (virtualId) {
+      requestBody.userId = virtualId;
+    }
+
     const response = await axios.post(
-      `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
-      {
-        sub_session_id: subSessionId,
-        contentType: currentContentType,
-        session_id: sessionId,
-        totalSyllableCount: totalSyllableCount,
-        language: getLocalData("lang"),
-        is_mechanics: mechanism && mechanism?.id ? true : false,
-      },
+      `${API_LEARNER_AI_APP_HOST}/${API_URLS.GET_SET_RESULT}`,
+      requestBody,
       getHeaders()
     );
     return response.data;
@@ -106,7 +138,7 @@ export const getSetResultPractice = async ({
 export const updateLearnerProfile = async (lang, requestBody) => {
   try {
     const response = await axios.post(
-      `${API_LEARNER_AI_APP_HOST}/${config.URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
+      `${API_LEARNER_AI_APP_HOST}/${API_URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
       requestBody,
       getHeaders()
     );

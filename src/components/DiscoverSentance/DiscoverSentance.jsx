@@ -12,7 +12,6 @@ import WordsOrImage from "../Mechanism/WordsOrImage";
 import { uniqueId } from "../../services/utilService";
 import useSound from "use-sound";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
-import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../Assesment/Assesment";
 import { Log } from "../../services/telementryService";
 import usePreloadAudio from "../../hooks/usePreloadAudio";

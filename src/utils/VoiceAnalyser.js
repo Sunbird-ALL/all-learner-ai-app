@@ -29,7 +29,6 @@ import {
   replaceAll,
   NextButtonRound,
 } from "./constants";
-import config from "./urlConstants.json";
 import { filterBadWords } from "./Badwords";
 import S3Client from "../config/awsS3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
@@ -343,7 +342,7 @@ function VoiceAnalyser(props) {
 
     try {
       const lang = getLocalData("lang");
-      const virtualId = getLocalData("virtualId");
+      const virtualId = localStorage.getItem("virtualId");
       const sessionId = getLocalData("sessionId");
       const sub_session_id = getLocalData("sub_session_id");
       const { originalText, contentType, contentId, currentLine } = props;

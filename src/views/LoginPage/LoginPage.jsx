@@ -21,9 +21,14 @@ const LoginPage = () => {
 
     try {
       const usernameDetails = await fetchVirtualId(username);
-      let token = usernameDetails?.result?.token;
-
-      localStorage.setItem("apiToken", token);
+      let token = "";
+      if (usernameDetails?.result?.token) {
+        token = usernameDetails?.result?.token;
+        localStorage.setItem("apiToken", token);
+      } else {
+        token = usernameDetails?.result?.virtualID;
+        localStorage.setItem("virtualId", token);
+      }
       // const tokenDetails = jwtDecode(token);
       if (token) {
         setLocalData("profileName", username);
