@@ -3,7 +3,7 @@ name: ALL tn dev Deployment
 on:
   push:
     branches:
-      - all-1.4.0-staging
+      - mozhigal-2.1-dev
 
 jobs:
   deploy:
