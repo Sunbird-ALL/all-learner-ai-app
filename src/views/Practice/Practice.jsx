@@ -148,7 +148,7 @@ const Practice = () => {
         syllablesAudio: [
           {
             name: "Pen",
-            audio: getAssetAudioUrl(s3Assets.penAudio) || Assets.penAudio,
+            audio: Assets.penAudio,
           },
           {
             name: "cil",
@@ -179,7 +179,7 @@ const Practice = () => {
         img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
         syllablesAudio: [
           { name: "Bas", audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas },
-          { name: "Ket", audio: getAssetAudioUrl(s3Assets.Ket) || Assets.Ket },
+          { name: "Ket", audio: Assets.Ket },
         ],
         completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
       },

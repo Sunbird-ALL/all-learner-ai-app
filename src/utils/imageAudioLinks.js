@@ -45,7 +45,7 @@ export const Jacket =
 export const Jack =
   "https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.4.0-dev/src/assets/Jack.wav";
 export const Ket =
-  "https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.4.0-dev/src/assets/et.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/Ket.wav";
 export const JacketS =
   "https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.4.0-dev/src/assets/Jacket.wav";
 export const Kitten =
@@ -847,7 +847,7 @@ export const tiAudio =
 export const hapAudio =
   "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/hapAudio.wav.wav";
 export const penAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/penAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/penAudio.wav";
 export const rockAudio =
   "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/rockAudio.wav.wav";
 export const basAudio =

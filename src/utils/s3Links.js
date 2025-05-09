@@ -19,7 +19,7 @@ export const pyAudio = "d71e9bec-a8aa-4e35-83f0-44bd8a3549bd.mp3";
 export const happyAudio = "5992042b-9bf0-4feb-a0e3-b6eb80100c32.mp3";
 
 export const pencilImg = "dfa309a9-713b-4726-b822-d0423c033175.png";
-export const penAudio = "3dc789a8-2cbe-4a92-83f1-b41da07ba70e.mp3";
+//export const penAudio = "3dc789a8-2cbe-4a92-83f1-b41da07ba70e.mp3";
 export const cilAudio = "3de1d37d-8b6a-436a-b36f-5843fd6f87c7.mp3";
 export const pencilAudio = "1f5163a9-bd4a-4f7b-8625-22c636c6b300.mp3";
 
@@ -35,7 +35,7 @@ export const RocketS = "dfff31f2-ac9c-4346-a9f7-7042e82d8888.mp3";
 
 export const Basket = "312cdd6d-e995-469a-ba3f-f3b8cbfeccd5.png";
 export const Bas = "631cf215-4282-4e62-b116-85cd92d6201e.mp3";
-export const Ket = "e095247f-d16a-40bc-8c86-dc9da7a7cdf6.mp3";
+//export const Ket = "e095247f-d16a-40bc-8c86-dc9da7a7cdf6.mp3";
 export const BasketS = "75ace319-2bdf-4ef2-8bfe-8f99dbc540aa.mp3";
 
 export const DinnerNewImg = "d8ae7f85-9262-434b-a813-5dd07780f7f0.png";
@@ -210,6 +210,8 @@ export const level12P8ThreeAudio = "6cb89bbd-b0d6-466a-b3e2-a54635624b9a.mp3";
 export const level12P8FourAudio = "247f9dbc-fc53-4334-884f-4e3433535bb7.mp3";
 export const level12P8FiveAudio = "eabc9a79-3228-4b36-9882-9158f329fc20.mp3";
 
+export const museumDirectionsAudio = "db8b8cb5-1cea-47d4-979c-fa9337e8f3d4.mp3";
+
 export const level12P3OneAudio = "a45d43f9-5c2d-4ce0-a326-dd360a2fd32b.mp3";
 export const level12P3TwoAudio = "a894822c-9552-4a79-8bfc-1365922a1098.mp3";
 export const level12P3ThreeAudio = "8cc34f87-0267-4b52-a15a-85277ea885c7.mp3";
@@ -234,6 +236,12 @@ export const level11P7TwoUAudio = "3ff2581e-291e-4557-b485-b6075c6d858b.mp3";
 export const level11P7ThreeUAudio = "f78c4a8d-f701-4c66-9d0f-123391ea982b.mp3";
 export const level11P7FourUAudio = "cf821322-e3b3-4005-a613-7c3113c30a49.mp3";
 export const level11P7FiveUAudio = "06de2726-72b6-4f90-a657-0158b08e9803.mp3";
+
+export const level11P8OneUAudio = "e0855b36-288a-41a6-9bbb-8df076109859.mp3";
+export const level11P8TwoUAudio = "6f76d676-de4f-489e-a025-d4fcd7fecba0.mp3";
+export const level11P8ThreeUAudio = "180e12bd-b0de-47dc-96e0-977d49e072f9.mp3";
+export const level11P8FourUAudio = "345b3b40-b661-4b96-82b0-08622166a12f.mp3";
+export const level11P8FiveUAudio = "f411bb71-3568-4a73-aa72-6d6de848875b.mp3";
 
 export const level11P3OneUAudio = "01b056a8-c53c-4d1a-963d-00322a09af56.mp3";
 export const level11P3TwoUAudio = "f12ee26d-dd45-45b8-b88f-cb7b48d860e2.mp3";

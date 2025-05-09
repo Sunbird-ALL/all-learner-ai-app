@@ -2750,7 +2750,7 @@ export const level12 = [
           {
             role: "System",
             message:
-              "Attention, everyone! If you're heading to the museum, take Bus Number 10 from the main bus stop. Get off at Museum Road and walk straight for two minutes. You will see the museum on your right. Apples are available at ₹50 per kilo. One kilo has been purchased. That’s all for now. Have a great day!",
+              "Attention everyone, if you're heading to the museum, please take bus number 10 from the main bus stop located near the central Plaza. Get off at Museum Road, then walk straight for about 2 minutes. You'll find the museum on your right, just past the coffee shop. Make sure to keep your tickets handy as they may be checked at the entrance guided to a start every hour, so try to arrive a bit early if you'd like to join one.",
             audio: "museumDirectionsAudio",
           },
         ],
@@ -2807,23 +2807,24 @@ export const level12 = [
         {
           question: {
             type: "text",
-            value: "Which fruit has been purchased?",
+            value:
+              "What should visitors do with their tickets before entering the museum?",
           },
           options: [
             {
               type: "text",
               id: "option1",
-              value: "Bananas",
+              value: "Leave them at the coffee shop",
             },
             {
               type: "text",
               id: "option2",
-              value: "Apples",
+              value: "Show them at the entrance if asked",
             },
             {
               type: "text",
               id: "option3",
-              value: "Oranges",
+              value: "Exchange them for a map",
             },
           ],
           answer: "option2",
@@ -2831,26 +2832,26 @@ export const level12 = [
         {
           question: {
             type: "text",
-            value: "How much does one kilo of apples cost?",
+            value: "When do guided tours at the museum begin?",
           },
           options: [
             {
               type: "text",
               id: "option1",
-              value: "₹30",
+              value: "Every hour",
             },
             {
               type: "text",
               id: "option2",
-              value: "₹50",
+              value: "Every 30 minutes",
             },
             {
               type: "text",
               id: "option3",
-              value: "₹70",
+              value: "Only in the afternoon",
             },
           ],
-          answer: "option2",
+          answer: "option1",
         },
         {
           question: {
@@ -4711,7 +4712,7 @@ export const level10 = [
             {
               type: "text",
               id: "option1",
-              value: "Follow station staff instructions",
+              value: "Follow instructions of the station staffs",
             },
             {
               type: "text",
