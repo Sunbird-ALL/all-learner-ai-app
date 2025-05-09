@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Container, Typography, TextField, Button, Grid } from "@mui/material";
+import {
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  CircularProgress,
+} from "@mui/material";
 import config from "../../utils/urlConstants.json";
-import "./LoginPage.css"; // Import the CSS file
+import "./LoginPage.css";
+import { useMediaQuery } from "@mui/material";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +48,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Container className="container">
+    <div className={`login-container ${isMobile ? "mobile-view" : ""}`}>
       <div className="loginBox">
         <Typography variant="h4" align="center" gutterBottom>
           Login
@@ -81,7 +89,7 @@ const LoginPage = () => {
           </Grid>
         </form>
       </div>
-    </Container>
+    </div>
   );
 };
 

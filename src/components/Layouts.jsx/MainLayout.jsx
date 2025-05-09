@@ -879,15 +879,18 @@ const MainLayout = (props) => {
                       <Box
                         sx={{
                           position: "absolute",
-                          top: "-120px",
-                          left: "-70px",
+                          top: { xs: "-50px", md: "-120px" },
+                          left: { xs: "-20px", md: "-70px" },
                         }}
                       >
                         {!gameOverData?.userWon && (
                           <img
                             src={clouds}
                             alt="clouds"
-                            style={{ zIndex: -999 }}
+                            style={{
+                              zIndex: -999,
+                              height: { xs: 200, md: 340 },
+                            }}
                           />
                         )}
                       </Box>
@@ -909,14 +912,16 @@ const MainLayout = (props) => {
                           <Stack
                             justifyContent="center"
                             alignItems="center"
-                            direction={"row"}
+                            direction={{ xs: "column", md: "row" }}
+                            spacing={{ xs: 2, md: 4 }}
                             zIndex={100}
+                            sx={{ width: "100%" }}
                           >
                             <Stack justifyContent="center" alignItems="center">
                               <img
                                 src={`https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.3/src/assets/images/gameLost.svg`}
                                 alt="gameLost"
-                                style={{ height: 340 }}
+                                style={{ height: { xs: 200, md: 340 } }}
                               />
                               <Typography
                                 sx={{ mb: 1, mt: 1, textAlign: "center" }}
@@ -925,7 +930,7 @@ const MainLayout = (props) => {
                                   <span
                                     style={{
                                       fontWeight: 600,
-                                      fontSize: "24px",
+                                      fontSize: { xs: "16px", md: "24px" },
                                       lineHeight: "1.5",
                                       letterSpacing: "1px",
                                       fontFamily: "Quicksand",
@@ -964,19 +969,21 @@ const MainLayout = (props) => {
                               direction={"column"}
                               alignItems="center"
                               spacing={2}
-                              marginLeft={"10px"}
+                              marginLeft={{ xs: 0, md: "10px" }}
+                              sx={{ width: { xs: "90%", md: "auto" } }}
                             >
                               <Stack
                                 sx={{
                                   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
-                                  paddingY: "49px",
-                                  paddingX: "30px",
+                                  paddingY: { xs: "20px", md: "49px" },
+                                  paddingX: { xs: "15px", md: "30px" },
                                   borderRadius: "13px",
-                                  marginLeft: "80px",
+                                  marginLeft: { xs: 0, md: "80px" },
                                   bgcolor: "#FFFFFF",
                                   zIndex: 100,
+                                  width: { xs: "100%", md: "auto" },
                                 }}
-                                direction={"row"}
+                                direction={{ xs: "column", md: "row" }}
                               >
                                 <Stack
                                   sx={{
@@ -984,13 +991,13 @@ const MainLayout = (props) => {
                                       (props.pageName === "wordsorimage" ||
                                         props.pageName === "m5") &&
                                       !fluency
-                                        ? "20px"
+                                        ? { xs: 0, md: "20px" }
                                         : "0px",
                                     borderRight:
                                       (props.pageName === "wordsorimage" ||
                                         props.pageName === "m5") &&
                                       !fluency
-                                        ? "1px dashed grey"
+                                        ? { xs: "none", md: "1px dashed grey" }
                                         : "none",
                                   }}
                                 >
@@ -1002,11 +1009,18 @@ const MainLayout = (props) => {
                                         justifyContent={"start"}
                                         alignItems={"center"}
                                         direction={"row"}
-                                        mt={index > 0 ? "25px" : 0}
+                                        mt={
+                                          index > 0
+                                            ? { xs: "10px", md: "25px" }
+                                            : 0
+                                        }
                                       >
                                         <Box
                                           sx={{
-                                            marginLeft: "35px",
+                                            marginLeft: {
+                                              xs: "10px",
+                                              md: "35px",
+                                            },
                                             marginRight: "5px",
                                           }}
                                         >
@@ -1070,9 +1084,15 @@ const MainLayout = (props) => {
                                             color: "#1E2937",
                                             fontWeight: 700,
                                             lineHeight: "30px",
-                                            fontSize: "15px",
+                                            fontSize: {
+                                              xs: "12px",
+                                              md: "15px",
+                                            },
                                             fontFamily: "Quicksand",
-                                            minWidth: "100px",
+                                            minWidth: {
+                                              xs: "70px",
+                                              md: "100px",
+                                            },
                                           }}
                                         >
                                           {elem.selectedAnswer || "Binocular"}
@@ -1088,8 +1108,9 @@ const MainLayout = (props) => {
                                         (props.pageName === "wordsorimage" ||
                                           props.pageName === "m5") &&
                                         !fluency
-                                          ? "20px"
+                                          ? { xs: 0, md: "20px" }
                                           : "0px",
+                                      mt: { xs: 2, md: 0 },
                                     }}
                                     justifyContent={"center"}
                                     alignItems={"center"}
@@ -1097,6 +1118,9 @@ const MainLayout = (props) => {
                                     <img
                                       src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/turtle.svg"
                                       alt="turtleImage"
+                                      style={{
+                                        width: { xs: "80px", md: "100px" },
+                                      }}
                                     />
                                     <span
                                       style={{
@@ -1104,7 +1128,7 @@ const MainLayout = (props) => {
                                         color: "#1E2937",
                                         fontWeight: 700,
                                         lineHeight: "25px",
-                                        fontSize: "20px",
+                                        fontSize: { xs: "16px", md: "20px" },
                                         fontFamily: "Quicksand",
                                       }}
                                     >
@@ -1122,15 +1146,15 @@ const MainLayout = (props) => {
                                   border: "2px solid yellow",
                                   borderRadius: "40px",
                                   padding: "10px 20px",
-                                  //maxWidth: "100%",
+                                  width: { xs: "100%", md: "auto" },
                                 }}
                               >
                                 <img
                                   src={Assets.starNewImg}
                                   alt="Star"
                                   style={{
-                                    width: "100px",
-                                    height: "100px",
+                                    width: { xs: "60px", md: "100px" },
+                                    height: { xs: "60px", md: "100px" },
                                     flexShrink: 0,
                                   }}
                                 />
@@ -1139,9 +1163,9 @@ const MainLayout = (props) => {
                                   sx={{
                                     wordWrap: "break-word",
                                     whiteSpace: "normal",
-                                    maxWidth: "150px",
+                                    maxWidth: { xs: "120px", md: "120px" },
                                     fontWeight: "700",
-                                    fontSize: "16px",
+                                    fontSize: { xs: "14px", md: "16px" },
                                     fontFamily: "Quicksand",
                                   }}
                                 >
