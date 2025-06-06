@@ -215,6 +215,14 @@ const MainLayout = (props) => {
   const [audioPlaying, setAudioPlaying] = useState(null);
   const audioRefs = useRef([]);
 
+  const language = getLocalData("lang");
+
+  useEffect(() => {
+    if (language !== "en") {
+      setLocalData("rFlow", false);
+    }
+  }, [language]);
+
   const handleAudioPlay = (index) => {
     const audioElem = audioRefs.current[index];
 
@@ -647,7 +655,9 @@ const MainLayout = (props) => {
                                           fontFamily: "Quicksand",
                                         }}
                                       >
-                                        {LEVEL === 1
+                                        {language !== "en"
+                                          ? elem.name
+                                          : LEVEL === 1
                                           ? elem.title
                                           : LEVEL === 2
                                           ? elem.titleNew
@@ -937,11 +947,12 @@ const MainLayout = (props) => {
                                   </Typography>
                                 ) : (
                                   <Typography textAlign="center" sx={{ mt: 2 }}>
-                                    You need{" "}
+                                    Oops! You need{" "}
                                     <span style={{ fontWeight: "bold" }}>
                                       {Math.abs(70 - percentage)}
                                     </span>{" "}
-                                    more.
+                                    more points to pass. You're almost there—try
+                                    again!
                                   </Typography>
                                 )}
                               </Typography>
@@ -1249,7 +1260,11 @@ const MainLayout = (props) => {
                                             fontFamily: "Quicksand",
                                           }}
                                         >
-                                          {LEVEL === 1 ? elem.title : elem.name}
+                                          {language !== "en"
+                                            ? elem.name
+                                            : LEVEL === 1
+                                            ? elem.title
+                                            : elem.name}
                                         </span>
                                       )}
                                     </Box>
@@ -1281,9 +1296,9 @@ const MainLayout = (props) => {
                             }}
                             onClick={() => {
                               if (
-                                ((LEVEL === 1 || LEVEL === 2) &&
-                                  mFlow === true) ||
-                                mFlow === "true"
+                                (LEVEL === 1 || LEVEL === 2) &&
+                                (mFlow === true || mFlow === "true") &&
+                                language === "en"
                               ) {
                                 console.log("mFlow value:", mFlow);
                                 setLocalData("rFlow", true);

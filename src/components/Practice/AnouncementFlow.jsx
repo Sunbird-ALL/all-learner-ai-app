@@ -966,6 +966,22 @@ const AnouncementFlow = ({
                     marginBottom: "50px",
                   }}
                 >
+                  <span
+                    style={{
+                      transition: "background-color 0.2s ease",
+                      color: "#000000",
+                      fontSize: "18px",
+                      fontWeight: "600",
+                      textAlign: "center",
+                      alignContent: "center",
+                      alignSelf: "center",
+                      alignItems: "center",
+                      marginBottom: "25px",
+                      fontFamily: "Quicksand",
+                    }}
+                  >
+                    {"Listen to the audio and answer the following question"}
+                  </span>
                   {/* Circular Image + Play Button */}
                   <div
                     style={{

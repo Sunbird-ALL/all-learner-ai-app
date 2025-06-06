@@ -128,7 +128,7 @@ const AskMoreM14 = ({
   const [finalTranscript, setFinalTranscript] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(null);
   const [audioInstance, setAudioInstance] = useState(null);
   const {
     transcript,
@@ -174,10 +174,11 @@ const AskMoreM14 = ({
   };
 
   const stopCompleteAudio = () => {
-    if (isPlaying) {
+    if (audioInstance) {
       audioInstance.pause();
       audioInstance.currentTime = 0;
-      setIsPlaying(false);
+      setIsPlaying(null);
+      setAudioInstance(null);
     }
   };
 
@@ -199,23 +200,26 @@ const AskMoreM14 = ({
   };
 
   const playAudio = (audioKey) => {
-    if (isPlaying) {
+    if (audioInstance) {
       // If already playing, stop the audio
       audioInstance.pause();
       audioInstance.currentTime = 0;
-      setIsPlaying(false);
+      setIsPlaying(null);
+      setAudioInstance(null);
+    }
+    if (audioKey) {
+      const audio = new Audio(audioKey);
+
+      audio.onended = () => {
+        setIsPlaying(null);
+        setAudioInstance(null);
+      };
+
+      audio.play();
+      setAudioInstance(audio);
+      setIsPlaying(audioKey);
     } else {
-      if (audioKey) {
-        const audio = new Audio(audioKey);
-
-        audio.onended = () => setIsPlaying(false);
-
-        audio.play();
-        setAudioInstance(audio);
-        setIsPlaying(true);
-      } else {
-        console.error("Audio file not found:", audioKey);
-      }
+      console.error("Audio file not found:", audioKey);
     }
   };
 
@@ -325,31 +329,38 @@ const AskMoreM14 = ({
       setCurrentWordIndex(-1);
       setShowPandaText(false);
 
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      // const utterance = new SpeechSynthesisUtterance(textToSpeak);
 
-      // Track each word being spoken
-      utterance.onboundary = (event) => {
-        if (event.name === "word") {
-          const charIndex = event.charIndex;
-          const spokenWordIndex = splitWords.findIndex((word, i) => {
-            const joined = splitWords.slice(0, i + 1).join(" ");
-            return joined.length >= charIndex;
-          });
-          setCurrentWordIndex(spokenWordIndex);
-        }
-      };
+      // // Track each word being spoken
+      // utterance.onboundary = (event) => {
+      //   if (event.name === "word") {
+      //     const charIndex = event.charIndex;
+      //     const spokenWordIndex = splitWords.findIndex((word, i) => {
+      //       const joined = splitWords.slice(0, i + 1).join(" ");
+      //       return joined.length >= charIndex;
+      //     });
+      //     setCurrentWordIndex(spokenWordIndex);
+      //   }
+      // };
 
-      utterance.onend = () => {
+      // utterance.onend = () => {
+      //   setCurrentWordIndex(-1);
+      //   setShowVoice(true);
+      //   setTimeout(() => {
+      //     setShowVoice(false);
+      //     setShowPandaText(true);
+      //   }, 1500);
+      // };
+
+      // window.speechSynthesis.cancel();
+      // window.speechSynthesis.speak(utterance);
+
+      setTimeout(() => {
         setCurrentWordIndex(-1);
         setShowVoice(true);
-        setTimeout(() => {
-          setShowVoice(false);
-          setShowPandaText(true);
-        }, 1500);
-      };
-
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
+        setShowVoice(false);
+        setShowPandaText(true);
+      }, 1500);
     }
   }, [currentSteps]);
 
@@ -372,10 +383,11 @@ const AskMoreM14 = ({
   const cloudPositions = generateCloudPositions();
 
   const handlePauseClick = async () => {
-    if (isPlaying) {
+    if (audioInstance) {
       audioInstance.pause();
       audioInstance.currentTime = 0;
-      setIsPlaying(false);
+      setIsPlaying(null);
+      setAudioInstance(null);
     }
     setIsLoading(true);
 
@@ -592,52 +604,56 @@ const AskMoreM14 = ({
             <div
               style={{
                 position: "absolute",
-                top: "19%",
-                left: "17%",
+                top: "28%",
+                left: "9%",
                 width: "250px",
                 textAlign: "center",
               }}
             >
-              <img
-                src={Assets.cloudImg}
-                alt="Cloud"
-                style={{ width: "100%" }}
-              />
-              <span
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  width: "80%",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                  color: "#333F61",
-                  textAlign: "center",
-                  fontFamily: "Quicksand",
-                  //lineHeight: 1.4,
-                  wordBreak: "keep-all",
-                  whiteSpace: "normal",
-                  overflowWrap: "break-word",
-                }}
-              >
-                {words.map((word, i) => (
-                  <span
-                    key={i}
-                    style={{
-                      backgroundColor:
-                        i === currentWordIndex ? "yellow" : "transparent",
-                      padding: "1px 2px",
-                      borderRadius: "4px",
-                      marginRight: "4px",
-                      color: i === currentWordIndex ? "#000" : "#333F61",
-                      display: "inline-block",
+              <div>
+                {isPlaying ===
+                (getAssetAudioUrl(
+                  s3Assets[conversation[currentSteps]?.speakerAudio]
+                ) || Assets[conversation[currentSteps]?.speakerAudio]) ? (
+                  <Box
+                    sx={{
+                      marginTop: "7px",
+                      position: "relative",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                      cursor: "pointer",
+                    }}
+                    onClick={stopCompleteAudio}
+                  >
+                    <StopButton height={45} width={45} />
+                  </Box>
+                ) : (
+                  <Box
+                    //className="walkthrough-step-1"
+                    sx={{
+                      marginTop: "7px",
+                      position: "relative",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                      cursor: "pointer",
+                      //cursor: `url(${clapImage}) 32 24, auto`,
+                    }}
+                    onClick={() => {
+                      playAudio(
+                        getAssetAudioUrl(
+                          s3Assets[conversation[currentSteps]?.speakerAudio]
+                        ) || Assets[conversation[currentSteps]?.speakerAudio]
+                      );
                     }}
                   >
-                    {word}
-                  </span>
-                ))}
-              </span>
+                    <ListenButton height={50} width={50} />
+                  </Box>
+                )}
+              </div>
             </div>
 
             {!showPandaText && (
@@ -729,7 +745,10 @@ const AskMoreM14 = ({
                 {/* 👂 Audio Button on the left */}
                 {currentLevel !== "S1" && currentLevel !== "S2" && (
                   <div style={{ marginRight: "10px" }}>
-                    {isPlaying ? (
+                    {isPlaying ===
+                    (getAssetAudioUrl(
+                      s3Assets[conversation[currentSteps]?.audio]
+                    ) || Assets[conversation[currentSteps]?.audio]) ? (
                       <Box
                         sx={{
                           marginTop: "7px",

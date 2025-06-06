@@ -1,4 +1,4 @@
-name: ALL rig dev Deployment
+name: ALL rig prod Deployment
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: all-dev-rig
+    environment: all-prod-rig
 
     steps:
       - name: Checkout code
@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          
+
       - name: Configure AWS credentials
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -55,10 +55,10 @@ jobs:
           REACT_APP_CONTENT_SIZE: ${{ vars.REACT_APP_CONTENT_SIZE }}
           REACT_APP_LANGUAGE: ${{ vars.REACT_APP_LANGUAGE }}
           REACT_APP_TELEMETRY_MODE: ${{ vars.REACT_APP_TELEMETRY_MODE }}
-          REACT_APP_VIRTUAL_ID_HOST: ${{ vars.REACT_APP_VIRTUAL_ID_HOST }}
-          REACT_APP_LEARNER_AI_ORCHESTRATION_HOST: ${{ vars.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST }}
-          REACT_APP_LEARNER_AI_APP_HOST: ${{ vars.REACT_APP_LEARNER_AI_APP_HOST }}
-          REACT_APP_CONTENT_SERVICE_APP_HOST: ${{ vars.REACT_APP_CONTENT_SERVICE_APP_HOST }}
+          REACT_APP_VIRTUAL_ID_HOST: ${{ vars.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST_TEMP }}
+          REACT_APP_LEARNER_AI_ORCHESTRATION_HOST: ${{ vars.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST_TEMP }}
+          REACT_APP_LEARNER_AI_APP_HOST: ${{ vars.REACT_APP_LEARNER_AI_APP_HOST_TEMP }}
+          REACT_APP_CONTENT_SERVICE_APP_HOST: ${{ vars.REACT_APP_CONTENT_SERVICE_APP_HOST_TEMP }}
           REACT_APP_CAPTURE_AUDIO: ${{ vars.REACT_APP_CAPTURE_AUDIO }}
           REACT_APP_AWS_S3_BUCKET_NAME: ${{ vars.REACT_APP_AWS_S3_BUCKET_NAME }}
           REACT_APP_AWS_S3_BUCKET_URL: ${{ vars.REACT_APP_AWS_S3_BUCKET_URL }}
@@ -80,7 +80,7 @@ jobs:
         run: npm run build
 
       - name: Deploy to S3 Bucket
-        run: aws s3 sync ./build s3://sballappliance/
+        run: aws s3 sync ./build s3://sb-all-rig/
 
       - name: Debug Environment Variables
         run: |

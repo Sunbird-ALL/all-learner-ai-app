@@ -76,12 +76,14 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
         position: "fixed",
         background: "rgba(0, 0, 0, 0.5)",
         zIndex: 9999,
+        overflowY: "auto",
       }}
     >
       <Box
         sx={{
           width: "600px",
-          minHeight: "424px",
+          //minHeight: "424px",
+          maxHeight: "90vh",
           borderRadius: "20px",
           display: "flex",
           flexDirection: "column",
@@ -91,6 +93,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
           backgroundRepeat: "round",
           boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
           backdropFilter: "blur(25px)",
+          overflowY: "auto",
         }}
       >
         <Box mt="32px">
@@ -111,7 +114,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
             {languages.map((elem) => {
               const isSelectedLang = elem.lang === selectedLang;
               return (
-                <Grid xs={5} item key={elem.lang}>
+                <Grid xs={3} item key={elem.lang}>
                   <Box
                     onClick={() => setSelectedLang(elem.lang)}
                     sx={{

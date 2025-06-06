@@ -148,7 +148,7 @@ const Practice = () => {
         syllablesAudio: [
           {
             name: "Pen",
-            audio: getAssetAudioUrl(s3Assets.penAudio) || Assets.penAudio,
+            audio: Assets.penAudio,
           },
           {
             name: "cil",
@@ -179,7 +179,7 @@ const Practice = () => {
         img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
         syllablesAudio: [
           { name: "Bas", audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas },
-          { name: "Ket", audio: getAssetAudioUrl(s3Assets.Ket) || Assets.Ket },
+          { name: "Ket", audio: Assets.Ket },
         ],
         completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
       },
@@ -487,7 +487,7 @@ const Practice = () => {
     P4: [
       { completeWord: "Circle", syllable: ["Cir", "cle"] },
       { completeWord: "Rabbit", syllable: ["Rab", "bit"] },
-      { completeWord: "Color", syllable: ["Co", "lor"] },
+      { completeWord: "Colour", syllable: ["Co", "lour"] },
       { completeWord: "Village", syllable: ["Vil", "lage"] },
       { completeWord: "Farmer", syllable: ["Far", "mer"] },
     ],
@@ -560,8 +560,8 @@ const Practice = () => {
     S1: [
       { completeWord: "Cats meow.", syllable: ["Cats", "meow."] },
       { completeWord: "Dogs bark.", syllable: ["Dogs", "bark."] },
-      { completeWord: "Fish swim.", syllable: ["Fish", "swim."] },
-      { completeWord: "Sun shines.", syllable: ["Sun", "shines."] },
+      { completeWord: "Fish swims.", syllable: ["Fish", "swims."] },
+      { completeWord: "The sun shines.", syllable: ["Sun", "shines."] },
       { completeWord: "Stars twinkle.", syllable: ["Stars", "twinkle."] },
     ],
     S2: [
@@ -621,6 +621,12 @@ const Practice = () => {
   const currentLevel = practiceSteps?.[currentPracticeStep]?.title || "P1";
 
   const rFlow = getLocalData("rFlow");
+
+  useEffect(() => {
+    if (lang !== "en") {
+      setLocalData("rFlow", false);
+    }
+  }, [lang]);
 
   useEffect(() => {
     console.log("levelsssss", level);
@@ -940,7 +946,11 @@ const Practice = () => {
             } catch (e) {
               // catch error
             }
-          } else if (currentLevel === "S2" && (level === 1 || level === 2)) {
+          } else if (
+            currentLevel === "S2" &&
+            lang === "en" &&
+            (level === 1 || level === 2)
+          ) {
             setLocalData("mFail", true);
             setTimeout(() => {
               setLocalData("rFlow", true);
@@ -976,9 +986,13 @@ const Practice = () => {
         console.log("levelNew", level);
 
         if (![10, 11, 12, 13, 14, 15].includes(level)) {
+          const shouldIncludeMechanicsId = !(
+            level === 4 && currentGetContent?.currentLevel === "P8"
+          );
+
           const resGetContent = await axios.get(
             `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-              (currentGetContent?.mechanism?.id
+              (shouldIncludeMechanicsId && currentGetContent?.mechanism?.id
                 ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
                 : "") +
               (currentGetContent?.competency
@@ -1320,9 +1334,13 @@ const Practice = () => {
       console.log("crg", currentGetContent, level, virtualId, updatedLevel);
 
       if (![10, 11, 12, 13, 14, 15].includes(level)) {
+        const shouldIncludeMechanicsId = !(
+          level === 4 && currentGetContent?.currentLevel === "P8"
+        );
+
         const resWord = await axios.get(
           `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-            (currentGetContent?.mechanism?.id
+            (shouldIncludeMechanicsId && currentGetContent?.mechanism?.id
               ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
               : "") +
             (currentGetContent?.competency
@@ -1452,9 +1470,13 @@ const Practice = () => {
       let quesArr = [];
 
       if (![10, 11, 12, 13, 14, 15].includes(level)) {
+        const shouldIncludeMechanicsId = !(
+          level === 4 && currentGetContent?.currentLevel === "P8"
+        );
+
         const resWord = await axios.get(
           `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-            (currentGetContent?.mechanism?.id
+            (shouldIncludeMechanicsId && currentGetContent?.mechanism?.id
               ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
               : "") +
             (currentGetContent?.competency
@@ -1677,12 +1699,12 @@ const Practice = () => {
             header:
               mechanism?.id &&
               (mechanism?.id === "mechanic_15"
-                ? "Read the question and record your response"
+                ? "Look at the picture and respond to the sentence given below"
                 : questions[currentQuestion]?.contentType === "image"
                 ? `Guess the below image`
                 : `Speak the below ${questions[currentQuestion]?.contentType}`),
             words:
-              level === 1 || level === 2 || level === 3
+              lang === "en" && (level === 1 || level === 2 || level === 3)
                 ? levelOneWord
                 : mechanism?.id === "mechanic_15"
                 ? questions[currentQuestion]?.mechanics_data?.[0]?.text

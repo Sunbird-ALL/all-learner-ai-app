@@ -12,26 +12,31 @@ export const level14 = [
           speaker: "What is your favourite season?",
           user: "I like winter.",
           audio: "level14P1OneUAudio",
+          speakerAudio: "level14P1OneSAudio",
         },
         {
           speaker: "Why do you like this season?",
           user: "Winter is cool and comfortable.",
           audio: "level14P1TwoUAudio",
+          speakerAudio: "level14P1TwoSAudio",
         },
         {
           speaker: "When does this season start and end in Tamil Nadu?",
           user: "Winter is from December to February in Tamil Nadu.",
           audio: "level14P1ThreeUAudio",
+          speakerAudio: "level14P1ThreeSAudio",
         },
         {
           speaker: "How is this season different from summer/winter?",
           user: "Winter feels cool and nice, but summer is very hot.",
           audio: "level14P1FourUAudio",
+          speakerAudio: "level14P1FourSAudio",
         },
         {
           speaker: "What do people do in this season?",
           user: "People wear warm clothes like sweaters in winter.",
           audio: "level14P1FiveUAudio",
+          speakerAudio: "level14P1FiveSAudio",
         },
       ],
     },
@@ -49,26 +54,31 @@ export const level14 = [
           speaker: "What is your favourite animal?",
           user: "Dog",
           audio: "level14P2OneUAudio",
+          speakerAudio: "level14P2OneSAudio",
         },
         {
           speaker: "Why do you like this animal?",
           user: "Because it is friendly and loyal.",
           audio: "level14P2TwoUAudio",
+          speakerAudio: "level14P2TwoSAudio",
         },
         {
           speaker: "Where does this animal live?",
           user: "Dogs live in homes and streets.",
           audio: "level14P2ThreeUAudio",
+          speakerAudio: "level14P2ThreeSAudio",
         },
         {
           speaker: "What does this animal eat?",
           user: "Meat, bones, and rice.",
           audio: "level14P2FourUAudio",
+          speakerAudio: "level14P2FourSAudio",
         },
         {
           speaker: "How does this animal help people?",
           user: "It guards homes and helps the police.",
           audio: "level14P2FiveUAudio",
+          speakerAudio: "level14P2FiveSAudio",
         },
         // {
         //   speaker: "Why do people like this animal?",
@@ -91,26 +101,31 @@ export const level14 = [
           speaker: "What do you see in the market?",
           user: "I see colourful shops, sweets, and toys everywhere.",
           audio: "level14P3OneUAudio",
+          speakerAudio: "level14P3OneSAudio",
         },
         {
           speaker: "What do you want to buy?",
           user: "I want to buy something special for my grandmother.",
           audio: "level14P3TwoUAudio",
+          speakerAudio: "level14P3TwoSAudio",
         },
         {
           speaker: "Do you have a lot of money?",
           user: "No, I don't have much money, but I will find something useful.",
           audio: "level14P3ThreeUAudio",
+          speakerAudio: "level14P3ThreeSAudio",
         },
         {
           speaker: "What did you buy?",
           user: "I bought a pair of tongs for my grandmother.",
           audio: "level14P3FourUAudio",
+          speakerAudio: "level14P3FourSAudio",
         },
         {
           speaker: "Why was your grandmother happy?",
           user: "She was very happy because now she won't burn her hands while making chapatis.",
           audio: "level14P3FiveUAudio",
+          speakerAudio: "level14P3FiveSAudio",
         },
       ],
     },
@@ -128,26 +143,31 @@ export const level14 = [
           speaker: "How are cricket and kabaddi different?",
           user: "Cricket is played with a bat and ball, but kabaddi is a physical game where players tag opponents and return to their side.",
           audio: "level14P4OneUAudio",
+          speakerAudio: "level14P4OneSAudio",
         },
         {
           speaker: "Which sport do you like more and why?",
           user: "I like kabaddi more because it is fast and exciting.",
           audio: "level14P4TwoUAudio",
+          speakerAudio: "level14P4TwoSAudio",
         },
         {
           speaker: "Where do we play cricket and kabaddi?",
           user: "Cricket is played on a large field, but kabaddi is played on a small court.",
           audio: "level14P4ThreeUAudio",
+          speakerAudio: "level14P4ThreeSAudio",
         },
         {
           speaker: "What equipment do players use in cricket and kabaddi?",
           user: "Cricket players use bats, balls, and protective gear, but kabaddi players need no equipment.",
           audio: "level14P4FourUAudio",
+          speakerAudio: "level14P4FourSAudio",
         },
         {
           speaker: "Why do people enjoy cricket and kabaddi?",
           user: "People enjoy cricket because it is strategic and thrilling, but kabaddi is loved for its speed and physical action.",
           audio: "level14P4FiveUAudio",
+          speakerAudio: "level14P4FiveSAudio",
         },
       ],
     },
@@ -165,26 +185,31 @@ export const level14 = [
           speaker: "What is your favourite sport?",
           user: "My favourite sport is cricket.",
           audio: "level14P5OneUAudio",
+          speakerAudio: "level14P5OneSAudio",
         },
         {
           speaker: "Why do you like this sport?",
           user: "I like cricket because it is exciting and popular.",
           audio: "level14P5TwoUAudio",
+          speakerAudio: "level14P5TwoSAudio",
         },
         {
           speaker: "Where do you play this sport?",
           user: "I play cricket on a big field with a pitch.",
           audio: "level14P5ThreeUAudio",
+          speakerAudio: "level14P5ThreeSAudio",
         },
         {
           speaker: "How is this sport different from others?",
           user: "Cricket is played with a bat and ball.",
           audio: "level14P5FourUAudio",
+          speakerAudio: "level14P5FourSAudio",
         },
         {
           speaker: "What do players wear while playing?",
           user: "Cricket players wear helmets, gloves, and pads.",
           audio: "level14P5FiveUAudio",
+          speakerAudio: "level14P5FiveSAudio",
         },
         // {
         //   speaker: "Why do people like this sport?",
@@ -207,26 +232,31 @@ export const level14 = [
           speaker: "What is your favourite transport?",
           user: "My favourite mode of transport is a bicycle.",
           audio: "level14P6OneUAudio",
+          speakerAudio: "level14P6OneSAudio",
         },
         {
           speaker: "Why do you like this transport?",
           user: "I like bicycles because they are fun.",
           audio: "level14P6TwoUAudio",
+          speakerAudio: "level14P6TwoSAudio",
         },
         {
           speaker: "Where do you use this transport?",
           user: "I use a bicycle to go to school.",
-          audio: "level14P6TwoUAudio",
+          audio: "level14P6TwoUAudio_Alt",
+          speakerAudio: "level14P6ThreeSAudio",
         },
         {
           speaker: "How is this transport different from others?",
           user: "A bicycle has no engine.",
           audio: "level14P6ThreeUAudio",
+          speakerAudio: "level14P6FourSAudio",
         },
         {
           speaker: "What do people carry while travelling?",
           user: "People carry a school bag and water bottle.",
           audio: "level14P6FourUAudio",
+          speakerAudio: "level14P6FiveSAudio",
         },
         // {
         //   speaker: "Why do people like this transport?",
@@ -249,26 +279,31 @@ export const level14 = [
           speaker: "Where are you going?",
           user: "I am going to the bazaar today.",
           audio: "level14P7OneUAudio",
+          speakerAudio: "level14P7OneSAudio",
         },
         {
           speaker: "What do you want to buy?",
           user: "I need to buy some spices and slippers for my mother.",
           audio: "level14P7TwoUAudio",
+          speakerAudio: "level14P7TwoSAudio",
         },
         {
           speaker: "Is someone going with you?",
           user: "No, I am going alone because Binya is busy at home.",
           audio: "level14P7ThreeUAudio",
+          speakerAudio: "level14P7ThreeSAudio",
         },
         {
           speaker: "Who did you meet in the bazaar?",
           user: "I met my aunt, and she invited me for tea.",
           audio: "level14P7FourUAudio",
+          speakerAudio: "level14P7FourSAudio",
         },
         {
           speaker: "What happened while you were returning home?",
           user: "Suddenly, the wind stopped, and the sky became very dark.",
           audio: "level14P7FiveUAudio",
+          speakerAudio: "level14P7FiveSAudio",
         },
       ],
     },
@@ -286,26 +321,31 @@ export const level14 = [
           speaker: "How are dogs and cats different?",
           user: "Dogs are social and active, but cats are independent and quiet.",
           audio: "level14P8OneUAudio",
+          speakerAudio: "level14P8OneSAudio",
         },
         {
           speaker: "Which pet do you like more and why?",
           user: "I like dogs more because they are friendly and loyal.",
           audio: "level14P8TwoUAudio",
+          speakerAudio: "level14P8TwoSAudio",
         },
         {
           speaker: "How do we take care of dogs and cats?",
           user: "Dogs need daily walks and training, but cats need a litter box and a quiet space.",
           audio: "level14P8ThreeUAudio",
+          speakerAudio: "level14P8ThreeSAudio",
         },
         {
           speaker: "What do dogs and cats eat?",
           user: "Dogs eat meat, kibble, and sometimes vegetables, but cats mostly eat meat and fish.",
           audio: "level14P8FourUAudio",
+          speakerAudio: "level14P8FourSAudio",
         },
         {
           speaker: "Why do people like dogs and cats?",
           user: "People like dogs because they are loyal and protective, but cats are loved for being calm and independent.",
           audio: "level14P8FiveUAudio",
+          speakerAudio: "level14P8FiveSAudio",
         },
       ],
     },
@@ -323,26 +363,31 @@ export const level14 = [
           speaker: "Which is your favourite season?",
           user: "My favourite season is winter.",
           audio: "level14S1OneUAudio",
+          speakerAudio: "level14S1OneSAudio",
         },
         {
           speaker: "Why do you like this season?",
           user: "Because it is cold and comfortable.",
           audio: "level14S1TwoUAudio",
+          speakerAudio: "level14S1TwoSAudio",
         },
         {
           speaker: "What kind of dress do you wear in this season?",
           user: "I wear jumpers, sweaters, and woollen clothes.",
           audio: "level14S1ThreeUAudio",
+          speakerAudio: "level14S1ThreeSAudio",
         },
         {
           speaker: "How is this season different from other seasons?",
           user: "It is colder and more pleasant.",
           audio: "level14S1FourUAudio",
+          speakerAudio: "level14S1FourSAudio",
         },
         {
           speaker: "When does this season occur?",
           user: "December, January.",
           audio: "level14S1FiveUAudio",
+          speakerAudio: "level14S1FiveSAudio",
         },
       ],
     },
@@ -360,27 +405,32 @@ export const level14 = [
           speaker: "What is your favourite type of road transport?",
           user: "I like travelling by bus.",
           audio: "level14S2OneUAudio",
+          speakerAudio: "level14P1OneSAudio",
         },
         {
           speaker: "Why do you like this type of transport?",
           user: "It is comfortable.",
           audio: "level14S2TwoUAudio",
+          speakerAudio: "level14P1OneSAudio",
         },
         {
           speaker: "How often do you travel using it?",
           user: "Every day.",
           audio: "level14S2ThreeUAudio",
+          speakerAudio: "level14P1OneSAudio",
         },
         {
           speaker: "Where do you usually go when you use this transport?",
           user: "To school.",
           audio: "level14S2FourUAudio",
+          speakerAudio: "level14P1OneSAudio",
         },
         {
           speaker:
             "How is this transport different from other types of transport?",
           user: "It has fixed routes and stops.",
           audio: "level14S2FiveUAudio",
+          speakerAudio: "level14P1OneSAudio",
         },
       ],
     },
@@ -2750,7 +2800,7 @@ export const level12 = [
           {
             role: "System",
             message:
-              "Attention, everyone! If you're heading to the museum, take Bus Number 10 from the main bus stop. Get off at Museum Road and walk straight for two minutes. You will see the museum on your right. Apples are available at ₹50 per kilo. One kilo has been purchased. That’s all for now. Have a great day!",
+              "Attention everyone, if you're heading to the museum, please take bus number 10 from the main bus stop located near the central Plaza. Get off at Museum Road, then walk straight for about 2 minutes. You'll find the museum on your right, just past the coffee shop. Make sure to keep your tickets handy as they may be checked at the entrance guided to a start every hour, so try to arrive a bit early if you'd like to join one.",
             audio: "museumDirectionsAudio",
           },
         ],
@@ -2807,23 +2857,24 @@ export const level12 = [
         {
           question: {
             type: "text",
-            value: "Which fruit has been purchased?",
+            value:
+              "What should visitors do with their tickets before entering the museum?",
           },
           options: [
             {
               type: "text",
               id: "option1",
-              value: "Bananas",
+              value: "Leave them at the coffee shop",
             },
             {
               type: "text",
               id: "option2",
-              value: "Apples",
+              value: "Show them at the entrance if asked",
             },
             {
               type: "text",
               id: "option3",
-              value: "Oranges",
+              value: "Exchange them for a map",
             },
           ],
           answer: "option2",
@@ -2831,26 +2882,26 @@ export const level12 = [
         {
           question: {
             type: "text",
-            value: "How much does one kilo of apples cost?",
+            value: "When do guided tours at the museum begin?",
           },
           options: [
             {
               type: "text",
               id: "option1",
-              value: "₹30",
+              value: "Every hour",
             },
             {
               type: "text",
               id: "option2",
-              value: "₹50",
+              value: "Every 30 minutes",
             },
             {
               type: "text",
               id: "option3",
-              value: "₹70",
+              value: "Only in the afternoon",
             },
           ],
-          answer: "option2",
+          answer: "option1",
         },
         {
           question: {
@@ -3168,26 +3219,31 @@ export const level11 = [
           speaker: "Good morning, dear! How can I help you?",
           user: "Good morning, sir. I need some potatoes.",
           audio: "level11P3OneUAudio",
+          speakerAudio: "level11P3OneSAudio",
         },
         {
           speaker: "How many kilos do you want?",
           user: "Two kilograms, please.",
           audio: "level11P3TwoUAudio",
+          speakerAudio: "level11P3TwoSAudio",
         },
         {
           speaker: "One kilo of potatoes costs Rs. 30.",
           user: "That’s fine. I also need half a kilo of carrots and beans.",
           audio: "level11P3ThreeUAudio",
+          speakerAudio: "level11P3ThreeSAudio",
         },
         {
           speaker: "Anything else?",
           user: "No, that’s all. What is the total amount?",
           audio: "level11P3FourUAudio",
+          speakerAudio: "level11P3FourSAudio",
         },
         {
           speaker: "The total amount is Rs. 100.",
           user: "Here is the money. Thank you, sir.",
           audio: "level11P3FiveUAudio",
+          speakerAudio: "level11P3FiveSAudio",
         },
       ],
     },
@@ -3205,26 +3261,31 @@ export const level11 = [
           speaker: "Arivu, can you help me in the kitchen?",
           user: "Sure, Mom! What should I do?",
           audio: "level11P4OneUAudio",
+          speakerAudio: "level11P4OneSAudio",
         },
         {
           speaker: "Please bring me the tomatoes from the fridge.",
           user: "Here they are, Mom. Do you need anything else?",
           audio: "level11P4TwoUAudio",
+          speakerAudio: "level11P4TwoSAudio",
         },
         {
           speaker: "Yes, wash these vegetables and put them in the basket.",
           user: "Okay, I have washed them. What’s next?",
           audio: "level11P4ThreeUAudio",
+          speakerAudio: "level11P4ThreeSAudio",
         },
         {
           speaker: "Can you get me the salt from the shelf?",
           user: "Here it is, Mom. Are you making sambar?",
           audio: "level11P4FourUAudio",
+          speakerAudio: "level11P4FourSAudio",
         },
         {
           speaker: "Yes, and your favourite potato fry too!",
           user: "Wow! I can’t wait to eat. Thank you, Mom!",
           audio: "level11P4FiveUAudio",
+          speakerAudio: "level11P4FiveSAudio",
         },
       ],
     },
@@ -3666,33 +3727,38 @@ export const level11 = [
     data: {
       images: {
         imageOne: "salesPerson",
-        imageTwo: "vegVendor",
+        imageTwo: "boyChildImg",
       },
       conversation: [
         {
           speaker: "Good morning! How can I help you?",
           user: "Good morning, sir. I need a notebook and some pens.",
           audio: "level11P7OneUAudio",
+          speakerAudio: "level11P7OneSAudio",
         },
         {
           speaker: "What type of notebook do you need?",
           user: "A ruled notebook, please. How much does it cost?",
           audio: "level11P7TwoUAudio",
+          speakerAudio: "level11P7TwoSAudio",
         },
         {
           speaker: "It costs Rs. 50. How many pens do you want?",
           user: "Two blue pens and one black pen, please.",
           audio: "level11P7ThreeUAudio",
+          speakerAudio: "level11P7ThreeSAudio",
         },
         {
           speaker: "Anything else?",
           user: "No, that’s all. What is the total amount?",
           audio: "level11P7FourUAudio",
+          speakerAudio: "level11P7FourSAudio",
         },
         {
           speaker: "The total is Rs. 100.",
           user: "Here is the money. Thank you, sir!",
           audio: "level11P7FiveUAudio",
+          speakerAudio: "level11P7FiveSAudio",
         },
       ],
     },
@@ -3702,7 +3768,7 @@ export const level11 = [
     mechanics: "askMore",
     data: {
       images: {
-        imageOne: "vegVendor",
+        imageOne: "humanImg",
         imageTwo: "child",
       },
       conversation: [
@@ -3710,26 +3776,31 @@ export const level11 = [
           speaker: "Nila, are you ready for school?",
           user: "Yes, Dad! But I can’t find my water bottle.",
           audio: "level11P8OneUAudio",
+          speakerAudio: "level11P8OneSAudio",
         },
         {
           speaker: "Check your bag. Is it inside?",
           user: "No, I don’t see it.",
           audio: "level11P8TwoUAudio",
+          speakerAudio: "level11P8TwoSAudio",
         },
         {
           speaker: "Look at the dining table. I saw it there.",
           user: "Oh yes! Here it is. Thank you, Dad.",
           audio: "level11P8ThreeUAudio",
+          speakerAudio: "level11P8ThreeSAudio",
         },
         {
           speaker: "Good! Do you have your books and lunch box?",
           user: "Yes, everything is packed.",
           audio: "level11P8FourUAudio",
+          speakerAudio: "level11P8FourSAudio",
         },
         {
           speaker: "Great! Let’s leave early to avoid traffic.",
           user: "Okay, Dad! Let’s go.",
           audio: "level11P8FiveUAudio",
+          speakerAudio: "level11P8FiveSAudio",
         },
       ],
     },
@@ -3892,26 +3963,31 @@ export const level15 = [
           speaker: "Hi!",
           user: "Hello!",
           audio: "level15P1OneUAudio",
+          speakerAudio: "level15P1OneSAudio",
         },
         {
           speaker: "What happened to Tom's balloon?",
           user: "Tom felt sad watching his balloon fly away.",
           audio: "level15P1TwoUAudio",
+          speakerAudio: "level15P1TwoSAudio",
         },
         {
           speaker: "How did the balloon fly away?",
           user: "Suddenly, the balloon slipped from his hand and floated into the sky!",
           audio: "level15P1ThreeUAudio",
+          speakerAudio: "level15P1ThreeSAudio",
         },
         {
           speaker: "Where did Tom get the balloon from?",
           user: "Tom bought a red balloon from the shop.",
           audio: "level15P1FourUAudio",
+          speakerAudio: "level15P1FourSAudio",
         },
         {
           speaker: "What did Tom’s mother do when he was sad?",
           user: "His mother gave him a new balloon to cheer him up.",
           audio: "level15P1FiveUAudio",
+          speakerAudio: "level15P1FiveSAudio",
         },
       ],
     },
@@ -4064,37 +4140,144 @@ export const level15 = [
   },
   {
     level: "S1",
-    mechanics: "actOut",
+    mechanics: "AnouncementFlow",
     data: {
-      images: {
-        imageOne: "child",
-        imageTwo: "vegVendor",
+      instructions: {
+        type: "announcement",
+        imageOne: "trainImgOne",
+        imageTwo: "patna2",
+        imageThree: "railAnouncementImg",
+        content: [
+          {
+            role: "System",
+            message:
+              "You are packing for a trip. Your list is: Passport, Suitcase, Sunglasses, Credit Card, and Guidebook. A credit card is used to pay for things like food and tickets. A guidebook has pictures and information to help you learn about the places you visit.",
+            audio: "packingTripAudio",
+          },
+        ],
       },
-      conversation: [
+      tasks: [
         {
-          speaker: "What did the train do as it moved up the hillside?",
-          user: "The train twisted and turned up the rugged hillside, winding its path through dense woods.",
-          audio: "level15S1OneUAudio",
+          question: {
+            type: "text",
+            value: "What are the five items in order?",
+          },
+          options: [
+            {
+              type: "text",
+              id: "option1",
+              value: "Passport, Suitcase, Sunglasses, Credit Card, Guidebook",
+            },
+            {
+              type: "text",
+              id: "option2",
+              value: "Guidebook, Passport, Credit Card, Suitcase, Sunglasses",
+            },
+            {
+              type: "text",
+              id: "option3",
+              value: "Sunglasses, Suitcase, Credit Card, Passport, Guidebook",
+            },
+          ],
+          answer: "option1",
         },
         {
-          speaker: "How did she react when she got scared?",
-          user: "She shrieked in fear and quickly stepped away.",
-          audio: "level15S1TwoUAudio",
+          question: {
+            type: "text",
+            value: "Which item is the most important?",
+          },
+          options: [
+            {
+              type: "text",
+              id: "option1",
+              value: "Passport.",
+            },
+            {
+              type: "text",
+              id: "option2",
+              value: "Sunglasses, because they look cool.",
+            },
+            {
+              type: "text",
+              id: "option3",
+              value: "Suitcase, because it holds clothes.",
+            },
+          ],
+          answer: "option1",
         },
         {
-          speaker: "How did the scene appear in the movie?",
-          user: "It looked like a scene from a beautiful dream.",
-          audio: "level15S1ThreeUAudio",
+          question: {
+            type: "text",
+            value: "Name one item that can be replaced easily.",
+          },
+          options: [
+            {
+              type: "text",
+              id: "option1",
+              value: "Sunglasses.",
+            },
+            {
+              type: "text",
+              id: "option2",
+              value: "Passport, because it is cheap.",
+            },
+            {
+              type: "text",
+              id: "option3",
+              value: "Credit Card, because I have two.",
+            },
+          ],
+          answer: "option1",
         },
         {
-          speaker: "What should you focus on to win?",
-          user: "Focus on winning! Just win! I believe in you.",
-          audio: "level15S1FourUAudio",
+          question: {
+            type: "text",
+            value:
+              "Which item will you use to pay for food, tickets, and shopping during your trip?",
+          },
+          options: [
+            {
+              type: "text",
+              id: "option1",
+              value: "Guidebook",
+            },
+            {
+              type: "text",
+              id: "option2",
+              value: "Credit Card",
+            },
+            {
+              type: "text",
+              id: "option3",
+              value: "Suitcase",
+            },
+          ],
+          answer: "option2",
         },
         {
-          speaker: "What happens to the stations as the train moves?",
-          user: "Colorful stations pass by quickly.",
-          audio: "level15S1FiveUAudio",
+          question: {
+            type: "text",
+            value:
+              "Which item helps you learn more about the places you are visiting?",
+          },
+          options: [
+            {
+              type: "text",
+              id: "option1",
+              value: "Guidebook.",
+            },
+            {
+              type: "text",
+              id: "option2",
+              value: "Sunglasses, because they block the sun.",
+            },
+            {
+              type: "text",
+              id: "option3",
+              value: "Suitcase, because it carries clothes.",
+            },
+          ],
+          answer: "option1",
         },
       ],
     },
@@ -4180,26 +4363,31 @@ export const level15 = [
           speaker: "How do turtles swim?",
           user: "Turtles use their flippers to swim gracefully and effortlessly.",
           audio: "level15P5OneUAudio",
+          speakerAudio: "level15P5OneSAudio",
         },
         {
           speaker: "What did someone do in a hurry?",
           user: "A hurried dash to the sea.",
           audio: "level15P5TwoUAudio",
+          speakerAudio: "level15P5TwoSAudio",
         },
         {
           speaker: "What was Owlie pretending to be?",
           user: "Owlie was pretending to be a curio!",
           audio: "level15P5ThreeUAudio",
+          speakerAudio: "level15P5ThreeSAudio",
         },
         {
           speaker: "Where did the poor farmer till the land?",
           user: "The poor farmer tilled the land near the once small depression.",
           audio: "level15P5FourUAudio",
+          speakerAudio: "level15P5FourSAudio",
         },
         {
           speaker: "What happened to the garden?",
           user: "The garden became a happy place.",
           audio: "level15P5FiveUAudio",
+          speakerAudio: "level15P5FiveSAudio",
         },
       ],
     },
@@ -4217,26 +4405,31 @@ export const level15 = [
           speaker: "How do dolphins move in water?",
           user: "Dolphins glide smoothly through the ocean waves.",
           audio: "level15P6OneUAudio",
+          speakerAudio: "level15P6OneSAudio",
         },
         {
           speaker: "What did the little crab do on the beach?",
           user: "The little crab scurried quickly across the sandy shore.",
           audio: "level15P6TwoUAudio",
+          speakerAudio: "level15P6TwoSAudio",
         },
         {
           speaker: "Why was Owlie excited?",
           user: "Owlie discovered a shiny pebble and hooted with joy.",
           audio: "level15P6ThreeUAudio",
+          speakerAudio: "level15P6ThreeSAudio",
         },
         {
           speaker: "What did the farmer plant in his field?",
           user: "The farmer carefully planted rows of golden wheat.",
           audio: "level15P6FourUAudio",
+          speakerAudio: "level15P6FourSAudio",
         },
         {
           speaker: "What made the garden beautiful?",
           user: "Bright flowers and buzzing bees filled the garden with life.",
           audio: "level15P6FiveUAudio",
+          speakerAudio: "level15P6FiveSAudio",
         },
       ],
     },
@@ -4284,12 +4477,12 @@ export const level15 = [
         },
         {
           question: {
-            text: "Which of the above can fly?",
+            text: "The horses _____ to seek attention",
             type: "text",
           },
           answer: "audio1",
           options: [
-            { id: "audio1", value: "BirdAudio", type: "audio" },
+            { id: "audio1", value: "neighAudio", type: "audio" },
             { id: "audio2", value: "DogAudio", type: "audio" },
             { id: "audio3", value: "CatAudio", type: "audio" },
           ],
@@ -4711,7 +4904,7 @@ export const level10 = [
             {
               type: "text",
               id: "option1",
-              value: "Follow station staff instructions",
+              value: "Follow instructions of the station staffs",
             },
             {
               type: "text",
@@ -4926,7 +5119,7 @@ export const level10 = [
         {
           question: {
             type: "text",
-            value: "Who helped move the baby elephant from the track?",
+            value: "Who helped to move the baby elephant from the track?",
           },
           options: [
             { type: "text", id: "option1", value: "The train driver" },
@@ -5334,8 +5527,8 @@ export const level10 = [
           question: "It is important to remember that it is not your ______.",
           options: [
             { id: "option1", value: "fault" },
-            { id: "option2", value: "responsibility" },
-            { id: "option3", value: "choice" },
+            { id: "option2", value: "umbrella" },
+            { id: "option3", value: "vacation" },
           ],
           answer: "option1",
         },
@@ -5356,7 +5549,7 @@ export const level10 = [
           options: [
             { id: "audio1", value: "level10P7FourAudio2", type: "audio" },
             { id: "audio2", value: "level10P7FiveAudio3", type: "audio" },
-            { id: "audio3", value: "level10P7FiveAudio1", type: "audio" },
+            { id: "audio3", value: "level10P7FiveAudio2", type: "audio" },
           ],
         },
         {
@@ -5380,7 +5573,7 @@ export const level10 = [
           options: [
             { id: "audio1", value: "level10P7FourAudio2", type: "audio" },
             { id: "audio2", value: "level10P7FiveAudio3", type: "audio" },
-            { id: "audio3", value: "level10P7ThreeAudio3", type: "audio" },
+            { id: "audio3", value: "level10P7FourAudio1", type: "audio" },
           ],
         },
         {
@@ -5400,11 +5593,11 @@ export const level10 = [
             text: "Which of the following is Not part of the classroom announcement?",
             type: "text",
           },
-          answer: "audio1",
+          answer: "audio3",
           options: [
-            { id: "audio1", value: "gymAudio", type: "audio" },
+            { id: "audio1", value: "level10P7FiveAudio2", type: "audio" },
             { id: "audio2", value: "level10P7FourAudio2", type: "audio" },
-            { id: "audio3", value: "level10P7ThreeAudio3", type: "audio" },
+            { id: "audio3", value: "gymAudio", type: "audio" },
           ],
         },
       ],

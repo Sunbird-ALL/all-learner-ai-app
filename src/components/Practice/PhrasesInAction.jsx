@@ -184,7 +184,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
-              text: "Sun Shines",
+              text: "The sun shines.",
             },
           ],
           audio:
@@ -197,15 +197,15 @@ const PhrasesInAction = ({
               text: "We Play",
             },
             {
-              img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
-              text: "Sun Shines",
-            },
-            {
               img: getAssetUrl(s3Assets.heDancesImg) || Assets.heDancesImg,
               text: "He Dances",
             },
+            {
+              img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
+              text: "The sun shines.",
+            },
           ],
-          correctWordTwo: "Sun Shines",
+          correctWordTwo: "The sun shines.",
           audio:
             getAssetAudioUrl(s3Assets.sunShinesAudio) || Assets.sunShinesAudio,
         },
@@ -215,7 +215,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.fishSwimImg) || Assets.fishSwimImg,
-              text: "Fish Swim",
+              text: "Fish swims.",
             },
           ],
           audio:
@@ -229,14 +229,14 @@ const PhrasesInAction = ({
             },
             {
               img: getAssetUrl(s3Assets.fishSwimImg) || Assets.fishSwimImg,
-              text: "Fish Swim",
+              text: "Fish swims.",
             },
             {
               img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
               text: "It Rains",
             },
           ],
-          correctWordTwo: "Fish Swim",
+          correctWordTwo: "Fish swims.",
           audio:
             getAssetAudioUrl(s3Assets.fishSwimAudio) || Assets.fishSwimAudio,
         },
@@ -246,7 +246,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
-              text: "Birds Fly",
+              text: "Birds fly.",
             },
           ],
           audio:
@@ -255,19 +255,19 @@ const PhrasesInAction = ({
         step2: {
           allwordsTwo: [
             {
-              img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
-              text: "She Reads",
+              img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
+              text: "Birds fly.",
             },
             {
-              img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
-              text: "Birds Fly",
+              img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
+              text: "She Reads",
             },
             {
               img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
               text: "We Win",
             },
           ],
-          correctWordTwo: "Birds Fly",
+          correctWordTwo: "Birds fly.",
           audio:
             getAssetAudioUrl(s3Assets.birdsFlyAudio) || Assets.birdsFlyAudio,
         },
@@ -277,7 +277,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.sheSmilesImg) || Assets.sheSmilesImg,
-              text: "She Smiles",
+              text: "She smiles.",
             },
           ],
           audio:
@@ -291,14 +291,14 @@ const PhrasesInAction = ({
             },
             {
               img: getAssetUrl(s3Assets.sheSmilesImg) || Assets.sheSmilesImg,
-              text: "She Smiles",
+              text: "She smiles.",
             },
             {
               img: getAssetUrl(s3Assets.heEatsImg) || Assets.heEatsImg,
               text: "He Eats",
             },
           ],
-          correctWordTwo: "She Smiles",
+          correctWordTwo: "She smiles.",
           audio:
             getAssetAudioUrl(s3Assets.sheSmilesAudio) || Assets.sheSmilesAudio,
         },
@@ -308,7 +308,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.theyLaughImg) || Assets.theyLaughImg,
-              text: "They Laugh",
+              text: "They laugh.",
             },
           ],
           audio:
@@ -322,14 +322,14 @@ const PhrasesInAction = ({
             },
             {
               img: getAssetUrl(s3Assets.theyLaughImg) || Assets.theyLaughImg,
-              text: "They Laugh",
+              text: "They laugh.",
             },
             {
               img: getAssetUrl(s3Assets.wePlayImg) || Assets.wePlayImg,
               text: "We Play",
             },
           ],
-          correctWordTwo: "They Laugh",
+          correctWordTwo: "They laugh.",
           audio:
             getAssetAudioUrl(s3Assets.theyLaughAudio) || Assets.theyLaughAudio,
         },
@@ -342,7 +342,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.wePlayImg) || Assets.wePlayImg,
-              text: "We Play",
+              text: "We play.",
             },
           ],
           audio: getAssetAudioUrl(s3Assets.wePlayAudio) || Assets.wePlayAudio,
@@ -350,19 +350,19 @@ const PhrasesInAction = ({
         step2: {
           allwordsTwo: [
             {
-              img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
-              text: "Sun Shines",
+              img: getAssetUrl(s3Assets.wePlayImg) || Assets.wePlayImg,
+              text: "We play.",
             },
             {
-              img: getAssetUrl(s3Assets.wePlayImg) || Assets.wePlayImg,
-              text: "We Play",
+              img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
+              text: "The Sun Shines.",
             },
             {
               img: getAssetUrl(s3Assets.heDancesImg) || Assets.heDancesImg,
               text: "He Dances",
             },
           ],
-          correctWordTwo: "We Play",
+          correctWordTwo: "We play.",
           audio: getAssetAudioUrl(s3Assets.wePlayAudio) || Assets.wePlayAudio,
         },
       },
@@ -371,7 +371,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.heDancesImg) || Assets.heDancesImg,
-              text: "He Dances",
+              text: "He dances.",
             },
           ],
           audio:
@@ -384,15 +384,15 @@ const PhrasesInAction = ({
               text: "Clocks Tick",
             },
             {
-              img: getAssetUrl(s3Assets.heDancesImg) || Assets.heDancesImg,
-              text: "He Dances",
-            },
-            {
               img: getAssetUrl(s3Assets.sheSingsImg) || Assets.sheSingsImg,
               text: "She Sings",
             },
+            {
+              img: getAssetUrl(s3Assets.heDancesImg) || Assets.heDancesImg,
+              text: "He dances.",
+            },
           ],
-          correctWordTwo: "He Dances",
+          correctWordTwo: "He dances.",
           audio:
             getAssetAudioUrl(s3Assets.heDancesAudio) || Assets.heDancesAudio,
         },
@@ -402,7 +402,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.sheSingsImg) || Assets.sheSingsImg,
-              text: "She Sings",
+              text: "She sings.",
             },
           ],
           audio:
@@ -417,14 +417,14 @@ const PhrasesInAction = ({
             },
             {
               img: getAssetUrl(s3Assets.sheSingsImg) || Assets.sheSingsImg,
-              text: "She Sings",
+              text: "She sings.",
             },
             {
               img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
               text: "It Rains",
             },
           ],
-          correctWordTwo: "She Sings",
+          correctWordTwo: "She sings.",
           audio:
             getAssetAudioUrl(s3Assets.sheSingsAudio) || Assets.sheSingsAudio,
         },
@@ -434,7 +434,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
-              text: "Dogs Bark",
+              text: "Dogs bark.",
             },
           ],
           audio:
@@ -447,15 +447,15 @@ const PhrasesInAction = ({
               text: "We Win",
             },
             {
-              img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
-              text: "Dogs Bark",
-            },
-            {
               img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
               text: "Baby Cries",
             },
+            {
+              img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+              text: "Dogs bark.",
+            },
           ],
-          correctWordTwo: "Dogs Bark",
+          correctWordTwo: "Dogs bark.",
           audio:
             getAssetAudioUrl(s3Assets.dogsBarkAudio) || Assets.dogsBarkAudio,
         },
@@ -465,7 +465,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
-              text: "It Rains",
+              text: "It rains.",
             },
           ],
           audio: getAssetAudioUrl(s3Assets.itRainsAudio) || Assets.itRainsAudio,
@@ -478,14 +478,14 @@ const PhrasesInAction = ({
             },
             {
               img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
-              text: "It Rains",
+              text: "It rains.",
             },
             {
               img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
               text: "I Sleep",
             },
           ],
-          correctWordTwo: "It Rains",
+          correctWordTwo: "It rains.",
           audio: getAssetAudioUrl(s3Assets.itRainsAudio) || Assets.itRainsAudio,
         },
       },
@@ -497,7 +497,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.youSwimImg) || Assets.youSwimImg,
-              text: "You Swim",
+              text: "You swim.",
             },
           ],
           audio: getAssetAudioUrl(s3Assets.youSwimAudio) || Assets.youSwimAudio,
@@ -510,14 +510,14 @@ const PhrasesInAction = ({
             },
             {
               img: getAssetUrl(s3Assets.youSwimImg) || Assets.youSwimImg,
-              text: "You Swim",
+              text: "You swim.",
             },
             {
               img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
               text: "She Reads",
             },
           ],
-          correctWordTwo: "You Swim",
+          correctWordTwo: "You swim.",
           audio: getAssetAudioUrl(s3Assets.youSwimAudio) || Assets.youSwimAudio,
         },
       },
@@ -526,7 +526,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
-              text: "I Sleep",
+              text: "I sleep.",
             },
           ],
           audio: getAssetAudioUrl(s3Assets.iSleepAudio) || Assets.iSleepAudio,
@@ -538,15 +538,15 @@ const PhrasesInAction = ({
               text: "Clocks Tick",
             },
             {
-              img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
-              text: "I Sleep",
+              img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
+              text: "The Sun Shines.",
             },
             {
-              img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
-              text: "Sun Shines",
+              img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
+              text: "I sleep.",
             },
           ],
-          correctWordTwo: "I Sleep",
+          correctWordTwo: "I sleep.",
           audio: getAssetAudioUrl(s3Assets.iSleepAudio) || Assets.iSleepAudio,
         },
       },
@@ -555,7 +555,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.heEatsImg) || Assets.heEatsImg,
-              text: "He Eats",
+              text: "He eats.",
             },
           ],
           audio: getAssetAudioUrl(s3Assets.heEatsAudio) || Assets.heEatsAudio,
@@ -563,20 +563,20 @@ const PhrasesInAction = ({
         step2: {
           allwordsTwo: [
             {
+              img: getAssetUrl(s3Assets.heEatsImg) || Assets.heEatsImg,
+              text: "He eats.",
+            },
+            {
               img:
                 getAssetUrl(s3Assets.flowersBloomImg) || Assets.flowersBloomImg,
               text: "Flowers Bloom",
-            },
-            {
-              img: getAssetUrl(s3Assets.heEatsImg) || Assets.heEatsImg,
-              text: "He Eats",
             },
             {
               img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
               text: "Dogs Bark",
             },
           ],
-          correctWordTwo: "He Eats",
+          correctWordTwo: "He eats.",
           audio: getAssetAudioUrl(s3Assets.heEatsAudio) || Assets.heEatsAudio,
         },
       },
@@ -585,7 +585,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
-              text: "She Reads",
+              text: "She reads.",
             },
           ],
           audio:
@@ -599,14 +599,14 @@ const PhrasesInAction = ({
             },
             {
               img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
-              text: "She Reads",
+              text: "She reads.",
             },
             {
               img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
               text: "Baby Cries",
             },
           ],
-          correctWordTwo: "She Reads",
+          correctWordTwo: "She reads.",
           audio:
             getAssetAudioUrl(s3Assets.sheReadsAudio) || Assets.sheReadsAudio,
         },
@@ -616,7 +616,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.clocksTickImg) || Assets.clocksTickImg,
-              text: "Clocks Tick",
+              text: "Clocks tick.",
             },
           ],
           audio:
@@ -630,15 +630,15 @@ const PhrasesInAction = ({
               text: "She Sings",
             },
             {
-              img: getAssetUrl(s3Assets.clocksTickImg) || Assets.clocksTickImg,
-              text: "Clocks Tick",
-            },
-            {
               img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
               text: "I Sleep",
             },
+            {
+              img: getAssetUrl(s3Assets.clocksTickImg) || Assets.clocksTickImg,
+              text: "Clocks tick.",
+            },
           ],
-          correctWordTwo: "Clocks Tick",
+          correctWordTwo: "Clocks tick.",
           audio:
             getAssetAudioUrl(s3Assets.clocksTickAudio) ||
             Assets.clocksTickAudio,
@@ -653,7 +653,7 @@ const PhrasesInAction = ({
             {
               img:
                 getAssetUrl(s3Assets.flowersBloomImg) || Assets.flowersBloomImg,
-              text: "Flowers Bloom",
+              text: "Flowers bloom.",
             },
           ],
           audio:
@@ -669,14 +669,14 @@ const PhrasesInAction = ({
             {
               img:
                 getAssetUrl(s3Assets.flowersBloomImg) || Assets.flowersBloomImg,
-              text: "Flowers Bloom",
+              text: "Flowers bloom.",
             },
             {
               img: getAssetUrl(s3Assets.fireBurnsImg) || Assets.fireBurnsImg,
               text: "Fire Burns",
             },
           ],
-          correctWordTwo: "Flowers Bloom",
+          correctWordTwo: "Flowers bloom.",
           audio:
             getAssetAudioUrl(s3Assets.flowersBloomAudio) ||
             Assets.flowersBloomAudio,
@@ -687,7 +687,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.fireBurnsImg) || Assets.fireBurnsImg,
-              text: "Fire Burns",
+              text: "Fire burns.",
             },
           ],
           audio:
@@ -700,15 +700,15 @@ const PhrasesInAction = ({
               text: "Birds Fly",
             },
             {
-              img: getAssetUrl(s3Assets.fireBurnsImg) || Assets.fireBurnsImg,
-              text: "Fire Burns",
-            },
-            {
               img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
               text: "Dogs Bark",
             },
+            {
+              img: getAssetUrl(s3Assets.fireBurnsImg) || Assets.fireBurnsImg,
+              text: "Fire burns.",
+            },
           ],
-          correctWordTwo: "Fire Burns",
+          correctWordTwo: "Fire burns.",
           audio:
             getAssetAudioUrl(s3Assets.fireBurnsAudio) || Assets.fireBurnsAudio,
         },
@@ -718,7 +718,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
-              text: "Baby Cries",
+              text: "Baby cries.",
             },
           ],
           audio:
@@ -727,19 +727,19 @@ const PhrasesInAction = ({
         step2: {
           allwordsTwo: [
             {
+              img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
+              text: "Baby cries.",
+            },
+            {
               img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
               text: "We Win",
             },
             {
-              img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
-              text: "Baby Cries",
-            },
-            {
               img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
-              text: "Sun Shines",
+              text: "The Sun Shines.",
             },
           ],
-          correctWordTwo: "Baby Cries",
+          correctWordTwo: "Baby cries.",
           audio:
             getAssetAudioUrl(s3Assets.babyCriesAudio) || Assets.babyCriesAudio,
         },
@@ -749,7 +749,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.youCookImg) || Assets.youCookImg,
-              text: "You Cook",
+              text: "You cook.",
             },
           ],
           audio: getAssetAudioUrl(s3Assets.youCookAudio) || Assets.youCookAudio,
@@ -762,7 +762,7 @@ const PhrasesInAction = ({
             },
             {
               img: getAssetUrl(s3Assets.youCookImg) || Assets.youCookImg,
-              text: "You Cook",
+              text: "You cook.",
             },
             {
               img:
@@ -770,7 +770,7 @@ const PhrasesInAction = ({
               text: "Flowers Bloom",
             },
           ],
-          correctWordTwo: "You Cook",
+          correctWordTwo: "You cook.",
           audio: getAssetAudioUrl(s3Assets.youCookAudio) || Assets.youCookAudio,
         },
       },
@@ -779,7 +779,7 @@ const PhrasesInAction = ({
           allwords: [
             {
               img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
-              text: "We Win",
+              text: "We win.",
             },
           ],
           audio: getAssetAudioUrl(s3Assets.weWinAudio) || Assets.weWinAudio,
@@ -791,15 +791,15 @@ const PhrasesInAction = ({
               text: "Dogs Bark",
             },
             {
-              img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
-              text: "We Win",
-            },
-            {
               img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
               text: "She Reads",
             },
+            {
+              img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+              text: "We win.",
+            },
           ],
-          correctWordTwo: "We Win",
+          correctWordTwo: "We win.",
           audio: getAssetAudioUrl(s3Assets.weWinAudio) || Assets.weWinAudio,
         },
       },
