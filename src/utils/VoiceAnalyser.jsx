@@ -39,6 +39,10 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import S3Client from "../config/awsS3";
 import * as wasm from "indicasr-wasm";
 import { ConstructionOutlined } from "@mui/icons-material";
+import { set } from "lodash";
+import { useNavigate } from "react-router-dom";
+import { original } from "@reduxjs/toolkit";
+
 /* eslint-disable */
 
 const AudioPath = {
@@ -79,10 +83,13 @@ function VoiceAnalyser(props) {
   const { callUpdateLearner } = props;
   const lang = getLocalData("lang");
   const { livesData, setLivesData } = props;
+  const navigate = useNavigate();
   const [isAudioPreprocessing, setIsAudioPreprocessing] = useState(
     import.meta.env.VITE_APP_IS_AUDIOPREPROCESSING === "true"
   );
   const [isMatching, setIsMatching] = useState(false);
+
+  const [recordedBlob, setRecordedBlob] = useState(null);
 
   //console.log('audio', recordedAudio, isMatching);
 
@@ -91,6 +98,7 @@ function VoiceAnalyser(props) {
       setRecordedAudio("");
     }
   }, [props.enableNext]);
+
   const [nonDenoisedText, setNonDenoisedText] = useState("");
   const [nonDenoisedTextTokens, setNonDenoisedTextTokens] = useState([]);
   const [denoisedTextTokens, setDenoisedTextTokens] = useState([]);
@@ -102,26 +110,31 @@ function VoiceAnalyser(props) {
   const { ffmpeg, loading } = useFFmpeg();
 
   const handleProcess = async (recordedBlob) => {
+    if(!window.sherpaRecognizer) {
+      // alert("Offline model not loaded, please logout and relogin to load the model");
+      // navigate("/login");
+    }
     // if (loading) {
     //   console.log("FFmpeg is still loading...");
     //   return;
     // }
-    console.log(recordedBlob);
+    // console.log(recordedBlob);
+    setRecordedBlob(recordedBlob);
     try {
       let nondenoisedBlob;
       let nonDenoisedRes;
       let newDenoisedUrl;
 
 
-      if (callUpdateLearner && isOfflineModel) {
+      if (callUpdateLearner && isOfflineModel && props.isPractice) {
         try {
-          if(isOfflineModel && lang === 'en') {
+          if (isOfflineModel && lang === 'en') {
             await ffmpeg.FS(
               "writeFile",
               "recorded.webm",
               await fetchFile(recordedBlob)
             );
-    
+
             let nondenoiseddata;
             try {
               nondenoiseddata = ffmpeg.FS("readFile", "recorded.webm");
@@ -132,53 +145,53 @@ function VoiceAnalyser(props) {
             nondenoisedBlob = new Blob([nondenoiseddata.buffer], {
               type: "audio/webm",
             });
-    
+
             nonDenoisedRes = await getResponseText(nondenoisedBlob);
-          
-          }else{
-            const transcodedArrayBuffer = await transcodeFile(recordedBlob, "webm",false);
-        
+
+          } else {
+            const transcodedArrayBuffer = await transcodeFile(recordedBlob, "webm", false);
+
             const byteArray = new Uint8Array(transcodedArrayBuffer);
-                  const processed_data = wasm.run_preprocessor(byteArray);
-                  const logits = await runModel(processed_data);
-                  let vocab = window.offlineVocab;
-                  let topK = 2;
-                  const batch_size = 1;
-                  const vocab_size = vocab.length - 1;
-                  const time_steps = logits.length / (vocab_size * batch_size);
-                  const offset = Number(vocab[0]);
-                  const actual_vocab_size = Number(vocab[1]);
-              
-                  let output;
-                  if (topK > 1) {
-                    output = wasm.decode_logprobs_topk(
-                      logits,
-                      new Uint32Array([batch_size, time_steps, vocab_size]),
-                      vocab.slice(2),
-                      offset,
-                      actual_vocab_size,
-                      topK
-                    );
-                  } else {
-                    output = wasm.decode_logprobs(
-                      logits,
-                      new Uint32Array([batch_size, time_steps, vocab_size]),
-                      vocab.slice(2),
-                      offset,
-                      actual_vocab_size
-                    );
-                  }
-    
-                  console.log(output);
-                  nonDenoisedRes = output[0].text;
-                  setNonDenoisedTextTokens([...nonDenoisedTextTokens,output]);
+            const processed_data = wasm.run_preprocessor(byteArray);
+            const logits = await runModel(processed_data);
+            let vocab = window.offlineVocab;
+            let topK = 2;
+            const batch_size = 1;
+            const vocab_size = vocab.length - 1;
+            const time_steps = logits.length / (vocab_size * batch_size);
+            const offset = Number(vocab[0]);
+            const actual_vocab_size = Number(vocab[1]);
+
+            let output;
+            if (topK > 1) {
+              output = wasm.decode_logprobs_topk(
+                logits,
+                new Uint32Array([batch_size, time_steps, vocab_size]),
+                vocab.slice(2),
+                offset,
+                actual_vocab_size,
+                topK
+              );
+            } else {
+              output = wasm.decode_logprobs(
+                logits,
+                new Uint32Array([batch_size, time_steps, vocab_size]),
+                vocab.slice(2),
+                offset,
+                actual_vocab_size
+              );
+            }
+
+            console.log(output);
+            nonDenoisedRes = output[0]?.text || "";
+            setNonDenoisedTextTokens([...nonDenoisedTextTokens, output]);
           }
 
 
           nonDenoisedRes = await filterBadWords(nonDenoisedRes);
           setNonDenoisedText(nonDenoisedRes);
-          console.log("non denoised output -- ", nonDenoisedRes);
-          console.log(fuzz.ratio(props.originalText, nonDenoisedRes));
+          // console.log("non denoised output -- ", nonDenoisedRes);
+          // console.log(fuzz.ratio(props.originalText, nonDenoisedRes));
         } catch (error) {
           console.error("Error getting non denoised text:", error);
         }
@@ -189,14 +202,14 @@ function VoiceAnalyser(props) {
       let denoisedRes;
 
 
-      if (callUpdateLearner && isOfflineModel) {
+      if (callUpdateLearner && isOfflineModel && props.isPractice) {
         try {
           await ffmpeg.FS(
             "writeFile",
             "cb.rnnn",
             await fetchFile(rnnoiseModelPath)
           );
-    
+
           await ffmpeg.run(
             "-i",
             "recorded.webm",
@@ -204,7 +217,7 @@ function VoiceAnalyser(props) {
             "arnndn=m=cb.rnnn",
             "output.wav"
           );
-    
+
           let data;
           try {
             data = ffmpeg.FS("readFile", "output.wav");
@@ -215,56 +228,56 @@ function VoiceAnalyser(props) {
           const denoisedBlob = new Blob([data.buffer], { type: "audio/wav" });
           newDenoisedUrl = URL.createObjectURL(denoisedBlob);
 
-          if(isOfflineModel && lang !== 'en') {
-            const transcodedArrayBuffer = await transcodeFile(recordedBlob, "webm",true);
-        
+          if (isOfflineModel && lang !== 'en') {
+            const transcodedArrayBuffer = await transcodeFile(recordedBlob, "webm", true);
+
             const byteArray = new Uint8Array(transcodedArrayBuffer);
-                  const processed_data = wasm.run_preprocessor(byteArray);
-                  const logits = await runModel(processed_data);
-                  let vocab = window.offlineVocab;
-                  let topK = 2;
-                  const batch_size = 1;
-                  const vocab_size = vocab.length - 1;
-                  const time_steps = logits.length / (vocab_size * batch_size);
-                  const offset = Number(vocab[0]);
-                  const actual_vocab_size = Number(vocab[1]);
-              
-                  let output;
-                  if (topK > 1) {
-                    output = wasm.decode_logprobs_topk(
-                      logits,
-                      new Uint32Array([batch_size, time_steps, vocab_size]),
-                      vocab.slice(2),
-                      offset,
-                      actual_vocab_size,
-                      topK
-                    );
-                  } else {
-                    output = wasm.decode_logprobs(
-                      logits,
-                      new Uint32Array([batch_size, time_steps, vocab_size]),
-                      vocab.slice(2),
-                      offset,
-                      actual_vocab_size
-                    );
-                  }
-    
-                  denoisedRes = output[0].text;
-                  setDenoisedTextTokens([...denoisedTextTokens,output]);
-          }else{
+            const processed_data = wasm.run_preprocessor(byteArray);
+            const logits = await runModel(processed_data);
+            let vocab = window.offlineVocab;
+            let topK = 2;
+            const batch_size = 1;
+            const vocab_size = vocab.length - 1;
+            const time_steps = logits.length / (vocab_size * batch_size);
+            const offset = Number(vocab[0]);
+            const actual_vocab_size = Number(vocab[1]);
+
+            let output;
+            if (topK > 1) {
+              output = wasm.decode_logprobs_topk(
+                logits,
+                new Uint32Array([batch_size, time_steps, vocab_size]),
+                vocab.slice(2),
+                offset,
+                actual_vocab_size,
+                topK
+              );
+            } else {
+              output = wasm.decode_logprobs(
+                logits,
+                new Uint32Array([batch_size, time_steps, vocab_size]),
+                vocab.slice(2),
+                offset,
+                actual_vocab_size
+              );
+            }
+
+            denoisedRes = output[0].text;
+            setDenoisedTextTokens([...denoisedTextTokens, output]);
+          } else {
             denoisedRes = await getResponseText(denoisedBlob);
           }
 
           denoisedRes = await filterBadWords(denoisedRes);
           setDenoisedText(denoisedRes);
-          console.log("denoised output -- ", denoisedRes);
-          console.log(fuzz.ratio(props.originalText, denoisedRes));
+          // console.log("denoised output -- ", denoisedRes);
+          // console.log(fuzz.ratio(props.originalText, denoisedRes));
         } catch (error) {
           console.error("Error getting denoised text:", error);
         }
       }
 
-      if(newDenoisedUrl === undefined){
+      if (newDenoisedUrl === undefined) {
         newDenoisedUrl = recordedBlob;
       }
       setRecordedAudio((prevUrl) => {
@@ -274,7 +287,7 @@ function VoiceAnalyser(props) {
         return newDenoisedUrl;
       });
 
-      console.log("Denoised URL:", newDenoisedUrl);
+      // console.log("Denoised URL:", newDenoisedUrl);
 
     } catch (error) {
       console.error("Error processing audio:", error);
@@ -304,19 +317,19 @@ function VoiceAnalyser(props) {
       new Uint8Array(fileBuffer)
     );
     // "-acodec pcm_s16le -ar 44100 -ac 2"
-    if(!isDenoised){
-    await ffmpeg.run(
-      "-i",
-      `input.${inputType}`,
-      "-acodec",
-      "pcm_s16le",
-      "-ar",
-      "16000",
-      "-ac",
-      "1",
-      "output.wav"
-    );
-    }else{
+    if (!isDenoised) {
+      await ffmpeg.run(
+        "-i",
+        `input.${inputType}`,
+        "-acodec",
+        "pcm_s16le",
+        "-ar",
+        "16000",
+        "-ac",
+        "1",
+        "output.wav"
+      );
+    } else {
       await ffmpeg.run(
         "-i",
         `input.${inputType}`,
@@ -365,114 +378,129 @@ function VoiceAnalyser(props) {
   };
 
   const getResponseText = async (audioBlob) => {
-  
-  let printed = false;
-  let lastResult = '';
-  let resultList = [];
-  let vad = window.vad;
-  let buffer = window.wasmBuffer;
-  let result;
+    try {
+      
+      let printed = false;
+      let lastResult = '';
+      let resultList = [];
+      let vad = window.vad;
+      let buffer = window.wasmBuffer;
+      let result;
 
-  let expectedSampleRate = 16000;
+      let expectedSampleRate = 16000;
 
-  // Convert the Blob to an ArrayBuffer
-  const arrayBuffer = await audioBlob.arrayBuffer();
+      // Convert the Blob to an ArrayBuffer
+      const arrayBuffer = await audioBlob.arrayBuffer();
 
-  // Decode the audio data
-  const audioContext = new AudioContext();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      // Decode the audio data
+      const audioContext = new AudioContext();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
-  let recordSampleRate = audioBuffer.sampleRate;
+      let recordSampleRate = audioBuffer.sampleRate;
 
-  let recognizer_stream = window.sherpaRecognizer;
+      let recognizer_stream = window.sherpaRecognizer;
 
-  function downsampleBuffer(buffer, exportSampleRate) {
-    if (exportSampleRate === recordSampleRate) {
-      return buffer;
-    }
-    var sampleRateRatio = recordSampleRate / exportSampleRate;
-    var newLength = Math.round(buffer.length / sampleRateRatio);
-    var result = new Float32Array(newLength);
-    var offsetResult = 0;
-    var offsetBuffer = 0;
-    while (offsetResult < result.length) {
-      var nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
-      var accum = 0, count = 0;
-      for (var i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
-        accum += buffer[i];
-        count++;
+      function downsampleBuffer(buffer, exportSampleRate) {
+        if (exportSampleRate === recordSampleRate) {
+          return buffer;
+        }
+        var sampleRateRatio = recordSampleRate / exportSampleRate;
+        var newLength = Math.round(buffer.length / sampleRateRatio);
+        var result = new Float32Array(newLength);
+        var offsetResult = 0;
+        var offsetBuffer = 0;
+        while (offsetResult < result.length) {
+          var nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
+          var accum = 0, count = 0;
+          for (var i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
+            accum += buffer[i];
+            count++;
+          }
+          result[offsetResult] = accum / count;
+          offsetResult++;
+          offsetBuffer = nextOffsetBuffer;
+        }
+        return result;
+      };
+
+      // Get the audio samples from the buffer
+      let samples = audioBuffer.getChannelData(0);
+
+      samples = downsampleBuffer(samples, expectedSampleRate);
+
+      if (import.meta.env.VITE_APP_SHERPA_VAD_ENABLED === "true") {
+        buffer.push(samples);
+
+        while (buffer.size() > vad.config.sileroVad.windowSize) {
+          const s = buffer.get(buffer.head(), vad.config.sileroVad.windowSize);
+          vad.acceptWaveform(s);
+          buffer.pop(vad.config.sileroVad.windowSize);
+
+          if (vad.isDetected() && !printed) {
+            printed = true;
+            lastResult = 'Speech detected';
+          }
+
+          if (!vad.isDetected()) {
+            printed = false;
+            if (lastResult != '') {
+              resultList.push(lastResult);
+            }
+            lastResult = '';
+          }
+
+          while (!vad.isEmpty()) {
+            const segment = vad.front();
+            vad.pop();
+
+            try{
+              recognizer_stream = await window.sherpaRecognizer?.createStream();
+              // console.log(recognizer_stream);
+              recognizer_stream?.acceptWaveform(expectedSampleRate, segment.samples);
+              window.sherpaRecognizer?.decode(recognizer_stream);
+              result = window.sherpaRecognizer?.getResult(recognizer_stream);
+              recognizer_stream?.free();
+            }catch (error) {
+              console.error("Error getting response text:", error);
+              //alert("There was an issue loading the offline model. Please log out and log back in to reload the model");
+              window.sherpaRecognizer?.free();
+            }
+          }
+        }
+
+      } else {
+        try {
+          recognizer_stream = await window.sherpaRecognizer?.createStream();
+          // console.log(window.sherpaRecognizer);
+          // console.log(recognizer_stream);
+          recognizer_stream?.acceptWaveform(expectedSampleRate, samples);
+          window.sherpaRecognizer?.decode(recognizer_stream);
+          result = window.sherpaRecognizer?.getResult(recognizer_stream);
+          recognizer_stream?.free();
+        }
+        catch (error) {
+          console.error("Error getting response text:", error);
+          //alert("There was an issue loading the offline model. Please log out and log back in to reload the model");
+          window.sherpaRecognizer?.free();
+        }
+
       }
-      result[offsetResult] = accum / count;
-      offsetResult++;
-      offsetBuffer = nextOffsetBuffer;
+
+
+      // console.log(result);
+      // console.log(vad);
+
+      return result?.text;
+    }catch (error) {
+      console.error("Error getting response text:", error);
+      window.sherpaRecognizer?.free();
     }
-    return result;
-  };
-
-  // Get the audio samples from the buffer
-  let samples = audioBuffer.getChannelData(0);
-
-  samples = downsampleBuffer(samples, expectedSampleRate);
-
-  if (import.meta.env.VITE_APP_SHERPA_VAD_ENABLED === "true") {
-  buffer.push(samples);
-
-  while (buffer.size() > vad.config.sileroVad.windowSize) {
-    const s = buffer.get(buffer.head(), vad.config.sileroVad.windowSize);
-    vad.acceptWaveform(s);
-    buffer.pop(vad.config.sileroVad.windowSize);
-
-    if (vad.isDetected() && !printed) {
-      printed = true;
-      lastResult = 'Speech detected';
-    }
-
-    if (!vad.isDetected()) {
-      printed = false;
-      if (lastResult != '') {
-        resultList.push(lastResult);
-      }
-      lastResult = '';
-    }
-
-    while (!vad.isEmpty()) {
-      const segment = vad.front();
-      vad.pop();
-      recognizer_stream = window.sherpaRecognizer.createStream();
-      recognizer_stream.acceptWaveform(expectedSampleRate, segment.samples);
-      window.sherpaRecognizer.decode(recognizer_stream);
-      result = window.sherpaRecognizer.getResult(recognizer_stream);
-      recognizer_stream.free();
-  }}
-
-  }else{
-    console.log(window.sherpaRecognizer);
-    recognizer_stream = window.sherpaRecognizer.createStream();
-
-    // Process the samples with the recognizer
-    recognizer_stream.acceptWaveform(expectedSampleRate, samples);
-  
-    // Decode the result
-    window.sherpaRecognizer.decode(recognizer_stream);
-  
-    result = window.sherpaRecognizer.getResult(recognizer_stream);
-    recognizer_stream.free();
-  }
-
-
-  console.log(result);
-  console.log(vad);
-
-  return result.text;
-
-  
-
   };
 
   useEffect(() => {
     const processAudio = async () => {
       if (loading || !recordedAudio) {
-        console.log("FFmpeg is still loading or no audio recorded...");
+        // console.log("FFmpeg is still loading or no audio recorded...");
         return;
       }
 
@@ -501,7 +529,7 @@ function VoiceAnalyser(props) {
         );
 
         setRecordedPauseCount(silenceStartCount);
-        console.log("silenceStartCount", silenceStartCount);
+        // console.log("silenceStartCount", silenceStartCount);
       } catch (error) {
         console.error("Error processing audio for pause count:", error);
       } finally {
@@ -699,13 +727,94 @@ function VoiceAnalyser(props) {
 
   useEffect(() => {
     if (props.isNextButtonCalled) {
-      if (recordedAudioBase64 !== "") {
+      if (recordedAudio !== "") {
         const lang = getLocalData("lang") || "ta";
-        fetchASROutput(lang, recordedAudioBase64);
+        if (props.isPractice) {
+          // Helper function to get duration from a blob URL
+          const getAudioDuration = async (audioUrl) => {
+            const response = await fetch(audioUrl);
+            const blob = await response.blob();
+            return new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = async () => {
+                try {
+                  const arrayBuffer = reader.result;
+                  const audioContext = new AudioContext();
+                  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                  resolve(audioBuffer.duration);
+                } catch (e) {
+                  reject(e);
+                }
+              };
+              reader.onerror = reject;
+              reader.readAsArrayBuffer(blob);
+            });
+          };
+
+          (async () => {
+            try {
+              const durationSeconds = await getAudioDuration(recordedAudio);
+              const durationMinutes = durationSeconds / 60;
+              const wpmNonDenoised = (nonDenoisedText.split(" ").length / durationMinutes).toFixed(2);
+              const wpmDenoised = (denoisedText.split(" ").length / durationMinutes).toFixed(2);
+
+              const fluencyAccuracyNonDenoised = fuzz.ratio(props.originalText, nonDenoisedText);
+              const fluencyAccuracyDenoised = fuzz.ratio(props.originalText, denoisedText);
+
+              const fluencyCategoryNonDenoised = decideFluencyCategory(wpmNonDenoised, fluencyAccuracyNonDenoised);
+              const fluencyCategoryDenoised = decideFluencyCategory(wpmDenoised, fluencyAccuracyDenoised);
+
+              props.setOfflineReport({
+                nonDenoisedText,
+                originalText: props.originalText,
+                nonDenoisedTextTokens,
+                denoisedTextTokens,
+                denoisedText,
+                wpmNonDenoised,
+                fluencyAccuracyNonDenoised,
+                fluencyAccuracyDenoised,
+                wpmDenoised,
+                fluencyCategoryNonDenoised,
+                fluencyCategoryDenoised,
+              });
+
+              if (props.handleNext) {
+                props.handleNext();
+                if (temp_audio !== null) {
+                  temp_audio.pause();
+                  setPauseAudio(false);
+                }
+              }
+              setLoader(false);
+              if (props.setIsNextButtonCalled) {
+                props.setIsNextButtonCalled(false);
+              }
+            } catch (error) {
+              setLoader(false);
+              console.error("Error getting audio duration:", error);
+            }
+          })();
+        } else {
+          fetchASROutput(lang, recordedAudioBase64);
+        }
         setLoader(true);
       }
     }
   }, [props.isNextButtonCalled]);
+
+  const decideFluencyCategory = (wpm, accuracy) => {
+    if (wpm >= 100 && accuracy >= 95) {
+      return "Fluent";
+    } else if (wpm >= 80 && wpm < 100 && accuracy >= 85) {
+      return "Moderately Fluent";
+    } else if (wpm >= 60 && wpm < 80 && accuracy >= 70) {
+      return "Disfluent";
+    } else if (wpm < 60 || accuracy < 70) {
+      return "Very Disfluent";
+    }
+    return "Moderately Fluent";
+  };
+
 
   useEffect(() => {
     if (recordedAudioBase64 !== "") {
@@ -772,7 +881,8 @@ function VoiceAnalyser(props) {
       let data = {};
 
       let response_text = "";
-      let mode = isOfflineModel ? "offline" : "online";
+      // let mode = isOfflineModel ? "offline" : "online";
+      let mode = "online";
       let pause_count = recordedPauseCount;
 
       if (
@@ -801,8 +911,8 @@ function VoiceAnalyser(props) {
         contentType,
       };
 
-      if(topkTokens.length > 0) {
-      requestBody.output= topkTokens
+      if (topkTokens.length > 0) {
+        requestBody.output = topkTokens
       }
 
       if (props.selectedOption) {
@@ -915,9 +1025,8 @@ function VoiceAnalyser(props) {
       let audioFileName = "";
       if (import.meta.env.VITE_APP_CAPTURE_AUDIO === "true") {
         let getContentId = currentLine;
-        audioFileName = `${
-          import.meta.env.VITE_APP_CHANNEL
-        }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+        audioFileName = `${import.meta.env.VITE_APP_CHANNEL
+          }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
         const command = new PutObjectCommand({
           Bucket: import.meta.env.VITE_APP_AWS_S3_BUCKET_NAME,
@@ -929,7 +1038,7 @@ function VoiceAnalyser(props) {
         });
         try {
           await S3Client.send(command);
-        } catch (err) {}
+        } catch (err) { }
       }
 
       response(

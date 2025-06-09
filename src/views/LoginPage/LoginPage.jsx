@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, TextField, Button, Grid } from '@mui/material';
+import { Container, Typography, TextField, Button, Grid, Link } from '@mui/material';
 import config from "../../utils/urlConstants.json";
-import './LoginPage.css'; // Import the CSS file
+import './LoginPage.css'; // Import the scoped CSS
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -37,43 +37,60 @@ const LoginPage = () => {
   };
 
   return (
-    <Container className="container">
-      <div className="loginBox">
-        <Typography variant="h4" align="center" gutterBottom>
-          Login
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                className="textField"
-                label="Username"
-                variant="outlined"
-                fullWidth
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
+    <div className="loginPage">
+      <Container className="loginPage__container">
+        <div className="loginBox">
+          <Typography variant="h4" align="center" gutterBottom>
+            Welcome to ALL!
+          </Typography>
+          <Typography variant="subtitle1" align="center" gutterBottom>
+            Please login to your account
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  className="textField"
+                  label="Username"
+                  variant="outlined"
+                  fullWidth
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className="textField"
+                  label="Password"
+                  variant="outlined"
+                  type="password"
+                  fullWidth
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  fullWidth
+                  className="loginButton"
+                >
+                  Login
+                </Button>
+              </Grid>
+              {/* <Grid item xs={12}>
+                <Typography align="center">
+                  <Link href="/forgot-password" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Typography>
+              </Grid> */}
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                className="textField"
-                label="Password"
-                variant="outlined"
-                type="password"
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary" fullWidth>
-                Login
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+          </form>
+        </div>
+      </Container>
+    </div>
   );
 };
 

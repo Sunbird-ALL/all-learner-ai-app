@@ -74,15 +74,30 @@ Module.loadModel = function () {
     function loadPackage(metadata) {
         getModelFromDB(data => {
             if (data) {
+                window.modelLoaded = true;
                 console.log("Model loaded from IndexedDB");
+                window.dispatchEvent(new Event("modelLoaded"));
                 processPackageData(data);
             } else {
                 console.log("Downloading model...");
+                window.dispatchEvent(new Event("loadingModel"));
+                window.modelLoaded = false;
                 fetchRemotePackage(REMOTE_PACKAGE_BASE, metadata.remote_package_size, function (data) {
                     console.log("Model downloaded, saving to IndexedDB...");
+                    window.modelLoaded = true;
+                    window.dispatchEvent(new Event("modelLoaded"));
                     saveModelToDB(data);
                     processPackageData(data);
-                }, console.error);
+                }, console.error),
+                // Pass the progress callback that updates your UI state
+                (progress) => {
+                    console.log(progress);
+                    window.downloadProgress = progress;
+                    window.dispatchEvent(
+                        new CustomEvent("modelProgress", { detail: { progress } })
+                      );
+                    //setDownloadProgress(progress); // assuming setDownloadProgress is defined in your component state
+                }
             }
         });
 

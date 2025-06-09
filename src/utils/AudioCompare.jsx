@@ -4,6 +4,8 @@ import { ListenButton, RetryIcon, SpeakButton, StopButton } from "./constants";
 import RecordVoiceVisualizer from "./RecordVoiceVisualizer";
 import useAudioDetection from "./useAudioDetection";
 import { Box, CircularProgress } from "@mui/material";
+import playButton from "../../src/assets/listen.png";
+import pauseButton from "../../src/assets/pause.png";
 
 const AudioRecorderCompair = (props) => {
   const { startDetection, stopDetection, isSilent, isRunning, audioDetected } =
@@ -131,7 +133,8 @@ const AudioRecorderCompair = (props) => {
               >
                 {!loader && (!props.dontShowListen || props.recordedAudio) && (
                   <>
-                    {!props.pauseAudio ? (
+                  {!props.isShowCase && 
+                    (!props.pauseAudio ? (
                       <div
                         onClick={() => {
                           props.playAudio(true);
@@ -150,7 +153,30 @@ const AudioRecorderCompair = (props) => {
                       >
                         <StopButton />
                       </Box>
-                    )}
+                    ))
+                  }
+                    <div>
+                      <Box>
+                        {props.recordedAudio ? (
+                          <img
+                            onClick={() =>
+                              props.playRecordedAudio(
+                                !props.isStudentAudioPlaying
+                              )
+                            }
+                            style={{ height: "70px", paddingLeft: "30px"}}
+                            src={
+                              props.isStudentAudioPlaying
+                                ? pauseButton
+                                : playButton
+                            }
+                            alt={props.isStudentAudioPlaying ? "Pause" : "Play"}
+                          />
+                        ) : (
+                          <Box></Box>
+                        )}
+                      </Box>
+                    </div>
                   </>
                 )}
 

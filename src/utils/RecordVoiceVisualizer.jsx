@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function RecordVoiceVisualizer() {
     const bar1 = (
         <span
@@ -58,6 +60,7 @@ export default function RecordVoiceVisualizer() {
         for (let i = 0; i <= Number(value.times); i++) {
             renderArr.push(
                 <span
+                    key={`${key}-${value.bar}-${i}`} // Unique key
                     className={`playing__bar playing__bar${value.bar}`}
                     style={{
                         height: `${Math.floor(Math.random() * 100)}%`,
@@ -72,7 +75,7 @@ export default function RecordVoiceVisualizer() {
         <div style={{ position: 'relative' }}>
             <div className="playing">
                 {Object.entries(renderType).map(([key, value]) => {
-                    return <>{renderBar(key, value)}</>;
+                    return <React.Fragment key={key}>{renderBar(key, value)}</React.Fragment>;
                 })}
             </div>
             <div
@@ -82,7 +85,7 @@ export default function RecordVoiceVisualizer() {
                 {Object.entries(renderType)
                     .reverse()
                     .map(([key, value]) => {
-                        return <>{renderBar(key, value)}</>;
+                        return <React.Fragment key={key}>{renderBar(key, value)}</React.Fragment>;
                     })}
             </div>
         </div>

@@ -13,6 +13,9 @@ export const checkBadWord = userInput => {
 };
 
 export const filterBadWords = input => {
+  if (!input) {
+    return '';
+  } 
   let texttemp = input.replace(/[.,|!?']/g, '');
   const wordsToFilter = texttemp.toLowerCase().split(/\s+/); // Split the input into an array of words
   const filteredWords = wordsToFilter.map(word => {

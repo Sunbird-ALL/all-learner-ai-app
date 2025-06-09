@@ -45,6 +45,8 @@ import gameLoseAudio from "../../assets/audio/gameLose.wav";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+import DownloadProgressModal from "../DownloadProgressModal";
+
 const MainLayout = (props) => {
   const levelsImages = {
     1: {
@@ -133,6 +135,20 @@ const MainLayout = (props) => {
   const [shake, setShake] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(null);
   const audioRefs = useRef([]);
+
+  // Offline
+  const [downloadProgress, setDownloadProgress] = useState(0);
+
+  useEffect(() => {
+    // Make sure to clean up the global callback when the component unmounts.
+    window.onDownloadProgress = (progress) => {
+      setDownloadProgress(progress);
+    };
+    return () => {
+      window.onDownloadProgress = null;
+    };
+  }, []);
+  
 
   //console.log('Main Layout Array', storedData, pageName);
 
@@ -270,6 +286,8 @@ const MainLayout = (props) => {
           </Box>
         )} */}
       </Box>
+      <DownloadProgressModal open={false} progress={downloadProgress} />
+
       {loading ? (
         <Card
           sx={{
@@ -1174,7 +1192,7 @@ const MainLayout = (props) => {
 
 MainLayout.propTypes = {
   contentType: PropTypes.string,
-  handleBack: PropTypes.func,
+  handleBack: PropTypes.any,
   disableScreen: PropTypes.bool,
   isShowCase: PropTypes.bool,
   showProgress: PropTypes.bool,

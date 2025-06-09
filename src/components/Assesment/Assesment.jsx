@@ -51,6 +51,7 @@ import { uniqueId } from "../../services/utilService";
 import ProgressOverlay from "../CommonComponent/ProgressOverlay";
 import { end } from "../../services/telementryService";
 import { offlineModelsInfo } from "../../utils/constants";
+import ModelLoaderIndicator from "../ModelLoaderIndicator";
 
 export const LanguageModal = ({
   lang,
@@ -68,154 +69,154 @@ export const LanguageModal = ({
     localStorage.setItem("isOfflineModel", isOfflineModel);
   }, [isOfflineModel]);
 
-  const dbName = "language-ai-models";
-  const dbVersion = 1;
-  let db;
+  // const dbName = "language-ai-models";
+  // const dbVersion = 1;
+  // let db;
 
-  // Open IndexedDB
-  const openDB = () => {
-    return new Promise((resolve, reject) => {
-      const request = window.indexedDB.open(dbName, dbVersion);
-      request.onerror = (event) => {
-        console.error("IndexedDB error:", event.target.errorCode);
-        reject(event.target.error);
-      };
-      request.onsuccess = (event) => {
-        db = event.target.result;
-        console.log("IndexedDB opened successfully");
-        resolve();
-      };
-      request.onupgradeneeded = (event) => {
-        db = event.target.result;
-        console.log("Creating object store for models");
-        if (!db.objectStoreNames.contains("models")) {
-          db.createObjectStore("models");
-        }
-      };
-    });
-  };
+  // // Open IndexedDB
+  // const openDB = () => {
+  //   return new Promise((resolve, reject) => {
+  //     const request = window.indexedDB.open(dbName, dbVersion);
+  //     request.onerror = (event) => {
+  //       console.error("IndexedDB error:", event.target.errorCode);
+  //       reject(event.target.error);
+  //     };
+  //     request.onsuccess = (event) => {
+  //       db = event.target.result;
+  //       console.log("IndexedDB opened successfully");
+  //       resolve();
+  //     };
+  //     request.onupgradeneeded = (event) => {
+  //       db = event.target.result;
+  //       console.log("Creating object store for models");
+  //       if (!db.objectStoreNames.contains("models")) {
+  //         db.createObjectStore("models");
+  //       }
+  //     };
+  //   });
+  // };
 
-  // Function to store model in IndexedDB
-  const storeModel = async (modelName, modelURL, isVocabModel) => {
-    try {
-      console.log(modelURL);
-      const response = await fetch(modelURL);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+  // // Function to store model in IndexedDB
+  // const storeModel = async (modelName, modelURL, isVocabModel) => {
+  //   try {
+  //     console.log(modelURL);
+  //     const response = await fetch(modelURL);
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
 
-      let modelData
+  //     let modelData
 
-      if(!isVocabModel){
+  //     if(!isVocabModel){
 
-      const reader = response.body.getReader();
-      const contentLength = +response.headers.get("Content-Length");
-      let receivedLength = 0;
-      const chunks = [];
+  //     const reader = response.body.getReader();
+  //     const contentLength = +response.headers.get("Content-Length");
+  //     let receivedLength = 0;
+  //     const chunks = [];
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-        receivedLength += value.length;
+  //     while (true) {
+  //       const { done, value } = await reader.read();
+  //       if (done) break;
+  //       chunks.push(value);
+  //       receivedLength += value.length;
 
-        // Update progress
-        const percentage = (receivedLength / contentLength) * 100;
-        setDownloadProgress(percentage.toFixed());
-      }
+  //       // Update progress
+  //       const percentage = (receivedLength / contentLength) * 100;
+  //       setDownloadProgress(percentage.toFixed());
+  //     }
 
-       modelData = new Uint8Array(receivedLength);
+  //      modelData = new Uint8Array(receivedLength);
 
-       let position = 0;
-       for (let chunk of chunks) {
-         modelData.set(chunk, position);
-         position += chunk.length;
-       }
+  //      let position = 0;
+  //      for (let chunk of chunks) {
+  //        modelData.set(chunk, position);
+  //        position += chunk.length;
+  //      }
 
-      }else{
-        console.log(response);
-        const vocabData = await response.arrayBuffer();
-        const decoder = new TextDecoder("utf-8");
-        modelData = decoder.decode(vocabData).split("\n");
-      }
+  //     }else{
+  //       console.log(response);
+  //       const vocabData = await response.arrayBuffer();
+  //       const decoder = new TextDecoder("utf-8");
+  //       modelData = decoder.decode(vocabData).split("\n");
+  //     }
 
 
 
-      const transaction = db.transaction(["models"], "readwrite");
-      const store = transaction.objectStore("models");
+  //     const transaction = db.transaction(["models"], "readwrite");
+  //     const store = transaction.objectStore("models");
 
-      store.put(modelData, modelName);
-      console.log(`Stored model ${modelName} in IndexedDB`);
-    } catch (error) {
-      console.error("Error storing model in IndexedDB:", error);
-    }
-  };
+  //     store.put(modelData, modelName);
+  //     console.log(`Stored model ${modelName} in IndexedDB`);
+  //   } catch (error) {
+  //     console.error("Error storing model in IndexedDB:", error);
+  //   }
+  // };
 
-  // Function to check if the model is already stored in IndexedDB
-  const isModelStored = (modelName) => {
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["models"], "readonly");
-      const store = transaction.objectStore("models");
-      const request = store.get(modelName);
+  // // Function to check if the model is already stored in IndexedDB
+  // const isModelStored = (modelName) => {
+  //   return new Promise((resolve, reject) => {
+  //     const transaction = db.transaction(["models"], "readonly");
+  //     const store = transaction.objectStore("models");
+  //     const request = store.get(modelName);
 
-      request.onerror = function (event) {
-        console.error(
-          "Error checking model in IndexedDB:",
-          event.target.errorCode
-        );
-        reject(event.target.error);
-      };
+  //     request.onerror = function (event) {
+  //       console.error(
+  //         "Error checking model in IndexedDB:",
+  //         event.target.errorCode
+  //       );
+  //       reject(event.target.error);
+  //     };
 
-      request.onsuccess = function (event) {
-        resolve(!!event.target.result);
-      };
-    });
-  };
+  //     request.onsuccess = function (event) {
+  //       resolve(!!event.target.result);
+  //     };
+  //   });
+  // };
 
-  // Function to load model
-  const loadModel = async (selectedLang) => {
-    setLoading(true);
-    try {
-      await openDB();
-      let modelName = "";
-      let modelURL = "";
-      let vacabFileName = "";
-      let vocabURL = "";
+  // // Function to load model
+  // const loadModel = async (selectedLang) => {
+  //   setLoading(true);
+  //   try {
+  //     await openDB();
+  //     let modelName = "";
+  //     let modelURL = "";
+  //     let vacabFileName = "";
+  //     let vocabURL = "";
 
-      offlineModelsInfo.map((modelInfoElement) => {
-        if (modelInfoElement.lang === selectedLang) {
-          modelName = modelInfoElement.modelName;
-          modelURL = modelInfoElement.modelURL;
-          vocabURL = modelInfoElement?.vocabUrl;
-          vacabFileName = modelInfoElement?.vacabFileName;
-        }
-      });
+  //     offlineModelsInfo.map((modelInfoElement) => {
+  //       if (modelInfoElement.lang === selectedLang) {
+  //         modelName = modelInfoElement.modelName;
+  //         modelURL = modelInfoElement.modelURL;
+  //         vocabURL = modelInfoElement?.vocabUrl;
+  //         vacabFileName = modelInfoElement?.vacabFileName;
+  //       }
+  //     });
 
-      const stored = await isModelStored(modelName);
+  //     const stored = await isModelStored(modelName);
 
-      if(vocabURL){
-        const vocabStored = await isModelStored(vacabFileName);
-        if (!stored) {
-          await storeModel(vacabFileName, vocabURL, true);
-        } else {
-          console.log(`Model ${vacabFileName} is already stored in IndexedDB`);
-          return;
-        }
-      }
+  //     if(vocabURL){
+  //       const vocabStored = await isModelStored(vacabFileName);
+  //       if (!stored) {
+  //         await storeModel(vacabFileName, vocabURL, true);
+  //       } else {
+  //         console.log(`Model ${vacabFileName} is already stored in IndexedDB`);
+  //         return;
+  //       }
+  //     }
 
-      if (!stored) {
-        await storeModel(modelName, modelURL,false);
-      } else {
-        console.log(`Model ${modelName} is already stored in IndexedDB`);
-        return;
-      }
+  //     if (!stored) {
+  //       await storeModel(modelName, modelURL,false);
+  //     } else {
+  //       console.log(`Model ${modelName} is already stored in IndexedDB`);
+  //       return;
+  //     }
 
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <Box
@@ -545,8 +546,9 @@ export const ProfileHeader = ({
 
   const handleLogout = () => {
     localStorage.clear();
+    sessionStorage.clear();
     end({});
-    navigate("/login");
+    window.location.href = "/login";
   };
 
   const CustomIconButton = styled(IconButton)({
@@ -593,7 +595,7 @@ export const ProfileHeader = ({
           top: 0,
           left: 0,
           width: "100%",
-          height: { xs: "60px", sm: "70px" },
+          height: { xs: "60px", sm: "50px" },
           background: "rgba(255, 255, 255, 0.2)",
           backdropFilter: "blur(3px)",
           display: "flex",
@@ -678,9 +680,18 @@ export const ProfileHeader = ({
               </span>
             </Box>
           </Box> */}
-
+          {/* <Box><ModelLoaderIndicator /></Box> */}
+          <Box  sx={{
+              justifySelf: "flex-start",
+              width: { xs: "100%", sm: "40%" },
+              display: "flex",
+              justifyContent: { xs: "center", sm: "flex-start" },
+              alignItems: "center",
+            }}>
+            {isOfflineModel && <ModelLoaderIndicator />}
+          </Box>
           <Box
-            mr={{ xs: "10px", sm: "90px" }}
+            mr={{ xs: "10px", sm: "40px" }}
             onClick={() =>
               setOpenLangModal
                 ? setOpenLangModal(!loading)
@@ -707,20 +718,22 @@ export const ProfileHeader = ({
               </Box>
             </Box>
           </Box>
-          {import.meta.env.VITE_APP_IS_IN_APP_AUTHORISATION === "true" && (
-            <CustomTooltip title="Logout">
-              <Box>
-                <CustomIconButton onClick={handleLogout}>
-                  <img
-                    className="logout-img"
-                    style={{ height: 30, width: 35 }}
-                    src={LogoutImg}
-                    alt="Logout"
-                  />
-                </CustomIconButton>
-              </Box>
-            </CustomTooltip>
-          )}
+          <Box mr={{ xs: "10px", sm: "20px" }}>
+            {import.meta.env.VITE_APP_IS_IN_APP_AUTHORISATION === "true" && (
+              <CustomTooltip title="Logout">
+                <Box>
+                  <CustomIconButton onClick={handleLogout}>
+                    <img
+                      className="logout-img"
+                      style={{ height: 30, width: 35 }}
+                      src={LogoutImg}
+                      alt="Logout"
+                    />
+                  </CustomIconButton>
+                </Box>
+              </CustomTooltip>
+            )}
+          </Box>
         </Box>
       </Box>
     </>
@@ -1035,6 +1048,7 @@ const Assesment = ({ discoverStart }) => {
       if (!stored) {
         await storeModel(modelName, modelURL,false);
       } else {
+        window.dispatchEvent(new Event("modelLoaded"));
         console.log(`Model ${modelName} is already stored in IndexedDB`);
         return;
       }
@@ -1081,6 +1095,20 @@ const Assesment = ({ discoverStart }) => {
   };
 
   const handleRedirect = async (lang) => {
+    const profileName = getLocalData("profileName");
+    if (!username && !profileName && !virtualId && level === 0) {
+
+      setOpenMessageDialog({
+        message: "please add username in query param",
+        isError: true,
+      });
+      return;
+    }
+    if (level === 0) {
+      navigate("/discover");
+    } else {
+      navigate("/practice");
+    }
     if (localStorage.getItem("isOfflineModel") === "true") {
       let modelName = "";
       let vacabFileName = "";
@@ -1095,11 +1123,14 @@ const Assesment = ({ discoverStart }) => {
       await openDB();
       const stored = await isModelStored(modelName);
       if (stored) {
+        window.dispatchEvent(new Event("modelLoaded"));
         console.log(`Model ${modelName} is already stored in IndexedDB`);
       } else {
         alert(`you have to download en-offline model`);
         if(lang != "en"){
-        await loadModel(lang);
+          await loadModel(lang);
+        }else{
+          window.sherpaModule.loadModel()
         }
         return;
       }
@@ -1163,21 +1194,9 @@ const Assesment = ({ discoverStart }) => {
       }
       }
     }
-    const profileName = getLocalData("profileName");
-    if (!username && !profileName && !virtualId && level === 0) {
-
-      setOpenMessageDialog({
-        message: "please add username in query param",
-        isError: true,
-      });
-      return;
-    }
-    if (level === 0) {
-      navigate("/discover");
-    } else {
-      navigate("/practice");
-    }
   };
+
+  window.handleRedirect = handleRedirect;
 
   const images = {
     desktopLevel1,

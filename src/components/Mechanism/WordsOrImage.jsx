@@ -10,6 +10,7 @@ const WordsOrImage = ({
   handleNext,
   background,
   header,
+  isPractice = false,
   type,
   words,
   image,
@@ -47,6 +48,7 @@ const WordsOrImage = ({
   setOpenMessageDialog,
   isNextButtonCalled,
   setIsNextButtonCalled,
+  setOfflineReport,
 }) => {
   const audioRef = createRef(null);
   const [duration, setDuration] = useState(0);
@@ -269,6 +271,7 @@ const WordsOrImage = ({
             setRecordedAudio={setRecordedAudio}
             setVoiceAnimate={setVoiceAnimate}
             storyLine={storyLine}
+            setOfflineReport={setOfflineReport}
             dontShowListen={type === "image" || isDiscover}
             // updateStory={updateStory}
             originalText={words}
@@ -280,7 +283,8 @@ const WordsOrImage = ({
               contentType,
               currentLine: currentStep - 1,
               playTeacherAudio,
-              callUpdateLearner,
+              callUpdateLearner: true,
+              isPractice: isPractice,
               setEnableNext,
               livesData,
               setLivesData,
@@ -314,7 +318,7 @@ WordsOrImage.propTypes = {
   callUpdateLearner: PropTypes.bool,
   disableScreen: PropTypes.bool,
   isShowCase: PropTypes.bool,
-  handleBack: PropTypes.func.isRequired,
+  handleBack: PropTypes.any,
   setEnableNext: PropTypes.func.isRequired,
   startShowCase: PropTypes.bool,
   setStartShowCase: PropTypes.func,
@@ -323,7 +327,7 @@ WordsOrImage.propTypes = {
   setOpenMessageDialog: PropTypes.func.isRequired,
   isNextButtonCalled: PropTypes.bool,
   setIsNextButtonCalled: PropTypes.func,
-  background: PropTypes.bool,
+  background: PropTypes.any,
   type: PropTypes.any,
   words: PropTypes.any,
   storyLine: PropTypes.number,

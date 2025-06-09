@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Mechanics2 from "../../components/Practice/Mechanics2";
 import Mechanics3 from "../../components/Practice/Mechanics3";
 import Mechanics4 from "../../components/Practice/Mechanics4";
@@ -44,6 +44,23 @@ const Practice = () => {
   const limit = 5;
   const [disableScreen, setDisableScreen] = useState(false);
   const [mechanism, setMechanism] = useState("");
+  const [isAttemptedOnce, setIsAttemptedOnce] = useState(false);
+
+  // Set offline report
+  const [offlineReports, setOfflineReports] = useState([]);
+  const offlineReportsRef = useRef(offlineReports);
+  
+  useEffect(() => {
+    offlineReportsRef.current = offlineReports;
+  }, [offlineReports]);
+
+  const addOfflineReport = (report) => {
+    console.log("addOfflineReport", report);
+    setOfflineReports((prevReports) => [...prevReports, report]);
+  };
+
+  const [reattemptIndices, setReattemptIndices] = useState([]);
+  const [isReattempt, setIsReattempt] = useState(false);
 
   // const [play] = useSound(LevelCompleteAudio);
   const [livesData, setLivesData] = useState();
@@ -63,6 +80,13 @@ const Practice = () => {
     const meetsFluencyCriteria = livesData?.meetsFluencyCriteria;
     setGameOverData({ gameOver: true, userWon, ...data, meetsFluencyCriteria });
   };
+
+  // useEffect(() => {
+  //   console.log(offlineReport) 
+  //   if (offlineReport) {
+  //     setLocalData("offlineReport", true);
+  //   }
+  // }, [offlineReport]);
 
   useEffect(() => {
     if (startShowCase) {
@@ -88,12 +112,14 @@ const Practice = () => {
     ) {
       setDisableScreen(true);
       callConfettiAndPlay();
-
-      setTimeout(() => {
-        setOpenMessageDialog({
-          message: `You have successfully completed ${practiceSteps[currentPracticeStep].fullName} `,
-        });
-      }, 1200);
+     
+        setTimeout(() => {
+          if (!isReattempt) {
+            setOpenMessageDialog({
+              message: `You have successfully completed ${practiceSteps[currentPracticeStep].fullName} `,
+            });
+          }
+        }, 1200);
     }
   }, [currentQuestion]);
 
@@ -188,7 +214,7 @@ const Practice = () => {
         currentPracticeProgress = Math.round(
           ((currentQuestion + 1 + currentPracticeStep * limit) /
             (practiceSteps.length * limit)) *
-            100
+          100
         );
       }
 
@@ -222,6 +248,58 @@ const Practice = () => {
       );
 
       if (currentQuestion === questions.length - 1 || isGameOver) {
+        
+        if (localStorage.getItem("isOfflineModel") === "true") {
+          // Notify user to reattempt failed items for the next set attempt.
+
+          const failedIndices = offlineReports.reduce((indices, report, index) => {
+            if (
+              (report.fluencyCategoryNonDenoised === "Disfluent" ||
+              report.fluencyCategoryNonDenoised === "Very Disfluent") &&
+              (report.fluencyCategoryDenoised === "Disfluent" ||
+              report.fluencyCategoryDenoised === "Very Disfluent")
+            ) {
+              indices.push(index);
+            }
+            return indices;
+          }, []);
+
+          if (failedIndices.length > 0 && !isReattempt) {
+            setIsReattempt(true);
+            // Notify user to reattempt failed items for the next set attempt.
+            const failedCount = failedIndices.length;
+            const message = `You have ${failedCount} item${failedCount > 1 ? "s" : ""} that need improvement. Please try ${failedCount > 1 ? "them" : "it"} again.`;
+
+            setOpenMessageDialog({
+              message,
+              isError: true,
+              dontShowHeader: true,
+            });
+
+            // Build a new questions array containing only the failed items.
+            const failedQuestions = questions.filter((q, index) =>
+              failedIndices.includes(index)
+            );
+
+            // Reset the offline reports for the next attempt.
+            //setOfflineReports([]);
+
+            // Update the state for the next set attempt to include only failed questions.
+            setQuestions(failedQuestions);
+            setCurrentQuestion(0);
+            setIsAttemptedOnce(true);
+            return; // Stop further progression; user will now reattempt failed items.
+          }
+          else {
+            setIsReattempt(false);
+            setIsAttemptedOnce(false);
+            // Optionally clear the offlineReports for the next set.
+            setOfflineReports([]);
+            // setOpenMessageDialog({
+            //   message: `You have successfully completed ${practiceSteps[currentPracticeStep].fullName} `,
+            // });
+          }
+        }
         // navigate or setNextPracticeLevel
         let currentPracticeStep =
           practiceProgress[virtualId].currentPracticeStep;
@@ -309,18 +387,18 @@ const Practice = () => {
         }
         const resGetContent = await axios.get(
           `${import.meta.env.VITE_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-            (currentGetContent?.mechanism?.id
-              ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
-              : "") +
-            (currentGetContent?.competency
-              ? `&level_competency=${currentGetContent?.competency}`
-              : "") +
-            (currentGetContent?.tags
-              ? `&tags=${currentGetContent?.tags}`
-              : "") +
-            (currentGetContent?.storyMode
-              ? `&story_mode=${currentGetContent?.storyMode}`
-              : "")
+          (currentGetContent?.mechanism?.id
+            ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
+            : "") +
+          (currentGetContent?.competency
+            ? `&level_competency=${currentGetContent?.competency}`
+            : "") +
+          (currentGetContent?.tags
+            ? `&tags=${currentGetContent?.tags}`
+            : "") +
+          (currentGetContent?.storyMode
+            ? `&story_mode=${currentGetContent?.storyMode}`
+            : "")
         );
 
         //TODO: required only for S1 and S2
@@ -479,16 +557,16 @@ const Practice = () => {
 
       const resWord = await axios.get(
         `${import.meta.env.VITE_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-          (currentGetContent?.mechanism?.id
-            ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
-            : "") +
-          (currentGetContent?.competency
-            ? `&level_competency=${currentGetContent?.competency}`
-            : "") +
-          (currentGetContent?.tags ? `&tags=${currentGetContent?.tags}` : "") +
-          (currentGetContent?.storyMode
-            ? `&story_mode=${currentGetContent?.storyMode}`
-            : "")
+        (currentGetContent?.mechanism?.id
+          ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
+          : "") +
+        (currentGetContent?.competency
+          ? `&level_competency=${currentGetContent?.competency}`
+          : "") +
+        (currentGetContent?.tags ? `&tags=${currentGetContent?.tags}` : "") +
+        (currentGetContent?.storyMode
+          ? `&story_mode=${currentGetContent?.storyMode}`
+          : "")
       );
 
       // TODO: handle error if resWord is empty
@@ -585,16 +663,16 @@ const Practice = () => {
       let quesArr = [];
       const resWord = await axios.get(
         `${import.meta.env.VITE_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${currentGetContent.criteria}/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-          (currentGetContent?.mechanism?.id
-            ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
-            : "") +
-          (currentGetContent?.competency
-            ? `&level_competency=${currentGetContent?.competency}`
-            : "") +
-          (currentGetContent?.tags ? `&tags=${currentGetContent?.tags}` : "") +
-          (currentGetContent?.storyMode
-            ? `&story_mode=${currentGetContent?.storyMode}`
-            : "")
+        (currentGetContent?.mechanism?.id
+          ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
+          : "") +
+        (currentGetContent?.competency
+          ? `&level_competency=${currentGetContent?.competency}`
+          : "") +
+        (currentGetContent?.tags ? `&tags=${currentGetContent?.tags}` : "") +
+        (currentGetContent?.storyMode
+          ? `&story_mode=${currentGetContent?.storyMode}`
+          : "")
       );
       setTotalSyllableCount(resWord?.data?.totalSyllableCount);
       setLivesData({
@@ -754,9 +832,9 @@ const Practice = () => {
         const stringLengths = contentSourceData.map((item) => item.text.length);
         const length =
           questions[currentQuestion]?.mechanics_data &&
-          (questions[currentQuestion]?.mechanics_data[0]?.mechanics_id ===
-            "mechanic_2" ||
-            questions[currentQuestion]?.mechanics_data[0]?.mechanics_id ===
+            (questions[currentQuestion]?.mechanics_data[0]?.mechanics_id ===
+              "mechanic_2" ||
+              questions[currentQuestion]?.mechanics_data[0]?.mechanics_id ===
               "mechanic_1")
             ? 500
             : stringLengths[0];
@@ -770,6 +848,7 @@ const Practice = () => {
       return (
         <WordsOrImage
           {...{
+            setOfflineReport: addOfflineReport,
             level: !isShowCase && level,
             header:
               questions[currentQuestion]?.contentType === "image"
@@ -781,6 +860,7 @@ const Practice = () => {
             setVoiceText,
             setRecordedAudio,
             setVoiceAnimate,
+            isPractice: !isShowCase && true,
             storyLine,
             handleNext,
             type: questions[currentQuestion]?.contentType,
@@ -828,8 +908,8 @@ const Practice = () => {
               mechanism.name === "fillInTheBlank"
                 ? "Fill in the blank"
                 : questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below ${questions[currentQuestion]?.contentType}`,
+                  ? `Guess the below image`
+                  : `Speak the below ${questions[currentQuestion]?.contentType}`,
             parentWords: questions[currentQuestion]?.mechanics_data?.[0]?.text,
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
@@ -841,11 +921,11 @@ const Practice = () => {
             handleNext,
             image: questions[currentQuestion]?.mechanics_data
               ? `${import.meta.env.VITE_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/` +
-                questions[currentQuestion]?.mechanics_data[0]?.image_url
+              questions[currentQuestion]?.mechanics_data[0]?.image_url
               : null,
             audio: questions[currentQuestion]?.mechanics_data
               ? `${import.meta.env.VITE_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
-                questions[currentQuestion]?.mechanics_data[0]?.audio_url
+              questions[currentQuestion]?.mechanics_data[0]?.audio_url
               : null,
             enableNext,
             showTimer: false,
@@ -941,7 +1021,7 @@ const Practice = () => {
             contentType: currentContentType,
             question_audio: mechanics_data
               ? `${import.meta.env.VITE_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
-                mechanics_data[0].audio_url
+              mechanics_data[0].audio_url
               : questions[currentQuestion]?.contentSourceData?.[0]?.audio_url,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,
@@ -954,12 +1034,12 @@ const Practice = () => {
             type: "word",
             image: mechanics_data
               ? `${import.meta.env.VITE_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/` +
-                mechanics_data[0]?.image_url
+              mechanics_data[0]?.image_url
               : null,
 
             audio: mechanics_data
               ? `${import.meta.env.VITE_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
-                audioLink
+              audioLink
               : null,
             enableNext,
             showTimer: false,
@@ -1016,7 +1096,7 @@ const Practice = () => {
             // image: elephant,
             audio: questions[currentQuestion]?.mechanics_data
               ? `${import.meta.env.VITE_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
-                questions[currentQuestion]?.mechanics_data[0]?.audio_url
+              questions[currentQuestion]?.mechanics_data[0]?.audio_url
               : null,
             enableNext,
             showTimer: false,
@@ -1056,8 +1136,8 @@ const Practice = () => {
               mechanism.name === "fillInTheBlank"
                 ? "Fill in the blank"
                 : questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below ${questions[currentQuestion]?.contentType}`,
+                  ? `Guess the below image`
+                  : `Speak the below ${questions[currentQuestion]?.contentType}`,
             parentWords:
               questions[currentQuestion]?.contentSourceData?.[0]?.text,
             contentType: currentContentType,
@@ -1070,11 +1150,11 @@ const Practice = () => {
             handleNext,
             image: questions[currentQuestion]?.mechanics_data
               ? `${import.meta.env.VITE_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/` +
-                questions[currentQuestion]?.mechanics_data[0]?.image_url
+              questions[currentQuestion]?.mechanics_data[0]?.image_url
               : null,
             audio: questions[currentQuestion]?.mechanics_data
               ? `${import.meta.env.VITE_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
-                questions[currentQuestion]?.mechanics_data[0]?.audio_url
+              questions[currentQuestion]?.mechanics_data[0]?.audio_url
               : null,
             enableNext,
             showTimer: false,
