@@ -24,12 +24,12 @@ import {
   setLocalData,
 } from "../../utils/constants";
 import practicebg from "../../assets/images/practice-bg.svg";
-import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import HelpLogo from "../../assets/help.png";
 import CloseIcon from "@mui/icons-material/Close";
 
-import axios from "../../../node_modules/axios/index";
+import axios from "axios";
 // import { useDispatch } from 'react-redux';
 import { setVirtualId } from "../../store/slices/user.slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,10 +58,10 @@ import profilePic from "../../assets/images/profile_url.png";
 import textureImage from "../../assets/images/textureImage.png";
 import back from "../../assets/images/back-arrow.png";
 import { jwtDecode } from "jwt-decode";
-import config from "../../utils/urlConstants.json";
 import panda from "../../assets/images/panda.svg";
 import cryPanda from "../../assets/images/cryPanda.svg";
 import { uniqueId } from "../../services/utilService";
+import ProgressOverlay from "../CommonComponent/ProgressOverlay";
 import { end } from "../../services/telementryService";
 import { levelMapping } from "../../utils/levelData";
 import scoreView from "../../assets/images/scoreView.svg";
@@ -71,9 +71,172 @@ import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiServ
 import * as Assets from "../../utils/imageAudioLinks";
 
 const theme = createTheme();
+import { offlineModelsInfo } from "../../utils/constants";
+import ModelLoaderIndicator from "../ModelLoaderIndicator";
 
-export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
+export const LanguageModal = ({
+  lang,
+  setLang,
+  setOpenLangModal,
+  setLoading,
+  setDownloadProgress,
+}) => {
   const [selectedLang, setSelectedLang] = useState(lang);
+  const [isOfflineModel, setIsOfflineModel] = useState(
+    localStorage.getItem("isOfflineModel") === "true"
+  );
+
+  useEffect(() => {
+    localStorage.setItem("isOfflineModel", isOfflineModel);
+  }, [isOfflineModel]);
+
+  // const dbName = "language-ai-models";
+  // const dbVersion = 1;
+  // let db;
+
+  // // Open IndexedDB
+  // const openDB = () => {
+  //   return new Promise((resolve, reject) => {
+  //     const request = window.indexedDB.open(dbName, dbVersion);
+  //     request.onerror = (event) => {
+  //       console.error("IndexedDB error:", event.target.errorCode);
+  //       reject(event.target.error);
+  //     };
+  //     request.onsuccess = (event) => {
+  //       db = event.target.result;
+  //       console.log("IndexedDB opened successfully");
+  //       resolve();
+  //     };
+  //     request.onupgradeneeded = (event) => {
+  //       db = event.target.result;
+  //       console.log("Creating object store for models");
+  //       if (!db.objectStoreNames.contains("models")) {
+  //         db.createObjectStore("models");
+  //       }
+  //     };
+  //   });
+  // };
+
+  // // Function to store model in IndexedDB
+  // const storeModel = async (modelName, modelURL, isVocabModel) => {
+  //   try {
+  //     console.log(modelURL);
+  //     const response = await fetch(modelURL);
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
+
+  //     let modelData
+
+  //     if(!isVocabModel){
+
+  //     const reader = response.body.getReader();
+  //     const contentLength = +response.headers.get("Content-Length");
+  //     let receivedLength = 0;
+  //     const chunks = [];
+
+  //     while (true) {
+  //       const { done, value } = await reader.read();
+  //       if (done) break;
+  //       chunks.push(value);
+  //       receivedLength += value.length;
+
+  //       // Update progress
+  //       const percentage = (receivedLength / contentLength) * 100;
+  //       setDownloadProgress(percentage.toFixed());
+  //     }
+
+  //      modelData = new Uint8Array(receivedLength);
+
+  //      let position = 0;
+  //      for (let chunk of chunks) {
+  //        modelData.set(chunk, position);
+  //        position += chunk.length;
+  //      }
+
+  //     }else{
+  //       console.log(response);
+  //       const vocabData = await response.arrayBuffer();
+  //       const decoder = new TextDecoder("utf-8");
+  //       modelData = decoder.decode(vocabData).split("\n");
+  //     }
+
+  //     const transaction = db.transaction(["models"], "readwrite");
+  //     const store = transaction.objectStore("models");
+
+  //     store.put(modelData, modelName);
+  //     console.log(`Stored model ${modelName} in IndexedDB`);
+  //   } catch (error) {
+  //     console.error("Error storing model in IndexedDB:", error);
+  //   }
+  // };
+
+  // // Function to check if the model is already stored in IndexedDB
+  // const isModelStored = (modelName) => {
+  //   return new Promise((resolve, reject) => {
+  //     const transaction = db.transaction(["models"], "readonly");
+  //     const store = transaction.objectStore("models");
+  //     const request = store.get(modelName);
+
+  //     request.onerror = function (event) {
+  //       console.error(
+  //         "Error checking model in IndexedDB:",
+  //         event.target.errorCode
+  //       );
+  //       reject(event.target.error);
+  //     };
+
+  //     request.onsuccess = function (event) {
+  //       resolve(!!event.target.result);
+  //     };
+  //   });
+  // };
+
+  // // Function to load model
+  // const loadModel = async (selectedLang) => {
+  //   setLoading(true);
+  //   try {
+  //     await openDB();
+  //     let modelName = "";
+  //     let modelURL = "";
+  //     let vacabFileName = "";
+  //     let vocabURL = "";
+
+  //     offlineModelsInfo.map((modelInfoElement) => {
+  //       if (modelInfoElement.lang === selectedLang) {
+  //         modelName = modelInfoElement.modelName;
+  //         modelURL = modelInfoElement.modelURL;
+  //         vocabURL = modelInfoElement?.vocabUrl;
+  //         vacabFileName = modelInfoElement?.vacabFileName;
+  //       }
+  //     });
+
+  //     const stored = await isModelStored(modelName);
+
+  //     if(vocabURL){
+  //       const vocabStored = await isModelStored(vacabFileName);
+  //       if (!stored) {
+  //         await storeModel(vacabFileName, vocabURL, true);
+  //       } else {
+  //         console.log(`Model ${vacabFileName} is already stored in IndexedDB`);
+  //         return;
+  //       }
+  //     }
+
+  //     if (!stored) {
+  //       await storeModel(modelName, modelURL,false);
+  //     } else {
+  //       console.log(`Model ${modelName} is already stored in IndexedDB`);
+  //       return;
+  //     }
+
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   return (
     <Box
       sx={{
@@ -120,12 +283,16 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
         </Box>
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Grid container justifyContent={"space-evenly"} sx={{ width: "80%" }}>
-            {languages.map((elem) => {
-              const isSelectedLang = elem.lang === selectedLang;
+            {languages?.map((elem, index) => {
+              const isSelectedLang =
+                isOfflineModel === elem.offline && elem.lang === selectedLang;
               return (
                 <Grid xs={3} item key={elem.lang}>
                   <Box
-                    onClick={() => setSelectedLang(elem.lang)}
+                    onClick={() => {
+                      setSelectedLang(elem.lang);
+                      setIsOfflineModel(elem.offline);
+                    }}
                     sx={{
                       cursor: "pointer",
                       mt: "34px",
@@ -206,9 +373,14 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
           // mr="110px"
         >
           <Box
-            onClick={() => {
+            onClick={async () => {
               setLang(selectedLang);
               setOpenLangModal(false);
+              if (isOfflineModel && selectedLang !== "en") {
+                loadModel(selectedLang);
+              } else {
+                await window.sherpaModule.loadModel();
+              }
             }}
             sx={{
               cursor: "pointer",
@@ -374,6 +546,7 @@ export const ProfileHeader = ({
   lang,
   profileName,
   points = 0,
+  loading,
   handleBack,
 }) => {
   const language = lang || getLocalData("lang");
@@ -400,10 +573,19 @@ export const ProfileHeader = ({
     }
   };
 
+  const isOfflineModel = localStorage.getItem("isOfflineModel") === "true";
+
+  const selectedLanguage = languages?.find(
+    (elem) => elem.lang === language && elem.offline === isOfflineModel
+  );
+
+  const displayLanguage = selectedLanguage?.name || "Select Language";
+
   const handleLogout = () => {
     localStorage.clear();
+    sessionStorage.clear();
     end({});
-    navigate("/login");
+    window.location.href = "/login";
   };
 
   const CustomIconButton = styled(IconButton)({
@@ -450,7 +632,7 @@ export const ProfileHeader = ({
           top: 0,
           left: 0,
           width: "100%",
-          height: { xs: "60px", sm: "70px" },
+          height: { xs: "60px", sm: "50px" },
           background: "rgba(255, 255, 255, 0.2)",
           backdropFilter: "blur(3px)",
           display: "flex",
@@ -544,55 +726,66 @@ export const ProfileHeader = ({
               </Box>
             </Box>
           )}
-
-          <Box
-            mr={{ xs: "10px", sm: "90px" }}
-            onClick={() =>
-              setOpenLangModal
-                ? setOpenLangModal(true)
-                : setOpenMessageDialog({
-                    message: "go to homescreen to change language",
-                    dontShowHeader: true,
-                  })
-            }
-          >
-            <Box sx={{ position: "relative", cursor: "pointer" }}>
-              <SelectLanguageButton width={isMobile ? 80 : 180} />
-              <Box
-                sx={{ position: "absolute", top: 9, left: isMobile ? 10 : 20 }}
+        </Box>
+        {/* <Box><ModelLoaderIndicator /></Box> */}
+        <Box
+          sx={{
+            justifySelf: "flex-start",
+            width: { xs: "100%", sm: "40%" },
+            display: "flex",
+            justifyContent: { xs: "center", sm: "flex-start" },
+            alignItems: "center",
+          }}
+        >
+          {isOfflineModel && <ModelLoaderIndicator />}
+        </Box>
+        <Box
+          mr={{ xs: "10px", sm: "40px" }}
+          onClick={() =>
+            setOpenLangModal
+              ? setOpenLangModal(!loading)
+              : setOpenMessageDialog({
+                  message: "go to homescreen to change language",
+                  dontShowHeader: true,
+                })
+          }
+        >
+          <Box sx={{ position: "relative", cursor: "pointer" }}>
+            <SelectLanguageButton width={isMobile ? 80 : 180} />
+            <Box
+              sx={{ position: "absolute", top: 9, left: isMobile ? 10 : 20 }}
+            >
+              <span
+                style={{
+                  color: "#000000",
+                  fontWeight: 700,
+                  fontSize: isMobile ? "10px" : "16px",
+                  fontFamily: "Quicksand",
+                  lineHeight: "25px",
+                }}
               >
-                <span
-                  style={{
-                    color: "#000000",
-                    fontWeight: 700,
-                    fontSize: isMobile ? "10px" : "16px",
-                    fontFamily: "Quicksand",
-                    lineHeight: "25px",
-                  }}
-                >
-                  {isMobile
-                    ? "Language"
-                    : languages?.find((elem) => elem.lang === language)?.name ||
-                      "Select Language"}
-                </span>
-              </Box>
+                {isMobile
+                  ? "Language"
+                  : languages?.find((elem) => elem.lang === language)?.name ||
+                    "Select Language"}
+              </span>
             </Box>
           </Box>
-          {import.meta.env.VITE_IS_IN_APP_AUTHORISATION === "true" && (
-            <CustomTooltip title="Logout">
-              <Box>
-                <CustomIconButton onClick={handleLogout}>
-                  <img
-                    className="logout-img"
-                    style={{ height: 30, width: 35 }}
-                    src={LogoutImg}
-                    alt="Logout"
-                  />
-                </CustomIconButton>
-              </Box>
-            </CustomTooltip>
-          )}
         </Box>
+        {import.meta.env.VITE_IS_IN_APP_AUTHORISATION === "true" && (
+          <CustomTooltip title="Logout">
+            <Box>
+              <CustomIconButton onClick={handleLogout}>
+                <img
+                  className="logout-img"
+                  style={{ height: 30, width: 35 }}
+                  src={LogoutImg}
+                  alt="Logout"
+                />
+              </CustomIconButton>
+            </Box>
+          </CustomTooltip>
+        )}
       </Box>
     </>
   );
@@ -608,6 +801,7 @@ const Assesment = ({ discoverStart }) => {
   }
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [profileName, setProfileName] = useState(username);
+  const [loading, setLoading] = useState(false);
   const [openMessageDialog, setOpenMessageDialog] = useState("");
   // let lang = searchParams.get("lang") || "ta";
   const [level, setLevel] = useState("");
@@ -616,6 +810,7 @@ const Assesment = ({ discoverStart }) => {
   const [lang, setLang] = useState(getLocalData("lang") || "en");
   const [points, setPoints] = useState(0);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [downloadProgress, setDownloadProgress] = useState(0);
 
   useEffect(() => {
     setLocalData("lang", lang);
@@ -781,7 +976,216 @@ const Assesment = ({ discoverStart }) => {
   };
 
   const navigate = useNavigate();
-  const handleRedirect = () => {
+
+  const dbName = "language-ai-models";
+  const dbVersion = 1;
+  let db;
+
+  // Function to check if the model is already stored in IndexedDB
+  const isModelStored = async (modelName) => {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(["models"], "readonly");
+      const store = transaction.objectStore("models");
+      const request = store.get(modelName);
+
+      request.onerror = function (event) {
+        console.error(
+          "Error checking model in IndexedDB:",
+          event.target.errorCode
+        );
+        reject(event.target.error);
+      };
+
+      request.onsuccess = function (event) {
+        resolve(!!event.target.result);
+      };
+    });
+  };
+
+  const loadModelIndic = async (modelName) => {
+    try {
+      let transaction;
+      let store;
+      let request;
+      try {
+        transaction = await db.transaction(["models"], "readonly");
+        store = transaction.objectStore("models");
+        request = await store.get(modelName);
+      } catch (error) {
+        console.error("Error accessing IndexedDB:", error);
+        return;
+      }
+
+      request.onsuccess = async () => {
+        const modelData = request.result;
+        if (window.offlineSession === undefined) {
+          window.offlineSession = await window.ort.InferenceSession.create(
+            modelData
+          );
+          console.log(window.offlineSession);
+        }
+      };
+
+      request.onerror = (err) => {
+        console.error(`Error to get model data: ${err}`);
+      };
+
+      console.log(`Created model session`);
+    } catch (error) {
+      console.error("Error storing model in IndexedDB:", error);
+    }
+  };
+
+  const loadVocabIndic = async (vocabFileName) => {
+    try {
+      let transaction;
+      let store;
+      let request;
+      try {
+        transaction = await db.transaction(["models"], "readonly");
+        store = transaction.objectStore("models");
+        request = await store.get(vocabFileName);
+      } catch (error) {
+        console.error("Error accessing IndexedDB:", error);
+        return;
+      }
+
+      request.onsuccess = async () => {
+        window.offlineVocab = request.result;
+      };
+
+      request.onerror = (err) => {
+        console.error(`Error to get model data: ${err}`);
+      };
+
+      console.log(`Created model session`);
+    } catch (error) {
+      console.error("Error storing model in IndexedDB:", error);
+    }
+  };
+
+  // Function to store model in IndexedDB
+  const storeModel = async (modelName, modelURL, isVocabModel) => {
+    try {
+      console.log(modelURL);
+      const response = await fetch(modelURL);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      let modelData;
+
+      if (!isVocabModel) {
+        const reader = response.body.getReader();
+        const contentLength = +response.headers.get("Content-Length");
+        let receivedLength = 0;
+        const chunks = [];
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          receivedLength += value.length;
+
+          // Update progress
+          const percentage = (receivedLength / contentLength) * 100;
+          setDownloadProgress(percentage.toFixed());
+        }
+
+        modelData = new Uint8Array(receivedLength);
+
+        let position = 0;
+        for (let chunk of chunks) {
+          modelData.set(chunk, position);
+          position += chunk.length;
+        }
+      } else {
+        console.log(response);
+        const vocabData = await response.arrayBuffer();
+        const decoder = new TextDecoder("utf-8");
+        modelData = decoder.decode(vocabData).split("\n");
+      }
+
+      const transaction = db.transaction(["models"], "readwrite");
+      const store = transaction.objectStore("models");
+
+      store.put(modelData, modelName);
+      console.log(`Stored model ${modelName} in IndexedDB`);
+    } catch (error) {
+      console.error("Error storing model in IndexedDB:", error);
+    }
+  };
+
+  // Function to load model
+  const loadModel = async (lang) => {
+    setLoading(true);
+    try {
+      await openDB();
+      let modelName = "";
+      let modelURL = "";
+      let vacabFileName = "";
+      let vocabURL = "";
+
+      offlineModelsInfo.map((modelInfoElement) => {
+        if (modelInfoElement.lang === lang) {
+          modelName = modelInfoElement.modelName;
+          modelURL = modelInfoElement.modelURL;
+          vocabURL = modelInfoElement?.vocabUrl;
+          vacabFileName = modelInfoElement?.vacabFileName;
+        }
+      });
+
+      const stored = await isModelStored(modelName);
+
+      if (!stored) {
+        await storeModel(modelName, modelURL, false);
+      } else {
+        window.dispatchEvent(new Event("modelLoaded"));
+        console.log(`Model ${modelName} is already stored in IndexedDB`);
+        return;
+      }
+
+      if (vocabURL) {
+        const vocabStored = await isModelStored(vacabFileName);
+        if (!stored) {
+          await storeModel(vacabFileName, vocabURL, true);
+        } else {
+          console.log(`Model ${vacabFileName} is already stored in IndexedDB`);
+          return;
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Open IndexedDB
+
+  const openDB = () => {
+    return new Promise((resolve, reject) => {
+      const request = window.indexedDB.open(dbName, dbVersion);
+      request.onerror = (event) => {
+        console.error("IndexedDB error:", event.target.errorCode);
+        reject(event.target.error);
+      };
+      request.onsuccess = (event) => {
+        db = event.target.result;
+        console.log("IndexedDB opened successfully");
+        resolve();
+      };
+      request.onupgradeneeded = (event) => {
+        db = event.target.result;
+        console.log("Creating object store for models");
+        if (!db.objectStoreNames.contains("models")) {
+          db.createObjectStore("models");
+        }
+      };
+    });
+  };
+
+  const handleRedirect = async (lang) => {
     const profileName = getLocalData("profileName");
     if (!username && !profileName && !TOKEN && level === 0) {
       // alert("please add username in query param");
@@ -796,7 +1200,97 @@ const Assesment = ({ discoverStart }) => {
     } else {
       navigate("/practice");
     }
+    if (localStorage.getItem("isOfflineModel") === "true") {
+      let modelName = "";
+      let vacabFileName = "";
+
+      offlineModelsInfo.map((modelInfoElement) => {
+        if (modelInfoElement.lang === lang) {
+          modelName = modelInfoElement.modelName;
+          vacabFileName = modelInfoElement?.vacabFileName;
+        }
+      });
+
+      await openDB();
+      const stored = await isModelStored(modelName);
+      if (stored) {
+        window.dispatchEvent(new Event("modelLoaded"));
+        console.log(`Model ${modelName} is already stored in IndexedDB`);
+      } else {
+        alert(`you have to download en-offline model`);
+        if (lang != "en") {
+          await loadModel(lang);
+        } else {
+          window.sherpaModule.loadModel();
+        }
+        return;
+      }
+      if (lang !== "en") {
+        await loadModelIndic(modelName);
+        await loadVocabIndic(vacabFileName);
+      } else {
+        if (!window.sherpaRecognizer) {
+          await window.sherpaModule.loadModel();
+          await fileExists("transducer-encoder.onnx");
+          let config = {
+            modelConfig: {
+              debug: 1,
+              tokens: "./tokens.txt",
+            },
+          };
+          config.modelConfig.transducer = {
+            encoder: "./transducer-encoder.onnx",
+            decoder: "./transducer-decoder.onnx",
+            joiner: "./transducer-joiner.onnx",
+          };
+          config.modelConfig.modelType = "transducer";
+          let recognizer = new window.OfflineRecognizer(
+            config,
+            window.sherpaModule
+          );
+          window.sherpaRecognizer = recognizer;
+          console.log("recognizer is created!", recognizer);
+
+          if (import.meta.env.VITE_APP_SHERPA_VAD_ENABLED === "true") {
+            let vad = window.createVad(window.sherpaModule);
+            window.vad = vad;
+            console.log("vad is created!", vad);
+
+            let buffer = new CircularBuffer(30 * 16000, window.sherpaModule);
+            window.wasmBuffer = buffer;
+            console.log("CircularBuffer is created!", buffer);
+          }
+
+          function fileExists(filename) {
+            let buffer = null;
+            try {
+              const filenameLen = Module.lengthBytesUTF8(filename) + 1;
+              const buffer = Module._malloc(filenameLen);
+              if (!buffer) {
+                throw new Error("Failed to allocate memory");
+              }
+              Module.stringToUTF8(filename, buffer, filenameLen);
+
+              let exists = Module._SherpaOnnxFileExists(buffer);
+
+              Module._free(buffer);
+
+              return exists;
+            } catch (error) {
+              console.error("Error checking file existence:", error);
+              return false;
+            } finally {
+              if (buffer) {
+                Module._free(buffer);
+              }
+            }
+          }
+        }
+      }
+    }
   };
+
+  window.handleRedirect = handleRedirect;
 
   const images = {
     desktopLevel1,
@@ -845,6 +1339,14 @@ const Assesment = ({ discoverStart }) => {
 
   return (
     <>
+      {loading && (
+        <ProgressOverlay
+          size="4rem"
+          color={"#ffffff"}
+          showLinearProgress={true}
+          downloadProgress={downloadProgress}
+        />
+      )}
       {!!openMessageDialog && (
         <MessageDialog
           message={openMessageDialog.message}
@@ -856,12 +1358,27 @@ const Assesment = ({ discoverStart }) => {
         />
       )}
       {openLangModal && (
-        <LanguageModal {...{ lang, setLang, setOpenLangModal }} />
+        <LanguageModal
+          {...{
+            lang,
+            setLang,
+            setOpenLangModal,
+            setLoading,
+            setDownloadProgress,
+          }}
+        />
       )}
       {level > 0 ? (
         <Box style={sectionStyle}>
           <ProfileHeader
-            {...{ level, lang, setOpenLangModal, points, setOpenMessageDialog }}
+            {...{
+              level,
+              lang,
+              setOpenLangModal,
+              points,
+              loading,
+              setOpenMessageDialog,
+            }}
           />
           <Box>
             {import.meta.env.VITE_SHOW_HELP_VIDEO === "true" && (
@@ -904,7 +1421,9 @@ const Assesment = ({ discoverStart }) => {
                   cursor: "pointer",
                   boxShadow: `3px 3px 10px ${levelConfig[level].color}80`,
                 }}
-                onClick={handleRedirect}
+                onClick={async () => {
+                  await handleRedirect(lang);
+                }}
               >
                 <span
                   style={{
@@ -1004,7 +1523,9 @@ const Assesment = ({ discoverStart }) => {
                   mt: { xs: 1, md: 2 },
                   zIndex: 9999,
                 }}
-                onClick={handleRedirect}
+                onClick={async () => {
+                  await handleRedirect(lang);
+                }}
               >
                 <StartAssessmentButton />
               </Box>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Mechanics2 from "../../components/Practice/Mechanics2";
 import Mechanics3 from "../../components/Practice/Mechanics3";
 import Mechanics4 from "../../components/Practice/Mechanics4";
@@ -86,6 +86,23 @@ const Practice = () => {
   const limit = 5;
   const [disableScreen, setDisableScreen] = useState(false);
   const [mechanism, setMechanism] = useState("");
+  const [isAttemptedOnce, setIsAttemptedOnce] = useState(false);
+
+  // Set offline report
+  const [offlineReports, setOfflineReports] = useState([]);
+  const offlineReportsRef = useRef(offlineReports);
+
+  useEffect(() => {
+    offlineReportsRef.current = offlineReports;
+  }, [offlineReports]);
+
+  const addOfflineReport = (report) => {
+    console.log("addOfflineReport", report);
+    setOfflineReports((prevReports) => [...prevReports, report]);
+  };
+
+  const [reattemptIndices, setReattemptIndices] = useState([]);
+  const [isReattempt, setIsReattempt] = useState(false);
 
   const [livesData, setLivesData] = useState();
   const [gameOverData, setGameOverData] = useState();
@@ -689,6 +706,13 @@ const Practice = () => {
     setGameOverData({ gameOver: true, userWon, ...data, meetsFluencyCriteria });
   };
 
+  // useEffect(() => {
+  //   console.log(offlineReport)
+  //   if (offlineReport) {
+  //     setLocalData("offlineReport", true);
+  //   }
+  // }, [offlineReport]);
+
   useEffect(() => {
     if (startShowCase) {
       setLivesData({ ...livesData, lives: LIVES });
@@ -729,9 +753,12 @@ const Practice = () => {
         } else {
           stepName = step.fullName;
         }
-        setOpenMessageDialog({
-          message: `You have successfully completed ${stepName} `,
-        });
+
+        if (!isReattempt) {
+          setOpenMessageDialog({
+            message: `You have successfully completed ${stepName} `,
+          });
+        }
       }, 1200);
     }
   }, [currentQuestion]);
@@ -777,7 +804,6 @@ const Practice = () => {
     setEnableNext(false);
     try {
       const lang = getLocalData("lang");
-
       const virtualId = getLocalData("virtualId");
       const sessionId = getLocalData("sessionId");
 
@@ -857,7 +883,66 @@ const Practice = () => {
       // }else{
 
       if (currentQuestion === questions.length - 1 || isGameOver) {
-        let currentPracticeStep = practiceProgress.currentPracticeStep;
+        if (localStorage.getItem("isOfflineModel") === "true") {
+          // Notify user to reattempt failed items for the next set attempt.
+
+          const failedIndices = offlineReports.reduce(
+            (indices, report, index) => {
+              if (
+                (report.fluencyCategoryNonDenoised === "Disfluent" ||
+                  report.fluencyCategoryNonDenoised === "Very Disfluent") &&
+                (report.fluencyCategoryDenoised === "Disfluent" ||
+                  report.fluencyCategoryDenoised === "Very Disfluent")
+              ) {
+                indices.push(index);
+              }
+              return indices;
+            },
+            []
+          );
+
+          if (failedIndices.length > 0 && !isReattempt) {
+            setIsReattempt(true);
+            // Notify user to reattempt failed items for the next set attempt.
+            const failedCount = failedIndices.length;
+            const message = `You have ${failedCount} item${
+              failedCount > 1 ? "s" : ""
+            } that need improvement. Please try ${
+              failedCount > 1 ? "them" : "it"
+            } again.`;
+
+            setOpenMessageDialog({
+              message,
+              isError: true,
+              dontShowHeader: true,
+            });
+
+            // Build a new questions array containing only the failed items.
+            const failedQuestions = questions.filter((q, index) =>
+              failedIndices.includes(index)
+            );
+
+            // Reset the offline reports for the next attempt.
+            //setOfflineReports([]);
+
+            // Update the state for the next set attempt to include only failed questions.
+            setQuestions(failedQuestions);
+            setCurrentQuestion(0);
+            setIsAttemptedOnce(true);
+            return; // Stop further progression; user will now reattempt failed items.
+          } else {
+            setIsReattempt(false);
+            setIsAttemptedOnce(false);
+            // Optionally clear the offlineReports for the next set.
+            setOfflineReports([]);
+            // setOpenMessageDialog({
+            //   message: `You have successfully completed ${practiceSteps[currentPracticeStep].fullName} `,
+            // });
+          }
+        }
+        // navigate or setNextPracticeLevel
+        let currentPracticeStep =
+          practiceProgress[virtualId].currentPracticeStep;
         let isShowCase = currentPracticeStep === 4 || currentPracticeStep === 9; // P4 or P8
 
         if (localStorage.getItem("contentSessionId") !== null) {
@@ -951,6 +1036,25 @@ const Practice = () => {
           gameOver();
           return;
         }
+        const resGetContent = await axios.get(
+          `${import.meta.env.VITE_APP_LEARNER_AI_APP_HOST}/${
+            config.URLS.GET_CONTENT
+          }/${
+            currentGetContent.criteria
+          }/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
+            (currentGetContent?.mechanism?.id
+              ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
+              : "") +
+            (currentGetContent?.competency
+              ? `&level_competency=${currentGetContent?.competency}`
+              : "") +
+            (currentGetContent?.tags
+              ? `&tags=${currentGetContent?.tags}`
+              : "") +
+            (currentGetContent?.storyMode
+              ? `&story_mode=${currentGetContent?.storyMode}`
+              : "")
+        );
 
         if (![10, 11, 12, 13, 14, 15].includes(level)) {
           const resGetContent = await getContent(
@@ -1537,6 +1641,7 @@ const Practice = () => {
         <WordsOrImage
           {...{
             level: level,
+            setOfflineReport: addOfflineReport,
             audioLink:
               mechanism?.id === "mechanic_15"
                 ? `${
@@ -1563,6 +1668,7 @@ const Practice = () => {
             setVoiceText,
             setRecordedAudio,
             setVoiceAnimate,
+            isPractice: !isShowCase && true,
             storyLine,
             handleNext,
             type: questions[currentQuestion]?.contentType,

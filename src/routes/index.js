@@ -47,7 +47,6 @@ const routData = [
     component: reviews.AssesmentEnd,
     requiresAuth: true,
   },
-
   {
     id: "route-008",
     path: "/level-page",

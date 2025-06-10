@@ -7850,18 +7850,16 @@ export const levelGetContent = {
         title: "P1",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_ENG",
-        storyMode: true,
       },
-      { title: "P2", criteria: "word", template: "simple", tags: "CEFR_ENG" },
-      { title: "P3", criteria: "word", template: "simple", tags: "CEFR_ENG" },
-      { title: "P4", criteria: "word", template: "simple", tags: "CEFR_ENG" },
-      { title: "S1", criteria: "word", template: "simple", tags: "CEFR_ENG" },
-      { title: "P5", criteria: "word", template: "simple", tags: "CEFR_ENG" },
-      { title: "P6", criteria: "word", template: "simple", tags: "CEFR_ENG" },
-      { title: "P7", criteria: "word", template: "simple", tags: "CEFR_ENG" },
-      { title: "P8", criteria: "word", template: "simple", tags: "CEFR_ENG" },
-      { title: "S2", criteria: "word", template: "simple", tags: "CEFR_ENG" },
+      { title: "P2", criteria: "word", template: "simple" },
+      { title: "P3", criteria: "word", template: "simple" },
+      { title: "P4", criteria: "word", template: "simple" },
+      { title: "S1", criteria: "word", template: "simple" },
+      { title: "P5", criteria: "word", template: "simple" },
+      { title: "P6", criteria: "word", template: "simple" },
+      { title: "P7", criteria: "word", template: "simple" },
+      { title: "P8", criteria: "word", template: "simple" },
+      { title: "S2", criteria: "word", template: "simple" },
     ],
     1: [
       {
@@ -7926,7 +7924,6 @@ export const levelGetContent = {
         title: "P4",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_ENG",
       },
       { title: "S1", criteria: "word", template: "simple", tags: "CEFR_ENG" },
       {
@@ -7947,15 +7944,13 @@ export const levelGetContent = {
         title: "P7",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_ENG",
       },
       {
         title: "P8",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_ENG",
       },
-      { title: "S2", criteria: "word", template: "simple", tags: "CEFR_ENG" },
+      { title: "S2", criteria: "word", template: "simple" },
     ],
     3: [
       {
@@ -7992,7 +7987,6 @@ export const levelGetContent = {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_ENG",
       },
       {
         title: "P5",
@@ -8025,7 +8019,6 @@ export const levelGetContent = {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_ENG",
       },
     ],
     4: [
@@ -8033,71 +8026,51 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.1",
-        storyMode: true,
-        mechanism: { id: "mechanic_1", name: "fillInTheBlank" },
       },
       {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.2",
-        mechanism: { id: "mechanic_3", name: "formASentence" },
       },
       {
         title: "P3",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.1",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P4",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.2",
       },
       {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.1, L1.2",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.2",
-        mechanism: { id: "mechanic_1", name: "fillInTheBlank" },
       },
       {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.1",
-        mechanism: { id: "mechanic_3", name: "formASentence" },
       },
       {
         title: "P7",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.2",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P8",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.1",
-        mechanism: { id: "mechanic_1", name: "fillInTheBlank" },
       },
       {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.2",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
     ],
     5: [
@@ -8105,70 +8078,51 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.5",
-        storyMode: true,
-        mechanism: { id: "mechanic_1", name: "fillInTheBlank" },
       },
       {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.6",
-        mechanism: { id: "mechanic_3", name: "formASentence" },
       },
       {
         title: "P3",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.5",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P4",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.5",
       },
       {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.5, L1.6",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.6",
-        mechanism: { id: "mechanic_1", name: "fillInTheBlank" },
       },
       {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.5",
-        mechanism: { id: "mechanic_3", name: "formASentence" },
       },
       {
         title: "P7",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.6",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P8",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.5",
       },
       {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.6",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
     ],
     6: [
@@ -8176,16 +8130,11 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.3",
-        storyMode: true,
       },
       {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.3",
-        storyMode: true,
-        mechanism: { id: "mechanic_1", name: "fillInTheBlank" },
       },
       {
         title: "P3",
@@ -8206,8 +8155,6 @@ export const levelGetContent = {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.3",
-        storyMode: true,
       },
       {
         title: "P6",
@@ -8235,66 +8182,51 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.8",
-        storyMode: true,
       },
       {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        competency: "L1.8",
-        storyMode: true,
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P3",
         criteria: "paragraph",
         template: "simple",
-        competency: "L1.8",
       },
       {
         title: "P4",
         criteria: "paragraph",
         template: "simple",
-        competency: "L1.8",
       },
       {
         title: "S1",
         criteria: "paragraph",
         template: "simple",
-        competency: "L1.8",
       },
       {
         title: "P5",
         criteria: "paragraph",
         template: "simple",
-        competency: "L1.8",
-        storyMode: true,
       },
       {
         title: "P6",
         criteria: "paragraph",
         template: "simple",
-        competency: "L1.8",
-        storyMode: true,
       },
       {
         title: "P7",
         criteria: "paragraph",
         template: "simple",
-        competency: "L1.8",
       },
       {
         title: "P8",
         criteria: "paragraph",
         template: "simple",
-        competency: "L1.8",
       },
       {
         title: "S2",
         criteria: "paragraph",
         template: "simple",
-        competency: "L1.8",
       },
     ],
     8: [
@@ -9638,22 +9570,54 @@ export const levelConfig = {
 };
 
 const AllLanguages = [
-  { name: "English", lang: "en", symbol: "A" },
-  { name: "தமிழ்", lang: "ta", symbol: "இ" },
-  { name: "हिंदी", lang: "hi", symbol: "क" },
-  { name: "ಕನ್ನಡ", lang: "kn", symbol: "ಕ" },
-  { name: "తెలుగు", lang: "te", symbol: "ఈ" },
-  { name: "ગુજરાતી", lang: "gu", symbol: "ક" },
-  { name: "ଓଡିଆ", lang: "or", symbol: "କ" },
+  { name: "English", lang: "en", symbol: "A", offline: false },
+  { name: "தமிழ்", lang: "ta", symbol: "இ", offline: false },
+  { name: "हिंदी", lang: "hi", symbol: "क", offline: false },
+  { name: "ಕನ್ನಡ", lang: "kn", symbol: "ಕ", offline: false },
+  { name: "తెలుగు", lang: "te", symbol: "ఈ", offline: false },
+  { name: "ગુજરાતી", lang: "gu", symbol: "ક", offline: false },
+  { name: "ଓଡିଆ", lang: "or", symbol: "କ", offline: false },
+  { name: "தமிழ் offline", lang: "ta", symbol: "இ", offline: true },
+  { name: "English-Offline", lang: "en", symbol: "A", offline: true },
+  { name: "ಕನ್ನಡ offline", lang: "kn", symbol: "ಕ", offline: true },
+];
+
+export const offlineModelsInfo = [
+  {
+    modelName: "english",
+    lang: "en",
+    modelURL: "./models/sherpa-onnx-wasm-main-vad-asr.data",
+  },
+  {
+    modelName: "kannada",
+    lang: "kn",
+    modelURL: "/models/kannada.quant.onnx",
+    vacabFileName: "kannada.vocab",
+    vocabUrl: "/models/kannada.vocab",
+  },
+  {
+    modelName: "tamil",
+    lang: "ta",
+    modelURL: "/models/tamil.quant.onnx",
+    vacabFileName: "tamil.vocab",
+    vocabUrl: "/models/tamil.vocab",
+  },
 ];
 
 const appLanguages = import.meta.env.VITE_LANGUAGES
   ? JSON.parse(import.meta.env.VITE_LANGUAGES)
   : [];
 
-export const languages = AllLanguages.filter((lang) =>
-  appLanguages.includes(lang.lang)
-);
+const offlineLanguages = import.meta.env.VITE_APP_ASR_OFFLINE_LANGUAGUAGES
+  ? JSON.parse(import.meta.env.VITE_APP_ASR_OFFLINE_LANGUAGUAGES)
+  : [];
+
+export const languages = AllLanguages.filter((lang) => {
+  return (
+    (appLanguages.includes(lang.lang) && !lang.offline) ||
+    (offlineLanguages.includes(lang.lang) && lang.offline)
+  );
+});
 
 export const randomizeArray = (arr) => {
   let wordsArr = [...arr];
@@ -9686,7 +9650,7 @@ export function handleEncrypt(value) {
 
 export function handleDecrypt(value) {
   const API_SECRET_KEY = localStorage.getItem("token");
-  console.log("newToken", API_SECRET_KEY);
+  //console.log("newToken", API_SECRET_KEY);
 
   if (!API_SECRET_KEY) {
     console.warn("Encryption key missing");
@@ -9713,3 +9677,4 @@ export const sendTestRigScore = (score) => {
     );
   }
 };
+export const rnnoiseModelPath = "models/cb.rnnn";
