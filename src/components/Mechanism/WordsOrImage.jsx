@@ -51,10 +51,10 @@ const isChrome = true;
 
 const WordsOrImage = ({
   handleNext,
+  offilnePractice = false,
   mechanism_id = "",
   background,
   header,
-  isPractice = false,
   type,
   words,
   hints = "",
@@ -1183,6 +1183,7 @@ const WordsOrImage = ({
             </div>
           ) : (
             <VoiceAnalyser
+              offilnePractice={offilnePractice}
               pageName={"wordsorimage"}
               setVoiceText={setVoiceText}
               updateStoredData={updateStoredData}
@@ -1202,7 +1203,7 @@ const WordsOrImage = ({
                 currentLine: currentStep - 1,
                 playTeacherAudio,
                 callUpdateLearner,
-                isPractice: isPractice,
+                offilnePractice,
                 setEnableNext,
                 livesData,
                 setLivesData,

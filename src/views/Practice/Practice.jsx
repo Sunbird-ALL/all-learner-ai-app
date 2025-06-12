@@ -87,6 +87,7 @@ const Practice = () => {
   const [disableScreen, setDisableScreen] = useState(false);
   const [mechanism, setMechanism] = useState("");
   const [isAttemptedOnce, setIsAttemptedOnce] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
 
   // Set offline report
   const [offlineReports, setOfflineReports] = useState([]);
@@ -883,7 +884,7 @@ const Practice = () => {
       // }else{
 
       if (currentQuestion === questions.length - 1 || isGameOver) {
-        if (localStorage.getItem("isOfflineModel") === "true") {
+        if (isOffline) {
           // Notify user to reattempt failed items for the next set attempt.
 
           const failedIndices = offlineReports.reduce(
@@ -941,8 +942,7 @@ const Practice = () => {
           }
         }
         // navigate or setNextPracticeLevel
-        let currentPracticeStep =
-          practiceProgress[virtualId].currentPracticeStep;
+        let currentPracticeStep = practiceProgress.currentPracticeStep;
         let isShowCase = currentPracticeStep === 4 || currentPracticeStep === 9; // P4 or P8
 
         if (localStorage.getItem("contentSessionId") !== null) {
@@ -1036,25 +1036,6 @@ const Practice = () => {
           gameOver();
           return;
         }
-        const resGetContent = await axios.get(
-          `${import.meta.env.VITE_APP_LEARNER_AI_APP_HOST}/${
-            config.URLS.GET_CONTENT
-          }/${
-            currentGetContent.criteria
-          }/${virtualId}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}` +
-            (currentGetContent?.mechanism?.id
-              ? `&mechanics_id=${currentGetContent?.mechanism?.id}`
-              : "") +
-            (currentGetContent?.competency
-              ? `&level_competency=${currentGetContent?.competency}`
-              : "") +
-            (currentGetContent?.tags
-              ? `&tags=${currentGetContent?.tags}`
-              : "") +
-            (currentGetContent?.storyMode
-              ? `&story_mode=${currentGetContent?.storyMode}`
-              : "")
-        );
 
         if (![10, 11, 12, 13, 14, 15].includes(level)) {
           const resGetContent = await getContent(
@@ -1146,6 +1127,7 @@ const Practice = () => {
         // TODO: needs to revisit this logic
         setTimeout(() => {
           setMechanism(currentGetContent.mechanism);
+          setIsOffline(currentGetContent.offline);
         }, 1000);
 
         // if(virtualId === "6760800019"){
@@ -1355,6 +1337,7 @@ const Practice = () => {
         setQuestions(dummyQuestions);
       }
       setMechanism(currentGetContent.mechanism);
+      setIsOffline(currentGetContent.offline);
 
       // if (virtualId === "6760800019" || level == 12) {
       //   //setMechanism({ id: "read_aloud", name: "readAloud" });
@@ -1473,6 +1456,7 @@ const Practice = () => {
 
       setTimeout(() => {
         setMechanism(currentGetContent.mechanism);
+        setIsOffline(currentGetContent.offline);
       }, 1000);
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
@@ -1636,7 +1620,7 @@ const Practice = () => {
       (mechanism?.id === "mechanic_15" && rFlow !== "true")
     ) {
       const mechanics_data = questions[currentQuestion]?.mechanics_data;
-
+      console.log(isOffline, "isOffline");
       return (
         <WordsOrImage
           {...{
@@ -1668,7 +1652,10 @@ const Practice = () => {
             setVoiceText,
             setRecordedAudio,
             setVoiceAnimate,
-            isPractice: !isShowCase && true,
+            offilnePractice:
+              !isShowCase &&
+              isOffline &&
+              localStorage.getItem("isOfflineModel") === "true",
             storyLine,
             handleNext,
             type: questions[currentQuestion]?.contentType,

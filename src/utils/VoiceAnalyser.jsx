@@ -109,9 +109,6 @@ function VoiceAnalyser(props) {
   const [nonDenoisedTextTokens, setNonDenoisedTextTokens] = useState([]);
   const [denoisedTextTokens, setDenoisedTextTokens] = useState([]);
   const [denoisedText, setDenoisedText] = useState("");
-  const [isOfflineModel, setIsOfflineModel] = useState(
-    localStorage.getItem("isOfflineModel") === "true"
-  );
 
   const { ffmpeg, loading } = useFFmpeg();
 
@@ -126,9 +123,9 @@ function VoiceAnalyser(props) {
       let nonDenoisedRes;
       let newDenoisedUrl;
 
-      if (callUpdateLearner && isOfflineModel && props.isPractice) {
+      if (props.offilnePractice) {
         try {
-          if (isOfflineModel && lang === "en") {
+          if (lang === "en") {
             await ffmpeg.FS(
               "writeFile",
               "recorded.webm",
@@ -199,7 +196,7 @@ function VoiceAnalyser(props) {
 
       let denoisedRes;
 
-      if (callUpdateLearner && isOfflineModel && props.isPractice) {
+      if (props.offilnePractice) {
         try {
           await ffmpeg.FS(
             "writeFile",
@@ -225,7 +222,7 @@ function VoiceAnalyser(props) {
           const denoisedBlob = new Blob([data.buffer], { type: "audio/wav" });
           newDenoisedUrl = URL.createObjectURL(denoisedBlob);
 
-          if (isOfflineModel && lang !== "en") {
+          if (props.offilnePractice && lang !== "en") {
             const transcodedArrayBuffer = await transcodeFile(
               recordedBlob,
               "webm",
@@ -477,50 +474,6 @@ function VoiceAnalyser(props) {
     }
   };
 
-  useEffect(() => {
-    const processAudio = async () => {
-      if (loading || !recordedAudio) {
-        // console.log("FFmpeg is still loading or no audio recorded...");
-        return;
-      }
-
-      try {
-        await ffmpeg.FS(
-          "writeFile",
-          "input.wav",
-          await fetchFile(recordedAudio)
-        );
-
-        let silenceStartCount = 0;
-        ffmpeg.setLogger(({ type, message }) => {
-          if (type === "fferr" && message.includes("silence_start")) {
-            silenceStartCount += 1;
-          }
-        });
-
-        await ffmpeg.run(
-          "-i",
-          "input.wav",
-          "-af",
-          "silencedetect=noise=-40dB:d=0.5",
-          "-f",
-          "null",
-          "/dev/null"
-        );
-
-        setRecordedPauseCount(silenceStartCount);
-        // console.log("silenceStartCount", silenceStartCount);
-      } catch (error) {
-        console.error("Error processing audio for pause count:", error);
-      } finally {
-        // Clean up
-        ffmpeg.FS("unlink", "input.wav");
-      }
-    };
-
-    processAudio();
-  }, [recordedAudio, loading, ffmpeg]);
-
   const initiateValues = async () => {
     const currIndex = (await localStorage.getItem("index")) || 1;
     setCurrentIndex(currIndex);
@@ -724,7 +677,7 @@ function VoiceAnalyser(props) {
     if (props.isNextButtonCalled) {
       if (recordedAudio !== "") {
         const lang = getLocalData("lang") || "ta";
-        if (props.isPractice) {
+        if (props.offilnePractice) {
           // Helper function to get duration from a blob URL
           const getAudioDuration = async (audioUrl) => {
             const response = await fetch(audioUrl);
@@ -790,6 +743,54 @@ function VoiceAnalyser(props) {
                 fluencyCategoryNonDenoised,
                 fluencyCategoryDenoised,
               });
+
+              // TODO: Remove false when VITE_AWS_S3_BUCKET_NAME and keys added
+              let OfflineAudioFileName = "";
+              const sessionId = getLocalData("sessionId");
+              const { originalText, contentType, contentId, currentLine } =
+                props;
+
+              if (import.meta.env.VITE_CAPTURE_AUDIO === "true") {
+                let getContentId = currentLine;
+                OfflineAudioFileName = `${
+                  import.meta.env.VITE_CHANNEL
+                }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+
+                const command = new PutObjectCommand({
+                  Bucket: import.meta.env.VITE_AWS_S3_BUCKET_NAME,
+                  Key: OfflineAudioFileName,
+                  Body: Uint8Array.from(window.atob(recordedAudioBase64), (c) =>
+                    c.charCodeAt(0)
+                  ),
+                  ContentType: "audio/wav",
+                });
+                try {
+                  await S3Client.send(command);
+                } catch (err) {}
+              }
+
+              response(
+                {
+                  // Required
+                  target:
+                    import.meta.env.VITE_CAPTURE_AUDIO === "true"
+                      ? `${OfflineAudioFileName}`
+                      : "", // Required. Target of the response
+                  //"qid": "", // Required. Unique assessment/question id
+                  type: "OFFLINE", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
+                  values: [
+                    { original_text: props.originalText },
+                    { nonDenoisedText },
+                    { denoisedText },
+                    { fluencyAccuracyNonDenoised },
+                    { fluencyAccuracyDenoised },
+                    { fluencyCategoryNonDenoised },
+                    { fluencyCategoryDenoised },
+                    { duration: durationSeconds },
+                  ],
+                },
+                "ET"
+              );
 
               if (props.handleNext) {
                 props.handleNext();

@@ -244,7 +244,7 @@ export const getEventOptions = () => {
 
   if (localStorage.getItem("token") !== null) {
     let jwtToken = localStorage.getItem("token");
-    console.log("newToken", jwtToken);
+    //console.log("newToken", jwtToken);
 
     //var userDetails = jwtDecode(jwtToken);
     //emis_username = userDetails.emis_username;

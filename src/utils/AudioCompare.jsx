@@ -77,8 +77,6 @@ const AudioRecorder = (props) => {
           }
           setIsRecording(false);
           props.setEnableNext?.(true);
-
-          props.handleStopRecording?.();
         });
       }
     }, 500);
@@ -88,7 +86,11 @@ const AudioRecorder = (props) => {
 
   const saveBlob = (blob) => {
     const url = window.URL.createObjectURL(blob);
-    props?.setRecordedAudio(url);
+    if (localStorage.getItem("isOfflineModel") === "true") {
+      props?.handleProcess(url);
+    } else {
+      props?.setRecordedAudio(url);
+    }
   };
 
   const getPulseAnimationStyle = (color) => ({
