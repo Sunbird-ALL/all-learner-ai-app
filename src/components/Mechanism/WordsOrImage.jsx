@@ -51,6 +51,7 @@ const isChrome = true;
 
 const WordsOrImage = ({
   handleNext,
+  offilnePractice = false,
   mechanism_id = "",
   background,
   header,
@@ -93,6 +94,7 @@ const WordsOrImage = ({
   isNextButtonCalled,
   setIsNextButtonCalled,
   audioLink,
+  setOfflineReport,
 }) => {
   const audioRefs = createRef(null);
   const [audioInstance, setAudioInstance] = useState(null);
@@ -1050,7 +1052,9 @@ const WordsOrImage = ({
             mt: isMobile ? 2 : 0,
           }}
         >
-          {language === "en" && (level === 1 || level === 2 || level === 3) && !isShowCase ? (
+          {language === "en" &&
+          (level === 1 || level === 2 || level === 3) &&
+          !isShowCase ? (
             <div>
               {showSpeakButton && (
                 <Box
@@ -1179,12 +1183,14 @@ const WordsOrImage = ({
             </div>
           ) : (
             <VoiceAnalyser
+              offilnePractice={offilnePractice}
               pageName={"wordsorimage"}
               setVoiceText={setVoiceText}
               updateStoredData={updateStoredData}
               setRecordedAudio={setRecordedAudio}
               setVoiceAnimate={setVoiceAnimate}
               storyLine={storyLine}
+              setOfflineReport={setOfflineReport}
               dontShowListen={type === "image" || isDiscover}
               originalText={words}
               handleNext={handleNext}
@@ -1197,6 +1203,7 @@ const WordsOrImage = ({
                 currentLine: currentStep - 1,
                 playTeacherAudio,
                 callUpdateLearner,
+                offilnePractice,
                 setEnableNext,
                 livesData,
                 setLivesData,
@@ -1230,7 +1237,7 @@ WordsOrImage.propTypes = {
   callUpdateLearner: PropTypes.bool,
   disableScreen: PropTypes.bool,
   isShowCase: PropTypes.bool,
-  handleBack: PropTypes.func.isRequired,
+  handleBack: PropTypes.any,
   setEnableNext: PropTypes.func.isRequired,
   startShowCase: PropTypes.bool,
   setStartShowCase: PropTypes.func,

@@ -12,7 +12,6 @@
       name="description"
       content="Base React App structure for Devigital Systems Projects"
     />
-
     <!-- <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
     <link rel="manifest" href="/manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,34 +22,17 @@
     />
     <link href="https://fonts.cdnfonts.com/css/bad-comic" rel="stylesheet" />
     <script src="./js/jquery-3.7.0.min.js" defer></script>
+     <!-- <script type="text/javascript" src="./whisper.wasm/stream.js" defer></script>
+    <script type="text/javascript" src="./whisper.wasm/initWhisper.js" defer></script> -->
+    <script type="text/javascript" src="./sherpa.wasm/sherpa-onnx-asr.js" defer></script>
+    <script type="text/javascript" src="./sherpa.wasm/sherpa-onnx-vad.js" defer></script>
+    <script type="text/javascript" src="./sherpa.wasm/sherpa-onnx-wasm-main-vad-asr.js" defer></script>
+    <script type="text/javascript" src="./sherpa.wasm/initShrepa.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script
+    src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"
+    strategy="lazyOnload"></script>
     <title>EkStep</title>
-
-    <!-- Content Security Policy -->
-<meta http-equiv="Content-Security-Policy" content="
-  default-src 'self';
-  script-src 'self' https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js 'unsafe-eval';
-  style-src 'self' https://fonts.googleapis.com https://fonts.cdnfonts.com 'unsafe-inline';
-  object-src 'none';
-  base-uri 'self';
-  connect-src 'self' *.theall.ai https://all-prod-content-service.s3.ap-south-1.amazonaws.com blob:;
-  font-src 'self' https://fonts.googleapis.com https://fonts.cdnfonts.com https://fonts.gstatic.com;
-  frame-src 'self';
-  img-src 'self' data: blob: 
-  https://images.squarespace-cdn.com 
-  https://all-prod-content-service.s3.ap-south-1.amazonaws.com 
-  https://all-dev-content-service.s3.ap-south-1.amazonaws.com 
-  https://s3.ap-south-1.amazonaws.com 
-  https://raw.githubusercontent.com 
-  https://cdn.jsdelivr.net;
-
-  manifest-src 'self';
-  media-src 'self' blob: https://all-prod-content-service.s3.ap-south-1.amazonaws.com https://all-dev-content-service.s3.ap-south-1.amazonaws.com https://raw.githubusercontent.com;
-  worker-src 'self' blob: https://d114esnbvw5tst.cloudfront.net;
-  form-action 'self';
-  frame-ancestors 'self';
-" />
-
-
   </head>
   <body>
     <div id="root">

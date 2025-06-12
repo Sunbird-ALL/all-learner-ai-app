@@ -21,8 +21,9 @@ export default defineConfig({
     open: true,
     port: 3000,
     headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      //'Cross-Origin-Embedder-Policy': 'require-corp',
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Embedder-Policy": "require-corp",
     },
-  }
+  },
+  assetsInclude: ['**/*.m4a', '**/*.wav', '**/*.mp3']
 });

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { StyledEngineProvider } from "@mui/material/styles";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import routes from "./routes";

@@ -9,7 +9,7 @@ import {
   setLocalData,
 } from "../../utils/constants";
 import homeBackground from "../../assets/images/homeBackground.png";
-import { Typography } from "../../../node_modules/@mui/material/index";
+import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";

@@ -67,6 +67,8 @@ import zIndex from "@mui/material/styles/zIndex";
 
 const theme = createTheme();
 
+import DownloadProgressModal from "../DownloadProgressModal";
+
 const MainLayout = (props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -235,6 +237,20 @@ const MainLayout = (props) => {
       setLocalData("rFlow", false);
     }
   }, [language]);
+  // Offline
+  const [downloadProgress, setDownloadProgress] = useState(0);
+
+  useEffect(() => {
+    // Make sure to clean up the global callback when the component unmounts.
+    window.onDownloadProgress = (progress) => {
+      setDownloadProgress(progress);
+    };
+    return () => {
+      window.onDownloadProgress = null;
+    };
+  }, []);
+
+  //console.log('Main Layout Array', storedData, pageName);
 
   const handleAudioPlay = (index) => {
     const audioElem = audioRefs.current[index];
@@ -398,6 +414,8 @@ const MainLayout = (props) => {
         </Box>
       )}
       <Box sx={{ position: "absolute", top: "15px", right: "80px" }}></Box>
+      <DownloadProgressModal open={false} progress={downloadProgress} />
+
       {loading ? (
         <Card
           sx={{
