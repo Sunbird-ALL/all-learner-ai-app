@@ -126,6 +126,7 @@ const WordsOrImage = ({
   const [recordedBlob, setRecordedBlob] = useState(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  //console.log('audios', audioLink);
 
   const language = getLocalData("lang");
 
@@ -929,9 +930,7 @@ const WordsOrImage = ({
           )}
         </Box>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          {language === "en" &&
-          (level === 1 || level === 2 || level === 3) &&
-          !isShowCase ? (
+          {language === "en" && level === 3 && !isShowCase ? (
             <div>
               {showSpeakButton && (
                 <Box

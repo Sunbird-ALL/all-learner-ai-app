@@ -66,6 +66,7 @@ const Practice = () => {
   const [currentImage, setCurrentImage] = useState({});
   const [parentWords, setParentWords] = useState({});
   const [levelOneWord, setLevelOneWord] = useState("");
+  const [refAudio, setRefAudio] = useState("");
   const [level, setLevel] = useState(0);
   const [isShowCase, setIsShowCase] = useState(false);
   const [startShowCase, setStartShowCase] = useState(false);
@@ -89,443 +90,3781 @@ const Practice = () => {
   });
 
   const levels = {
-    L1: [
-      {
-        completeWord: "Apple",
-        syllable: ["Ap", "ple"],
-        img: getAssetUrl(s3Assets.Apple) || Assets.Apple,
-        syllablesAudio: [
-          {
-            name: "Ap",
-            audio: getAssetAudioUrl(s3Assets.apAudio) || Assets.apAudio,
-          },
-          {
-            name: "ple",
-            audio: getAssetAudioUrl(s3Assets.pleAudio) || Assets.pleAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
-      },
-      {
-        completeWord: "Tiger",
-        syllable: ["Ti", "ger"],
-        img: getAssetUrl(s3Assets.TigerNewImg) || Assets.TigerNewImg,
-        syllablesAudio: [
-          {
-            name: "Ti",
-            audio: getAssetAudioUrl(s3Assets.tiAudio) || Assets.tiAudio,
-          },
-          {
-            name: "ger",
-            audio: getAssetAudioUrl(s3Assets.gerAudio) || Assets.gerAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.tigerAudio) || Assets.tigerAudio,
-      },
-      {
-        completeWord: "Happy",
-        syllable: ["Hap", "py"],
-        img: getAssetUrl(s3Assets.happyImg) || Assets.happyImg,
-        syllablesAudio: [
-          {
-            name: "Hap",
-            audio: getAssetAudioUrl(s3Assets.hapAudio) || Assets.hapAudio,
-          },
-          {
-            name: "py",
-            audio: getAssetAudioUrl(s3Assets.pyAudio) || Assets.pyAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.happyAudio) || Assets.happyAudio,
-      },
-      {
-        completeWord: "Pencil",
-        syllable: ["Pen", "cil"],
-        img: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
-        syllablesAudio: [
-          {
-            name: "Pen",
-            audio: Assets.penAudio,
-          },
-          {
-            name: "cil",
-            audio: getAssetAudioUrl(s3Assets.cilAudio) || Assets.cilAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.pencilAudio) || Assets.pencilAudio,
-      },
-      {
-        completeWord: "Rocket",
-        syllable: ["Rock", "et"],
-        img: getAssetUrl(s3Assets.RocketNewImg) || Assets.RocketNewImg,
-        syllablesAudio: [
-          {
-            name: "Rock",
-            audio: getAssetAudioUrl(s3Assets.Rock) || Assets.Rock,
-          },
-          { name: "Et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
-        ],
-        completeAudio: getAssetAudioUrl(s3Assets.RocketS) || Assets.RocketS,
-      },
-    ],
-    L2: [
-      {
-        completeWord: "Basket",
-        syllable: ["Bas", "ket"],
-        img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
-        syllablesAudio: [
-          { name: "Bas", audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas },
-          { name: "Ket", audio: Assets.Ket },
-        ],
-        completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
-      },
-      {
-        completeWord: "Dinner",
-        syllable: ["Din", "ner"],
-        img: getAssetUrl(s3Assets.DinnerNewImg) || Assets.DinnerNewImg,
-        syllablesAudio: [
-          {
-            name: "Din",
-            audio: getAssetAudioUrl(s3Assets.dinAudio) || Assets.dinAudio,
-          },
-          {
-            name: "ner",
-            audio: getAssetAudioUrl(s3Assets.nerAudio) || Assets.nerAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.dinnerAudio) || Assets.dinnerAudio,
-      },
-      {
-        completeWord: "Window",
-        syllable: ["Win", "dow"],
-        img: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
-        syllablesAudio: [
-          {
-            name: "Win",
-            audio: getAssetAudioUrl(s3Assets.winAudio) || Assets.winAudio,
-          },
-          {
-            name: "dow",
-            audio: getAssetAudioUrl(s3Assets.dowAudio) || Assets.dowAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.windowAudio) || Assets.windowAudio,
-      },
-      {
-        completeWord: "Magnet",
-        syllable: ["Mag", "net"],
-        img: getAssetUrl(s3Assets.MagnetNewImg) || Assets.MagnetNewImg,
-        syllablesAudio: [
-          {
-            name: "Mag",
-            audio: getAssetAudioUrl(s3Assets.magAudio) || Assets.magAudio,
-          },
-          {
-            name: "net",
-            audio: getAssetAudioUrl(s3Assets.netAudio) || Assets.netAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.magnetAudio) || Assets.magnetAudio,
-      },
-      {
-        completeWord: "Tennis",
-        syllable: ["Ten", "nis"],
-        img: getAssetUrl(s3Assets.TennisNewImg) || Assets.TennisNewImg,
-        syllablesAudio: [
-          {
-            name: "Ten",
-            audio: getAssetAudioUrl(s3Assets.tenAudio) || Assets.tenAudio,
-          },
-          {
-            name: "nis",
-            audio: getAssetAudioUrl(s3Assets.nisAudio) || Assets.nisAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.tennisAudio) || Assets.tennisAudio,
-      },
-    ],
-    P1: [
-      { completeWord: "River", syllable: ["Ri", "ver"] },
-      { completeWord: "Signal", syllable: ["Sig", "nal"] },
-      { completeWord: "Boring", syllable: ["Bor", "ing"] },
-      { completeWord: "Table", syllable: ["Ta", "ble"] },
-      { completeWord: "Carpet", syllable: ["Car", "pet"] },
-    ],
-    P2: [
-      { completeWord: "Rabbit", syllable: ["Rab", "bit"] },
-      { completeWord: "Table", syllable: ["Ta", "ble"] },
-      { completeWord: "Lemon", syllable: ["Le", "mon"] },
-      { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
-      { completeWord: "Apple", syllable: ["Ap", "ple"] },
-    ],
-    S1: [
-      { completeWord: "Tiger", syllable: ["Ti", "ger"] },
-      { completeWord: "Rocket", syllable: ["Rock", "et"] },
-      { completeWord: "Lemon", syllable: ["Le", "mon"] },
-      { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
-      { completeWord: "Mango", syllable: ["Man", "go"] },
-    ],
-    L3: [
-      {
-        completeWord: "Picture",
-        syllable: ["Pic", "ture"],
-        img: getAssetUrl(s3Assets.PictureNewImg) || Assets.PictureNewImg,
-        syllablesAudio: [
-          {
-            name: "Pic",
-            audio: getAssetAudioUrl(s3Assets.picAudio) || Assets.picAudio,
-          },
-          {
-            name: "ture",
-            audio: getAssetAudioUrl(s3Assets.tureAudio) || Assets.tureAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.pictureAudio) || Assets.pictureAudio,
-      },
-      {
-        completeWord: "Number",
-        syllable: ["Num", "ber"],
-        img: getAssetUrl(s3Assets.NumberNewImg) || Assets.NumberNewImg,
-        syllablesAudio: [
-          {
-            name: "Num",
-            audio: getAssetAudioUrl(s3Assets.numAudio) || Assets.numAudio,
-          },
-          {
-            name: "ber",
-            audio: getAssetAudioUrl(s3Assets.berAudio) || Assets.berAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.numberAudio) || Assets.numberAudio,
-      },
-      {
-        completeWord: "Doctor",
-        syllable: ["Doc", "tor"],
-        img: getAssetUrl(s3Assets.DoctorNewImg) || Assets.DoctorNewImg,
-        syllablesAudio: [
-          {
-            name: "Doc",
-            audio: getAssetAudioUrl(s3Assets.docAudio) || Assets.docAudio,
-          },
-          {
-            name: "tor",
-            audio: getAssetAudioUrl(s3Assets.torAudio) || Assets.torAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.doctorAudio) || Assets.doctorAudio,
-      },
-      {
-        completeWord: "Paper",
-        syllable: ["Pa", "per"],
-        img: getAssetUrl(s3Assets.questionPaperImg) || Assets.questionPaperImg,
-        syllablesAudio: [
-          {
-            name: "Pa",
-            audio: getAssetAudioUrl(s3Assets.paAudio) || Assets.paAudio,
-          },
-          {
-            name: "per",
-            audio: getAssetAudioUrl(s3Assets.perAudio) || Assets.perAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.paperAudio) || Assets.paperAudio,
-      },
-      {
-        completeWord: "Monkey",
-        syllable: ["Mon", "key"],
-        img: getAssetUrl(s3Assets.MonkeyNewImg) || Assets.MonkeyNewImg,
-        syllablesAudio: [
-          {
-            name: "Mon",
-            audio: getAssetAudioUrl(s3Assets.monAudio) || Assets.monAudio,
-          },
-          {
-            name: "key",
-            audio: getAssetAudioUrl(s3Assets.keyAudio) || Assets.keyAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.monkeyAudio) || Assets.monkeyAudio,
-      },
-    ],
-    L4: [
-      {
-        completeWord: "Garden",
-        syllable: ["Gar", "den"],
-        img: getAssetUrl(s3Assets.gardenImg) || Assets.GardenNewImg,
-        syllablesAudio: [
-          {
-            name: "Gar",
-            audio: getAssetAudioUrl(s3Assets.garAudio) || Assets.garAudio,
-          },
-          {
-            name: "den",
-            audio: getAssetAudioUrl(s3Assets.denAudio) || Assets.denAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.GardenAudio) || Assets.GardenAudio,
-      },
-      {
-        completeWord: "Helmet",
-        syllable: ["Hel", "met"],
-        img: getAssetUrl(s3Assets.helmetImg) || Assets.helmetImg,
-        syllablesAudio: [
-          {
-            name: "Hel",
-            audio: getAssetAudioUrl(s3Assets.helAudio) || Assets.helAudio,
-          },
-          {
-            name: "met",
-            audio: getAssetAudioUrl(s3Assets.metAudio) || Assets.metAudio,
-          },
-        ],
-        completeAudio:
-          getAssetAudioUrl(s3Assets.helmetAudio) || Assets.helmetAudio,
-      },
-      {
-        completeWord: "Kitten",
-        syllable: ["Kit", "ten"],
-        img: getAssetUrl(s3Assets.catImage) || Assets.catImage,
-        syllablesAudio: [
-          { name: "Kit", audio: getAssetAudioUrl(s3Assets.Kit) || Assets.Kit },
-          { name: "ten", audio: getAssetAudioUrl(s3Assets.Ten) || Assets.Ten },
-        ],
-        completeAudio: getAssetAudioUrl(s3Assets.KittenS) || Assets.KittenS,
-      },
-      {
-        completeWord: "Jacket",
-        syllable: ["Jack", "et"],
-        img: getAssetUrl(s3Assets.Jacket) || Assets.Jacket,
-        syllablesAudio: [
-          {
-            name: "Jack",
-            audio: getAssetAudioUrl(s3Assets.Jack) || Assets.Jack,
-          },
-          { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
-        ],
-        completeAudio: getAssetAudioUrl(s3Assets.JacketS) || Assets.JacketS,
-      },
-      {
-        completeWord: "Pocket",
-        syllable: ["Pock", "et"],
-        img: getAssetUrl(s3Assets.pocketImage) || Assets.pocketImage,
-        syllablesAudio: [
-          {
-            name: "Pock",
-            audio: getAssetAudioUrl(s3Assets.Pock) || Assets.Pock,
-          },
-          { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
-        ],
-        completeAudio: getAssetAudioUrl(s3Assets.PocketS) || Assets.PocketS,
-      },
-    ],
-    P3: [
-      { completeWord: "Basket", syllable: ["Bas", "ket"] },
-      { completeWord: "Tunnel", syllable: ["Tun", "nel"] },
-      { completeWord: "Sunset", syllable: ["Sun", "set"] },
-      { completeWord: "Candle", syllable: ["Can", "dle"] },
-      { completeWord: "Button", syllable: ["But", "ton"] },
-    ],
-    P4: [
-      { completeWord: "Pocket", syllable: ["Pock", "et"] },
-      { completeWord: "Dinner", syllable: ["Din", "ner"] },
-      { completeWord: "Tunnel", syllable: ["Tun", "nel"] },
-      { completeWord: "Sunset", syllable: ["Sun", "set"] },
-      { completeWord: "Tablet", syllable: ["Tab", "let"] },
-    ],
-    S2: [
-      { completeWord: "Basket", syllable: ["Bas", "ket"] },
-      { completeWord: "Tablet", syllable: ["Tab", "let"] },
-      { completeWord: "Sunset", syllable: ["Sun", "set"] },
-      { completeWord: "Button", syllable: ["But", "ton"] },
-      { completeWord: "Window", syllable: ["Win", "dow"] },
-    ],
+    en: {
+      L1: [
+        {
+          completeWord: "Apple",
+          syllable: ["Ap", "ple"],
+          img: getAssetUrl(s3Assets.Apple) || Assets.Apple,
+          syllablesAudio: [
+            {
+              name: "Ap",
+              audio: getAssetAudioUrl(s3Assets.apAudio) || Assets.apAudio,
+            },
+            {
+              name: "ple",
+              audio: getAssetAudioUrl(s3Assets.pleAudio) || Assets.pleAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
+        },
+        {
+          completeWord: "Tiger",
+          syllable: ["Ti", "ger"],
+          img: getAssetUrl(s3Assets.TigerNewImg) || Assets.TigerNewImg,
+          syllablesAudio: [
+            {
+              name: "Ti",
+              audio: getAssetAudioUrl(s3Assets.tiAudio) || Assets.tiAudio,
+            },
+            {
+              name: "ger",
+              audio: getAssetAudioUrl(s3Assets.gerAudio) || Assets.gerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tigerAudio) || Assets.tigerAudio,
+        },
+        {
+          completeWord: "Happy",
+          syllable: ["Hap", "py"],
+          img: getAssetUrl(s3Assets.happyImg) || Assets.happyImg,
+          syllablesAudio: [
+            {
+              name: "Hap",
+              audio: getAssetAudioUrl(s3Assets.hapAudio) || Assets.hapAudio,
+            },
+            {
+              name: "py",
+              audio: getAssetAudioUrl(s3Assets.pyAudio) || Assets.pyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.happyAudio) || Assets.happyAudio,
+        },
+        {
+          completeWord: "Pencil",
+          syllable: ["Pen", "cil"],
+          img: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
+          syllablesAudio: [
+            {
+              name: "Pen",
+              audio: Assets.penAudio,
+            },
+            {
+              name: "cil",
+              audio: getAssetAudioUrl(s3Assets.cilAudio) || Assets.cilAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pencilAudio) || Assets.pencilAudio,
+        },
+        {
+          completeWord: "Rocket",
+          syllable: ["Rock", "et"],
+          img: getAssetUrl(s3Assets.RocketNewImg) || Assets.RocketNewImg,
+          syllablesAudio: [
+            {
+              name: "Rock",
+              audio: getAssetAudioUrl(s3Assets.Rock) || Assets.Rock,
+            },
+            { name: "Et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.RocketS) || Assets.RocketS,
+        },
+      ],
+      L2: [
+        {
+          completeWord: "Basket",
+          syllable: ["Bas", "ket"],
+          img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
+          syllablesAudio: [
+            {
+              name: "Bas",
+              audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas,
+            },
+            { name: "Ket", audio: Assets.Ket },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
+        },
+        {
+          completeWord: "Dinner",
+          syllable: ["Din", "ner"],
+          img: getAssetUrl(s3Assets.DinnerNewImg) || Assets.DinnerNewImg,
+          syllablesAudio: [
+            {
+              name: "Din",
+              audio: getAssetAudioUrl(s3Assets.dinAudio) || Assets.dinAudio,
+            },
+            {
+              name: "ner",
+              audio: getAssetAudioUrl(s3Assets.nerAudio) || Assets.nerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.dinnerAudio) || Assets.dinnerAudio,
+        },
+        {
+          completeWord: "Window",
+          syllable: ["Win", "dow"],
+          img: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
+          syllablesAudio: [
+            {
+              name: "Win",
+              audio: getAssetAudioUrl(s3Assets.winAudio) || Assets.winAudio,
+            },
+            {
+              name: "dow",
+              audio: getAssetAudioUrl(s3Assets.dowAudio) || Assets.dowAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.windowAudio) || Assets.windowAudio,
+        },
+        {
+          completeWord: "Magnet",
+          syllable: ["Mag", "net"],
+          img: getAssetUrl(s3Assets.MagnetNewImg) || Assets.MagnetNewImg,
+          syllablesAudio: [
+            {
+              name: "Mag",
+              audio: getAssetAudioUrl(s3Assets.magAudio) || Assets.magAudio,
+            },
+            {
+              name: "net",
+              audio: getAssetAudioUrl(s3Assets.netAudio) || Assets.netAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.magnetAudio) || Assets.magnetAudio,
+        },
+        {
+          completeWord: "Tennis",
+          syllable: ["Ten", "nis"],
+          img: getAssetUrl(s3Assets.TennisNewImg) || Assets.TennisNewImg,
+          syllablesAudio: [
+            {
+              name: "Ten",
+              audio: getAssetAudioUrl(s3Assets.tenAudio) || Assets.tenAudio,
+            },
+            {
+              name: "nis",
+              audio: getAssetAudioUrl(s3Assets.nisAudio) || Assets.nisAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tennisAudio) || Assets.tennisAudio,
+        },
+      ],
+      P1: [
+        {
+          completeWord: "Coconut",
+          syllable: ["Coco", "nut"],
+          audio: "coconutM1Eng",
+        },
+        {
+          completeWord: "Peacock",
+          syllable: ["Pea", "cock"],
+          audio: "peacockM1Eng",
+        },
+        { completeWord: "Puppy", syllable: ["Pup", "py"], audio: "puppyM1Eng" },
+        { completeWord: "Clock", syllable: ["clo", "ck"], audio: "clockM1Eng" },
+        {
+          completeWord: "Grapes",
+          syllable: ["grape", "s"],
+          audio: "grapesM1Eng",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "Tongue",
+          syllable: ["Tong", "ue"],
+          audio: "tongueM1Eng",
+        },
+        { completeWord: "Money", syllable: ["Mon", "ey"], audio: "moneyM1Eng" },
+        { completeWord: "Phone", syllable: ["Pho", "ne"], audio: "phoneM1Eng" },
+        {
+          completeWord: "Vegetables",
+          syllable: ["Vege", "tables"],
+          audio: "vegetablesM1Eng",
+        },
+        { completeWord: "Cards", syllable: ["Car", "ds"], audio: "cardsM1Eng" },
+      ],
+      S1: [
+        { completeWord: "Tiger", syllable: ["Ti", "ger"] },
+        { completeWord: "Rocket", syllable: ["Rock", "et"] },
+        { completeWord: "Lemon", syllable: ["Le", "mon"] },
+        { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
+        { completeWord: "Mango", syllable: ["Man", "go"] },
+      ],
+      L3: [
+        {
+          completeWord: "Picture",
+          syllable: ["Pic", "ture"],
+          img: getAssetUrl(s3Assets.PictureNewImg) || Assets.PictureNewImg,
+          syllablesAudio: [
+            {
+              name: "Pic",
+              audio: getAssetAudioUrl(s3Assets.picAudio) || Assets.picAudio,
+            },
+            {
+              name: "ture",
+              audio: getAssetAudioUrl(s3Assets.tureAudio) || Assets.tureAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pictureAudio) || Assets.pictureAudio,
+        },
+        {
+          completeWord: "Number",
+          syllable: ["Num", "ber"],
+          img: getAssetUrl(s3Assets.NumberNewImg) || Assets.NumberNewImg,
+          syllablesAudio: [
+            {
+              name: "Num",
+              audio: getAssetAudioUrl(s3Assets.numAudio) || Assets.numAudio,
+            },
+            {
+              name: "ber",
+              audio: getAssetAudioUrl(s3Assets.berAudio) || Assets.berAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.numberAudio) || Assets.numberAudio,
+        },
+        {
+          completeWord: "Doctor",
+          syllable: ["Doc", "tor"],
+          img: getAssetUrl(s3Assets.DoctorNewImg) || Assets.DoctorNewImg,
+          syllablesAudio: [
+            {
+              name: "Doc",
+              audio: getAssetAudioUrl(s3Assets.docAudio) || Assets.docAudio,
+            },
+            {
+              name: "tor",
+              audio: getAssetAudioUrl(s3Assets.torAudio) || Assets.torAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.doctorAudio) || Assets.doctorAudio,
+        },
+        {
+          completeWord: "Paper",
+          syllable: ["Pa", "per"],
+          img:
+            getAssetUrl(s3Assets.questionPaperImg) || Assets.questionPaperImg,
+          syllablesAudio: [
+            {
+              name: "Pa",
+              audio: getAssetAudioUrl(s3Assets.paAudio) || Assets.paAudio,
+            },
+            {
+              name: "per",
+              audio: getAssetAudioUrl(s3Assets.perAudio) || Assets.perAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.paperAudio) || Assets.paperAudio,
+        },
+        {
+          completeWord: "Monkey",
+          syllable: ["Mon", "key"],
+          img: getAssetUrl(s3Assets.MonkeyNewImg) || Assets.MonkeyNewImg,
+          syllablesAudio: [
+            {
+              name: "Mon",
+              audio: getAssetAudioUrl(s3Assets.monAudio) || Assets.monAudio,
+            },
+            {
+              name: "key",
+              audio: getAssetAudioUrl(s3Assets.keyAudio) || Assets.keyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.monkeyAudio) || Assets.monkeyAudio,
+        },
+      ],
+      L4: [
+        {
+          completeWord: "Garden",
+          syllable: ["Gar", "den"],
+          img: getAssetUrl(s3Assets.gardenImg) || Assets.GardenNewImg,
+          syllablesAudio: [
+            {
+              name: "Gar",
+              audio: getAssetAudioUrl(s3Assets.garAudio) || Assets.garAudio,
+            },
+            {
+              name: "den",
+              audio: getAssetAudioUrl(s3Assets.denAudio) || Assets.denAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.GardenAudio) || Assets.GardenAudio,
+        },
+        {
+          completeWord: "Helmet",
+          syllable: ["Hel", "met"],
+          img: getAssetUrl(s3Assets.helmetImg) || Assets.helmetImg,
+          syllablesAudio: [
+            {
+              name: "Hel",
+              audio: getAssetAudioUrl(s3Assets.helAudio) || Assets.helAudio,
+            },
+            {
+              name: "met",
+              audio: getAssetAudioUrl(s3Assets.metAudio) || Assets.metAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.helmetAudio) || Assets.helmetAudio,
+        },
+        {
+          completeWord: "Kitten",
+          syllable: ["Kit", "ten"],
+          img: getAssetUrl(s3Assets.catImage) || Assets.catImage,
+          syllablesAudio: [
+            {
+              name: "Kit",
+              audio: getAssetAudioUrl(s3Assets.Kit) || Assets.Kit,
+            },
+            {
+              name: "ten",
+              audio: getAssetAudioUrl(s3Assets.Ten) || Assets.Ten,
+            },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.KittenS) || Assets.KittenS,
+        },
+        {
+          completeWord: "Jacket",
+          syllable: ["Jack", "et"],
+          img: getAssetUrl(s3Assets.Jacket) || Assets.Jacket,
+          syllablesAudio: [
+            {
+              name: "Jack",
+              audio: getAssetAudioUrl(s3Assets.Jack) || Assets.Jack,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.JacketS) || Assets.JacketS,
+        },
+        {
+          completeWord: "Pocket",
+          syllable: ["Pock", "et"],
+          img: getAssetUrl(s3Assets.pocketImage) || Assets.pocketImage,
+          syllablesAudio: [
+            {
+              name: "Pock",
+              audio: getAssetAudioUrl(s3Assets.Pock) || Assets.Pock,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.PocketS) || Assets.PocketS,
+        },
+      ],
+      P3: [
+        {
+          completeWord: "Stones",
+          syllable: ["Stone", "s"],
+          audio: "stonesM1Eng",
+        },
+        {
+          completeWord: "Turtle",
+          syllable: ["Tur", "tle"],
+          audio: "turtleM1Eng",
+        },
+        { completeWord: "Key", syllable: ["K", "ey"], audio: "keyM1Eng" },
+        { completeWord: "Hands", syllable: ["Han", "ds"], audio: "handsM1Eng" },
+        {
+          completeWord: "Fruits",
+          syllable: ["Fruit", "s"],
+          audio: "fruitsM1Eng",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "Spider",
+          syllable: ["Spi", "der"],
+          audio: "spiderM1Eng",
+        },
+        { completeWord: "Happy", syllable: ["Hap", "py"], audio: "happyM1Eng" },
+        {
+          completeWord: "Plants",
+          syllable: ["Plant", "s"],
+          audio: "plantsM1Eng",
+        },
+        {
+          completeWord: "Family",
+          syllable: ["Fa", "mily"],
+          audio: "familyM1Eng",
+        },
+        {
+          completeWord: "Dustbin",
+          syllable: ["Dust", "bin"],
+          audio: "dustbinM1Eng",
+        },
+      ],
+      S2: [
+        { completeWord: "Basket", syllable: ["Bas", "ket"] },
+        { completeWord: "Tablet", syllable: ["Tab", "let"] },
+        { completeWord: "Sunset", syllable: ["Sun", "set"] },
+        { completeWord: "Button", syllable: ["But", "ton"] },
+        { completeWord: "Window", syllable: ["Win", "dow"] },
+      ],
+    },
+    hi: {
+      L1: [
+        {
+          completeWord: "Apple",
+          syllable: ["Ap", "ple"],
+          img: getAssetUrl(s3Assets.Apple) || Assets.Apple,
+          syllablesAudio: [
+            {
+              name: "Ap",
+              audio: getAssetAudioUrl(s3Assets.apAudio) || Assets.apAudio,
+            },
+            {
+              name: "ple",
+              audio: getAssetAudioUrl(s3Assets.pleAudio) || Assets.pleAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
+        },
+        {
+          completeWord: "Tiger",
+          syllable: ["Ti", "ger"],
+          img: getAssetUrl(s3Assets.TigerNewImg) || Assets.TigerNewImg,
+          syllablesAudio: [
+            {
+              name: "Ti",
+              audio: getAssetAudioUrl(s3Assets.tiAudio) || Assets.tiAudio,
+            },
+            {
+              name: "ger",
+              audio: getAssetAudioUrl(s3Assets.gerAudio) || Assets.gerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tigerAudio) || Assets.tigerAudio,
+        },
+        {
+          completeWord: "Happy",
+          syllable: ["Hap", "py"],
+          img: getAssetUrl(s3Assets.happyImg) || Assets.happyImg,
+          syllablesAudio: [
+            {
+              name: "Hap",
+              audio: getAssetAudioUrl(s3Assets.hapAudio) || Assets.hapAudio,
+            },
+            {
+              name: "py",
+              audio: getAssetAudioUrl(s3Assets.pyAudio) || Assets.pyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.happyAudio) || Assets.happyAudio,
+        },
+        {
+          completeWord: "Pencil",
+          syllable: ["Pen", "cil"],
+          img: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
+          syllablesAudio: [
+            {
+              name: "Pen",
+              audio: Assets.penAudio,
+            },
+            {
+              name: "cil",
+              audio: getAssetAudioUrl(s3Assets.cilAudio) || Assets.cilAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pencilAudio) || Assets.pencilAudio,
+        },
+        {
+          completeWord: "Rocket",
+          syllable: ["Rock", "et"],
+          img: getAssetUrl(s3Assets.RocketNewImg) || Assets.RocketNewImg,
+          syllablesAudio: [
+            {
+              name: "Rock",
+              audio: getAssetAudioUrl(s3Assets.Rock) || Assets.Rock,
+            },
+            { name: "Et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.RocketS) || Assets.RocketS,
+        },
+      ],
+      L2: [
+        {
+          completeWord: "Basket",
+          syllable: ["Bas", "ket"],
+          img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
+          syllablesAudio: [
+            {
+              name: "Bas",
+              audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas,
+            },
+            { name: "Ket", audio: Assets.Ket },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
+        },
+        {
+          completeWord: "Dinner",
+          syllable: ["Din", "ner"],
+          img: getAssetUrl(s3Assets.DinnerNewImg) || Assets.DinnerNewImg,
+          syllablesAudio: [
+            {
+              name: "Din",
+              audio: getAssetAudioUrl(s3Assets.dinAudio) || Assets.dinAudio,
+            },
+            {
+              name: "ner",
+              audio: getAssetAudioUrl(s3Assets.nerAudio) || Assets.nerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.dinnerAudio) || Assets.dinnerAudio,
+        },
+        {
+          completeWord: "Window",
+          syllable: ["Win", "dow"],
+          img: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
+          syllablesAudio: [
+            {
+              name: "Win",
+              audio: getAssetAudioUrl(s3Assets.winAudio) || Assets.winAudio,
+            },
+            {
+              name: "dow",
+              audio: getAssetAudioUrl(s3Assets.dowAudio) || Assets.dowAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.windowAudio) || Assets.windowAudio,
+        },
+        {
+          completeWord: "Magnet",
+          syllable: ["Mag", "net"],
+          img: getAssetUrl(s3Assets.MagnetNewImg) || Assets.MagnetNewImg,
+          syllablesAudio: [
+            {
+              name: "Mag",
+              audio: getAssetAudioUrl(s3Assets.magAudio) || Assets.magAudio,
+            },
+            {
+              name: "net",
+              audio: getAssetAudioUrl(s3Assets.netAudio) || Assets.netAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.magnetAudio) || Assets.magnetAudio,
+        },
+        {
+          completeWord: "Tennis",
+          syllable: ["Ten", "nis"],
+          img: getAssetUrl(s3Assets.TennisNewImg) || Assets.TennisNewImg,
+          syllablesAudio: [
+            {
+              name: "Ten",
+              audio: getAssetAudioUrl(s3Assets.tenAudio) || Assets.tenAudio,
+            },
+            {
+              name: "nis",
+              audio: getAssetAudioUrl(s3Assets.nisAudio) || Assets.nisAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tennisAudio) || Assets.tennisAudio,
+        },
+      ],
+      P1: [
+        { completeWord: "मूँछ", syllable: ["मूँ", "छ"], audio: "moochM1Hin" },
+        { completeWord: "लौकी", syllable: ["लौ", "की"], audio: "laukiM1Hin" },
+        { completeWord: "टॉवर", syllable: ["टॉ", "वर"], audio: "towerM1Hin" },
+        { completeWord: "नानी", syllable: ["ना", "नी"], audio: "naniM1Hin" },
+        { completeWord: "मटर", syllable: ["म", "टर"], audio: "matarM1Hin" },
+      ],
+      P2: [
+        { completeWord: "केला", syllable: ["के", "ला"], audio: "kelaM1Hin" },
+        { completeWord: "भालू", syllable: ["भा", "लू"], audio: "bhaluM1Hin" },
+        { completeWord: "गोभी", syllable: ["गो", "भी"], audio: "gobhiM1Hin" },
+        { completeWord: "चूहा", syllable: ["चू", "हा"], audio: "chuhaM1Hin" },
+        { completeWord: "घोड़ा", syllable: ["घो", "ड़ा"], audio: "ghodaM1Hin" },
+      ],
+      S1: [
+        { completeWord: "Tiger", syllable: ["Ti", "ger"] },
+        { completeWord: "Rocket", syllable: ["Rock", "et"] },
+        { completeWord: "Lemon", syllable: ["Le", "mon"] },
+        { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
+        { completeWord: "Mango", syllable: ["Man", "go"] },
+      ],
+      L3: [
+        {
+          completeWord: "Picture",
+          syllable: ["Pic", "ture"],
+          img: getAssetUrl(s3Assets.PictureNewImg) || Assets.PictureNewImg,
+          syllablesAudio: [
+            {
+              name: "Pic",
+              audio: getAssetAudioUrl(s3Assets.picAudio) || Assets.picAudio,
+            },
+            {
+              name: "ture",
+              audio: getAssetAudioUrl(s3Assets.tureAudio) || Assets.tureAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pictureAudio) || Assets.pictureAudio,
+        },
+        {
+          completeWord: "Number",
+          syllable: ["Num", "ber"],
+          img: getAssetUrl(s3Assets.NumberNewImg) || Assets.NumberNewImg,
+          syllablesAudio: [
+            {
+              name: "Num",
+              audio: getAssetAudioUrl(s3Assets.numAudio) || Assets.numAudio,
+            },
+            {
+              name: "ber",
+              audio: getAssetAudioUrl(s3Assets.berAudio) || Assets.berAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.numberAudio) || Assets.numberAudio,
+        },
+        {
+          completeWord: "Doctor",
+          syllable: ["Doc", "tor"],
+          img: getAssetUrl(s3Assets.DoctorNewImg) || Assets.DoctorNewImg,
+          syllablesAudio: [
+            {
+              name: "Doc",
+              audio: getAssetAudioUrl(s3Assets.docAudio) || Assets.docAudio,
+            },
+            {
+              name: "tor",
+              audio: getAssetAudioUrl(s3Assets.torAudio) || Assets.torAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.doctorAudio) || Assets.doctorAudio,
+        },
+        {
+          completeWord: "Paper",
+          syllable: ["Pa", "per"],
+          img:
+            getAssetUrl(s3Assets.questionPaperImg) || Assets.questionPaperImg,
+          syllablesAudio: [
+            {
+              name: "Pa",
+              audio: getAssetAudioUrl(s3Assets.paAudio) || Assets.paAudio,
+            },
+            {
+              name: "per",
+              audio: getAssetAudioUrl(s3Assets.perAudio) || Assets.perAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.paperAudio) || Assets.paperAudio,
+        },
+        {
+          completeWord: "Monkey",
+          syllable: ["Mon", "key"],
+          img: getAssetUrl(s3Assets.MonkeyNewImg) || Assets.MonkeyNewImg,
+          syllablesAudio: [
+            {
+              name: "Mon",
+              audio: getAssetAudioUrl(s3Assets.monAudio) || Assets.monAudio,
+            },
+            {
+              name: "key",
+              audio: getAssetAudioUrl(s3Assets.keyAudio) || Assets.keyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.monkeyAudio) || Assets.monkeyAudio,
+        },
+      ],
+      L4: [
+        {
+          completeWord: "Garden",
+          syllable: ["Gar", "den"],
+          img: getAssetUrl(s3Assets.gardenImg) || Assets.GardenNewImg,
+          syllablesAudio: [
+            {
+              name: "Gar",
+              audio: getAssetAudioUrl(s3Assets.garAudio) || Assets.garAudio,
+            },
+            {
+              name: "den",
+              audio: getAssetAudioUrl(s3Assets.denAudio) || Assets.denAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.GardenAudio) || Assets.GardenAudio,
+        },
+        {
+          completeWord: "Helmet",
+          syllable: ["Hel", "met"],
+          img: getAssetUrl(s3Assets.helmetImg) || Assets.helmetImg,
+          syllablesAudio: [
+            {
+              name: "Hel",
+              audio: getAssetAudioUrl(s3Assets.helAudio) || Assets.helAudio,
+            },
+            {
+              name: "met",
+              audio: getAssetAudioUrl(s3Assets.metAudio) || Assets.metAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.helmetAudio) || Assets.helmetAudio,
+        },
+        {
+          completeWord: "Kitten",
+          syllable: ["Kit", "ten"],
+          img: getAssetUrl(s3Assets.catImage) || Assets.catImage,
+          syllablesAudio: [
+            {
+              name: "Kit",
+              audio: getAssetAudioUrl(s3Assets.Kit) || Assets.Kit,
+            },
+            {
+              name: "ten",
+              audio: getAssetAudioUrl(s3Assets.Ten) || Assets.Ten,
+            },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.KittenS) || Assets.KittenS,
+        },
+        {
+          completeWord: "Jacket",
+          syllable: ["Jack", "et"],
+          img: getAssetUrl(s3Assets.Jacket) || Assets.Jacket,
+          syllablesAudio: [
+            {
+              name: "Jack",
+              audio: getAssetAudioUrl(s3Assets.Jack) || Assets.Jack,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.JacketS) || Assets.JacketS,
+        },
+        {
+          completeWord: "Pocket",
+          syllable: ["Pock", "et"],
+          img: getAssetUrl(s3Assets.pocketImage) || Assets.pocketImage,
+          syllablesAudio: [
+            {
+              name: "Pock",
+              audio: getAssetAudioUrl(s3Assets.Pock) || Assets.Pock,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.PocketS) || Assets.PocketS,
+        },
+      ],
+      P3: [
+        { completeWord: "रोटी", syllable: ["रो", "टी"], audio: "rotiM1Hin" },
+        { completeWord: "मूली", syllable: [" Moo", "ली"], audio: "mooliM1Hin" },
+        { completeWord: "लीची", syllable: ["ली", "ची"], audio: "lichiM1Hin" },
+        {
+          completeWord: "नींबू",
+          syllable: ["नीं", "बू"],
+          audio: "neembuM1Hin",
+        },
+        { completeWord: "होली", syllable: ["हो", "ली"], audio: "holiM1Hin" },
+      ],
+      P4: [
+        { completeWord: "पैसा", syllable: ["पै", "सा"], audio: "paisaM1Hin" },
+        {
+          completeWord: "चींटी",
+          syllable: ["चीन", "टी"],
+          audio: "cheentiM1Hin",
+        },
+        { completeWord: "खीरा", syllable: ["खी", "रा"], audio: "kheeraM1Hin" },
+        { completeWord: "भेड़", syllable: ["भे", "ड़"], audio: "bheD_M1Hin" },
+        { completeWord: "चाबी", syllable: ["चा", "बी"], audio: "chabiM1Hin" },
+      ],
+      S2: [
+        { completeWord: "Basket", syllable: ["Bas", "ket"] },
+        { completeWord: "Tablet", syllable: ["Tab", "let"] },
+        { completeWord: "Sunset", syllable: ["Sun", "set"] },
+        { completeWord: "Button", syllable: ["But", "ton"] },
+        { completeWord: "Window", syllable: ["Win", "dow"] },
+      ],
+    },
+    ta: {
+      L1: [
+        {
+          completeWord: "Apple",
+          syllable: ["Ap", "ple"],
+          img: getAssetUrl(s3Assets.Apple) || Assets.Apple,
+          syllablesAudio: [
+            {
+              name: "Ap",
+              audio: getAssetAudioUrl(s3Assets.apAudio) || Assets.apAudio,
+            },
+            {
+              name: "ple",
+              audio: getAssetAudioUrl(s3Assets.pleAudio) || Assets.pleAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
+        },
+        {
+          completeWord: "Tiger",
+          syllable: ["Ti", "ger"],
+          img: getAssetUrl(s3Assets.TigerNewImg) || Assets.TigerNewImg,
+          syllablesAudio: [
+            {
+              name: "Ti",
+              audio: getAssetAudioUrl(s3Assets.tiAudio) || Assets.tiAudio,
+            },
+            {
+              name: "ger",
+              audio: getAssetAudioUrl(s3Assets.gerAudio) || Assets.gerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tigerAudio) || Assets.tigerAudio,
+        },
+        {
+          completeWord: "Happy",
+          syllable: ["Hap", "py"],
+          img: getAssetUrl(s3Assets.happyImg) || Assets.happyImg,
+          syllablesAudio: [
+            {
+              name: "Hap",
+              audio: getAssetAudioUrl(s3Assets.hapAudio) || Assets.hapAudio,
+            },
+            {
+              name: "py",
+              audio: getAssetAudioUrl(s3Assets.pyAudio) || Assets.pyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.happyAudio) || Assets.happyAudio,
+        },
+        {
+          completeWord: "Pencil",
+          syllable: ["Pen", "cil"],
+          img: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
+          syllablesAudio: [
+            {
+              name: "Pen",
+              audio: Assets.penAudio,
+            },
+            {
+              name: "cil",
+              audio: getAssetAudioUrl(s3Assets.cilAudio) || Assets.cilAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pencilAudio) || Assets.pencilAudio,
+        },
+        {
+          completeWord: "Rocket",
+          syllable: ["Rock", "et"],
+          img: getAssetUrl(s3Assets.RocketNewImg) || Assets.RocketNewImg,
+          syllablesAudio: [
+            {
+              name: "Rock",
+              audio: getAssetAudioUrl(s3Assets.Rock) || Assets.Rock,
+            },
+            { name: "Et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.RocketS) || Assets.RocketS,
+        },
+      ],
+      L2: [
+        {
+          completeWord: "Basket",
+          syllable: ["Bas", "ket"],
+          img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
+          syllablesAudio: [
+            {
+              name: "Bas",
+              audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas,
+            },
+            { name: "Ket", audio: Assets.Ket },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
+        },
+        {
+          completeWord: "Dinner",
+          syllable: ["Din", "ner"],
+          img: getAssetUrl(s3Assets.DinnerNewImg) || Assets.DinnerNewImg,
+          syllablesAudio: [
+            {
+              name: "Din",
+              audio: getAssetAudioUrl(s3Assets.dinAudio) || Assets.dinAudio,
+            },
+            {
+              name: "ner",
+              audio: getAssetAudioUrl(s3Assets.nerAudio) || Assets.nerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.dinnerAudio) || Assets.dinnerAudio,
+        },
+        {
+          completeWord: "Window",
+          syllable: ["Win", "dow"],
+          img: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
+          syllablesAudio: [
+            {
+              name: "Win",
+              audio: getAssetAudioUrl(s3Assets.winAudio) || Assets.winAudio,
+            },
+            {
+              name: "dow",
+              audio: getAssetAudioUrl(s3Assets.dowAudio) || Assets.dowAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.windowAudio) || Assets.windowAudio,
+        },
+        {
+          completeWord: "Magnet",
+          syllable: ["Mag", "net"],
+          img: getAssetUrl(s3Assets.MagnetNewImg) || Assets.MagnetNewImg,
+          syllablesAudio: [
+            {
+              name: "Mag",
+              audio: getAssetAudioUrl(s3Assets.magAudio) || Assets.magAudio,
+            },
+            {
+              name: "net",
+              audio: getAssetAudioUrl(s3Assets.netAudio) || Assets.netAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.magnetAudio) || Assets.magnetAudio,
+        },
+        {
+          completeWord: "Tennis",
+          syllable: ["Ten", "nis"],
+          img: getAssetUrl(s3Assets.TennisNewImg) || Assets.TennisNewImg,
+          syllablesAudio: [
+            {
+              name: "Ten",
+              audio: getAssetAudioUrl(s3Assets.tenAudio) || Assets.tenAudio,
+            },
+            {
+              name: "nis",
+              audio: getAssetAudioUrl(s3Assets.nisAudio) || Assets.nisAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tennisAudio) || Assets.tennisAudio,
+        },
+      ],
+      P1: [
+        { completeWord: "முகம்", syllable: ["மு", "கம்"], audio: "FaceM1Tam" },
+        { completeWord: "புயல்", syllable: ["பு", "யல்"], audio: "stormM1Tam" },
+        {
+          completeWord: "எருமை",
+          syllable: ["எ", "ருமை"],
+          audio: "BuffaloM1Tam",
+        },
+        {
+          completeWord: "புதினா",
+          syllable: ["பு", "தினா"],
+          audio: "MintM1Tam",
+        },
+        {
+          completeWord: "பாலம்",
+          syllable: ["பா", "லம்"],
+          audio: "bridgeM1Tam",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "ரூபாய்",
+          syllable: ["ரூ", "பாய்"],
+          audio: "RupeesM1Tam",
+        },
+        {
+          completeWord: "தாகம்",
+          syllable: ["தா", "கம்"],
+          audio: "thirstM1Tam",
+        },
+        { completeWord: "மாதம்", syllable: ["மா", "தம்"], audio: "MONTHM1Tam" },
+        { completeWord: "குழாய்", syllable: ["கு", "ழாய்"], audio: "TapM1Tam" },
+        { completeWord: "கடல்", syllable: ["க", "டல்"], audio: "oceanM1Tam" },
+      ],
+      S1: [
+        { completeWord: "Tiger", syllable: ["Ti", "ger"] },
+        { completeWord: "Rocket", syllable: ["Rock", "et"] },
+        { completeWord: "Lemon", syllable: ["Le", "mon"] },
+        { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
+        { completeWord: "Mango", syllable: ["Man", "go"] },
+      ],
+      L3: [
+        {
+          completeWord: "Picture",
+          syllable: ["Pic", "ture"],
+          img: getAssetUrl(s3Assets.PictureNewImg) || Assets.PictureNewImg,
+          syllablesAudio: [
+            {
+              name: "Pic",
+              audio: getAssetAudioUrl(s3Assets.picAudio) || Assets.picAudio,
+            },
+            {
+              name: "ture",
+              audio: getAssetAudioUrl(s3Assets.tureAudio) || Assets.tureAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pictureAudio) || Assets.pictureAudio,
+        },
+        {
+          completeWord: "Number",
+          syllable: ["Num", "ber"],
+          img: getAssetUrl(s3Assets.NumberNewImg) || Assets.NumberNewImg,
+          syllablesAudio: [
+            {
+              name: "Num",
+              audio: getAssetAudioUrl(s3Assets.numAudio) || Assets.numAudio,
+            },
+            {
+              name: "ber",
+              audio: getAssetAudioUrl(s3Assets.berAudio) || Assets.berAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.numberAudio) || Assets.numberAudio,
+        },
+        {
+          completeWord: "Doctor",
+          syllable: ["Doc", "tor"],
+          img: getAssetUrl(s3Assets.DoctorNewImg) || Assets.DoctorNewImg,
+          syllablesAudio: [
+            {
+              name: "Doc",
+              audio: getAssetAudioUrl(s3Assets.docAudio) || Assets.docAudio,
+            },
+            {
+              name: "tor",
+              audio: getAssetAudioUrl(s3Assets.torAudio) || Assets.torAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.doctorAudio) || Assets.doctorAudio,
+        },
+        {
+          completeWord: "Paper",
+          syllable: ["Pa", "per"],
+          img:
+            getAssetUrl(s3Assets.questionPaperImg) || Assets.questionPaperImg,
+          syllablesAudio: [
+            {
+              name: "Pa",
+              audio: getAssetAudioUrl(s3Assets.paAudio) || Assets.paAudio,
+            },
+            {
+              name: "per",
+              audio: getAssetAudioUrl(s3Assets.perAudio) || Assets.perAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.paperAudio) || Assets.paperAudio,
+        },
+        {
+          completeWord: "Monkey",
+          syllable: ["Mon", "key"],
+          img: getAssetUrl(s3Assets.MonkeyNewImg) || Assets.MonkeyNewImg,
+          syllablesAudio: [
+            {
+              name: "Mon",
+              audio: getAssetAudioUrl(s3Assets.monAudio) || Assets.monAudio,
+            },
+            {
+              name: "key",
+              audio: getAssetAudioUrl(s3Assets.keyAudio) || Assets.keyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.monkeyAudio) || Assets.monkeyAudio,
+        },
+      ],
+      L4: [
+        {
+          completeWord: "Garden",
+          syllable: ["Gar", "den"],
+          img: getAssetUrl(s3Assets.gardenImg) || Assets.GardenNewImg,
+          syllablesAudio: [
+            {
+              name: "Gar",
+              audio: getAssetAudioUrl(s3Assets.garAudio) || Assets.garAudio,
+            },
+            {
+              name: "den",
+              audio: getAssetAudioUrl(s3Assets.denAudio) || Assets.denAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.GardenAudio) || Assets.GardenAudio,
+        },
+        {
+          completeWord: "Helmet",
+          syllable: ["Hel", "met"],
+          img: getAssetUrl(s3Assets.helmetImg) || Assets.helmetImg,
+          syllablesAudio: [
+            {
+              name: "Hel",
+              audio: getAssetAudioUrl(s3Assets.helAudio) || Assets.helAudio,
+            },
+            {
+              name: "met",
+              audio: getAssetAudioUrl(s3Assets.metAudio) || Assets.metAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.helmetAudio) || Assets.helmetAudio,
+        },
+        {
+          completeWord: "Kitten",
+          syllable: ["Kit", "ten"],
+          img: getAssetUrl(s3Assets.catImage) || Assets.catImage,
+          syllablesAudio: [
+            {
+              name: "Kit",
+              audio: getAssetAudioUrl(s3Assets.Kit) || Assets.Kit,
+            },
+            {
+              name: "ten",
+              audio: getAssetAudioUrl(s3Assets.Ten) || Assets.Ten,
+            },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.KittenS) || Assets.KittenS,
+        },
+        {
+          completeWord: "Jacket",
+          syllable: ["Jack", "et"],
+          img: getAssetUrl(s3Assets.Jacket) || Assets.Jacket,
+          syllablesAudio: [
+            {
+              name: "Jack",
+              audio: getAssetAudioUrl(s3Assets.Jack) || Assets.Jack,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.JacketS) || Assets.JacketS,
+        },
+        {
+          completeWord: "Pocket",
+          syllable: ["Pock", "et"],
+          img: getAssetUrl(s3Assets.pocketImage) || Assets.pocketImage,
+          syllablesAudio: [
+            {
+              name: "Pock",
+              audio: getAssetAudioUrl(s3Assets.Pock) || Assets.Pock,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.PocketS) || Assets.PocketS,
+        },
+      ],
+      P3: [
+        { completeWord: "தயிர்", syllable: ["த", "யிர்"], audio: "CurdM1Tam" },
+        { completeWord: "மேகம்", syllable: ["மே", "கம்"], audio: "CloudM1Tam" },
+        { completeWord: "குடில்", syllable: ["கு", "டில்"], audio: "hutM1Tam" },
+        {
+          completeWord: "மாலை",
+          syllable: ["மா", "லை"],
+          audio: "necklaceM1Tam",
+        },
+        { completeWord: "கொடரி", syllable: ["கொ", "டரி"], audio: "AxeM1Tam" },
+      ],
+      P4: [
+        { completeWord: "முரலி", syllable: ["மு", "ரலி"], audio: "FluteM1Tam" },
+        { completeWord: "சிறகு", syllable: ["சி", "றகு"], audio: "wingM1Tam" },
+        {
+          completeWord: "வலிமையான",
+          syllable: ["வலி", "மையான"],
+          audio: "STRONGM1Tam",
+        },
+        {
+          completeWord: "நிழல்",
+          syllable: ["நி", "ழல்"],
+          audio: "shadowM1Tam",
+        },
+        {
+          completeWord: "கோலம்",
+          syllable: ["கோ", "லம்"],
+          audio: "rangoliM1Tam",
+        },
+      ],
+      S2: [
+        { completeWord: "Basket", syllable: ["Bas", "ket"] },
+        { completeWord: "Tablet", syllable: ["Tab", "let"] },
+        { completeWord: "Sunset", syllable: ["Sun", "set"] },
+        { completeWord: "Button", syllable: ["But", "ton"] },
+        { completeWord: "Window", syllable: ["Win", "dow"] },
+      ],
+    },
+    kn: {
+      L1: [
+        {
+          completeWord: "Apple",
+          syllable: ["Ap", "ple"],
+          img: getAssetUrl(s3Assets.Apple) || Assets.Apple,
+          syllablesAudio: [
+            {
+              name: "Ap",
+              audio: getAssetAudioUrl(s3Assets.apAudio) || Assets.apAudio,
+            },
+            {
+              name: "ple",
+              audio: getAssetAudioUrl(s3Assets.pleAudio) || Assets.pleAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
+        },
+        {
+          completeWord: "Tiger",
+          syllable: ["Ti", "ger"],
+          img: getAssetUrl(s3Assets.TigerNewImg) || Assets.TigerNewImg,
+          syllablesAudio: [
+            {
+              name: "Ti",
+              audio: getAssetAudioUrl(s3Assets.tiAudio) || Assets.tiAudio,
+            },
+            {
+              name: "ger",
+              audio: getAssetAudioUrl(s3Assets.gerAudio) || Assets.gerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tigerAudio) || Assets.tigerAudio,
+        },
+        {
+          completeWord: "Happy",
+          syllable: ["Hap", "py"],
+          img: getAssetUrl(s3Assets.happyImg) || Assets.happyImg,
+          syllablesAudio: [
+            {
+              name: "Hap",
+              audio: getAssetAudioUrl(s3Assets.hapAudio) || Assets.hapAudio,
+            },
+            {
+              name: "py",
+              audio: getAssetAudioUrl(s3Assets.pyAudio) || Assets.pyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.happyAudio) || Assets.happyAudio,
+        },
+        {
+          completeWord: "Pencil",
+          syllable: ["Pen", "cil"],
+          img: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
+          syllablesAudio: [
+            {
+              name: "Pen",
+              audio: Assets.penAudio,
+            },
+            {
+              name: "cil",
+              audio: getAssetAudioUrl(s3Assets.cilAudio) || Assets.cilAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pencilAudio) || Assets.pencilAudio,
+        },
+        {
+          completeWord: "Rocket",
+          syllable: ["Rock", "et"],
+          img: getAssetUrl(s3Assets.RocketNewImg) || Assets.RocketNewImg,
+          syllablesAudio: [
+            {
+              name: "Rock",
+              audio: getAssetAudioUrl(s3Assets.Rock) || Assets.Rock,
+            },
+            { name: "Et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.RocketS) || Assets.RocketS,
+        },
+      ],
+      L2: [
+        {
+          completeWord: "Basket",
+          syllable: ["Bas", "ket"],
+          img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
+          syllablesAudio: [
+            {
+              name: "Bas",
+              audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas,
+            },
+            { name: "Ket", audio: Assets.Ket },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
+        },
+        {
+          completeWord: "Dinner",
+          syllable: ["Din", "ner"],
+          img: getAssetUrl(s3Assets.DinnerNewImg) || Assets.DinnerNewImg,
+          syllablesAudio: [
+            {
+              name: "Din",
+              audio: getAssetAudioUrl(s3Assets.dinAudio) || Assets.dinAudio,
+            },
+            {
+              name: "ner",
+              audio: getAssetAudioUrl(s3Assets.nerAudio) || Assets.nerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.dinnerAudio) || Assets.dinnerAudio,
+        },
+        {
+          completeWord: "Window",
+          syllable: ["Win", "dow"],
+          img: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
+          syllablesAudio: [
+            {
+              name: "Win",
+              audio: getAssetAudioUrl(s3Assets.winAudio) || Assets.winAudio,
+            },
+            {
+              name: "dow",
+              audio: getAssetAudioUrl(s3Assets.dowAudio) || Assets.dowAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.windowAudio) || Assets.windowAudio,
+        },
+        {
+          completeWord: "Magnet",
+          syllable: ["Mag", "net"],
+          img: getAssetUrl(s3Assets.MagnetNewImg) || Assets.MagnetNewImg,
+          syllablesAudio: [
+            {
+              name: "Mag",
+              audio: getAssetAudioUrl(s3Assets.magAudio) || Assets.magAudio,
+            },
+            {
+              name: "net",
+              audio: getAssetAudioUrl(s3Assets.netAudio) || Assets.netAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.magnetAudio) || Assets.magnetAudio,
+        },
+        {
+          completeWord: "Tennis",
+          syllable: ["Ten", "nis"],
+          img: getAssetUrl(s3Assets.TennisNewImg) || Assets.TennisNewImg,
+          syllablesAudio: [
+            {
+              name: "Ten",
+              audio: getAssetAudioUrl(s3Assets.tenAudio) || Assets.tenAudio,
+            },
+            {
+              name: "nis",
+              audio: getAssetAudioUrl(s3Assets.nisAudio) || Assets.nisAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tennisAudio) || Assets.tennisAudio,
+        },
+      ],
+      P1: [
+        { completeWord: "ಆಕಾಶ", syllable: ["ಆ", "ಕಾಶ"], audio: "skyM1Kan" },
+        { completeWord: "ಹಲ್ಲು", syllable: ["ಹಲ್", "ಲು"], audio: "teethM1Kan" },
+        { completeWord: "ಕೋಪ", syllable: ["코", "ಪ"], audio: "angerM1Kan" },
+        { completeWord: "ಕಪ್ಪೆ", syllable: ["ಕಪ್", "ಪೆ"], audio: "frogM1Kan" },
+        { completeWord: "ಉಪ್ಪು", syllable: ["ಉಪ್", "ಪು"], audio: "saltM1Kan" },
+      ],
+      P2: [
+        { completeWord: "ಸೀರೆ", syllable: ["ಸೀ", "ರೆ"], audio: "sareeM1Kan" },
+        { completeWord: "ಸೀಬೆ", syllable: ["ಸೀ", "ಬೆ"], audio: "guavaM1Kan" },
+        { completeWord: "ಗೋಧಿ", syllable: ["ಗೋ", "ಧಿ"], audio: "wheatM1Kan" },
+        {
+          completeWord: "ಕೊಡೆ",
+          syllable: ["ಕೊ", "ಡೆ"],
+          audio: "umbrellaM1Kan",
+        },
+        { completeWord: "ಆಹಾರ", syllable: ["ಆ", "ಹಾರ"], audio: "foodM1Kan" },
+      ],
+      S1: [
+        { completeWord: "Tiger", syllable: ["Ti", "ger"] },
+        { completeWord: "Rocket", syllable: ["Rock", "et"] },
+        { completeWord: "Lemon", syllable: ["Le", "mon"] },
+        { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
+        { completeWord: "Mango", syllable: ["Man", "go"] },
+      ],
+      L3: [
+        {
+          completeWord: "Picture",
+          syllable: ["Pic", "ture"],
+          img: getAssetUrl(s3Assets.PictureNewImg) || Assets.PictureNewImg,
+          syllablesAudio: [
+            {
+              name: "Pic",
+              audio: getAssetAudioUrl(s3Assets.picAudio) || Assets.picAudio,
+            },
+            {
+              name: "ture",
+              audio: getAssetAudioUrl(s3Assets.tureAudio) || Assets.tureAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pictureAudio) || Assets.pictureAudio,
+        },
+        {
+          completeWord: "Number",
+          syllable: ["Num", "ber"],
+          img: getAssetUrl(s3Assets.NumberNewImg) || Assets.NumberNewImg,
+          syllablesAudio: [
+            {
+              name: "Num",
+              audio: getAssetAudioUrl(s3Assets.numAudio) || Assets.numAudio,
+            },
+            {
+              name: "ber",
+              audio: getAssetAudioUrl(s3Assets.berAudio) || Assets.berAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.numberAudio) || Assets.numberAudio,
+        },
+        {
+          completeWord: "Doctor",
+          syllable: ["Doc", "tor"],
+          img: getAssetUrl(s3Assets.DoctorNewImg) || Assets.DoctorNewImg,
+          syllablesAudio: [
+            {
+              name: "Doc",
+              audio: getAssetAudioUrl(s3Assets.docAudio) || Assets.docAudio,
+            },
+            {
+              name: "tor",
+              audio: getAssetAudioUrl(s3Assets.torAudio) || Assets.torAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.doctorAudio) || Assets.doctorAudio,
+        },
+        {
+          completeWord: "Paper",
+          syllable: ["Pa", "per"],
+          img:
+            getAssetUrl(s3Assets.questionPaperImg) || Assets.questionPaperImg,
+          syllablesAudio: [
+            {
+              name: "Pa",
+              audio: getAssetAudioUrl(s3Assets.paAudio) || Assets.paAudio,
+            },
+            {
+              name: "per",
+              audio: getAssetAudioUrl(s3Assets.perAudio) || Assets.perAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.paperAudio) || Assets.paperAudio,
+        },
+        {
+          completeWord: "Monkey",
+          syllable: ["Mon", "key"],
+          img: getAssetUrl(s3Assets.MonkeyNewImg) || Assets.MonkeyNewImg,
+          syllablesAudio: [
+            {
+              name: "Mon",
+              audio: getAssetAudioUrl(s3Assets.monAudio) || Assets.monAudio,
+            },
+            {
+              name: "key",
+              audio: getAssetAudioUrl(s3Assets.keyAudio) || Assets.keyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.monkeyAudio) || Assets.monkeyAudio,
+        },
+      ],
+      L4: [
+        {
+          completeWord: "Garden",
+          syllable: ["Gar", "den"],
+          img: getAssetUrl(s3Assets.gardenImg) || Assets.GardenNewImg,
+          syllablesAudio: [
+            {
+              name: "Gar",
+              audio: getAssetAudioUrl(s3Assets.garAudio) || Assets.garAudio,
+            },
+            {
+              name: "den",
+              audio: getAssetAudioUrl(s3Assets.denAudio) || Assets.denAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.GardenAudio) || Assets.GardenAudio,
+        },
+        {
+          completeWord: "Helmet",
+          syllable: ["Hel", "met"],
+          img: getAssetUrl(s3Assets.helmetImg) || Assets.helmetImg,
+          syllablesAudio: [
+            {
+              name: "Hel",
+              audio: getAssetAudioUrl(s3Assets.helAudio) || Assets.helAudio,
+            },
+            {
+              name: "met",
+              audio: getAssetAudioUrl(s3Assets.metAudio) || Assets.metAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.helmetAudio) || Assets.helmetAudio,
+        },
+        {
+          completeWord: "Kitten",
+          syllable: ["Kit", "ten"],
+          img: getAssetUrl(s3Assets.catImage) || Assets.catImage,
+          syllablesAudio: [
+            {
+              name: "Kit",
+              audio: getAssetAudioUrl(s3Assets.Kit) || Assets.Kit,
+            },
+            {
+              name: "ten",
+              audio: getAssetAudioUrl(s3Assets.Ten) || Assets.Ten,
+            },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.KittenS) || Assets.KittenS,
+        },
+        {
+          completeWord: "Jacket",
+          syllable: ["Jack", "et"],
+          img: getAssetUrl(s3Assets.Jacket) || Assets.Jacket,
+          syllablesAudio: [
+            {
+              name: "Jack",
+              audio: getAssetAudioUrl(s3Assets.Jack) || Assets.Jack,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.JacketS) || Assets.JacketS,
+        },
+        {
+          completeWord: "Pocket",
+          syllable: ["Pock", "et"],
+          img: getAssetUrl(s3Assets.pocketImage) || Assets.pocketImage,
+          syllablesAudio: [
+            {
+              name: "Pock",
+              audio: getAssetAudioUrl(s3Assets.Pock) || Assets.Pock,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.PocketS) || Assets.PocketS,
+        },
+      ],
+      P3: [
+        { completeWord: "ಹಕ್ಕಿ", syllable: ["ಹಕ್", "ಕಿ"], audio: "birdM1Kan" },
+        {
+          completeWord: "ಗುಬ್ಬಿ",
+          syllable: ["ಗುಬ್", "ಬಿ"],
+          audio: "sparrowM1Kan",
+        },
+        { completeWord: "ಹಣ್ಣು", syllable: ["ಹಣ್", "ಣು"], audio: "fruitM1Kan" },
+        { completeWord: "ಸುಣ್ಣ", syllable: ["ಸುಣ್", "ಣ"], audio: "limeM1Kan" },
+        {
+          completeWord: "ಬುಟ್ಟಿ",
+          syllable: ["ಬುಟ್", "ಟಿ"],
+          audio: "basketM1Kan",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "ಸೌತೆ",
+          syllable: ["ಸೌ", "ತೆ"],
+          audio: "cucumberM1Kan",
+        },
+        {
+          completeWord: "ಮೀಸೆ",
+          syllable: ["ಮೀ", "ಸೆ"],
+          audio: "moustacheM1Kan",
+        },
+        {
+          completeWord: "ಹಬ್ಬ",
+          syllable: ["ಹಬ್", "ಬ"],
+          audio: "festivalM1Kan",
+        },
+        { completeWord: "ಲಡ್ಡು", syllable: ["ಲಡ್", "ಡು"], audio: "ladduM1Kan" },
+        { completeWord: "ಹದ್ದು", syllable: ["ಹದ್", "ದು"], audio: "eagleM1Kan" },
+      ],
+      S2: [
+        { completeWord: "Basket", syllable: ["Bas", "ket"] },
+        { completeWord: "Tablet", syllable: ["Tab", "let"] },
+        { completeWord: "Sunset", syllable: ["Sun", "set"] },
+        { completeWord: "Button", syllable: ["But", "ton"] },
+        { completeWord: "Window", syllable: ["Win", "dow"] },
+      ],
+    },
+    te: {
+      L1: [
+        {
+          completeWord: "Apple",
+          syllable: ["Ap", "ple"],
+          img: getAssetUrl(s3Assets.Apple) || Assets.Apple,
+          syllablesAudio: [
+            {
+              name: "Ap",
+              audio: getAssetAudioUrl(s3Assets.apAudio) || Assets.apAudio,
+            },
+            {
+              name: "ple",
+              audio: getAssetAudioUrl(s3Assets.pleAudio) || Assets.pleAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
+        },
+        {
+          completeWord: "Tiger",
+          syllable: ["Ti", "ger"],
+          img: getAssetUrl(s3Assets.TigerNewImg) || Assets.TigerNewImg,
+          syllablesAudio: [
+            {
+              name: "Ti",
+              audio: getAssetAudioUrl(s3Assets.tiAudio) || Assets.tiAudio,
+            },
+            {
+              name: "ger",
+              audio: getAssetAudioUrl(s3Assets.gerAudio) || Assets.gerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tigerAudio) || Assets.tigerAudio,
+        },
+        {
+          completeWord: "Happy",
+          syllable: ["Hap", "py"],
+          img: getAssetUrl(s3Assets.happyImg) || Assets.happyImg,
+          syllablesAudio: [
+            {
+              name: "Hap",
+              audio: getAssetAudioUrl(s3Assets.hapAudio) || Assets.hapAudio,
+            },
+            {
+              name: "py",
+              audio: getAssetAudioUrl(s3Assets.pyAudio) || Assets.pyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.happyAudio) || Assets.happyAudio,
+        },
+        {
+          completeWord: "Pencil",
+          syllable: ["Pen", "cil"],
+          img: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
+          syllablesAudio: [
+            {
+              name: "Pen",
+              audio: Assets.penAudio,
+            },
+            {
+              name: "cil",
+              audio: getAssetAudioUrl(s3Assets.cilAudio) || Assets.cilAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pencilAudio) || Assets.pencilAudio,
+        },
+        {
+          completeWord: "Rocket",
+          syllable: ["Rock", "et"],
+          img: getAssetUrl(s3Assets.RocketNewImg) || Assets.RocketNewImg,
+          syllablesAudio: [
+            {
+              name: "Rock",
+              audio: getAssetAudioUrl(s3Assets.Rock) || Assets.Rock,
+            },
+            { name: "Et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.RocketS) || Assets.RocketS,
+        },
+      ],
+      L2: [
+        {
+          completeWord: "Basket",
+          syllable: ["Bas", "ket"],
+          img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
+          syllablesAudio: [
+            {
+              name: "Bas",
+              audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas,
+            },
+            { name: "Ket", audio: Assets.Ket },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
+        },
+        {
+          completeWord: "Dinner",
+          syllable: ["Din", "ner"],
+          img: getAssetUrl(s3Assets.DinnerNewImg) || Assets.DinnerNewImg,
+          syllablesAudio: [
+            {
+              name: "Din",
+              audio: getAssetAudioUrl(s3Assets.dinAudio) || Assets.dinAudio,
+            },
+            {
+              name: "ner",
+              audio: getAssetAudioUrl(s3Assets.nerAudio) || Assets.nerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.dinnerAudio) || Assets.dinnerAudio,
+        },
+        {
+          completeWord: "Window",
+          syllable: ["Win", "dow"],
+          img: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
+          syllablesAudio: [
+            {
+              name: "Win",
+              audio: getAssetAudioUrl(s3Assets.winAudio) || Assets.winAudio,
+            },
+            {
+              name: "dow",
+              audio: getAssetAudioUrl(s3Assets.dowAudio) || Assets.dowAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.windowAudio) || Assets.windowAudio,
+        },
+        {
+          completeWord: "Magnet",
+          syllable: ["Mag", "net"],
+          img: getAssetUrl(s3Assets.MagnetNewImg) || Assets.MagnetNewImg,
+          syllablesAudio: [
+            {
+              name: "Mag",
+              audio: getAssetAudioUrl(s3Assets.magAudio) || Assets.magAudio,
+            },
+            {
+              name: "net",
+              audio: getAssetAudioUrl(s3Assets.netAudio) || Assets.netAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.magnetAudio) || Assets.magnetAudio,
+        },
+        {
+          completeWord: "Tennis",
+          syllable: ["Ten", "nis"],
+          img: getAssetUrl(s3Assets.TennisNewImg) || Assets.TennisNewImg,
+          syllablesAudio: [
+            {
+              name: "Ten",
+              audio: getAssetAudioUrl(s3Assets.tenAudio) || Assets.tenAudio,
+            },
+            {
+              name: "nis",
+              audio: getAssetAudioUrl(s3Assets.nisAudio) || Assets.nisAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tennisAudio) || Assets.tennisAudio,
+        },
+      ],
+      P1: [
+        { completeWord: "ಆಕಾಶ", syllable: ["ಆ", "ಕಾಶ"], audio: "skyM1Kan" },
+        { completeWord: "ಹಲ್ಲು", syllable: ["ಹಲ್", "ಲು"], audio: "teethM1Kan" },
+        { completeWord: "ಕೋಪ", syllable: ["코", "ಪ"], audio: "angerM1Kan" },
+        { completeWord: "ಕಪ್ಪೆ", syllable: ["ಕಪ್", "ಪೆ"], audio: "frogM1Kan" },
+        { completeWord: "ಉಪ್ಪು", syllable: ["ಉಪ್", "ಪು"], audio: "saltM1Kan" },
+      ],
+      P2: [
+        { completeWord: "ಸೀರೆ", syllable: ["ಸೀ", "ರೆ"], audio: "sareeM1Kan" },
+        { completeWord: "ಸೀಬೆ", syllable: ["ಸೀ", "ಬೆ"], audio: "guavaM1Kan" },
+        { completeWord: "ಗೋಧಿ", syllable: ["ಗೋ", "ಧಿ"], audio: "wheatM1Kan" },
+        {
+          completeWord: "ಕೊಡೆ",
+          syllable: ["ಕೊ", "ಡೆ"],
+          audio: "umbrellaM1Kan",
+        },
+        { completeWord: "ಆಹಾರ", syllable: ["ಆ", "ಹಾರ"], audio: "foodM1Kan" },
+      ],
+      S1: [
+        { completeWord: "Tiger", syllable: ["Ti", "ger"] },
+        { completeWord: "Rocket", syllable: ["Rock", "et"] },
+        { completeWord: "Lemon", syllable: ["Le", "mon"] },
+        { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
+        { completeWord: "Mango", syllable: ["Man", "go"] },
+      ],
+      L3: [
+        {
+          completeWord: "Picture",
+          syllable: ["Pic", "ture"],
+          img: getAssetUrl(s3Assets.PictureNewImg) || Assets.PictureNewImg,
+          syllablesAudio: [
+            {
+              name: "Pic",
+              audio: getAssetAudioUrl(s3Assets.picAudio) || Assets.picAudio,
+            },
+            {
+              name: "ture",
+              audio: getAssetAudioUrl(s3Assets.tureAudio) || Assets.tureAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pictureAudio) || Assets.pictureAudio,
+        },
+        {
+          completeWord: "Number",
+          syllable: ["Num", "ber"],
+          img: getAssetUrl(s3Assets.NumberNewImg) || Assets.NumberNewImg,
+          syllablesAudio: [
+            {
+              name: "Num",
+              audio: getAssetAudioUrl(s3Assets.numAudio) || Assets.numAudio,
+            },
+            {
+              name: "ber",
+              audio: getAssetAudioUrl(s3Assets.berAudio) || Assets.berAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.numberAudio) || Assets.numberAudio,
+        },
+        {
+          completeWord: "Doctor",
+          syllable: ["Doc", "tor"],
+          img: getAssetUrl(s3Assets.DoctorNewImg) || Assets.DoctorNewImg,
+          syllablesAudio: [
+            {
+              name: "Doc",
+              audio: getAssetAudioUrl(s3Assets.docAudio) || Assets.docAudio,
+            },
+            {
+              name: "tor",
+              audio: getAssetAudioUrl(s3Assets.torAudio) || Assets.torAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.doctorAudio) || Assets.doctorAudio,
+        },
+        {
+          completeWord: "Paper",
+          syllable: ["Pa", "per"],
+          img:
+            getAssetUrl(s3Assets.questionPaperImg) || Assets.questionPaperImg,
+          syllablesAudio: [
+            {
+              name: "Pa",
+              audio: getAssetAudioUrl(s3Assets.paAudio) || Assets.paAudio,
+            },
+            {
+              name: "per",
+              audio: getAssetAudioUrl(s3Assets.perAudio) || Assets.perAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.paperAudio) || Assets.paperAudio,
+        },
+        {
+          completeWord: "Monkey",
+          syllable: ["Mon", "key"],
+          img: getAssetUrl(s3Assets.MonkeyNewImg) || Assets.MonkeyNewImg,
+          syllablesAudio: [
+            {
+              name: "Mon",
+              audio: getAssetAudioUrl(s3Assets.monAudio) || Assets.monAudio,
+            },
+            {
+              name: "key",
+              audio: getAssetAudioUrl(s3Assets.keyAudio) || Assets.keyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.monkeyAudio) || Assets.monkeyAudio,
+        },
+      ],
+      L4: [
+        {
+          completeWord: "Garden",
+          syllable: ["Gar", "den"],
+          img: getAssetUrl(s3Assets.gardenImg) || Assets.GardenNewImg,
+          syllablesAudio: [
+            {
+              name: "Gar",
+              audio: getAssetAudioUrl(s3Assets.garAudio) || Assets.garAudio,
+            },
+            {
+              name: "den",
+              audio: getAssetAudioUrl(s3Assets.denAudio) || Assets.denAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.GardenAudio) || Assets.GardenAudio,
+        },
+        {
+          completeWord: "Helmet",
+          syllable: ["Hel", "met"],
+          img: getAssetUrl(s3Assets.helmetImg) || Assets.helmetImg,
+          syllablesAudio: [
+            {
+              name: "Hel",
+              audio: getAssetAudioUrl(s3Assets.helAudio) || Assets.helAudio,
+            },
+            {
+              name: "met",
+              audio: getAssetAudioUrl(s3Assets.metAudio) || Assets.metAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.helmetAudio) || Assets.helmetAudio,
+        },
+        {
+          completeWord: "Kitten",
+          syllable: ["Kit", "ten"],
+          img: getAssetUrl(s3Assets.catImage) || Assets.catImage,
+          syllablesAudio: [
+            {
+              name: "Kit",
+              audio: getAssetAudioUrl(s3Assets.Kit) || Assets.Kit,
+            },
+            {
+              name: "ten",
+              audio: getAssetAudioUrl(s3Assets.Ten) || Assets.Ten,
+            },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.KittenS) || Assets.KittenS,
+        },
+        {
+          completeWord: "Jacket",
+          syllable: ["Jack", "et"],
+          img: getAssetUrl(s3Assets.Jacket) || Assets.Jacket,
+          syllablesAudio: [
+            {
+              name: "Jack",
+              audio: getAssetAudioUrl(s3Assets.Jack) || Assets.Jack,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.JacketS) || Assets.JacketS,
+        },
+        {
+          completeWord: "Pocket",
+          syllable: ["Pock", "et"],
+          img: getAssetUrl(s3Assets.pocketImage) || Assets.pocketImage,
+          syllablesAudio: [
+            {
+              name: "Pock",
+              audio: getAssetAudioUrl(s3Assets.Pock) || Assets.Pock,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.PocketS) || Assets.PocketS,
+        },
+      ],
+      P3: [
+        { completeWord: "ಹಕ್ಕಿ", syllable: ["ಹಕ್", "ಕಿ"], audio: "birdM1Kan" },
+        {
+          completeWord: "ಗುಬ್ಬಿ",
+          syllable: ["ಗುಬ್", "ಬಿ"],
+          audio: "sparrowM1Kan",
+        },
+        { completeWord: "ಹಣ್ಣು", syllable: ["ಹಣ್", "ಣು"], audio: "fruitM1Kan" },
+        { completeWord: "ಸುಣ್ಣ", syllable: ["ಸುಣ್", "ಣ"], audio: "limeM1Kan" },
+        {
+          completeWord: "ಬುಟ್ಟಿ",
+          syllable: ["ಬುಟ್", "ಟಿ"],
+          audio: "basketM1Kan",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "ಸೌತೆ",
+          syllable: ["ಸೌ", "ತೆ"],
+          audio: "cucumberM1Kan",
+        },
+        {
+          completeWord: "ಮೀಸೆ",
+          syllable: ["ಮೀ", "ಸೆ"],
+          audio: "moustacheM1Kan",
+        },
+        {
+          completeWord: "ಹಬ್ಬ",
+          syllable: ["ಹಬ್", "ಬ"],
+          audio: "festivalM1Kan",
+        },
+        { completeWord: "ಲಡ್ಡು", syllable: ["ಲಡ್", "ಡು"], audio: "ladduM1Kan" },
+        { completeWord: "ಹದ್ದು", syllable: ["ಹದ್", "ದು"], audio: "eagleM1Kan" },
+      ],
+      S2: [
+        { completeWord: "Basket", syllable: ["Bas", "ket"] },
+        { completeWord: "Tablet", syllable: ["Tab", "let"] },
+        { completeWord: "Sunset", syllable: ["Sun", "set"] },
+        { completeWord: "Button", syllable: ["But", "ton"] },
+        { completeWord: "Window", syllable: ["Win", "dow"] },
+      ],
+    },
+    gu: {
+      L1: [
+        {
+          completeWord: "Apple",
+          syllable: ["Ap", "ple"],
+          img: getAssetUrl(s3Assets.Apple) || Assets.Apple,
+          syllablesAudio: [
+            {
+              name: "Ap",
+              audio: getAssetAudioUrl(s3Assets.apAudio) || Assets.apAudio,
+            },
+            {
+              name: "ple",
+              audio: getAssetAudioUrl(s3Assets.pleAudio) || Assets.pleAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
+        },
+        {
+          completeWord: "Tiger",
+          syllable: ["Ti", "ger"],
+          img: getAssetUrl(s3Assets.TigerNewImg) || Assets.TigerNewImg,
+          syllablesAudio: [
+            {
+              name: "Ti",
+              audio: getAssetAudioUrl(s3Assets.tiAudio) || Assets.tiAudio,
+            },
+            {
+              name: "ger",
+              audio: getAssetAudioUrl(s3Assets.gerAudio) || Assets.gerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tigerAudio) || Assets.tigerAudio,
+        },
+        {
+          completeWord: "Happy",
+          syllable: ["Hap", "py"],
+          img: getAssetUrl(s3Assets.happyImg) || Assets.happyImg,
+          syllablesAudio: [
+            {
+              name: "Hap",
+              audio: getAssetAudioUrl(s3Assets.hapAudio) || Assets.hapAudio,
+            },
+            {
+              name: "py",
+              audio: getAssetAudioUrl(s3Assets.pyAudio) || Assets.pyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.happyAudio) || Assets.happyAudio,
+        },
+        {
+          completeWord: "Pencil",
+          syllable: ["Pen", "cil"],
+          img: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
+          syllablesAudio: [
+            {
+              name: "Pen",
+              audio: Assets.penAudio,
+            },
+            {
+              name: "cil",
+              audio: getAssetAudioUrl(s3Assets.cilAudio) || Assets.cilAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pencilAudio) || Assets.pencilAudio,
+        },
+        {
+          completeWord: "Rocket",
+          syllable: ["Rock", "et"],
+          img: getAssetUrl(s3Assets.RocketNewImg) || Assets.RocketNewImg,
+          syllablesAudio: [
+            {
+              name: "Rock",
+              audio: getAssetAudioUrl(s3Assets.Rock) || Assets.Rock,
+            },
+            { name: "Et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.RocketS) || Assets.RocketS,
+        },
+      ],
+      L2: [
+        {
+          completeWord: "Basket",
+          syllable: ["Bas", "ket"],
+          img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
+          syllablesAudio: [
+            {
+              name: "Bas",
+              audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas,
+            },
+            { name: "Ket", audio: Assets.Ket },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
+        },
+        {
+          completeWord: "Dinner",
+          syllable: ["Din", "ner"],
+          img: getAssetUrl(s3Assets.DinnerNewImg) || Assets.DinnerNewImg,
+          syllablesAudio: [
+            {
+              name: "Din",
+              audio: getAssetAudioUrl(s3Assets.dinAudio) || Assets.dinAudio,
+            },
+            {
+              name: "ner",
+              audio: getAssetAudioUrl(s3Assets.nerAudio) || Assets.nerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.dinnerAudio) || Assets.dinnerAudio,
+        },
+        {
+          completeWord: "Window",
+          syllable: ["Win", "dow"],
+          img: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
+          syllablesAudio: [
+            {
+              name: "Win",
+              audio: getAssetAudioUrl(s3Assets.winAudio) || Assets.winAudio,
+            },
+            {
+              name: "dow",
+              audio: getAssetAudioUrl(s3Assets.dowAudio) || Assets.dowAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.windowAudio) || Assets.windowAudio,
+        },
+        {
+          completeWord: "Magnet",
+          syllable: ["Mag", "net"],
+          img: getAssetUrl(s3Assets.MagnetNewImg) || Assets.MagnetNewImg,
+          syllablesAudio: [
+            {
+              name: "Mag",
+              audio: getAssetAudioUrl(s3Assets.magAudio) || Assets.magAudio,
+            },
+            {
+              name: "net",
+              audio: getAssetAudioUrl(s3Assets.netAudio) || Assets.netAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.magnetAudio) || Assets.magnetAudio,
+        },
+        {
+          completeWord: "Tennis",
+          syllable: ["Ten", "nis"],
+          img: getAssetUrl(s3Assets.TennisNewImg) || Assets.TennisNewImg,
+          syllablesAudio: [
+            {
+              name: "Ten",
+              audio: getAssetAudioUrl(s3Assets.tenAudio) || Assets.tenAudio,
+            },
+            {
+              name: "nis",
+              audio: getAssetAudioUrl(s3Assets.nisAudio) || Assets.nisAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tennisAudio) || Assets.tennisAudio,
+        },
+      ],
+      P1: [
+        { completeWord: "ಆಕಾಶ", syllable: ["ಆ", "ಕಾಶ"], audio: "skyM1Kan" },
+        { completeWord: "ಹಲ್ಲು", syllable: ["ಹಲ್", "ಲು"], audio: "teethM1Kan" },
+        { completeWord: "ಕೋಪ", syllable: ["코", "ಪ"], audio: "angerM1Kan" },
+        { completeWord: "ಕಪ್ಪೆ", syllable: ["ಕಪ್", "ಪೆ"], audio: "frogM1Kan" },
+        { completeWord: "ಉಪ್ಪು", syllable: ["ಉಪ್", "ಪು"], audio: "saltM1Kan" },
+      ],
+      P2: [
+        { completeWord: "ಸೀರೆ", syllable: ["ಸೀ", "ರೆ"], audio: "sareeM1Kan" },
+        { completeWord: "ಸೀಬೆ", syllable: ["ಸೀ", "ಬೆ"], audio: "guavaM1Kan" },
+        { completeWord: "ಗೋಧಿ", syllable: ["ಗೋ", "ಧಿ"], audio: "wheatM1Kan" },
+        {
+          completeWord: "ಕೊಡೆ",
+          syllable: ["ಕೊ", "ಡೆ"],
+          audio: "umbrellaM1Kan",
+        },
+        { completeWord: "ಆಹಾರ", syllable: ["ಆ", "ಹಾರ"], audio: "foodM1Kan" },
+      ],
+      S1: [
+        { completeWord: "Tiger", syllable: ["Ti", "ger"] },
+        { completeWord: "Rocket", syllable: ["Rock", "et"] },
+        { completeWord: "Lemon", syllable: ["Le", "mon"] },
+        { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
+        { completeWord: "Mango", syllable: ["Man", "go"] },
+      ],
+      L3: [
+        {
+          completeWord: "Picture",
+          syllable: ["Pic", "ture"],
+          img: getAssetUrl(s3Assets.PictureNewImg) || Assets.PictureNewImg,
+          syllablesAudio: [
+            {
+              name: "Pic",
+              audio: getAssetAudioUrl(s3Assets.picAudio) || Assets.picAudio,
+            },
+            {
+              name: "ture",
+              audio: getAssetAudioUrl(s3Assets.tureAudio) || Assets.tureAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pictureAudio) || Assets.pictureAudio,
+        },
+        {
+          completeWord: "Number",
+          syllable: ["Num", "ber"],
+          img: getAssetUrl(s3Assets.NumberNewImg) || Assets.NumberNewImg,
+          syllablesAudio: [
+            {
+              name: "Num",
+              audio: getAssetAudioUrl(s3Assets.numAudio) || Assets.numAudio,
+            },
+            {
+              name: "ber",
+              audio: getAssetAudioUrl(s3Assets.berAudio) || Assets.berAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.numberAudio) || Assets.numberAudio,
+        },
+        {
+          completeWord: "Doctor",
+          syllable: ["Doc", "tor"],
+          img: getAssetUrl(s3Assets.DoctorNewImg) || Assets.DoctorNewImg,
+          syllablesAudio: [
+            {
+              name: "Doc",
+              audio: getAssetAudioUrl(s3Assets.docAudio) || Assets.docAudio,
+            },
+            {
+              name: "tor",
+              audio: getAssetAudioUrl(s3Assets.torAudio) || Assets.torAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.doctorAudio) || Assets.doctorAudio,
+        },
+        {
+          completeWord: "Paper",
+          syllable: ["Pa", "per"],
+          img:
+            getAssetUrl(s3Assets.questionPaperImg) || Assets.questionPaperImg,
+          syllablesAudio: [
+            {
+              name: "Pa",
+              audio: getAssetAudioUrl(s3Assets.paAudio) || Assets.paAudio,
+            },
+            {
+              name: "per",
+              audio: getAssetAudioUrl(s3Assets.perAudio) || Assets.perAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.paperAudio) || Assets.paperAudio,
+        },
+        {
+          completeWord: "Monkey",
+          syllable: ["Mon", "key"],
+          img: getAssetUrl(s3Assets.MonkeyNewImg) || Assets.MonkeyNewImg,
+          syllablesAudio: [
+            {
+              name: "Mon",
+              audio: getAssetAudioUrl(s3Assets.monAudio) || Assets.monAudio,
+            },
+            {
+              name: "key",
+              audio: getAssetAudioUrl(s3Assets.keyAudio) || Assets.keyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.monkeyAudio) || Assets.monkeyAudio,
+        },
+      ],
+      L4: [
+        {
+          completeWord: "Garden",
+          syllable: ["Gar", "den"],
+          img: getAssetUrl(s3Assets.gardenImg) || Assets.GardenNewImg,
+          syllablesAudio: [
+            {
+              name: "Gar",
+              audio: getAssetAudioUrl(s3Assets.garAudio) || Assets.garAudio,
+            },
+            {
+              name: "den",
+              audio: getAssetAudioUrl(s3Assets.denAudio) || Assets.denAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.GardenAudio) || Assets.GardenAudio,
+        },
+        {
+          completeWord: "Helmet",
+          syllable: ["Hel", "met"],
+          img: getAssetUrl(s3Assets.helmetImg) || Assets.helmetImg,
+          syllablesAudio: [
+            {
+              name: "Hel",
+              audio: getAssetAudioUrl(s3Assets.helAudio) || Assets.helAudio,
+            },
+            {
+              name: "met",
+              audio: getAssetAudioUrl(s3Assets.metAudio) || Assets.metAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.helmetAudio) || Assets.helmetAudio,
+        },
+        {
+          completeWord: "Kitten",
+          syllable: ["Kit", "ten"],
+          img: getAssetUrl(s3Assets.catImage) || Assets.catImage,
+          syllablesAudio: [
+            {
+              name: "Kit",
+              audio: getAssetAudioUrl(s3Assets.Kit) || Assets.Kit,
+            },
+            {
+              name: "ten",
+              audio: getAssetAudioUrl(s3Assets.Ten) || Assets.Ten,
+            },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.KittenS) || Assets.KittenS,
+        },
+        {
+          completeWord: "Jacket",
+          syllable: ["Jack", "et"],
+          img: getAssetUrl(s3Assets.Jacket) || Assets.Jacket,
+          syllablesAudio: [
+            {
+              name: "Jack",
+              audio: getAssetAudioUrl(s3Assets.Jack) || Assets.Jack,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.JacketS) || Assets.JacketS,
+        },
+        {
+          completeWord: "Pocket",
+          syllable: ["Pock", "et"],
+          img: getAssetUrl(s3Assets.pocketImage) || Assets.pocketImage,
+          syllablesAudio: [
+            {
+              name: "Pock",
+              audio: getAssetAudioUrl(s3Assets.Pock) || Assets.Pock,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.PocketS) || Assets.PocketS,
+        },
+      ],
+      P3: [
+        { completeWord: "ಹಕ್ಕಿ", syllable: ["ಹಕ್", "ಕಿ"], audio: "birdM1Kan" },
+        {
+          completeWord: "ಗುಬ್ಬಿ",
+          syllable: ["ಗುಬ್", "ಬಿ"],
+          audio: "sparrowM1Kan",
+        },
+        { completeWord: "ಹಣ್ಣು", syllable: ["ಹಣ್", "ಣು"], audio: "fruitM1Kan" },
+        { completeWord: "ಸುಣ್ಣ", syllable: ["ಸುಣ್", "ಣ"], audio: "limeM1Kan" },
+        {
+          completeWord: "ಬುಟ್ಟಿ",
+          syllable: ["ಬುಟ್", "ಟಿ"],
+          audio: "basketM1Kan",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "ಸೌತೆ",
+          syllable: ["ಸೌ", "ತೆ"],
+          audio: "cucumberM1Kan",
+        },
+        {
+          completeWord: "ಮೀಸೆ",
+          syllable: ["ಮೀ", "ಸೆ"],
+          audio: "moustacheM1Kan",
+        },
+        {
+          completeWord: "ಹಬ್ಬ",
+          syllable: ["ಹಬ್", "ಬ"],
+          audio: "festivalM1Kan",
+        },
+        { completeWord: "ಲಡ್ಡು", syllable: ["ಲಡ್", "ಡು"], audio: "ladduM1Kan" },
+        { completeWord: "ಹದ್ದು", syllable: ["ಹದ್", "ದು"], audio: "eagleM1Kan" },
+      ],
+      S2: [
+        { completeWord: "Basket", syllable: ["Bas", "ket"] },
+        { completeWord: "Tablet", syllable: ["Tab", "let"] },
+        { completeWord: "Sunset", syllable: ["Sun", "set"] },
+        { completeWord: "Button", syllable: ["But", "ton"] },
+        { completeWord: "Window", syllable: ["Win", "dow"] },
+      ],
+    },
+    or: {
+      L1: [
+        {
+          completeWord: "Apple",
+          syllable: ["Ap", "ple"],
+          img: getAssetUrl(s3Assets.Apple) || Assets.Apple,
+          syllablesAudio: [
+            {
+              name: "Ap",
+              audio: getAssetAudioUrl(s3Assets.apAudio) || Assets.apAudio,
+            },
+            {
+              name: "ple",
+              audio: getAssetAudioUrl(s3Assets.pleAudio) || Assets.pleAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
+        },
+        {
+          completeWord: "Tiger",
+          syllable: ["Ti", "ger"],
+          img: getAssetUrl(s3Assets.TigerNewImg) || Assets.TigerNewImg,
+          syllablesAudio: [
+            {
+              name: "Ti",
+              audio: getAssetAudioUrl(s3Assets.tiAudio) || Assets.tiAudio,
+            },
+            {
+              name: "ger",
+              audio: getAssetAudioUrl(s3Assets.gerAudio) || Assets.gerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tigerAudio) || Assets.tigerAudio,
+        },
+        {
+          completeWord: "Happy",
+          syllable: ["Hap", "py"],
+          img: getAssetUrl(s3Assets.happyImg) || Assets.happyImg,
+          syllablesAudio: [
+            {
+              name: "Hap",
+              audio: getAssetAudioUrl(s3Assets.hapAudio) || Assets.hapAudio,
+            },
+            {
+              name: "py",
+              audio: getAssetAudioUrl(s3Assets.pyAudio) || Assets.pyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.happyAudio) || Assets.happyAudio,
+        },
+        {
+          completeWord: "Pencil",
+          syllable: ["Pen", "cil"],
+          img: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
+          syllablesAudio: [
+            {
+              name: "Pen",
+              audio: Assets.penAudio,
+            },
+            {
+              name: "cil",
+              audio: getAssetAudioUrl(s3Assets.cilAudio) || Assets.cilAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pencilAudio) || Assets.pencilAudio,
+        },
+        {
+          completeWord: "Rocket",
+          syllable: ["Rock", "et"],
+          img: getAssetUrl(s3Assets.RocketNewImg) || Assets.RocketNewImg,
+          syllablesAudio: [
+            {
+              name: "Rock",
+              audio: getAssetAudioUrl(s3Assets.Rock) || Assets.Rock,
+            },
+            { name: "Et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.RocketS) || Assets.RocketS,
+        },
+      ],
+      L2: [
+        {
+          completeWord: "Basket",
+          syllable: ["Bas", "ket"],
+          img: getAssetUrl(s3Assets.Basket) || Assets.Basket,
+          syllablesAudio: [
+            {
+              name: "Bas",
+              audio: getAssetAudioUrl(s3Assets.Bas) || Assets.Bas,
+            },
+            { name: "Ket", audio: Assets.Ket },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.BasketS) || Assets.BasketS,
+        },
+        {
+          completeWord: "Dinner",
+          syllable: ["Din", "ner"],
+          img: getAssetUrl(s3Assets.DinnerNewImg) || Assets.DinnerNewImg,
+          syllablesAudio: [
+            {
+              name: "Din",
+              audio: getAssetAudioUrl(s3Assets.dinAudio) || Assets.dinAudio,
+            },
+            {
+              name: "ner",
+              audio: getAssetAudioUrl(s3Assets.nerAudio) || Assets.nerAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.dinnerAudio) || Assets.dinnerAudio,
+        },
+        {
+          completeWord: "Window",
+          syllable: ["Win", "dow"],
+          img: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
+          syllablesAudio: [
+            {
+              name: "Win",
+              audio: getAssetAudioUrl(s3Assets.winAudio) || Assets.winAudio,
+            },
+            {
+              name: "dow",
+              audio: getAssetAudioUrl(s3Assets.dowAudio) || Assets.dowAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.windowAudio) || Assets.windowAudio,
+        },
+        {
+          completeWord: "Magnet",
+          syllable: ["Mag", "net"],
+          img: getAssetUrl(s3Assets.MagnetNewImg) || Assets.MagnetNewImg,
+          syllablesAudio: [
+            {
+              name: "Mag",
+              audio: getAssetAudioUrl(s3Assets.magAudio) || Assets.magAudio,
+            },
+            {
+              name: "net",
+              audio: getAssetAudioUrl(s3Assets.netAudio) || Assets.netAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.magnetAudio) || Assets.magnetAudio,
+        },
+        {
+          completeWord: "Tennis",
+          syllable: ["Ten", "nis"],
+          img: getAssetUrl(s3Assets.TennisNewImg) || Assets.TennisNewImg,
+          syllablesAudio: [
+            {
+              name: "Ten",
+              audio: getAssetAudioUrl(s3Assets.tenAudio) || Assets.tenAudio,
+            },
+            {
+              name: "nis",
+              audio: getAssetAudioUrl(s3Assets.nisAudio) || Assets.nisAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.tennisAudio) || Assets.tennisAudio,
+        },
+      ],
+      P1: [
+        { completeWord: "ಆಕಾಶ", syllable: ["ಆ", "ಕಾಶ"], audio: "skyM1Kan" },
+        { completeWord: "ಹಲ್ಲು", syllable: ["ಹಲ್", "ಲು"], audio: "teethM1Kan" },
+        { completeWord: "ಕೋಪ", syllable: ["코", "ಪ"], audio: "angerM1Kan" },
+        { completeWord: "ಕಪ್ಪೆ", syllable: ["ಕಪ್", "ಪೆ"], audio: "frogM1Kan" },
+        { completeWord: "ಉಪ್ಪು", syllable: ["ಉಪ್", "ಪು"], audio: "saltM1Kan" },
+      ],
+      P2: [
+        { completeWord: "ಸೀರೆ", syllable: ["ಸೀ", "ರೆ"], audio: "sareeM1Kan" },
+        { completeWord: "ಸೀಬೆ", syllable: ["ಸೀ", "ಬೆ"], audio: "guavaM1Kan" },
+        { completeWord: "ಗೋಧಿ", syllable: ["ಗೋ", "ಧಿ"], audio: "wheatM1Kan" },
+        {
+          completeWord: "ಕೊಡೆ",
+          syllable: ["ಕೊ", "ಡೆ"],
+          audio: "umbrellaM1Kan",
+        },
+        { completeWord: "ಆಹಾರ", syllable: ["ಆ", "ಹಾರ"], audio: "foodM1Kan" },
+      ],
+      S1: [
+        { completeWord: "Tiger", syllable: ["Ti", "ger"] },
+        { completeWord: "Rocket", syllable: ["Rock", "et"] },
+        { completeWord: "Lemon", syllable: ["Le", "mon"] },
+        { completeWord: "Tomato", syllable: ["To", "ma", "to"] },
+        { completeWord: "Mango", syllable: ["Man", "go"] },
+      ],
+      L3: [
+        {
+          completeWord: "Picture",
+          syllable: ["Pic", "ture"],
+          img: getAssetUrl(s3Assets.PictureNewImg) || Assets.PictureNewImg,
+          syllablesAudio: [
+            {
+              name: "Pic",
+              audio: getAssetAudioUrl(s3Assets.picAudio) || Assets.picAudio,
+            },
+            {
+              name: "ture",
+              audio: getAssetAudioUrl(s3Assets.tureAudio) || Assets.tureAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.pictureAudio) || Assets.pictureAudio,
+        },
+        {
+          completeWord: "Number",
+          syllable: ["Num", "ber"],
+          img: getAssetUrl(s3Assets.NumberNewImg) || Assets.NumberNewImg,
+          syllablesAudio: [
+            {
+              name: "Num",
+              audio: getAssetAudioUrl(s3Assets.numAudio) || Assets.numAudio,
+            },
+            {
+              name: "ber",
+              audio: getAssetAudioUrl(s3Assets.berAudio) || Assets.berAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.numberAudio) || Assets.numberAudio,
+        },
+        {
+          completeWord: "Doctor",
+          syllable: ["Doc", "tor"],
+          img: getAssetUrl(s3Assets.DoctorNewImg) || Assets.DoctorNewImg,
+          syllablesAudio: [
+            {
+              name: "Doc",
+              audio: getAssetAudioUrl(s3Assets.docAudio) || Assets.docAudio,
+            },
+            {
+              name: "tor",
+              audio: getAssetAudioUrl(s3Assets.torAudio) || Assets.torAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.doctorAudio) || Assets.doctorAudio,
+        },
+        {
+          completeWord: "Paper",
+          syllable: ["Pa", "per"],
+          img:
+            getAssetUrl(s3Assets.questionPaperImg) || Assets.questionPaperImg,
+          syllablesAudio: [
+            {
+              name: "Pa",
+              audio: getAssetAudioUrl(s3Assets.paAudio) || Assets.paAudio,
+            },
+            {
+              name: "per",
+              audio: getAssetAudioUrl(s3Assets.perAudio) || Assets.perAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.paperAudio) || Assets.paperAudio,
+        },
+        {
+          completeWord: "Monkey",
+          syllable: ["Mon", "key"],
+          img: getAssetUrl(s3Assets.MonkeyNewImg) || Assets.MonkeyNewImg,
+          syllablesAudio: [
+            {
+              name: "Mon",
+              audio: getAssetAudioUrl(s3Assets.monAudio) || Assets.monAudio,
+            },
+            {
+              name: "key",
+              audio: getAssetAudioUrl(s3Assets.keyAudio) || Assets.keyAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.monkeyAudio) || Assets.monkeyAudio,
+        },
+      ],
+      L4: [
+        {
+          completeWord: "Garden",
+          syllable: ["Gar", "den"],
+          img: getAssetUrl(s3Assets.gardenImg) || Assets.GardenNewImg,
+          syllablesAudio: [
+            {
+              name: "Gar",
+              audio: getAssetAudioUrl(s3Assets.garAudio) || Assets.garAudio,
+            },
+            {
+              name: "den",
+              audio: getAssetAudioUrl(s3Assets.denAudio) || Assets.denAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.GardenAudio) || Assets.GardenAudio,
+        },
+        {
+          completeWord: "Helmet",
+          syllable: ["Hel", "met"],
+          img: getAssetUrl(s3Assets.helmetImg) || Assets.helmetImg,
+          syllablesAudio: [
+            {
+              name: "Hel",
+              audio: getAssetAudioUrl(s3Assets.helAudio) || Assets.helAudio,
+            },
+            {
+              name: "met",
+              audio: getAssetAudioUrl(s3Assets.metAudio) || Assets.metAudio,
+            },
+          ],
+          completeAudio:
+            getAssetAudioUrl(s3Assets.helmetAudio) || Assets.helmetAudio,
+        },
+        {
+          completeWord: "Kitten",
+          syllable: ["Kit", "ten"],
+          img: getAssetUrl(s3Assets.catImage) || Assets.catImage,
+          syllablesAudio: [
+            {
+              name: "Kit",
+              audio: getAssetAudioUrl(s3Assets.Kit) || Assets.Kit,
+            },
+            {
+              name: "ten",
+              audio: getAssetAudioUrl(s3Assets.Ten) || Assets.Ten,
+            },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.KittenS) || Assets.KittenS,
+        },
+        {
+          completeWord: "Jacket",
+          syllable: ["Jack", "et"],
+          img: getAssetUrl(s3Assets.Jacket) || Assets.Jacket,
+          syllablesAudio: [
+            {
+              name: "Jack",
+              audio: getAssetAudioUrl(s3Assets.Jack) || Assets.Jack,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.JacketS) || Assets.JacketS,
+        },
+        {
+          completeWord: "Pocket",
+          syllable: ["Pock", "et"],
+          img: getAssetUrl(s3Assets.pocketImage) || Assets.pocketImage,
+          syllablesAudio: [
+            {
+              name: "Pock",
+              audio: getAssetAudioUrl(s3Assets.Pock) || Assets.Pock,
+            },
+            { name: "et", audio: getAssetAudioUrl(s3Assets.Et) || Assets.Et },
+          ],
+          completeAudio: getAssetAudioUrl(s3Assets.PocketS) || Assets.PocketS,
+        },
+      ],
+      P3: [
+        { completeWord: "ಹಕ್ಕಿ", syllable: ["ಹಕ್", "ಕಿ"], audio: "birdM1Kan" },
+        {
+          completeWord: "ಗುಬ್ಬಿ",
+          syllable: ["ಗುಬ್", "ಬಿ"],
+          audio: "sparrowM1Kan",
+        },
+        { completeWord: "ಹಣ್ಣು", syllable: ["ಹಣ್", "ಣು"], audio: "fruitM1Kan" },
+        { completeWord: "ಸುಣ್ಣ", syllable: ["ಸುಣ್", "ಣ"], audio: "limeM1Kan" },
+        {
+          completeWord: "ಬುಟ್ಟಿ",
+          syllable: ["ಬುಟ್", "ಟಿ"],
+          audio: "basketM1Kan",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "ಸೌತೆ",
+          syllable: ["ಸೌ", "ತೆ"],
+          audio: "cucumberM1Kan",
+        },
+        {
+          completeWord: "ಮೀಸೆ",
+          syllable: ["ಮೀ", "ಸೆ"],
+          audio: "moustacheM1Kan",
+        },
+        {
+          completeWord: "ಹಬ್ಬ",
+          syllable: ["ಹಬ್", "ಬ"],
+          audio: "festivalM1Kan",
+        },
+        { completeWord: "ಲಡ್ಡು", syllable: ["ಲಡ್", "ಡು"], audio: "ladduM1Kan" },
+        { completeWord: "ಹದ್ದು", syllable: ["ಹದ್", "ದು"], audio: "eagleM1Kan" },
+      ],
+      S2: [
+        { completeWord: "Basket", syllable: ["Bas", "ket"] },
+        { completeWord: "Tablet", syllable: ["Tab", "let"] },
+        { completeWord: "Sunset", syllable: ["Sun", "set"] },
+        { completeWord: "Button", syllable: ["But", "ton"] },
+        { completeWord: "Window", syllable: ["Win", "dow"] },
+      ],
+    },
   };
 
   const levelTwo = {
-    P1: [
-      { completeWord: "Sister", syllable: ["Sis", "ter"] },
-      { completeWord: "Brother", syllable: ["Bro", "ther"] },
-      { completeWord: "Eraser", syllable: ["E", "raser"] },
-      { completeWord: "Teacher", syllable: ["Tea", "cher"] },
-      { completeWord: "Bottle", syllable: ["Bot", "tle"] },
-    ],
-    P2: [
-      { completeWord: "Table", syllable: ["Ta", "ble"] },
-      { completeWord: "Temple", syllable: ["Tem", "ple"] },
-      { completeWord: "Jacket", syllable: ["Jack", "et"] },
-      { completeWord: "Summer", syllable: ["Sum", "mer"] },
-      { completeWord: "Winter", syllable: ["Win", "ter"] },
-    ],
-    S1: [
-      { completeWord: "Rainy", syllable: ["Rai", "ny"] },
-      { completeWord: "Picture", syllable: ["Pic", "ture"] },
-      { completeWord: "Sunday", syllable: ["Sun", "day"] },
-      { completeWord: "Morning", syllable: ["Mor", "ning"] },
-      { completeWord: "Evening", syllable: ["Eve", "ning"] },
-    ],
-    P3: [
-      { completeWord: "Dinner", syllable: ["Din", "ner"] },
-      { completeWord: "Pocket", syllable: ["Poc", "ket"] },
-      { completeWord: "Butter", syllable: ["But", "ter"] },
-      { completeWord: "Orange", syllable: ["O", "range"] },
-      { completeWord: "Lemon", syllable: ["Le", "mon"] },
-    ],
-    P4: [
-      { completeWord: "Circle", syllable: ["Cir", "cle"] },
-      { completeWord: "Rabbit", syllable: ["Rab", "bit"] },
-      { completeWord: "Colour", syllable: ["Co", "lour"] },
-      { completeWord: "Village", syllable: ["Vil", "lage"] },
-      { completeWord: "Farmer", syllable: ["Far", "mer"] },
-    ],
-    S2: [
-      { completeWord: "Coward", syllable: ["Cow", "ard"] },
-      { completeWord: "Ladder", syllable: ["Lad", "der"] },
-      { completeWord: "River", syllable: ["Ri", "ver"] },
-      { completeWord: "People", syllable: ["Peo", "ple"] },
-      { completeWord: "Silver", syllable: ["Sil", "ver"] },
-    ],
-    L1: [
-      { completeWord: "Coward", syllable: ["Cow", "ard"] },
-      { completeWord: "Ladder", syllable: ["Lad", "der"] },
-      { completeWord: "River", syllable: ["Ri", "ver"] },
-      { completeWord: "People", syllable: ["Peo", "ple"] },
-      { completeWord: "Silver", syllable: ["Sil", "ver"] },
-    ],
-    L2: [
-      { completeWord: "Coward", syllable: ["Cow", "ard"] },
-      { completeWord: "Ladder", syllable: ["Lad", "der"] },
-      { completeWord: "River", syllable: ["Ri", "ver"] },
-      { completeWord: "People", syllable: ["Peo", "ple"] },
-      { completeWord: "Silver", syllable: ["Sil", "ver"] },
-    ],
-    L3: [
-      { completeWord: "Coward", syllable: ["Cow", "ard"] },
-      { completeWord: "Ladder", syllable: ["Lad", "der"] },
-      { completeWord: "River", syllable: ["Ri", "ver"] },
-      { completeWord: "People", syllable: ["Peo", "ple"] },
-      { completeWord: "Silver", syllable: ["Sil", "ver"] },
-    ],
-    L4: [
-      { completeWord: "Coward", syllable: ["Cow", "ard"] },
-      { completeWord: "Ladder", syllable: ["Lad", "der"] },
-      { completeWord: "River", syllable: ["Ri", "ver"] },
-      { completeWord: "People", syllable: ["Peo", "ple"] },
-      { completeWord: "Silver", syllable: ["Sil", "ver"] },
-    ],
+    en: {
+      P1: [
+        {
+          completeWord: "Joyful",
+          syllable: ["Joy", "ful"],
+          audio: "joyfulM2Eng",
+        },
+        {
+          completeWord: "Brothers",
+          syllable: ["Bro", "thers"],
+          audio: "brothersM2Eng",
+        },
+        { completeWord: "Cheer", syllable: ["Che", "er"], audio: "cheerM2Eng" },
+        {
+          completeWord: "Stitch",
+          syllable: ["Sti", "tch"],
+          audio: "stichM2Eng",
+        },
+        {
+          completeWord: "Monument",
+          syllable: ["Monu", "ment"],
+          audio: "monumentM2Eng",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "Lecturer",
+          syllable: ["Lec", "turer"],
+          audio: "lecturerM2Eng",
+        },
+        {
+          completeWord: "Curious",
+          syllable: ["Cu", "rious"],
+          audio: "curiousM2Eng",
+        },
+        {
+          completeWord: "Notebook",
+          syllable: ["Note", "book"],
+          audio: "notebookM2Eng",
+        },
+        {
+          completeWord: "Grandfather",
+          syllable: ["Grand", "father"],
+          audio: "grandfatherM2Eng",
+        },
+        { completeWord: "House", syllable: ["Hou", "se"], audio: "houseM2Eng" },
+      ],
+      S1: [
+        { completeWord: "Rainy", syllable: ["Rai", "ny"] },
+        { completeWord: "Picture", syllable: ["Pic", "ture"] },
+        { completeWord: "Sunday", syllable: ["Sun", "day"] },
+        { completeWord: "Morning", syllable: ["Mor", "ning"] },
+        { completeWord: "Evening", syllable: ["Eve", "ning"] },
+      ],
+      P3: [
+        { completeWord: "Sound", syllable: ["Sou", "nd"], audio: "soundM2Eng" },
+        { completeWord: "Women", syllable: ["Wo", "men"], audio: "womenM2Eng" },
+        { completeWord: "Beach", syllable: ["Bea", "ch"], audio: "beachM2Eng" },
+        {
+          completeWord: "Jackfruit",
+          syllable: ["Jack", "fruit"],
+          audio: "jackfruitM2Eng",
+        },
+        {
+          completeWord: "Branch",
+          syllable: ["Bra", "nch"],
+          audio: "branchM2Eng",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "Mathematics",
+          syllable: ["Mathe", "matics"],
+          audio: "mathematicsM2Eng",
+        },
+        {
+          completeWord: "Warriors",
+          syllable: ["War", "riors"],
+          audio: "warriorsM2Eng",
+        },
+        {
+          completeWord: "Sandcastle",
+          syllable: ["Sand", "castle"],
+          audio: "sandcastleM2Eng",
+        },
+        {
+          completeWord: "Cooking",
+          syllable: ["Cook", "ing"],
+          audio: "cookingM2Eng",
+        },
+        {
+          completeWord: "Champion",
+          syllable: ["Cham", "pion"],
+          audio: "championM2Eng",
+        },
+      ],
+      S2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L1: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L3: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L4: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+    },
+    hi: {
+      P1: [
+        {
+          completeWord: "पृथ्वी",
+          syllable: ["पृथ्", "वी"],
+          audio: "prithviM2Hin",
+        },
+        {
+          completeWord: "शिक्षक",
+          syllable: ["शिक्ष", "क"],
+          audio: "shikshakM2Hin",
+        },
+        { completeWord: "सर्दी", syllable: ["सर", "दी"], audio: "sardiM2Hin" },
+        {
+          completeWord: "चिकित्सा",
+          syllable: ["चि", "कित्सा"],
+          audio: "chikitsaM2Hin",
+        },
+        {
+          completeWord: "मुर्गा",
+          syllable: ["मुर", "गा"],
+          audio: "murgaM2Hin",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "बत्तख",
+          syllable: ["बत्", "तख"],
+          audio: "battakhM2Hin",
+        },
+        {
+          completeWord: "पत्थर",
+          syllable: ["पत्", "थर"],
+          audio: "pattharM2Hin",
+        },
+        {
+          completeWord: "बिस्किट",
+          syllable: ["बिस्", "किट"],
+          audio: "biscuitM2Hin",
+        },
+        {
+          completeWord: "कुल्फी",
+          syllable: ["कुल", "फी"],
+          audio: "kulfiM2Hin",
+        },
+        {
+          completeWord: "बिस्तर",
+          syllable: ["बिस्", "तर"],
+          audio: "bistarM2Hin",
+        },
+      ],
+      S1: [
+        { completeWord: "Rainy", syllable: ["Rai", "ny"] },
+        { completeWord: "Picture", syllable: ["Pic", "ture"] },
+        { completeWord: "Sunday", syllable: ["Sun", "day"] },
+        { completeWord: "Morning", syllable: ["Mor", "ning"] },
+        { completeWord: "Evening", syllable: ["Eve", "ning"] },
+      ],
+      P3: [
+        {
+          completeWord: "खरगोश",
+          syllable: ["खर", "गोश"],
+          audio: "khargoshM2Hin",
+        },
+        {
+          completeWord: "फूलदान",
+          syllable: ["फूल", "दान"],
+          audio: "phooldanM2Hin",
+        },
+        {
+          completeWord: "गिलहरी",
+          syllable: ["गिल", "हरी"],
+          audio: "gilhariM2Hin",
+        },
+        {
+          completeWord: "इलायची",
+          syllable: ["इला", "इची"],
+          audio: "elaichiM2Hin",
+        },
+        {
+          completeWord: "खरबूज़ा",
+          syllable: ["खर", "बूज़ा"],
+          audio: "kharboozaM2Hin",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "नारियल",
+          syllable: ["ना", "रियल"],
+          audio: "nariyalM2Hin",
+        },
+        {
+          completeWord: "चॉकलेट",
+          syllable: ["चॉक", "लेट"],
+          audio: "chocolateM2Hin",
+        },
+        {
+          completeWord: "साइकिल",
+          syllable: ["साइ", "किल"],
+          audio: "cycleM2Hin",
+        },
+        {
+          completeWord: "फुटबॉल",
+          syllable: ["फुट", "बॉल"],
+          audio: "footballM2Hin",
+        },
+        {
+          completeWord: "लहसुन",
+          syllable: ["लह", "सुन"],
+          audio: "lahsunM2Hin",
+        },
+      ],
+      S2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L1: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L3: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L4: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+    },
+    ta: {
+      P1: [
+        {
+          completeWord: "கொட்டை",
+          syllable: ["கொ", "ட்டை"],
+          audio: "castleM2Tam",
+        },
+        { completeWord: "தங்கு", syllable: ["தங்", "கு"], audio: "bearM2Tam" },
+        { completeWord: "நர்ஸ்", syllable: ["நர்", "ஸ்"], audio: "nurseM2Tam" },
+        { completeWord: "லட்டு", syllable: ["லட்", "டு"], audio: "ladduM2Tam" },
+        {
+          completeWord: "பாட்டு",
+          syllable: ["பா", "ட்டு"],
+          audio: "songM2Tam",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "சைக்கிள்",
+          syllable: ["சை", "க்கிள்"],
+          audio: "cycleM2Tam",
+        },
+        {
+          completeWord: "புட்டி",
+          syllable: ["பு", "ட்டி"],
+          audio: "bottleM2Tam",
+        },
+        {
+          completeWord: "மிட்டாய்",
+          syllable: ["மிட்", "டாய்"],
+          audio: "sweetsM2Tam",
+        },
+        {
+          completeWord: "காத்தாடி",
+          syllable: ["காத்", "தாடி"],
+          audio: "kiteM2Tam",
+        },
+        {
+          completeWord: "வேப்பிலை",
+          syllable: ["வேப்", "பிலை"],
+          audio: "neemM2Tam",
+        },
+      ],
+      S1: [
+        { completeWord: "Rainy", syllable: ["Rai", "ny"] },
+        { completeWord: "Picture", syllable: ["Pic", "ture"] },
+        { completeWord: "Sunday", syllable: ["Sun", "day"] },
+        { completeWord: "Morning", syllable: ["Mor", "ning"] },
+        { completeWord: "Evening", syllable: ["Eve", "ning"] },
+      ],
+      P3: [
+        { completeWord: "தொப்பி", syllable: ["தொப்", "பி"], audio: "capM2Tam" },
+        {
+          completeWord: "பல்லி",
+          syllable: ["பல்", "லி"],
+          audio: "lizardM2Tam",
+        },
+        {
+          completeWord: "பூண்டு",
+          syllable: ["பூண்", "டு"],
+          audio: "garlicM2Tam",
+        },
+        { completeWord: "பெட்டி", syllable: ["பெட்", "டி"], audio: "boxM2Tam" },
+        {
+          completeWord: "போர்வை",
+          syllable: ["போர்", "வை"],
+          audio: "blanketM2Tam",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "குர்தா",
+          syllable: ["குர்", "தா"],
+          audio: "kurtaM2Tam",
+        },
+        {
+          completeWord: "நெற்றி",
+          syllable: ["நெ", "ற்றி"],
+          audio: "foreheadM2Tam",
+        },
+        { completeWord: "பந்து", syllable: ["பன்", "து"], audio: "ballM2Tam" },
+        {
+          completeWord: "பூட்டு",
+          syllable: ["பூ", "ட்டு"],
+          audio: "lockM2Tam",
+        },
+        {
+          completeWord: "குச்சி",
+          syllable: ["கு", "ச்சி"],
+          audio: "stickM2Tam",
+        },
+      ],
+      S2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L1: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L3: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L4: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+    },
+    kn: {
+      P1: [
+        { completeWord: "ಸೂರ್ಯ", syllable: ["ಸೂ", "ರ್ಯ"], audio: "sunM2Kan" },
+        {
+          completeWord: "ಸಹೋದರ",
+          syllable: ["ಸ", "ಹೋದರ"],
+          audio: "brotherM2Kan",
+        },
+        {
+          completeWord: "ಬಹುಮಾನ",
+          syllable: ["ಬಹು", "ಮಾನ"],
+          audio: "prizeM2Kan",
+        },
+        {
+          completeWord: "ಅಲಮಾರು",
+          syllable: ["ಅಲ", "ಮಾರು"],
+          audio: "almirahM2Kan",
+        },
+        {
+          completeWord: "ಬಾಳೆಕಾಯಿ",
+          syllable: ["ಬಾ", "ಳೆಕಾಯಿ"],
+          audio: "rawbananaM2Kan",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "ಕುರ್ಚಿ",
+          syllable: ["ಕುರ್", "ಚಿ"],
+          audio: "chairM2Kan",
+        },
+        {
+          completeWord: "ವಿಜ್ಞಾನಿ",
+          syllable: ["ವಿಜ್", "್ಞಾನಿ"],
+          audio: "scientistM2Kan",
+        },
+        { completeWord: "ವಾಚ್", syllable: ["ವಾ", "ಚ್"], audio: "watchM2Kan" },
+        {
+          completeWord: "ಕ್ಯಾರೆಟ್",
+          syllable: ["ಕ್ಯಾ", "ರೆಟ್"],
+          audio: "carrotM2Kan",
+        },
+        {
+          completeWord: "ಬೆಳ್ಳುಳ್ಳಿ",
+          syllable: ["ಬೆಳ್ಳು", "ಳ್ಳಿ"],
+          audio: "garlicM2Kan",
+        },
+      ],
+      S1: [
+        { completeWord: "Rainy", syllable: ["Rai", "ny"] },
+        { completeWord: "Picture", syllable: ["Pic", "ture"] },
+        { completeWord: "Sunday", syllable: ["Sun", "day"] },
+        { completeWord: "Morning", syllable: ["Mor", "ning"] },
+        { completeWord: "Evening", syllable: ["Eve", "ning"] },
+      ],
+      P3: [
+        {
+          completeWord: "ಸ್ಕೂಟರು",
+          syllable: ["ಸ್ಕೂ", "ಟರು"],
+          audio: "scooterM2Kan",
+        },
+        {
+          completeWord: "ಪುಸ್ತಕ",
+          syllable: ["ಪುಸ್", "ತಕ"],
+          audio: "bookM2Kan",
+        },
+        {
+          completeWord: "ಸ್ನಾಯು",
+          syllable: ["ಸ್ನಾ", "ಯು"],
+          audio: "muscleM2Kan",
+        },
+        {
+          completeWord: "ಶಿಕ್ಷಕ",
+          syllable: ["ಶಿಕ್", "ಷಕ"],
+          audio: "teacherM2Kan",
+        },
+        {
+          completeWord: "ಪ್ರಾಣಿ",
+          syllable: ["ಪ್ರಾ", "ಣಿ"],
+          audio: "animalM2Kan",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "ಪರ್ವತ",
+          syllable: ["ಪರ್", "ವತ"],
+          audio: "mountainM2Kan",
+        },
+        { completeWord: "ನೃತ್ಯ", syllable: ["ನೃ", "ತ್ಯ"], audio: "danceM2Kan" },
+        { completeWord: "ಮನುಷ್ಯ", syllable: ["ಮನು", "ಷ್ಯ"], audio: "manM2Kan" },
+        {
+          completeWord: "ಕ್ಷೌರಿಕ",
+          syllable: ["ಕ್ಷೌ", "ರಿಕ"],
+          audio: "barberM2Kan",
+        },
+        {
+          completeWord: "ಜೀಬ್ರಾ",
+          syllable: ["ಜೀ", "ಬ್ರಾ"],
+          audio: "zebraM2Kan",
+        },
+      ],
+      S2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L1: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L3: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L4: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+    },
+    te: {
+      P1: [
+        { completeWord: "ಸೂರ್ಯ", syllable: ["ಸೂ", "ರ್ಯ"], audio: "sunM2Kan" },
+        {
+          completeWord: "ಸಹೋದರ",
+          syllable: ["ಸ", "ಹೋದರ"],
+          audio: "brotherM2Kan",
+        },
+        {
+          completeWord: "ಬಹುಮಾನ",
+          syllable: ["ಬಹು", "ಮಾನ"],
+          audio: "prizeM2Kan",
+        },
+        {
+          completeWord: "ಅಲಮಾರು",
+          syllable: ["ಅಲ", "ಮಾರು"],
+          audio: "almirahM2Kan",
+        },
+        {
+          completeWord: "ಬಾಳೆಕಾಯಿ",
+          syllable: ["ಬಾ", "ಳೆಕಾಯಿ"],
+          audio: "rawbananaM2Kan",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "ಕುರ್ಚಿ",
+          syllable: ["ಕುರ್", "ಚಿ"],
+          audio: "chairM2Kan",
+        },
+        {
+          completeWord: "ವಿಜ್ಞಾನಿ",
+          syllable: ["ವಿಜ್", "್ಞಾನಿ"],
+          audio: "scientistM2Kan",
+        },
+        { completeWord: "ವಾಚ್", syllable: ["ವಾ", "ಚ್"], audio: "watchM2Kan" },
+        {
+          completeWord: "ಕ್ಯಾರೆಟ್",
+          syllable: ["ಕ್ಯಾ", "ರೆಟ್"],
+          audio: "carrotM2Kan",
+        },
+        {
+          completeWord: "ಬೆಳ್ಳುಳ್ಳಿ",
+          syllable: ["ಬೆಳ್ಳು", "ಳ್ಳಿ"],
+          audio: "garlicM2Kan",
+        },
+      ],
+      S1: [
+        { completeWord: "Rainy", syllable: ["Rai", "ny"] },
+        { completeWord: "Picture", syllable: ["Pic", "ture"] },
+        { completeWord: "Sunday", syllable: ["Sun", "day"] },
+        { completeWord: "Morning", syllable: ["Mor", "ning"] },
+        { completeWord: "Evening", syllable: ["Eve", "ning"] },
+      ],
+      P3: [
+        {
+          completeWord: "ಸ್ಕೂಟರು",
+          syllable: ["ಸ್ಕೂ", "ಟರು"],
+          audio: "scooterM2Kan",
+        },
+        {
+          completeWord: "ಪುಸ್ತಕ",
+          syllable: ["ಪುಸ್", "ತಕ"],
+          audio: "bookM2Kan",
+        },
+        {
+          completeWord: "ಸ್ನಾಯು",
+          syllable: ["ಸ್ನಾ", "ಯು"],
+          audio: "muscleM2Kan",
+        },
+        {
+          completeWord: "ಶಿಕ್ಷಕ",
+          syllable: ["ಶಿಕ್", "ಷಕ"],
+          audio: "teacherM2Kan",
+        },
+        {
+          completeWord: "ಪ್ರಾಣಿ",
+          syllable: ["ಪ್ರಾ", "ಣಿ"],
+          audio: "animalM2Kan",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "ಪರ್ವತ",
+          syllable: ["ಪರ್", "ವತ"],
+          audio: "mountainM2Kan",
+        },
+        { completeWord: "ನೃತ್ಯ", syllable: ["ನೃ", "ತ್ಯ"], audio: "danceM2Kan" },
+        { completeWord: "ಮನುಷ್ಯ", syllable: ["ಮನು", "ಷ್ಯ"], audio: "manM2Kan" },
+        {
+          completeWord: "ಕ್ಷೌರಿಕ",
+          syllable: ["ಕ್ಷೌ", "ರಿಕ"],
+          audio: "barberM2Kan",
+        },
+        {
+          completeWord: "ಜೀಬ್ರಾ",
+          syllable: ["ಜೀ", "ಬ್ರಾ"],
+          audio: "zebraM2Kan",
+        },
+      ],
+      S2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L1: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L3: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L4: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+    },
+    gu: {
+      P1: [
+        { completeWord: "ಸೂರ್ಯ", syllable: ["ಸೂ", "ರ್ಯ"], audio: "sunM2Kan" },
+        {
+          completeWord: "ಸಹೋದರ",
+          syllable: ["ಸ", "ಹೋದರ"],
+          audio: "brotherM2Kan",
+        },
+        {
+          completeWord: "ಬಹುಮಾನ",
+          syllable: ["ಬಹು", "ಮಾನ"],
+          audio: "prizeM2Kan",
+        },
+        {
+          completeWord: "ಅಲಮಾರು",
+          syllable: ["ಅಲ", "ಮಾರು"],
+          audio: "almirahM2Kan",
+        },
+        {
+          completeWord: "ಬಾಳೆಕಾಯಿ",
+          syllable: ["ಬಾ", "ಳೆಕಾಯಿ"],
+          audio: "rawbananaM2Kan",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "ಕುರ್ಚಿ",
+          syllable: ["ಕುರ್", "ಚಿ"],
+          audio: "chairM2Kan",
+        },
+        {
+          completeWord: "ವಿಜ್ಞಾನಿ",
+          syllable: ["ವಿಜ್", "್ಞಾನಿ"],
+          audio: "scientistM2Kan",
+        },
+        { completeWord: "ವಾಚ್", syllable: ["ವಾ", "ಚ್"], audio: "watchM2Kan" },
+        {
+          completeWord: "ಕ್ಯಾರೆಟ್",
+          syllable: ["ಕ್ಯಾ", "ರೆಟ್"],
+          audio: "carrotM2Kan",
+        },
+        {
+          completeWord: "ಬೆಳ್ಳುಳ್ಳಿ",
+          syllable: ["ಬೆಳ್ಳು", "ಳ್ಳಿ"],
+          audio: "garlicM2Kan",
+        },
+      ],
+      S1: [
+        { completeWord: "Rainy", syllable: ["Rai", "ny"] },
+        { completeWord: "Picture", syllable: ["Pic", "ture"] },
+        { completeWord: "Sunday", syllable: ["Sun", "day"] },
+        { completeWord: "Morning", syllable: ["Mor", "ning"] },
+        { completeWord: "Evening", syllable: ["Eve", "ning"] },
+      ],
+      P3: [
+        {
+          completeWord: "ಸ್ಕೂಟರು",
+          syllable: ["ಸ್ಕೂ", "ಟರು"],
+          audio: "scooterM2Kan",
+        },
+        {
+          completeWord: "ಪುಸ್ತಕ",
+          syllable: ["ಪುಸ್", "ತಕ"],
+          audio: "bookM2Kan",
+        },
+        {
+          completeWord: "ಸ್ನಾಯು",
+          syllable: ["ಸ್ನಾ", "ಯು"],
+          audio: "muscleM2Kan",
+        },
+        {
+          completeWord: "ಶಿಕ್ಷಕ",
+          syllable: ["ಶಿಕ್", "ಷಕ"],
+          audio: "teacherM2Kan",
+        },
+        {
+          completeWord: "ಪ್ರಾಣಿ",
+          syllable: ["ಪ್ರಾ", "ಣಿ"],
+          audio: "animalM2Kan",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "ಪರ್ವತ",
+          syllable: ["ಪರ್", "ವತ"],
+          audio: "mountainM2Kan",
+        },
+        { completeWord: "ನೃತ್ಯ", syllable: ["ನೃ", "ತ್ಯ"], audio: "danceM2Kan" },
+        { completeWord: "ಮನುಷ್ಯ", syllable: ["ಮನು", "ಷ್ಯ"], audio: "manM2Kan" },
+        {
+          completeWord: "ಕ್ಷೌರಿಕ",
+          syllable: ["ಕ್ಷೌ", "ರಿಕ"],
+          audio: "barberM2Kan",
+        },
+        {
+          completeWord: "ಜೀಬ್ರಾ",
+          syllable: ["ಜೀ", "ಬ್ರಾ"],
+          audio: "zebraM2Kan",
+        },
+      ],
+      S2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L1: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L3: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L4: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+    },
+    or: {
+      P1: [
+        { completeWord: "ಸೂರ್ಯ", syllable: ["ಸೂ", "ರ್ಯ"], audio: "sunM2Kan" },
+        {
+          completeWord: "ಸಹೋದರ",
+          syllable: ["ಸ", "ಹೋದರ"],
+          audio: "brotherM2Kan",
+        },
+        {
+          completeWord: "ಬಹುಮಾನ",
+          syllable: ["ಬಹು", "ಮಾನ"],
+          audio: "prizeM2Kan",
+        },
+        {
+          completeWord: "ಅಲಮಾರು",
+          syllable: ["ಅಲ", "ಮಾರು"],
+          audio: "almirahM2Kan",
+        },
+        {
+          completeWord: "ಬಾಳೆಕಾಯಿ",
+          syllable: ["ಬಾ", "ಳೆಕಾಯಿ"],
+          audio: "rawbananaM2Kan",
+        },
+      ],
+      P2: [
+        {
+          completeWord: "ಕುರ್ಚಿ",
+          syllable: ["ಕುರ್", "ಚಿ"],
+          audio: "chairM2Kan",
+        },
+        {
+          completeWord: "ವಿಜ್ಞಾನಿ",
+          syllable: ["ವಿಜ್", "್ಞಾನಿ"],
+          audio: "scientistM2Kan",
+        },
+        { completeWord: "ವಾಚ್", syllable: ["ವಾ", "ಚ್"], audio: "watchM2Kan" },
+        {
+          completeWord: "ಕ್ಯಾರೆಟ್",
+          syllable: ["ಕ್ಯಾ", "ರೆಟ್"],
+          audio: "carrotM2Kan",
+        },
+        {
+          completeWord: "ಬೆಳ್ಳುಳ್ಳಿ",
+          syllable: ["ಬೆಳ್ಳು", "ಳ್ಳಿ"],
+          audio: "garlicM2Kan",
+        },
+      ],
+      S1: [
+        { completeWord: "Rainy", syllable: ["Rai", "ny"] },
+        { completeWord: "Picture", syllable: ["Pic", "ture"] },
+        { completeWord: "Sunday", syllable: ["Sun", "day"] },
+        { completeWord: "Morning", syllable: ["Mor", "ning"] },
+        { completeWord: "Evening", syllable: ["Eve", "ning"] },
+      ],
+      P3: [
+        {
+          completeWord: "ಸ್ಕೂಟರು",
+          syllable: ["ಸ್ಕೂ", "ಟರು"],
+          audio: "scooterM2Kan",
+        },
+        {
+          completeWord: "ಪುಸ್ತಕ",
+          syllable: ["ಪುಸ್", "ತಕ"],
+          audio: "bookM2Kan",
+        },
+        {
+          completeWord: "ಸ್ನಾಯು",
+          syllable: ["ಸ್ನಾ", "ಯು"],
+          audio: "muscleM2Kan",
+        },
+        {
+          completeWord: "ಶಿಕ್ಷಕ",
+          syllable: ["ಶಿಕ್", "ಷಕ"],
+          audio: "teacherM2Kan",
+        },
+        {
+          completeWord: "ಪ್ರಾಣಿ",
+          syllable: ["ಪ್ರಾ", "ಣಿ"],
+          audio: "animalM2Kan",
+        },
+      ],
+      P4: [
+        {
+          completeWord: "ಪರ್ವತ",
+          syllable: ["ಪರ್", "ವತ"],
+          audio: "mountainM2Kan",
+        },
+        { completeWord: "ನೃತ್ಯ", syllable: ["ನೃ", "ತ್ಯ"], audio: "danceM2Kan" },
+        { completeWord: "ಮನುಷ್ಯ", syllable: ["ಮನು", "ಷ್ಯ"], audio: "manM2Kan" },
+        {
+          completeWord: "ಕ್ಷೌರಿಕ",
+          syllable: ["ಕ್ಷೌ", "ರಿಕ"],
+          audio: "barberM2Kan",
+        },
+        {
+          completeWord: "ಜೀಬ್ರಾ",
+          syllable: ["ಜೀ", "ಬ್ರಾ"],
+          audio: "zebraM2Kan",
+        },
+      ],
+      S2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L1: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L2: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L3: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+      L4: [
+        { completeWord: "Coward", syllable: ["Cow", "ard"] },
+        { completeWord: "Ladder", syllable: ["Lad", "der"] },
+        { completeWord: "River", syllable: ["Ri", "ver"] },
+        { completeWord: "People", syllable: ["Peo", "ple"] },
+        { completeWord: "Silver", syllable: ["Sil", "ver"] },
+      ],
+    },
   };
 
   const levelThree = {
@@ -654,7 +3993,7 @@ const Practice = () => {
       progressData?.currentPracticeStep !== null
     ) {
       const selectedLevels =
-        level === 2 ? levelTwo : level === 3 ? levelThree : levels;
+        level === 2 ? levelTwo[lang] : level === 3 ? levelThree : levels[lang];
 
       const levelData = selectedLevels[currentLevelMap];
       const levelImage = selectedLevels[currentImageMap];
@@ -664,6 +4003,7 @@ const Practice = () => {
       setCurrentImage(levelImage[currentQuestion]);
       setParentWords(currentWord?.syllable?.join(" "));
       setLevelOneWord(levelImage[currentQuestion]?.completeWord);
+      setRefAudio(levelImage[currentQuestion]?.audio);
     }
   }, [progressData]);
 
@@ -998,7 +4338,7 @@ const Practice = () => {
               (currentGetContent?.competency
                 ? `&level_competency=${currentGetContent?.competency}`
                 : "") +
-              (currentGetContent?.tags
+              (currentGetContent?.tags && lang === "en"
                 ? `&tags=${currentGetContent?.tags}`
                 : "") +
               (currentGetContent?.storyMode
@@ -1346,7 +4686,7 @@ const Practice = () => {
             (currentGetContent?.competency
               ? `&level_competency=${currentGetContent?.competency}`
               : "") +
-            (currentGetContent?.tags
+            (currentGetContent?.tags && lang === "en"
               ? `&tags=${currentGetContent?.tags}`
               : "") +
             (currentGetContent?.storyMode
@@ -1482,7 +4822,7 @@ const Practice = () => {
             (currentGetContent?.competency
               ? `&level_competency=${currentGetContent?.competency}`
               : "") +
-            (currentGetContent?.tags
+            (currentGetContent?.tags && lang === "en"
               ? `&tags=${currentGetContent?.tags}`
               : "") +
             (currentGetContent?.storyMode
@@ -1692,7 +5032,9 @@ const Practice = () => {
           {...{
             level: level,
             audioLink:
-              mechanism?.id === "mechanic_15"
+              level === 1 || level === 2 || level === 3
+                ? getAssetAudioUrl(s3Assets[refAudio])
+                : mechanism?.id === "mechanic_15"
                 ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${mechanics_data?.[0]?.audio_url}`
                 : null,
             mechanism_id: mechanism?.id,
@@ -1704,7 +5046,7 @@ const Practice = () => {
                 ? `Guess the below image`
                 : `Speak the below ${questions[currentQuestion]?.contentType}`),
             words:
-              lang === "en" && (level === 1 || level === 2 || level === 3)
+              level === 1 || level === 2 || level === 3
                 ? levelOneWord
                 : mechanism?.id === "mechanic_15"
                 ? questions[currentQuestion]?.mechanics_data?.[0]?.text
