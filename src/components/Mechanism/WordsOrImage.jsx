@@ -930,7 +930,7 @@ const WordsOrImage = ({
           )}
         </Box>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          {language === "en" && level === 3 && !isShowCase ? (
+          {level === 15 && !isShowCase ? (
             <div>
               {showSpeakButton && (
                 <Box

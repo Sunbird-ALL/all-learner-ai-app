@@ -1377,3 +1377,28 @@ export const brotherM2Kan = "483134bf-08e3-496c-8bb9-0bda719fa39b.mp3";
 export const prizeM2Kan = "cfb42fc8-f694-49cf-a204-1fac180c4003.mp3";
 export const almirahM2Kan = "bcfa235d-804e-4eef-9cfd-cc112ac1ce22.mp3";
 export const rawbananaM2Kan = "f8790636-5595-44f8-b40d-9185a13e06d0.mp3";
+
+export const level10S2Announcement = "dbc0f212-b68a-4b61-b3b9-25cf11cd092b.mp3";
+
+//M3EngAudio
+
+export const sheSings = "0c5740d3-0597-4174-9511-663ee425ed7b.mp3";
+export const heDances = "dcb4ecad-5657-4e36-ba41-24c0a112d7bc.mp3";
+export const weWin = "96ecda94-c3a4-49a5-af25-83977512a03b.mp3";
+export const iDream = "68962340-c1b0-49b9-9fb4-d20959fce56e.mp3";
+export const iSleep = "381edc58-23be-49c9-8767-b11336f9c618.mp3";
+export const heEats = "16da35c6-dddc-4a1b-b9e7-a665dd82bf05.mp3";
+export const weTalks = "2d170853-40c6-4516-b9fc-119d4b9dfa64.mp3";
+export const theyLaugh = "62af30f8-f79f-40c9-992f-7630326b1fcc.mp3";
+export const heListens = "9711a5a6-8fa2-4f80-b1ca-bfee7130f298.mp3";
+export const sheReads = "b24d8831-c354-46a7-8756-8db99e07040c.mp3";
+export const iRun = "42073cfa-f445-47c8-9376-2b015bc8ed07.mp3";
+export const wePlay = "4e4a915d-826c-4527-ac96-8b5ccfcc6279.mp3";
+export const youCook = "12fed714-5e46-4d83-9ad2-26853aa95b68.mp3";
+export const birdsFly = "79ae8ab9-61a7-414a-be37-0cb9d6cc1dff.mp3";
+export const sheSmiles = "5b632b71-864b-4dcb-9fe9-c0ea99a01d3a.mp3";
+export const theyJump = "34cbafc4-32ed-4393-a8ea-1b713e7a8872.mp3";
+export const youLearn = "0f984e64-d6e6-414c-9623-13c07f8f1b46.mp3";
+export const itRains = "f0aedde3-58b9-4c70-becc-9f52fa88ac3a.mp3";
+export const weWalk = "4bf8af93-5c88-4552-b6c0-48fd4163348a.mp3";
+export const youSwim = "aee23dbd-1117-4659-a545-6c2ec4264983.mp3";
