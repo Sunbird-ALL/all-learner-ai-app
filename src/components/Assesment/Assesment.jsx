@@ -9,7 +9,16 @@ import {
   Dialog,
   isMuiElement,
   createTheme,
+  Collapse,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Divider,
 } from "../../../node_modules/@mui/material/index";
+import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
+import TranslateIcon from "@mui/icons-material/Translate";
 import { useMediaQuery, useTheme } from "@mui/material";
 import LogoutImg from "../../assets/images/logout.svg";
 import { styled } from "@mui/material/styles";
@@ -49,6 +58,16 @@ import desktopLevel12 from "../../assets/images/desktopLevel12.png";
 import desktopLevel13 from "../../assets/images/desktopLevel13.png";
 import desktopLevel14 from "../../assets/images/desktopLevel14.png";
 import desktopLevel15 from "../../assets/images/desktopLevel15.png";
+import desktopLevel1Mobile from "../../assets/images/mobilebglevel1.png";
+import desktopLevel2Mobile from "../../assets/images/mobilebglevel2.png";
+import desktopLevel3Mobile from "../../assets/images/mobilebglevel3.png";
+import desktopLevel4Mobile from "../../assets/images/mobilebglevel4.png";
+import desktopLevel5Mobile from "../../assets/images/mobilebglevel5.png";
+import desktopLevel6Mobile from "../../assets/images/mobilebglevel6.png";
+import desktopLevel7Mobile from "../../assets/images/mobilebglevel7.png";
+import desktopLevel8Mobile from "../../assets/images/mobilebglevel8.png";
+import desktopLevel9Mobile from "../../assets/images/mobilebglevel9.png";
+import desktopLevel10Mobile from "../../assets/images/mobilebglevel10.png";
 import rOneImage from "../../assets/R1Back.png";
 import rTwoImage from "../../assets/R2Back.png";
 import rThreeImage from "../../assets/R3Back.png";
@@ -77,6 +96,7 @@ const theme = createTheme();
 
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box
       sx={{
@@ -126,7 +146,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
             {languages.map((elem) => {
               const isSelectedLang = elem.lang === selectedLang;
               return (
-                <Grid xs={3} item key={elem.lang}>
+                <Grid xs={isMobile ? 4 : 2} item key={elem.lang}>
                   <Box
                     onClick={() => setSelectedLang(elem.lang)}
                     sx={{
@@ -387,6 +407,8 @@ export const ProfileHeader = ({
   const [openMessageDialog, setOpenMessageDialog] = useState("");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [menuOpen, setMenuOpen] = useState(false);
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const handleProfileBack = () => {
     try {
@@ -461,7 +483,7 @@ export const ProfileHeader = ({
           top: 0,
           left: 0,
           width: "100%",
-          height: { xs: "60px", sm: "70px" },
+          height: isMobile ? "75px" : "65px",
           background: "rgba(255, 255, 255, 0.2)",
           backdropFilter: "blur(3px)",
           display: "flex",
@@ -477,9 +499,13 @@ export const ProfileHeader = ({
           }}
         >
           {handleBack && (
-            <Box ml={{ xs: "10px", sm: "94px" }}>
+            <Box sx={{ ml: { xs: "10px", sm: "24px" } }}>
               <IconButton onClick={handleBack}>
-                <img src={back} alt="back" style={{ height: "30px" }} />
+                <img
+                  src={back}
+                  alt="back"
+                  style={{ height: isMobile ? "18px" : "30px" }}
+                />
               </IconButton>
             </Box>
           )}
@@ -488,7 +514,7 @@ export const ProfileHeader = ({
               <Box
                 ml={
                   handleBack
-                    ? { xs: "10px", sm: "12px" }
+                    ? { xs: "10px", sm: "8px" }
                     : { xs: "10px", sm: "94px" }
                 }
                 sx={{ cursor: "pointer" }}
@@ -497,15 +523,15 @@ export const ProfileHeader = ({
                 <img
                   src={profilePic}
                   alt="profile-pic"
-                  style={{ height: "30px" }}
+                  style={{ height: isMobile ? "25px" : "30px" }}
                 />
               </Box>
-              <Box ml="12px">
+              <Box ml={isMobile ? "5px" : "12px"}>
                 <span
                   style={{
                     color: "#000000",
                     fontWeight: 700,
-                    fontSize: { xs: "14px", sm: "16px" },
+                    fontSize: { xs: "10px", sm: "16px" },
                     fontFamily: "Quicksand",
                     lineHeight: "25px",
                   }}
@@ -519,8 +545,18 @@ export const ProfileHeader = ({
             sx={{
               display: "flex",
               justifyContent: "center",
-              gap: 5,
-              ml: 2,
+              gap: isMobile ? 1 : 4,
+              mt: isMobile ? 1 : 0,
+              ml: isMobile ? 5 : 2,
+              flexDirection: {
+                xs: "column",
+                sm: "row",
+              },
+              alignItems: {
+                xs: "center",
+                sm: "initial",
+              },
+              width: isMobile ? "35%" : "auto",
             }}
           >
             {/* Words Learnt */}
@@ -531,15 +567,20 @@ export const ProfileHeader = ({
                 border: "1px solid white",
                 color: "#fff",
                 borderRadius: "12px",
-                padding: "7px 20px",
+                px: 3,
+                py: "4px",
                 display: "flex",
                 alignItems: "center",
+                width: {
+                  xs: "100%",
+                  sm: "auto",
+                },
                 boxShadow: 2,
               }}
             >
               <Box
                 sx={{
-                  fontSize: "20px",
+                  fontSize: isMobile ? "10px" : "20px",
                   fontWeight: "bold",
                   mr: 1,
                   fontFamily: "Quicksand",
@@ -549,7 +590,7 @@ export const ProfileHeader = ({
               </Box>
               <Box
                 sx={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "8px" : "16px",
                   fontWeight: 600,
                   mr: 2,
                   fontFamily: "Quicksand",
@@ -564,9 +605,20 @@ export const ProfileHeader = ({
                 alt="Books"
                 sx={{
                   position: "absolute",
-                  right: "-20px",
-                  width: "40px",
-                  height: "40px",
+                  right: {
+                    xs: "8px",
+                    sm: "-20px",
+                  },
+                  top: {
+                    xs: "50%",
+                    sm: "auto",
+                  },
+                  transform: {
+                    xs: "translateY(-50%)",
+                    sm: "none",
+                  },
+                  width: isMobile ? "17px" : "40px",
+                  height: isMobile ? "17px" : "40px",
                   border: "4px solid white",
                   borderRadius: "50%",
                   backgroundColor: "#fff",
@@ -582,15 +634,20 @@ export const ProfileHeader = ({
                 border: "1px solid white",
                 color: "#fff",
                 borderRadius: "12px",
-                padding: "7px 20px",
+                px: 3,
+                py: "4px",
                 display: "flex",
                 alignItems: "center",
+                width: {
+                  xs: "100%",
+                  sm: "auto",
+                },
                 boxShadow: 2,
               }}
             >
               <Box
                 sx={{
-                  fontSize: "20px",
+                  fontSize: isMobile ? "10px" : "20px",
                   fontWeight: "bold",
                   mr: 1,
                   fontFamily: "Quicksand",
@@ -600,7 +657,7 @@ export const ProfileHeader = ({
               </Box>
               <Box
                 sx={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "8px" : "16px",
                   fontWeight: 600,
                   mr: 2,
                   fontFamily: "Quicksand",
@@ -615,9 +672,20 @@ export const ProfileHeader = ({
                 alt="Clock"
                 sx={{
                   position: "absolute",
-                  right: "-20px",
-                  width: "40px",
-                  height: "40px",
+                  right: {
+                    xs: "8px",
+                    sm: "-20px",
+                  },
+                  top: {
+                    xs: "50%",
+                    sm: "auto",
+                  },
+                  transform: {
+                    xs: "translateY(-50%)",
+                    sm: "none",
+                  },
+                  width: isMobile ? "17px" : "40px",
+                  height: isMobile ? "17px" : "40px",
                   border: "4px solid white",
                   borderRadius: "50%",
                   backgroundColor: "#fff",
@@ -627,93 +695,168 @@ export const ProfileHeader = ({
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            justifySelf: "flex-end",
-            width: { xs: "100%", sm: "50%" },
-            display: "flex",
-            justifyContent: { xs: "center", sm: "flex-end" },
-            alignItems: "center",
-          }}
-        >
-          {import.meta.env.VITE_IS_IN_APP_AUTHORISATION === "true" && (
-            <Box sx={{ position: "relative" }} mr="10px">
-              <img
-                src={scoreView}
-                alt="scoreView"
-                width={isMobile ? "47px" : "86px"}
-                height={isMobile ? "25px" : "35px"}
-              />
+        {isMobile && (
+          <Box sx={{ position: "relative", zIndex: 10, mr: 3 }}>
+            <IconButton
+              onClick={toggleMenu}
+              sx={{
+                backgroundColor: "#fff",
+                border: "2px solid #ccc",
+                borderRadius: "8px",
+                ml: 1,
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Collapse in={menuOpen}>
               <Box
                 sx={{
                   position: "absolute",
-                  top: isMobile ? "40%" : "50%",
-                  left: isMobile ? "68%" : "70%",
-                  transform: "translate(-50%, -50%)",
+                  right: 0,
+                  top: "100%",
+                  mt: 1,
+                  bgcolor: "#fff",
+                  borderRadius: "12px",
+                  boxShadow: 3,
+                  width: "200px",
+                  overflow: "hidden",
                 }}
               >
-                <span
-                  style={{
-                    color: "#FFDD39",
-                    fontWeight: 700,
-                    fontSize: isMobile ? "11px" : "18px",
-                    fontFamily: "Quicksand",
-                  }}
-                >
-                  {points}
-                </span>
+                <List disablePadding>
+                  <ListItemButton
+                    onClick={() =>
+                      setOpenLangModal
+                        ? setOpenLangModal(true)
+                        : setOpenMessageDialog({
+                            message: "go to homescreen to change language",
+                            dontShowHeader: true,
+                          })
+                    }
+                  >
+                    <TranslateIcon sx={{ mr: 1 }} />
+                    <ListItemText
+                      primary="Select Language"
+                      primaryTypographyProps={{
+                        fontFamily: "Quicksand",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        color: "#333F61",
+                      }}
+                    />
+                  </ListItemButton>
+                  <Divider />
+                  <ListItemButton onClick={handleLogout}>
+                    <LogoutIcon sx={{ mr: 1 }} />
+                    <ListItemText
+                      primary="Logout"
+                      primaryTypographyProps={{
+                        fontFamily: "Quicksand",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        color: "#333F61",
+                      }}
+                    />
+                  </ListItemButton>
+                </List>
               </Box>
-            </Box>
-          )}
-
-          <Box
-            mr={{ xs: "10px", sm: "90px" }}
-            onClick={() =>
-              setOpenLangModal
-                ? setOpenLangModal(true)
-                : setOpenMessageDialog({
-                    message: "go to homescreen to change language",
-                    dontShowHeader: true,
-                  })
-            }
-          >
-            <Box sx={{ position: "relative", cursor: "pointer" }}>
-              <SelectLanguageButton width={isMobile ? 80 : 180} />
-              <Box
-                sx={{ position: "absolute", top: 9, left: isMobile ? 10 : 20 }}
-              >
-                <span
-                  style={{
-                    color: "#000000",
-                    fontWeight: 700,
-                    fontSize: isMobile ? "10px" : "16px",
-                    fontFamily: "Quicksand",
-                    lineHeight: "25px",
-                  }}
-                >
-                  {isMobile
-                    ? "Language"
-                    : languages?.find((elem) => elem.lang === language)?.name ||
-                      "Select Language"}
-                </span>
-              </Box>
-            </Box>
+            </Collapse>
           </Box>
-          {import.meta.env.VITE_IS_IN_APP_AUTHORISATION === "true" && (
-            <CustomTooltip title="Logout">
-              <Box>
-                <CustomIconButton onClick={handleLogout}>
-                  <img
-                    className="logout-img"
-                    style={{ height: 30, width: 35 }}
-                    src={LogoutImg}
-                    alt="Logout"
-                  />
-                </CustomIconButton>
+        )}
+
+        {!isMobile && (
+          <Box
+            sx={{
+              justifySelf: "flex-end",
+              width: { xs: "100%", sm: "50%" },
+              display: "flex",
+              justifyContent: { xs: "center", sm: "flex-end" },
+              alignItems: "center",
+            }}
+          >
+            {import.meta.env.VITE_IS_IN_APP_AUTHORISATION === "true" && (
+              <Box sx={{ position: "relative" }} mr="10px">
+                <img
+                  src={scoreView}
+                  alt="scoreView"
+                  width={isMobile ? "47px" : "86px"}
+                  height={isMobile ? "25px" : "35px"}
+                />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: isMobile ? "40%" : "50%",
+                    left: isMobile ? "68%" : "70%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#FFDD39",
+                      fontWeight: 700,
+                      fontSize: isMobile ? "11px" : "18px",
+                      fontFamily: "Quicksand",
+                    }}
+                  >
+                    {points}
+                  </span>
+                </Box>
               </Box>
-            </CustomTooltip>
-          )}
-        </Box>
+            )}
+
+            <Box
+              mr={{ xs: "10px", sm: "90px" }}
+              onClick={() =>
+                setOpenLangModal
+                  ? setOpenLangModal(true)
+                  : setOpenMessageDialog({
+                      message: "go to homescreen to change language",
+                      dontShowHeader: true,
+                    })
+              }
+            >
+              <Box sx={{ position: "relative", cursor: "pointer" }}>
+                <SelectLanguageButton width={isMobile ? 80 : 180} />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 9,
+                    left: isMobile ? 10 : 20,
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#000000",
+                      fontWeight: 700,
+                      fontSize: isMobile ? "10px" : "16px",
+                      fontFamily: "Quicksand",
+                      lineHeight: "25px",
+                    }}
+                  >
+                    {isMobile
+                      ? "Language"
+                      : languages?.find((elem) => elem.lang === language)
+                          ?.name || "Select Language"}
+                  </span>
+                </Box>
+              </Box>
+            </Box>
+            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+              <CustomTooltip title="Logout">
+                <Box>
+                  <CustomIconButton onClick={handleLogout}>
+                    <img
+                      className="logout-img"
+                      style={{ height: 30, width: 35 }}
+                      src={LogoutImg}
+                      alt="Logout"
+                    />
+                  </CustomIconButton>
+                </Box>
+              </CustomTooltip>
+            )}
+          </Box>
+        )}
       </Box>
     </>
   );
@@ -947,7 +1090,22 @@ const Assesment = ({ discoverStart }) => {
     desktopLevel13,
     desktopLevel14,
     desktopLevel15,
+    desktopLevel1Mobile,
+    desktopLevel2Mobile,
+    desktopLevel3Mobile,
+    desktopLevel4Mobile,
+    desktopLevel5Mobile,
+    desktopLevel6Mobile,
+    desktopLevel7Mobile,
+    desktopLevel8Mobile,
+    desktopLevel9Mobile,
+    desktopLevel10Mobile,
   };
+
+  const imageKey =
+    isMobile && level <= 10
+      ? `desktopLevel${level || 1}Mobile`
+      : `desktopLevel${level || 1}`;
 
   const rFlow = String(getLocalData("rFlow"));
   const tFlow = String(getLocalData("tFlow"));
@@ -969,8 +1127,8 @@ const Assesment = ({ discoverStart }) => {
           ? rThreeImage
           : level == 2 && rStep === 4
           ? rFourImage
-          : images?.[`desktopLevel${level || 1}`]
-        : images?.[`desktopLevel${level || 1}`]
+          : images?.[imageKey]
+        : images?.[imageKey]
     })`,
     backgroundRepeat: "round",
     backgroundSize: "auto",
