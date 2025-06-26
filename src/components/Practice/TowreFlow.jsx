@@ -364,7 +364,7 @@ const CombinedReportPage = ({
           onClick={() => {
             setLocalData("tFlow", false);
             //window.location.reload();
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            if (import.meta.env.VITE_IS_APP_IFRAME === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
