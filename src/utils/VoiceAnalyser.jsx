@@ -104,7 +104,7 @@ function VoiceAnalyser(props) {
       return;
     }
     const { audioLink } = props;
-    console.log("llink", audioLink);
+    //console.log("llink", audioLink);
 
     try {
       let audio = new Audio(
@@ -114,7 +114,7 @@ function VoiceAnalyser(props) {
               import.meta.env.VITE_AWS_S3_BUCKET_CONTENT_URL
             }/all-audio-files/${lang}/${props.contentId}.wav`
       );
-      console.log("audo", audio);
+      //console.log("audo", audio);
       audio.addEventListener("canplaythrough", () => {
         set_temp_audio(audio);
         setPauseAudio(val);

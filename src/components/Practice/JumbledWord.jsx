@@ -84,6 +84,8 @@ const JumbledWord = ({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -416,6 +418,8 @@ const JumbledWord = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <ThemeProvider theme={theme}>

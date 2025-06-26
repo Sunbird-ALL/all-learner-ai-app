@@ -109,6 +109,8 @@ function ArrangePicture({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) {
   const [placedImages, setPlacedImages] = useState([
     null,
@@ -299,6 +301,8 @@ function ArrangePicture({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <ThemeProvider theme={theme}>

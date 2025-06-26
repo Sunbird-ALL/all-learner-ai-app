@@ -378,6 +378,8 @@ export const ProfileHeader = ({
   profileName,
   points = 0,
   handleBack,
+  vocabCount = 0,
+  wordCount = 0,
 }) => {
   const language = lang || getLocalData("lang");
   const username = profileName || getLocalData("profileName");
@@ -513,6 +515,116 @@ export const ProfileHeader = ({
               </Box>
             </>
           )}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 5,
+              ml: 2,
+            }}
+          >
+            {/* Words Learnt */}
+            <Box
+              sx={{
+                position: "relative",
+                background: "linear-gradient(90deg, #7B2CBF 0%, #9D4EDD 100%)",
+                border: "1px solid white",
+                color: "#fff",
+                borderRadius: "12px",
+                padding: "7px 20px",
+                display: "flex",
+                alignItems: "center",
+                boxShadow: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  mr: 1,
+                  fontFamily: "Quicksand",
+                }}
+              >
+                {vocabCount}
+              </Box>
+              <Box
+                sx={{
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  mr: 2,
+                  fontFamily: "Quicksand",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Words Learnt
+              </Box>
+              <Box
+                component="img"
+                src={Assets.books}
+                alt="Books"
+                sx={{
+                  position: "absolute",
+                  right: "-20px",
+                  width: "40px",
+                  height: "40px",
+                  border: "4px solid white",
+                  borderRadius: "50%",
+                  backgroundColor: "#fff",
+                }}
+              />
+            </Box>
+
+            {/* Words Per Minute */}
+            <Box
+              sx={{
+                position: "relative",
+                background: "linear-gradient(90deg, #00C6FF 0%, #0072FF 100%)",
+                border: "1px solid white",
+                color: "#fff",
+                borderRadius: "12px",
+                padding: "7px 20px",
+                display: "flex",
+                alignItems: "center",
+                boxShadow: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  mr: 1,
+                  fontFamily: "Quicksand",
+                }}
+              >
+                {wordCount}
+              </Box>
+              <Box
+                sx={{
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  mr: 2,
+                  fontFamily: "Quicksand",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Words per minute
+              </Box>
+              <Box
+                component="img"
+                src={Assets.clock}
+                alt="Clock"
+                sx={{
+                  position: "absolute",
+                  right: "-20px",
+                  width: "40px",
+                  height: "40px",
+                  border: "4px solid white",
+                  borderRadius: "50%",
+                  backgroundColor: "#fff",
+                }}
+              />
+            </Box>
+          </Box>
         </Box>
 
         <Box
@@ -624,6 +736,8 @@ const Assesment = ({ discoverStart }) => {
   const [openLangModal, setOpenLangModal] = useState(false);
   const [lang, setLang] = useState(getLocalData("lang") || "en");
   const [points, setPoints] = useState(0);
+  const [vocabCount, setVocabCount] = useState(0);
+  const [wordCount, setWordCount] = useState(0);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
@@ -670,6 +784,11 @@ const Assesment = ({ discoverStart }) => {
         );
         //let session_id = localStorage.getItem("sessionId");
         setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
+        setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
+        setWordCount(
+          getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
+            0
+        );
         let session_id = getLocalData("sessionId");
 
         if (!session_id) {
@@ -704,6 +823,11 @@ const Assesment = ({ discoverStart }) => {
         );
         setLevel(
           Number(getMilestoneDetails?.data?.milestone_level?.replace("m", ""))
+        );
+        setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
+        setWordCount(
+          getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
+            0
         );
 
         if (levelMapping[virtualId] !== undefined) {
@@ -826,6 +950,7 @@ const Assesment = ({ discoverStart }) => {
   };
 
   const rFlow = String(getLocalData("rFlow"));
+  const tFlow = String(getLocalData("tFlow"));
   const rStep = Number(getLocalData("rStep")) || 2;
 
   const sectionStyle = {
@@ -870,7 +995,15 @@ const Assesment = ({ discoverStart }) => {
       {level > 0 ? (
         <Box style={sectionStyle}>
           <ProfileHeader
-            {...{ level, lang, setOpenLangModal, points, setOpenMessageDialog }}
+            {...{
+              level,
+              lang,
+              setOpenLangModal,
+              points,
+              setOpenMessageDialog,
+              vocabCount,
+              wordCount,
+            }}
           />
           <Box>
             {import.meta.env.VITE_SHOW_HELP_VIDEO === "true" && (

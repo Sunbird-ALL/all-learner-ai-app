@@ -58,6 +58,8 @@ const Mechanics4 = ({
   audio,
   isNextButtonCalled,
   setIsNextButtonCalled,
+  vocabCount,
+  wordCount,
 }) => {
   const [words, setWords] = useState(
     type === "word" ? [] : ["Friend", "She is", "My"]
@@ -249,6 +251,8 @@ const Mechanics4 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <div

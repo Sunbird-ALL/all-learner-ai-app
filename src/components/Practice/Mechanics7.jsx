@@ -20,6 +20,7 @@ import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import addSound from "../../assets/audio/add.mp3";
 import removeSound from "../../assets/remove.wav";
+import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import {
   WordRedCircle,
   StopButton,
@@ -28,6 +29,7 @@ import {
   NextButtonRound,
   RetryIcon,
   getLocalData,
+  setLocalData,
 } from "../../utils/constants";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
@@ -35,6 +37,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
 import Joyride from "react-joyride";
+
 import {
   fetchASROutput,
   handleTextEvaluation,
@@ -80,6 +83,8 @@ const Mechanics7 = ({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) => {
   const [words, setWords] = useState(
     type === "word" ? [] : ["Friend", "She is", "My"]
@@ -113,6 +118,25 @@ const Mechanics7 = ({
 
   useEffect(() => {
     transcriptRef.current = transcript;
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      if (filteredText.includes("*")) {
+        const count = parseInt(getLocalData("profanityCheck") || "0");
+
+        if (count > 2) {
+          setOpenMessageDialog({
+            open: true,
+            message: `Please speak properly.`,
+            severity: "warning",
+            isError: true,
+          });
+        }
+
+        stopRecording();
+
+        setLocalData("profanityCheck", (count + 1).toString());
+      }
+    }
   }, [transcript]);
 
   const [wordsAfterSplit, setWordsAfterSplit] = useState([]);
@@ -146,7 +170,9 @@ const Mechanics7 = ({
   const chunksRef = useRef([]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-
+  const [abusiveFound, setAbusiveFound] = useState(false);
+  const [detectedWord, setDetectedWord] = useState("");
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
   const syllableCount = currentImg?.syllablesAudio?.length || 0;
   const isLastSyllable = stepIndex === syllableCount;
   const [currentText, setCurrentText] = useState("");
@@ -157,7 +183,21 @@ const Mechanics7 = ({
       ? currentImg?.completeWord
       : currentImg?.syllablesAudio?.[stepIndex]?.name || "";
     setCurrentText(text);
-  }, [currentImg, stepIndex, isLastSyllable]);
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      console.log("filtered", filteredText);
+      if (filteredText.includes("*")) {
+        stopRecording();
+
+        setOpenMessageDialog({
+          open: true,
+          message: `Warning: Inappropriate language detected. Please refrain from using such words.`,
+          severity: "warning",
+          isError: true,
+        });
+      }
+    }
+  }, [currentImg, stepIndex, isLastSyllable, transcript]);
 
   // const currentText = isLastSyllable
   //   ? currentImg?.completeWord
@@ -448,9 +488,13 @@ const Mechanics7 = ({
       // }
       resetTranscript();
       startAudioRecording();
+      setLanguage(language);
+      setAbusiveFound(false);
+      setDetectedWord("");
       SpeechRecognition.startListening({
         continuous: true,
         interimResults: true,
+        language: language || "en-US",
       });
     }
     setRecordingStates((prev) => ({
@@ -469,8 +513,8 @@ const Mechanics7 = ({
       SpeechRecognition.stopListening();
       stopAudioRecording();
       const finalTranscript = transcriptRef.current;
+      setAbusiveFound(false);
       console.log("textR", word, finalTranscript);
-
       const matchPercentage = phoneticMatch(word, finalTranscript);
 
       if (matchPercentage < 40) {
@@ -495,6 +539,7 @@ const Mechanics7 = ({
       }
       setIsProcessing(true);
     }
+    setAbusiveFound(false);
     setRecordingStates((prev) => ({
       ...prev,
       [word]: false,
@@ -722,6 +767,8 @@ const Mechanics7 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       {/* {isRecordingComplete && (
@@ -865,29 +912,24 @@ const Mechanics7 = ({
                     }}
                   />
                 )}
-                {currentText?.split("").map((char, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      color: !isRecorded
-                        ? "#333F61" // default background
-                        : isIncorrectWord
-                        ? "#58CC02" // red FF7F36
-                        : "#58CC02",
-                      //color: isRecorded ? "#58CC02" : "#333F61",
-                      fontWeight: 700,
-                      fontSize: isMobile ? "50px" : "72px",
-                      lineHeight: isMobile ? "60px" : "87px",
-                      letterSpacing: isMobile ? "1%" : "2%",
-                      fontFamily: "Quicksand",
-                      marginLeft:
-                        index > 0 ? (isMobile ? "2px" : "10px") : undefined,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {char}
-                  </span>
-                ))}
+                <span
+                  style={{
+                    color: !isRecorded
+                      ? "#333F61" // default background
+                      : isIncorrectWord
+                      ? "#58CC02" // red FF7F36
+                      : "#58CC02",
+                    //color: isRecorded ? "#58CC02" : "#333F61",
+                    fontWeight: 700,
+                    fontSize: isMobile ? "50px" : "72px",
+                    lineHeight: isMobile ? "60px" : "87px",
+                    letterSpacing: isMobile ? "1%" : "2%",
+                    fontFamily: "Quicksand",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {currentText}
+                </span>
               </Box>
               {isRecorded && (
                 <img
@@ -1085,6 +1127,25 @@ const Mechanics7 = ({
                   </Box>
                 </Box>
               </Box>
+            )}
+
+            {abusiveFound && (
+              <div
+                style={{
+                  position: "fixed",
+                  top: "20px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  backgroundColor: "#ffebee",
+                  color: "#c62828",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                  zIndex: 1000,
+                }}
+              >
+                Warning: Inappropriate word detected ({detectedWord})
+              </div>
             )}
 
             {isRecorded && (

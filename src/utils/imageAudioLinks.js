@@ -2753,3 +2753,252 @@ export const r3Reset =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/bf41e73150a28d6d818aa10806ca84ce4882bccc/r3Reset.svg";
 export const correctTick =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/bf41e73150a28d6d818aa10806ca84ce4882bccc/correctTick.svg";
+export const tyreImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/tayar.png";
+export const gaganImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/gagan.png";
+export const gayakImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/gayak.png";
+export const auratImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/aurat.png";
+export const kadImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/kadh.png";
+export const tyreAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/tayarAudio.wav";
+export const kadAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/kadhAudio.wav";
+export const gaganAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/gaganAudio.wav";
+export const gayakAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/gayakAudio.wav";
+export const auratAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/AuratAudio.wav";
+export const gagan1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gagan1Audio.wav";
+export const gayak1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gayak1Audio.wav";
+export const aurat1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/aurat1Audio.wav";
+export const gagan2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gagan2Audio.wav";
+export const gagan3Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gagan3Audio.wav";
+export const gayak2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gayak2Audio.wav";
+export const gayak3Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gayak3Audio.wav";
+export const aurat2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/aurat2Audio.wav";
+export const aurat3Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/aurat3Audio.wav";
+export const tayar1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/tayar1Audio.wav";
+export const tayar2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/tayar2Audio.wav";
+export const tayar3Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/tayar3Audio.wav";
+export const kad1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kad1Audio.wav";
+export const kadh2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kadh2Audio.wav";
+export const books =
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/9be3bcb01bd39a34f2572c7497efb53b10a81918/books.svg";
+export const clock =
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/9be3bcb01bd39a34f2572c7497efb53b10a81918/clock.svg";
+export const badalM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/badalM1Hin.svg";
+export const kalamM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/kalamM1Hin.svg";
+export const koyalM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/koyalM1Hin.svg";
+export const chawalM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/chawalM1Hin.svg";
+export const tablaM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/tablaM1Hin.svg";
+export const walM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/walM1Audio.wav";
+export const chawalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/chawalM1Audio.wav";
+export const koyalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/koyalM1Audio.wav";
+export const koM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/koM1Audio.wav";
+export const yalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/yalM1Audio.wav";
+export const kalamM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kalamM1Audio.wav";
+export const kaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kaM1Audio.wav";
+export const laaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/laaM1Audio.wav";
+export const amM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/amM1Audio.wav";
+export const baM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/baM1Audio.wav";
+export const dalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/dalM1Audio.wav";
+export const badalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/badalM1Audio.wav";
+export const tablaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/tablaM1Audio.wav";
+export const taM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/taM1Audio.wav";
+export const baaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/baaM1Audio.wav";
+export const laM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/laM1Audio.wav";
+export const chaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/chaM1Audio.wav";
+export const palangM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/palangM2Hin.svg";
+export const matkaM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/matkaM2Hin.svg";
+export const mandirM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/mandirM2Hin.svg";
+export const kadduM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/kadduM2Hin.svg";
+export const matarM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/matarM2Hin.svg";
+export const wordsLearnt =
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/94aa9a6a9a056469223905c10a6883e1fa2a45c0/wordsLearnt.svg";
+export const saltR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/saltR1Hin.svg";
+export const carrotR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/carrotR1Hin.svg";
+export const rubberR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/rubberR1Hin.svg";
+export const kiteR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/kiteR1Hin.svg";
+export const dandaR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/dandaR1Hin.svg";
+export const batR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/batR1Hin.svg";
+export const featherR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/featherR1Hin.svg";
+export const BrushR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/BrushR1Hin.svg";
+export const kalasR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/kalasR1Hin.svg";
+export const bodyR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/bodyR1Hin.svg";
+export const coldR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/coldR1Hin.svg";
+export const hockeyR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/hockeyR1Hin.svg";
+export const eidR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/eidR1Hin.svg";
+export const coffeeR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/coffeeR1Hin.svg";
+export const cheetahR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/cheetahR1Hin.svg";
+export const donkeyR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/donkeyR1Hin.svg";
+export const peacockR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/peacockR1Hin.svg";
+export const gamlaR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/gamlaR1Hin.svg";
+export const lockR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/lockR1Hin.svg";
+export const TyreR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/TyreR1Hin.svg";
+export const singerR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/singerR1Hin.svg";
+export const snakeR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/snakeR1Hin.svg";
+export const EagleR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/EagleR1Hin.svg";
+export const AutoR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/AutoR1Hin.svg";
+export const legR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/legR1Hin.svg";
+export const houseR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/houseR1Hin.svg";
+export const chandR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/chandR1Hin.svg";
+export const teaR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/teaR1Hin.svg";
+export const neckR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/neckR1Hin.svg";
+export const mugR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/mugR1Hin.svg";
+export const dressR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/dressR1Hin.svg";
+export const fireR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/fireR1Hin.svg";
+export const parrotR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/parrotR1Hin.svg";
+export const knifeR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/knifeR1Hin.svg";
+export const crowR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/crowR1Hin.svg";
+export const eggR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/eggR1Hin.svg";
+export const ballR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/ballR1Hin.svg";
+export const lionR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/lionR1Hin.svg";
+export const mathR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/mathR1Hin.svg";
+export const womanR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/womanR1Hin.svg";
+export const duckR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/duckR1Hin.svg";
+export const oilR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/oilR1Hin.svg";
+export const bagR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/bagR1Hin.svg";
+export const medicineR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/medicineR1Hin.svg";
+export const tigerR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/tigerR1Hin.svg";
+export const matkaM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/matkaM2Audio.wav";
+export const matarM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/matarM2Audio.wav";
+export const palangM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/palangM2Audio.wav";
+export const mandirM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/mandirM2Audio.wav";
+export const kadduM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kadduM2Audio.wav";
+export const batR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/batR1Audio.wav";
+export const namakR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/namakR1Audio.wav";
+export const auratR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/auratR1Audio.wav";
+export const sherR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/sherR1Audio.wav";
+export const chakuR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/chakuR1Audio.wav";
+export const aagR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/aagR1Audio.wav";
+export const teaR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/teaR1Audio.wav";
+export const gharR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gharR1Audio.wav";
+export const baghR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/baghR1Audio.wav";
+export const saphR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/saphR1Audio.wav";
+export const talaR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/talaR1Audio.wav";
+export const morR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/morR1Audio.wav";
+export const eidR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/eidR1Audio.wav";
+export const thandR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/thandR1Audio.wav";
+export const pankhR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/pankhR1Audio.wav";
+
+export const startNewButtonImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/start.png";
+export const startButtonImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/startButton.svg";
+export const birthdayBoxImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/birthdayBox.svg";
+export const confettiImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/confetti.svg";
+export const yellowLightImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/yellowLight.svg";

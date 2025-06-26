@@ -61,6 +61,8 @@ const Mechanics5 = ({
   correctness,
   audio,
   mechanism,
+  vocabCount,
+  wordCount,
 }) => {
   const audiosRef = useRef(
     new Array(options.length).fill(null).map(() => React.createRef())
@@ -169,6 +171,8 @@ const Mechanics5 = ({
         setLivesData,
         isNextButtonCalled,
         setIsNextButtonCalled,
+        vocabCount,
+        wordCount,
       }}
     >
       <div

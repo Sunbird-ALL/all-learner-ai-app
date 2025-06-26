@@ -25,6 +25,7 @@ import { getAssetAudioUrl } from "../../utils/s3Links";
 import {
   practiceSteps,
   getLocalData,
+  setLocalData,
   NextButtonRound,
   RetryIcon,
   ListenButton,
@@ -44,7 +45,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
-
+import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 const levelMap = {
   10: level10,
   11: level11,
@@ -96,6 +97,8 @@ const AnouncementFlow = ({
   matchedChar,
   isNextButtonCalled,
   setIsNextButtonCalled,
+  vocabCount,
+  wordCount,
 }) => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [conversationData, setConversationData] = useState([]);
@@ -125,6 +128,9 @@ const AnouncementFlow = ({
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isPressedOnce, setIsPressedOnce] = useState(false);
+  const [abusiveFound, setAbusiveFound] = useState(false);
+  const [detectedWord, setDetectedWord] = useState("");
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
   const {
     transcript,
     interimTranscript,
@@ -138,6 +144,25 @@ const AnouncementFlow = ({
   useEffect(() => {
     transcriptRef.current = transcript;
     console.log("Live Transcript:", transcript);
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      if (filteredText.includes("*")) {
+        const count = parseInt(getLocalData("profanityCheck") || "0");
+
+        if (count > 2) {
+          setOpenMessageDialog({
+            open: true,
+            message: `Please speak properly.`,
+            severity: "warning",
+            isError: true,
+          });
+        }
+
+        handleStopRecording();
+
+        setLocalData("profanityCheck", (count + 1).toString());
+      }
+    }
   }, [transcript]);
 
   // let mediaRecorder;
@@ -220,16 +245,23 @@ const AnouncementFlow = ({
     setRecAudio(null);
     resetTranscript();
     setIsRecording(true);
+    setLanguage(language);
+    setAbusiveFound(false);
+    setDetectedWord("");
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
+      language: language || "en-US",
     });
   };
 
   const handleStopRecording = () => {
     SpeechRecognition.stopListening();
     setFinalTranscript(transcriptRef.current);
+    setAbusiveFound(false);
+
     setIsRecording(false);
+    setAbusiveFound(false);
     //console.log("Final Transcript:", transcriptRef.current);
   };
 
@@ -242,7 +274,6 @@ const AnouncementFlow = ({
       setRecAudio("");
     }
   };
-
   // const playAudio = (audioKey) => {
   //   if (Assets[audioKey]) {
   //     const audio = new Audio(Assets[audioKey]);
@@ -251,6 +282,8 @@ const AnouncementFlow = ({
   //     console.error("Audio file not found:", audioKey);
   //   }
   // };
+
+  console.log("token", localStorage.getItem("apiToken"));
 
   const handleHintClick = () => {
     if (isPlaying) {
@@ -585,6 +618,14 @@ const AnouncementFlow = ({
       audioInstance.currentTime = 0;
       setIsPlaying(false);
     }
+    if (finalTranscript && filterBadWords(finalTranscript)) {
+      setOpenMessageDialog({
+        open: true,
+        message: `Cannot proceed - inappropriate language detected (${detectedWord}). Please try again.`,
+        severity: "error",
+      });
+      return;
+    }
     setIsLoading(true);
 
     const sessionId = getLocalData("sessionId");
@@ -828,6 +869,8 @@ const AnouncementFlow = ({
         livesData,
         gameOverData,
         setIsNextButtonCalled,
+        vocabCount,
+        wordCount,
       }}
     >
       <ThemeProvider theme={theme}>
@@ -1130,6 +1173,25 @@ const AnouncementFlow = ({
                       </Box>
                     )}
                   </>
+                )}
+
+                {abusiveFound && (
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: "20px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      backgroundColor: "#ffebee",
+                      color: "#c62828",
+                      padding: "10px 20px",
+                      borderRadius: "5px",
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                      zIndex: 1000,
+                    }}
+                  >
+                    Warning: Inappropriate word detected ({detectedWord})
+                  </div>
                 )}
 
                 {/* Stop Button */}

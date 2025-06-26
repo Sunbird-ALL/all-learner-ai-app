@@ -18,6 +18,7 @@ import practicebg3 from "../../assets/images/practice-bg3.svg";
 import gameWon from "../../assets/images/gameWon.svg";
 import clouds from "../../assets/images/clouds.svg";
 import catLoading from "../../assets/images/catLoading.gif";
+import towreLoading from "../../assets/images/loaderGif.gif";
 import textureImage from "../../assets/images/textureImage.png";
 import timer from "../../assets/images/timer.svg";
 import playButton from "../../assets/listen.png";
@@ -162,6 +163,7 @@ const MainLayout = (props) => {
   };
 
   const rFlow = String(getLocalData("rFlow"));
+  const tFlow = String(getLocalData("tFlow"));
   const mFlow = getLocalData("mFail");
   const allCompleted = getLocalData("allCompleted");
 
@@ -190,7 +192,7 @@ const MainLayout = (props) => {
     }
   }
 
-  console.log("Assigned LEVEL:", LEVEL, props.rStep);
+  //console.log("Assigned LEVEL:", LEVEL, props.rStep);
 
   const {
     handleNext,
@@ -222,6 +224,8 @@ const MainLayout = (props) => {
     isRecordingComplete,
     answer,
     isCorrect,
+    vocabCount,
+    wordCount,
   } = props;
 
   const [shake, setShake] = useState(false);
@@ -230,11 +234,11 @@ const MainLayout = (props) => {
 
   const language = getLocalData("lang");
 
-  useEffect(() => {
-    if (language !== "en") {
-      setLocalData("rFlow", false);
-    }
-  }, [language]);
+  // useEffect(() => {
+  //   if (language !== "en") {
+  //     setLocalData("rFlow", false);
+  //   }
+  // }, [language]);
 
   const handleAudioPlay = (index) => {
     const audioElem = audioRefs.current[index];
@@ -292,7 +296,7 @@ const MainLayout = (props) => {
     };
   }, []);
 
-  console.log("isCo", isCorrect);
+  //console.log("isCo", isCorrect);
 
   useEffect(() => {
     if (isRecordingComplete && answer && isCorrect) {
@@ -373,7 +377,15 @@ const MainLayout = (props) => {
   return (
     <Box sx={sectionStyle}>
       <ProfileHeader
-        {...{ level: LEVEL, setOpenLangModal, lang, points, handleBack }}
+        {...{
+          level: LEVEL,
+          setOpenLangModal,
+          lang,
+          points,
+          handleBack,
+          vocabCount,
+          wordCount,
+        }}
       />
 
       {LEVEL && (
@@ -416,9 +428,35 @@ const MainLayout = (props) => {
             mt: "50px",
           }}
         >
-          <Box>
-            <img src={catLoading} alt="catLoading" />
-          </Box>
+          {tFlow === "true" ? (
+            <Box textAlign="center">
+              <img
+                src={towreLoading}
+                alt="catLoading"
+                height={200}
+                style={{
+                  display: "block",
+                  margin: "0 auto",
+                  marginBottom: "2px",
+                }}
+              />
+              <p
+                style={{
+                  fontSize: "32px",
+                  fontWeight: "700",
+                  marginBottom: "5px",
+                  fontFamily: "Quicksand",
+                  color: "#333F61",
+                }}
+              >
+                Loading
+              </p>
+            </Box>
+          ) : (
+            <Box>
+              <img src={catLoading} alt="catLoading" />
+            </Box>
+          )}
         </Card>
       ) : (
         <>
@@ -668,9 +706,7 @@ const MainLayout = (props) => {
                                           fontFamily: "Quicksand",
                                         }}
                                       >
-                                        {language !== "en"
-                                          ? elem.name
-                                          : LEVEL === 1
+                                        {LEVEL === 1
                                           ? elem.title
                                           : LEVEL === 2
                                           ? elem.titleNew
@@ -931,7 +967,7 @@ const MainLayout = (props) => {
                               <img
                                 src={`https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.3/src/assets/images/gameLost.svg`}
                                 alt="gameLost"
-                                style={{ height: { xs: 200, md: 340 } }}
+                                height={"250px"}
                               />
                               <Typography
                                 sx={{ mb: 1, mt: 1, textAlign: "center" }}
@@ -973,15 +1009,6 @@ const MainLayout = (props) => {
                                   </Typography>
                                 )}
                               </Typography>
-                            </Stack>
-                            {/* second stack below*/}
-                            <Stack
-                              direction={"column"}
-                              alignItems="center"
-                              spacing={2}
-                              marginLeft={{ xs: 0, md: "10px" }}
-                              sx={{ width: { xs: "90%", md: "auto" } }}
-                            >
                               <Stack
                                 sx={{
                                   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
@@ -1147,6 +1174,48 @@ const MainLayout = (props) => {
                                   </Stack>
                                 )}
                               </Stack>
+                            </Stack>
+                            {/* second stack below*/}
+                            <Stack
+                              direction={"column"}
+                              alignItems="center"
+                              spacing={2}
+                              marginLeft={{ xs: 0, md: "10px" }}
+                              sx={{ width: { xs: "90%", md: "auto" } }}
+                            >
+                              <Box
+                                component="img"
+                                src={Assets.wordsLearnt}
+                                alt="Words Learnt"
+                                sx={{
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
+
+                              {/* Number */}
+                              <Typography
+                                sx={{
+                                  color: "#FF00B8",
+                                  fontWeight: "bold",
+                                  fontSize: "24px",
+                                  fontFamily: "Quicksand",
+                                }}
+                              >
+                                {vocabCount}
+                              </Typography>
+
+                              {/* Label */}
+                              <Typography
+                                sx={{
+                                  color: "#2E2E2E",
+                                  fontSize: "16px",
+                                  fontWeight: 600,
+                                  fontFamily: "Quicksand",
+                                }}
+                              >
+                                Words Learnt
+                              </Typography>
                               <Stack
                                 direction="row"
                                 alignItems="center"
@@ -1336,9 +1405,20 @@ const MainLayout = (props) => {
                                 (mFlow === true || mFlow === "true") &&
                                 language === "en"
                               ) {
-                                console.log("mFlow value:", mFlow);
+                                //console.log("mFlow value:", mFlow);
                                 setLocalData("rFlow", true);
                               }
+                              // if (
+                              //               LEVEL === 1 ||
+                              //               LEVEL === 2 ||
+                              //               LEVEL === 3 ||
+                              //               LEVEL === 4 ||
+                              //               LEVEL === 6 ||
+                              //               LEVEL === 9
+                              //             ) {
+                              //               setLocalData("tFlow", true);
+                              //               navigate("/_practice");
+                              //             }
                               if (
                                 props.pageName === "wordsorimage" ||
                                 props.pageName === "m5"

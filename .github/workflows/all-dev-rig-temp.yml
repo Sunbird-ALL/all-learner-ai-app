@@ -3,7 +3,7 @@ name: ALL rig dev Deployment
 on:
   push:
     branches:
-      - release-1.4.1_
+      - all-2.0.0_
 
 jobs:
   deploy:

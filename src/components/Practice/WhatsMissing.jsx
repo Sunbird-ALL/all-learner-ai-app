@@ -609,6 +609,8 @@ function WhatsMissing({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) {
   const [currentSteps, setCurrentSteps] = useState(2);
 
@@ -638,6 +640,8 @@ function WhatsMissing({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <ThemeProvider theme={theme}>

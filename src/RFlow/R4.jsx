@@ -336,6 +336,8 @@ const R4 = ({
   audio,
   currentImg,
   rStep,
+  vocabCount,
+  wordCount,
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedWord, setSelectedWord] = useState(null);
@@ -435,6 +437,8 @@ const R4 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       {currentQuestion?.allwords ? (

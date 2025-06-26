@@ -139,6 +139,8 @@ const R3 = ({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) => {
   const [selectedLetters, setSelectedLetters] = useState([]);
   const [error, setError] = useState(false);
@@ -390,6 +392,8 @@ const R3 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <div

@@ -9,6 +9,9 @@ import {
 } from "@mui/material";
 import listenImg2 from "../../assets/listen.png";
 import Confetti from "react-confetti";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import {
   level13,
   level14,
@@ -22,11 +25,13 @@ import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
 import { getAssetAudioUrl } from "../../utils/s3Links";
+
 import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
   RetryIcon,
+  setLocalData,
 } from "../../utils/constants";
 import spinnerStop from "../../assets/pause.png";
 import raMic from "../../assets/listen.png";
@@ -37,6 +42,8 @@ import wrongSound from "../../assets/audio/wrong.wav";
 import { Modal } from "@mui/material";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import CloseIcon from "@mui/icons-material/Close";
+import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
+
 import {
   fetchASROutput,
   handleTextEvaluation,
@@ -84,6 +91,8 @@ const McqFlow = ({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [conversationData, setConversationData] = useState([]);
@@ -101,6 +110,18 @@ const McqFlow = ({
   const [zoomOpen, setZoomOpen] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const [abusiveFound, setAbusiveFound] = useState(false);
+  const [detectedWord, setDetectedWord] = useState("");
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
+  const [finalTranscript, setFinalTranscript] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const {
+    transcript,
+    interimTranscript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
 
   const handleRecordingComplete = (base64Data) => {
     if (base64Data) {
@@ -114,6 +135,25 @@ const McqFlow = ({
 
   const handleStartRecording = () => {
     setRecAudio(null);
+    resetTranscript();
+    setIsRecording(true);
+    setLanguage(language);
+    setAbusiveFound(false);
+    setDetectedWord("");
+    SpeechRecognition.startListening({
+      continuous: true,
+      interimResults: true,
+      language: language || "en-US",
+    });
+  };
+
+  const handleStopRecording = () => {
+    SpeechRecognition.stopListening();
+    setFinalTranscript(transcriptRef.current);
+    setAbusiveFound(false);
+
+    setIsRecording(false);
+    //console.log("Final Transcript:", transcriptRef.current)
   };
 
   const playAudioCorrect = () => {
@@ -170,6 +210,32 @@ const McqFlow = ({
     setShowQuestion(false);
   }, [currentLevel]);
 
+  const transcriptRef = useRef("");
+  useEffect(() => {
+    transcriptRef.current = transcript;
+    console.log("Live Transcript:", transcript);
+
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      if (filteredText.includes("*")) {
+        const count = parseInt(getLocalData("profanityCheck") || "0");
+
+        if (count > 2) {
+          setOpenMessageDialog({
+            open: true,
+            message: `Please speak properly.`,
+            severity: "warning",
+            isError: true,
+          });
+        }
+
+        handleStopRecording();
+
+        setLocalData("profanityCheck", (count + 1).toString());
+      }
+    }
+  }, [transcript]);
+
   const task = conversation?.tasks[currentStep - 1];
   const correctAnswer = task?.options.find(
     (option) => option.id === task.answer
@@ -225,6 +291,8 @@ const McqFlow = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <ThemeProvider theme={theme}>
@@ -503,7 +571,7 @@ const McqFlow = ({
                 audioLink={audio ? audio : completeAudio}
                 buttonAnimation={selectedOption}
                 handleStartRecording={handleStartRecording}
-                //handleStopRecording={handleStopRecording}
+                handleStopRecording={handleStopRecording}
                 {...{
                   contentId,
                   contentType,

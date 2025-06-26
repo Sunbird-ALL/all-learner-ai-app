@@ -9,6 +9,7 @@ import {
   getLocalData,
   NextButtonRound,
   RetryIcon,
+  setLocalData,
 } from "../../utils/constants";
 import r3WrongTick from "../../assets/r3WrongTick.svg";
 import bingoReset from "../../assets/bingoReset.svg";
@@ -36,6 +37,7 @@ import {
   handleTextEvaluation,
   callTelemetryApi,
 } from "../../utils/apiUtil";
+import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -76,6 +78,8 @@ const BingoCard = ({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) => {
   const [showHint, setShowHint] = useState(false);
   const [hideButtons, setHideButtons] = useState(false);
@@ -94,6 +98,12 @@ const BingoCard = ({
   const [showInitialEffect, setShowInitialEffect] = useState(false);
   const [startGame, setStartGame] = useState(true);
   const [showRecording, setShowRecording] = useState(false);
+  const [abusiveFound, setAbusiveFound] = useState(false);
+  const [detectedWord, setDetectedWord] = useState("");
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
+  const [showWrongTick, setShowWrongTick] = useState(true);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const {
     transcript,
     interimTranscript,
@@ -101,13 +111,33 @@ const BingoCard = ({
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-  const [showWrongTick, setShowWrongTick] = useState(true);
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
+    console.log("Live Transcript:", transcript);
+
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      console.log("filteredText", filteredText);
+
+      if (filteredText.includes("*")) {
+        const count = parseInt(getLocalData("profanityCheck") || "0");
+
+        if (count > 2) {
+          setOpenMessageDialog({
+            open: true,
+            message: `Please speak properly.`,
+            severity: "warning",
+            isError: true,
+          });
+        }
+
+        stopRecording();
+
+        setLocalData("profanityCheck", (count + 1).toString());
+      }
+    }
   }, [transcript]);
 
   const [wordsAfterSplit, setWordsAfterSplit] = useState([]);
@@ -241,9 +271,12 @@ const BingoCard = ({
       // }
       resetTranscript();
       startAudioRecording();
+      setAbusiveFound(false);
+      setDetectedWord("");
       SpeechRecognition.startListening({
         continuous: true,
         interimResults: true,
+        language: language || "en-US",
       });
     }
     setIsRecording(true);
@@ -259,6 +292,7 @@ const BingoCard = ({
       setIsMicOn(false);
       setIsRecording(false);
       setIsProcessing(false);
+      setAbusiveFound(false);
     } else {
       // if (recognition) {
       //   recognition.stop();
@@ -370,347 +404,809 @@ const BingoCard = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // const levels = {
-  //   L1: {
-  //     words: [
-  //       "MAN",
-  //       "WA",
-  //       "GO",
-  //       "CIL",
-  //       "MO",
-  //       "THER",
-  //       "FA",
-  //       "TER",
-  //       "SIS",
-  //       "BRO",
-  //       "PEN",
-  //       "E",
-  //     ],
-  //     imageAudioMap: {
-  //       MANGO: {
-  //         image: Assets.mangoR1OneImg,
-  //         audio: Assets.mangoNewAudio,
-  //       },
-  //       WATER: {
-  //         image: Assets.waterImg,
-  //         audio: Assets.waterNewAudio,
-  //       },
-  //       MOTHER: {
-  //         image: Assets.motherImg,
-  //         audio: Assets.motherNewAudio,
-  //       },
-  //       FATHER: {
-  //         image: Assets.fatherImg,
-  //         audio: Assets.fatherNewAudio,
-  //       },
-  //       PENCIL: {
-  //         image: Assets.pencilImg,
-  //         audio: Assets.pencilNewAudio,
-  //       },
-  //     },
-  //     arrM: ["MANGO", "WATER", "MOTHER", "FATHER", "PENCIL"],
-  //   },
-  //   L2: {
-  //     words: [
-  //       "MAR",
-  //       "BAS",
-  //       "DOW",
-  //       "TOR",
-  //       "KET",
-  //       "CRICK",
-  //       "DOC",
-  //       "WIN",
-  //       "BOT",
-  //       "CHER",
-  //       "TLE",
-  //       "ET",
-  //     ],
-  //     imageAudioMap: {
-  //       DOCTOR: {
-  //         image: Assets.doctorImg,
-  //         audio: Assets.doctorNewAudio,
-  //       },
-  //       MARKET: {
-  //         image: Assets.marketImg,
-  //         audio: Assets.marketNewAudio,
-  //       },
-  //       BASKET: {
-  //         image: Assets.basketImg,
-  //         audio: Assets.basketNewAudio,
-  //       },
-  //       CRICKET: {
-  //         image: Assets.cricketImg,
-  //         audio: Assets.cricketNewAudio,
-  //       },
-  //       WINDOW: {
-  //         image: Assets.WindowNewImg,
-  //         audio: Assets.windowNewAudio,
-  //       },
-  //     },
-  //     arrM: ["DOCTOR", "MARKET", "BASKET", "CRICKET", "WINDOW"],
-  //   },
-  //   L3: {
-  //     words: [
-  //       "BAL",
-  //       "CLE",
-  //       "GAR",
-  //       "DLE",
-  //       "LOON",
-  //       "CAN",
-  //       "TEM",
-  //       "SCOO",
-  //       "CY",
-  //       "DEN",
-  //       "TER",
-  //       "PLE",
-  //     ],
-  //     imageAudioMap: {
-  //       BALLOON: {
-  //         image: Assets.balloonImg,
-  //         audio: Assets.balloonNewAudio,
-  //       },
-  //       GARDEN: {
-  //         image: Assets.gardenImg,
-  //         audio: Assets.gardenNewAudio,
-  //       },
-  //       CANDLE: {
-  //         image: Assets.candleImg,
-  //         audio: Assets.candleNewAudio,
-  //       },
-  //       SCOOTER: {
-  //         image: Assets.scooterImg,
-  //         audio: Assets.scooterNewAudio,
-  //       },
-  //       CYCLE: {
-  //         image: Assets.bicycleRImg,
-  //         audio: Assets.cycleNewAudio,
-  //       },
-  //     },
-  //     arrM: ["BALLOON", "GARDEN", "CANDLE", "SCOOTER", "CYCLE"],
-  //   },
-  //   L4: {
-  //     words: [
-  //       "FLOW",
-  //       "PY",
-  //       "MUS",
-  //       "OL",
-  //       "ER",
-  //       "PUP",
-  //       "PER",
-  //       "STU",
-  //       "IC",
-  //       "DENT",
-  //       "SCHO",
-  //       "PA",
-  //     ],
-  //     imageAudioMap: {
-  //       FLOWER: {
-  //         image: Assets.flowerRImg,
-  //         audio: Assets.flowerNewAudio,
-  //       },
-  //       MUSIC: {
-  //         image: Assets.musicImg,
-  //         audio: Assets.musicNewAudio,
-  //       },
-  //       PUPPY: {
-  //         image: Assets.puppyImg,
-  //         audio: Assets.puppyNewAudio,
-  //       },
-  //       STUDENT: {
-  //         image: Assets.studentImg,
-  //         audio: Assets.studentNewAudio,
-  //       },
-  //       PAPER: {
-  //         image: Assets.paperImg,
-  //         audio: Assets.paperNewAudio,
-  //       },
-  //     },
-  //     arrM: ["FLOWER", "MUSIC", "PUPPY", "STUDENT", "PAPER"],
-  //   },
-  // };
+  const levelData = {
+    en: {
+      L1: {
+        words: [
+          "TEA",
+          "ONFLY",
+          "CHE",
+          "PLE",
+          "RRY",
+          "CHER",
+          "DRAG",
+          "FOOT",
+          "WOO",
+          "KET",
+          "LLEN",
+          "PATH",
+        ],
+        imageAudioMap: {
+          TEACHER: {
+            image: getAssetUrl(s3Assets.teacherM2),
+            audio: getAssetAudioUrl(s3Assets.teacherM2Eng),
+          },
+          CHERRY: {
+            image: getAssetUrl(s3Assets.cherryM2),
+            audio: getAssetAudioUrl(s3Assets.cherryM2Eng),
+          },
+          DRAGONFLY: {
+            image: getAssetUrl(s3Assets.dragonflyM2),
+            audio: getAssetAudioUrl(s3Assets.dragonflyM2Eng),
+          },
+          WOOLLEN: {
+            image: getAssetUrl(s3Assets.woollenM2),
+            audio: getAssetAudioUrl(s3Assets.woollenM2Eng),
+          },
+          FOOTPATH: {
+            image: getAssetUrl(s3Assets.footpathM2),
+            audio: getAssetAudioUrl(s3Assets.footpathM2Eng),
+          },
+        },
+        arrM: ["TEACHER", "CHERRY", "DRAGONFLY", "WOOLLEN", "FOOTPATH"],
+      },
+      L2: {
+        words: [
+          "CHOCO",
+          "KET",
+          "SPR",
+          "SILS",
+          "LATES",
+          "CL",
+          "OUT",
+          "OWN",
+          "UTEN",
+          "RCHIEF",
+          "PLE",
+          "HANDKE",
+        ],
+        imageAudioMap: {
+          CHOCOLATES: {
+            image: getAssetUrl(s3Assets.chocolatesM2),
+            audio: getAssetAudioUrl(s3Assets.chocolatesM2Eng),
+          },
+          SPROUT: {
+            image: getAssetUrl(s3Assets.sproutM2),
+            audio: getAssetAudioUrl(s3Assets.sproutM2Eng),
+          },
+          CLOWN: {
+            image: getAssetUrl(s3Assets.clownM2),
+            audio: getAssetAudioUrl(s3Assets.clownM2Eng),
+          },
+          UTENSILS: {
+            image: getAssetUrl(s3Assets.utensilsM2),
+            audio: getAssetAudioUrl(s3Assets.utensilsM2Eng),
+          },
+          HANDKERCHIEF: {
+            image: getAssetUrl(s3Assets.handkerchiefM2),
+            audio: getAssetAudioUrl(s3Assets.handkerchiefM2Eng),
+          },
+        },
+        arrM: ["CHOCOLATES", "SPROUT", "CLOWN", "UTENSILS", "HANDKERCHIEF"],
+      },
+      L3: {
+        words: [
+          "FLO",
+          "KING",
+          "MOUN",
+          "WERS",
+          "TAINS",
+          "THIN",
+          "GAR",
+          "KET",
+          "SU",
+          "CH",
+          "PLE",
+          "AIR",
+        ],
+        imageAudioMap: {
+          FLOWERS: {
+            image: getAssetUrl(s3Assets.flowersM2),
+            audio: getAssetAudioUrl(s3Assets.flowersM2Eng),
+          },
+          MOUNTAINS: {
+            image: getAssetUrl(s3Assets.mountainsM2),
+            audio: getAssetAudioUrl(s3Assets.mountainsM2Eng),
+          },
+          THINKING: {
+            image: getAssetUrl(s3Assets.thinkingM2),
+            audio: getAssetAudioUrl(s3Assets.thinkingM2Eng),
+          },
+          SUGAR: {
+            image: getAssetUrl(s3Assets.sugarM2),
+            audio: getAssetAudioUrl(s3Assets.sugarM2Eng),
+          },
+          CHAIR: {
+            image: getAssetUrl(s3Assets.chairM2),
+            audio: getAssetAudioUrl(s3Assets.chairM2Eng),
+          },
+        },
+        arrM: ["FLOWERS", "MOUNTAINS", "THINKING", "SUGAR", "CHAIR"],
+      },
+      L4: {
+        words: [
+          "TE",
+          "OK",
+          "CLO",
+          "UTH",
+          "UDS",
+          "ETH",
+          "BO",
+          "CHEN",
+          "KIT",
+          "PLE",
+          "KET",
+          "MO",
+        ],
+        imageAudioMap: {
+          TEETH: {
+            image: getAssetUrl(s3Assets.teethM2),
+            audio: getAssetAudioUrl(s3Assets.teethM2Eng),
+          },
+          CLOUDS: {
+            image: getAssetUrl(s3Assets.cloudsM2),
+            audio: getAssetAudioUrl(s3Assets.cloudsM2Eng),
+          },
+          BOOK: {
+            image: getAssetUrl(s3Assets.bookM2),
+            audio: getAssetAudioUrl(s3Assets.bookM2Eng),
+          },
+          KITCHEN: {
+            image: getAssetUrl(s3Assets.kitchenM2),
+            audio: getAssetAudioUrl(s3Assets.kitchenM2Eng),
+          },
+          MOUTH: {
+            image: getAssetUrl(s3Assets.mouthM2),
+            audio: getAssetAudioUrl(s3Assets.mouthM2Eng),
+          },
+        },
+        arrM: ["TEETH", "CLOUDS", "BOOK", "KITCHEN", "MOUTH"],
+      },
+    },
+    hi: {
+      L1: {
+        words: [
+          "मो",
+          "धगोभी",
+          "बं",
+          "बाइल",
+          "मि",
+          "मच",
+          "मस",
+          "जिद",
+          "र्च",
+          "मूं",
+          "फली",
+          "कूटर",
+        ],
+        imageAudioMap: {
+          मोबाइल: {
+            image: getAssetUrl(s3Assets.mobileM2),
+            audio: getAssetAudioUrl(s3Assets.mobileM2Hin),
+          },
+          बंदगोभी: {
+            image: getAssetUrl(s3Assets.bandhagobiM2Hin),
+            audio: getAssetAudioUrl(s3Assets.bandgobhiM2Hin),
+          },
+          मिर्च: {
+            image: getAssetUrl(s3Assets.mirchM2),
+            audio: getAssetAudioUrl(s3Assets.mirchM2Hin),
+          },
+          मस्जिद: {
+            image: getAssetUrl(s3Assets.masjidM2),
+            audio: getAssetAudioUrl(s3Assets.masjidM2Hin),
+          },
+          मूँगफली: {
+            image: getAssetUrl(s3Assets.mumfaliM2Hin),
+            audio: getAssetAudioUrl(s3Assets.moongphaliM2Hin),
+          },
+        },
+        arrM: ["मोबाइल", "बंदगोभी", "मिर्च", "मस्जिद", "मूँगफली"],
+      },
+      L2: {
+        words: [
+          "मच",
+          "खे",
+          "डॉ",
+          "क्टर",
+          "जिद",
+          "ष्प",
+          "छर",
+          "कूटर",
+          "लकूद",
+          "पु",
+          "सर्क",
+          "स्",
+        ],
+        imageAudioMap: {
+          मच्छर: {
+            image: getAssetUrl(s3Assets.maccharM2Hin),
+            audio: getAssetAudioUrl(s3Assets.machharM2Hin),
+          },
+          डॉक्टर: {
+            image: getAssetUrl(s3Assets.doctorM2),
+            audio: getAssetAudioUrl(s3Assets.doctorM2Hin),
+          },
+          खेलकूद: {
+            image: getAssetUrl(s3Assets.khelkudM2),
+            audio: getAssetAudioUrl(s3Assets.khelkudM2Hin),
+          },
+          पुष्प: {
+            image: getAssetUrl(s3Assets.pushpM2Hin),
+            audio: getAssetAudioUrl(s3Assets.gulabM2Hin),
+          },
+          स्कूटर: {
+            image: getAssetUrl(s3Assets.scooterM2),
+            audio: getAssetAudioUrl(s3Assets.scooterM2Hin),
+          },
+        },
+        arrM: ["मच्छर", "डॉक्टर", "खेलकूद", "पुष्प", "स्कूटर"],
+      },
+      L3: {
+        words: [
+          "सर्क",
+          "बास",
+          "हेल",
+          "स",
+          "कृ",
+          "गुब्बा",
+          "मेट",
+          "रा",
+          "र्क",
+          "ष्ण",
+          "मो",
+          "केट",
+        ],
+        imageAudioMap: {
+          सर्कस: {
+            image: getAssetUrl(s3Assets.circusM2),
+            audio: getAssetAudioUrl(s3Assets.circusM2Hin),
+          },
+          हेलमेट: {
+            image: getAssetUrl(s3Assets.helmetM2),
+            audio: getAssetAudioUrl(s3Assets.helmetM2Hin),
+          },
+          गुब्बारा: {
+            image: getAssetUrl(s3Assets.gubbaraM2),
+            audio: getAssetAudioUrl(s3Assets.gubbaraM2Hin),
+          },
+          कृष्ण: {
+            image: getAssetUrl(s3Assets.krishnM2),
+            audio: getAssetAudioUrl(s3Assets.krishnM2Hin),
+          },
+          टोकरी: {
+            image: getAssetUrl(s3Assets.basketM2),
+            audio: getAssetAudioUrl(s3Assets.basketM2Hin),
+          },
+        },
+        arrM: ["सर्कस", "हेलमेट", "गुब्बारा", "कृष्ण", "टोकरी"],
+      },
+      L4: {
+        words: [
+          "मो",
+          "हेल",
+          "मच",
+          "बाइल",
+          "खे",
+          "छर",
+          "मि",
+          "मेट",
+          "छ",
+          "लकूद",
+          "र्च",
+          "स",
+        ],
+        imageAudioMap: {
+          मोबाइल: {
+            image: getAssetUrl(s3Assets.mobileM2),
+            audio: getAssetAudioUrl(s3Assets.mobileM2Hin),
+          },
+          मच्छर: {
+            image: getAssetUrl(s3Assets.maccharM2Hin),
+            audio: getAssetAudioUrl(s3Assets.machharM2Hin),
+          },
+          हेलमेट: {
+            image: getAssetUrl(s3Assets.helmetM2),
+            audio: getAssetAudioUrl(s3Assets.helmetM2Hin),
+          },
+          खेलकूद: {
+            image: getAssetUrl(s3Assets.khelkudM2),
+            audio: getAssetAudioUrl(s3Assets.khelkudM2Hin),
+          },
+          मिर्च: {
+            image: getAssetUrl(s3Assets.mirchM2),
+            audio: getAssetAudioUrl(s3Assets.mirchM2Hin),
+          },
+        },
+        arrM: ["मोबाइल", "मच्छर", "हेलमेट", "खेलकूद", "मिर्च"],
+      },
+    },
+    ta: {
+      L1: {
+        words: [
+          "மூன",
+          "தொப",
+          "்று",
+          "முட",
+          "ந்து",
+          "சீப",
+          "பேரு",
+          "சட",
+          "்பு",
+          "்டை",
+          "்பி",
+          "ளாடு",
+        ],
+        imageAudioMap: {
+          மூன்று: {
+            image: getAssetUrl(s3Assets.threeM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.threeM2Tam),
+          },
+          தொப்பி: {
+            image: getAssetUrl(s3Assets.capM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.capM2Tam),
+          },
+          சீப்பு: {
+            image: getAssetUrl(s3Assets.combM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.combM2Tam),
+          },
+          பேருந்து: {
+            image: getAssetUrl(s3Assets.busM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.busM2Tam),
+          },
+          சட்டை: {
+            image: getAssetUrl(s3Assets.shirtM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.shirtM2Tam),
+          },
+        },
+        arrM: ["மூன்று", "தொப்பி", "சீப்பு", "பேருந்து", "சட்டை"],
+      },
 
-  const levels = {
-    L1: {
-      words: [
-        "MAN",
-        "WA",
-        "GO",
-        "CIL",
-        "MO",
-        "THER",
-        "FA",
-        "TER",
-        "SIS",
-        "BRO",
-        "PEN",
-        "E",
-      ],
-      imageAudioMap: {
-        MANGO: {
-          image: getAssetUrl(s3Assets.mangoR1OneImg) || Assets.mangoR1OneImg,
-          audio:
-            getAssetAudioUrl(s3Assets.mangoNewAudio) || Assets.mangoNewAudio,
+      L2: {
+        words: [
+          "உப",
+          "காலி",
+          "கத",
+          "்பு",
+          "நாற்",
+          "்டி",
+          "்யா",
+          "ரொட",
+          "வெள்",
+          "கொய",
+          "முட",
+          "ளாடு",
+        ],
+        imageAudioMap: {
+          உப்பு: {
+            image: getAssetUrl(s3Assets.saltM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.saltM2Tam),
+          },
+          நாற்காலி: {
+            image: getAssetUrl(s3Assets.chairM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.chairM2Tam),
+          },
+          ரொட்டி: {
+            image: getAssetUrl(s3Assets.chapatiM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.chapathiM2Tam),
+          },
+          கொய்யா: {
+            image: getAssetUrl(s3Assets.jamunM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.jamunM2Tam),
+          },
+          வெள்ளாடு: {
+            image: getAssetUrl(s3Assets.goatM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.goatM2Tam),
+          },
         },
-        WATER: {
-          image: getAssetUrl(s3Assets.waterImg) || Assets.waterImg,
-          audio:
-            getAssetAudioUrl(s3Assets.waterNewAudio) || Assets.waterNewAudio,
-        },
-        MOTHER: {
-          image: Assets.motherImg,
-          audio:
-            getAssetAudioUrl(s3Assets.motherNewAudio) || Assets.motherNewAudio,
-        },
-        FATHER: {
-          image: Assets.fatherImg,
-          audio:
-            getAssetAudioUrl(s3Assets.fatherNewAudio) || Assets.fatherNewAudio,
-        },
-        PENCIL: {
-          image: getAssetUrl(s3Assets.pencilImg) || Assets.pencilImg,
-          audio:
-            getAssetAudioUrl(s3Assets.pencilNewAudio) || Assets.pencilNewAudio,
-        },
+        arrM: ["உப்பு", "நாற்காலி", "ரொட்டி", "கொய்யா", "வெள்ளாடு"],
       },
-      arrM: ["MANGO", "WATER", "MOTHER", "FATHER", "PENCIL"],
+
+      L3: {
+        words: [
+          "முட",
+          "்டை",
+          "உப",
+          "மூன",
+          "்பு",
+          "பாம",
+          "நண",
+          "்டு",
+          "நாக",
+          "கத",
+          "்தி",
+          "்கு",
+        ],
+        imageAudioMap: {
+          முட்டை: {
+            image: getAssetUrl(s3Assets.eggM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.eggM2Tam),
+          },
+          பாம்பு: {
+            image: getAssetUrl(s3Assets.snakeM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.snakeM2Tam),
+          },
+          நண்டு: {
+            image: getAssetUrl(s3Assets.crabM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.crabM2Tam),
+          },
+          கத்தி: {
+            image: getAssetUrl(s3Assets.knifeM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.knifeM2Tam),
+          },
+          நாக்கு: {
+            image: getAssetUrl(s3Assets.toungeM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.toungeM2Tam),
+          },
+        },
+        arrM: ["முட்டை", "பாம்பு", "நண்டு", "கத்தி", "நாக்கு"],
+      },
+
+      L4: {
+        words: [
+          "பொம",
+          "உப",
+          "்தை",
+          "்மை",
+          "ப்பு",
+          "்கு",
+          "ஆந",
+          "மூக",
+          "செரு",
+          "தட",
+          "சட",
+          "்டு",
+        ],
+        imageAudioMap: {
+          பொம்மை: {
+            image: getAssetUrl(s3Assets.toyM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.toyM2Tam),
+          },
+          செருப்பு: {
+            image: getAssetUrl(s3Assets.chappalM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.chappalM2Tam),
+          },
+          ஆந்தை: {
+            image: getAssetUrl(s3Assets.owlM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.owlM2Tam),
+          },
+          மூக்கு: {
+            image: getAssetUrl(s3Assets.noseM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.noseM2Tam),
+          },
+          தட்டு: {
+            image: getAssetUrl(s3Assets.plateM2TamImg),
+            audio: getAssetAudioUrl(s3Assets.plateM2Tam),
+          },
+        },
+        arrM: ["பொம்மை", "செருப்பு", "ஆந்தை", "மூக்கு", "தட்டு"],
+      },
     },
-    L2: {
-      words: [
-        "MAR",
-        "BAS",
-        "DOW",
-        "TOR",
-        "KET",
-        "CRICK",
-        "DOC",
-        "WIN",
-        "BOT",
-        "CHER",
-        "TLE",
-        "ET",
-      ],
-      imageAudioMap: {
-        DOCTOR: {
-          image: getAssetUrl(s3Assets.doctorImg) || Assets.doctorImg,
-          audio:
-            getAssetAudioUrl(s3Assets.doctorNewAudio) || Assets.doctorNewAudio,
+    kn: {
+      L1: {
+        words: [
+          "ಗಡ",
+          "ಕಾರಿ",
+          "ತರ",
+          "ಕ",
+          "ಿಯಾರ",
+          "ಗಾಲ",
+          "ಗುಡಿ",
+          "ಚಳಿ",
+          "ತ್ತ",
+          "ಿಪಟ",
+          "ಗಾಳ",
+          "ಸಲು",
+        ],
+        imageAudioMap: {
+          ಗಡಿಯಾರ: {
+            image: getAssetUrl(s3Assets.clockM2KanI),
+            audio: getAssetAudioUrl(s3Assets.clockM2Kan),
+          },
+          ತರಕಾರಿ: {
+            image: getAssetUrl(s3Assets.vegetableM2KanI),
+            audio: getAssetAudioUrl(s3Assets.vegetableM2Kan),
+          },
+          ಚಳಿಗಾಲ: {
+            image: getAssetUrl(s3Assets.winterM2KanI),
+            audio: getAssetAudioUrl(s3Assets.winterM2Kan),
+          },
+          ಗಾಳಿಪಟ: {
+            image: getAssetUrl(s3Assets.kiteM2KanI),
+            audio: getAssetAudioUrl(s3Assets.kiteM2Kan),
+          },
+          ಗುಡಿಸಲು: {
+            image: getAssetUrl(s3Assets.hutM2KanI),
+            audio: getAssetAudioUrl(s3Assets.hutM2Kan),
+          },
         },
-        MARKET: {
-          image: getAssetUrl(s3Assets.marketImg) || Assets.marketImg,
-          audio:
-            getAssetAudioUrl(s3Assets.marketNewAudio) || Assets.marketNewAudio,
-        },
-        BASKET: {
-          image: getAssetUrl(s3Assets.basketImg) || Assets.basketImg,
-          audio:
-            getAssetAudioUrl(s3Assets.basketNewAudio) || Assets.basketNewAudio,
-        },
-        CRICKET: {
-          image: getAssetUrl(s3Assets.cricketImg) || Assets.cricketImg,
-          audio:
-            getAssetAudioUrl(s3Assets.cricketNewAudio) ||
-            Assets.cricketNewAudio,
-        },
-        WINDOW: {
-          image: getAssetUrl(s3Assets.WindowNewImg) || Assets.WindowNewImg,
-          audio:
-            getAssetAudioUrl(s3Assets.windowNewAudio) || Assets.windowNewAudio,
-        },
+        arrM: ["ಗಡಿಯಾರ", "ತರಕಾರಿ", "ಚಳಿಗಾಲ", "ಗಾಳಿಪಟ", "ಗುಡಿಸಲು"],
       },
-      arrM: ["DOCTOR", "MARKET", "BASKET", "CRICKET", "WINDOW"],
+
+      L2: {
+        words: [
+          "ಕಂ",
+          "ವಾಳ",
+          "ಕ",
+          "ಅನಾ",
+          "ದಾಸ",
+          "ಠಹಾರ",
+          "ಸಿಹಿ",
+          "ಪಾರಿ",
+          "ತ್ತ",
+          "ವಾಳ",
+          "ನಸ್",
+          "ತಿಂಡಿ",
+        ],
+        imageAudioMap: {
+          ಕಂಠಹಾರ: {
+            image: getAssetUrl(s3Assets.necklaceM2KanI),
+            audio: getAssetAudioUrl(s3Assets.necklaceM2Kan),
+          },
+          ದಾಸವಾಳ: {
+            image: getAssetUrl(s3Assets.hibiscusM2KanI),
+            audio: getAssetAudioUrl(s3Assets.hibiscusM2Kan),
+          },
+          ಪಾರಿವಾಳ: {
+            image: getAssetUrl(s3Assets.pigeonM2KanI),
+            audio: getAssetAudioUrl(s3Assets.pigeonM2Kan),
+          },
+          ಅನಾನಸ್: {
+            image: getAssetUrl(s3Assets.pineappleM2KanI),
+            audio: getAssetAudioUrl(s3Assets.pineappleM2Kan),
+          },
+          ಸಿಹಿತಿಂಡಿ: {
+            image: getAssetUrl(s3Assets.sweetsM2KanI),
+            audio: getAssetAudioUrl(s3Assets.sweetsM2Kan),
+          },
+        },
+        arrM: ["ಕಂಠಹಾರ", "ದಾಸವಾಳ", "ಪಾರಿವಾಳ", "ಅನಾನಸ್", "ಸಿಹಿತಿಂಡಿ"],
+      },
+
+      L3: {
+        words: [
+          "ಕತ್ತ",
+          "ಕತ್ತ",
+          "ರಿ",
+          "ೆ",
+          "ಉಣ್",
+          "ಈರು",
+          "ಕ",
+          "ತ್ತ",
+          "ಳ್ಳಿ",
+          "ಪಪ್",
+          "ಪಾಯಿ",
+          "ಣೆ",
+        ],
+        imageAudioMap: {
+          ಕತ್ತರಿ: {
+            image: getAssetUrl(s3Assets.scissorsM2KanI),
+            audio: getAssetAudioUrl(s3Assets.scissorsM2Kan),
+          },
+          ಕತ್ತೆ: {
+            image: getAssetUrl(s3Assets.donkeyM2KanI),
+            audio: getAssetAudioUrl(s3Assets.donkeyM2Kan),
+          },
+          ಈರುಳ್ಳಿ: {
+            image: getAssetUrl(s3Assets.onionM2KanI),
+            audio: getAssetAudioUrl(s3Assets.onionM2Kan),
+          },
+          ಪಪ್ಪಾಯಿ: {
+            image: getAssetUrl(s3Assets.papayaM2KanI),
+            audio: getAssetAudioUrl(s3Assets.papayaM2Kan),
+          },
+          ಉಣ್ಣೆ: {
+            image: getAssetUrl(s3Assets.woolM2KanI),
+            audio: getAssetAudioUrl(s3Assets.woolM2Kan),
+          },
+        },
+        arrM: ["ಕತ್ತರಿ", "ಕತ್ತೆ", "ಈರುಳ್ಳಿ", "ಪಪ್ಪಾಯಿ", "ಉಣ್ಣೆ"],
+      },
+
+      L4: {
+        words: [
+          "ಚಾಕೋ",
+          "ತ್ತ",
+          "ಲೇಡು",
+          "ರೊ",
+          "ಕ",
+          "ಚಿಟ್",
+          "ಟೆ",
+          "ಬಾತು",
+          "ಟ್ಟಿ",
+          "ಕು",
+          "ಬೆಕ್",
+          "ಕೋಳಿ",
+        ],
+        imageAudioMap: {
+          ಚಾಕೋಲೇಟು: {
+            image: getAssetUrl(s3Assets.chocolateM2KanI),
+            audio: getAssetAudioUrl(s3Assets.chocolateM2Kan),
+          },
+          ಚಿಟ್ಟೆ: {
+            image: getAssetUrl(s3Assets.butterflyM2KanI),
+            audio: getAssetAudioUrl(s3Assets.butterflyM2Kan),
+          },
+          ರೊಟ್ಟಿ: {
+            image: getAssetUrl(s3Assets.rotiM2KanI),
+            audio: getAssetAudioUrl(s3Assets.rotiM2Kan),
+          },
+          ಬೆಕ್ಕು: {
+            image: getAssetUrl(s3Assets.catM2KanI),
+            audio: getAssetAudioUrl(s3Assets.catM2Kan),
+          },
+          ಬಾತುಕೋಳಿ: {
+            image: getAssetUrl(s3Assets.duckM2KanI),
+            audio: getAssetAudioUrl(s3Assets.duckM2Kan),
+          },
+        },
+        arrM: ["ಚಾಕೋಲೇಟು", "ಚಿಟ್ಟೆ", "ರೊಟ್ಟಿ", "ಬೆಕ್ಕು", "ಬಾತುಕೋಳಿ"],
+      },
     },
-    L3: {
-      words: [
-        "BAL",
-        "CLE",
-        "GAR",
-        "DLE",
-        "LOON",
-        "CAN",
-        "TEM",
-        "SCOO",
-        "CY",
-        "DEN",
-        "TER",
-        "PLE",
-      ],
-      imageAudioMap: {
-        BALLOON: {
-          image: getAssetUrl(s3Assets.balloonImg) || Assets.balloonImg,
-          audio:
-            getAssetAudioUrl(s3Assets.balloonNewAudio) ||
-            Assets.balloonNewAudio,
+    te: {
+      L1: {
+        words: [
+          "రచ",
+          "నీ",
+          "పటం",
+          "గాలి",
+          "యిత",
+          "గాయ",
+          "చలి",
+          "కాలం",
+          "యారం",
+          "లు",
+          "ఊర",
+          "గడి",
+        ],
+        imageAudioMap: {
+          రచయిత: {
+            image: getAssetUrl(s3Assets.authorM2TelI),
+            audio: getAssetAudioUrl(s3Assets.authorM2Tel),
+          },
+          గాలిపటం: {
+            image: getAssetUrl(s3Assets.kiteM2TelI),
+            audio: getAssetAudioUrl(s3Assets.kiteM2Tel),
+          },
+          చలికాలం: {
+            image: getAssetUrl(s3Assets.winterM2TelI),
+            audio: getAssetAudioUrl(s3Assets.winterM2Tel),
+          },
+          ఊరగాయ: {
+            image: getAssetUrl(s3Assets.pickleM2TelI),
+            audio: getAssetAudioUrl(s3Assets.pickleM2Tel),
+          },
+          గడియారం: {
+            image: getAssetUrl(s3Assets.watchM2TelI),
+            audio: getAssetAudioUrl(s3Assets.watchM2Tel),
+          },
         },
-        GARDEN: {
-          image: getAssetUrl(s3Assets.gardenImg) || Assets.gardenImg,
-          audio:
-            getAssetAudioUrl(s3Assets.gardenNewAudio) || Assets.gardenNewAudio,
-        },
-        CANDLE: {
-          image: getAssetUrl(s3Assets.candleImg) || Assets.candleImg,
-          audio:
-            getAssetAudioUrl(s3Assets.candleNewAudio) || Assets.candleNewAudio,
-        },
-        SCOOTER: {
-          image: getAssetUrl(s3Assets.scooterImg) || Assets.scooterImg,
-          audio:
-            getAssetAudioUrl(s3Assets.scooterNewAudio) ||
-            Assets.scooterNewAudio,
-        },
-        CYCLE: {
-          image: getAssetUrl(s3Assets.bicycleRImg) || Assets.bicycleRImg,
-          audio:
-            getAssetAudioUrl(s3Assets.cycleNewAudio) || Assets.cycleNewAudio,
-        },
+        arrM: ["రచయిత", "గాలిపటం", "చలికాలం", "ఊరగాయ", "గడియారం"],
       },
-      arrM: ["BALLOON", "GARDEN", "CANDLE", "SCOOTER", "CYCLE"],
-    },
-    L4: {
-      words: [
-        "FLOW",
-        "PY",
-        "MUS",
-        "OL",
-        "ER",
-        "PUP",
-        "PER",
-        "STU",
-        "IC",
-        "DENT",
-        "SCHO",
-        "PA",
-      ],
-      imageAudioMap: {
-        FLOWER: {
-          image: getAssetUrl(s3Assets.flowerRImg) || Assets.flowerRImg,
-          audio:
-            getAssetAudioUrl(s3Assets.flowerNewAudio) || Assets.flowerNewAudio,
+
+      L2: {
+        words: [
+          "పాల",
+          "కను",
+          "లు",
+          "బటా",
+          "మాన",
+          "కూర",
+          "నీలు",
+          "దోస",
+          "నీ",
+          "బొమ",
+          "కాయ",
+          "వుడు",
+        ],
+        imageAudioMap: {
+          పాలకూర: {
+            image: getAssetUrl(s3Assets.spinachM2TelI),
+            audio: getAssetAudioUrl(s3Assets.spinachM2Tel),
+          },
+          బటానీలు: {
+            image: getAssetUrl(s3Assets.peasM2TelI),
+            audio: getAssetAudioUrl(s3Assets.peasM2Tel),
+          },
+          కనుబొమ: {
+            image: getAssetUrl(s3Assets.eyebrowM2TelI),
+            audio: getAssetAudioUrl(s3Assets.eyebrowM2Tel),
+          },
+          దోసకాయ: {
+            image: getAssetUrl(s3Assets.cucumberM2TelI),
+            audio: getAssetAudioUrl(s3Assets.cucumberM2Tel),
+          },
+          మానవుడు: {
+            image: getAssetUrl(s3Assets.humanM2TelI),
+            audio: getAssetAudioUrl(s3Assets.humanM2Tel),
+          },
         },
-        MUSIC: {
-          image: getAssetUrl(s3Assets.musicImg) || Assets.musicImg,
-          audio:
-            getAssetAudioUrl(s3Assets.musicNewAudio) || Assets.musicNewAudio,
-        },
-        PUPPY: {
-          image: getAssetUrl(s3Assets.puppyImg) || Assets.puppyImg,
-          audio:
-            getAssetAudioUrl(s3Assets.puppyNewAudio) || Assets.puppyNewAudio,
-        },
-        STUDENT: {
-          image: Assets.studentImg,
-          audio:
-            getAssetAudioUrl(s3Assets.studentNewAudio) ||
-            Assets.studentNewAudio,
-        },
-        PAPER: {
-          image: Assets.paperImg,
-          audio:
-            getAssetAudioUrl(s3Assets.paperNewAudio) || Assets.paperNewAudio,
-        },
+        arrM: ["పాలకూర", "బటానీలు", "కనుబొమ", "దోసకాయ", "మానవుడు"],
       },
-      arrM: ["FLOWER", "MUSIC", "PUPPY", "STUDENT", "PAPER"],
+
+      L3: {
+        words: [
+          "సై",
+          "తాళం",
+          "లు",
+          "చెవి",
+          "నికుడు",
+          "నీ",
+          "ముగ్",
+          "జుట్",
+          "కన్",
+          "గు",
+          "ను",
+          "టు",
+        ],
+        imageAudioMap: {
+          సైనికుడు: {
+            image: getAssetUrl(s3Assets.soldierM2TelI),
+            audio: getAssetAudioUrl(s3Assets.soldierM2Tel),
+          },
+          తాళంచెవి: {
+            image: getAssetUrl(s3Assets.keyM2TelI),
+            audio: getAssetAudioUrl(s3Assets.keyM2Tel),
+          },
+          ముగ్గు: {
+            image: getAssetUrl(s3Assets.rangoliM2TelI),
+            audio: getAssetAudioUrl(s3Assets.rangoliM2Tel),
+          },
+          కన్ను: {
+            image: getAssetUrl(s3Assets.eyeM2TelI),
+            audio: getAssetAudioUrl(s3Assets.eyeM2Tel),
+          },
+          జుట్టు: {
+            image: getAssetUrl(s3Assets.hairM2TelI),
+            audio: getAssetAudioUrl(s3Assets.hairM2Tel),
+          },
+        },
+        arrM: ["సైనికుడు", "తాళంచెవి", "ముగ్గు", "కన్ను", "జుట్టు"],
+      },
+
+      L4: {
+        words: [
+          "తేనె",
+          "టు",
+          "కా",
+          "ముక్",
+          "లు",
+          "నీ",
+          "చోక్",
+          "టీగ",
+          "చెట్",
+          "పన్",
+          "ను",
+          "కు",
+        ],
+        imageAudioMap: {
+          చెట్టు: {
+            image: getAssetUrl(s3Assets.treeM2TelI),
+            audio: getAssetAudioUrl(s3Assets.treeM2Tel),
+          },
+          తేనెటీగ: {
+            image: getAssetUrl(s3Assets.honeybeeM2TelI),
+            audio: getAssetAudioUrl(s3Assets.honeybeeM2Tel),
+          },
+          పన్ను: {
+            image: getAssetUrl(s3Assets.teethM2TelI),
+            audio: getAssetAudioUrl(s3Assets.teethM2Tel),
+          },
+          ముక్కు: {
+            image: getAssetUrl(s3Assets.noseM2TelI),
+            audio: getAssetAudioUrl(s3Assets.noseM2Tel),
+          },
+          చొక్కా: {
+            image: getAssetUrl(s3Assets.shirtM2TelI),
+            audio: getAssetAudioUrl(s3Assets.shirtM2Tel),
+          },
+        },
+        arrM: ["చెట్టు", "తేనెటీగ", "పన్ను", "ముక్కు", "చొక్కా"],
+      },
     },
   };
+
+  const levels = levelData[language];
 
   const currentData =
     levels[currentLevel]?.imageAudioMap[
@@ -798,6 +1294,111 @@ const BingoCard = ({
       PUPPY: ["PUP", "PY"],
       STUDENT: ["STU", "DENT"],
       PAPER: ["PA", "PER"],
+      कद: ["क", "द"],
+      गगन: ["ग", "गन"],
+      गायक: ["गाय", "क"],
+      औरत: ["औ", "रत"],
+      टायर: ["टा", "यर"],
+      मटर: ["म", "टर"],
+      पलंग: ["प", "लंग"],
+      मटका: ["मट", "का"],
+      मंदिर: ["मं", "दिर"],
+      कददू: ["क", "ददू"],
+      TEACHER: ["TEA", "CHER"],
+      CHERRY: ["CHE", "RRY"],
+      DRAGONFLY: ["DRAG", "ONFLY"],
+      WOOLLEN: ["WOO", "LLEN"],
+      FOOTPATH: ["FOOT", "PATH"],
+      CHOCOLATES: ["CHOCO", "LATES"],
+      SPROUT: ["SPR", "OUT"],
+      CLOWN: ["CL", "OWN"],
+      UTENSILS: ["UTEN", "SILS"],
+      HANDKERCHIEF: ["HANDKE", "RCHIEF"],
+      FLOWERS: ["FLO", "WERS"],
+      MOUNTAINS: ["MOUN", "TAINS"],
+      THINKING: ["THIN", "KING"],
+      SUGAR: ["SU", "GAR"],
+      CHAIR: ["CH", "AIR"],
+      TEETH: ["TE", "ETH"],
+      CLOUDS: ["CLO", "UDS"],
+      BOOK: ["BO", "OK"],
+      KITCHEN: ["KIT", "CHEN"],
+      MOUTH: ["MO", "UTH"],
+      मोबाइल: ["मो", "बाइल"],
+      बंदगोभी: ["बं", "धगोभी"],
+      मिर्च: ["मि", "र्च"],
+      मस्जिद: ["मस", "जिद"],
+      मूँगफली: ["मूं", "फली"],
+      मच्छर: ["मच", "छर"],
+      डॉक्टर: ["डॉ", "क्टर"],
+      खेलकूद: ["खे", "लकूद"],
+      पुष्प: ["पु", "ष्प"],
+      स्कूटर: ["स्", "कूटर"],
+      सर्कस: ["सर्क", "स"],
+      हेलमेट: ["हेल", "मेट"],
+      गुब्बारा: ["गुब्बा", "रा"],
+      कृष्ण: ["कृ", "ष्ण"],
+      टोकरी: ["बास", "केट"],
+      மூன்று: ["மூன", "்று"],
+      தொப்பி: ["தொப", "்பி"],
+      சீப்பு: ["சீப", "்பு"],
+      பேருந்து: ["பேரு", "ந்து"],
+      சட்டை: ["சட", "்டை"],
+      உப்பு: ["உப", "்பு"],
+      நாற்காலி: ["நாற்", "காலி"],
+      ரொட்டி: ["ரொட", "்டி"],
+      கொய்யா: ["கொய", "்யா"],
+      வெள்ளாடு: ["வெள்", "ளாடு"],
+      முட்டை: ["முட", "்டை"],
+      பாம்பு: ["பாம", "்பு"],
+      நண்டு: ["நண", "்டு"],
+      கத்தி: ["கத", "்தி"],
+      நாக்கு: ["நாக", "்கு"],
+      பொம்மை: ["பொம", "்மை"],
+      செருப்பு: ["செரு", "ப்பு"],
+      ஆந்தை: ["ஆந", "்தை"],
+      மூக்கு: ["மூக", "்கு"],
+      தட்டு: ["தட", "்டு"],
+      ಗಡಿಯಾರ: ["ಗಡ", "ಿಯಾರ"],
+      ತರಕಾರಿ: ["ತರ", "ಕಾರಿ"],
+      ಚಳಿಗಾಲ: ["ಚಳಿ", "ಗಾಲ"],
+      ಗಾಳಿಪಟ: ["ಗಾಳ", "ಿಪಟ"],
+      ಗುಡಿಸಲು: ["ಗುಡಿ", "ಸಲು"],
+      ಕಂಠಹಾರ: ["ಕಂ", "ಠಹಾರ"],
+      ದಾಸವಾಳ: ["ದಾಸ", "ವಾಳ"],
+      ಪಾರಿವಾಳ: ["ಪಾರಿ", "ವಾಳ"],
+      ಅನಾನಸ್: ["ಅನಾ", "ನಸ್"],
+      ಸಿಹಿತಿಂಡಿ: ["ಸಿಹಿ", "ತಿಂಡಿ"],
+      ಕತ್ತರಿ: ["ಕತ್ತ", "ರಿ"],
+      ಕತ್ತೆ: ["ಕತ್ತ", "ೆ"],
+      ಈರುಳ್ಳಿ: ["ಈರು", "ಳ್ಳಿ"],
+      ಪಪ್ಪಾಯಿ: ["ಪಪ್", "ಪಾಯಿ"],
+      ಉಣ್ಣೆ: ["ಉಣ್", "ಣೆ"],
+      ಚಾಕೋಲೇಟು: ["ಚಾಕೋ", "ಲೇಡು"],
+      ಚಿಟ್ಟೆ: ["ಚಿಟ್", "ಟೆ"],
+      ರೊಟ್ಟಿ: ["ರೊ", "ಟ್ಟಿ"],
+      ಬೆಕ್ಕು: ["ಬೆಕ್", "ಕು"],
+      ಬಾತುಕೋಳಿ: ["ಬಾತು", "ಕೋಳಿ"],
+      రచయిత: ["రచ", "యిత"],
+      గాలిపటం: ["గాలి", "పటం"],
+      చలికాలం: ["చలి", "కాలం"],
+      ఊరగాయ: ["ఊర", "గాయ"],
+      గడియారం: ["గడి", "యారం"],
+      పాలకూర: ["పాల", "కూర"],
+      బటానీలు: ["బటా", "నీలు"],
+      కనుబొమ: ["కను", "బొమ"],
+      దోసకాయ: ["దోస", "కాయ"],
+      మానవుడు: ["మాన", "వుడు"],
+      సైనికుడు: ["సై", "నికుడు"],
+      తాళంచెవి: ["తాళం", "చెవి"],
+      ముగ్గు: ["ముగ్", "గు"],
+      కన్ను: ["కన్", "ను"],
+      జుట్టు: ["జుట్", "టు"],
+      చెట్టు: ["చెట్", "టు"],
+      తేనెటీగ: ["తేనె", "టీగ"],
+      పన్ను: ["పన్", "ను"],
+      ముక్కు: ["ముక్", "కు"],
+      చొక్కా: ["చోక్", "కా"],
     };
 
     const currentWord = levels[currentLevel]?.arrM[currentWordIndex];
@@ -902,6 +1503,8 @@ const BingoCard = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <ThemeProvider theme={theme}>

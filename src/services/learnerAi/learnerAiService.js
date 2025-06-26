@@ -21,8 +21,9 @@ export const getContent = async (criteria, lang, limit, options = {}) => {
 
     if (options.mechanismId) url += `&mechanics_id=${options.mechanismId}`;
     if (options.competency) url += `&level_competency=${options.competency}`;
-    if (options.tags) url += `&tags=${options.tags}`;
+    if (options.tags && lang === "en") url += `&tags=${options.tags}`;
     if (options.storyMode) url += `&story_mode=${options.storyMode}`;
+    if (options.CEFR_level) url += `&CEFR_level=${options.CEFR_level}`;
 
     const response = await axios.get(url, getHeaders());
     return response.data;
@@ -128,3 +129,36 @@ export const updateLearnerProfile = async (lang, requestBody) => {
     throw error;
   }
 };
+
+export const addTowreRecord = async (audioPath, towreResult) => {
+  const sessionId = getLocalData("sessionId");
+
+  const audioBase64 = await blobToBase64(audioPath);
+
+  const payload = {
+    audio_file_path: audioBase64,
+    session_id: sessionId,
+    language: "en",
+    towre_result: towreResult,
+  };
+
+  try {
+    const response = await axios.post(
+      `${API_LEARNER_AI_APP_HOST}/api/towre/addRecord`,
+      payload,
+      getHeaders()
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding TOWRE record:", error);
+    throw error;
+  }
+};
+
+const blobToBase64 = (blob) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });

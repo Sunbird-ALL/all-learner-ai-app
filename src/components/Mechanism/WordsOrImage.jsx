@@ -20,6 +20,7 @@ import {
   SpeakButton,
   NextButtonRound,
   getLocalData,
+  setLocalData,
 } from "../../utils/constants";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import PropTypes from "prop-types";
@@ -39,6 +40,7 @@ import {
   handleTextEvaluation,
   callTelemetryApi,
 } from "../../utils/apiUtil";
+import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -93,6 +95,8 @@ const WordsOrImage = ({
   isNextButtonCalled,
   setIsNextButtonCalled,
   audioLink,
+  vocabCount,
+  wordCount,
 }) => {
   const audioRefs = createRef(null);
   const [audioInstance, setAudioInstance] = useState(null);
@@ -110,7 +114,12 @@ const WordsOrImage = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-
+  const [abusiveFound, setAbusiveFound] = useState(false);
+  const [detectedWord, setDetectedWord] = useState("");
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
+  const [recAudio, setRecAudio] = useState("");
+  const [finalTranscript, setFinalTranscript] = useState("");
+  const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const audioRef = useRef(null);
   const audioRefNew = useRef(null);
   const currentWordRef = useRef(null);
@@ -127,14 +136,74 @@ const WordsOrImage = ({
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
+    //console.log("Live Transcript:", transcript);
+
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      //console.log("filteredText", filteredText);
+
+      if (filteredText.includes("*")) {
+        const count = parseInt(getLocalData("profanityCheck") || "0");
+
+        if (count > 2) {
+          setOpenMessageDialog({
+            open: true,
+            message: `Please speak properly.`,
+            severity: "warning",
+            isError: true,
+          });
+        }
+
+        handleStopRecording();
+
+        setLocalData("profanityCheck", (count + 1).toString());
+      }
+    }
   }, [transcript]);
   const [recordedBlob, setRecordedBlob] = useState(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
 
-  const language = getLocalData("lang");
+  // const language = getLocalData("lang");
 
   const mimeType = "audio/webm;codecs=opus";
+
+  const handleStartRecording = () => {
+    // if (!browserSupportsSpeechRecognition) {
+    //   //alert("Speech recognition is not supported in your browser.");
+    //   return;
+    // }
+    setRecAudio(null);
+    resetTranscript();
+    setIsRecording(true);
+    setLanguage(language);
+    setAbusiveFound(false);
+    setDetectedWord("");
+    SpeechRecognition.startListening({
+      continuous: true,
+      interimResults: true,
+      language: language || "en-US",
+    });
+  };
+
+  const handleStopRecording = () => {
+    SpeechRecognition.stopListening();
+    setFinalTranscript(transcriptRef.current);
+    setAbusiveFound(false);
+
+    setIsRecording(false);
+    //console.log("Final Transcript:", transcriptRef.current);
+  };
+
+  const handleRecordingComplete = (base64Data) => {
+    if (base64Data) {
+      setIsRecordingComplete(true);
+      setRecAudio(base64Data);
+    } else {
+      setIsRecordingComplete(false);
+      setRecAudio("");
+    }
+  };
 
   const startAudioRecording = useCallback(async () => {
     setRecordedBlob(null);
@@ -188,7 +257,7 @@ const WordsOrImage = ({
   }, []);
 
   const playRecordings = useCallback(() => {
-    console.log("play", isPlaying);
+    //console.log("play", isPlaying);
 
     if (!recordedBlob || !(recordedBlob instanceof Blob)) {
       console.error("No valid audio blob to play:", recordedBlob);
@@ -202,7 +271,7 @@ const WordsOrImage = ({
       return;
     }
 
-    console.log("bls", recordedBlob);
+    //console.log("bls", recordedBlob);
 
     const audioUrl = URL.createObjectURL(recordedBlob);
     const audio = new Audio(audioUrl);
@@ -214,7 +283,7 @@ const WordsOrImage = ({
     audio.play();
     setIsPlaying(true);
 
-    console.log("play", isPlaying);
+    //console.log("play", isPlaying);
 
     audio.onended = () => {
       setIsPlaying(false);
@@ -328,7 +397,7 @@ const WordsOrImage = ({
       SpeechRecognition.stopListening();
       stopAudioRecording();
       const finalTranscript = transcriptRef.current;
-      console.log("transcript", finalTranscript, currentWordRef.current);
+      //console.log("transcript", finalTranscript, currentWordRef.current);
 
       const matchPercentage = phoneticMatch(
         currentWordRef.current,
@@ -384,7 +453,7 @@ const WordsOrImage = ({
     const responseStartTime = new Date().getTime();
     let responseText = "";
     const base64Data = await blobToBase64(recordedBlob);
-    console.log("bvlobss", recordedBlob);
+    //console.log("bvlobss", recordedBlob);
 
     await callTelemetryApi(
       words,
@@ -504,7 +573,7 @@ const WordsOrImage = ({
     return "#333F61";
   };
 
-  console.log("wds", words, matchedChar, answer);
+  //console.log("wds", words, matchedChar, answer);
 
   return (
     <MainLayout
@@ -535,6 +604,8 @@ const WordsOrImage = ({
         gameOverData,
         loading,
         setIsNextButtonCalled,
+        vocabCount,
+        wordCount,
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -1050,7 +1121,7 @@ const WordsOrImage = ({
             mt: isMobile ? 2 : 0,
           }}
         >
-          {language === "en" && (level === 1 || level === 2 || level === 3) && !isShowCase ? (
+          {level === 15 && !isShowCase ? (
             <div>
               {showSpeakButton && (
                 <Box
@@ -1190,6 +1261,9 @@ const WordsOrImage = ({
               handleNext={handleNext}
               enableNext={enableNext}
               isShowCase={isShowCase || isDiscover}
+              handleRecordingComplete={handleRecordingComplete}
+              handleStartRecording={handleStartRecording}
+              handleStopRecording={handleStopRecording}
               audioLink={audioLink ? audioLink : null}
               {...{
                 contentId,
