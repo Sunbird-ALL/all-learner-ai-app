@@ -2257,7 +2257,7 @@ const R2 = ({
           setLocalData("rFlow", false);
           setLocalData("mFail", false);
           setLocalData("rStep", 0);
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          if (import.meta.env.VITE_IS_APP_IFRAME === "true") {
             navigate("/");
           } else {
             navigate("/discover-start");
@@ -2766,7 +2766,7 @@ const R2 = ({
                       setLocalData("rFlow", false);
                       setLocalData("mFail", false);
                       setLocalData("rStep", 0);
-                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                      if (import.meta.env.VITE_IS_APP_IFRAME === "true") {
                         navigate("/");
                       } else {
                         navigate("/discover-start");

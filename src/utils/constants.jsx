@@ -10301,7 +10301,7 @@ export function handleEncrypt(value) {
 
 export function handleDecrypt(value) {
   const API_SECRET_KEY = localStorage.getItem("token");
-  console.log("newToken", API_SECRET_KEY);
+  //console.log("newToken", API_SECRET_KEY);
 
   if (!API_SECRET_KEY) {
     console.warn("Encryption key missing");

@@ -148,7 +148,7 @@ const SpeakSentenceComponent = () => {
           let milestone = "m0";
 
           if (point !== 1) {
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            if (import.meta.env.VITE_IS_APP_IFRAME === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
@@ -160,7 +160,7 @@ const SpeakSentenceComponent = () => {
             const result = await addPointer(point, milestone);
             const awardedPoints = result?.result?.points;
             if (awardedPoints !== 1) {
-              if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              if (import.meta.env.VITE_IS_APP_IFRAME === "true") {
                 navigate("/");
               } else {
                 navigate("/discover-start");

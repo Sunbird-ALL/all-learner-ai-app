@@ -841,7 +841,7 @@ export const ProfileHeader = ({
                 </Box>
               </Box>
             </Box>
-            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+            {import.meta.env.VITE_IS_IN_APP_AUTHORISATION === "true" && (
               <CustomTooltip title="Logout">
                 <Box>
                   <CustomIconButton onClick={handleLogout}>

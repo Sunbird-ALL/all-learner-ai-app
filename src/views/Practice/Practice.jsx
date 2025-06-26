@@ -4383,7 +4383,7 @@ const Practice = () => {
           let milestone = `m${level}`;
 
           if (points !== 1) {
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            if (import.meta.env.VITE_IS_APP_IFRAME === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
@@ -4395,7 +4395,7 @@ const Practice = () => {
           const awardedPoints = result?.result?.points;
 
           if (awardedPoints !== 1) {
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            if (import.meta.env.VITE_IS_APP_IFRAME === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
