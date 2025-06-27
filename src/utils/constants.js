@@ -8882,7 +8882,7 @@ export const levelGetContent = {
         title: "S1",
         criteria: "paragraph",
         template: "simple",
-        mechanism: { id: "askMore", name: "askMore" },
+        mechanism: { id: "AnouncementFlow", name: "AnouncementFlow" },
       },
       {
         title: "P5",

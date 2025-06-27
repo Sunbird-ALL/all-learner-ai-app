@@ -163,6 +163,7 @@ const WordsOrImage = ({
   const [recordedBlob, setRecordedBlob] = useState(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  //console.log('audios', audioLink);
 
   // const language = getLocalData("lang");
 

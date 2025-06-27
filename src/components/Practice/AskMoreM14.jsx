@@ -3,7 +3,11 @@ import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
 import { getAssetAudioUrl } from "../../utils/s3Links";
-import { practiceSteps, getLocalData } from "../../utils/constants";
+import {
+  practiceSteps,
+  getLocalData,
+  setLocalData,
+} from "../../utils/constants";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
   level13,
@@ -19,21 +23,12 @@ import {
   SpeakButton,
   StopButton,
   NextButtonRound,
-  setLocalData,
 } from "../../utils/constants";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
-import {
-  ThemeProvider,
-  createTheme,
-  useMediaQuery,
-  Grid,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
-
 import {
   fetchASROutput,
   handleTextEvaluation,
@@ -52,8 +47,6 @@ const levelMap = {
   14: level14,
   15: level15,
 };
-
-const theme = createTheme();
 
 const content = {
   conversation: [
@@ -117,8 +110,6 @@ const AskMoreM14 = ({
   matchedChar,
   isNextButtonCalled,
   setIsNextButtonCalled,
-  vocabCount,
-  wordCount,
 }) => {
   const [currentSteps, setCurrentStep] = useState(-1);
   const [isMikeClicked, setIsMikeClicked] = useState(false);
@@ -142,10 +133,8 @@ const AskMoreM14 = ({
   const [finalTranscript, setFinalTranscript] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(null);
   const [audioInstance, setAudioInstance] = useState(null);
-  const [abusiveFound, setAbusiveFound] = useState(false);
-  const [detectedWord, setDetectedWord] = useState("");
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
   const {
     transcript,
@@ -156,15 +145,12 @@ const AskMoreM14 = ({
   } = useSpeechRecognition();
   const audioRef = useRef(null);
   const transcriptRef = useRef("");
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-
   useEffect(() => {
     transcriptRef.current = transcript;
     console.log("Live Transcript:", transcript);
     if (transcript) {
       const filteredText = filterBadWords(transcript, language);
-      if (filteredText.includes("*")) {
+      if (filteredText.includes("*") || filteredText.includes("hello")) {
         const count = parseInt(getLocalData("profanityCheck") || "0");
 
         if (count > 2) {
@@ -192,13 +178,9 @@ const AskMoreM14 = ({
     resetTranscript();
     setIsRecording(true);
     handleMikeClick();
-    setLanguage(language);
-    setAbusiveFound(false);
-    setDetectedWord("");
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
-      language: language || "en-US",
     });
   };
 
@@ -217,11 +199,11 @@ const AskMoreM14 = ({
   };
 
   const stopCompleteAudio = () => {
-    if (isPlaying) {
+    if (audioInstance) {
       audioInstance.pause();
       audioInstance.currentTime = 0;
-      setIsPlaying(false);
-      setAbusiveFound(false);
+      setIsPlaying(null);
+      setAudioInstance(null);
     }
   };
 
@@ -243,23 +225,26 @@ const AskMoreM14 = ({
   };
 
   const playAudio = (audioKey) => {
-    if (isPlaying) {
+    if (audioInstance) {
       // If already playing, stop the audio
       audioInstance.pause();
       audioInstance.currentTime = 0;
-      setIsPlaying(false);
+      setIsPlaying(null);
+      setAudioInstance(null);
+    }
+    if (audioKey) {
+      const audio = new Audio(audioKey);
+
+      audio.onended = () => {
+        setIsPlaying(null);
+        setAudioInstance(null);
+      };
+
+      audio.play();
+      setAudioInstance(audio);
+      setIsPlaying(audioKey);
     } else {
-      if (audioKey) {
-        const audio = new Audio(audioKey);
-
-        audio.onended = () => setIsPlaying(false);
-
-        audio.play();
-        setAudioInstance(audio);
-        setIsPlaying(true);
-      } else {
-        console.error("Audio file not found:", audioKey);
-      }
+      console.error("Audio file not found:", audioKey);
     }
   };
 
@@ -304,15 +289,15 @@ const AskMoreM14 = ({
   //steps = 1;
 
   let progressDatas = getLocalData("practiceProgress");
-  //const virtualId = String(getLocalData("virtualId"));
+  const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas) {
-    currentPracticeStep = progressDatas?.currentPracticeStep;
+  if (progressDatas?.[virtualId]) {
+    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.name || "P1";
@@ -369,31 +354,38 @@ const AskMoreM14 = ({
       setCurrentWordIndex(-1);
       setShowPandaText(false);
 
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      // const utterance = new SpeechSynthesisUtterance(textToSpeak);
 
-      // Track each word being spoken
-      utterance.onboundary = (event) => {
-        if (event.name === "word") {
-          const charIndex = event.charIndex;
-          const spokenWordIndex = splitWords.findIndex((word, i) => {
-            const joined = splitWords.slice(0, i + 1).join(" ");
-            return joined.length >= charIndex;
-          });
-          setCurrentWordIndex(spokenWordIndex);
-        }
-      };
+      // // Track each word being spoken
+      // utterance.onboundary = (event) => {
+      //   if (event.name === "word") {
+      //     const charIndex = event.charIndex;
+      //     const spokenWordIndex = splitWords.findIndex((word, i) => {
+      //       const joined = splitWords.slice(0, i + 1).join(" ");
+      //       return joined.length >= charIndex;
+      //     });
+      //     setCurrentWordIndex(spokenWordIndex);
+      //   }
+      // };
 
-      utterance.onend = () => {
+      // utterance.onend = () => {
+      //   setCurrentWordIndex(-1);
+      //   setShowVoice(true);
+      //   setTimeout(() => {
+      //     setShowVoice(false);
+      //     setShowPandaText(true);
+      //   }, 1500);
+      // };
+
+      // window.speechSynthesis.cancel();
+      // window.speechSynthesis.speak(utterance);
+
+      setTimeout(() => {
         setCurrentWordIndex(-1);
         setShowVoice(true);
-        setTimeout(() => {
-          setShowVoice(false);
-          setShowPandaText(true);
-        }, 1500);
-      };
-
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
+        setShowVoice(false);
+        setShowPandaText(true);
+      }, 1500);
     }
   }, [currentSteps]);
 
@@ -416,10 +408,11 @@ const AskMoreM14 = ({
   const cloudPositions = generateCloudPositions();
 
   const handlePauseClick = async () => {
-    if (isPlaying) {
+    if (audioInstance) {
       audioInstance.pause();
       audioInstance.currentTime = 0;
-      setIsPlaying(false);
+      setIsPlaying(null);
+      setAudioInstance(null);
     }
     setIsLoading(true);
 
@@ -515,490 +508,457 @@ const AskMoreM14 = ({
         livesData,
         gameOverData,
         setIsNextButtonCalled,
-        vocabCount,
-        wordCount,
       }}
     >
-      <ThemeProvider theme={theme}>
-        <div
-          style={{
-            position: "relative",
-            height: "100vh",
-            background: "#B6E4FA",
-            overflow: "hidden",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {cloudPositions?.map((pos, index) => (
-            <img
-              key={index}
-              src={Assets.cloudyImg}
-              alt="Cloudy Background"
+      <div
+        style={{
+          position: "relative",
+          height: "100vh",
+          background: "#B6E4FA",
+          overflow: "hidden",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {cloudPositions?.map((pos, index) => (
+          <img
+            key={index}
+            src={Assets.cloudyImg}
+            alt="Cloudy Background"
+            style={{
+              position: "absolute",
+              top: `${pos.top}px`,
+              left: `${pos.left}px`,
+              width: "200px",
+
+              opacity: 0.7,
+            }}
+          />
+        ))}
+        {showModal && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              textAlign: "center",
+            }}
+          >
+            <span
               style={{
                 position: "absolute",
-                top: `${pos.top}px`,
-                left: `${pos.left}px`,
-                width: "200px",
-
-                opacity: 0.7,
+                top: "17px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: "24px",
+                fontWeight: "bold",
+                color: "white",
               }}
+            >
+              Ask More!
+            </span>
+            <img src={Assets.modalImg} alt="Modal" style={{ width: "500px" }} />
+            <img
+              src={Assets.playImg}
+              alt="Play Button"
+              style={{
+                position: "absolute",
+                top: "60%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                cursor: "pointer",
+                width: "120px",
+              }}
+              onClick={handlePlayClick}
             />
-          ))}
-          {showModal && (
+          </div>
+        )}
+        {/* {showClock && (
+        <div style={{ position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <img src={clockImg} alt="Clock" style={{ width: '30px' }} />
+          <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#333F61' }}>00:10</span>
+        </div>
+      )} */}
+        <img
+          src={Assets.sunImg}
+          alt="Sun"
+          style={{
+            position: "absolute",
+            top: "5%",
+            left: "10%",
+            width: "100px",
+          }}
+        />
+        <img
+          src={
+            getAssetUrl(s3Assets[imageData?.images?.imageOne]) ||
+            Assets[imageData?.images?.imageOne] ||
+            Assets.beerImg
+          }
+          alt="Left Character"
+          style={{
+            position: "absolute",
+            bottom: "15%",
+            left: "10%",
+            //width: "210px",
+            height: "250px",
+            zIndex: 2,
+          }}
+        />
+        <img
+          src={
+            getAssetUrl(s3Assets[imageData?.images?.imageTwo]) ||
+            Assets[imageData?.images?.imageTwo] ||
+            Assets.pandaImg
+          }
+          alt="Right Character"
+          style={{
+            position: "absolute",
+            bottom: "15%",
+            right: "8%",
+            //width: "210px",
+            height: "250px",
+            zIndex: 2,
+          }}
+        />
+
+        {currentSteps >= 0 && currentSteps < conversation.length ? (
+          <>
+            <div
+              style={{
+                position: "absolute",
+                top: "28%",
+                left: "9%",
+                width: "250px",
+                textAlign: "center",
+              }}
+            >
+              <div>
+                {isPlaying ===
+                (getAssetAudioUrl(
+                  s3Assets[conversation[currentSteps]?.speakerAudio]
+                ) || Assets[conversation[currentSteps]?.speakerAudio]) ? (
+                  <Box
+                    sx={{
+                      marginTop: "7px",
+                      position: "relative",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                      cursor: "pointer",
+                    }}
+                    onClick={stopCompleteAudio}
+                  >
+                    <StopButton height={45} width={45} />
+                  </Box>
+                ) : (
+                  <Box
+                    //className="walkthrough-step-1"
+                    sx={{
+                      marginTop: "7px",
+                      position: "relative",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                      cursor: "pointer",
+                      //cursor: `url(${clapImage}) 32 24, auto`,
+                    }}
+                    onClick={() => {
+                      playAudio(
+                        getAssetAudioUrl(
+                          s3Assets[conversation[currentSteps]?.speakerAudio]
+                        ) || Assets[conversation[currentSteps]?.speakerAudio]
+                      );
+                    }}
+                  >
+                    <ListenButton height={50} width={50} />
+                  </Box>
+                )}
+              </div>
+            </div>
+
+            {!showPandaText && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "18%",
+                  right: "21%",
+                  width: "195px",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: "130%",
+                    margin: "0 auto",
+                  }}
+                >
+                  <img
+                    src={Assets.cloudPandaImg}
+                    alt="Cloud Panda"
+                    style={{ width: "100%" }}
+                  />
+                  <img
+                    src={Assets.listeningImg}
+                    alt="Listening Icon"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      height: "150px",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* {showVoice && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "18%",
+                  right: "21%",
+                  width: "195px",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: "130%",
+                    margin: "0 auto",
+                  }}
+                >
+                  <img
+                    src={Assets.cloudPandaImg}
+                    alt="Cloud Panda"
+                    style={{ width: "100%" }}
+                  />
+                  <img
+                    src={Assets.voiceImg}
+                    alt="Voice Icon"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      height: "80px",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </div>
+              </div>
+            )} */}
+
+            {showPandaText && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "18%",
+                  right: "21%",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {/* 👂 Audio Button on the left */}
+                {currentLevel !== "S1" && currentLevel !== "S2" && (
+                  <div style={{ marginRight: "10px" }}>
+                    {isPlaying ===
+                    (getAssetAudioUrl(
+                      s3Assets[conversation[currentSteps]?.audio]
+                    ) || Assets[conversation[currentSteps]?.audio]) ? (
+                      <Box
+                        sx={{
+                          marginTop: "7px",
+                          position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                          cursor: "pointer",
+                        }}
+                        onClick={stopCompleteAudio}
+                      >
+                        <StopButton height={45} width={45} />
+                      </Box>
+                    ) : (
+                      <Box
+                        //className="walkthrough-step-1"
+                        sx={{
+                          marginTop: "7px",
+                          position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                          cursor: "pointer",
+                          //cursor: `url(${clapImage}) 32 24, auto`,
+                        }}
+                        onClick={() => {
+                          playAudio(
+                            getAssetAudioUrl(
+                              s3Assets[conversation[currentSteps]?.audio]
+                            ) || Assets[conversation[currentSteps]?.audio]
+                          );
+                        }}
+                      >
+                        <ListenButton height={50} width={50} />
+                      </Box>
+                    )}
+                  </div>
+                )}
+
+                {/* 🐼 Cloud and text */}
+                <div
+                  style={{
+                    position: "relative",
+                    width: "195px",
+                    textAlign: "center",
+                  }}
+                >
+                  <img
+                    src={Assets.cloudPandaImg}
+                    alt="Cloud Panda"
+                    style={{ width: "130%" }}
+                  />
+                  <img
+                    src={Assets.voiceImg}
+                    alt="Voice Icon"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      height: "150px",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {showPandaText && (
+              <div
+                style={{
+                  display: "flex",
+                  //width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop:
+                    currentLevel === "S1" || currentLevel === "S2"
+                      ? "30px"
+                      : "15px",
+                  gap: "10px",
+                  position: "fixed", // Use fixed to ensure it remains in the center regardless of scrolling
+                  top: "60%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  flexDirection: "column",
+                  //backgroundColor: "rgba(255, 255, 255, 0.9)", // Light background for better visibility
+                  padding: "20px",
+                  borderRadius: "10px",
+                  //boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Adds slight shadow for better UI
+                  zIndex: 1000, // Ensure it's above all other content
+                  width: "auto", // Keep it flexible
+                  maxWidth: "90%",
+                }}
+              >
+                {isLoading ? (
+                  <Box sx={{ display: "flex" }}>
+                    <CircularProgress size="3rem" sx={{ color: "#E15404" }} />
+                  </Box>
+                ) : (
+                  <>
+                    <VoiceAnalyser
+                      pageName={"m8"}
+                      setVoiceText={setVoiceText}
+                      onAudioProcessed={handleRecordingComplete}
+                      setRecordedAudio={setRecordedAudio}
+                      setVoiceAnimate={setVoiceAnimate}
+                      storyLine={storyLine}
+                      dontShowListen={true}
+                      handleNext={handleNext}
+                      enableNext={enableNext}
+                      originalText={parentWords}
+                      audioLink={audio ? audio : completeAudio}
+                      buttonAnimation={true}
+                      handleStartRecording={handleStartRecording}
+                      handleStopRecording={handleStopRecording}
+                      {...{
+                        contentId,
+                        contentType,
+                        currentLine: currentStep - 1,
+                        playTeacherAudio,
+                        callUpdateLearner,
+                        isShowCase,
+                        setEnableNext,
+                        //showOnlyListen: answer !== "correct",
+                        showOnlyListen: false,
+                        setOpenMessageDialog,
+                      }}
+                    />
+                    {recAudio && (
+                      <div
+                        onClick={handlePauseClick}
+                        style={{
+                          cursor: "pointer",
+                          marginLeft:
+                            currentLevel === "S1" || currentLevel === "S2"
+                              ? "0px"
+                              : "33px",
+                        }}
+                      >
+                        <NextButtonRound height={45} width={45} />
+                      </div>
+                    )}
+                  </>
+                )}
+                <audio
+                  ref={audioRef}
+                  //onEnded={handleAudioEnd}
+                  src={completeAudio}
+                  hidden
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          !showModal && (
             <div
               style={{
                 position: "absolute",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                textAlign: "center",
+                fontSize: "24px",
+                fontWeight: "bold",
+                color: "white",
               }}
             >
-              <span
-                style={{
-                  position: "absolute",
-                  top: isMobile || isTablet ? "10px" : "17px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  fontSize: isMobile || isTablet ? "20px" : "24px",
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                Ask More!
-              </span>
-              <img
-                src={Assets.modalImg}
-                alt="Modal"
-                style={{ width: isMobile || isTablet ? "300px" : "500px" }}
-              />
-              <img
-                src={Assets.playImg}
-                alt="Play Button"
-                style={{
-                  position: "absolute",
-                  top: "60%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  cursor: "pointer",
-                  width: isMobile || isTablet ? "100px" : "120px",
-                }}
-                onClick={handlePlayClick}
-              />
+              Conversation Complete!
             </div>
-          )}
-          {/* {showClock && (
-        <div style={{ position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <img src={clockImg} alt="Clock" style={{ width: '30px' }} />
-          <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#333F61' }}>00:10</span>
-        </div>
-      )} */}
-          <img
-            src={Assets.sunImg}
-            alt="Sun"
-            style={{
-              position: "absolute",
-              top: "5%",
-              left: "10%",
-              width: "100px",
-            }}
-          />
+          )
+        )}
 
-          {!(isMobile || isTablet) && (
-            <>
-              <img
-                src={
-                  getAssetUrl(s3Assets[imageData?.images?.imageOne]) ||
-                  Assets[imageData?.images?.imageOne] ||
-                  Assets.beerImg
-                }
-                alt="Left Character"
-                style={{
-                  position: "absolute",
-                  bottom: "15%",
-                  left: "10%",
-                  //width: "210px",
-                  height: isMobile || isTablet ? "150px" : "250px",
-                  zIndex: 2,
-                }}
-              />
-              <img
-                src={
-                  getAssetUrl(s3Assets[imageData?.images?.imageTwo]) ||
-                  Assets[imageData?.images?.imageTwo] ||
-                  Assets.pandaImg
-                }
-                alt="Right Character"
-                style={{
-                  position: "absolute",
-                  bottom: "15%",
-                  right: "8%",
-                  //width: "210px",
-                  height: isMobile || isTablet ? "150px" : "250px",
-                  zIndex: 2,
-                }}
-              />
-            </>
-          )}
-
-          {currentSteps >= 0 && currentSteps < conversation.length ? (
-            <>
-              <div
-                style={{
-                  position: "absolute",
-                  top: "19%",
-                  left: "17%",
-                  width: isMobile || isTablet ? "200px" : "250px",
-                  textAlign: "center",
-                  //position: "relative",
-                }}
-              >
-                <img
-                  src={Assets.cloudImg}
-                  alt="Cloud"
-                  style={{ width: "100%" }}
-                />
-                <span
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "80%",
-                    fontSize: isMobile || isTablet ? "10px" : "15px",
-                    fontWeight: "bold",
-                    color: "#333F61",
-                    textAlign: "center",
-                    fontFamily: "Quicksand",
-                    //lineHeight: 1.4,
-                    wordBreak: "keep-all",
-                    whiteSpace: "normal",
-                    overflowWrap: "break-word",
-                  }}
-                >
-                  {words.map((word, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        backgroundColor:
-                          i === currentWordIndex ? "yellow" : "transparent",
-                        padding: "1px 2px",
-                        borderRadius: "4px",
-                        marginRight: "4px",
-                        color: i === currentWordIndex ? "#000" : "#333F61",
-                        display: "inline-block",
-                      }}
-                    >
-                      {word}
-                    </span>
-                  ))}
-                </span>
-                {(isMobile || isTablet) && (
-                  <img
-                    src={Assets.avatar1}
-                    alt="Boy"
-                    width="35px"
-                    height="35px"
-                    style={{
-                      position: "absolute",
-                      bottom: "-10px",
-                      left: "0px",
-                      transform: "translate(-20%, 20%)",
-                    }}
-                  />
-                )}
-              </div>
-
-              {!showPandaText && (
-                <>
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: isMobile || isTablet ? "45%" : "18%",
-                      right: "21%",
-                      width: isMobile || isTablet ? "100px" : "195px",
-                      textAlign: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "130%",
-                        margin: "0 auto",
-                      }}
-                    >
-                      <img
-                        src={Assets.cloudPandaImg}
-                        alt="Cloud Panda"
-                        style={{ width: "100%" }}
-                      />
-                      <img
-                        src={Assets.listeningImg}
-                        alt="Listening Icon"
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                          height: isMobile || isTablet ? "100px" : "150px",
-                          pointerEvents: "none",
-                        }}
-                      />
-                    </div>
-                    {(isMobile || isTablet) && (
-                      <img
-                        src={Assets.avatar2}
-                        alt="Boy"
-                        width="35px"
-                        height="35px"
-                        style={{
-                          position: "absolute",
-                          bottom: "-30px",
-                          right: "-40px",
-                          transform: "translate(-20%, 20%)",
-                        }}
-                      />
-                    )}
-                  </div>
-                </>
-              )}
-
-              {showPandaText && (
-                <>
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: isMobile || isTablet ? "45%" : "18%",
-                      right: "21%",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    {/* 👂 Audio Button on the left */}
-                    {currentLevel !== "S1" && currentLevel !== "S2" && (
-                      <div style={{ marginRight: "10px" }}>
-                        {isPlaying ? (
-                          <Box
-                            sx={{
-                              marginTop: "7px",
-                              position: "relative",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                              cursor: "pointer",
-                            }}
-                            onClick={stopCompleteAudio}
-                          >
-                            <StopButton height={45} width={45} />
-                          </Box>
-                        ) : (
-                          <Box
-                            //className="walkthrough-step-1"
-                            sx={{
-                              marginTop: "7px",
-                              position: "relative",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                              cursor: "pointer",
-                              //cursor: `url(${clapImage}) 32 24, auto`,
-                            }}
-                            onClick={() => {
-                              playAudio(
-                                getAssetAudioUrl(
-                                  s3Assets[conversation[currentSteps]?.audio]
-                                ) || Assets[conversation[currentSteps]?.audio]
-                              );
-                            }}
-                          >
-                            <ListenButton height={45} width={45} />
-                          </Box>
-                        )}
-                      </div>
-                    )}
-
-                    {/* 🐼 Cloud and text */}
-                    <div
-                      style={{
-                        position: "relative",
-                        width: isMobile || isTablet ? "100px" : "195px",
-                        textAlign: "center",
-                      }}
-                    >
-                      <img
-                        src={Assets.cloudPandaImg}
-                        alt="Cloud Panda"
-                        style={{ width: "130%" }}
-                      />
-                      <img
-                        src={Assets.voiceImg}
-                        alt="Voice Icon"
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                          height: isMobile || isTablet ? "75px" : "150px",
-                          pointerEvents: "none",
-                        }}
-                      />
-                    </div>
-                    {(isMobile || isTablet) && (
-                      <img
-                        src={Assets.avatar2}
-                        alt="Boy"
-                        width="35px"
-                        height="35px"
-                        style={{
-                          position: "absolute",
-                          bottom: "-30px",
-                          right: "-40px",
-                          transform: "translate(-20%, 20%)",
-                        }}
-                      />
-                    )}
-                  </div>
-                </>
-              )}
-
-              {showPandaText && (
-                <div
-                  style={{
-                    display: "flex",
-                    //width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop:
-                      currentLevel === "S1" || currentLevel === "S2"
-                        ? "30px"
-                        : "15px",
-                    gap: "10px",
-                    position: "fixed", // Use fixed to ensure it remains in the center regardless of scrolling
-                    top: "60%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    flexDirection: "column",
-                    //backgroundColor: "rgba(255, 255, 255, 0.9)", // Light background for better visibility
-                    padding: "20px",
-                    borderRadius: "10px",
-                    //boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Adds slight shadow for better UI
-                    zIndex: 1000, // Ensure it's above all other content
-                    width: "auto", // Keep it flexible
-                    maxWidth: "90%",
-                  }}
-                >
-                  {isLoading ? (
-                    <Box sx={{ display: "flex" }}>
-                      <CircularProgress size="3rem" sx={{ color: "#E15404" }} />
-                    </Box>
-                  ) : (
-                    <>
-                      <VoiceAnalyser
-                        pageName={"m8"}
-                        setVoiceText={setVoiceText}
-                        onAudioProcessed={handleRecordingComplete}
-                        setRecordedAudio={setRecordedAudio}
-                        setVoiceAnimate={setVoiceAnimate}
-                        storyLine={storyLine}
-                        dontShowListen={true}
-                        handleNext={handleNext}
-                        enableNext={enableNext}
-                        originalText={parentWords}
-                        audioLink={audio ? audio : completeAudio}
-                        buttonAnimation={true}
-                        handleStartRecording={handleStartRecording}
-                        handleStopRecording={handleStopRecording}
-                        {...{
-                          contentId,
-                          contentType,
-                          currentLine: currentStep - 1,
-                          playTeacherAudio,
-                          callUpdateLearner,
-                          isShowCase,
-                          setEnableNext,
-                          //showOnlyListen: answer !== "correct",
-                          showOnlyListen: false,
-                          setOpenMessageDialog,
-                        }}
-                      />
-                      {recAudio && (
-                        <div
-                          onClick={handlePauseClick}
-                          style={{
-                            cursor: "pointer",
-                            marginLeft:
-                              currentLevel === "S1" || currentLevel === "S2"
-                                ? "0px"
-                                : "33px",
-                          }}
-                        >
-                          <NextButtonRound height={45} width={45} />
-                        </div>
-                      )}
-                    </>
-                  )}
-                  <audio
-                    ref={audioRef}
-                    //onEnded={handleAudioEnd}
-                    src={completeAudio}
-                    hidden
-                  />
-                </div>
-              )}
-            </>
-          ) : (
-            !showModal && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                Conversation Complete!
-              </div>
-            )
-          )}
-
-          {/* <img
-            src={Assets.sandImg}
-            alt="Sand"
-            style={{
-              position: "relative",
-              top: "0",
-              width: "100%",
-              height: "auto",
-              marginTop: "450px",
-            }}
-          /> */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              minHeight: "100vh",
-            }}
-          >
-            <div style={{ flex: 1 }}></div>
-
-            <img
-              src={Assets.sandImg}
-              alt="Sand"
-              style={{
-                width: "100%",
-                height: "auto",
-              }}
-            />
-          </div>
-        </div>
-      </ThemeProvider>
+        <img
+          src={Assets.sandImg}
+          alt="Sand"
+          style={{
+            position: "relative",
+            bottom: "0",
+            width: "100%",
+            height: "auto",
+            marginTop: "450px",
+          }}
+        />
+      </div>
     </MainLayout>
   );
 };

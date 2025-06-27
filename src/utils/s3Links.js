@@ -713,6 +713,36 @@ export const batRImg = "92bc2f24-9977-45ea-99d4-a6af60dc7aab.png";
 export const basketRImg = "312cdd6d-e995-469a-ba3f-f3b8cbfeccd5.png";
 export const basketRAudio = "75ace319-2bdf-4ef2-8bfe-8f99dbc540aa.mp3";
 
+// export const level11P7OneSAudio = "aa04d176-298b-474d-9c6f-3396a4bf0d22.mp3";
+// export const level11P7TwoSAudio = "b64641ab-1ae7-4768-8c30-82f1c3c36d2a.mp3";
+// export const level11P7ThreeSAudio = "dac9f0ce-b747-4320-9b07-98cdd373b493.mp3";
+// export const level11P7FourSAudio = "2a52ec17-e402-4c2b-a570-32dd118fd30f.mp3";
+// export const level11P7FiveSAudio = "0b773f53-8674-4b46-a8fe-0b6b1b3c689c.mp3";
+
+// export const level11P8OneSAudio = "929e4b79-1cca-4951-91a9-f67d4cd44a67.mp3";
+// export const level11P8TwoSAudio = "0101df8c-7f1b-40f3-8f75-00dc8d6d14c7.mp3";
+// export const level11P8ThreeSAudio = "e6b3e0c5-c609-466d-bd29-e8a2f296a309.mp3";
+// export const level11P8FourSAudio = "630262c3-1bdd-4f2c-9303-7c686f036ef4.mp3";
+// export const level11P8FiveSAudio = "ed2178ef-2a66-4556-b059-55d2c3ce55cf.mp3";
+
+// export const level11P3OneSAudio = "4e13184b-6ac1-461d-9e74-37c52ebc8d93.mp3";
+// export const level11P3TwoSAudio = "711b87fc-9772-437c-b885-22996d19189c.mp3";
+// export const level11P3ThreeSAudio = "06c729cd-93fb-4860-b0c7-63c11f5f0593.mp3";
+// export const level11P3FourSAudio = "2c2069f4-cc86-4595-9ca5-4804a1853997.mp3";
+// export const level11P3FiveSAudio = "7348574b-4864-409b-b8ab-6fc883df1f0d.mp3";
+
+// export const level11P4OneUAudio = "23f66a4a-66ba-4190-b14a-f9e7a8e05779.mp3";
+// export const level11P4TwoUAudio = "2d608d86-a89f-4051-b868-f503dd239f1c.mp3";
+// export const level11P4ThreeUAudio = "23ad4ddf-4726-44cd-8f2b-aa6e6a4db8e3.mp3";
+// export const level11P4FourUAudio = "a4955a1f-b7ff-4c3c-9c55-7a9adcaeed24.mp3";
+// export const level11P4FiveUAudio = "66035aef-f71e-44c1-8d12-0db87907a475.mp3";
+
+// export const level11P4OneSAudio = "33d117b5-5b8d-4cb9-ac3b-b79c94c74bb8.mp3";
+// export const level11P4TwoSAudio = "c56ee590-dfa3-4228-9519-13a7ce085af4.mp3";
+// export const level11P4ThreeSAudio = "01d8b532-e31e-4558-9885-77f072262581.mp3";
+// export const level11P4FourSAudio = "b9fd2059-448d-4e75-98d5-1277deecf050.mp3";
+// export const level11P4FiveSAudio = "8e5bbc10-95b2-45af-bf73-5d31cbc5bd2e.mp3";
+
 //export const DinnerNewImg = "d8ae7f85-9262-434b-a813-5dd07780f7f0.png";
 //export const shoutRImg = "eb944944-ade7-464c-9566-a0fa4585c731.png";
 export const DinnerAudio = "a01366a7-e0a6-4a00-9e44-afcabfe46190.mp3";
@@ -1002,6 +1032,66 @@ export const level15P1TwoSAudio = "0b10c8ce-879c-436c-b00f-c0fdc13c5ecf.mp3";
 export const level15P1ThreeSAudio = "88afff2e-1b17-45e4-b281-5ba016ee32b9.mp3";
 export const level15P1FourSAudio = "3d12e80e-372e-4229-a2b6-82296c4fb564.mp3";
 export const level15P1FiveSAudio = "5ce6fa45-67fe-4354-947b-f9214196b24b.mp3";
+export const level14P1OneSAudio = "0098f035-432c-4531-a1f1-8fbbbb3fe8fd.mp3";
+export const level14P1TwoSAudio = "e7ae85bc-9147-4539-a4f4-ca471717005b.mp3";
+export const level14P1ThreeSAudio = "8d84f24c-604c-4b21-83a1-aec538d46068.mp3";
+export const level14P1FourSAudio = "c056f714-1982-45f8-962f-6615714e2007.mp3";
+export const level14P1FiveSAudio = "4a0de0e8-acde-48cc-b3ef-3acc6368b41c.mp3";
+
+export const level14P2OneSAudio = "621d2ddc-5258-452d-b0ad-8d8f5c94cf06.mp3";
+export const level14P2TwoSAudio = "3fd55559-542c-44f8-9881-cf0baeb4aa8e.mp3";
+export const level14P2ThreeSAudio = "43bda94d-b9ee-4162-bb4b-fe8c9cd868ce.mp3";
+export const level14P2FourSAudio = "e139821c-9a0c-456a-bebe-8cbd5ebdebf0.mp3";
+export const level14P2FiveSAudio = "90d9480e-3797-4bda-bda9-797aa643e5b6.mp3";
+
+export const level14P3OneSAudio = "2fb05e81-6d2d-445d-bcd9-c1e97b4bb81a.mp3";
+export const level14P3TwoSAudio = "0a6599b9-633c-4f23-9f8e-a35b536bd2f2.mp3";
+export const level14P3ThreeSAudio = "0a6599b9-633c-4f23-9f8e-a35b536bd2f2.mp3";
+export const level14P3FourSAudio = "d2e2dd41-4f7b-4118-b926-a6a8f44b6ff7.mp3";
+export const level14P3FiveSAudio = "fe552ea6-8196-4d1c-b3c3-5df901b55070.mp3";
+
+export const level14P4OneSAudio = "f1ef117b-f26b-430e-a74e-14d1e37c98b4.mp3";
+export const level14P4TwoSAudio = "b9e62576-e2b5-4135-bff9-ac4fae7ee5d6.mp3";
+export const level14P4ThreeSAudio = "1a5c9b5e-e246-4021-a2e9-3107c8b789c9.mp3";
+export const level14P4FourSAudio = "79ab7ec7-b8a1-4446-a7d5-a28284f299d0.mp3";
+export const level14P4FiveSAudio = "993c20e1-bc2b-47f4-ba11-5bb935e2b370.mp3";
+
+export const level14P5OneSAudio = "738fe2bd-4419-45aa-aeeb-ab3c9fd2edde.mp3";
+export const level14P5TwoSAudio = "470aafff-112a-4497-93c8-0359046e5a71.mp3";
+export const level14P5ThreeSAudio = "b599d72d-45f5-425d-b17b-31fcedbbf41c.mp3";
+export const level14P5FourSAudio = "6442a431-a930-42c9-9f6d-856fc72fb5df.mp3";
+export const level14P5FiveSAudio = "b3fcfa88-3ef8-4dc1-82f1-976a776f76bc.mp3";
+
+export const level14P6OneSAudio = "22e1fbd5-a829-4e96-b50a-de20c60d68d2.mp3";
+export const level14P6TwoSAudio = "55c5f3d8-d783-4bba-837d-84f05169e11a.mp3";
+export const level14P6ThreeSAudio = "f3d86696-50ff-4e46-9b18-3c92b3ba855b.mp3";
+export const level14P6FourSAudio = "2a635093-11de-4396-9b17-7b5014fe0c1f.mp3";
+export const level14P6FiveSAudio = "33209867-fe34-4b90-bf54-168a45455b56.mp3";
+
+export const level14P8OneSAudio = "b16aa336-5e24-49b8-a7ea-e5c6c8ce6e82.mp3";
+export const level14P8TwoSAudio = "fa7725f1-e9f9-493f-99cc-0743104d5fdb.mp3";
+export const level14P8ThreeSAudio = "a576d4d6-b95f-429f-b315-e582991dc2b6.mp3";
+export const level14P8FourSAudio = "0f4b5438-2b79-43a3-a322-7c591cf89927.mp3";
+export const level14P8FiveSAudio = "f7f7d73f-3986-4da9-b5f0-59e3492f4d6b.mp3";
+
+export const level14S1OneSAudio = "eed23620-f734-40b3-a241-9836de34bb9c.mp3";
+export const level14S1TwoSAudio = "38e95049-0b74-4253-b442-5d0be201fad6.mp3";
+export const level14S1ThreeSAudio = "ca8a0083-f1ae-41e7-86e4-fbc641d91a3b.mp3";
+export const level14S1FourSAudio = "dd87b5f5-2270-4f11-ae68-91c805e15752.mp3";
+export const level14S1FiveSAudio = "d9256cd0-5c9c-4c9e-a3cc-0811f4e19258.mp3";
+
+// export const level14P7OneSAudio = "a8627ff8-c34b-44e8-8a50-867d94b152b3.mp3";
+// export const level14P7TwoSAudio = "8d96a46d-f2ee-453b-b411-92de2e06dfd7.mp3";
+// export const level14P7ThreeSAudio = "23db7e05-ca87-474b-bad3-ab62aed89501.mp3";
+// export const level14P7FourSAudio = "ca41c2e7-5b77-4dd1-b232-aa7e9daf8913.mp3";
+// export const level14P7FiveSAudio = "9b3cd9ff-7e49-40bb-b7fb-40dfb94c73f6.mp3";
+
+// export const level15P1OneUAudio = "21c03e04-7172-4800-9c41-1e44713c9106.mp3";
+// export const level15P1TwoUAudio = "afdf7ab8-02d6-4c47-86a2-70f2a472b3f3.mp3";
+// export const level15P1ThreeUAudio = "f3eadd72-4843-4121-8667-42704bcb2660.mp3";
+// export const level15P1FourUAudio = "d2ca7e2a-aa3e-4276-87f8-0d2b42417130.mp3";
+// export const level15P1FiveUAudio = "6a4efd78-3fa6-42a1-bf80-07ccede10ace.mp3";
+// export const level15P1SixUAudio = "7b677b68-95c6-49c9-a7bf-aa075c693879.mp3";
 
 //M15P2
 export const level15P2OneAudio = "75db381c-6897-4f09-a897-22ad35084549.mp3";
@@ -1124,6 +1214,7 @@ export const DogAudio = "ccecdbaf-389e-4643-af53-6258fae7c6fb.mp3";
 
 //const HorseAudio = "e708b1cd-13d9-4d7e-8be1-a27dfd53bbd3.mp3";
 export const LionAudio = "6c228f8d-0a7b-463f-9f98-c3a25c41ebba.mp3";
+export const neighAudio = "e25ea8f7-a24f-489e-a7b5-1fe05c9fcee7.mp3";
 
 export const childImage = "0fa4b96c-b5d7-4d5b-9916-87ca004237c4.png";
 export const boyFromSuperMarket = "c9c58580-7d91-4380-bd08-44dfcf91e808.png";
@@ -1136,6 +1227,41 @@ export const coconutM1Eng = "6ca98ad5-d0f7-4880-90c7-3943ac5c3707.mp3";
 
 //Reference Audios
 
+export const packingTripAudio = "55477e59-7141-4f80-9df3-22697809a6a6.mp3";
+
+export const level15P5OneSAudio = "2c545c32-ee2b-40a8-86ff-428e8a571566.mp3";
+export const level15P5TwoSAudio = "d73dcefb-aa5d-4a51-8057-78c449d7d9cd.mp3";
+export const level15P5ThreeSAudio = "a785d3ba-fb37-4ebe-b0e2-5045117bce8d.mp3";
+export const level15P5FourSAudio = "f4dd4adb-98c5-4521-a39c-1c166dee88fb.mp3";
+export const level15P5FiveSAudio = "52e8de57-14d7-4e76-aeae-31eefbc3fd19.mp3";
+
+// export const level15P1OneSAudio = "f0db478d-69c1-4199-ab5e-9152afd00794.mp3";
+// export const level15P1TwoSAudio = "14c59733-761f-4534-9736-6df1ab9944a3.mp3";
+// export const level15P1ThreeSAudio = "eea07d04-2295-414d-892f-74fe50bb7aa6.mp3";
+// export const level15P1FourSAudio = "fd5b366d-af34-4859-aaab-c955c8da8130.mp3";
+// export const level15P1FiveSAudio = "bffd5dff-7131-407a-8f75-6843326d0266.mp3";
+
+// export const level15P5OneUAudio = "c8f5e4ac-8f0e-4ec4-bbfa-ed53daed9359.mp3";
+// export const level15P5TwoUAudio = "e4791c9a-f266-4531-a23d-08442facbe2a.mp3";
+// export const level15P5ThreeUAudio = "dda8e06d-ee7d-4e7c-846e-6d307e9dc6eb.mp3";
+// export const level15P5FourUAudio = "e03a3e93-4c87-44a9-ac67-b1f231004516.mp3";
+// export const level15P5FiveUAudio = "0de8e127-e306-4c22-adfd-afe2e9de505b.mp3";
+
+// export const level15P6OneUAudio = "aacfb8c7-2069-407e-ac9a-c0424a851472.mp3";
+// export const level15P6TwoUAudio = "fa47dc7b-283e-42e4-8b68-3d560150d559.mp3";
+// export const level15P6ThreeUAudio = "2c5c2400-54c4-44db-98cc-06b7be532ccf.mp3";
+// export const level15P6FOurUAudio = "243b98bc-923a-4ddb-a6de-385624d131f0.mp3";
+// export const level15P6FIveUAudio = "ab3cbcab-f5b1-4e7f-86b9-f79ebe27d2cc.mp3";
+
+export const level15P6OneSAudio = "bc292feb-8212-4a9b-966d-663946b15a75.mp3";
+export const level15P6TwoSAudio = "ede7498c-7feb-407e-9cbb-6b02431b1d71.mp3";
+export const level15P6ThreeSAudio = "6a0e3bb2-896a-46d5-91fc-b7091947d356.mp3";
+export const level15P6FourSAudio = "5b7ca783-c781-45de-947e-bb8ce566680b.mp3";
+export const level15P6FiveSAudio = "71289f70-33c3-4c8b-ae9f-6af062b7cac5.mp3";
+
+//Reference Audios
+
+// export const coconutM1Eng = "6ca98ad5-d0f7-4880-90c7-3943ac5c3707.mp3";
 export const animalsM1Eng = "72139e23-f554-4361-ad3e-cce3ecd07fb2.mp3";
 export const appleM1Eng = "0a5ca155-a486-4507-93ac-e28e7fca9ce4.mp3";
 export const tableM1Eng = "a7121af9-09ee-47e9-808f-5e5273acf761.mp3";
@@ -2916,6 +3042,7 @@ export const listenToTheSongM3KanAudio =
 export const moonRaisedM3KanAudio = "eea0c560-b163-4339-b8c9-9e2918b40712.mp3";
 export const closeTheWindowM3KanAudio =
   "34229200-0489-4950-b723-fc2cb9878796.mp3";
+// export const level10S2Announcement = "dbc0f212-b68a-4b61-b3b9-25cf11cd092b.mp3";
 
 //M3EngAudio
 
