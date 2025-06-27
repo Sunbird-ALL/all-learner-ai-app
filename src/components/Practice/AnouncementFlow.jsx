@@ -851,6 +851,7 @@ const AnouncementFlow = ({
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
       fluency={false}
+      lang={language}
       //={recAudio}
       {...{
         steps,

@@ -196,6 +196,7 @@ const Mechanics2 = ({
       enableNext={enableNext}
       showTimer={showTimer}
       points={points}
+      lang={lang}
       {...{
         steps,
         currentStep,

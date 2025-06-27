@@ -281,6 +281,7 @@ const McqFlow = ({
       points={points}
       pageName={"m7"}
       parentWords={parentWords}
+      lang={language}
       {...{
         steps,
         currentStep,

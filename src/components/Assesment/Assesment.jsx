@@ -91,6 +91,7 @@ import {
 import { fetchVirtualId } from "../../services/userservice/userService";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
+import NumberFlow from "@number-flow/react";
 
 const theme = createTheme();
 
@@ -393,6 +394,7 @@ export const MessageDialog = ({
 };
 
 export const ProfileHeader = ({
+  level,
   setOpenLangModal,
   lang,
   profileName,
@@ -409,6 +411,39 @@ export const ProfileHeader = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const [animatedVocabCount, setAnimatedVocabCount] = useState(0);
+  const [animatedWordCount, setAnimatedWordCount] = useState(0);
+  const [milestone, setMilestone] = useState(0);
+
+  useEffect(() => {
+    const rawMilestone = getLocalData("getMilestone");
+
+    try {
+      const parsed = rawMilestone ? JSON.parse(rawMilestone) : null;
+      const levelStr = parsed?.data?.milestone_level || "m0";
+      const levelNum = parseInt(levelStr.replace("m", ""), 10);
+      setMilestone(levelNum);
+    } catch (e) {
+      console.error("Failed to parse milestone data:", e);
+      setMilestone(0);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAnimatedVocabCount(vocabCount);
+    }, 200);
+
+    return () => clearTimeout(timeout);
+  }, [vocabCount]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAnimatedWordCount(wordCount);
+    }, 200);
+
+    return () => clearTimeout(timeout);
+  }, [wordCount]);
 
   const handleProfileBack = () => {
     try {
@@ -541,158 +576,192 @@ export const ProfileHeader = ({
               </Box>
             </>
           )}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: isMobile ? 1 : 4,
-              mt: isMobile ? 1 : 0,
-              ml: isMobile ? 5 : 2,
-              flexDirection: {
-                xs: "column",
-                sm: "row",
-              },
-              alignItems: {
-                xs: "center",
-                sm: "initial",
-              },
-              width: isMobile ? "35%" : "auto",
-            }}
-          >
-            {/* Words Learnt */}
+          {milestone > 0 && (
             <Box
               sx={{
-                position: "relative",
-                background: "linear-gradient(90deg, #7B2CBF 0%, #9D4EDD 100%)",
-                border: "1px solid white",
-                color: "#fff",
-                borderRadius: "12px",
-                px: 3,
-                py: "4px",
                 display: "flex",
-                alignItems: "center",
-                width: {
-                  xs: "100%",
-                  sm: "auto",
+                justifyContent: "center",
+                gap: isMobile ? 1 : 4,
+                mt: isMobile ? 1 : 0,
+                ml: isMobile ? 5 : 2,
+                flexDirection: {
+                  xs: "column",
+                  sm: "row",
                 },
-                boxShadow: 2,
+                alignItems: {
+                  xs: "center",
+                  sm: "initial",
+                },
+                width: isMobile ? "35%" : "auto",
               }}
             >
+              {/* Words Learnt */}
               <Box
                 sx={{
-                  fontSize: isMobile ? "10px" : "20px",
-                  fontWeight: "bold",
-                  mr: 1,
-                  fontFamily: "Quicksand",
-                }}
-              >
-                {vocabCount}
-              </Box>
-              <Box
-                sx={{
-                  fontSize: isMobile ? "8px" : "16px",
-                  fontWeight: 600,
-                  mr: 2,
-                  fontFamily: "Quicksand",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Words Learnt
-              </Box>
-              <Box
-                component="img"
-                src={Assets.books}
-                alt="Books"
-                sx={{
-                  position: "absolute",
-                  right: {
-                    xs: "8px",
-                    sm: "-20px",
-                  },
-                  top: {
-                    xs: "50%",
+                  position: "relative",
+                  background:
+                    "linear-gradient(90deg, #7B2CBF 0%, #9D4EDD 100%)",
+                  border: "1px solid white",
+                  color: "#fff",
+                  borderRadius: "12px",
+                  px: 3,
+                  py: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  width: {
+                    xs: "100%",
                     sm: "auto",
                   },
-                  transform: {
-                    xs: "translateY(-50%)",
-                    sm: "none",
-                  },
-                  width: isMobile ? "17px" : "40px",
-                  height: isMobile ? "17px" : "40px",
-                  border: "4px solid white",
-                  borderRadius: "50%",
-                  backgroundColor: "#fff",
+                  boxShadow: 2,
                 }}
-              />
-            </Box>
+              >
+                <Box
+                  sx={{
+                    fontSize: isMobile ? "10px" : "20px",
+                    fontWeight: "bold",
+                    mr: 1,
+                    fontFamily: "Quicksand",
+                  }}
+                >
+                  {vocabCount > 0 ? (
+                    <NumberFlow
+                      value={animatedVocabCount}
+                      decimals={0}
+                      duration={4000}
+                      style={{
+                        fontSize: isMobile ? "10px" : "18px",
+                        fontWeight: "bold",
+                        fontFamily: "Quicksand",
+                        color: "white",
+                      }}
+                    />
+                  ) : (
+                    "-"
+                  )}
+                </Box>
+                <Box
+                  sx={{
+                    fontSize: isMobile ? "8px" : "16px",
+                    fontWeight: 600,
+                    mr: 2,
+                    fontFamily: "Quicksand",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Words Learnt
+                </Box>
+                <Box
+                  component="img"
+                  src={Assets.books}
+                  alt="Books"
+                  sx={{
+                    position: "absolute",
+                    right: {
+                      xs: "8px",
+                      sm: "-20px",
+                    },
+                    top: {
+                      xs: "50%",
+                      sm: "auto",
+                    },
+                    transform: {
+                      xs: "translateY(-50%)",
+                      sm: "none",
+                    },
+                    width: isMobile ? "17px" : "40px",
+                    height: isMobile ? "17px" : "40px",
+                    border: "4px solid white",
+                    borderRadius: "50%",
+                    backgroundColor: "#fff",
+                  }}
+                />
+              </Box>
 
-            {/* Words Per Minute */}
-            <Box
-              sx={{
-                position: "relative",
-                background: "linear-gradient(90deg, #00C6FF 0%, #0072FF 100%)",
-                border: "1px solid white",
-                color: "#fff",
-                borderRadius: "12px",
-                px: 3,
-                py: "4px",
-                display: "flex",
-                alignItems: "center",
-                width: {
-                  xs: "100%",
-                  sm: "auto",
-                },
-                boxShadow: 2,
-              }}
-            >
-              <Box
-                sx={{
-                  fontSize: isMobile ? "10px" : "20px",
-                  fontWeight: "bold",
-                  mr: 1,
-                  fontFamily: "Quicksand",
-                }}
-              >
-                {wordCount}
-              </Box>
-              <Box
-                sx={{
-                  fontSize: isMobile ? "8px" : "16px",
-                  fontWeight: 600,
-                  mr: 2,
-                  fontFamily: "Quicksand",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Words per minute
-              </Box>
-              <Box
-                component="img"
-                src={Assets.clock}
-                alt="Clock"
-                sx={{
-                  position: "absolute",
-                  right: {
-                    xs: "8px",
-                    sm: "-20px",
-                  },
-                  top: {
-                    xs: "50%",
-                    sm: "auto",
-                  },
-                  transform: {
-                    xs: "translateY(-50%)",
-                    sm: "none",
-                  },
-                  width: isMobile ? "17px" : "40px",
-                  height: isMobile ? "17px" : "40px",
-                  border: "4px solid white",
-                  borderRadius: "50%",
-                  backgroundColor: "#fff",
-                }}
-              />
+              {/* Words Per Minute */}
+              {lang === "en" && (
+                <Box
+                  sx={{
+                    position: "relative",
+                    background:
+                      "linear-gradient(90deg, #00C6FF 0%, #0072FF 100%)",
+                    border: "1px solid white",
+                    color: "#fff",
+                    borderRadius: "12px",
+                    px: 3,
+                    py: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    width: {
+                      xs: "100%",
+                      sm: "auto",
+                    },
+                    boxShadow: 2,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      fontSize: isMobile ? "10px" : "20px",
+                      fontWeight: "bold",
+                      mr: 1,
+                      fontFamily: "Quicksand",
+                    }}
+                  >
+                    {wordCount > 0 ? (
+                      <NumberFlow
+                        value={animatedWordCount}
+                        decimals={0}
+                        duration={1000}
+                        style={{
+                          fontSize: isMobile ? "10px" : "18px",
+                          fontWeight: "bold",
+                          fontFamily: "Quicksand",
+                          color: "white",
+                        }}
+                      />
+                    ) : (
+                      "-"
+                    )}
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: isMobile ? "8px" : "16px",
+                      fontWeight: 600,
+                      mr: 2,
+                      fontFamily: "Quicksand",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Words per minute
+                  </Box>
+                  <Box
+                    component="img"
+                    src={Assets.clock}
+                    alt="Clock"
+                    sx={{
+                      position: "absolute",
+                      right: {
+                        xs: "8px",
+                        sm: "-20px",
+                      },
+                      top: {
+                        xs: "50%",
+                        sm: "auto",
+                      },
+                      transform: {
+                        xs: "translateY(-50%)",
+                        sm: "none",
+                      },
+                      width: isMobile ? "17px" : "40px",
+                      height: isMobile ? "17px" : "40px",
+                      border: "4px solid white",
+                      borderRadius: "50%",
+                      backgroundColor: "#fff",
+                    }}
+                  />
+                </Box>
+              )}
             </Box>
-          </Box>
+          )}
         </Box>
 
         {isMobile && (

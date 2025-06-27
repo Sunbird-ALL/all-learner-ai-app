@@ -139,6 +139,7 @@ function ArrangePicture({
   const [isLandscape, setIsLandscape] = useState(
     window.innerWidth > window.innerHeight
   );
+  const lang = getLocalData("lang");
 
   useEffect(() => {
     const handleOrientationChange = () => {
@@ -290,6 +291,7 @@ function ArrangePicture({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={lang}
       //={recAudio}
       {...{
         steps,

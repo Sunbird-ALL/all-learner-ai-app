@@ -927,6 +927,7 @@ const R1 = ({
       parentWords={parentWords}
       flowNames={flowNames} // Pass all flows
       activeFlow={activeFlow} // Pass current active flow
+      lang={lang}
       //={recAudio}
       {...{
         steps,

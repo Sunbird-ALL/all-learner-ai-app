@@ -380,7 +380,7 @@ const MainLayout = (props) => {
         {...{
           level: LEVEL,
           setOpenLangModal,
-          lang,
+          lang: language,
           points,
           handleBack,
           vocabCount,

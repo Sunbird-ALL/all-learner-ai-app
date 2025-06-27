@@ -21,7 +21,7 @@ import bookImg from "../../assets/newWord.svg";
 import booksStackImg from "../../assets/totalWord.svg";
 import reportPandaImg from "../../assets/pandaa.svg";
 import reportImg from "../../assets/reportImg.svg";
-import { setLocalData } from "../../utils/constants";
+import { setLocalData, getLocalData } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import SpeechRecognition, {
@@ -664,6 +664,7 @@ const TowreFlow = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const currentWordSet = allWordSets[currentWordSetIndex];
   const transcriptRef = useRef("");
+  const lang = getLocalData("lang");
 
   useEffect(() => {
     transcriptRef.current = transcript;
@@ -922,7 +923,7 @@ const TowreFlow = ({
         allWords={allWords}
         transcript={transcripts}
         totalSec={totalSec}
-        wpm={wordCount}
+        wpm={vocabCount}
       />
     );
   }
@@ -939,6 +940,7 @@ const TowreFlow = ({
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
       fluency={false}
+      lang={lang}
       //={recAudio}
       {...{
         steps,

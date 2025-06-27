@@ -615,6 +615,7 @@ function WhatsMissing({
   const [currentSteps, setCurrentSteps] = useState(2);
 
   const handleNextStep = () => setCurrentSteps(2);
+  const lang = getLocalData("lang");
 
   console.log("lvls", currentStep);
 
@@ -629,6 +630,7 @@ function WhatsMissing({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={lang}
       //={recAudio}
       {...{
         steps,
