@@ -66,6 +66,8 @@ const Mechanics2 = ({
   audio,
   isNextButtonCalled,
   setIsNextButtonCalled,
+  vocabCount,
+  wordCount,
 }) => {
   const [words, setWords] = useState([]);
   const [sentences, setSentences] = useState([]);
@@ -153,6 +155,7 @@ const Mechanics2 = ({
       showTimer={showTimer}
       points={points}
       pageName={"m3"}
+      lang={lang}
       {...{
         steps,
         currentStep,
@@ -163,6 +166,8 @@ const Mechanics2 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <ThemeProvider theme={theme}>

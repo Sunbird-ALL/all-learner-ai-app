@@ -71,6 +71,7 @@ const Mechanics4 = ({
   const [wordsAfterSplit, setWordsAfterSplit] = useState([]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const lang = getLocalData("lang");
 
   let progressDatas = getLocalData("practiceProgress");
   //const virtualId = String(getLocalData("virtualId"));
@@ -241,6 +242,7 @@ const Mechanics4 = ({
       showTimer={showTimer}
       points={points}
       pageName={"m4"}
+      lang={lang}
       {...{
         steps,
         currentStep,

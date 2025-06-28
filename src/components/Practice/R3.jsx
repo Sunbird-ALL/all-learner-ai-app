@@ -173,6 +173,7 @@ const R3 = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const transcriptRef = useRef("");
+  const lang = getLocalData("lang");
 
   useEffect(() => {
     transcriptRef.current = transcript;
@@ -381,6 +382,7 @@ const R3 = ({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={lang}
       //={recAudio}
       {...{
         steps,

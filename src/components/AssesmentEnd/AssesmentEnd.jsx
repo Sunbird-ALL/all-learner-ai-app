@@ -28,6 +28,9 @@ const AssesmentEnd = () => {
   const [previousLevel, setPreviousLevel] = useState("");
   const [points, setPoints] = useState(0);
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
+  const [vocabCount, setVocabCount] = useState(0);
+  const [wordCount, setWordCount] = useState(0);
+  const lang = getLocalData("lang");
 
   useEffect(() => {
     (async () => {
@@ -43,6 +46,8 @@ const AssesmentEnd = () => {
       const { data } = getMilestoneDetails;
       setLevel(data.milestone_level);
       setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+      setVocabCount(data?.extra?.vocabulary_count || 0);
+      setWordCount(data?.extra?.latest_towre_data?.wordsPerMinute || 0);
       let sessionId = getLocalData("sessionId");
       if (!sessionId) {
         sessionId = uniqueId();
@@ -84,7 +89,9 @@ const AssesmentEnd = () => {
   };
   return true ? (
     <Box style={sectionStyle}>
-      <ProfileHeader {...{ level: newLevel, points }} />
+      <ProfileHeader
+        {...{ level: newLevel, points, wordCount, vocabCount, lang }}
+      />
       <Box sx={{ position: "absolute", top: 5, left: 0 }}>
         <Box sx={{ position: "relative" }} className="plane">
           <AssesmentCompletePlane />

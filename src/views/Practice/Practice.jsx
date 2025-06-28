@@ -4441,15 +4441,8 @@ const Practice = () => {
           }
           //setLocalData("previous_level", getSetData.data.previous_level);
           setLocalData("previous_level", getSetData.previous_level);
-          if (getSetData.sessionResult === "pass") {
-            if (
-              level === 15 &&
-              (currentLevel === "S1" || currentLevel === "S2")
-            ) {
-              setLocalData("allCompleted", true);
-              gameOver({ link: "/assesment-end" }, true);
-              return;
-            }
+
+          try {
             const lang = getLocalData("lang");
             const getMilestoneDetails = await getFetchMilestoneDetails(lang);
             setVocabCount(
@@ -4459,6 +4452,19 @@ const Practice = () => {
               getMilestoneDetails?.data?.extra?.latest_towre_data
                 ?.wordsPerMinute || 0
             );
+          } catch (e) {
+            // catch error
+          }
+
+          if (getSetData.sessionResult === "pass") {
+            if (
+              level === 15 &&
+              (currentLevel === "S1" || currentLevel === "S2")
+            ) {
+              setLocalData("allCompleted", true);
+              gameOver({ link: "/assesment-end" }, true);
+              return;
+            }
             if (lang === "en" && (level === 3 || level === 6 || level === 9)) {
               gameOver({ link: "/assesment-end" }, true);
               setLocalData("tFlow", true);
@@ -4482,22 +4488,8 @@ const Practice = () => {
             setLocalData("mFail", true);
             setTimeout(() => {
               setLocalData("rFlow", true);
-            }, 10000);
+            }, 7000);
           }
-        }
-
-        try {
-          const lang = getLocalData("lang");
-          const getMilestoneDetails = await getFetchMilestoneDetails(lang);
-          setVocabCount(
-            getMilestoneDetails?.data?.extra?.vocabulary_count || 0
-          );
-          setWordCount(
-            getMilestoneDetails?.data?.extra?.latest_towre_data
-              ?.wordsPerMinute || 0
-          );
-        } catch (e) {
-          // catch error
         }
 
         let quesArr = [];

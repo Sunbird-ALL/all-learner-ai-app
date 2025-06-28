@@ -757,6 +757,7 @@ const Mechanics7 = ({
       parentWords={parentWords}
       recAudio={recAudio}
       isCorrect={isCorrect}
+      lang={language}
       {...{
         steps,
         currentStep,

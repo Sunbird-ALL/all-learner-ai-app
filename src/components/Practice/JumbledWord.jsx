@@ -101,6 +101,7 @@ const JumbledWord = ({
   const [recordedBlob, setRecordedBlob] = useState(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  const lang = getLocalData("lang");
 
   const mimeType = "audio/webm;codecs=opus";
 
@@ -407,6 +408,7 @@ const JumbledWord = ({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={lang}
       //={recAudio}
       {...{
         steps,

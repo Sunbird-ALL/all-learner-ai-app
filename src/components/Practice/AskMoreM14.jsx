@@ -110,6 +110,8 @@ const AskMoreM14 = ({
   matchedChar,
   isNextButtonCalled,
   setIsNextButtonCalled,
+  vocabCount,
+  wordCount,
 }) => {
   const [currentSteps, setCurrentStep] = useState(-1);
   const [isMikeClicked, setIsMikeClicked] = useState(false);
@@ -490,6 +492,7 @@ const AskMoreM14 = ({
       parentWords={parentWords}
       //={recAudio}
       fluency={false}
+      lang={language}
       //={recAudio}
       {...{
         steps,
@@ -508,6 +511,8 @@ const AskMoreM14 = ({
         livesData,
         gameOverData,
         setIsNextButtonCalled,
+        vocabCount,
+        wordCount,
       }}
     >
       <div

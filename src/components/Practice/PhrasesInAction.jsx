@@ -5126,6 +5126,7 @@ const PhrasesInAction = ({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={language}
       //={recAudio}
       {...{
         steps,

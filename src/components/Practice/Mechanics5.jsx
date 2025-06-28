@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Grid, Radio } from "@mui/material";
 import MainLayout from "../Layouts.jsx/MainLayout";
-import { PlayAudioButton, StopAudioButton } from "../../utils/constants";
+import {
+  PlayAudioButton,
+  StopAudioButton,
+  getLocalData,
+} from "../../utils/constants";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import PropTypes from "prop-types";
 import { Modal } from "@mui/material";
@@ -71,7 +75,7 @@ const Mechanics5 = ({
   const questionAudioRef = useRef();
   const [playingIndex, setPlayingIndex] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null); // Add state to track selected radio button
-
+  const lang = getLocalData("lang");
   const [storedData, setStoredData] = useState([]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -150,6 +154,7 @@ const Mechanics5 = ({
       enableNext={enableNext}
       showTimer={showTimer}
       points={points}
+      lang={lang}
       {...{
         steps,
         currentStep,
