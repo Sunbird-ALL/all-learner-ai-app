@@ -1403,8 +1403,7 @@ const MainLayout = (props) => {
                             onClick={() => {
                               if (
                                 (LEVEL === 1 || LEVEL === 2) &&
-                                (mFlow === true || mFlow === "true") &&
-                                language === "en"
+                                (mFlow === true || mFlow === "true")
                               ) {
                                 //console.log("mFlow value:", mFlow);
                                 setLocalData("rFlow", true);
