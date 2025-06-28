@@ -2082,7 +2082,7 @@ const R2 = ({
   audio,
   currentImg,
   rStep,
-  onComplete,
+  //onComplete,
   vocabCount,
   wordCount,
 }) => {
@@ -2262,7 +2262,6 @@ const R2 = ({
           } else {
             navigate("/discover-start");
           }
-          onComplete();
         } else {
           console.log("contents", content);
           setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -2772,7 +2771,6 @@ const R2 = ({
                       } else {
                         navigate("/discover-start");
                       }
-                      onComplete();
                     } else {
                       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
                     }

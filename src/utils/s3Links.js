@@ -1288,7 +1288,7 @@ export const puzzleM1Eng = "df79c682-ca98-415a-a44d-2a97579f75c8.mp3";
 export const tomatoM1Eng = "fd9d8fb6-d267-47f5-a607-426f97380f3f.mp3";
 export const windowM1Eng = "60067a21-ab87-4e91-88cf-e6f188711cfa.mp3";
 export const dragonM1Eng = "abbcdd42-b4d8-4fcc-bd73-668a0d992d32.mp3";
-export const cameraM1Eng = "11ac3672-dccb-4ae9-a324-bc4e8712480f.mp3";
+//export const cameraM1Eng = "11ac3672-dccb-4ae9-a324-bc4e8712480f.mp3";
 export const kitesM1Eng = "d2c43ae3-3ce1-4fa0-bfd5-6c3895bd1b90.mp3";
 export const potatoM1Eng = "f1cfc4b1-7ec6-47ce-8740-cb7d4b11a77f.mp3";
 export const balloonM1Eng = "eb0803f3-f255-4c2d-8c21-36baf4003c73.mp3";
@@ -1313,7 +1313,7 @@ export const puppyM1Eng = "58f982bb-6ed5-4acb-a64b-e5b008fceb2c.mp3";
 export const peacockM1Eng = "75fe967d-1330-4f43-9558-1feb8c5136c1.mp3";
 
 export const teacherM2Eng = "7f896d72-04ce-406e-a9aa-3e7884ff98fc.mp3";
-export const cherryM2Eng = "c96a9d22-7918-4b7d-826f-4197fd075016.mp3";
+//export const cherryM2Eng = "c96a9d22-7918-4b7d-826f-4197fd075016.mp3";
 export const dragonflyM2Eng = "4fc6c12e-9e48-4ec3-bc38-34ba80035c24.mp3";
 export const woollenM2Eng = "7f7532ee-bf50-466b-a407-9d3c53d88bad.mp3";
 export const footpathM2Eng = "99eee7a8-20a4-474e-ba1b-b41f93af937f.mp3";
@@ -1334,7 +1334,7 @@ export const kitchenM2Eng = "c7b6dac3-bfaa-45a6-939a-de0a138d5d28.mp3";
 export const mouthM2Eng = "1b8c125a-06a3-446f-8f0d-be76e6e74e84.mp3";
 export const drawingM2Eng = "aa22d175-706c-45ca-b450-9c85812fa88c.mp3";
 export const mouseM2Eng = "25eda8ce-1cae-4a9f-8b67-09d65728ddca.mp3";
-export const musicM2Eng = "ff80022d-67b8-48cd-9dc1-7ff0b65256df.mp3";
+//export const musicM2Eng = "ff80022d-67b8-48cd-9dc1-7ff0b65256df.mp3";
 export const lunchM2Eng = "9d030546-ebbf-4a52-a30e-b339e1cc44ee.mp3";
 export const clothM2Eng = "b2cf1e46-c5c3-41e5-a2d7-a300ef546c58.mp3";
 export const goodbyeM2Eng = "0ec29f46-09be-4eb3-a697-74f615ce0f52.mp3";
@@ -1380,7 +1380,7 @@ export const achaarM1Hin = "64477069-1dea-4260-bd8b-16ca8813d785.mp3";
 export const dumrooM1Hin = "64fde5d4-4d57-4b29-8e2c-b9b9c4422ec3.mp3";
 export const takiaM1Hin = "1988131b-cebb-476a-b5ac-985463817ab1.mp3";
 export const teacherM1Hin = "69977348-ee0f-4be1-898c-ef52161952fd.mp3";
-export const bandarM1Hin = "21e50c46-ecf0-4401-b0bb-b32cc8698007.mp3";
+//export const bandarM1Hin = "21e50c46-ecf0-4401-b0bb-b32cc8698007.mp3";
 export const langoorM1Hin = "7e13fa46-2f9f-4286-b8b0-8e675eec3ad6.mp3";
 export const gaajarM1Hin = "f94efb34-906c-423e-9109-ab04e93c8061.mp3";
 export const hiranM1Hin = "2e29070a-4cfa-483c-8d27-78f35ab4acc0.mp3";
@@ -1559,8 +1559,8 @@ export const nurseM2Tam = "c5b45b56-eb35-4bfb-a19d-0dc941925b31.mp3";
 export const ladduM2Tam = "3585e02e-9d02-42c3-908b-e08d192decd6.mp3";
 export const songM2Tam = "ce83e47f-51f8-43f3-8dcd-f33727e3aba0.mp3";
 
-export const lotusM1Kan = "3afb6062-6a46-4e50-b935-c75e0690aec7.mp3";
-export const spoonM1Kan = "6b43f304-017e-4b76-9733-1d93d6c5128a.mp3";
+//export const lotusM1Kan = "3afb6062-6a46-4e50-b935-c75e0690aec7.mp3";
+//export const spoonM1Kan = "6b43f304-017e-4b76-9733-1d93d6c5128a.mp3";
 export const bearM1Kan = "cedc0ca0-d9ab-4b7d-aeb5-352641bd0dd6.mp3";
 export const shipM1Kan = "4f5d8904-f78d-4a23-8b17-cb5ca67b87ec.mp3";
 export const tabalaM1Kan = "013997cf-d98b-4297-b0d5-7ab88382e2eb.mp3";
@@ -1602,11 +1602,11 @@ export const basketM1Kan = "5a6725ce-94c1-492e-9f61-559b51787f10.mp3";
 export const sareeM1Kan = "683870f5-383b-47d4-8f53-670b4ce8f668.mp3";
 export const guavaM1Kan = "33032461-184c-405f-a234-d44c20936764.mp3";
 export const wheatM1Kan = "67626517-6ccb-4259-9575-658120ab9dde.mp3";
-export const umbrellaM1Kan = "7a8cf3c0-feac-44ec-ac27-2b5e2fc0aecd.mp3";
+//export const umbrellaM1Kan = "7a8cf3c0-feac-44ec-ac27-2b5e2fc0aecd.mp3";
 export const foodM1Kan = "a7c86135-65aa-437c-a193-9820dfbb98b1.mp3";
 export const skyM1Kan = "7fb56edb-3078-4898-b33d-8a740f2c83c5.mp3";
 export const teethM1Kan = "85284c4a-757e-417d-b0d7-fc30554ef681.mp3";
-export const angerM1Kan = "c0a464f2-9b50-453e-90f2-7f4f0d203282.mp3";
+//export const angerM1Kan = "c0a464f2-9b50-453e-90f2-7f4f0d203282.mp3";
 export const frogM1Kan = "4a5b1379-cba3-473e-985c-fb0bef2d1009.mp3";
 export const saltM1Kan = "b312ae1f-2f28-41f6-ae75-59ea2bfefa77.mp3";
 
@@ -1625,9 +1625,9 @@ export const donkeyM2Kan = "1d4f466b-94db-4a1b-9787-58371355f454.mp3";
 export const onionM2Kan = "716311b9-5836-402c-b9d3-9a710016b851.mp3";
 export const papayaM2Kan = "de367ff4-cf78-4e87-9a84-2ac3954999e9.mp3";
 export const woolM2Kan = "9ba34c0f-34e5-48b0-aa48-0d1241bf87d5.mp3";
-export const chocolateM2Kan = "bf0a9957-2258-4bb6-8184-af39c1d65de7.mp3";
+//export const chocolateM2Kan = "bf0a9957-2258-4bb6-8184-af39c1d65de7.mp3";
 export const butterflyM2Kan = "8f9ad22f-9b57-4e2e-9660-b0e869baa1c6.mp3";
-export const rotiM2Kan = "c5a797ff-18e4-40b7-8a0b-5fa4dfea00b3.mp3";
+//export const rotiM2Kan = "c5a797ff-18e4-40b7-8a0b-5fa4dfea00b3.mp3";
 export const catM2Kan = "55fc8479-45d1-4fed-acc8-f79f77335e7d.mp3";
 export const duckM2Kan = "3f7452cb-4835-4da4-98dd-a5b5028d1fd8.mp3";
 export const woodM2Kan = "357b4024-951f-4403-8ff6-f322f33c0d15.mp3";
@@ -2710,7 +2710,7 @@ export const respectR2Tam = "643d5ea6-ed0b-4100-81e3-72b355758563.mp3";
 
 export const batR2KanI = "fc11b046-43b6-4a36-b154-80f64e77e940.png";
 export const flagR2KanI = "49e2fc03-8a0a-4618-a735-c592066ced79.png";
-export const authorR2KanI = "b96663a4-f3f1-412e-b517-8c5d49040f99.png";
+//export const authorR2KanI = "b96663a4-f3f1-412e-b517-8c5d49040f99.png";
 export const heartR2KanI = "32da18ac-2e1b-4420-8f25-33b106f7f59d.png";
 export const medicineR2KanI = "df43f4f5-8754-4ede-b48d-d46c7b77b809.png";
 export const PeacockR2KanI = "cbb9cca4-6127-4601-878b-6638770037b9.png";
@@ -2770,7 +2770,7 @@ export const appleR2Tel = "9d9c8502-34b6-4580-b5f0-492ddea47038.mp3";
 export const brainR2Tel = "1e8efe29-e89a-4854-8e5a-f315019abe10.mp3";
 export const elephantR2Tel = "4e6a15d3-ddea-4a53-9af7-6bd5b51f9bb5.mp3";
 export const windowR2Tel = "68ad6c01-912f-422a-ab67-41ad3147c333.mp3";
-export const bearR2Tel = "0a7cbfa7-64a8-444d-b927-d2d1d2d4a128.mp3";
+//export const bearR2Tel = "0a7cbfa7-64a8-444d-b927-d2d1d2d4a128.mp3";
 export const brinjalR2Tel = "949fbecd-a81b-4d95-be24-56da9a0e5021.mp3";
 export const pigeonR2Tel = "e3f9dd79-3fe3-4e68-827b-1f6791bcf1fb.mp3";
 export const crocodileR2Tel = "9224eb29-9864-44b8-9dc6-737db951555c.mp3";
@@ -2811,7 +2811,7 @@ export const heybhagwanM3Hin = "df2a53c2-adaf-4312-b5f7-c65a99514aaa.png";
 export const badibehaanM3Hin = "8c96672d-ee50-4050-9d76-d78cea7c550a.png";
 export const vaajankarnaM3Hin = "b201c522-c873-4e33-9bc3-221a7d37e471.png";
 export const kanghiikarnaM3Hin = "b52e32ca-d641-42d5-907c-a49242898745.png";
-export const chalookhelenM3Hin = "e01e2f33-4b09-46bb-8fad-211dd8b12d69.png";
+//export const chalookhelenM3Hin = "e01e2f33-4b09-46bb-8fad-211dd8b12d69.png";
 export const bhaagleenaM3Hin = "52f22791-0438-436e-a0ec-1cd9bf5a1a2c.png";
 export const mootorgaadiM3Hin = "1d0a199e-bf78-4078-ab94-53c6cc623a58.png";
 
@@ -3224,3 +3224,70 @@ export const level15P6TwoSAudio = "179d4ada-ce48-4982-aac0-06ef942837e4.mp3";
 export const level15P6ThreeSAudio = "b649a5d9-4d8e-450f-aaf9-c7ce909e92f5.mp3";
 export const level15P6FourSAudio = "caa663f3-a6e4-4b19-ad5b-6e2d97edf2bb.mp3";
 export const level15P6FiveSAudio = "261e173a-ad2b-4243-b284-26a33ac84bfa.mp3";
+
+export const sarbatM2Hin = "c226797a-0e2f-4d84-8401-b16fefb12e3d.png";
+export const teacherR1Hin = "e62e9b45-3bf9-4f66-949c-ae648601ea75.png";
+export const chalookhelenM3Hin = "9325a35f-2881-4935-98dc-a0cb765a234b.png";
+
+export const authorR2KanI = "8a270288-cf22-4def-8f26-d2d09ef4239c.png";
+export const umbrellaM1Kan = "7848e977-281e-49d9-b633-7390a18822cb.png";
+export const bedroomM3Kan = "68db623b-e2bd-4d89-8704-491cab8b08d6.png";
+export const flowerR1Kan = "12c86317-4df8-4231-8bdb-bff51d735b7d.png";
+
+export const spindleM1Kan = "207a7af9-952b-46a2-837e-832706012af5.png";
+export const swimM1Kan = "51c0027a-09d9-423f-b746-ab36fba9533f.png";
+export const peopleM1Kan = "96a4b9b9-c2f0-4e66-bfe3-38ceca5632a2.png";
+export const sixM1Kan = "1e70030a-1350-4459-8c29-a51b9d963bbf.png";
+export const fiveM1Kan = "e92b7127-23fa-4c6e-988f-c527f937ff71.png";
+export const necklaceM1KanImg = "7e07cffc-c838-48f2-b7db-7d6b899f2a34.png";
+export const runM1Kan = "f45e74b5-9b10-46f2-b895-891166d4196e.png";
+export const lockM1Kan = "34592aff-1d8a-46e8-b028-9cc0deb4f071.png";
+export const cotM1KanImg = "c45bbe86-cb08-4800-ab93-679862ae2637.png";
+export const oneM1Kan = "eef8b85a-e9a3-4259-adef-0f9a795164af.png";
+
+export const mathematics2M1SylKan = "b9deee88-d6f5-4598-af29-a0db5419fc77.mp3";
+export const rotiM2Kan = "016db371-d7b8-476c-9214-ae3cb510e5d7.mp3";
+export const angerM1Kan = "d5e63ee5-42c9-43ca-ad76-69d202e1e464.mp3";
+export const spoonM1Kan = "9ff68da8-eeaf-4a4e-81ed-7afa1fb70662.mp3";
+
+export const necklaceM1KanAudio = "80fc616c-4932-4786-9e10-2eb921ff29ad.mp3";
+export const cotM1KanAudio = "7875eae5-8a56-449d-9171-a3372a5a3917.mp3";
+
+// English - M1/M2
+export const cameraM1Eng = "1b8720ae-0dd4-47d3-863b-6a26103f59c7.mp3";
+export const camM1Eng = "8300d1a5-6bc2-4c8a-8378-d32620c79fd5.mp3";
+export const erM1Eng = "0cb18875-6acc-4eac-bfb9-d54ad10e2018.mp3";
+export const aM1Eng = "45ca98d1-4f97-4b56-81ab-c814e695a458.mp3";
+export const cherryM2Eng = "2e3181ca-373e-4be2-b3ec-e6cb15ecf420.mp3";
+export const chocolateM2Eng = "55e8724a-7d96-42a3-9022-3aa972eeedb3.mp3";
+export const musicM2Eng = "420d894e-b31c-4d9e-ab2e-bf46b0af7db7.mp3";
+
+// Telugu - R2
+export const bearR2Tel = "d2536436-c8d0-4e9c-ada6-bb2a2181449c.mp3";
+
+// Hindi - M1/M2
+export const bandarM1Hin = "5432f0f2-f38d-48c8-a27a-67750679222c.mp3";
+export const sarbatM2HinAudio = "fddac7e2-2842-4eb8-ba42-c221cb9f4e3f.mp3";
+
+// Kannada - M1/M2/R1/R2/M3
+export const lotusM1Kan = "ef40aaf6-4f6d-4039-bda2-189f5c58835b.mp3";
+export const necklaceR1Kan = "4d2a2364-07e1-4259-99d0-4823bac68789.mp3";
+export const bedroomM3KanAudio = "2f60e9f4-a0e4-4eef-a36c-4f06e95925ef.mp3";
+export const fountainpenM3Kan = "aead4cd8-e34f-4af1-a7d9-1c252ad0303f.mp3";
+export const necklaceM2KanAudio = "b2c6d7d3-e6e9-48d8-af46-b4b4f644899f.mp3";
+export const cucumberM2Kan = "e8574f14-2e96-4da1-87b4-273721d1b6e9.mp3";
+export const chocolateM2Kan = "2e27b63e-8d93-4e2c-ab3f-d0142c2c8a51.mp3";
+export const flowerM1KanAudio = "eeab957e-6391-45c6-a1ce-919b15db5476.mp3";
+export const raviM2Kan = "570efe0e-38f3-474c-bdf7-5c1a811b874c.mp3";
+export const umbrellaM1KanAudio = "fe801adf-c10f-4c43-bd42-eb727a723a83.mp3";
+
+export const sixM1KanA = "5a744c58-7d5e-4880-9da8-e068317138b2.mp3";
+export const oneM1KanA = "03894238-46a3-4950-b871-cfedcfd38b6b.mp3";
+
+export const lockM1KanA = "b1439fc5-d568-4ec4-b8fa-65d6365d4a99.mp3";
+export const runM1KanA = "f994b6bc-e591-4437-a167-904d09caee81.mp3";
+export const swimM1KanA = "11a6b467-1e47-4798-9f07-83006af7ff63.mp3";
+export const spindleM1KanA = "4ba1362d-837b-48d3-850a-1e6e3e3d4441.mp3";
+export const peopleM1KanA = "acd82a52-c0d3-4645-8bd1-29277bb46332.mp3";
+
+export const fiveM1KanA = "b50343da-a1d8-47a2-8e99-d5e20aae8609.mp3";
