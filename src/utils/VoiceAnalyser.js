@@ -563,7 +563,57 @@ function VoiceAnalyser(props) {
         props.setIsNextButtonCalled(false);
       }
       setRecordedAudioBase64("");
-      setApiResponse("error");
+      if (error?.response?.data?.message === "Profanity detected.") {
+        setApiResponse("profanity");
+
+        const { originalText, currentLine } = props;
+        const sessionId = getLocalData("sessionId");
+
+        let audioFileName = "";
+        if (process.env.REACT_APP_CAPTURE_AUDIO === "true") {
+          let getContentId = currentLine;
+          audioFileName = `${
+            process.env.REACT_APP_CHANNEL
+          }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+
+          const command = new PutObjectCommand({
+            Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
+            Key: audioFileName,
+            Body: Uint8Array.from(window.atob(base64Data), (c) =>
+              c.charCodeAt(0)
+            ),
+            ContentType: "audio/wav",
+          });
+          try {
+            await S3Client.send(command);
+          } catch (err) {}
+        }
+        response(
+          {
+            // Required
+            target:
+              process.env.REACT_APP_CAPTURE_AUDIO === "true"
+                ? `${audioFileName}`
+                : "", // Required. Target of the response
+            type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
+            values: [
+              { profanity: "true" },
+              { original_text: originalText },
+              // { response_text: "" },
+              // { response_correct_words_array: ""  },
+              // { response_incorrect_words_array: ""  },
+              // { response_word_array_result: ""  },
+              // { response_word_result: "" },
+              // { accuracy_percentage: "" },
+              // { duration: "" },
+            ],
+          },
+          "ET"
+        );
+      } else {
+        setApiResponse("error");
+      }
+
       console.error("err", error);
     }
   };

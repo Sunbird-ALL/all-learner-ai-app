@@ -152,7 +152,7 @@ const AnouncementFlow = ({
         if (count > 2) {
           setOpenMessageDialog({
             open: true,
-            message: `Please speak properly.`,
+            message: `Please speak appropriately.`,
             severity: "warning",
             isError: true,
           });
