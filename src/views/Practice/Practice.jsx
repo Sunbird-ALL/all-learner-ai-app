@@ -5271,108 +5271,13 @@ const Practice = () => {
           }}
         />
       );
-    } else if (rFlow === "true" && level === 2 && rStep === 2) {
+    } else if (rFlow === "true" && level === 2 && [2, 3, 4].includes(rStep)) {
       return (
         <R2
           page={page}
           setPage={setPage}
           rStep={rStep}
           //onComplete={() => handleComplete(3)}
-          {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: currentImage,
-            parentWords: parentWords,
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-          }}
-        />
-      );
-    } else if (rFlow === "true" && level === 2 && rStep === 3) {
-      return (
-        <R3Flow
-          page={page}
-          setPage={setPage}
-          rStep={rStep}
-          onComplete={() => handleComplete(4)}
-          {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: currentImage,
-            parentWords: parentWords,
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-          }}
-        />
-      );
-    } else if (rFlow === "true" && level === 2 && rStep === 4) {
-      return (
-        <R4
-          page={page}
-          setPage={setPage}
-          rStep={rStep}
           {...{
             level: level,
             header:
