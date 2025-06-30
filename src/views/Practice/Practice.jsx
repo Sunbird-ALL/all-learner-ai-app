@@ -3951,7 +3951,7 @@ const Practice = () => {
         {
           completeWord: "We talk.",
           syllable: ["We", "talk."],
-          audio: "weTalk",
+          audio: "weTalks",
         },
         {
           completeWord: "He listens.",
