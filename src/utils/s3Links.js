@@ -1402,3 +1402,28 @@ export const youLearn = "0f984e64-d6e6-414c-9623-13c07f8f1b46.mp3";
 export const itRains = "f0aedde3-58b9-4c70-becc-9f52fa88ac3a.mp3";
 export const weWalk = "4bf8af93-5c88-4552-b6c0-48fd4163348a.mp3";
 export const youSwim = "aee23dbd-1117-4659-a545-6c2ec4264983.mp3";
+
+//M3TamilAudio
+
+export const wetsoilM3Tam = "dc8e1f35-51dc-475e-9b84-eb0e5b2776f5.mp3";
+export const poorhealthM3Tam = "129c31db-3a63-4d9f-a115-574f6e9ecf16.mp3";
+export const adeliciousmealM3Tam = "9f0ff022-0860-45f7-9b88-4297989dc2fa.mp3";
+export const hedrankmilkM3Tam = "cd993f1e-8445-4ecb-95d5-f1384bd6d5f9.mp3";
+export const shepickedflowersM3Tam = "203a5c62-6e8f-49d8-9dba-4303b7e0ce08.mp3";
+export const thedogisbarkingM3Tam = "ca592740-418c-4a67-8a55-e374e054c0d2.mp3";
+export const thankyoufriendM3Tam = "0bdbecc1-90a2-4ff3-ae9b-be49deead2e7.mp3";
+export const iamcomingM3Tam = "f0499194-83d1-4bd6-8e6a-b27e374ca4bd.mp3";
+export const thefrogcameM3Tam = "1adc6c77-9f53-49fe-942a-1a2535415cdc.mp3";
+export const adonkeycameM3Tam = "947529f1-d8f2-4847-bf32-bd547f08064c.mp3";
+export const gheedosaM3Tam = "0872340a-4e4b-479b-bdae-2810f4a937b2.mp3";
+export const hedrankwaterM3Tam = "993dc1b4-38d8-43e8-933c-c3d367924fc8.mp3";
+export const elephantroarsM3Tam = "026ae0bd-9f52-4b44-b141-16221bc9cb7c.mp3";
+export const hegaveittothepoorM3Tam =
+  "c20602e7-f014-41d4-b469-c2a6097216a4.mp3";
+export const singingasongM3Tam = "aa0f9dd1-4281-4488-b962-dd7c7f577802.mp3";
+export const theturtlecameM3Tam = "a7f4dafe-4e73-411f-a8b4-7756397a67d7.mp3";
+export const thewormcameM3Tam = "c8a658f1-86d2-4993-9f4a-5bf0cfa31893.mp3";
+export const likeapearlM3Tam = "70d62a46-1980-4b14-bd22-1d05fc593fd2.mp3";
+export const honeybeeM3Tam = "59d0e6e7-4878-49cb-9382-8c1d19621cb7.mp3";
+export const thewheelisspinningM3Tam =
+  "bc5ab525-0542-4420-90d2-945897dd8c59.mp3";

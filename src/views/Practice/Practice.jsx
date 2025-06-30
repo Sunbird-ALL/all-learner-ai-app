@@ -3951,7 +3951,7 @@ const Practice = () => {
         {
           completeWord: "We talk.",
           syllable: ["We", "talk."],
-          audio: "weTalk",
+          audio: "weTalks",
         },
         {
           completeWord: "He listens.",
@@ -4086,32 +4086,112 @@ const Practice = () => {
     },
     ta: {
       P1: [
-        { completeWord: "I run.", syllable: ["I", "run."] },
-        { completeWord: "We play.", syllable: ["We", "play."] },
-        { completeWord: "She reads.", syllable: ["She", "reads."] },
-        { completeWord: "He eats.", syllable: ["He", "eats."] },
-        { completeWord: "They jump.", syllable: ["They", "jump."] },
+        {
+          completeWord: "ஈர மண்",
+          syllable: ["ஈர", "மண்"],
+          audio: "wetsoilM3Tam",
+        },
+        {
+          completeWord: "உடல்நிலை குறைவு",
+          syllable: ["உடல்நிலை", "குறைவு"],
+          audio: "poorhealthM3Tam",
+        },
+        {
+          completeWord: "சுவையான உணவு",
+          syllable: ["சுவையான", "உணவு"],
+          audio: "adeliciousmealM3Tam",
+        },
+        {
+          completeWord: "அவன் பால் குடித்தான்",
+          syllable: ["அவன் பால்", "குடித்தான்"],
+          audio: "hedrankmilkM3Tam",
+        },
+        {
+          completeWord: "அவள் பூக்களைப் பறித்தாள்",
+          syllable: ["அவள் பூக்களைப்", "பறித்தாள்"],
+          audio: "shepickedflowersM3Tam",
+        },
       ],
       P2: [
-        { completeWord: "We walk.", syllable: ["We", "walk."] },
-        { completeWord: "I sleep.", syllable: ["I", "sleep."] },
-        { completeWord: "You swim.", syllable: ["You", "swim."] },
-        { completeWord: "She sings.", syllable: ["She", "sings."] },
-        { completeWord: "He dances.", syllable: ["He", "dances."] },
+        {
+          completeWord: "நாய் குரைக்கிறது",
+          syllable: ["நாய்", "குரைக்கிறது"],
+          audio: "thedogisbarkingM3Tam",
+        },
+        {
+          completeWord: "நன்றி நண்பா",
+          syllable: ["நன்றி", "நண்பா"],
+          audio: "thankyoufriendM3Tam",
+        },
+        {
+          completeWord: "நான் வருகிறேன்",
+          syllable: ["நான்", "வருகிறேன்"],
+          audio: "iamcomingM3Tam",
+        },
+        {
+          completeWord: "தவளை வந்தது",
+          syllable: ["தவளை", "வந்தது"],
+          audio: "thefrogcameM3Tam",
+        },
+        {
+          completeWord: "ஒரு கழுதை வந்தது",
+          syllable: ["ஒரு கழுதை", "வந்தது"],
+          audio: "adonkeycameM3Tam",
+        },
       ],
       P3: [
-        { completeWord: "It rains.", syllable: ["It", "rains."] },
-        { completeWord: "We win.", syllable: ["We", "win."] },
-        { completeWord: "You cook.", syllable: ["You", "cook."] },
-        { completeWord: "They laugh.", syllable: ["They", "laugh."] },
-        { completeWord: "I dream.", syllable: ["I", "dream."] },
+        {
+          completeWord: "நெய் தோசை",
+          syllable: ["நெய்", "தோசை"],
+          audio: "gheedosaM3Tam",
+        },
+        {
+          completeWord: "அவன் தண்ணீர் குடித்தான்",
+          syllable: ["அவன் தண்ணீர்", "குடித்தான்"],
+          audio: "hedrankwaterM3Tam",
+        },
+        {
+          completeWord: "யானை கர்ஜிக்கிறது",
+          syllable: ["யானை", "கர்ஜிக்கிறது"],
+          audio: "elephantroarsM3Tam",
+        },
+        {
+          completeWord: "அவர் அதை ஏழைகளுக்கு கொடுத்தார்",
+          syllable: ["அவர் அதை", "ஏழைகளுக்கு கொடுத்தார்"],
+          audio: "hegaveittothepoorM3Tam",
+        },
+        {
+          completeWord: "பாடல் பாடுதல்",
+          syllable: ["பாடல்", "பாடுதல்"],
+          audio: "singingasongM3Tam",
+        },
       ],
       P4: [
-        { completeWord: "You learn.", syllable: ["You", "learn."] },
-        { completeWord: "We talk.", syllable: ["We", "talk."] },
-        { completeWord: "He listens.", syllable: ["He", "listens."] },
-        { completeWord: "She smiles.", syllable: ["She", "smiles."] },
-        { completeWord: "Birds fly.", syllable: ["Birds", "fly."] },
+        {
+          completeWord: "ஆமை வந்தது",
+          syllable: ["ஆமை", "வந்தது"],
+          audio: "theturtlecameM3Tam",
+        },
+        {
+          completeWord: "புழு வந்தது",
+          syllable: ["புழு", "வந்தது"],
+          audio: "thewormcameM3Tam",
+        },
+        {
+          completeWord: "முத்துச் சிப்பிபோல",
+          syllable: ["முத்துச்", "சிப்பிபோல"],
+          audio: "likeapearlM3Tam",
+        },
+        {
+          completeWord: "தேனீ",
+          syllable: ["தே", "னீ"],
+          audio: "honeybeeM3Tam",
+        },
+        {
+          completeWord: "சக்கரமும் சுழன்றோட",
+          syllable: ["சக்கரமும்", "சுழன்றோட"],
+          audio: "thewheelisspinningM3Tam",
+        },
       ],
       S1: [
         { completeWord: "Cats meow.", syllable: ["Cats", "meow."] },
