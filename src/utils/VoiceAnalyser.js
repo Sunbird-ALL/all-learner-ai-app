@@ -563,7 +563,12 @@ function VoiceAnalyser(props) {
         props.setIsNextButtonCalled(false);
       }
       setRecordedAudioBase64("");
-      setApiResponse("error");
+      if (error?.response?.data?.message === "Profanity detected.") {
+        setApiResponse("profanity");
+      } else {
+        setApiResponse("error");
+      }
+
       console.error("err", error);
     }
   };

@@ -106,6 +106,15 @@ const SpeakSentenceComponent = () => {
       setVoiceText("");
       setEnableNext(false);
     }
+    if (voiceText === "profanity") {
+      setOpenMessageDialog({
+        message: `Please speak appropriately.`,
+        severity: "warning",
+        isError: true,
+      });
+      setVoiceText("");
+      setEnableNext(false);
+    }
     if (voiceText == "success") {
       // go_to_result(voiceText);
       setVoiceText("");

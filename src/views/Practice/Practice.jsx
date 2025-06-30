@@ -4288,6 +4288,15 @@ const Practice = () => {
       setVoiceText("");
       setEnableNext(false);
     }
+    if (voiceText === "profanity") {
+      setOpenMessageDialog({
+        message: `Please speak appropriately.`,
+        severity: "warning",
+        isError: true,
+      });
+      setVoiceText("");
+      setEnableNext(false);
+    }
     if (voiceText == "success") {
       setVoiceText("");
     }
