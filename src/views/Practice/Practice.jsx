@@ -629,10 +629,10 @@ const Practice = () => {
         },
         {
           completeWord: "कद्दू",
-          syllable: ["कद", "दू"],
+          syllable: ["कद्", "दू"],
           img: getAssetUrl(s3Assets.kadduM2Hin),
           syllablesAudio: [
-            { name: "कद", audio: getAssetAudioUrl(s3Assets.kadM1Hin) },
+            { name: "कद्", audio: getAssetAudioUrl(s3Assets.kadM1Hin) },
             { name: "दू", audio: getAssetAudioUrl(s3Assets.duM1Hin) },
           ],
           completeAudio: getAssetAudioUrl(s3Assets.kadduM1Hin),
@@ -640,7 +640,7 @@ const Practice = () => {
       ],
       P3: [
         { completeWord: "रोटी", syllable: ["रो", "टी"], audio: "rotiM1Hin" },
-        { completeWord: "मूली", syllable: [" Moo", "ली"], audio: "mooliM1Hin" },
+        { completeWord: "मूली", syllable: ["मू", "ली"], audio: "mooliM1Hin" },
         { completeWord: "लीची", syllable: ["ली", "ची"], audio: "lichiM1Hin" },
         {
           completeWord: "नींबू",
