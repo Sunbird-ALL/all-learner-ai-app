@@ -422,11 +422,11 @@ const Practice = () => {
         },
         {
           completeWord: "संतरा",
-          syllable: ["सन", "त्रा"],
+          syllable: ["सं", "तरा"],
           img: getAssetUrl(s3Assets.santraM1HinI),
           syllablesAudio: [
-            { name: "सन", audio: getAssetAudioUrl(s3Assets.sanM1Hin) },
-            { name: "त्रा", audio: getAssetAudioUrl(s3Assets.traM1Hin) },
+            { name: "सं", audio: getAssetAudioUrl(s3Assets.sanM1Hin) },
+            { name: "तरा", audio: getAssetAudioUrl(s3Assets.traM1Hin) },
           ],
           completeAudio: getAssetAudioUrl(s3Assets.santraM1Hin),
         },
