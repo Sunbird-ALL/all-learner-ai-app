@@ -1427,3 +1427,9 @@ export const likeapearlM3Tam = "70d62a46-1980-4b14-bd22-1d05fc593fd2.mp3";
 export const honeybeeM3Tam = "59d0e6e7-4878-49cb-9382-8c1d19621cb7.mp3";
 export const thewheelisspinningM3Tam =
   "bc5ab525-0542-4420-90d2-945897dd8c59.mp3";
+
+export const level14S2OneSAudio = "2fd75d42-74b2-4304-b821-d71186a1f905.mp3";
+export const level14S2TwoSAudio = "999f91e9-3ad4-4851-ba54-6e836be6b9f0.mp3";
+export const level14S2ThreeSAudio = "95ea2f3a-90ca-49e0-82d5-b7637b20e9dd.mp3";
+export const level14S2FourSAudio = "d1db8124-8ee6-408b-a3a1-c235c8cba5d7.mp3";
+export const level14S2FiveSAudio = "f92b237a-4c8c-46df-a6b6-56481139192b.mp3";
