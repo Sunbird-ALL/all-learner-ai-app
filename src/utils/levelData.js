@@ -4244,13 +4244,13 @@ export const level15 = [
   },
   {
     level: "S1",
-    mechanics: "AnouncementFlow",
+    mechanics: "askMore",
     data: {
       images: {
         imageOne: "thingirlImg",
         imageTwo: "femaleAstronautImg",
       },
-      tasks: [
+      conversation: [
         {
           speaker: "What did you feel when you saw Earth from space?",
           user: "My heart floated like a balloon filled with wonder.",
