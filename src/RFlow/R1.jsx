@@ -240,7 +240,7 @@ const levelData = {
         allwords: [
           { img: getAssetUrl(s3Assets.saltR1Hin), text: "Salt" },
           { img: getAssetUrl(s3Assets.teethR1Hin), text: "Teeth" },
-          { img: getAssetUrl(s3Assets.cowR1Hin), text: "Cow" },
+          { img: getAssetUrl(s3Assets.cowR1KanImage), text: "Cow" },
         ],
         correctWord: "Cow",
         audio: getAssetAudioUrl(s3Assets.cowR1HinAud),
@@ -511,7 +511,7 @@ const levelData = {
           { img: getAssetUrl(s3Assets.glassR1KanImage), text: "Glass" },
         ],
         correctWord: "Tree",
-        audio: getAssetAudioUrl(s3Assets.treeR1KanAudio),
+        audio: getAssetAudioUrl(s3Assets.TreeKan),
         flowName: "P2",
       },
       {
@@ -521,7 +521,7 @@ const levelData = {
           { img: getAssetUrl(s3Assets.monkeyR1KanImage), text: "Monkey" },
         ],
         correctWord: "Juice",
-        audio: getAssetAudioUrl(s3Assets.juiceR1KanAudio),
+        audio: getAssetAudioUrl(s3Assets.RasajuiceKan),
         flowName: "P3",
       },
       {
@@ -641,7 +641,7 @@ const levelData = {
           { img: getAssetUrl(s3Assets.lionR1KanImage), text: "Lion" },
         ],
         correctWord: "Lion",
-        audio: getAssetAudioUrl(s3Assets.lionR1KanAudio),
+        audio: getAssetAudioUrl(s3Assets.lionKan),
         flowName: "P15",
       },
     ],
