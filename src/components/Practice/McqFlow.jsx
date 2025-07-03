@@ -254,7 +254,7 @@ const McqFlow = ({
     let responseText = "";
     //console.log("apiResp", responseText);
     await callTelemetryApi(
-      conversation?.tasks[currentStep - 1]?.answer,
+      correctAnswer,
       sessionId,
       currentStep - 1,
       recAudio,
