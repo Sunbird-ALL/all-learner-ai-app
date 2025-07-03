@@ -47,6 +47,11 @@ import {
 } from "../../utils/constants";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
+import {
+  fetchASROutput,
+  handleTextEvaluation,
+  callTelemetryApi,
+} from "../../utils/apiUtil";
 
 const levelMap = {
   10: level10,
@@ -210,6 +215,23 @@ const R3 = ({
     }, 3000);
   };
 
+  const callTelemetry = async () => {
+    const sessionId = getLocalData("sessionId");
+    const responseStartTime = new Date().getTime();
+    let responseText = "";
+    let base64Data = "";
+    //console.log("bvlobss", recordedBlob);
+
+    await callTelemetryApi(
+      conversation[currentStep - 1]?.answer,
+      sessionId,
+      currentStep - 1,
+      base64Data,
+      responseStartTime,
+      responseText?.responseText || ""
+    );
+  };
+
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     setActiveIndex((prev) =>
@@ -332,6 +354,7 @@ const R3 = ({
         setShowRecordButton(false);
         setShowReset(false);
         handleNext();
+        callTelemetry();
         reset();
       }, 4000);
     } else {
