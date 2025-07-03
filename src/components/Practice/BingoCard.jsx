@@ -1033,7 +1033,7 @@ const BingoCard = ({
           },
           ಬೆಕ್ಕು: {
             image: getAssetUrl(s3Assets.catM2KanI),
-            audio: getAssetAudioUrl(s3Assets.catM2Kan),
+            audio: getAssetAudioUrl(s3Assets.catM2Kan), //audio should be chnaged(beekku)
           },
           ಬಾತುಕೋಳಿ: {
             image: getAssetUrl(s3Assets.duckM2KanI),
@@ -1133,11 +1133,11 @@ const BingoCard = ({
           "నికుడు",
           "నీ",
           "ము",
-          "జుట్",
+          "జు",
           "క",
           "గ్గు",
           "న్ను",
-          "టు",
+          "ట్టు",
         ],
         imageAudioMap: {
           సైనికుడు: {
@@ -1167,17 +1167,17 @@ const BingoCard = ({
       L4: {
         words: [
           "తేనె",
-          "టు",
-          "కా",
-          "ముక్",
+          "ట్టు",
+          "క్కా",
+          "ము",
           "లు",
           "నీ",
-          "చోక్",
+          "చొ",
           "టీగ",
-          "చెట్",
-          "పన్",
-          "ను",
-          "కు",
+          "చె",
+          "ప",
+          "న్ను",
+          "క్కు",
         ],
         imageAudioMap: {
           చెట్టు: {

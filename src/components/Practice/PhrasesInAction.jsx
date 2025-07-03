@@ -3346,17 +3346,17 @@ const PhrasesInAction = ({
           step1: {
             allwords: [
               {
-                img: getAssetUrl(s3Assets.fillthewaterM3Kan),
-                text: "ನೀರು ತುಂಬು",
+                img: getAssetUrl(s3Assets.therousterHenM3Kan),
+                text: "ಕೋಳಿ ಕೂಗಿತು",
               },
             ],
-            audio: getAssetAudioUrl(s3Assets.fillTheWaterM3KanAudio),
+            audio: getAssetAudioUrl(s3Assets.rousterhen),
           },
           step2: {
             allwordsTwo: [
               {
-                img: getAssetUrl(s3Assets.fillthewaterM3Kan),
-                text: "ನೀರು ತುಂಬು",
+                img: getAssetUrl(s3Assets.therousterHenM3Kan),
+                text: "ಕೋಳಿ ಕೂಗಿತು",
               },
               {
                 img: getAssetUrl(s3Assets.fillthewaterM3Kan),
@@ -3367,8 +3367,8 @@ const PhrasesInAction = ({
                 text: "ಅಂದದ ಸರ",
               },
             ],
-            correctWordTwo: "ನೀರು ತುಂಬು",
-            audio: getAssetAudioUrl(s3Assets.fillTheWaterM3KanAudio),
+            correctWordTwo: "ಕೋಳಿ ಕೂಗಿತು",
+            audio: getAssetAudioUrl(s3Assets.rousterhen),
           },
         },
         {
