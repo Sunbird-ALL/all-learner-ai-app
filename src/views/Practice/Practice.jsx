@@ -4169,7 +4169,7 @@ const Practice = () => {
 
   //console.log("prog", progressDatas);
 
-  const rFlow = "true";
+  const rFlow = String(getLocalData("rFlow"));
   const tFlow = String(getLocalData("tFlow"));
 
   // useEffect(() => {
