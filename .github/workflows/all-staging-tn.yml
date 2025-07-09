@@ -3,7 +3,7 @@ name: ALL tn staging Deployment
 on:
   push:
     branches:
-      - all-1.3-tn-staging-hotfix
+      - mozhigal-2.1-staging
 
 jobs:
   deploy:
