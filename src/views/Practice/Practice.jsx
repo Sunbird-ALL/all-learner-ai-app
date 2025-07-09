@@ -1175,11 +1175,11 @@ const Practice = () => {
           syllable: ["ಬ", "ಟಾ", "ಣಿ"],
           img: getAssetUrl(s3Assets.peasM1KanI),
           syllablesAudio: [
-            { name: "ಬ", audio: getAssetAudioUrl(s3Assets.peas1M1SylKan) },
-            { name: "ಟಾ", audio: getAssetAudioUrl(s3Assets.peas2M1SylKan) },
-            { name: "ಣಿ", audio: getAssetAudioUrl(s3Assets.peas3M1SylKan) },
+            { name: "ಬ", audio: getAssetAudioUrl(s3Assets.Peas1) },
+            { name: "ಟಾ", audio: getAssetAudioUrl(s3Assets.Peas2) },
+            { name: "ಣಿ", audio: getAssetAudioUrl(s3Assets.Peas3) },
           ],
-          completeAudio: getAssetAudioUrl(s3Assets.peasM1Kan),
+          completeAudio: getAssetAudioUrl(s3Assets.Peas),
         },
         {
           completeWord: "ಮೀನು",
@@ -1241,11 +1241,11 @@ const Practice = () => {
           syllable: ["ಹೂ", "ಕೋ", "ಸು"],
           img: getAssetUrl(s3Assets.cabbageM1KanI),
           syllablesAudio: [
-            { name: "ಹೂ", audio: getAssetAudioUrl(s3Assets.cabbage1M1SylKan) },
-            { name: "ಕೋ", audio: getAssetAudioUrl(s3Assets.cabbage2M1SylKan) },
-            { name: "ಸು", audio: getAssetAudioUrl(s3Assets.cabbage3M1SylKan) },
+            { name: "ಹೂ", audio: getAssetAudioUrl(s3Assets.Cauliflower_1) },
+            { name: "ಕೋ", audio: getAssetAudioUrl(s3Assets.Cauliflower_2) },
+            { name: "ಸು", audio: getAssetAudioUrl(s3Assets.Cauliflower_3) },
           ],
-          completeAudio: getAssetAudioUrl(s3Assets.cabbageM1Kan),
+          completeAudio: getAssetAudioUrl(s3Assets.Cauliflower),
         },
         {
           completeWord: "ಭೂಮಿ",
@@ -2828,7 +2828,7 @@ const Practice = () => {
     },
     kn: {
       P1: [
-        { completeWord: "ರವಿ", syllable: ["ರ", "ವಿ"], audio: "sunM2Kan" },
+        { completeWord: "ರವಿ", syllable: ["ರ", "ವಿ"], audio: "Ravi_Sun" },
         {
           completeWord: "ಸಹೋದರ",
           syllable: ["ಸ", "ಹೋದರ"],
@@ -4169,7 +4169,7 @@ const Practice = () => {
 
   //console.log("prog", progressDatas);
 
-  const rFlow = String(getLocalData("rFlow"));
+  const rFlow = "true";
   const tFlow = String(getLocalData("tFlow"));
 
   // useEffect(() => {
