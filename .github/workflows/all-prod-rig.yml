@@ -3,7 +3,7 @@ name: ALL rig prod Deployment
 on:
   push:
     branches:
-      - test-rig-1.1-prod
+      - test-rig-temp-2.0.0
 
 jobs:
   deploy:
