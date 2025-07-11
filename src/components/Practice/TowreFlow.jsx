@@ -195,7 +195,7 @@ const CombinedReportPage = ({
   const attemptedWordsCount = wordCount;
   const correctWordsCount = allWords.filter((word) => word.isCorrect).length;
   const wordsPerMinute = Math.round((correctWordsCount / totalSec) * 60);
-  const unattemptedWordsCount = allWords.length - wordCount;
+  const unattemptedWordsCount = allWords.length - correctWordsCount;
   const newWordsLearnt = correctWordsCount;
   const totalWordsLearnt = correctWordsCount + wpm;
   const renderResults = () => (
