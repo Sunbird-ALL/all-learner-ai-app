@@ -1247,7 +1247,7 @@ const levelData = {
           { img: getAssetUrl(s3Assets.personR1TamImage), text: "Person" },
           { img: getAssetUrl(s3Assets.runR1TamImage), text: "Run" },
         ],
-        correctWord: "Flag",
+        correctWord: "FLag",
         audio: getAssetAudioUrl(s3Assets.flagR1TamAudio),
         flowName: "P21",
       },
