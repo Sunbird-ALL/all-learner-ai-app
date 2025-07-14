@@ -29,6 +29,8 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { addTowreRecord } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
+import S3Client from "../../config/awsS3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 env.localModelPath = "https://huggingface.co/Xenova/whisper-tiny/resolve/main/";
 
@@ -195,7 +197,7 @@ const CombinedReportPage = ({
   const attemptedWordsCount = wordCount;
   const correctWordsCount = allWords.filter((word) => word.isCorrect).length;
   const wordsPerMinute = Math.round((correctWordsCount / totalSec) * 60);
-  const unattemptedWordsCount = allWords.length - wordCount;
+  const unattemptedWordsCount = allWords.length - correctWordsCount;
   const newWordsLearnt = correctWordsCount;
   const totalWordsLearnt = correctWordsCount + wpm;
   const renderResults = () => (
@@ -803,6 +805,18 @@ const TowreFlow = ({
 
   const getPhonetic = (word) => doubleMetaphone(word)[0];
 
+  const blobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64data = reader.result.split(",")[1];
+        resolve(base64data);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
   const startAudioRecording = async () => {
     try {
       chunksRef.current = [];
@@ -862,7 +876,31 @@ const TowreFlow = ({
             word.isCorrect = isSpoken;
           });
 
-          await addTowreRecord(audioBlob, allWords);
+          const base64Audio = await blobToBase64(audioBlob);
+
+          const sessionId = getLocalData("sessionId");
+          var audioFileName = "";
+          let getContentId = "towre";
+          audioFileName = `${
+            process.env.REACT_APP_CHANNEL
+          }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+
+          const command = new PutObjectCommand({
+            Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
+            Key: audioFileName,
+            Body: Uint8Array.from(window.atob(base64Audio), (c) =>
+              c.charCodeAt(0)
+            ),
+            ContentType: "audio/wav",
+          });
+          try {
+            await S3Client.send(command);
+            //console.log("Upload success");
+          } catch (err) {
+            console.error("Upload failed:", err);
+          }
+
+          await addTowreRecord(audioFileName, allWords);
 
           setLoading(false);
           setCompleted(true);
@@ -883,7 +921,7 @@ const TowreFlow = ({
           });
 
           try {
-            await addTowreRecord(audioBlob, allWords);
+            await addTowreRecord(audioFileName, allWords);
           } catch (apiErr) {
             console.error("Error sending TOWRE record:", apiErr);
             setLoading(false);
