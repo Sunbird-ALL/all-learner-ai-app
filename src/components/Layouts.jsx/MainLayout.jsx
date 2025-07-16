@@ -50,7 +50,8 @@ import {
   ROneImg,
   setLocalData,
 } from "../../utils/constants";
-
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import { ProfileHeader } from "../Assesment/Assesment";
 import Confetti from "react-confetti";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
@@ -339,7 +340,35 @@ const MainLayout = (props) => {
   }, [startShowCase, isShowCase, gameOverData, audioCache]);
 
   let currentPracticeStep = progressData?.currentPracticeStep;
+  const [currentPageStart, setCurrentPageStart] = useState(0);
+  const prevActiveFlow = useRef(null);
 
+  useEffect(() => {
+    if (!flowNames || !activeFlow) return;
+
+    const activeIndex = flowNames.indexOf(activeFlow);
+    if (activeIndex === -1) return;
+
+    const currentPageEnd = currentPageStart + 9;
+
+    if (activeIndex > currentPageEnd && activeFlow !== prevActiveFlow.current) {
+      const newPageStart = Math.floor(activeIndex / 10) * 10;
+      setCurrentPageStart(newPageStart);
+    }
+
+    prevActiveFlow.current = activeFlow;
+  }, [activeFlow, flowNames]);
+
+  const handleNext1 = () => {
+    if (!flowNames) return;
+    const newStart = Math.min(flowNames.length - 10, currentPageStart + 10);
+    setCurrentPageStart(newStart);
+  };
+
+  const handlePrev = () => {
+    const newStart = Math.max(0, currentPageStart - 10);
+    setCurrentPageStart(newStart);
+  };
   const sectionStyle = {
     width: "100%",
     backgroundImage: `url(${
@@ -735,71 +764,122 @@ const MainLayout = (props) => {
                               display: "flex",
                               flexDirection: "column",
                               justifyContent: "center",
+                              maxWidth: "100%",
+                              overflow: "hidden",
                             }}
                           >
                             <Box
                               sx={{
                                 display: "flex",
-                                justifyContent: "center",
                                 alignItems: "center",
                                 height: "48px",
-                                border: "1.5px solid rgba(51, 63, 97, 0.15)",
-                                ml: { xs: 10, sm: 15, lg: 25, md: 18 },
-                                borderRadius: "30px",
-                                background: "white",
                               }}
                             >
-                              {flowNames?.map((flow, i) => (
-                                <Box
-                                  key={i}
-                                  sx={{
-                                    width: {
-                                      xs: "24px",
-                                      sm: "26px",
-                                      md: "28px",
-                                      lg: "36px",
-                                    },
-                                    height: {
-                                      xs: "24px",
-                                      sm: "26px",
-                                      md: "28px",
-                                      lg: "36px",
-                                    },
-                                    background:
-                                      flow === activeFlow
-                                        ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                        : flowNames?.indexOf(flow) <
-                                          flowNames?.indexOf(activeFlow)
-                                        ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
-                                        : "rgba(0, 0, 0, 0.04)",
-                                    ml: { xs: 0.5, sm: 0.5, md: 1.5, lg: 2 },
-                                    mr: i === flowNames?.length - 1 ? 2 : 0,
-                                    borderRadius: "30px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  {flowNames?.indexOf(flow) <
-                                  flowNames?.indexOf(activeFlow) ? (
-                                    <GreenTick />
-                                  ) : (
-                                    <span
-                                      style={{
-                                        color:
+                              <IconButton
+                                onClick={handlePrev}
+                                disabled={currentPageStart === 0}
+                                sx={{
+                                  mr: 1,
+                                  visibility:
+                                    currentPageStart === 0
+                                      ? "hidden"
+                                      : "visible",
+                                }}
+                              >
+                                <ChevronLeft />
+                              </IconButton>
+
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  height: "48px",
+                                  border: "1.5px solid rgba(51, 63, 97, 0.15)",
+                                  borderRadius: "30px",
+                                  background: "white",
+                                  overflow: "hidden",
+                                }}
+                              >
+                                {flowNames
+                                  ?.slice(
+                                    currentPageStart,
+                                    currentPageStart + 10
+                                  )
+                                  .map((flow, i) => (
+                                    <Box
+                                      key={i}
+                                      sx={{
+                                        width: {
+                                          xs: "24px",
+                                          sm: "26px",
+                                          md: "28px",
+                                          lg: "36px",
+                                        },
+                                        height: {
+                                          xs: "24px",
+                                          sm: "26px",
+                                          md: "28px",
+                                          lg: "36px",
+                                        },
+                                        background:
                                           flow === activeFlow
-                                            ? "white"
-                                            : "#1E2937",
-                                        fontWeight: 600,
-                                        fontSize: "16px",
-                                        fontFamily: "Quicksand",
+                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
+                                            : flowNames?.indexOf(flow) <
+                                              flowNames?.indexOf(activeFlow)
+                                            ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
+                                            : "rgba(0, 0, 0, 0.04)",
+                                        ml: {
+                                          xs: 0.5,
+                                          sm: 0.5,
+                                          md: 1.5,
+                                          lg: 2,
+                                        },
+                                        mr: i === 9 ? 2 : 0,
+                                        borderRadius: "30px",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        flexShrink: 0,
                                       }}
                                     >
-                                      {flow}
-                                    </span>
-                                  )}
-                                </Box>
-                              ))}
+                                      {flowNames?.indexOf(flow) <
+                                      flowNames?.indexOf(activeFlow) ? (
+                                        <GreenTick />
+                                      ) : (
+                                        <span
+                                          style={{
+                                            color:
+                                              flow === activeFlow
+                                                ? "white"
+                                                : "#1E2937",
+                                            fontWeight: 600,
+                                            fontSize: "16px",
+                                            fontFamily: "Quicksand",
+                                          }}
+                                        >
+                                          {flow}
+                                        </span>
+                                      )}
+                                    </Box>
+                                  ))}
+                              </Box>
+
+                              <IconButton
+                                onClick={handleNext1}
+                                disabled={
+                                  currentPageStart + 10 >= flowNames.length
+                                }
+                                sx={{
+                                  ml: 1,
+                                  visibility:
+                                    currentPageStart + 10 >= flowNames.length
+                                      ? "hidden"
+                                      : "visible",
+                                }}
+                              >
+                                <ChevronRight />
+                              </IconButton>
                             </Box>
                           </Box>
                         </Box>
