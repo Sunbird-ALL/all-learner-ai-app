@@ -19,7 +19,7 @@ import v7 from "../assets/audio/V7.m4a";
 import v8 from "../assets/audio/V8.m4a";
 import livesAdd from "../assets/audio/livesAdd.wav";
 import livesCut from "../assets/audio/livesCut.wav";
-import { response } from "../services/telementryService";
+import { Log, response } from "../services/telementryService";
 import AudioCompare from "./AudioCompare";
 import PropTypes from "prop-types";
 import {
@@ -360,6 +360,8 @@ function VoiceAnalyser(props) {
       const virtualId = getLocalData("virtualId");
       const sessionId = getLocalData("sessionId");
       const sub_session_id = getLocalData("sub_session_id");
+      let milestoneData = getLocalData("getMilestone");
+      let milestone = JSON.parse(milestoneData);
       const { originalText, contentType, contentId, currentLine } = props;
       const responseStartTime = new Date().getTime();
       let responseText = "";
@@ -378,6 +380,7 @@ function VoiceAnalyser(props) {
         contentId,
         contentType,
         mechanics_id: getLocalData("mechanism_id") || "",
+        milestone: milestone?.data?.milestone_level || "",
       };
 
       if (props.selectedOption) {
