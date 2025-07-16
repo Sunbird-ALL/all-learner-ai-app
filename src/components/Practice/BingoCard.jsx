@@ -934,7 +934,7 @@ const BingoCard = ({
           "ಸಿಹಿ",
           "ಪಾರಿ",
           "ತ್ತ",
-          "ವಾಳ",
+          "ಜಾತ",
           "ನಸ್",
           "ತಿಂಡಿ",
         ],
@@ -947,9 +947,9 @@ const BingoCard = ({
             image: getAssetUrl(s3Assets.hibiscusM2KanI),
             audio: getAssetAudioUrl(s3Assets.hibiscusM2Kan),
           },
-          ಪಾರಿವಾಳ: {
-            image: getAssetUrl(s3Assets.pigeonM2KanI),
-            audio: getAssetAudioUrl(s3Assets.pigeonM2Kan),
+          ಪಾರಿಜಾತ: {
+            image: getAssetUrl(s3Assets.parijataImg),
+            audio: getAssetAudioUrl(s3Assets.Parijat),
           },
           ಅನಾನಸ್: {
             image: getAssetUrl(s3Assets.pineappleM2KanI),
@@ -960,7 +960,7 @@ const BingoCard = ({
             audio: getAssetAudioUrl(s3Assets.sweetsM2Kan),
           },
         },
-        arrM: ["ಕಂಠಹಾರ", "ದಾಸವಾಳ", "ಪಾರಿವಾಳ", "ಅನಾನಸ್", "ಸಿಹಿತಿಂಡಿ"],
+        arrM: ["ಕಂಠಹಾರ", "ದಾಸವಾಳ", "ಪಾರಿಜಾತ", "ಅನಾನಸ್", "ಸಿಹಿತಿಂಡಿ"],
       },
 
       L3: {
@@ -997,7 +997,7 @@ const BingoCard = ({
           },
           ಉಣ್ಣೆ: {
             image: getAssetUrl(s3Assets.woolM2KanI),
-            audio: getAssetAudioUrl(s3Assets.woolM2Kan),
+            audio: getAssetAudioUrl(s3Assets.whoolKan),
           },
         },
         arrM: ["ಕತ್ತರಿ", "ಕತ್ತೆ", "ಈರುಳ್ಳಿ", "ಪಪ್ಪಾಯಿ", "ಉಣ್ಣೆ"],
@@ -1021,7 +1021,7 @@ const BingoCard = ({
         imageAudioMap: {
           ಚಾಕೋಲೇಟು: {
             image: getAssetUrl(s3Assets.chocolateM2KanI),
-            audio: getAssetAudioUrl(s3Assets.chocolateM2Kan),
+            audio: getAssetAudioUrl(s3Assets.ChocolateKan),
           },
           ಚಿಟ್ಟೆ: {
             image: getAssetUrl(s3Assets.butterflyM2KanI),
@@ -1033,7 +1033,7 @@ const BingoCard = ({
           },
           ಬೆಕ್ಕು: {
             image: getAssetUrl(s3Assets.catM2KanI),
-            audio: getAssetAudioUrl(s3Assets.catM2Kan), //audio should be chnaged(beekku)
+            audio: getAssetAudioUrl(s3Assets.catKan),
           },
           ಬಾತುಕೋಳಿ: {
             image: getAssetUrl(s3Assets.duckM2KanI),
@@ -1380,7 +1380,7 @@ const BingoCard = ({
       ಚಾಕೋಲೇಟು: ["ಚಾಕೋ", "ಲೇಟು"],
       ಚಿಟ್ಟೆ: ["ಚಿ", "ಟ್ಟೆ"],
       ರೊಟ್ಟಿ: ["ರೊ", "ಟ್ಟಿ"],
-      ಬೆಕ್ಕು: ["ಬೆಕ್", "ಕು"],
+      ಬೆಕ್ಕು: ["ಬೆ", "ಕ್ಕು"],
       ಬಾತುಕೋಳಿ: ["ಬಾತು", "ಕೋಳಿ"],
       రచయిత: ["రచ", "యిత"],
       గాలిపటం: ["గాలి", "పటం"],
