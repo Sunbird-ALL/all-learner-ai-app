@@ -133,10 +133,8 @@ export const updateLearnerProfile = async (lang, requestBody) => {
 export const addTowreRecord = async (audioPath, towreResult) => {
   const sessionId = getLocalData("sessionId");
 
-  const audioBase64 = await blobToBase64(audioPath);
-
   const payload = {
-    audio_file_path: audioBase64,
+    audio_file_path: `${audioPath}`,
     session_id: sessionId,
     language: "en",
     towre_result: towreResult,
