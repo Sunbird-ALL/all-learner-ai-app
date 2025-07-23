@@ -35,21 +35,23 @@ const App = () => {
         error.response &&
         (error.response.status === 401 || error.response.status === 400)
       ) {
-        if (
-          localStorage.getItem("contentSessionId") &&
-          process.env.REACT_APP_IS_APP_IFRAME === "true"
-        ) {
-          window.parent.postMessage(
-            {
-              message: "Unauthorized",
-            },
-            window?.location?.ancestorOrigins?.[0] ||
-              window.parent.location.origin
-          );
-        } else {
-          localStorage.clear();
-          sessionStorage.clear();
-          navigate("/login");
+        if (error?.response?.data?.error !== "Profanity detected.") {
+          if (
+            localStorage.getItem("contentSessionId") &&
+            process.env.REACT_APP_IS_APP_IFRAME === "true"
+          ) {
+            window.parent.postMessage(
+              {
+                message: "Unauthorized",
+              },
+              window?.location?.ancestorOrigins?.[0] ||
+                window.parent.location.origin
+            );
+          } else {
+            localStorage.clear();
+            sessionStorage.clear();
+            navigate("/login");
+          }
         }
       }
       return Promise.reject(error);
