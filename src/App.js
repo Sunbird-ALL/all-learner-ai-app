@@ -35,7 +35,10 @@ const App = () => {
         error.response &&
         (error.response.status === 401 || error.response.status === 400)
       ) {
-        if (error?.response?.data?.error !== "Profanity detected.") {
+        const errorMessage = error?.response?.data?.message
+          ?.trim()
+          ?.toLowerCase();
+        if (!errorMessage?.includes("profanity")) {
           if (
             localStorage.getItem("contentSessionId") &&
             process.env.REACT_APP_IS_APP_IFRAME === "true"
