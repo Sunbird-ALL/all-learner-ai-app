@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { ThemeProvider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "../node_modules/react-router-dom/dist/index";
 import { StyledEngineProvider } from "@mui/material/styles";
 import routes from "./routes";
 import { AppContent } from "./views";
@@ -50,7 +50,12 @@ const App = () => {
               window?.location?.ancestorOrigins?.[0] ||
                 window.parent.location.origin
             );
+            console.log("if logout!");
+            localStorage.clear();
+            sessionStorage.clear();
+            navigate("/login");
           } else {
+            console.log("else logout!");
             localStorage.clear();
             sessionStorage.clear();
             navigate("/login");
