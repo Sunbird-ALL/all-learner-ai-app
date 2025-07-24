@@ -45,7 +45,7 @@ const App = () => {
           ) {
             window.parent.postMessage(
               {
-                message: "Unauthorized",
+                message: "Logged out!",
               },
               window?.location?.ancestorOrigins?.[0] ||
                 window.parent.location.origin
@@ -53,7 +53,6 @@ const App = () => {
             console.log("if logout!");
             localStorage.clear();
             sessionStorage.clear();
-            navigate("/login");
           } else {
             console.log("else logout!");
             localStorage.clear();
