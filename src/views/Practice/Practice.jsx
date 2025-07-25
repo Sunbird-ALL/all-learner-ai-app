@@ -5388,6 +5388,15 @@ const Practice = () => {
             options: questions[currentQuestion]?.mechanics_data
               ? questions[currentQuestion]?.mechanics_data[0]?.options
               : [],
+            setOpenMessageDialog,
+            startShowCase,
+            setStartShowCase,
+            livesData,
+            setLivesData,
+            gameOverData,
+            highlightWords,
+            percentage,
+            fluency,
             isNextButtonCalled,
             setIsNextButtonCalled,
             vocabCount,
