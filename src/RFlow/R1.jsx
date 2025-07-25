@@ -26,6 +26,7 @@ import {
   setLocalData,
 } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
+import { response } from "../services/telementryService";
 
 const theme = createTheme();
 
@@ -2965,6 +2966,20 @@ const R1 = ({
                     }
                   } else {
                     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+                    response(
+                      {
+                        // Required
+                        target: "", // Required. Target of the response
+                        //"qid": "", // Required. Unique assessment/question id
+                        type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
+                        values: [
+                          { original_text: currentQuestion?.correctWord },
+                          { level: "R1" },
+                          { isCorrect: "true" },
+                        ],
+                      },
+                      "ET"
+                    );
                   }
                 }}
                 src={Assets.pause}
@@ -3019,6 +3034,20 @@ const R1 = ({
                       }
                     } else {
                       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+                      response(
+                        {
+                          // Required
+                          target: "", // Required. Target of the response
+                          //"qid": "", // Required. Unique assessment/question id
+                          type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
+                          values: [
+                            { original_text: currentQuestion?.correctWord },
+                            { level: "R1" },
+                            { isCorrect: "true" },
+                          ],
+                        },
+                        "ET"
+                      );
                     }
                   }}
                   src={Assets.pause}

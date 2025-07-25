@@ -1431,48 +1431,71 @@ const Practice = () => {
       ],
       P1: [
         {
-          completeWord: "నిప్పు",
-          syllable: ["ని", "ప్పు"],
-          audio: "fireM1Tel",
-        },
-        { completeWord: "కత్తి", syllable: ["కత్", "తి"], audio: "knifeM1Tel" },
-        {
-          completeWord: "గుర్రం",
-          syllable: ["గు", "ర్రం"],
-          audio: "horseM1Tel",
+          completeWord: "కాఫీ",
+          syllable: ["కా", "ఫీ"],
+          audio: "coffee_M1Audio",
         },
         {
-          completeWord: "పువ్వు",
-          syllable: ["పు", "వ్వు"],
-          audio: "flowerM1Tel",
+          completeWord: "వీధి",
+          syllable: ["వీ", "ధి"],
+          audio: "street_M1Audio",
         },
         {
-          completeWord: "అల్లం",
-          syllable: ["అల్", "లం"],
-          audio: "gingerM1Tel",
+          completeWord: "నలుపు",
+          syllable: ["న", "లుపు"],
+          audio: "black_M1Audio",
+        },
+        {
+          completeWord: "అరటి",
+          syllable: ["అ", "రటి"],
+          audio: "banana_M1Audio",
+        },
+        {
+          completeWord: "నగరం",
+          syllable: ["న", "గరం"],
+          audio: "city_M1Audio",
         },
       ],
       P2: [
         {
-          completeWord: "ముగ్గు",
-          syllable: ["ము", "గ్గు"],
-          audio: "rangoliM1Tel",
+          completeWord: "దారం",
+          syllable: ["దా", "రం"],
+          audio: "thread_M1Audio",
         },
         {
-          completeWord: "అవ్వ",
-          syllable: ["అ", "వ్వ"],
-          audio: "gandmotherM1Tel",
+          completeWord: "ఎరుపు",
+          syllable: ["ఎ", "రుపు"],
+          audio: "red_M1Audio",
         },
-        { completeWord: "బస్సు", syllable: ["బస్", "సు"], audio: "busM1Tel" },
+        {
+          completeWord: "కుంచె",
+          syllable: ["కు", "ంచె"],
+          audio: "brush_M1Audio",
+        },
         { completeWord: "గీయు", syllable: ["గీ", "యు"], audio: "drawM1Tel" },
         { completeWord: "ఎముక", syllable: ["ఎ", "ముక"], audio: "boneM1Tel" },
       ],
       S1: [
-        { completeWord: "గద్ద", syllable: ["గద్ద"] },
-        { completeWord: "బుట్ట", syllable: ["బు", "ట్ట"] },
-        { completeWord: "సబ్బు", syllable: ["సబ్", "బు"] },
-        { completeWord: "కప్పు", syllable: ["కప్", "పు"] },
-        { completeWord: "కుక్క", syllable: ["కు", "క్క"] },
+        {
+          completeWord: "నగ",
+          syllable: ["నగ"],
+        },
+        {
+          completeWord: "బడి",
+          syllable: ["బ", "డి"],
+        },
+        {
+          completeWord: "కల",
+          syllable: ["కల"],
+        },
+        {
+          completeWord: "ఈత",
+          syllable: ["ఈ", "త"],
+        },
+        {
+          completeWord: "దండ",
+          syllable: ["దం", "డ"],
+        },
       ],
       L3: [
         {
@@ -1603,16 +1626,43 @@ const Practice = () => {
           audio: "grasshopperM1Tel",
         },
         { completeWord: "టోపీ", syllable: ["టో", "పీ"], audio: "capM1Tel" },
-        { completeWord: "గడ్డి", syllable: ["గ్", "డి"], audio: "grassM1Tel" },
-        { completeWord: "లడ్డు", syllable: ["లడ్", "డు"], audio: "ladduM1Tel" },
-        { completeWord: "నవ్వు", syllable: ["న", "వ్వు"], audio: "laughM1Tel" },
+        {
+          completeWord: "గది",
+          syllable: ["గ", "ది"],
+          audio: "room_M1Audio",
+        },
+        {
+          completeWord: "తల",
+          syllable: ["త", "ల"],
+          audio: "head_M1Audio",
+        },
+        {
+          completeWord: "నేల",
+          syllable: ["నే", "ల"],
+          audio: "floor_M1Audio",
+        },
       ],
       S2: [
-        { completeWord: "బల్ల", syllable: ["బల్", "ల"] },
-        { completeWord: "గుడ్డు", syllable: ["గు", "డ్డు"] },
-        { completeWord: "మబ్బు", syllable: ["మబ్", "బు"] },
-        { completeWord: "ఉప్పు", syllable: ["ఉప్", "పు"] },
-        { completeWord: "మొక్క", syllable: ["మొ", "క్క"] },
+        {
+          completeWord: "గోడ",
+          syllable: ["గో", "డ"],
+        },
+        {
+          completeWord: "తోట",
+          syllable: ["తో", "ట"],
+        },
+        {
+          completeWord: "దీపం",
+          syllable: ["దీ", "పం"],
+        },
+        {
+          completeWord: "నది",
+          syllable: ["న", "ది"],
+        },
+        {
+          completeWord: "కల",
+          syllable: ["కల"],
+        },
       ],
     },
     gu: {
@@ -5388,6 +5438,15 @@ const Practice = () => {
             options: questions[currentQuestion]?.mechanics_data
               ? questions[currentQuestion]?.mechanics_data[0]?.options
               : [],
+            setOpenMessageDialog,
+            startShowCase,
+            setStartShowCase,
+            livesData,
+            setLivesData,
+            gameOverData,
+            highlightWords,
+            percentage,
+            fluency,
             isNextButtonCalled,
             setIsNextButtonCalled,
             vocabCount,

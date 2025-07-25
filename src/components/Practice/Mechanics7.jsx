@@ -22,6 +22,7 @@ import addSound from "../../assets/audio/add.mp3";
 import removeSound from "../../assets/remove.wav";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import {
+  practiceSteps,
   WordRedCircle,
   StopButton,
   SpeakButton,
@@ -110,11 +111,21 @@ const Mechanics7 = ({
   } = useSpeechRecognition();
   const transcriptRef = useRef("");
 
-  console.table([
-    { Label: "Final Transcript", Value: transcript },
-    { Label: "Interim Transcript", Value: interimTranscript },
-    { Label: "Is Chrome", Value: isChrome },
-  ]);
+  let progressDatas = getLocalData("practiceProgress");
+  //const virtualId = String(getLocalData("virtualId"));
+
+  if (typeof progressDatas === "string") {
+    progressDatas = JSON.parse(progressDatas);
+  }
+
+  let currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
+  }
+
+  let currentLevel = practiceSteps?.[currentPracticeStep]?.title || "L1";
+
+  let apiLevel = `M${level}-${currentLevel}`;
 
   useEffect(() => {
     transcriptRef.current = transcript;
@@ -210,89 +221,6 @@ const Mechanics7 = ({
 
   console.log("wordSyl", currentText);
 
-  const walkSteps = [
-    {
-      target: ".walkthrough-step-1",
-      content: (
-        <div style={{ textAlign: "center" }}>
-          <img
-            src={Assets.cowStep}
-            alt="Instructor Cow"
-            style={{ width: 80, marginBottom: 10 }}
-          />
-        </div>
-      ),
-      disableBeacon: true,
-      placement: "top",
-    },
-    {
-      target: ".walkthrough-step-2",
-      content: (
-        <div style={{ textAlign: "center" }}>
-          <img
-            src={Assets.cowStep}
-            alt="Instructor Cow"
-            style={{ width: 80, marginBottom: 10 }}
-          />
-        </div>
-      ),
-      disableBeacon: true,
-      placement: "top",
-    },
-    // {
-    //   target: '.walkthrough-step-3',
-    //   content: (
-    //     <div style={{ textAlign: 'center' }}>
-    //       <img src={Assets.cowStep} alt="Instructor Cow" style={{ width: 80, marginBottom: 10 }} />
-    //     </div>
-    //   ),
-    //   disableBeacon: true,
-    //   placement: 'top',
-    // },
-    // {
-    //   target: '.walkthrough-step-4',
-    //   content: (
-    //     <div style={{ textAlign: 'center' }}>
-    //       <img src={Assets.cowStep} alt="Instructor Cow" style={{ width: 80, marginBottom: 10 }} />
-    //     </div>
-    //   ),
-    //   disableBeacon: true,
-    //   placement: 'top',
-    // },
-    // {
-    //   target: '.walkthrough-step-5',
-    //   content: (
-    //     <div style={{ textAlign: 'center' }}>
-    //       <img src={Assets.cowStep} alt="Instructor Cow" style={{ width: 80, marginBottom: 10 }} />
-    //     </div>
-    //   ),
-    //   disableBeacon: true,
-    //   placement: 'top',
-    // },
-  ];
-
-  const MyCustomTooltip = ({ step }) => {
-    return (
-      <div style={{ background: "transparent", boxShadow: "none", padding: 0 }}>
-        <img
-          src={Assets.cowStep}
-          alt="Cow Instructor"
-          style={{ width: 100, height: 100 }}
-        />
-      </div>
-    );
-  };
-
-  // useEffect(() => {
-  //   const hasSeenWalkthrough = localStorage.getItem('hasSeenWalkthrough');
-  //   if (!hasSeenWalkthrough) {
-  //     setRun(true);
-  //     localStorage.setItem('hasSeenWalkthrough', 'true');
-  //   }
-  // }, []);
-
-  //setCompleteAudio(currentImg?.completeAudio);
-
   const startAudioRecording = async () => {
     try {
       chunksRef.current = [];
@@ -380,7 +308,8 @@ const Mechanics7 = ({
       currentStep - 1,
       recAudio,
       responseStartTime,
-      responseText?.responseText || ""
+      currentText,
+      apiLevel
     );
   };
 

@@ -105,7 +105,8 @@ export const callTelemetryApi = async (
   currentLine,
   base64Data,
   responseStartTime,
-  responseText
+  responseText,
+  level
 ) => {
   //const responseStartTime = new Date().getTime();
   const responseEndTime = new Date().getTime();
@@ -207,6 +208,7 @@ export const callTelemetryApi = async (
         { response_word_result: word_result },
         { accuracy_percentage: finalScore },
         { duration: responseDuration },
+        ...(level ? [{ level }] : []),
       ],
     },
     "ET"

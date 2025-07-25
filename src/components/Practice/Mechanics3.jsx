@@ -68,6 +68,10 @@ const Mechanics2 = ({
   setIsNextButtonCalled,
   vocabCount,
   wordCount,
+  startShowCase,
+  setStartShowCase,
+  livesData,
+  gameOverData,
 }) => {
   const [words, setWords] = useState([]);
   const [sentences, setSentences] = useState([]);
@@ -166,6 +170,12 @@ const Mechanics2 = ({
         handleBack,
         disableScreen,
         loading,
+        isShowCase,
+        startShowCase,
+        setStartShowCase,
+        livesData,
+        gameOverData,
+        setIsNextButtonCalled,
         vocabCount,
         wordCount,
       }}
