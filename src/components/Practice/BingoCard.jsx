@@ -112,6 +112,22 @@ const BingoCard = ({
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
+  let progressDatas = getLocalData("practiceProgress");
+  //const virtualId = String(getLocalData("virtualId"));
+
+  if (typeof progressDatas === "string") {
+    progressDatas = JSON.parse(progressDatas);
+  }
+
+  let currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
+  }
+
+  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+
+  let apiLevel = `M${level}-${currentLevel}`;
+
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
@@ -236,7 +252,8 @@ const BingoCard = ({
       currentStep - 1,
       base64Data,
       responseStartTime,
-      responseText?.responseText || ""
+      levels[currentLevel]?.arrM[currentWordIndex],
+      apiLevel
     );
   };
 
@@ -342,20 +359,6 @@ const BingoCard = ({
   //     initializeRecognition();
   //   }
   // }, []);
-
-  let progressDatas = getLocalData("practiceProgress");
-  //const virtualId = String(getLocalData("virtualId"));
-
-  if (typeof progressDatas === "string") {
-    progressDatas = JSON.parse(progressDatas);
-  }
-
-  let currentPracticeStep;
-  if (progressDatas) {
-    currentPracticeStep = progressDatas?.currentPracticeStep;
-  }
-
-  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
 
   console.log("loggslevel", currentLevel, currentPracticeStep);
 

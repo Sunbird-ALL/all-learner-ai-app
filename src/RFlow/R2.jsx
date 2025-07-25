@@ -58,6 +58,7 @@ import {
   level12,
   level15,
 } from "../utils/levelData";
+import { response } from "../services/telementryService";
 
 const theme = createTheme();
 
@@ -6683,6 +6684,13 @@ const R2 = ({
 
   const currentQuestion = content?.L1[currentQuestionIndex];
 
+  const correctAnswerIndex = currentQuestion?.options?.findIndex(
+    (option) => option.value === currentQuestion.answer
+  );
+
+  const correctAnswerPosition =
+    correctAnswerIndex !== -1 ? correctAnswerIndex + 1 : null;
+
   const flowNames = [...new Set(content?.L1?.map((item) => item.flowName))];
   const activeFlow =
     content?.L1[currentQuestionIndex]?.flowName || flowNames[0];
@@ -6696,7 +6704,7 @@ const R2 = ({
     }, 3000);
   };
 
-  console.log("cq", currentQuestion, rStep);
+  //console.log("cq", currentQuestion, rStep);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -6815,6 +6823,20 @@ const R2 = ({
         } else {
           console.log("contents", content);
           setCurrentQuestionIndex(currentQuestionIndex + 1);
+          response(
+            {
+              // Required
+              target: "", // Required. Target of the response
+              //"qid": "", // Required. Unique assessment/question id
+              type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
+              values: [
+                { original_text: correctAnswerPosition },
+                { level: "R2" },
+                { isCorrect: "true" },
+              ],
+            },
+            "ET"
+          );
         }
       }, 3000);
     } else {
