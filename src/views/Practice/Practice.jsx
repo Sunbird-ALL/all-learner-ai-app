@@ -59,6 +59,7 @@ import {
 } from "../../services/orchestration/orchestrationService";
 import {
   getContent,
+  getContentNew,
   getFetchMilestoneDetails,
   getSetResultPractice,
 } from "../../services/learnerAi/learnerAiService";
@@ -4452,6 +4453,10 @@ const Practice = () => {
 
       const currentGetContent = getCurrentContent(newPracticeStep);
 
+      const getContentFn = currentGetContent?.mechanism
+        ? getContent
+        : getContentNew;
+
       //console.log("cqer", currentQuestion, questions, level);
 
       // if(updatedLevel === 14){
@@ -4590,7 +4595,7 @@ const Practice = () => {
         }
 
         if (![10, 11, 12, 13, 14, 15].includes(level)) {
-          const resGetContent = await getContent(
+          const resGetContent = await getContentFn(
             currentGetContent.criteria,
             lang,
             limit,
@@ -4843,10 +4848,14 @@ const Practice = () => {
 
       const currentGetContent = getCurrentContent(userState);
 
+      const getContentFn = currentGetContent?.mechanism
+        ? getContent
+        : getContentNew;
+
       //console.log("curGetCont", userState, currentGetContent);
 
       if (![10, 11, 12, 13, 14, 15].includes(level)) {
-        const resWord = await getContent(
+        const resWord = await getContentFn(
           currentGetContent.criteria,
           lang,
           limit,
@@ -4966,10 +4975,14 @@ const Practice = () => {
 
       const currentGetContent = getCurrentContent(newCurrentPracticeStep);
 
+      const getContentFn = currentGetContent?.mechanism
+        ? getContent
+        : getContentNew;
+
       let quesArr = [];
 
       if (![10, 11, 12, 13, 14, 15].includes(level)) {
-        const resWord = await getContent(
+        const resWord = await getContentFn(
           currentGetContent.criteria,
           lang,
           limit,
@@ -5191,9 +5204,7 @@ const Practice = () => {
                 ? `Guess the below image`
                 : `Speak the below ${questions[currentQuestion]?.contentType}`),
             words:
-              level === 1 || level === 2 || level === 3
-                ? levelOneWord
-                : mechanism?.id === "mechanic_15"
+              mechanism?.id === "mechanic_15"
                 ? questions[currentQuestion]?.mechanics_data?.[0]?.text
                 : questions[currentQuestion]?.contentSourceData?.[0]?.text,
             hints: questions[currentQuestion]?.mechanics_data?.[0]?.hints?.text,
