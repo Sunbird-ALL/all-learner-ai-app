@@ -423,7 +423,7 @@ export const patna2 = "c79c4d26-816e-40f2-8c8d-4202385a8687.png";
 
 //M10P5
 export const TvBreakingNewsImg = "3baa6bb2-bba1-439d-8c46-8f5d683925cd.png";
-export const HeavyRainImg = "0c5f0143-c9a3-49f6-8db7-723646dfe300.png";
+export const HeavyRainImg = "7fe91e0a-d0a2-46b0-8e06-e6b18eeb54d5.png";
 export const RainAudio = "2d1586f1-d0de-4f0b-bf34-9a360479f895.mp3";
 
 export const reporter1 = "61a59cfe-aeb7-4c55-93d0-66001fe1f46b.png";
@@ -754,7 +754,7 @@ export const heDancesImg = "0db9a578-3b48-4d6e-908f-3fd95d09c894.png";
 export const sunShinesAudio = "bacfa1df-a291-484a-8bfd-2ce3dd5e4d8d.mp3";
 export const fishSwimImg = "024d99b9-19dc-4bb7-82db-ccc5f23933f8.png";
 //export const dogsBarkImg = "0012d4ce-4413-496e-814f-db47e408f1b5.png";
-export const itRainsImg = "71d1f707-44ad-49d6-a8b5-e37096db3ec7.png";
+export const itRainsImg = "7fe91e0a-d0a2-46b0-8e06-e6b18eeb54d5.png";
 export const fishSwimAudio = "d73b01b7-98d3-44f4-832b-31552e621dbb.mp3";
 export const birdsFlyImg = "e6221717-d50b-4ca0-a0ad-d0ca93c73bfc.png";
 export const sheReadsImg = "53a1261c-45c8-479c-ad78-2e5c5010526b.png";
@@ -2311,7 +2311,7 @@ export const fanR1 = "ad5c26c9-a0ed-4f72-b3cd-3d2f548e4ec8.png";
 export const sunR1 = "1314cc9f-fea2-45a2-8b04-e07374456eed.png";
 export const cubR1 = "7ec09317-229f-42ec-9e16-c7c56fb11f17.png";
 export const mangoR1 = "09e68d7a-75d6-4de2-992d-98732a27e983.png";
-export const rainR1 = "20f1e9e6-6963-4f19-ba93-6c8c0eaf6df0.png";
+export const rainR1 = "7fe91e0a-d0a2-46b0-8e06-e6b18eeb54d5.png";
 export const rootsR1 = "63e45f28-7ed4-40f0-b82d-421751057ca7.png";
 export const kiteR1 = "1cac0ef2-c8a6-44fa-b402-5120fcdac9b4.png";
 export const flagR1 = "e7a13fdd-6ccf-4595-98c5-b97697887e02.png";
@@ -3550,7 +3550,7 @@ export const babyR1Kan = "9e0b6a51-0da5-4c08-b8e7-a189a49febf6.png";
 export const capR1Kan = "f9a897aa-53fa-44d6-9d6a-01b5871e0937.png";
 export const footR1Kan = "75ff38d1-c20f-4662-82cb-0666b301668b.png";
 export const matR1Kan = "9cbf3efd-855e-40c7-9b98-8af6b62f7840.png";
-export const mugR1Kan = "a38b9928-4861-4aee-9e18-dc3422b15fde.png";
+export const mugR1Kan = "e0eb88f3-517e-4986-a878-e72fb44ecb2c.png";
 
 export const tortoiseR1Kan = "ac0ec0d9-e5d9-46d4-a8ee-d1ac1180e837.png";
 export const milkR1Kan = "1f5e9c26-074b-4fb6-ba06-5edeb8246af4.png";
@@ -3655,7 +3655,7 @@ export const headR1TamAudio = "9bfe3633-ce87-4f36-b0ed-530f3ed1be10.mp3";
 export const rainR1TamAudio = "451a4c77-50f1-4083-a236-90b5360cc181.mp3";
 
 export const honeyR1TamImage = "49c982d4-5bc2-4069-a4c4-d966ca05a89b.png";
-export const rainR1TamImage = "163be3f1-4f07-4532-9eb6-ac586e256f0c.png";
+export const rainR1TamImage = "7fe91e0a-d0a2-46b0-8e06-e6b18eeb54d5.png";
 export const jumpR1TamImage = "931e8bd7-74e1-4ff7-9de5-ebf1909a993c.png";
 export const drumR1TamImage = "306b6cf2-8f13-4693-b8f5-04ce69db5ccf.png";
 export const umbrellaR1TamImage = "6be491e0-4e6b-4d01-880f-b54b1b630b60.png";
@@ -3727,7 +3727,7 @@ export const rootR1Tel = "42728737-232e-46a2-9176-f630ec446e1f.png";
 export const fingerR1Tel = "139711b5-7ace-4712-bf92-a6c29194de30.png";
 export const cowR1Tel = "86df8731-fceb-448c-bce4-2513a8c04b50.png";
 export const carR1Tel = "94417c63-db92-4f9e-8ce5-74ca530e887b.png";
-export const plantR1Tel = "ce62e9e5-3801-4cd1-a85d-c963e3f37504.png";
+export const plantR1Tel = "6faef597-2c99-4fcf-9506-630d066b7f30.png";
 
 export const milkR1TelAudio = "74be2d6e-3a49-40b7-89dd-b95d59107e40.mp3";
 export const duckR1TelAudio = "19b0c4b7-11b6-4519-a3e4-cf8f88b826ab.mp3";
