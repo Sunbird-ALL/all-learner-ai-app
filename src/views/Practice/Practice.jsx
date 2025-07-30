@@ -4455,7 +4455,9 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : getContentNew;
+        : process.env.REACT_APP_RECOMMENDATION_API === "true"
+        ? getContentNew
+        : getContent;
 
       //console.log("cqer", currentQuestion, questions, level);
 
@@ -4850,7 +4852,9 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : getContentNew;
+        : process.env.REACT_APP_RECOMMENDATION_API === "true"
+        ? getContentNew
+        : getContent;
 
       //console.log("curGetCont", userState, currentGetContent);
 
@@ -4977,7 +4981,9 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : getContentNew;
+        : process.env.REACT_APP_RECOMMENDATION_API === "true"
+        ? getContentNew
+        : getContent;
 
       let quesArr = [];
 
@@ -5204,7 +5210,13 @@ const Practice = () => {
                 ? `Guess the below image`
                 : `Speak the below ${questions[currentQuestion]?.contentType}`),
             words:
-              mechanism?.id === "mechanic_15"
+              process.env.REACT_APP_RECOMMENDATION_API === "true"
+                ? mechanism?.id === "mechanic_15"
+                  ? questions[currentQuestion]?.mechanics_data?.[0]?.text
+                  : questions[currentQuestion]?.contentSourceData?.[0]?.text
+                : level === 1 || level === 2 || level === 3
+                ? levelOneWord
+                : mechanism?.id === "mechanic_15"
                 ? questions[currentQuestion]?.mechanics_data?.[0]?.text
                 : questions[currentQuestion]?.contentSourceData?.[0]?.text,
             hints: questions[currentQuestion]?.mechanics_data?.[0]?.hints?.text,
