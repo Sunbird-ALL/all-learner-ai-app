@@ -4455,7 +4455,7 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : process.env.REACT_APP_RECOMMENDATION_API === "true"
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true"
         ? getContentNew
         : getContent;
 
@@ -4852,7 +4852,7 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : process.env.REACT_APP_RECOMMENDATION_API === "true"
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true"
         ? getContentNew
         : getContent;
 
@@ -4981,7 +4981,7 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : process.env.REACT_APP_RECOMMENDATION_API === "true"
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true"
         ? getContentNew
         : getContent;
 
@@ -5210,7 +5210,7 @@ const Practice = () => {
                 ? `Guess the below image`
                 : `Speak the below ${questions[currentQuestion]?.contentType}`),
             words:
-              process.env.REACT_APP_RECOMMENDATION_API === "true"
+              process.env.REACT_APP_USE_RECOMMENDATION_API === "true"
                 ? mechanism?.id === "mechanic_15"
                   ? questions[currentQuestion]?.mechanics_data?.[0]?.text
                   : questions[currentQuestion]?.contentSourceData?.[0]?.text
