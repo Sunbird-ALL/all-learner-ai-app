@@ -331,11 +331,11 @@ const levelData = {
           img: getAssetUrl(s3Assets.fullR2),
           type: "text",
         },
-        answer: getAssetAudioUrl(s3Assets.fullR2Eng),
+        answer: getAssetAudioUrl(s3Assets.glassRAudio),
         options: [
           {
-            id: "fullR2Eng",
-            value: getAssetAudioUrl(s3Assets.fullR2Eng),
+            id: "glassRAudio",
+            value: getAssetAudioUrl(s3Assets.glassRAudio),
             type: "audio",
           },
           {
