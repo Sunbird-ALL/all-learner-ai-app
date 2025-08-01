@@ -41,6 +41,7 @@ import { MessageDialog } from "../../components/Assesment/Assesment";
 import { Log } from "../../services/telementryService";
 import Mechanics6 from "../../components/Practice/Mechanics6";
 import Mechanics7 from "../../components/Practice/Mechanics7";
+import ReadMatch from "../../components/Practice/ReadMatch";
 import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
@@ -4222,6 +4223,7 @@ const Practice = () => {
 
   const rFlow = String(getLocalData("rFlow"));
   const tFlow = String(getLocalData("tFlow"));
+  const readMatch = String(getLocalData("readMatch"));
 
   // useEffect(() => {
   //   if (lang !== "en") {
@@ -5186,8 +5188,14 @@ const Practice = () => {
 
   const renderMechanics = () => {
     if (
-      (!mechanism && rFlow !== "true" && tFlow !== "true") ||
-      (mechanism?.id === "mechanic_15" && rFlow !== "true" && tFlow !== "true")
+      (!mechanism &&
+        rFlow !== "true" &&
+        tFlow !== "true" &&
+        readMatch !== "true") ||
+      (mechanism?.id === "mechanic_15" &&
+        rFlow !== "true" &&
+        tFlow !== "true" &&
+        readMatch !== "true")
     ) {
       const mechanics_data = questions[currentQuestion]?.mechanics_data;
 
@@ -5270,6 +5278,52 @@ const Practice = () => {
     } else if (tFlow === "true") {
       return (
         <TowreFlow
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (readMatch === "true") {
+      return (
+        <ReadMatch
           page={page}
           setPage={setPage}
           {...{

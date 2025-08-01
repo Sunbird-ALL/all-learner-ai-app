@@ -2830,12 +2830,12 @@ const R1 = ({
                           : isWrong
                           ? "rgba(255, 127, 54, 0.8)"
                           : "#FFFFFF",
-                        padding: "8px",
-                        borderRadius: "24px",
+                        padding: "16px",
+                        borderRadius: "16px",
                         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                         border: "2px solid rgba(255, 255, 255, 0.5)",
-                        width: isMobile ? "60px" : "128px",
-                        height: isMobile ? "60px" : "128px",
+                        width: isMobile ? "100px" : "150px",
+                        height: isMobile ? "60px" : "80px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -2851,14 +2851,31 @@ const R1 = ({
                         }
                       }}
                     >
-                      <img
-                        src={item.img}
-                        alt={item.text}
-                        style={{
-                          width: isMobile ? "55px" : "110px",
-                          height: isMobile ? "55px" : "110px",
-                        }}
-                      />
+                      {lang === "en" ? (
+                        <span
+                          style={{
+                            fontSize: isMobile ? "18px" : "24px",
+                            fontWeight: "bold",
+                            color: isCorrect ? "#FFFFFF" : "#333",
+                            textAlign: "center",
+                            textShadow: isCorrect
+                              ? "0px 1px 3px rgba(0,0,0,0.3)"
+                              : "none",
+                          }}
+                        >
+                          {item.text}
+                        </span>
+                      ) : (
+                        <img
+                          src={item.img}
+                          alt={item.text}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "contain",
+                          }}
+                        />
+                      )}
                     </div>
                   );
                 })}
@@ -2878,12 +2895,12 @@ const R1 = ({
               <div
                 style={{
                   backgroundColor: "#FFFFFF",
-                  padding: "8px",
-                  borderRadius: "24px",
+                  padding: lang === "en" ? "16px" : "8px",
+                  borderRadius: lang === "en" ? "16px" : "24px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                   border: "2px solid rgba(255, 255, 255, 0.5)",
-                  width: "128px",
-                  height: "128px",
+                  width: lang === "en" ? "150px" : "128px",
+                  height: lang === "en" ? "80px" : "128px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -2894,11 +2911,24 @@ const R1 = ({
                 }}
                 //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
-                <img
-                  src={correctImage}
-                  alt={currentQuestion.correctWord}
-                  style={{ width: "110px", height: "110px" }}
-                />
+                {lang === "en" ? (
+                  <span
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      textAlign: "center",
+                    }}
+                  >
+                    {currentQuestion.correctWord}
+                  </span>
+                ) : (
+                  <img
+                    src={correctImage}
+                    alt={currentQuestion.correctWord}
+                    style={{ width: "110px", height: "110px" }}
+                  />
+                )}
               </div>
               <img
                 onClick={() => {
@@ -2923,12 +2953,12 @@ const R1 = ({
               <div
                 style={{
                   backgroundColor: "#FFFFFF",
-                  padding: "8px",
-                  borderRadius: "24px",
+                  padding: lang === "en" ? "16px" : "8px",
+                  borderRadius: lang === "en" ? "16px" : "24px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                   border: "2px solid rgba(255, 255, 255, 0.5)",
-                  width: "128px",
-                  height: "128px",
+                  width: lang === "en" ? "150px" : "128px",
+                  height: lang === "en" ? "80px" : "128px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -2939,11 +2969,24 @@ const R1 = ({
                 }}
                 //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
-                <img
-                  src={correctImage}
-                  alt={currentQuestion.correctWord}
-                  style={{ width: "110px", height: "110px" }}
-                />
+                {lang === "en" ? (
+                  <span
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      textAlign: "center",
+                    }}
+                  >
+                    {currentQuestion.correctWord}
+                  </span>
+                ) : (
+                  <img
+                    src={correctImage}
+                    alt={currentQuestion.correctWord}
+                    style={{ width: "110px", height: "110px" }}
+                  />
+                )}
               </div>
               <Box style={{ marginTop: "10px", marginBottom: "10px" }}>
                 <RecordVoiceVisualizer />

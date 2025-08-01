@@ -78,6 +78,7 @@ const LoginPage = () => {
         const { visitorId } = await fp.get();
         await initService(visitorId);
 
+        setLocalData("readMatch", true);
         navigate("/discover-start");
       } else {
         alert("Enter correct username and password");
