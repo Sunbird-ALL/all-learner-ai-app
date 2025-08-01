@@ -95,7 +95,8 @@ const Mechanics2 = ({
   });
 
   const lang = getLocalData("lang");
-
+  const correctOption = options.find((opt) => opt.isAns)?.text;
+  const filledSentence = parentWords.replace(/_+/g, correctOption);
   //console.log('Mechanics3', answer);
 
   useEffect(() => {
@@ -529,7 +530,7 @@ const Mechanics2 = ({
               storyLine={storyLine}
               dontShowListen={type === "image" || isDiscover}
               // updateStory={updateStory}
-              originalText={parentWords}
+              originalText={filledSentence}
               enableNext={enableNext}
               handleNext={handleNext}
               audioLink={audio ? audio : null}
