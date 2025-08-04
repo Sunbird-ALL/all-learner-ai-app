@@ -477,7 +477,7 @@ const levelData = {
         allwords: [
           { img: getAssetUrl(s3Assets.speakR1Eng), text: "Speak" },
           { img: getAssetUrl(s3Assets.saltR1Eng), text: "Salt" },
-          { img: getAssetUrl(s3Assets.fanR1Eng), text: "Fan" },
+          { img: getAssetUrl(s3Assets.fanR1Kan), text: "Fan" },
         ],
         correctWord: "Salt",
         audio: getAssetAudioUrl(s3Assets.saltR1Audio),
