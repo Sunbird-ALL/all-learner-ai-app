@@ -40,7 +40,8 @@ const App = () => {
           ?.toLowerCase();
         if (
           errorMessage?.includes("unauthorized") ||
-          errorMessage?.includes("token")
+          errorMessage?.includes("token") ||
+          errorMessage?.includes("logged")
         ) {
           if (
             localStorage.getItem("contentSessionId") &&
