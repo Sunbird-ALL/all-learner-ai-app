@@ -5142,7 +5142,7 @@ const Practice = () => {
               component="h4"
               ml={1}
               sx={{
-                color: "#333F61",
+                color: color,
                 fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
                 fontFamily: "Quicksand",
