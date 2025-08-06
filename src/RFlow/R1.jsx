@@ -12,7 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import MainLayout from "../components/Layouts.jsx/MainLayout";
-import listenImg from "../assets/listen.png";
+import listenImg from "../assets/listen.svg";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
 import correctSound from "../assets/correct.wav";
@@ -2830,13 +2830,14 @@ const R1 = ({
                           : isWrong
                           ? "rgba(255, 127, 54, 0.8)"
                           : "#FFFFFF",
-                        padding: "8px",
+                        padding: "12px",
                         borderRadius: "24px",
                         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                         border: "2px solid rgba(255, 255, 255, 0.5)",
-                        width: isMobile ? "60px" : "128px",
-                        height: isMobile ? "60px" : "128px",
+                        width: isMobile ? "90px" : "140px",
+                        height: isMobile ? "120px" : "140px",
                         display: "flex",
+                        flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
                         backdropFilter: "blur(56px)",
@@ -2855,10 +2856,27 @@ const R1 = ({
                         src={item.img}
                         alt={item.text}
                         style={{
-                          width: isMobile ? "55px" : "110px",
-                          height: isMobile ? "55px" : "110px",
+                          width: isMobile ? "55px" : "70px",
+                          height: isMobile ? "55px" : "70px",
+                          marginBottom: "5px",
                         }}
                       />
+                      <div
+                        style={{
+                          fontFamily: "Quicksand",
+                          fontWeight: 700,
+                          fontStyle: "bold",
+                          fontSize: isMobile ? "14px" : "28px",
+                          lineHeight: "40px",
+                          letterSpacing: "12%",
+                          textAlign: "center",
+                          verticalAlign: "middle",
+                          textTransform: "uppercase",
+                          marginTop: "15px",
+                        }}
+                      >
+                        {item.text.toUpperCase()}
+                      </div>
                     </div>
                   );
                 })}
@@ -2869,10 +2887,12 @@ const R1 = ({
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "80px",
+                gap: "40px",
+                width: "100%",
+                padding: "0 20px",
               }}
             >
               <div
@@ -2882,8 +2902,8 @@ const R1 = ({
                   borderRadius: "24px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                   border: "2px solid rgba(255, 255, 255, 0.5)",
-                  width: "128px",
-                  height: "128px",
+                  width: "180px",
+                  height: "180px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -2892,7 +2912,6 @@ const R1 = ({
                   cursor: "pointer",
                   transition: "background-color 0.3s ease-in-out",
                 }}
-                //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
                 <img
                   src={correctImage}
@@ -2900,24 +2919,92 @@ const R1 = ({
                   style={{ width: "110px", height: "110px" }}
                 />
               </div>
-              <img
-                onClick={() => {
-                  setRecording("startRec");
+
+              <div
+                style={{
+                  height: "100vh",
+                  width: "1px",
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "2px",
                 }}
-                src={Assets.pzMic}
-                alt="mic"
-                style={{ width: "70px", height: "70px", cursor: "pointer" }}
-              />
+              ></div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "300px",
+                  marginLeft: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "200px",
+                    height: "80px",
+                    borderRadius: "16px",
+                    border: "1px solid #FFFFFF",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(255, 255, 255, 0.3)",
+                    backdropFilter: "blur(10px)",
+                    padding: "16px",
+                    boxSizing: "border-box",
+                    marginBottom: "30px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "Quicksand",
+                      fontWeight: 700,
+                      fontSize: "34px",
+                      textTransform: "uppercase",
+                      color: "#333F61",
+                      textAlign: "center",
+                    }}
+                  >
+                    {currentQuestion.correctWord.toUpperCase()}
+                  </div>
+                </div>
+
+                <img
+                  src={listenImg}
+                  alt="Listen"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    cursor: "pointer",
+                    marginBottom: "120px",
+                  }}
+                  onClick={handlePlayAudio}
+                />
+
+                <img
+                  onClick={() => {
+                    setRecording("startRec");
+                  }}
+                  src={Assets.pzMic}
+                  alt="mic"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    cursor: "pointer",
+                  }}
+                />
+              </div>
             </div>
           )}
           {recording === "startRec" && (
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "80px",
+                gap: "40px",
+                width: "100%",
+                padding: "0 20px",
               }}
             >
               <div
@@ -2927,8 +3014,8 @@ const R1 = ({
                   borderRadius: "24px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                   border: "2px solid rgba(255, 255, 255, 0.5)",
-                  width: "128px",
-                  height: "128px",
+                  width: "180px",
+                  height: "180px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -2937,7 +3024,6 @@ const R1 = ({
                   cursor: "pointer",
                   transition: "background-color 0.3s ease-in-out",
                 }}
-                //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
                 <img
                   src={correctImage}
@@ -2945,47 +3031,123 @@ const R1 = ({
                   style={{ width: "110px", height: "110px" }}
                 />
               </div>
-              <Box style={{ marginTop: "10px", marginBottom: "10px" }}>
-                <RecordVoiceVisualizer />
-              </Box>
-              <img
-                onClick={() => {
-                  const audio = new Audio(correctSound);
-                  audio.play();
-                  setRecording("no");
-                  setIsAudioPlayedOnce(false);
-                  setIsPlaying(false);
-                  if (currentQuestionIndex === content.L1.length - 1) {
-                    setLocalData("rFlow", false);
-                    setLocalData("mFail", false);
-                    //window.location.reload();
-                    if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                      navigate("/");
-                    } else {
-                      navigate("/discover-start");
-                    }
-                  } else {
-                    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-                    response(
-                      {
-                        // Required
-                        target: "", // Required. Target of the response
-                        //"qid": "", // Required. Unique assessment/question id
-                        type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
-                        values: [
-                          { original_text: currentQuestion?.correctWord },
-                          { level: "R1" },
-                          { isCorrect: "true" },
-                        ],
-                      },
-                      "ET"
-                    );
-                  }
+
+              <div
+                style={{
+                  height: "100vh",
+                  width: "1px",
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "2px",
                 }}
-                src={Assets.pause}
-                alt="Stop"
-                style={{ width: "60px", height: "60px", cursor: "pointer" }}
-              />
+              ></div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "300px",
+                  marginLeft: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "200px",
+                    height: "80px",
+                    borderRadius: "16px",
+                    border: "1px solid #FFFFFF",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(255, 255, 255, 0.3)",
+                    backdropFilter: "blur(10px)",
+                    padding: "16px",
+                    boxSizing: "border-box",
+                    marginBottom: "30px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "Quicksand",
+                      fontWeight: 700,
+                      fontSize: "34px",
+                      textTransform: "uppercase",
+                      color: "#333F61",
+                      textAlign: "center",
+                    }}
+                  >
+                    {currentQuestion.correctWord.toUpperCase()}
+                  </div>
+                </div>
+
+                <img
+                  src={listenImg}
+                  alt="Listen"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    cursor: "pointer",
+                    marginBottom: "20px",
+                  }}
+                  onClick={handlePlayAudio}
+                />
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "15px",
+                  }}
+                >
+                  {/* Visualizer */}
+                  <Box style={{ marginBottom: "15px" }}>
+                    <RecordVoiceVisualizer />
+                  </Box>
+
+                  {/* Stop button */}
+                  <img
+                    onClick={() => {
+                      const audio = new Audio(correctSound);
+                      audio.play();
+                      setRecording("no");
+                      setIsAudioPlayedOnce(false);
+                      setIsPlaying(false);
+                      if (currentQuestionIndex === content.L1.length - 1) {
+                        setLocalData("rFlow", false);
+                        setLocalData("mFail", false);
+                        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                          navigate("/");
+                        } else {
+                          navigate("/discover-start");
+                        }
+                      } else {
+                        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+                        response(
+                          {
+                            target: "",
+                            type: "SPEAK",
+                            values: [
+                              { original_text: currentQuestion?.correctWord },
+                              { level: "R1" },
+                              { isCorrect: "true" },
+                            ],
+                          },
+                          "ET"
+                        );
+                      }
+                    }}
+                    src={Assets.pause}
+                    alt="Stop"
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      cursor: "pointer",
+                      marginTop: "20px",
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           )}
         </div>

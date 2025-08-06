@@ -781,6 +781,7 @@ function VoiceAnalyser(props) {
                     buttonAnimation={props.buttonAnimation}
                     handleStartRecording={props.handleStartRecording}
                     handleStopRecording={props.handleStopRecording}
+                    setIsCorrect={props.setIsCorrect}
                   />
                   {/* <RecordVoiceVisualizer /> */}
                 </>
