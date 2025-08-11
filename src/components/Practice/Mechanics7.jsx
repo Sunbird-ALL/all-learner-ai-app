@@ -847,16 +847,30 @@ const Mechanics7 = ({
           <Box
             sx={{
               display: "flex",
+              flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
               maskBorderWidth: 6,
             }}
           >
+            <span
+              style={{
+                color: "#333F61",
+                fontWeight: 700,
+                fontSize: isMobile ? "30px" : "50px",
+                lineHeight: isMobile ? "60px" : "87px",
+                letterSpacing: isMobile ? "1%" : "2%",
+                fontFamily: "Quicksand",
+                textTransform: "uppercase",
+              }}
+            >
+              {currentImg?.text}
+            </span>
             <img
               src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${parentWords?.image_url}`}
               alt="pencil"
-              height={"200px"}
-              width={"200px"}
+              height={"150px"}
+              width={"150px"}
               style={{
                 zIndex: 2,
               }}

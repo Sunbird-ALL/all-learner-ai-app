@@ -970,7 +970,7 @@ const WordWall = ({
           padding: "0 20px",
         }}
       >
-        {wrongAnswersAllQuestions.map((wrongAnswer, idx) => {
+        {wrongAnswersAllQuestions?.map((wrongAnswer, idx) => {
           const isOpened = openedGifts.includes(idx);
           const isAnimating = showGiftAnimation && currentReviewIndex === idx;
 
@@ -993,15 +993,38 @@ const WordWall = ({
               {isAnimating ? (
                 <GiftBox />
               ) : (
-                <img
-                  src={isOpened ? giftopenImg : giftboxImg}
-                  alt={isOpened ? "Opened Gift" : "Gift Box"}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    transition: "transform 0.2s",
-                  }}
-                />
+                <>
+                  <img
+                    src={isOpened ? giftopenImg : giftboxImg}
+                    alt={isOpened ? "Opened Gift" : "Gift Box"}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      transition: "transform 0.2s",
+                    }}
+                  />
+                  {isOpened && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "70%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        textAlign: "center",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        color: "#000",
+                        padding: "4px 6px",
+                        background: "rgba(255,255,255,0.8)",
+                        borderRadius: "6px",
+                        maxWidth: "90%",
+                        wordWrap: "break-word",
+                      }}
+                    >
+                      {wrongAnswer?.item?.text}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           );
