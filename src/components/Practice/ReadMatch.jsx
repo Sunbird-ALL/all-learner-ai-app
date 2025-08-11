@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import bikeImg from "../../assets/bike.svg";
 import lemonImg from "../../assets/Mango.svg";
 import farmerImg from "../../assets/farmer.svg";
@@ -19,6 +19,10 @@ import {
 import { Log } from "../../services/telementryService";
 import { useNavigate } from "react-router-dom";
 import { setLocalData } from "../../utils/constants";
+import {
+  getCorrectPracticeWords,
+  updateCorrectPracticeWords,
+} from "../../services/orchestration/orchestrationService";
 
 const theme = createTheme();
 
@@ -38,8 +42,9 @@ const ReadMatch = () => {
   });
   const [showInitialSelection, setShowInitialSelection] = useState(false);
   const [shuffledImages, setShuffledImages] = useState([]);
+  const [shuffledWords, setShuffledWords] = useState([]);
 
-  const wordImagePairs = [
+  const defaultWordImagePairs = [
     { word: "Bike", img: bikeImg, match: "Bike" },
     { word: "Lime", img: lemonImg, match: "Lime" },
     { word: "Farmer", img: farmerImg, match: "Farmer" },
@@ -48,8 +53,44 @@ const ReadMatch = () => {
     { word: "Tie", img: tieImg, match: "Tie" },
   ];
 
-  const words = wordImagePairs.map((pair) => pair.word);
-  const correctMatches = wordImagePairs.map((pair) => pair.match);
+  const [wordImagePairs, setWordImagePairs] = useState(null);
+
+  useEffect(() => {
+    const fetchCorrectWords = async () => {
+      try {
+        const response = await getCorrectPracticeWords("false");
+        const correctWords = response?.data || [];
+
+        const formattedCorrectWords = correctWords?.map((item) => ({
+          word: item?.contentSourceData?.[0]?.text,
+          img: item.mechanics_data?.[0].image_url,
+          match: item?.contentSourceData?.[0]?.text,
+          content_id: item?.contentId,
+        }));
+
+        if (formattedCorrectWords <= 3) {
+          setLocalData("readMatch", false);
+        }
+
+        setWordImagePairs(formattedCorrectWords);
+      } catch (error) {
+        console.error("Error fetching and mapping words:", error);
+      }
+    };
+
+    fetchCorrectWords();
+  }, []);
+
+  console.log("imagePairs", wordImagePairs);
+
+  const words = wordImagePairs?.map((pair) => pair.word);
+  const correctMatches = wordImagePairs?.map((pair) => pair.match);
+
+  const shuffledRef = useRef(null);
+
+  if (!shuffledRef.current && Array.isArray(words)) {
+    shuffledRef.current = [...words].sort(() => Math.random() - 0.5);
+  }
 
   const shuffleArray = (array) => {
     const newArray = [...array];
@@ -60,22 +101,33 @@ const ReadMatch = () => {
     return newArray;
   };
 
-  console.log("matches", matches, wordImagePairs.length);
+  console.log("matches", shuffledImages);
 
   useEffect(() => {
-    setShuffledImages(shuffleArray(wordImagePairs));
-  }, []);
+    console.log("res", matches.length, wordImagePairs?.length);
 
-  useEffect(() => {
-    console.log("res", matches.length, wordImagePairs.length);
+    if (matches.length === wordImagePairs?.length) {
+      const formattedData = wordImagePairs?.map((item) => ({
+        content_id: item.content_id,
+        practice: true,
+        learned: true,
+        understood: true,
+      }));
 
-    if (matches.length === wordImagePairs.length) {
-      setLocalData("readMatch", false);
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-        navigate("/");
-      } else {
-        navigate("/discover-start");
-      }
+      updateCorrectPracticeWords(formattedData)
+        .then((res) => {
+          console.log("Update successful:", res);
+          setLocalData("readMatch", false);
+          navigate("/practice");
+        })
+        .catch((err) => {
+          console.error("Error updating correct practice words:", err);
+          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            navigate("/");
+          } else {
+            navigate("/discover-start");
+          }
+        });
     }
   }, [matches]);
 
@@ -94,9 +146,9 @@ const ReadMatch = () => {
     setSelectedImage(imageIndex);
     setShowInitialSelection(true);
 
-    if (shuffledImages[imageIndex].match === selectedWord.word) {
+    if (wordImagePairs[imageIndex]?.match === selectedWord?.word) {
       setCorrectMatch({
-        wordIndex: selectedWord.wordIndex,
+        wordIndex: selectedWord?.wordIndex,
         imageIndex: imageIndex,
       });
 
@@ -107,7 +159,7 @@ const ReadMatch = () => {
             ...matches,
             {
               sourceIndex: imageIndex,
-              wordIndex: selectedWord.wordIndex,
+              wordIndex: selectedWord?.wordIndex,
             },
           ]);
           setCorrectMatch(null);
@@ -116,8 +168,8 @@ const ReadMatch = () => {
           setSelectedWord(null);
           setSelectedImage(null);
           setShowInitialSelection(false);
-        }, 1000);
-      }, 1000);
+        }, 2500);
+      }, 500);
     } else {
       setTimeout(() => {
         setWrongMatch({
@@ -265,7 +317,7 @@ const ReadMatch = () => {
           alignItems: "center",
         }}
       >
-        {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
+        {showConfetti && <Confetti />}
 
         <Box
           sx={{
@@ -292,7 +344,7 @@ const ReadMatch = () => {
               top: 0,
               left: 0,
               right: 0,
-              height: isMobile ? "70px" : "90px",
+              height: isMobile ? "70px" : "100px",
               backgroundImage: `url(${ulineImg})`,
               backgroundSize: isMobile
                 ? "cover"
@@ -309,16 +361,27 @@ const ReadMatch = () => {
               alignItems: "center",
             }}
           >
-            <Box
+            {/* <Box
               component="img"
               src={RememberImg}
-              alt="Can You Remember?"
+              alt="Word Practice"
               sx={{
                 height: isMobile ? "14px" : "27px",
                 margin: isMobile ? "15px auto" : "30px auto",
                 marginBottom: isMobile ? "17px" : "37px",
               }}
-            />
+            /> */}
+            <span
+              style={{
+                color: "#FFFFFF",
+                fontWeight: 700,
+                fontSize: isMobile ? "48px" : "36px",
+                //lineHeight: "100%",
+                fontFamily: "Quicksand",
+              }}
+            >
+              {"Word Practice"}
+            </span>
           </Box>
 
           <Box
@@ -340,7 +403,7 @@ const ReadMatch = () => {
                 width: isMobile ? "30%" : "auto",
               }}
             >
-              {shuffledImages.slice(0, 3).map((item, index) => (
+              {wordImagePairs?.slice(0, 3)?.map((item, index) => (
                 <Box
                   key={index}
                   onClick={() =>
@@ -350,11 +413,11 @@ const ReadMatch = () => {
                 >
                   <Box
                     component="img"
-                    src={item.img}
+                    src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${item.img}`}
                     alt={`image-${index}`}
                     sx={{
-                      width: isMobile ? "30px" : "60px",
-                      height: isMobile ? "30px" : "60px",
+                      width: isMobile ? "30px" : "85px",
+                      height: isMobile ? "30px" : "85px",
                       opacity: isMatchedImage(index) && isFaded ? 0.7 : 1,
                     }}
                   />
@@ -373,7 +436,7 @@ const ReadMatch = () => {
                 width: isMobile ? "30%" : "auto",
               }}
             >
-              {words.map((word, i) => (
+              {shuffledRef.current?.map((word, i) => (
                 <Box
                   key={i}
                   onClick={() => !isMatchedWord(i) && handleWordClick(word, i)}
@@ -393,7 +456,7 @@ const ReadMatch = () => {
                 width: isMobile ? "30%" : "auto",
               }}
             >
-              {shuffledImages.slice(3).map((item, index) => (
+              {wordImagePairs?.slice(3)?.map((item, index) => (
                 <Box
                   key={index + 3}
                   onClick={() =>
@@ -403,11 +466,11 @@ const ReadMatch = () => {
                 >
                   <Box
                     component="img"
-                    src={item.img}
+                    src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${item.img}`}
                     alt={`image-${index + 3}`}
                     sx={{
-                      width: isMobile ? "30px" : "60px",
-                      height: isMobile ? "30px" : "60px",
+                      width: isMobile ? "30px" : "85px",
+                      height: isMobile ? "30px" : "85px",
                       opacity: isMatchedImage(index + 3) && isFaded ? 0.7 : 1,
                     }}
                   />

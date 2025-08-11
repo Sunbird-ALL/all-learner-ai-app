@@ -6,6 +6,8 @@ import { getVirtualId } from "../userservice/userService";
 const API_BASE_URL_ORCHESTRATION =
   process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST;
 
+const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
+
 const getHeaders = () => {
   const token = localStorage.getItem("apiToken");
   return {
@@ -63,6 +65,82 @@ export const addPointer = async (points, milestone) => {
     return response.data;
   } catch (error) {
     console.error("Error adding points:", error);
+    throw error;
+  }
+};
+
+export const addCorrectPracticeWords = async () => {
+  const correctPracticeWords = getLocalData("correctPracticeWords");
+  const token = localStorage.getItem("apiToken");
+
+  if (!correctPracticeWords || correctPracticeWords.length === 0) {
+    console.warn("No correct practice words to send.");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_LEARNER_AI_APP_HOST}/api/towre/addCorrectWord`,
+      { correctPracticeWords },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error sending correctPracticeWords:", error);
+    throw error;
+  }
+};
+
+export const updateCorrectPracticeWords = async (updates) => {
+  const token = localStorage.getItem("apiToken");
+
+  if (!updates || updates.length === 0) {
+    console.warn("No correct practice words to send.");
+    return;
+  }
+
+  try {
+    const response = await axios.put(
+      `${API_LEARNER_AI_APP_HOST}/api/towre/updateCorrectWords`,
+      { updates },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error sending correctPracticeWords:", error);
+    throw error;
+  }
+};
+
+export const getCorrectPracticeWords = async (understood) => {
+  const token = localStorage.getItem("apiToken");
+
+  try {
+    const response = await axios.get(
+      `${API_LEARNER_AI_APP_HOST}/api/towre/getCorrectWords?practiced=true&learned=true&understood=${understood}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching correctPracticeWords:", error);
     throw error;
   }
 };

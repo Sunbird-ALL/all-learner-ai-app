@@ -41,6 +41,7 @@ import {
   callTelemetryApi,
 } from "../../utils/apiUtil";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
+import { green } from "@mui/material/colors";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -132,6 +133,14 @@ const WordsOrImage = ({
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
   const [showWrongTick, setShowWrongTick] = useState(true);
+  const [isTranscriptCorrect, setIsTranscriptCorrect] = useState(null);
+
+  console.log("isTranscriptCorrect", isTranscriptCorrect, audioLink);
+
+  const handleNextWrapped = () => {
+    setIsTranscriptCorrect(null);
+    handleNext();
+  };
 
   const transcriptRef = useRef("");
   useEffect(() => {
@@ -561,13 +570,15 @@ const WordsOrImage = ({
   };
 
   const getAnswerColor = (answer) => {
-    const isFirefox =
-      typeof navigator !== "undefined" &&
-      navigator.userAgent.toLowerCase().includes("firefox");
+    // const isFirefox =
+    //   typeof navigator !== "undefined" &&
+    //   navigator.userAgent.toLowerCase().includes("firefox");
 
-    if (isFirefox && (answer === true || answer === false)) {
-      return "green";
-    }
+    // if (isFirefox && (answer === true || answer === false)) {
+    //   return "green";
+    // }
+
+    console.log("ccc", answer);
 
     if (answer === true) return "green";
     if (answer === false) return "red";
@@ -1088,7 +1099,12 @@ const WordsOrImage = ({
                         fontFamily: "Quicksand",
                         lineHeight: isMobile ? "30px" : "50px",
                         //background: "#FFF0BD",
-                        color: "black",
+                        color:
+                          isTranscriptCorrect === true
+                            ? "green"
+                            : isTranscriptCorrect === false
+                            ? "red"
+                            : "#333F61",
                       }}
                     >
                       {words}
@@ -1107,7 +1123,7 @@ const WordsOrImage = ({
                       {highlightWords(
                         words,
                         matchedChar,
-                        getAnswerColor(answer)
+                        getAnswerColor(isTranscriptCorrect)
                       )}
                     </Box>
                   ))}
@@ -1259,13 +1275,14 @@ const WordsOrImage = ({
               storyLine={storyLine}
               dontShowListen={type === "image" || isDiscover}
               originalText={words}
-              handleNext={handleNext}
+              handleNext={handleNextWrapped}
               enableNext={enableNext}
               isShowCase={isShowCase || isDiscover}
               handleRecordingComplete={handleRecordingComplete}
               handleStartRecording={handleStartRecording}
               handleStopRecording={handleStopRecording}
               audioLink={audioLink ? audioLink : null}
+              setIsCorrect={setIsTranscriptCorrect}
               {...{
                 contentId,
                 contentType,

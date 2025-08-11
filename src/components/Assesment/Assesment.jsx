@@ -92,6 +92,7 @@ import { fetchVirtualId } from "../../services/userservice/userService";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
 import NumberFlow from "@number-flow/react";
+import LanguageModalNew from "../../utils/LanguageModal";
 
 const theme = createTheme();
 
@@ -951,6 +952,21 @@ const Assesment = ({ discoverStart }) => {
   const [vocabCount, setVocabCount] = useState(0);
   const [wordCount, setWordCount] = useState(0);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [showModal, setShowModal] = useState(false);
+  const nativeLangEnable = getLocalData("nativeLangEnable");
+  const nativeLang = getLocalData("nativeLang");
+
+  const handleWordClick = () => {
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    if (nativeLangEnable !== true) {
+      handleWordClick();
+    }
+  }, []);
+
+  console.log("nLang", nativeLang, nativeLangEnable);
 
   useEffect(() => {
     setLocalData("lang", lang);
@@ -1384,6 +1400,7 @@ const Assesment = ({ discoverStart }) => {
           </Box>
         </MainLayout>
       )}
+      <LanguageModalNew show={showModal} onClose={() => setShowModal(false)} />
     </>
   );
 };

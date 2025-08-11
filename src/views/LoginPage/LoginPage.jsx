@@ -17,6 +17,7 @@ import { setLocalData } from "../../utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { initialize } from "../../services/telementryService";
 import { startEvent } from "../../services/callTelemetryIntract";
+import LanguageModalNew from "../../utils/LanguageModal";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -24,6 +25,11 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const isMobile = useMediaQuery("(max-width:600px)");
   const ranonce = useRef(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleWordClick = () => {
+    setShowModal(true);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,6 +85,8 @@ const LoginPage = () => {
         await initService(visitorId);
 
         setLocalData("readMatch", true);
+        //setLocalData("wordWall", true);
+        handleWordClick();
         navigate("/discover-start");
       } else {
         alert("Enter correct username and password");
@@ -131,6 +139,7 @@ const LoginPage = () => {
           </Grid>
         </form>
       </div>
+      <LanguageModalNew show={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };

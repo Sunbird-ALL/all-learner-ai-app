@@ -6,6 +6,10 @@ import RecordVoiceVisualizer from "./RecordVoiceVisualizer";
 import playButton from "../../src/assets/listen.png";
 import pauseButton from "../../src/assets/pause.png";
 import PropTypes from "prop-types";
+import { pipeline, env } from "@xenova/transformers";
+import { loadTranscriber } from "./transcriber";
+import { doubleMetaphone } from "double-metaphone";
+env.localModelPath = "https://huggingface.co/Xenova/whisper-tiny/resolve/main/";
 
 const AudioRecorder = (props) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -14,6 +18,20 @@ const AudioRecorder = (props) => {
   const recorderRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const [showLoader, setShowLoader] = useState(false);
+
+  function sanitize(text) {
+    return text
+      .toLowerCase()
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"\[\]'’]/g, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  }
+
+  function phoneticMatch(a, b) {
+    const [a1, a2] = doubleMetaphone(a);
+    const [b1, b2] = doubleMetaphone(b);
+    return a1 === b1 || a1 === b2 || a2 === b1 || a2 === b2;
+  }
 
   //console.log("pageName", props.pageName);
 
@@ -61,16 +79,45 @@ const AudioRecorder = (props) => {
   const stopRecording = () => {
     setShowLoader(true);
     const timeoutId = setTimeout(() => {
-      setShowLoader(false);
-      setStatus("inactive");
+      // setShowLoader(false);
+      // setStatus("inactive");
       if (recorderRef.current) {
-        recorderRef.current.stopRecording(() => {
+        recorderRef.current.stopRecording(async () => {
           const blob = recorderRef.current.getBlob();
           if (blob) {
             setAudioBlob(blob);
             saveBlob(blob);
+            try {
+              // setLoading(true);
+              const transcriber = await loadTranscriber();
+              console.log("Transcriber is:", transcriber);
+              const audioUrl = URL.createObjectURL(blob);
+              const output = await transcriber(audioUrl, {
+                chunk_length_s: 20,
+                stride_length_s: 5,
+              });
+
+              const transcripts = sanitize(output.text);
+              const target = sanitize(props.originalText);
+              console.log("Transcription resultss 1:", transcripts);
+              console.log("Transcription resultss 2:", target);
+              const isCorrect =
+                transcripts.includes(target) ||
+                phoneticMatch(transcripts, target);
+              props.setIsCorrect?.(isCorrect);
+              setShowLoader(false);
+              setStatus("inactive");
+            } catch (error) {
+              console.error("Transcription error:", error);
+              setShowLoader(false);
+              setStatus("inactive");
+              props.setIsCorrect?.(false);
+            }
           } else {
             console.error("Failed to retrieve audio blob.");
+            setShowLoader(false);
+            setStatus("inactive");
+            props.setIsCorrect?.(false);
           }
           if (mediaStreamRef.current) {
             mediaStreamRef.current.getTracks().forEach((track) => track.stop());
