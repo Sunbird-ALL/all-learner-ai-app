@@ -135,7 +135,7 @@ const WordsOrImage = ({
   const [showWrongTick, setShowWrongTick] = useState(true);
   const [isTranscriptCorrect, setIsTranscriptCorrect] = useState(null);
 
-  console.log("isTranscriptCorrect", isTranscriptCorrect);
+  console.log("isTranscriptCorrect", isTranscriptCorrect, audioLink);
 
   const handleNextWrapped = () => {
     setIsTranscriptCorrect(null);

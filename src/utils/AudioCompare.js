@@ -100,7 +100,7 @@ const AudioRecorder = (props) => {
               const transcripts = sanitize(output.text);
               const target = sanitize(props.originalText);
               console.log("Transcription resultss 1:", transcripts);
-              //console.log("Transcription resultss 2:", target);
+              console.log("Transcription resultss 2:", target);
               const isCorrect =
                 transcripts.includes(target) ||
                 phoneticMatch(transcripts, target);

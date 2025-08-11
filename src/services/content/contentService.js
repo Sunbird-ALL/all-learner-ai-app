@@ -39,7 +39,7 @@ export const fetchPaginatedContent = async (
 ) => {
   try {
     const response = await axios.get(
-      `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_PAGINATION}?page=${page}&limit=${limit}&collectionId=${collectionId}`,
+      `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_PAGINATION}?page=${page}&limit=${limit}&collectionId=${collectionId}&multilingual=true`,
       getHeaders()
     );
     return response.data;

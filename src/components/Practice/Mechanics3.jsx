@@ -97,7 +97,8 @@ const Mechanics2 = ({
   const lang = getLocalData("lang");
   const correctOption = options?.find((opt) => opt.isAns)?.text;
   const filledSentence = parentWords?.replace(/_+/g, correctOption);
-  //console.log('Mechanics3', answer);
+
+  //console.log('Mechanics3', parentWords, options, filledSentence);
 
   useEffect(() => {
     if (!enableNext) {
