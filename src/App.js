@@ -38,7 +38,11 @@ const App = () => {
         const errorMessage = error?.response?.data?.message
           ?.trim()
           ?.toLowerCase();
-        if (!errorMessage?.includes("profanity")) {
+        if (
+          errorMessage?.includes("unauthorized") ||
+          errorMessage?.includes("token") ||
+          errorMessage?.includes("logged")
+        ) {
           if (
             localStorage.getItem("contentSessionId") &&
             process.env.REACT_APP_IS_APP_IFRAME === "true"
