@@ -21,7 +21,8 @@ export const getContent = async (criteria, lang, limit, options = {}) => {
 
     if (options.mechanismId) url += `&mechanics_id=${options.mechanismId}`;
     if (options.competency) url += `&level_competency=${options.competency}`;
-    if (options.tags && lang === "en") url += `&tags=${options.tags}`;
+    if (options.tags && (lang === "en" || lang === "kn"))
+      url += `&tags=${options.tags}`;
     if (options.storyMode) url += `&story_mode=${options.storyMode}`;
     if (options.CEFR_level) url += `&CEFR_level=${options.CEFR_level}`;
     if (options.multilingual) url += `&multilingual=${options.multilingual}`;
