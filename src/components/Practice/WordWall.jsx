@@ -200,7 +200,7 @@ const WordWall = ({
   useEffect(() => {
     const fetchGameData = async () => {
       try {
-        const response = await getCorrectPracticeWords("true");
+        const response = await getCorrectPracticeWords("false");
         const correctWords = response?.data || [];
 
         const formattedItems = correctWords?.map((item) => ({

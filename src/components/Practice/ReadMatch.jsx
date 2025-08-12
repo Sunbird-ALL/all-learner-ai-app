@@ -26,7 +26,7 @@ import {
 
 const theme = createTheme();
 
-const ReadMatch = () => {
+const ReadMatch = (level) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const navigate = useNavigate();
@@ -54,6 +54,15 @@ const ReadMatch = () => {
   ];
 
   const [wordImagePairs, setWordImagePairs] = useState(null);
+
+  console.log("level", level);
+
+  useEffect(() => {
+    if (level === 1) {
+      setLocalData("readMatch", false);
+      navigate("/practice");
+    }
+  }, []);
 
   useEffect(() => {
     const fetchCorrectWords = async () => {
