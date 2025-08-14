@@ -38,6 +38,15 @@ import {
   callTelemetryApi,
 } from "../../utils/apiUtil";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
+import AudioTooltipModal from "./AudioTooltipModal";
+import { loadTranscriber } from "../../utils/transcriber";
+import { doubleMetaphone } from "double-metaphone";
+import loadingJson from "../../assets/loadingJson.json";
+import Lottie from "lottie-react";
+import {
+  transliterateKannadaToLatin,
+  compareWords,
+} from "../../utils/textUtils";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -111,6 +120,29 @@ const BingoCard = ({
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+  const [transformed, setTransformed] = useState(null);
+  const correctPracticeWords = getLocalData("correctPracticeWords");
+
+  useEffect(() => {
+    if (parentWords && parentWords.imageAudioMap) {
+      const newTransformed = {
+        words: parentWords.words,
+        imageAudioMap: parentWords.imageAudioMap.reduce((acc, item) => {
+          acc[item.text] = {
+            image: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${item?.image_url}`,
+            audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${item?.audio_url}`,
+          };
+          return acc;
+        }, {}),
+        arrM: parentWords.imageAudioMap.map((item) => item.text),
+      };
+      setTransformed(newTransformed);
+    }
+  }, [parentWords]);
+
+  //console.log(transformed);
+
+  //console.log('words', transformed);
 
   let progressDatas = getLocalData("practiceProgress");
   //const virtualId = String(getLocalData("virtualId"));
@@ -131,11 +163,11 @@ const BingoCard = ({
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
-    console.log("Live Transcript:", transcript);
+    //console.log("Live Transcript:", transcript);
 
     if (transcript) {
       const filteredText = filterBadWords(transcript, language);
-      console.log("filteredText", filteredText);
+      //console.log("filteredText", filteredText);
 
       if (filteredText.includes("*")) {
         const count = parseInt(getLocalData("profanityCheck") || "0");
@@ -175,10 +207,28 @@ const BingoCard = ({
   const [recordedBlob, setRecordedBlob] = useState(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  const [selectedWord, setSelectedWord] = useState("");
+  const [isLoading, setIsLoading] = useState(null);
+  const [isWordCorrect, setIsWordCorrect] = useState(false);
+  const sessionId = getLocalData("sessionId");
+
+  function sanitize(text) {
+    return text
+      .toLowerCase()
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"\[\]'’]/g, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  }
+
+  function phoneticMatch(a, b) {
+    const [a1, a2] = doubleMetaphone(a);
+    const [b1, b2] = doubleMetaphone(b);
+    return a1 === b1 || a1 === b2 || a2 === b1 || a2 === b2;
+  }
 
   const mimeType = "audio/webm;codecs=opus";
 
-  const startAudioRecording = useCallback(async () => {
+  const startAudioRecording = useCallback(async (word) => {
     setRecordedBlob(null);
     recordedChunksRef.current = [];
 
@@ -198,7 +248,7 @@ const BingoCard = ({
         }
       };
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
         if (recordedChunksRef.current.length === 0) {
           console.warn("No audio data captured.");
           setRecordedBlob(null);
@@ -208,6 +258,46 @@ const BingoCard = ({
         const blob = new Blob(recordedChunksRef.current, { type: mimeType });
         setRecordedBlob(blob);
         recordedChunksRef.current = [];
+
+        try {
+          setIsLoading(true);
+          const transcriber = await loadTranscriber();
+          console.log("Transcriber is:", transcriber);
+          const audioUrl = URL.createObjectURL(blob);
+          const output = await transcriber(audioUrl, {
+            chunk_length_s: 20,
+            stride_length_s: 5,
+            task: "transcribe",
+            language: "en",
+          });
+
+          const transcripts = sanitize(output.text);
+
+          console.log("Transcribsss", transcripts, word);
+
+          const isCorrect =
+            transcripts.includes(word) || phoneticMatch(transcripts, word);
+
+          console.log("Transcription resultss 1:", transcripts);
+          console.log("Transcription resultss 2:", word, isCorrect);
+
+          if (language === "kn") {
+            const knLatin = transliterateKannadaToLatin(word);
+            const comparison = compareWords(transcripts, knLatin);
+            setIsWordCorrect(comparison?.isFine);
+          } else {
+            setIsWordCorrect(isCorrect);
+          }
+
+          setIsLoading(false);
+          // setStatus("inactive");
+        } catch (error) {
+          console.error("Transcription error:", error);
+          setIsLoading(false);
+          setIsWordCorrect(false);
+          // setStatus("inactive");
+          // props.setIsCorrect?.(false);
+        }
       };
 
       mediaRecorderRef.current = mediaRecorder;
@@ -244,15 +334,15 @@ const BingoCard = ({
     const responseStartTime = new Date().getTime();
     let responseText = "";
     const base64Data = await blobToBase64(recordedBlob);
-    console.log("bvlobss", recordedBlob);
+    //console.log("bvlobss", recordedBlob);
 
     await callTelemetryApi(
-      levels[currentLevel]?.arrM[currentWordIndex],
+      transformed?.arrM?.[currentWordIndex],
       sessionId,
       currentStep - 1,
       base64Data,
       responseStartTime,
-      levels[currentLevel]?.arrM[currentWordIndex],
+      transformed?.arrM?.[currentWordIndex],
       apiLevel
     );
   };
@@ -287,7 +377,7 @@ const BingoCard = ({
       //   return;
       // }
       resetTranscript();
-      startAudioRecording();
+      startAudioRecording(word);
       setAbusiveFound(false);
       setDetectedWord("");
       SpeechRecognition.startListening({
@@ -360,7 +450,7 @@ const BingoCard = ({
   //   }
   // }, []);
 
-  console.log("loggslevel", currentLevel, currentPracticeStep);
+  //console.log("loggslevel", currentLevel, currentPracticeStep);
 
   useEffect(() => {
     setShowHint(false);
@@ -407,819 +497,18 @@ const BingoCard = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const levelData = {
-    en: {
-      L1: {
-        words: [
-          "TEA",
-          "ONFLY",
-          "CHE",
-          "PLE",
-          "RRY",
-          "CHER",
-          "DRAG",
-          "FOOT",
-          "WOO",
-          "KET",
-          "LLEN",
-          "PATH",
-        ],
-        imageAudioMap: {
-          TEACHER: {
-            image: getAssetUrl(s3Assets.teacherM2),
-            audio: getAssetAudioUrl(s3Assets.teacherM2Eng),
-          },
-          CHERRY: {
-            image: getAssetUrl(s3Assets.cherryM2),
-            audio: getAssetAudioUrl(s3Assets.cherryM2Eng),
-          },
-          DRAGONFLY: {
-            image: getAssetUrl(s3Assets.dragonflyM2),
-            audio: getAssetAudioUrl(s3Assets.dragonflyM2Eng),
-          },
-          WOOLLEN: {
-            image: getAssetUrl(s3Assets.woollenM2),
-            audio: getAssetAudioUrl(s3Assets.woollenM2Eng),
-          },
-          FOOTPATH: {
-            image: getAssetUrl(s3Assets.footpathM2),
-            audio: getAssetAudioUrl(s3Assets.footpathM2Eng),
-          },
-        },
-        arrM: ["TEACHER", "CHERRY", "DRAGONFLY", "WOOLLEN", "FOOTPATH"],
-      },
-      L2: {
-        words: [
-          "CHOCO",
-          "KET",
-          "SPR",
-          "SILS",
-          "LATE",
-          "CL",
-          "OUT",
-          "OWN",
-          "UTEN",
-          "IC",
-          "PLE",
-          "MUS",
-        ],
-        imageAudioMap: {
-          CHOCOLATE: {
-            image: getAssetUrl(s3Assets.chocolatesM2),
-            audio: getAssetAudioUrl(s3Assets.chocolateM2Eng),
-          },
-          SPROUT: {
-            image: getAssetUrl(s3Assets.sproutM2),
-            audio: getAssetAudioUrl(s3Assets.sproutM2Eng),
-          },
-          CLOWN: {
-            image: getAssetUrl(s3Assets.clownM2),
-            audio: getAssetAudioUrl(s3Assets.clownM2Eng),
-          },
-          UTENSILS: {
-            image: getAssetUrl(s3Assets.utensilsM2),
-            audio: getAssetAudioUrl(s3Assets.utensilsM2Eng),
-          },
-          MUSIC: {
-            image: getAssetUrl(s3Assets.musicM2),
-            audio: getAssetAudioUrl(s3Assets.musicM2Eng),
-          },
-        },
-        arrM: ["CHOCOLATE", "SPROUT", "CLOWN", "UTENSILS", "MUSIC"],
-      },
-      L3: {
-        words: [
-          "FLO",
-          "KING",
-          "MOUN",
-          "WERS",
-          "TAINS",
-          "THIN",
-          "GAR",
-          "KET",
-          "SU",
-          "CH",
-          "PLE",
-          "AIR",
-        ],
-        imageAudioMap: {
-          FLOWERS: {
-            image: getAssetUrl(s3Assets.flowersM2),
-            audio: getAssetAudioUrl(s3Assets.flowersM2Eng),
-          },
-          MOUNTAINS: {
-            image: getAssetUrl(s3Assets.mountainsM2),
-            audio: getAssetAudioUrl(s3Assets.mountainsM2Eng),
-          },
-          THINKING: {
-            image: getAssetUrl(s3Assets.thinkingM2),
-            audio: getAssetAudioUrl(s3Assets.thinkingM2Eng),
-          },
-          SUGAR: {
-            image: getAssetUrl(s3Assets.sugarM2),
-            audio: getAssetAudioUrl(s3Assets.sugarM2Eng),
-          },
-          CHAIR: {
-            image: getAssetUrl(s3Assets.chairM2),
-            audio: getAssetAudioUrl(s3Assets.chairM2Eng),
-          },
-        },
-        arrM: ["FLOWERS", "MOUNTAINS", "THINKING", "SUGAR", "CHAIR"],
-      },
-      L4: {
-        words: [
-          "TE",
-          "OK",
-          "CLO",
-          "UTH",
-          "UDS",
-          "ETH",
-          "BO",
-          "CHEN",
-          "KIT",
-          "PLE",
-          "KET",
-          "MO",
-        ],
-        imageAudioMap: {
-          TEETH: {
-            image: getAssetUrl(s3Assets.teethM2),
-            audio: getAssetAudioUrl(s3Assets.teethM2Eng),
-          },
-          CLOUDS: {
-            image: getAssetUrl(s3Assets.cloudsM2),
-            audio: getAssetAudioUrl(s3Assets.cloudsM2Eng),
-          },
-          BOOK: {
-            image: getAssetUrl(s3Assets.bookM2),
-            audio: getAssetAudioUrl(s3Assets.bookM2Eng),
-          },
-          KITCHEN: {
-            image: getAssetUrl(s3Assets.kitchenM2),
-            audio: getAssetAudioUrl(s3Assets.kitchenM2Eng),
-          },
-          MOUTH: {
-            image: getAssetUrl(s3Assets.mouthM2),
-            audio: getAssetAudioUrl(s3Assets.mouthM2Eng),
-          },
-        },
-        arrM: ["TEETH", "CLOUDS", "BOOK", "KITCHEN", "MOUTH"],
-      },
-    },
-    hi: {
-      L1: {
-        words: [
-          "मो",
-          "गोभी",
-          "बंद",
-          "बाइल",
-          "मि",
-          "मच",
-          "शर ",
-          "बत",
-          "र्च",
-          "मूँग",
-          "फली",
-          "कूटर",
-        ],
-        imageAudioMap: {
-          मोबाइल: {
-            image: getAssetUrl(s3Assets.mobileM2),
-            audio: getAssetAudioUrl(s3Assets.mobileM2Hin),
-          },
-          बंदगोभी: {
-            image: getAssetUrl(s3Assets.bandhagobiM2Hin),
-            audio: getAssetAudioUrl(s3Assets.bandgobhiM2Hin),
-          },
-          मिर्च: {
-            image: getAssetUrl(s3Assets.mirchM2),
-            audio: getAssetAudioUrl(s3Assets.mirchM2Hin),
-          },
-          शरबत: {
-            image: getAssetUrl(s3Assets.sarbatM2Hin),
-            audio: getAssetAudioUrl(s3Assets.sarbatM2HinAudio),
-          },
-          मूँगफली: {
-            image: getAssetUrl(s3Assets.mumfaliM2Hin),
-            audio: getAssetAudioUrl(s3Assets.moongphaliM2Hin),
-          },
-        },
-        arrM: ["मोबाइल", "बंदगोभी", "मिर्च", "शरबत", "मूँगफली"],
-      },
-      L2: {
-        words: [
-          "मच्छ",
-          "खेल",
-          "डॉ",
-          "क्टर",
-          "जिद",
-          "लाब",
-          "र",
-          "टर",
-          "कूद",
-          "गु",
-          "सर्क",
-          "स्कू",
-        ],
-        imageAudioMap: {
-          मच्छर: {
-            image: getAssetUrl(s3Assets.maccharM2Hin),
-            audio: getAssetAudioUrl(s3Assets.machharM2Hin),
-          },
-          डॉक्टर: {
-            image: getAssetUrl(s3Assets.doctorM2),
-            audio: getAssetAudioUrl(s3Assets.doctorM2Hin),
-          },
-          खेलकूद: {
-            image: getAssetUrl(s3Assets.khelkudM2),
-            audio: getAssetAudioUrl(s3Assets.khelkudM2Hin),
-          },
-          गुलाब: {
-            image: getAssetUrl(s3Assets.pushpM2Hin),
-            audio: getAssetAudioUrl(s3Assets.gulabM2Hin),
-          },
-          स्कूटर: {
-            image: getAssetUrl(s3Assets.scooterM2),
-            audio: getAssetAudioUrl(s3Assets.scooterM2Hin),
-          },
-        },
-        arrM: ["मच्छर", "डॉक्टर", "खेलकूद", "गुलाब", "स्कूटर"],
-      },
-      L3: {
-        words: [
-          "सर्क",
-          "बास",
-          "हेल",
-          "स",
-          "कृ",
-          "गुब्बा",
-          "मेट",
-          "रा",
-          "र्क",
-          "ष्ण",
-          "मो",
-          "केट",
-        ],
-        imageAudioMap: {
-          सर्कस: {
-            image: getAssetUrl(s3Assets.circusM2),
-            audio: getAssetAudioUrl(s3Assets.circusM2Hin),
-          },
-          हेलमेट: {
-            image: getAssetUrl(s3Assets.helmetM2),
-            audio: getAssetAudioUrl(s3Assets.helmetM2Hin),
-          },
-          गुब्बारा: {
-            image: getAssetUrl(s3Assets.gubbaraM2),
-            audio: getAssetAudioUrl(s3Assets.gubbaraM2Hin),
-          },
-          कृष्ण: {
-            image: getAssetUrl(s3Assets.krishnM2),
-            audio: getAssetAudioUrl(s3Assets.krishnM2Hin),
-          },
-          टोकरी: {
-            image: getAssetUrl(s3Assets.basketM2),
-            audio: getAssetAudioUrl(s3Assets.basketM2Hin),
-          },
-        },
-        arrM: ["सर्कस", "हेलमेट", "गुब्बारा", "कृष्ण", "टोकरी"],
-      },
-      L4: {
-        words: [
-          "मो",
-          "हेल",
-          "मच्छ",
-          "बाइल",
-          "खेल",
-          "र",
-          "मि",
-          "मेट",
-          "छ",
-          "कूद",
-          "र्च",
-          "स",
-        ],
-        imageAudioMap: {
-          मोबाइल: {
-            image: getAssetUrl(s3Assets.mobileM2),
-            audio: getAssetAudioUrl(s3Assets.mobileM2Hin),
-          },
-          मच्छर: {
-            image: getAssetUrl(s3Assets.maccharM2Hin),
-            audio: getAssetAudioUrl(s3Assets.machharM2Hin),
-          },
-          हेलमेट: {
-            image: getAssetUrl(s3Assets.helmetM2),
-            audio: getAssetAudioUrl(s3Assets.helmetM2Hin),
-          },
-          खेलकूद: {
-            image: getAssetUrl(s3Assets.khelkudM2),
-            audio: getAssetAudioUrl(s3Assets.khelkudM2Hin),
-          },
-          मिर्च: {
-            image: getAssetUrl(s3Assets.mirchM2),
-            audio: getAssetAudioUrl(s3Assets.mirchM2Hin),
-          },
-        },
-        arrM: ["मोबाइल", "मच्छर", "हेलमेट", "खेलकूद", "मिर्च"],
-      },
-    },
-    ta: {
-      L1: {
-        words: [
-          "மூன",
-          "தொப",
-          "்று",
-          "முட",
-          "ந்து",
-          "சீப",
-          "பேரு",
-          "சட",
-          "்பு",
-          "்டை",
-          "்பி",
-          "ளாடு",
-        ],
-        imageAudioMap: {
-          மூன்று: {
-            image: getAssetUrl(s3Assets.threeM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.threeM2Tam),
-          },
-          தொப்பி: {
-            image: getAssetUrl(s3Assets.capM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.capM2Tam),
-          },
-          சீப்பு: {
-            image: getAssetUrl(s3Assets.combM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.combM2Tam),
-          },
-          பேருந்து: {
-            image: getAssetUrl(s3Assets.busM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.busM2Tam),
-          },
-          சட்டை: {
-            image: getAssetUrl(s3Assets.shirtM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.shirtM2Tam),
-          },
-        },
-        arrM: ["மூன்று", "தொப்பி", "சீப்பு", "பேருந்து", "சட்டை"],
-      },
-
-      L2: {
-        words: [
-          "உப",
-          "காலி",
-          "கத",
-          "்பு",
-          "நாற்",
-          "்டி",
-          "்யா",
-          "ரொட",
-          "வெள்",
-          "கொய",
-          "முட",
-          "ளாடு",
-        ],
-        imageAudioMap: {
-          உப்பு: {
-            image: getAssetUrl(s3Assets.saltM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.saltM2Tam),
-          },
-          நாற்காலி: {
-            image: getAssetUrl(s3Assets.chairM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.chairM2Tam),
-          },
-          ரொட்டி: {
-            image: getAssetUrl(s3Assets.chapatiM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.chapathiM2Tam),
-          },
-          கொய்யா: {
-            image: getAssetUrl(s3Assets.jamunM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.jamunM2Tam),
-          },
-          வெள்ளாடு: {
-            image: getAssetUrl(s3Assets.goatM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.goatM2Tam),
-          },
-        },
-        arrM: ["உப்பு", "நாற்காலி", "ரொட்டி", "கொய்யா", "வெள்ளாடு"],
-      },
-
-      L3: {
-        words: [
-          "முட",
-          "்டை",
-          "உப",
-          "மூன",
-          "்பு",
-          "பாம",
-          "நண",
-          "்டு",
-          "நாக",
-          "கத",
-          "்தி",
-          "்கு",
-        ],
-        imageAudioMap: {
-          முட்டை: {
-            image: getAssetUrl(s3Assets.eggM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.eggM2Tam),
-          },
-          பாம்பு: {
-            image: getAssetUrl(s3Assets.snakeM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.snakeM2Tam),
-          },
-          நண்டு: {
-            image: getAssetUrl(s3Assets.crabM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.crabM2Tam),
-          },
-          கத்தி: {
-            image: getAssetUrl(s3Assets.knifeM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.knifeM2Tam),
-          },
-          நாக்கு: {
-            image: getAssetUrl(s3Assets.toungeM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.toungeM2Tam),
-          },
-        },
-        arrM: ["முட்டை", "பாம்பு", "நண்டு", "கத்தி", "நாக்கு"],
-      },
-
-      L4: {
-        words: [
-          "பொம",
-          "உப",
-          "்தை",
-          "்மை",
-          "ப்பு",
-          "்கு",
-          "ஆந",
-          "மூக",
-          "செரு",
-          "தட",
-          "சட",
-          "்டு",
-        ],
-        imageAudioMap: {
-          பொம்மை: {
-            image: getAssetUrl(s3Assets.toyM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.toyM2Tam),
-          },
-          செருப்பு: {
-            image: getAssetUrl(s3Assets.chappalM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.chappalM2Tam),
-          },
-          ஆந்தை: {
-            image: getAssetUrl(s3Assets.owlM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.owlM2Tam),
-          },
-          மூக்கு: {
-            image: getAssetUrl(s3Assets.noseM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.noseM2Tam),
-          },
-          தட்டு: {
-            image: getAssetUrl(s3Assets.plateM2TamImg),
-            audio: getAssetAudioUrl(s3Assets.plateM2Tam),
-          },
-        },
-        arrM: ["பொம்மை", "செருப்பு", "ஆந்தை", "மூக்கு", "தட்டு"],
-      },
-    },
-    kn: {
-      L1: {
-        words: [
-          "ಗಡಿ",
-          "ಕಾರಿ",
-          "ತರ",
-          "ಕ",
-          "ಯಾರ",
-          "ಗಾಲ",
-          "ಗುಡಿ",
-          "ಚಳಿ",
-          "ತ್ತ",
-          "ಪಟ",
-          "ಗಾಳಿ",
-          "ಸಲು",
-        ],
-        imageAudioMap: {
-          ಗಡಿಯಾರ: {
-            image: getAssetUrl(s3Assets.clockM2KanI),
-            audio: getAssetAudioUrl(s3Assets.clockM2Kan),
-          },
-          ತರಕಾರಿ: {
-            image: getAssetUrl(s3Assets.vegetableM2KanI),
-            audio: getAssetAudioUrl(s3Assets.vegetableM2Kan),
-          },
-          ಚಳಿಗಾಲ: {
-            image: getAssetUrl(s3Assets.winterM2KanI),
-            audio: getAssetAudioUrl(s3Assets.winterM2Kan),
-          },
-          ಗಾಳಿಪಟ: {
-            image: getAssetUrl(s3Assets.kiteM2KanI),
-            audio: getAssetAudioUrl(s3Assets.kiteM2Kan),
-          },
-          ಗುಡಿಸಲು: {
-            image: getAssetUrl(s3Assets.hutM2KanI),
-            audio: getAssetAudioUrl(s3Assets.hutM2Kan),
-          },
-        },
-        arrM: ["ಗಡಿಯಾರ", "ತರಕಾರಿ", "ಚಳಿಗಾಲ", "ಗಾಳಿಪಟ", "ಗುಡಿಸಲು"],
-      },
-
-      L2: {
-        words: [
-          "ಕಂಠ",
-          "ವಾಳ",
-          "ಕ",
-          "ಅನಾ",
-          "ದಾಸ",
-          "ಹಾರ",
-          "ಸಿಹಿ",
-          "ಪಾರಿ",
-          "ತ್ತ",
-          "ಜಾತ",
-          "ನಸ್",
-          "ತಿಂಡಿ",
-        ],
-        imageAudioMap: {
-          ಕಂಠಹಾರ: {
-            image: getAssetUrl(s3Assets.necklaceM2KanI),
-            audio: getAssetAudioUrl(s3Assets.necklaceM2Kan),
-          },
-          ದಾಸವಾಳ: {
-            image: getAssetUrl(s3Assets.hibiscusM2KanI),
-            audio: getAssetAudioUrl(s3Assets.hibiscusM2Kan),
-          },
-          ಪಾರಿಜಾತ: {
-            image: getAssetUrl(s3Assets.parijataImg),
-            audio: getAssetAudioUrl(s3Assets.Parijat),
-          },
-          ಅನಾನಸ್: {
-            image: getAssetUrl(s3Assets.pineappleM2KanI),
-            audio: getAssetAudioUrl(s3Assets.pineappleM2Kan),
-          },
-          ಸಿಹಿತಿಂಡಿ: {
-            image: getAssetUrl(s3Assets.sweetsM2KanI),
-            audio: getAssetAudioUrl(s3Assets.sweetsM2Kan),
-          },
-        },
-        arrM: ["ಕಂಠಹಾರ", "ದಾಸವಾಳ", "ಪಾರಿಜಾತ", "ಅನಾನಸ್", "ಸಿಹಿತಿಂಡಿ"],
-      },
-
-      L3: {
-        words: [
-          "ಕತ್ತ",
-          "ಕ",
-          "ಈರು",
-          "ಪ",
-          "ಉ",
-          "ರಿ",
-          "ತ್ತೆ",
-          "ಳ್ಳಿ",
-          "ಪ್ಪಾಯಿ",
-          "ಣ್ಣೆ",
-          "ಪಟ್ಟಿ",
-          "ಗರಿ",
-        ],
-        imageAudioMap: {
-          ಕತ್ತರಿ: {
-            image: getAssetUrl(s3Assets.scissorsM2KanI),
-            audio: getAssetAudioUrl(s3Assets.scissorsM2Kan),
-          },
-          ಕತ್ತೆ: {
-            image: getAssetUrl(s3Assets.donkeyM2KanI),
-            audio: getAssetAudioUrl(s3Assets.donkeyM2Kan),
-          },
-          ಈರುಳ್ಳಿ: {
-            image: getAssetUrl(s3Assets.onionM2KanI),
-            audio: getAssetAudioUrl(s3Assets.onionM2Kan),
-          },
-          ಪಪ್ಪಾಯಿ: {
-            image: getAssetUrl(s3Assets.papayaM2KanI),
-            audio: getAssetAudioUrl(s3Assets.papayaM2Kan),
-          },
-          ಉಣ್ಣೆ: {
-            image: getAssetUrl(s3Assets.woolM2KanI),
-            audio: getAssetAudioUrl(s3Assets.whoolKan),
-          },
-        },
-        arrM: ["ಕತ್ತರಿ", "ಕತ್ತೆ", "ಈರುಳ್ಳಿ", "ಪಪ್ಪಾಯಿ", "ಉಣ್ಣೆ"],
-      },
-
-      L4: {
-        words: [
-          "ಚಾಕೋ",
-          "ತ್ತ",
-          "ಲೇಟು",
-          "ರೊ",
-          "ಕ",
-          "ಚಿ",
-          "ಬೆ",
-          "ಟ್ಟೆ",
-          "ಬಾತು",
-          "ಟ್ಟಿ",
-          "ಕ್ಕು",
-          "ಕೋಳಿ",
-        ],
-        imageAudioMap: {
-          ಚಾಕೋಲೇಟು: {
-            image: getAssetUrl(s3Assets.chocolateM2KanI),
-            audio: getAssetAudioUrl(s3Assets.ChocolateKan),
-          },
-          ಚಿಟ್ಟೆ: {
-            image: getAssetUrl(s3Assets.butterflyM2KanI),
-            audio: getAssetAudioUrl(s3Assets.butterflyM2Kan),
-          },
-          ರೊಟ್ಟಿ: {
-            image: getAssetUrl(s3Assets.rotiM2KanI),
-            audio: getAssetAudioUrl(s3Assets.rotiM2Kan),
-          },
-          ಬೆಕ್ಕು: {
-            image: getAssetUrl(s3Assets.catM2KanI),
-            audio: getAssetAudioUrl(s3Assets.catKan),
-          },
-          ಬಾತುಕೋಳಿ: {
-            image: getAssetUrl(s3Assets.duckM2KanI),
-            audio: getAssetAudioUrl(s3Assets.duckM2Kan),
-          },
-        },
-        arrM: ["ಚಾಕೋಲೇಟು", "ಚಿಟ್ಟೆ", "ರೊಟ್ಟಿ", "ಬೆಕ್ಕು", "ಬಾತುಕೋಳಿ"],
-      },
-    },
-    te: {
-      L1: {
-        words: [
-          "రచ",
-          "నీ",
-          "పటం",
-          "గాలి",
-          "యిత",
-          "గాయ",
-          "చలి",
-          "కాలం",
-          "యారం",
-          "లు",
-          "ఊర",
-          "గడి",
-        ],
-        imageAudioMap: {
-          రచయిత: {
-            image: getAssetUrl(s3Assets.authorM2TelI),
-            audio: getAssetAudioUrl(s3Assets.authorM2Tel),
-          },
-          గాలిపటం: {
-            image: getAssetUrl(s3Assets.kiteM2TelI),
-            audio: getAssetAudioUrl(s3Assets.kiteM2Tel),
-          },
-          చలికాలం: {
-            image: getAssetUrl(s3Assets.winterM2TelI),
-            audio: getAssetAudioUrl(s3Assets.winterM2Tel),
-          },
-          ఊరగాయ: {
-            image: getAssetUrl(s3Assets.pickleM2TelI),
-            audio: getAssetAudioUrl(s3Assets.pickleM2Tel),
-          },
-          గడియారం: {
-            image: getAssetUrl(s3Assets.watchM2TelI),
-            audio: getAssetAudioUrl(s3Assets.watchM2Tel),
-          },
-        },
-        arrM: ["రచయిత", "గాలిపటం", "చలికాలం", "ఊరగాయ", "గడియారం"],
-      },
-
-      L2: {
-        words: [
-          "పాల",
-          "కను",
-          "లు",
-          "బటా",
-          "మాన",
-          "కూర",
-          "నీలు",
-          "దోస",
-          "నీ",
-          "బొమ",
-          "కాయ",
-          "వుడు",
-        ],
-        imageAudioMap: {
-          పాలకూర: {
-            image: getAssetUrl(s3Assets.spinachM2TelI),
-            audio: getAssetAudioUrl(s3Assets.spinachM2Tel),
-          },
-          బటానీలు: {
-            image: getAssetUrl(s3Assets.peasM2TelI),
-            audio: getAssetAudioUrl(s3Assets.peasM2Tel),
-          },
-          కనుబొమ: {
-            image: getAssetUrl(s3Assets.eyebrowM2TelI),
-            audio: getAssetAudioUrl(s3Assets.eyebrowM2Tel),
-          },
-          దోసకాయ: {
-            image: getAssetUrl(s3Assets.cucumberM2TelI),
-            audio: getAssetAudioUrl(s3Assets.cucumberM2Tel),
-          },
-          మానవుడు: {
-            image: getAssetUrl(s3Assets.humanM2TelI),
-            audio: getAssetAudioUrl(s3Assets.humanM2Tel),
-          },
-        },
-        arrM: ["పాలకూర", "బటానీలు", "కనుబొమ", "దోసకాయ", "మానవుడు"],
-      },
-
-      L3: {
-        words: [
-          "సై",
-          "తాళం",
-          "లు",
-          "చెవి",
-          "నికుడు",
-          "నీ",
-          "ము",
-          "జు",
-          "క",
-          "గ్గు",
-          "న్ను",
-          "ట్టు",
-        ],
-        imageAudioMap: {
-          సైనికుడు: {
-            image: getAssetUrl(s3Assets.soldierM2TelI),
-            audio: getAssetAudioUrl(s3Assets.soldierM2Tel),
-          },
-          తాళంచెవి: {
-            image: getAssetUrl(s3Assets.keyM2TelI),
-            audio: getAssetAudioUrl(s3Assets.keyM2Tel),
-          },
-          ముగ్గు: {
-            image: getAssetUrl(s3Assets.rangoliM2TelI),
-            audio: getAssetAudioUrl(s3Assets.rangoliM2Tel),
-          },
-          కన్ను: {
-            image: getAssetUrl(s3Assets.eyeM2TelI),
-            audio: getAssetAudioUrl(s3Assets.eyeM2Tel),
-          },
-          జుట్టు: {
-            image: getAssetUrl(s3Assets.hairM2TelI),
-            audio: getAssetAudioUrl(s3Assets.hairM2Tel),
-          },
-        },
-        arrM: ["సైనికుడు", "తాళంచెవి", "ముగ్గు", "కన్ను", "జుట్టు"],
-      },
-
-      L4: {
-        words: [
-          "తేనె",
-          "ట్టు",
-          "క్కా",
-          "ము",
-          "లు",
-          "నీ",
-          "చొ",
-          "టీగ",
-          "చె",
-          "ప",
-          "న్ను",
-          "క్కు",
-        ],
-        imageAudioMap: {
-          చెట్టు: {
-            image: getAssetUrl(s3Assets.treeM2TelI),
-            audio: getAssetAudioUrl(s3Assets.treeM2Tel),
-          },
-          తేనెటీగ: {
-            image: getAssetUrl(s3Assets.honeybeeM2TelI),
-            audio: getAssetAudioUrl(s3Assets.honeybeeM2Tel),
-          },
-          పన్ను: {
-            image: getAssetUrl(s3Assets.teethM2TelI),
-            audio: getAssetAudioUrl(s3Assets.teethM2Tel),
-          },
-          ముక్కు: {
-            image: getAssetUrl(s3Assets.noseM2TelI),
-            audio: getAssetAudioUrl(s3Assets.noseM2Tel),
-          },
-          చొక్కా: {
-            image: getAssetUrl(s3Assets.shirtM2TelI),
-            audio: getAssetAudioUrl(s3Assets.shirtM2Tel),
-          },
-        },
-        arrM: ["చెట్టు", "తేనెటీగ", "పన్ను", "ముక్కు", "చొక్కా"],
-      },
-    },
-  };
-
-  const levels = levelData[language];
+  // const currentData =
+  //   transformed?.imageAudioMap[
+  //     transformed?.arrM[currentWordIndex]
+  //   ];
 
   const currentData =
-    levels[currentLevel]?.imageAudioMap[
-      levels[currentLevel]?.arrM[currentWordIndex]
-    ];
+    transformed?.imageAudioMap?.[transformed?.arrM?.[currentWordIndex]];
+
   const currentImage = currentData?.image;
 
   const startAudio = (index) => {
-    const currentData =
-      levels[currentLevel]?.imageAudioMap[levels[currentLevel]?.arrM[index]];
+    const currentData = transformed?.imageAudioMap[transformed?.arrM[index]];
     const audio = new Audio(currentData?.audio);
     audio
       .play()
@@ -1244,7 +533,7 @@ const BingoCard = ({
   };
 
   useEffect(() => {
-    levels[currentLevel]?.words.forEach((_, index) => {
+    transformed?.words?.forEach((_, index) => {
       setTimeout(() => {
         setHighlightedButtonIndex(index);
       }, index * 500);
@@ -1252,7 +541,7 @@ const BingoCard = ({
 
     setTimeout(() => {
       setHighlightedButtonIndex(-1);
-    }, levels[currentLevel]?.words.length * 500);
+    }, transformed?.words?.length * 500);
   }, []);
 
   const getSize = () =>
@@ -1407,7 +696,7 @@ const BingoCard = ({
       చొక్కా: ["చోక్", "కా"],
     };
 
-    const currentWord = levels[currentLevel]?.arrM[currentWordIndex];
+    const currentWord = transformed?.arrM[currentWordIndex];
 
     // const isCorrectPair = validPairs[currentWord]?.every((part) =>
     //   updatedWords.includes(part)
@@ -1471,7 +760,23 @@ const BingoCard = ({
   }, [showEmptyImg]);
 
   const handleNextButton = () => {
-    if (currentWordIndex < levels[currentLevel]?.arrM.length - 1) {
+    const newWordData = {
+      original_text: transformed?.arrM?.[currentWordIndex],
+      content_id: contentId,
+      milestone_level: "m1",
+      practice_level: currentLevel,
+      session_id: sessionId,
+      practiced: true,
+      learned: isWordCorrect ? true : false,
+      subsession_id: "session_123",
+    };
+
+    setLocalData("correctPracticeWords", [
+      ...(correctPracticeWords || []),
+      newWordData,
+    ]);
+
+    if (currentWordIndex < transformed?.arrM.length - 1) {
       callTelemetry();
       setCurrentWordIndex(currentWordIndex + 1);
       setShowNextButton(false);
@@ -1833,7 +1138,7 @@ const BingoCard = ({
               />
               <img
                 src={currentImage}
-                alt={levels[currentLevel]?.arrM[currentWordIndex]}
+                alt={transformed?.arrM[currentWordIndex]}
                 style={{
                   position: "absolute",
                   left: "50%",
@@ -1882,7 +1187,7 @@ const BingoCard = ({
                     cursor: "pointer",
                   }}
                   onClick={() =>
-                    startRecording(levels[currentLevel]?.arrM[currentWordIndex])
+                    startRecording(transformed?.arrM[currentWordIndex])
                   }
                 />
               </div>
@@ -2002,7 +1307,7 @@ const BingoCard = ({
                       fontSize: screenWidth < 768 ? "12px" : "18px",
                     }}
                   >
-                    {levels[currentLevel]?.arrM[currentWordIndex]}
+                    {transformed?.arrM[currentWordIndex]}
                   </p>
                 </div>
 
@@ -2034,7 +1339,7 @@ const BingoCard = ({
               zIndex: 1,
             }}
           >
-            {levels[currentLevel]?.words.map((word, index) => {
+            {transformed?.words?.map((word, index) => {
               const validPairs = {
                 MANGO: ["MAN", "GO"],
                 WATER: ["WA", "TER"],
@@ -2062,9 +1367,7 @@ const BingoCard = ({
               const isCorrectWord =
                 highlightCorrectWords &&
                 validPairs[
-                  levels[currentLevel]?.levels[currentLevel]?.arrM[
-                    currentWordIndex
-                  ]
+                  transformed?.transformed?.arrM[currentWordIndex]
                 ].includes(word);
 
               return (
