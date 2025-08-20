@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import RecordRTC from "recordrtc";
 import { Box, CircularProgress } from "@mui/material";
-import { ListenButton, RetryIcon, SpeakButton, StopButton } from "./constants";
+import {
+  ListenButton,
+  RetryIcon,
+  SpeakButton,
+  StopButton,
+  getLocalData,
+} from "./constants";
 import RecordVoiceVisualizer from "./RecordVoiceVisualizer";
 import playButton from "../../src/assets/listen.png";
 import pauseButton from "../../src/assets/pause.png";
@@ -9,6 +15,8 @@ import PropTypes from "prop-types";
 import { pipeline, env } from "@xenova/transformers";
 import { loadTranscriber } from "./transcriber";
 import { doubleMetaphone } from "double-metaphone";
+import { transliterateKannadaToLatin, compareWords } from "../utils/textUtils";
+
 env.localModelPath = "https://huggingface.co/Xenova/whisper-tiny/resolve/main/";
 
 const AudioRecorder = (props) => {
@@ -18,6 +26,7 @@ const AudioRecorder = (props) => {
   const recorderRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const [showLoader, setShowLoader] = useState(false);
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
 
   function sanitize(text) {
     return text
@@ -95,16 +104,27 @@ const AudioRecorder = (props) => {
               const output = await transcriber(audioUrl, {
                 chunk_length_s: 20,
                 stride_length_s: 5,
+                task: "transcribe",
+                language: "en",
               });
-
               const transcripts = sanitize(output.text);
               const target = sanitize(props.originalText);
+
               console.log("Transcription resultss 1:", transcripts);
               console.log("Transcription resultss 2:", target);
+
               const isCorrect =
                 transcripts.includes(target) ||
                 phoneticMatch(transcripts, target);
-              props.setIsCorrect?.(isCorrect);
+
+              if (language === "kn") {
+                const knLatin = transliterateKannadaToLatin(target);
+                const comparison = compareWords(transcripts, knLatin);
+                props.setIsCorrect?.(comparison?.isFine);
+              } else {
+                props.setIsCorrect?.(isCorrect);
+              }
+
               setShowLoader(false);
               setStatus("inactive");
             } catch (error) {

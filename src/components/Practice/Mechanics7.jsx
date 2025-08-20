@@ -49,6 +49,10 @@ import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import loadingJson from "../../assets/loadingJson.json";
 import Lottie from "lottie-react";
+import {
+  transliterateKannadaToLatin,
+  compareWords,
+} from "../../utils/textUtils";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -301,16 +305,27 @@ const Mechanics7 = ({
             const output = await transcriber(audioUrl, {
               chunk_length_s: 20,
               stride_length_s: 5,
+              task: "transcribe",
+              language: "en",
             });
 
             const transcripts = sanitize(output.text);
             const target = sanitize(currentText);
-            console.log("Transcription resultss 1:", transcripts);
-            console.log("Transcription resultss 2:", target);
             const isCorrect =
               transcripts.includes(target) ||
               phoneticMatch(transcripts, target);
-            setIsWordCorrect(isCorrect);
+
+            console.log("Transcription resultss 1:", transcripts);
+            console.log("Transcription resultss 2:", target);
+
+            if (language === "kn") {
+              const knLatin = transliterateKannadaToLatin(target);
+              const comparison = compareWords(transcripts, knLatin);
+              setIsWordCorrect(comparison?.isFine);
+            } else {
+              setIsWordCorrect(isCorrect);
+            }
+
             setIsLoading(false);
             // setStatus("inactive");
           } catch (error) {

@@ -4493,7 +4493,9 @@ const Practice = () => {
             return;
           }
 
-          const addCorrectWords = await addCorrectPracticeWords();
+          if (level === 1 || level === 2) {
+            const addCorrectWords = await addCorrectPracticeWords();
+          }
 
           const result = await addPointer(points, milestone);
           const awardedPoints = result?.result?.points;
@@ -5689,7 +5691,7 @@ const Practice = () => {
                 : `Speak the below word`,
             //
             currentImg: currentImage,
-            parentWords: parentWords,
+            parentWords: questions[currentQuestion]?.mechanics_data?.[0],
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,
