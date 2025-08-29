@@ -104,7 +104,7 @@ function VoiceAnalyser(props) {
       return;
     }
     const { audioLink } = props;
-    //console.log("llink", audioLink);
+    console.log("llink", audioLink);
 
     try {
       let audio = new Audio(
@@ -782,6 +782,7 @@ function VoiceAnalyser(props) {
                     handleStartRecording={props.handleStartRecording}
                     handleStopRecording={props.handleStopRecording}
                     setIsCorrect={props.setIsCorrect}
+                    noOffline={props.noOffline}
                   />
                   {/* <RecordVoiceVisualizer /> */}
                 </>

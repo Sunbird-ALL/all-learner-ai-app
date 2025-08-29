@@ -38,6 +38,8 @@ import {
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import AudioTooltipModal from "./AudioTooltipModal";
+import { Log } from "../../services/telementryService";
 
 const theme = createTheme();
 
@@ -73,6 +75,7 @@ const PhrasesInAction = ({
   currentImg,
   vocabCount,
   wordCount,
+  multilingual,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -99,6 +102,35 @@ const PhrasesInAction = ({
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+
+  function convertToStepFormat(rawData, audioFile) {
+    if (!rawData || !rawData.options) return {};
+
+    const correctOption = rawData.options.find((opt) => opt.isAns);
+
+    const step1 = {
+      allwords: [
+        {
+          img: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${correctOption.image_url}`,
+          text: correctOption.text,
+        },
+      ],
+      audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioFile}`,
+    };
+
+    const step2 = {
+      allwordsTwo: rawData.options.map((opt) => ({
+        img: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${opt.image_url}`,
+        text: opt.text,
+      })),
+      correctWordTwo: correctOption.text,
+      audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioFile}`,
+    };
+
+    return { step1, step2 };
+  }
+
+  let levelDataRaw = convertToStepFormat(parentWords, currentImg?.audioUrl);
 
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
@@ -4876,7 +4908,13 @@ const PhrasesInAction = ({
   const content = levelContent[language];
 
   //const levelData = content?.[currentLevel][currentWordIndex][currentSteps];
-  const levelData = content?.[currentLevel]?.[currentWordIndex]?.[currentSteps];
+  let levelData;
+
+  if (currentSteps === "step1") {
+    levelData = levelDataRaw?.step1;
+  } else {
+    levelData = levelDataRaw?.step2;
+  }
 
   //console.log("dataP410", levelData, currentLevel);
 
@@ -5208,9 +5246,14 @@ const PhrasesInAction = ({
                         marginBottom: "20px",
                       }}
                     >
-                      <span style={{ margin: "0 10px" }}>
-                        {levelData?.allwords[0]?.text}
-                      </span>
+                      <AudioTooltipModal
+                        audioSrc={multilingual?.kn?.audio_url}
+                        description={levelData?.allwords[0]?.text}
+                      >
+                        <span style={{ margin: "0 10px" }}>
+                          {levelData?.allwords[0]?.text}
+                        </span>
+                      </AudioTooltipModal>
                       {isPlaying ? (
                         <Box
                           sx={{
@@ -5417,9 +5460,14 @@ const PhrasesInAction = ({
                           marginBottom: "20px",
                         }}
                       >
-                        <span style={{ margin: "0 10px", color: textColor }}>
-                          {levelData?.correctWordTwo}
-                        </span>
+                        <AudioTooltipModal
+                          audioSrc={multilingual?.kn?.audio_url}
+                          description={levelData?.correctWordTwo}
+                        >
+                          <span style={{ margin: "0 10px", color: textColor }}>
+                            {levelData?.correctWordTwo}
+                          </span>
+                        </AudioTooltipModal>
                         {isPlaying ? (
                           <Box
                             sx={{

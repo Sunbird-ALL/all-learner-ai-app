@@ -13,7 +13,7 @@ export const loadTranscriber = async () => {
   if (!transcriberPromise) {
     transcriberPromise = pipeline(
       "automatic-speech-recognition",
-      "Xenova/whisper-tiny.en",
+      "Xenova/whisper-base",
       { quantized: true }
     )
       .then((instance) => {

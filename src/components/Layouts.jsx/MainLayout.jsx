@@ -751,7 +751,7 @@ const MainLayout = (props) => {
                           </Box>
                         </Box>
                       )}
-                      {rFlow == "true" && (
+                      {rFlow === "true" && LEVEL !== 1 && (
                         <Box
                           sx={{
                             display: "flex",
@@ -1487,6 +1487,7 @@ const MainLayout = (props) => {
                               ) {
                                 //console.log("mFlow value:", mFlow);
                                 setLocalData("rFlow", true);
+                                setLocalData("rStepZero", 0);
                               }
                               // if (
                               //               LEVEL === 1 ||

@@ -95,6 +95,7 @@ const Mechanics7 = ({
   currentImg,
   vocabCount,
   wordCount,
+  multilingual,
 }) => {
   const [words, setWords] = useState(
     type === "word" ? [] : ["Friend", "She is", "My"]
@@ -941,15 +942,37 @@ const Mechanics7 = ({
                     }}
                   />
                 )} */}
-                <AudioTooltipModal audioSrc={"TEXT"} description={currentText}>
+                {isLastSyllable ? (
+                  <AudioTooltipModal
+                    audioSrc={multilingual?.kn?.audio_url}
+                    description={currentText}
+                  >
+                    <span
+                      style={{
+                        color: !isRecorded
+                          ? "#333F61"
+                          : isIncorrectWord
+                          ? "#58CC02"
+                          : "#58CC02",
+                        fontWeight: 700,
+                        fontSize: isMobile ? "50px" : "72px",
+                        lineHeight: isMobile ? "60px" : "87px",
+                        letterSpacing: isMobile ? "1%" : "2%",
+                        fontFamily: "Quicksand",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {currentText}
+                    </span>
+                  </AudioTooltipModal>
+                ) : (
                   <span
                     style={{
                       color: !isRecorded
-                        ? "#333F61" // default background
+                        ? "#333F61"
                         : isIncorrectWord
-                        ? "#58CC02" // red FF7F36
+                        ? "#58CC02"
                         : "#58CC02",
-                      //color: isRecorded ? "#58CC02" : "#333F61",
                       fontWeight: 700,
                       fontSize: isMobile ? "50px" : "72px",
                       lineHeight: isMobile ? "60px" : "87px",
@@ -960,7 +983,7 @@ const Mechanics7 = ({
                   >
                     {currentText}
                   </span>
-                </AudioTooltipModal>
+                )}
               </Box>
               {isRecorded && (
                 <img
