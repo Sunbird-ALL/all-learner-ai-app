@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
 import {
@@ -819,16 +819,16 @@ const dataEn = [
         audio: getAssetAudioUrl(s3Assets.brinjalPhonemeAudio),
         singleAudio: s3Assets.JPhonemeAudio,
       },
-      {
-        id: 69,
-        title: "Consonant Sounds",
-        letters: "Jj",
-        letter: "j",
-        word: "Raj",
-        image: getAssetUrl(s3Assets.rajTenImg),
-        audio: getAssetAudioUrl(s3Assets.rajPhonemeAudio),
-        singleAudio: s3Assets.JPhonemeAudio,
-      },
+      // {
+      //   id: 69,
+      //   title: "Consonant Sounds",
+      //   letters: "Jj",
+      //   letter: "j",
+      //   word: "Raj",
+      //   image: getAssetUrl(s3Assets.rajTenImg),
+      //   audio: getAssetAudioUrl(s3Assets.rajPhonemeAudio),
+      //   singleAudio: s3Assets.JPhonemeAudio,
+      // },
     ],
   },
   {
@@ -2236,7 +2236,41 @@ const R0 = ({
   const current = playlist[currentIndex];
   const navigate = useNavigate();
 
-  console.log("letters", letters);
+  const audioRef = useRef(null);
+
+  const currentAudio = playlist[currentIndex]?.item?.audio || null;
+  const singleAudio = playlist[currentIndex]?.item?.singleAudio || null;
+
+  console.log("letters", singleAudio);
+
+  const playAudio = (src) => {
+    if (!src) return;
+
+    // Stop any existing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
+    // Create new audio and play
+    audioRef.current = new Audio(src);
+    audioRef.current.play().catch((err) => {
+      console.log("Audio play error:", err);
+    });
+  };
+
+  // Play on flow start / index change
+  useEffect(() => {
+    if (currentAudio) {
+      playAudio(currentAudio);
+    }
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [currentIndex]);
 
   const handleNextWord = () => {
     const currentLetter = playlist[currentIndex]?.item?.letter || "";
@@ -2253,7 +2287,11 @@ const R0 = ({
       setCurrentIndex((i) => i + 1);
     } else {
       setLocalData("rStepZero", 1);
-      navigate("/practice");
+      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        navigate("/");
+      } else {
+        navigate("/discover-start");
+      }
       console.log("finished r0");
     }
     setRecAudio(null);
@@ -2262,6 +2300,7 @@ const R0 = ({
   };
   const handleRetry = () => {
     console.log("audio playing!");
+    playAudio(currentAudio);
   };
 
   const updateStoredData = (audio, isCorrect) => {};
@@ -2664,7 +2703,7 @@ const R0 = ({
               handleRecordingComplete={handleRecordingComplete}
               handleStartRecording={handleStartRecording}
               handleStopRecording={handleStopRecording}
-              audioLink={"HI"}
+              audioLink={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${singleAudio}`}
               noOffline={true}
               isNextButtonCalled={isNextButtonCalled}
               setIsNextButtonCalled={setIsNextButtonCalled}

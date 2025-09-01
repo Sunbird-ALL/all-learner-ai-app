@@ -955,6 +955,7 @@ const Assesment = ({ discoverStart }) => {
   const [showModal, setShowModal] = useState(false);
   const nativeLangEnable = getLocalData("nativeLangEnable");
   const nativeLang = getLocalData("nativeLang");
+  const rStepNo = getLocalData("rStepZero");
 
   const handleWordClick = () => {
     setShowModal(true);
@@ -1305,7 +1306,13 @@ const Assesment = ({ discoverStart }) => {
                   }}
                 >
                   {rFlow === "true"
-                    ? `Start Refresher ${level === 1 ? "1" : rStep}`
+                    ? `Start Refresher ${
+                        level === 1
+                          ? rStepNo == null || rStep === 0 || rStep === "0"
+                            ? "0"
+                            : "1"
+                          : rStep
+                      }`
                     : `Start Level ${level}`}
                 </span>
               </Box>

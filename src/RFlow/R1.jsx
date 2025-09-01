@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
 import {
@@ -714,9 +714,40 @@ const R1 = ({
 
   const currentItem = dataKn[itemIndexUi];
 
+  const audioRef = useRef(null);
+
   const currentAudio =
     lang === "en" ? item?.audio : currentItem?.audios?.[imgIndex];
   console.log("audios", currentAudio);
+
+  const playAudio = (src) => {
+    if (!src) return;
+
+    // Stop any existing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
+    // Create new audio and play
+    audioRef.current = new Audio(src);
+    audioRef.current.play().catch((err) => {
+      console.log("Audio play error:", err);
+    });
+  };
+
+  // Play on flow start / index change
+  useEffect(() => {
+    if (currentAudio) {
+      playAudio(currentAudio);
+    }
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [stepIndex]);
 
   const handleNextImage = () => {
     if (imgIndex < currentItem.images.length - 1) {
@@ -727,7 +758,11 @@ const R1 = ({
         setImgIndex(0);
       } else {
         setLocalData("rFlow", false);
-        navigate("/practice");
+        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          navigate("/");
+        } else {
+          navigate("/discover-start");
+        }
       }
     }
     setRecAudio(null);
@@ -742,7 +777,11 @@ const R1 = ({
       setStepIndex((i) => i + 1);
     } else {
       setLocalData("rFlow", false);
-      navigate("/practice");
+      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        navigate("/");
+      } else {
+        navigate("/discover-start");
+      }
     }
     setRecAudio(null);
     setIsNextButtonCalled(true);
@@ -751,6 +790,7 @@ const R1 = ({
 
   const handleRetry = () => {
     console.log("audio playing!");
+    playAudio(currentAudio);
   };
 
   const updateStoredData = (audio, isCorrect) => {};
