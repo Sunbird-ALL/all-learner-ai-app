@@ -1105,7 +1105,7 @@ const R1 = ({
                   alignItems: "center",
                 }}
               >
-                {recAudio && (
+                {/* {recAudio && (
                   <img
                     //src={!isIncorrectWord ? Assets.tick : Assets.wrongTick}
                     src={Assets.tick}
@@ -1116,7 +1116,7 @@ const R1 = ({
                       height: "56px",
                     }}
                   />
-                )}
+                )} */}
                 <span
                   style={{
                     color: "#333F61",
