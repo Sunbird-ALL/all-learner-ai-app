@@ -4607,7 +4607,8 @@ const Practice = () => {
               tags: currentGetContent?.tags,
               storyMode: currentGetContent?.storyMode,
               CEFR_level: currentGetContent?.CEFR_level,
-            }
+            },
+            level
           );
 
           setTotalSyllableCount(resGetContent?.totalSyllableCount);
@@ -4869,7 +4870,8 @@ const Practice = () => {
             tags: currentGetContent?.tags,
             storyMode: currentGetContent?.storyMode,
             CEFR_level: currentGetContent?.CEFR_level,
-          }
+          },
+          level
         );
         // TODO: handle error if resWord is empty
 
@@ -4998,7 +5000,8 @@ const Practice = () => {
             tags: currentGetContent?.tags,
             storyMode: currentGetContent?.storyMode,
             CEFR_level: currentGetContent?.CEFR_level,
-          }
+          },
+          level
         );
         setTotalSyllableCount(resWord?.totalSyllableCount);
         setLivesData({
