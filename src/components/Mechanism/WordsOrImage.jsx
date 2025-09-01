@@ -42,6 +42,7 @@ import {
 } from "../../utils/apiUtil";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import { green } from "@mui/material/colors";
+import AudioTooltipModal from "../Practice/AudioTooltipModal";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -98,6 +99,7 @@ const WordsOrImage = ({
   audioLink,
   vocabCount,
   wordCount,
+  multilingual,
 }) => {
   const audioRefs = createRef(null);
   const [audioInstance, setAudioInstance] = useState(null);
@@ -1086,46 +1088,56 @@ const WordsOrImage = ({
                 )}
                 {matchedChar &&
                   (level === 3 ? (
-                    <Typography
-                      variant="h5"
-                      component="h4"
-                      sx={{
-                        fontSize: isMobile
-                          ? "1.4rem"
-                          : isTablet
-                          ? "2rem"
-                          : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                        fontWeight: 700,
-                        fontFamily: "Quicksand",
-                        lineHeight: isMobile ? "30px" : "50px",
-                        //background: "#FFF0BD",
-                        color:
-                          isTranscriptCorrect === true
-                            ? "green"
-                            : isTranscriptCorrect === false
-                            ? "red"
-                            : "#333F61",
-                      }}
+                    <AudioTooltipModal
+                      audioSrc={multilingual?.kn?.audio_url}
+                      description={words}
                     >
-                      {words}
-                    </Typography>
+                      <Typography
+                        variant="h5"
+                        component="h4"
+                        sx={{
+                          fontSize: isMobile
+                            ? "1.4rem"
+                            : isTablet
+                            ? "2rem"
+                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                          fontWeight: 700,
+                          fontFamily: "Quicksand",
+                          lineHeight: isMobile ? "30px" : "50px",
+                          //background: "#FFF0BD",
+                          color:
+                            isTranscriptCorrect === true
+                              ? "green"
+                              : isTranscriptCorrect === false
+                              ? "red"
+                              : "#333F61",
+                        }}
+                      >
+                        {words}
+                      </Typography>
+                    </AudioTooltipModal>
                   ) : (
-                    <Box
-                      display={"flex"}
-                      mb={isMobile ? 2 : 4}
-                      sx={{
-                        color: "red",
-                        width: "100%",
-                        justifyContent: "center",
-                        flexWrap: "wrap",
-                      }}
+                    <AudioTooltipModal
+                      audioSrc={multilingual?.kn?.audio_url}
+                      description={words}
                     >
-                      {highlightWords(
-                        words,
-                        matchedChar,
-                        getAnswerColor(isTranscriptCorrect)
-                      )}
-                    </Box>
+                      <Box
+                        display={"flex"}
+                        mb={isMobile ? 2 : 4}
+                        sx={{
+                          color: "red",
+                          width: "100%",
+                          justifyContent: "center",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {highlightWords(
+                          words,
+                          matchedChar,
+                          getAnswerColor(isTranscriptCorrect)
+                        )}
+                      </Box>
+                    </AudioTooltipModal>
                   ))}
               </Box>
             </Box>

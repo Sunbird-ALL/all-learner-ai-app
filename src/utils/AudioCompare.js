@@ -96,39 +96,45 @@ const AudioRecorder = (props) => {
           if (blob) {
             setAudioBlob(blob);
             saveBlob(blob);
-            try {
-              // setLoading(true);
-              const transcriber = await loadTranscriber();
-              console.log("Transcriber is:", transcriber);
-              const audioUrl = URL.createObjectURL(blob);
-              const output = await transcriber(audioUrl, {
-                chunk_length_s: 20,
-                stride_length_s: 5,
-                task: "transcribe",
-                language: "en",
-              });
-              const transcripts = sanitize(output.text);
-              const target = sanitize(props.originalText);
+            if (props.noOffline !== true) {
+              try {
+                // setLoading(true);
+                const transcriber = await loadTranscriber();
+                console.log("Transcriber is:", transcriber);
+                const audioUrl = URL.createObjectURL(blob);
+                const output = await transcriber(audioUrl, {
+                  chunk_length_s: 20,
+                  stride_length_s: 5,
+                  task: "transcribe",
+                  language: "en",
+                });
+                const transcripts = sanitize(output.text);
+                const target = sanitize(props.originalText);
 
-              console.log("Transcription resultss 1:", transcripts);
-              console.log("Transcription resultss 2:", target);
+                console.log("Transcription resultss 1:", transcripts);
+                console.log("Transcription resultss 2:", target);
 
-              const isCorrect =
-                transcripts.includes(target) ||
-                phoneticMatch(transcripts, target);
+                const isCorrect =
+                  transcripts.includes(target) ||
+                  phoneticMatch(transcripts, target);
 
-              if (language === "kn") {
-                const knLatin = transliterateKannadaToLatin(target);
-                const comparison = compareWords(transcripts, knLatin);
-                props.setIsCorrect?.(comparison?.isFine);
-              } else {
-                props.setIsCorrect?.(isCorrect);
+                if (language === "kn") {
+                  const knLatin = transliterateKannadaToLatin(target);
+                  const comparison = compareWords(transcripts, knLatin);
+                  props.setIsCorrect?.(comparison?.isFine);
+                } else {
+                  props.setIsCorrect?.(isCorrect);
+                }
+                setShowLoader(false);
+                setStatus("inactive");
+              } catch (error) {
+                console.error("Transcription error:", error);
+                setShowLoader(false);
+                setStatus("inactive");
+                props.setIsCorrect?.(false);
               }
-
-              setShowLoader(false);
-              setStatus("inactive");
-            } catch (error) {
-              console.error("Transcription error:", error);
+            }
+            if (props.noOffline === true) {
               setShowLoader(false);
               setStatus("inactive");
               props.setIsCorrect?.(false);

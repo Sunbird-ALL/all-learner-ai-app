@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ThemeProvider,
   createTheme,
@@ -11,6 +11,30 @@ import { ListenButton } from "../../utils/constants";
 
 const AudioTooltipModal = ({ audioSrc, description, children }) => {
   const [showModal, setShowModal] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (showModal && audioSrc) {
+      const audio = new Audio(
+        `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${audioSrc}`
+      );
+      audioRef.current = audio;
+      audio.play().catch((err) => console.log("Audio play error:", err));
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+      }
+    }
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [showModal, audioSrc]);
 
   return (
     <div

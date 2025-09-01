@@ -61,11 +61,13 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { levelMapping } from "../../utils/levelData";
 import { jwtDecode } from "jwt-decode";
+import r0 from "../../assets/R0m.png";
 import rOneImg from "../../assets/R1.png";
 import rTwoMileImage from "../../assets/r2mile.png";
 import rThreeMileImage from "../../assets/r3mile.png";
 import rFourMileImage from "../../assets/r4mile.png";
 import zIndex from "@mui/material/styles/zIndex";
+import { Log } from "../../services/telementryService";
 
 const theme = createTheme();
 
@@ -164,9 +166,12 @@ const MainLayout = (props) => {
   };
 
   const rFlow = String(getLocalData("rFlow"));
+  const rStep = getLocalData("rStepZero");
   const tFlow = String(getLocalData("tFlow"));
   const mFlow = getLocalData("mFail");
   const allCompleted = getLocalData("allCompleted");
+
+  console.log("rStep", rStep);
 
   let LEVEL = props?.level;
 
@@ -608,7 +613,11 @@ const MainLayout = (props) => {
                       {rFlow === "true" ? (
                         LEVEL == 1 ? (
                           <img
-                            src={Assets.rOneMileImage}
+                            src={
+                              rStep == null || rStep === 0 || rStep === "0"
+                                ? r0
+                                : Assets.rOneMileImage
+                            }
                             alt="R One"
                             height={isMobile ? "130px" : "200px"}
                           />
@@ -751,7 +760,7 @@ const MainLayout = (props) => {
                           </Box>
                         </Box>
                       )}
-                      {rFlow == "true" && (
+                      {rFlow === "true" && LEVEL !== 1 && (
                         <Box
                           sx={{
                             display: "flex",
@@ -1487,6 +1496,7 @@ const MainLayout = (props) => {
                               ) {
                                 //console.log("mFlow value:", mFlow);
                                 setLocalData("rFlow", true);
+                                setLocalData("rStepZero", 0);
                               }
                               // if (
                               //               LEVEL === 1 ||
