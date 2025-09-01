@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "../../utils/urlConstants.json";
 import { getLocalData } from "../../utils/constants";
 import { getVirtualId } from "../userservice/userService";
+import { logImg } from "../../utils/imageAudioLinks";
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
 
@@ -15,11 +16,19 @@ const getHeaders = () => {
   };
 };
 
-export const getContent = async (criteria, lang, limit, options = {}) => {
+export const getContent = async (
+  criteria,
+  lang,
+  limit,
+  options = {},
+  level = {}
+) => {
+  console.log("api level", level);
+
   try {
     let url = `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${criteria}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`;
-
-    if (options.mechanismId) url += `&mechanics_id=${options.mechanismId}`;
+    if (options.mechanismId && ![2, 3].includes(level))
+      url += `&mechanics_id=${options.mechanismId}`;
     if (options.competency) url += `&level_competency=${options.competency}`;
     if (options.tags && lang === "en") url += `&tags=${options.tags}`;
     if (options.storyMode) url += `&story_mode=${options.storyMode}`;
