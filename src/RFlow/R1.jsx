@@ -718,6 +718,7 @@ const R1 = ({
 
   const currentAudio =
     lang === "en" ? item?.audio : currentItem?.audios?.[imgIndex];
+  const singleAudio = item?.phonemeAudio;
   console.log("audios", currentAudio);
 
   const playAudio = (src) => {
@@ -1105,7 +1106,7 @@ const R1 = ({
                   alignItems: "center",
                 }}
               >
-                {recAudio && (
+                {/* {recAudio && (
                   <img
                     //src={!isIncorrectWord ? Assets.tick : Assets.wrongTick}
                     src={Assets.tick}
@@ -1116,7 +1117,7 @@ const R1 = ({
                       height: "56px",
                     }}
                   />
-                )}
+                )} */}
                 <span
                   style={{
                     color: "#333F61",
@@ -1157,7 +1158,7 @@ const R1 = ({
               handleRecordingComplete={handleRecordingComplete}
               handleStartRecording={handleStartRecording}
               handleStopRecording={handleStopRecording}
-              audioLink={currentAudio}
+              audioLink={singleAudio}
               noOffline={true}
               isNextButtonCalled={isNextButtonCalled}
               setIsNextButtonCalled={setIsNextButtonCalled}

@@ -1711,7 +1711,7 @@ const dataKn = [
         word: "ಫಲ",
         image: getAssetUrl(s3Assets.fruitAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.fruitsAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.phaAlphabetWithFruitsImageAudio,
       },
       {
         id: 64,
@@ -1721,7 +1721,7 @@ const dataKn = [
         word: "ಸೌರಫಲಕ",
         image: getAssetUrl(s3Assets.solarAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.solarPanelAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.phaAlphabetWithFruitsImageAudio,
       },
       {
         id: 65,
@@ -1731,7 +1731,7 @@ const dataKn = [
         word: "ಕಫ",
         image: getAssetUrl(s3Assets.coughAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.phlegmAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.phaAlphabetWithFruitsImageAudio,
       },
     ],
   },
@@ -1778,10 +1778,10 @@ const dataKn = [
         title: "Consonant Sounds",
         letters: "ಭ",
         letter: "ಭ",
-        word: "ಭರಣi",
+        word: "ಭರಣಿ",
         image: getAssetUrl(s3Assets.boxAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.smallBoxOrChestAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.bhaAlphabetWithScaredBoyAudio,
       },
       {
         id: 70,
@@ -1791,7 +1791,7 @@ const dataKn = [
         word: "ಆಭರಣ",
         image: getAssetUrl(s3Assets.jewelleryAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.jewelariesAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.bhaAlphabetWithScaredBoyAudio,
       },
       {
         id: 71,
@@ -1801,7 +1801,7 @@ const dataKn = [
         word: "ವೃಷಭ",
         image: getAssetUrl(s3Assets.bullAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.anOxOrBullAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.bhaAlphabetWithScaredBoyAudio,
       },
     ],
   },
@@ -1816,7 +1816,7 @@ const dataKn = [
         word: "ಮರ",
         image: getAssetUrl(s3Assets.treeAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.treeAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.maAlphabetTreeImageAudio,
       },
       {
         id: 73,
@@ -1826,7 +1826,7 @@ const dataKn = [
         word: "ಕಮಲ",
         image: getAssetUrl(s3Assets.lotusAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.lotusAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.maAlphabetTreeImageAudio,
       },
       {
         id: 74,
@@ -1836,7 +1836,7 @@ const dataKn = [
         word: "ಹಿಮ",
         image: getAssetUrl(s3Assets.snowAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.snowAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.maAlphabetTreeImageAudio,
       },
     ],
   },
@@ -1956,7 +1956,7 @@ const dataKn = [
         word: "ವನ",
         image: getAssetUrl(s3Assets.forestAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.jungleAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.vaAlphabetJungleImageAudio,
       },
       {
         id: 85,
@@ -1966,7 +1966,7 @@ const dataKn = [
         word: "ಲವಣ",
         image: getAssetUrl(s3Assets.saltAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.rockSaltAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.vaAlphabetJungleImageAudio,
       },
       {
         id: 86,
@@ -1976,7 +1976,7 @@ const dataKn = [
         word: "ಶಿವ",
         image: getAssetUrl(s3Assets.shivAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.shivaGodAlpAudio),
-        singleAudio: s3Assets.mangoPhonemeAudio,
+        singleAudio: s3Assets.vaAlphabetJungleImageAudio,
       },
     ],
   },
@@ -2061,7 +2061,7 @@ const dataKn = [
         word: "ಸರ",
         image: getAssetUrl(s3Assets.tinklechainAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.goldChainAlpAudio),
-        singleAudio: s3Assets.goldChainAlpAudio,
+        singleAudio: s3Assets.saalphabetgoldchain,
       },
       {
         id: 94,
@@ -2071,7 +2071,7 @@ const dataKn = [
         word: "ಮೊಸಳೆ",
         image: getAssetUrl(s3Assets.crocodileAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.crocodileAlpAudio),
-        singleAudio: s3Assets.goldChainAlpAudio,
+        singleAudio: s3Assets.saalphabetgoldchain,
       },
       {
         id: 95,
@@ -2081,7 +2081,7 @@ const dataKn = [
         word: "ಹಂಸ",
         image: getAssetUrl(s3Assets.swanAlpTelImage),
         audio: getAssetAudioUrl(s3Assets.swanAlpAudio),
-        singleAudio: s3Assets.goldChainAlpAudio,
+        singleAudio: s3Assets.saalphabetgoldchain,
       },
     ],
   },
@@ -2651,7 +2651,7 @@ const R0 = ({
                   alignItems: "center",
                 }}
               >
-                {recAudio && (
+                {/* {recAudio && (
                   <img
                     //src={!isIncorrectWord ? Assets.tick : Assets.wrongTick}
                     src={Assets.tick}
@@ -2662,7 +2662,7 @@ const R0 = ({
                       height: "56px",
                     }}
                   />
-                )}
+                )} */}
                 <span
                   style={{
                     color: "#333F61",

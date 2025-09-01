@@ -550,84 +550,34 @@ export const bicepAlpTelImage = "75d35179-e97b-4fec-aa32-b8aadcadc1bb.png";
 export const sheSingsAlpTelImage = "9be3f2de-f286-450e-85ca-fd634ea8829c.png";
 export const tinklechainAlpTelImage =
   "1c6e6bdd-b4ee-4fa0-aa50-1a6c4dae5469.png";
+export const wolfAlpTelImage = "324c81d3-5431-4933-9ae1-37384f2ba2d8.png";
 
 //short audio
 
-export const am14thAlphabetAudio = "7906e497-d33a-47a5-8406-a8ecb354d497.mp3";
-export const aiWordWithFiveImageAudio =
-  "03941325-bd2d-436a-b38c-296fc2381d64.mp3";
 export const alphabetWithYellowAudio =
-  "73050c1c-96eb-4755-aa0b-030ee1c3fa5b.mp3";
-export const dhaAlphabetWithSchoolBellImageAudio =
-  "ec5de7f6-d57b-4016-a88b-c9490392d019.mp3";
-export const aa2ndAudio = "f8f89849-417b-4ddd-8739-c105f2ee1aa2.mp3";
+  "53a69e16-357a-404d-8e79-ea3b772756b1.mp3";
+
 export const alphabetWithScaredBoyAudio =
   "d74c958f-0d96-41ff-a87d-3e5c230e8a83.mp3";
-export const chaWordWithSpinningImageAudio =
-  "16d11596-1541-4cfe-b1df-2be0b7c68db9.mp3";
+
 export const alphabetJungleImageAudio =
   "1446aa62-ffb1-434e-8b38-54c86903ac63.mp3";
-export const auWordWithMedicineAudio =
-  "62bb9d18-6f69-4e2a-bb34-a9554cd908c4.mp3";
-export const dabbaWordForContainerImageAudio =
-  "441fbda2-5945-4800-8835-82a7cb839c92.mp3";
-export const jna5thLetterInTheChaSeriesAudio =
-  "8df77f63-7c4d-47ac-97ee-403f5c7d803c.mp3";
-export const gaWordWithFeatherAudio =
-  "2d50202a-3fe9-48e6-9149-1c841449473a.mp3";
-export const e8thAlphabetAudio = "2472b729-c4e2-4c39-b480-470fad0c948b.mp3";
+
 export const alphabetCreeperImageAudio =
   "c94eeccc-89ce-4dec-a467-a14bde879caf.mp3";
-export const jaWithPeopleImageAudio =
-  "f07b321b-1c3b-4514-a049-3cfb9b0df90b.mp3";
+
 export const alphabetHexagoneAudio = "9d576b60-635e-4927-b8d8-133bd3897487.mp3";
 export const alphabetWithFruitsImageAudio =
   "aea35287-43ca-486f-8d85-cadd7bad437c.mp3";
-export const jhariWaterfallImageAudio =
-  "ee652b3e-5be2-48bc-b7ee-df7c19880d5a.mp3";
-export const au13thAlphabetAudio = "bedd1b90-360d-4ead-8b28-ba5121e25073.mp3";
-export const ai10thAlphabetAudio = "b10a224a-8fb8-46c3-8395-c2c196ec4cf3.mp3";
-export const dhaWordWithAssetOrMoneyImageAudio =
-  "8d659158-3771-43e4-a524-71560f674297.mp3";
-export const baAlphabetBangleAudio = "852483ed-a53d-455c-8533-35b07aa7103a.mp3";
-export const i3rdAlphabetAudio = "a4ed004d-d4e7-4dbe-8c7a-44c4e4faee17.mp3";
-export const iWithWordMouseAudio = "7fed130c-1255-422d-ab43-e26b278e309e.mp3";
-export const jaAudio = "26ed41f2-46f4-4897-955a-31d2f4b96f7c.mp3";
-export const dhanaDhanaWordWithSchoolBellRingingImageAudio =
-  "e552f602-4de9-490d-a333-a38898069fb5.mp3";
-export const aha15thAlphabetAudio = "871db23c-80d4-4346-b678-b8f5d8315c67.mp3";
-export const alphabetWithCowAudio = "13c1ce61-5fb8-4bef-8f96-85ed47d59452.mp3";
-export const eeWordWithLadderAudio = "e1cdbc0e-7a6d-4b27-b1e9-92e93e735fbb.mp3";
-export const ghaWithWordBellAudio = "20e03f18-fdf8-4a21-9ebf-100694ead99e.mp3";
-export const ee9thAlphabetAudio = "8c22a072-6c77-4083-a2c3-b4a20e00f2a2.mp3";
-export const gaAudio = "5aedd951-a800-46c2-9bc8-7f9c2ad195be.mp3";
-export const daAlphabetWithMysoreDasaraImageAudio =
-  "f5c7e8e9-0332-4ecd-b984-147a9a88b346.mp3";
-export const aFirstAlphabetAudio = "9fa57118-60a6-4ed4-8edb-31e1a4bb9868.mp3";
-export const cha2ndChaAudio = "afd44725-b588-421b-bd38-f99a84dabca8.mp3";
-export const jnaTheLastOneAlphabetAudio =
-  "6540d968-ac72-4217-b549-6acba5d95776.mp3";
+
+export const alphabetWithCowAudio = "8da80e6a-8310-4ccc-9a00-dc6f48d6efc0.mp3";
+
 export const alphabetTreeImageAudio =
   "ae71b5cc-77b0-4d16-8de6-d3d3900a4c24.mp3";
-export const chaWithUmbrellaImageAudio =
-  "938d7d9c-9c9e-4acb-8b3e-f1265b1dc03a.mp3";
-export const hanaWordWithMoneyImageAudio =
-  "46832937-356d-43a6-ba87-b38272baa369.mp3";
-export const ghaAudio = "16e3c56a-1e4c-479c-a42b-1f5c054142b1.mp3";
-export const daAlphabetWithContainerImageAudio =
-  "47418124-611e-48cb-bedc-8a1128660130.mp3";
-export const ii4thAlphabetAudio = "47d62cfe-20f1-4501-aefa-a514c1e7e124.mp3";
-export const aWithWordKingAudio = "b9bf6e02-4edf-4486-8a2e-53301687df95.mp3";
-export const jhaAudio = "4f466045-8b81-47a9-a5f8-2806c37cd087.mp3";
-export const aaWithWordElephantAudio =
-  "2d707b9a-fca9-4c0f-88f4-69612161f154.mp3";
-export const chaAudio = "ecdce644-ba36-4f3f-9a5e-b1b1262d907d.mp3";
-export const iiWordSwimAudio = "3307e35d-f7bb-478a-8330-228f04d0ab1f.mp3";
-export const eWordWithLeafAudio = "00329a6e-5bb2-4366-9a1a-198d4a0f6d86.mp3";
-export const amWordWithShopAudio = "daaf5834-cc74-4dc6-8f9b-cc52307c024b.mp3";
+
 export const saAudio = "c504e802-3ae5-4dea-8127-39d3788cc6b1.mp3";
 export const SHAAlphabetHexagoneAudio =
-  "9d576b60-635e-4927-b8d8-133bd3897487.mp3";
+  "298244e0-612b-4565-a2a9-388739d5cd18.mp3";
 
 export const wordWithCowAudio = "1013f5d5-ec16-42b3-8ede-1087e1e3daf1.mp3";
 export const kshaAlphabetTeacherImageAudio =
@@ -705,3 +655,78 @@ export const nga5thLetterInKaSeriesAudio =
 export const wordBangleAudio = "e848fb2b-3d8f-4e2d-a9f2-8c07de3005ff.mp3";
 export const wordWithTreeAudio = "7b4dc912-0156-4b69-96d4-13d734c97823.mp3";
 export const ta3rdSeriesInKaAudio = "8f4fdf14-3049-4bd6-8add-e4cf6f908855.mp3";
+
+export const am14thAlphabetAudio = "a55bcdcb-ca6e-471f-8061-b42b21df2657.mp3";
+export const aiWordWithFiveImageAudio =
+  "aa1e5632-30ba-403b-a964-ad1b4391654a.mp3";
+export const dhaAlphabetWithSchoolBellImageAudio =
+  "05dd8ce1-4cd8-4dca-a34e-06f410ce2f1f.mp3";
+export const aa2ndAudio = "5ff6c938-0ee6-43fd-a6ab-9c2d3efd2622.mp3";
+export const chaWordWithSpinningImageAudio =
+  "5746d71d-ae7e-4a6e-bb4f-c046956caacc.mp3";
+export const alphabetLaCreeperImageAudio =
+  "81ccaf72-6a3a-4cec-a179-7f3c94621bc8.mp3";
+export const dhaAlphabetForAssetWordNewAudio =
+  "54424753-bfbd-4697-944d-5cc8b4853b8a.mp3";
+export const auWordWithMedicineAudio =
+  "983e754b-397b-44f1-8cb3-89f8144386fc.mp3";
+export const dabbaWordForContainerImageAudio =
+  "84917d10-0bc2-4831-bb18-23959dc7f0a4.mp3";
+export const jna5thLetterInTheChaSeriesAudio =
+  "9de2bbf3-f21b-4d66-932b-e84fee8e521e.mp3";
+export const gaWordWithFeatherAudio =
+  "574cffd9-9c31-44ea-883f-3f57666e6900.mp3";
+export const e8thAlphabetAudio = "2b702f9f-2923-4d18-8458-586a10668f66.mp3";
+export const jaWithPeopleImageAudio =
+  "4bee2999-1f89-49db-b8b3-f10754709622.mp3";
+export const jhariWaterfallImageAudio =
+  "1061eb7c-e5b3-4308-8ccb-11c6d5daebc1.mp3";
+export const au13thAlphabetAudio = "7af8b871-dfc0-4414-b4e2-e2c2423f1fcb.mp3";
+export const ai10thAlphabetAudio = "966f0dd7-3be8-44b8-a0f0-f4d0d06b5d95.mp3";
+export const dhaWordWithAssetOrMoneyImageAudio =
+  "662e47a4-db18-46f6-9943-aadb51fdca38.mp3";
+export const baAlphabetBangleAudio = "920d6897-b4ed-4673-8a5e-813ae49d7c80.mp3";
+export const i3rdAlphabetAudio = "c8a75a0e-c94a-4a08-ab90-4f4ef17fcdf5.mp3";
+export const iWithWordMouseAudio = "4871dcc1-f3d3-407e-8686-03f981ec5f3f.mp3";
+export const jaAudio = "ed0f227e-4960-4c50-91f4-84cd4affc42f.mp3";
+export const dhanaDhanaWordWithSchoolBellRingingImageAudio =
+  "11b24b9b-d9c5-40ae-88cd-1e93899ac2c1.mp3";
+export const aha15thAlphabetAudio = "4ab3ffae-3368-4b12-83e4-3311d5ed60be.mp3";
+export const eeWordWithLadderAudio = "fc35402a-0b78-42f2-9ac7-c0daa7688080.mp3";
+export const ghaWithWordBellAudio = "30756b18-61b2-4b06-9e35-f1f4cf3cfe11.mp3";
+export const ee9thAlphabetAudio = "7eb23cb4-a939-4a56-bf2e-95bb28a5531e.mp3";
+export const gaAudio = "cd68eae9-f4fb-4e75-80e7-878485067ec1.mp3";
+export const daAlphabetWithMysoreDasaraImageAudio =
+  "1aebb069-030a-4e48-b6cf-caf01b4717cb.mp3";
+export const aFirstAlphabetAudio = "0e69d74d-6df9-4d17-a471-61356d326378.mp3";
+export const cha2ndChaAudio = "637501aa-91a6-44e6-9fc8-7b598d95bf4d.mp3";
+export const jnaTheLastOneAlphabetAudio =
+  "108f2bac-9ed1-4e6d-9484-5befff76eac8.mp3";
+export const chaWithUmbrellaImageAudio =
+  "9de11632-7e09-4fb0-b351-cb209a0b9cda.mp3";
+export const hanaWordWithMoneyImageAudio =
+  "5a408035-0668-4e01-8b03-9bec770465f2.mp3";
+export const ghaAudio = "b358c2b5-f307-428a-b909-b9bbf1c3e750.mp3";
+export const daAlphabetWithContainerImageAudio =
+  "3347f686-5d69-4f26-ba02-78de014d5bce.mp3";
+export const ii4thAlphabetAudio = "b38d7040-1506-4b72-8968-c2661a6862cb.mp3";
+export const haAlphabetWithCowAudio =
+  "8da80e6a-8310-4ccc-9a00-dc6f48d6efc0.mp3";
+export const aWithWordKingAudio = "47c261be-2bae-4503-8af5-35b44d3e7d69.mp3";
+export const jhaAudio = "2f9053ec-9e75-4c5e-87cc-7c7641adeae1.mp3";
+export const aaWithWordElephantAudio =
+  "25718578-8478-4384-a82a-5018de4dc1fe.mp3";
+export const chaAudio = "6c4b8c7b-1fd3-49b9-ab11-3b6a79d5e210.mp3";
+export const iiWordSwimAudio = "1e3f437f-0dd9-4c27-9bcd-d5e2fa07c8e4.mp3";
+export const eWordWithLeafAudio = "0b27a8cc-54ca-42d4-9faf-3e4ac044e4ee.mp3";
+export const amWordWithShopAudio = "7257f5a8-95e1-4358-b123-1a3211a2d547.mp3";
+export const saalphabetgoldchain = "c504e802-3ae5-4dea-8127-39d3788cc6b1.mp3";
+
+export const bhaAlphabetWithScaredBoyAudio =
+  "b4381153-8ce2-41ca-9efe-6dcf476a0c9d.mp3";
+export const phaAlphabetWithFruitsImageAudio =
+  "60bf7906-afcc-41bb-a83d-d8c356266863.mp3";
+export const vaAlphabetJungleImageAudio =
+  "077a9948-a44f-4f1a-b801-e23a6c2b7fa4.mp3";
+export const maAlphabetTreeImageAudio =
+  "787b14b4-b622-47f4-b1f4-882c219fc6d6.mp3";
