@@ -2241,7 +2241,7 @@ const R0 = ({
   const currentAudio = playlist[currentIndex]?.item?.audio || null;
   const singleAudio = playlist[currentIndex]?.item?.singleAudio || null;
 
-  console.log("letters", singleAudio);
+  //console.log("letters", singleAudio);
 
   const playAudio = (src) => {
     if (!src) return;
