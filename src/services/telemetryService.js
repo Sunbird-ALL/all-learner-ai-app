@@ -15,10 +15,7 @@ export const initialize = ({ did }) => {
         channel: process.env.REACT_APP_CHANNEL,
         did: did,
         authtoken: "",
-        uid:
-          localStorage.getItem("virtualId") ||
-          localStorage.getItem("apiToken") ||
-          "anonymous",
+        uid: "",
         sid: "",
         batchsize: 1,
         mode: "",
