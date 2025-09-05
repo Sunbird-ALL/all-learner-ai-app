@@ -49,10 +49,7 @@ export const initialize = async ({ context, config, metadata }) => {
         channel: context.channel,
         did: context.did,
         authtoken: context.authToken || "",
-        uid:
-          getLocalData("virtualId") ||
-          localStorage.getItem("apiToken") ||
-          "anonymous",
+        uid: "",
         sid: context.sid,
         batchsize: process.env.REACT_APP_BATCHSIZE,
         mode: context.mode,
@@ -271,21 +268,14 @@ export const getEventOptions = () => {
         pid: process.env.REACT_APP_PID, // Optional. In case the component is distributed, then which instance of that component
       },
       env: process.env.REACT_APP_ENV,
-      uid: `${
-        isBuddyLogin
-          ? emis_username + "/" + buddyUserId
-          : emis_username ||
-            getLocalData("virtualId") ||
-            localStorage.getItem("apiToken") ||
-            "anonymous"
-      }`,
+      uid: "",
       cdata: [
         {
           id: getLocalData("sessionId") || contentSessionId,
           type: "ContentSession",
         },
         { id: playSessionId, type: "PlaySession" },
-        { id: userId, type: userType },
+        { id: "", type: userType },
         { id: getLocalData("lang") || "ta", type: "language" },
         { id: userDetails?.school_name, type: "school_name" },
         {
@@ -293,7 +283,7 @@ export const getEventOptions = () => {
           type: "class_studying_id",
         },
         { id: userDetails?.udise_code, type: "udise_code" },
-        { id: getVirtualId() || null, type: "virtualId" },
+        { id: "", type: "virtualId" },
       ],
       rollup: {},
     },
