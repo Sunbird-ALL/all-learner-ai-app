@@ -757,6 +757,21 @@ const Mechanics7 = ({
   const isCorrectWord = incorrectWords[currentText] === false;
   const isIncorrectWord = incorrectWords[currentText] === true;
 
+  const text = currentImg?.text || "";
+  const search = currentText || "";
+
+  const matchIndex = text.toLowerCase().indexOf(search.toLowerCase());
+
+  let before = text;
+  let match = "";
+  let after = "";
+
+  if (matchIndex !== -1 && search.length > 0) {
+    before = text.slice(0, matchIndex);
+    match = text.slice(matchIndex, matchIndex + search.length);
+    after = text.slice(matchIndex + search.length);
+  }
+
   //console.log("audios", completeAudio, answer);
 
   return (
@@ -824,7 +839,7 @@ const Mechanics7 = ({
           style={{
             display: "flex",
             flexDirection: isMobile ? "column" : "row",
-            alignItems: "center",
+            //alignItems: "center",
             justifyContent: "space-evenly",
             height: "100%",
             //width: "80%"
@@ -866,12 +881,13 @@ const Mechanics7 = ({
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
+              alignSelf: "center",
               maskBorderWidth: 6,
+              height: "300px",
             }}
           >
             <span
               style={{
-                color: "#333F61",
                 fontWeight: 700,
                 fontSize: isMobile ? "30px" : "50px",
                 lineHeight: isMobile ? "60px" : "87px",
@@ -880,7 +896,9 @@ const Mechanics7 = ({
                 textTransform: "uppercase",
               }}
             >
-              {currentImg?.text}
+              {before && <span style={{ color: "grey" }}>{before}</span>}
+              {match && <span style={{ color: "#333F61" }}>{match}</span>}
+              {after && <span style={{ color: "grey" }}>{after}</span>}
             </span>
             <img
               src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${parentWords?.image_url}`}
@@ -899,11 +917,13 @@ const Mechanics7 = ({
               height: isMobile ? "1px" : "50vh",
               border: "1px solid #E0E2E7",
               margin: isMobile ? "40px 0px" : "0px 0px",
+              alignSelf: "center",
             }}
           />
           <Box textAlign="center">
             <Box
               sx={{
+                marginTop: 3,
                 backgroundColor: !isRecorded
                   ? "#1CB0F60F" // default background
                   : isIncorrectWord
@@ -921,6 +941,8 @@ const Mechanics7 = ({
                 alignItems: "center",
                 padding: isMobile ? "10px 20px" : "10px 70px",
                 marginBottom: "16px",
+                width: "400px",
+                height: "150px",
               }}
             >
               <Box
@@ -928,6 +950,7 @@ const Mechanics7 = ({
                   display: "inline-flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  gap: "10px",
                 }}
               >
                 {/* {isRecorded && (
@@ -942,29 +965,24 @@ const Mechanics7 = ({
                     }}
                   />
                 )} */}
-                {isLastSyllable ? (
-                  <AudioTooltipModal
-                    audioSrc={multilingual?.kn?.audio_url}
-                    description={currentText}
+                {isLastSyllable && isRecorded ? (
+                  <span
+                    style={{
+                      color: !isRecorded
+                        ? "#333F61"
+                        : isIncorrectWord
+                        ? "#58CC02"
+                        : "#58CC02",
+                      fontWeight: 700,
+                      fontSize: isMobile ? "50px" : "72px",
+                      lineHeight: isMobile ? "60px" : "87px",
+                      letterSpacing: isMobile ? "1%" : "2%",
+                      fontFamily: "Quicksand",
+                      textTransform: "uppercase",
+                    }}
                   >
-                    <span
-                      style={{
-                        color: !isRecorded
-                          ? "#333F61"
-                          : isIncorrectWord
-                          ? "#58CC02"
-                          : "#58CC02",
-                        fontWeight: 700,
-                        fontSize: isMobile ? "50px" : "72px",
-                        lineHeight: isMobile ? "60px" : "87px",
-                        letterSpacing: isMobile ? "1%" : "2%",
-                        fontFamily: "Quicksand",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {currentText}
-                    </span>
-                  </AudioTooltipModal>
+                    {currentText}
+                  </span>
                 ) : (
                   <span
                     style={{
@@ -983,6 +1001,55 @@ const Mechanics7 = ({
                   >
                     {currentText}
                   </span>
+                )}
+                {isLastSyllable && isRecorded && (
+                  <AudioTooltipModal
+                    audioSrc={multilingual?.kn?.audio_url}
+                    description={currentText}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        marginTop: "5px",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        border: "2px solid #FF7F36",
+                        borderRadius: "16px",
+                        gap: "10px",
+                        padding: "15px",
+                        //width: "300px",
+                        backgroundColor: "#fff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {/* Kannada Letter Box */}
+                      <Box
+                        sx={{
+                          backgroundColor: "#FEBC2F66",
+                          borderRadius: "4px",
+                          //width: "100px",
+                          //height: "100px",
+                          padding: "5px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: "40px",
+                            fontWeight: "400",
+                            color: "#333F61",
+                            fontStyle: "Quicksand",
+                          }}
+                        >
+                          ಕಾ
+                        </span>
+                      </Box>
+
+                      <ListenButton height={50} width={50} />
+                    </Box>
+                  </AudioTooltipModal>
                 )}
               </Box>
               {isRecorded && (
@@ -1004,6 +1071,7 @@ const Mechanics7 = ({
                   alignItems: "center",
                   maskBorderWidth: 6,
                   gap: 5,
+                  height: "250px",
                 }}
               >
                 {isPlaying ? (
@@ -1110,6 +1178,7 @@ const Mechanics7 = ({
                   justifyContent: "center",
                   alignItems: "center",
                   maskBorderWidth: 6,
+                  height: "250px",
                 }}
               >
                 <Box style={{ marginTop: "10px", marginBottom: "50px" }}>
@@ -1211,6 +1280,7 @@ const Mechanics7 = ({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
+                    height: "250px",
                   }}
                 >
                   <Loader />
@@ -1224,6 +1294,7 @@ const Mechanics7 = ({
                     alignItems: "center",
                     marginTop: "30px",
                     gap: "10px",
+                    height: "250px",
                     //maskBorderWidth: 6,
                   }}
                 >
