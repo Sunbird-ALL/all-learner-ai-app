@@ -137,8 +137,6 @@ const WordsOrImage = ({
   const [showWrongTick, setShowWrongTick] = useState(true);
   const [isTranscriptCorrect, setIsTranscriptCorrect] = useState(null);
 
-  console.log("isTranscriptCorrect", isTranscriptCorrect, audioLink);
-
   const handleNextWrapped = () => {
     setIsTranscriptCorrect(null);
     handleNext();
@@ -586,6 +584,8 @@ const WordsOrImage = ({
     if (answer === false) return "red";
     return "#333F61";
   };
+
+  console.log("isTranscriptCorrect", isTranscriptCorrect);
 
   //console.log("wds", words, matchedChar, answer);
 
@@ -1087,57 +1087,98 @@ const WordsOrImage = ({
                   </Box>
                 )}
                 {matchedChar &&
-                  (level === 3 ? (
-                    <AudioTooltipModal
-                      audioSrc={multilingual?.kn?.audio_url}
-                      description={words}
+                  ([1, 2, 3].includes(level) ? (
+                    <Typography
+                      variant="h5"
+                      component="h4"
+                      sx={{
+                        fontSize: isMobile
+                          ? "1.4rem"
+                          : isTablet
+                          ? "2rem"
+                          : "clamp(3rem, 4vw, 5rem)",
+                        fontWeight: 700,
+                        fontFamily: "Quicksand",
+                        lineHeight: isMobile ? "30px" : "50px",
+                        //background: "#FFF0BD",
+                        color:
+                          isTranscriptCorrect === true
+                            ? "green"
+                            : isTranscriptCorrect === false
+                            ? "red"
+                            : "#333F61",
+                      }}
                     >
-                      <Typography
-                        variant="h5"
-                        component="h4"
-                        sx={{
-                          fontSize: isMobile
-                            ? "1.4rem"
-                            : isTablet
-                            ? "2rem"
-                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                          fontWeight: 700,
-                          fontFamily: "Quicksand",
-                          lineHeight: isMobile ? "30px" : "50px",
-                          //background: "#FFF0BD",
-                          color:
-                            isTranscriptCorrect === true
-                              ? "green"
-                              : isTranscriptCorrect === false
-                              ? "red"
-                              : "#333F61",
-                        }}
-                      >
-                        {words}
-                      </Typography>
-                    </AudioTooltipModal>
+                      {words}
+                      {isTranscriptCorrect !== null && (
+                        <AudioTooltipModal
+                          audioSrc={multilingual?.kn?.audio_url}
+                          description={words}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              marginTop: "5px",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              border: "2px solid #FF7F36",
+                              borderRadius: "16px",
+                              gap: "10px",
+                              padding: "15px",
+                              //width: "300px",
+                              backgroundColor: "#fff",
+                              cursor: "pointer",
+                              marginLeft: "15px",
+                            }}
+                          >
+                            {/* Kannada Letter Box */}
+                            <Box
+                              sx={{
+                                backgroundColor: "#FEBC2F66",
+                                borderRadius: "4px",
+                                //width: "100px",
+                                //height: "100px",
+                                padding: "5px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  fontSize: "40px",
+                                  fontWeight: "400",
+                                  color: "#333F61",
+                                  fontStyle: "Quicksand",
+                                }}
+                              >
+                                ಕಾ
+                              </span>
+                            </Box>
+
+                            <ListenButton height={50} width={50} />
+                          </Box>
+                        </AudioTooltipModal>
+                      )}
+                    </Typography>
                   ) : (
-                    <AudioTooltipModal
-                      audioSrc={multilingual?.kn?.audio_url}
-                      description={words}
+                    <Box
+                      display={"flex"}
+                      mb={isMobile ? 2 : 4}
+                      sx={{
+                        color: "red",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                      }}
                     >
-                      <Box
-                        display={"flex"}
-                        mb={isMobile ? 2 : 4}
-                        sx={{
-                          color: "red",
-                          width: "100%",
-                          justifyContent: "center",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {highlightWords(
-                          words,
-                          matchedChar,
-                          getAnswerColor(isTranscriptCorrect)
-                        )}
-                      </Box>
-                    </AudioTooltipModal>
+                      {highlightWords(
+                        words,
+                        matchedChar,
+                        getAnswerColor(isTranscriptCorrect)
+                      )}
+                    </Box>
                   ))}
               </Box>
             </Box>

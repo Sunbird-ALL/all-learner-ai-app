@@ -717,7 +717,8 @@ const R1 = ({
   const audioRef = useRef(null);
 
   const currentAudio =
-    lang === "en" ? item?.audio : currentItem?.audios?.[imgIndex];
+    isUI1 && (lang === "en" ? item?.audio : currentItem?.audios?.[imgIndex]);
+
   const singleAudio = item?.phonemeAudio;
   console.log("audios", currentAudio);
 
@@ -855,7 +856,7 @@ const R1 = ({
               pb: { xs: 2, md: 3 },
             }}
           >
-            <Box
+            {/* <Box
               sx={{
                 position: "absolute",
                 top: { xs: 18, md: 22 },
@@ -875,7 +876,7 @@ const R1 = ({
               }}
             >
               {item.id}
-            </Box>
+            </Box> */}
 
             {/* Title centered */}
             <Box sx={{ textAlign: "center", position: "relative", mb: 2 }}>
@@ -1151,7 +1152,7 @@ const R1 = ({
               setVoiceAnimate={setVoiceAnimate}
               storyLine={storyLine}
               dontShowListen={type === "image" || isDiscover}
-              originalText={"text"}
+              originalText={`R1-${item?.letter}`}
               handleNext={handleNextWord}
               enableNext={enableNext}
               isShowCase={isShowCase || isDiscover}
@@ -1278,7 +1279,7 @@ const R1 = ({
                 setVoiceAnimate={setVoiceAnimate}
                 storyLine={storyLine}
                 dontShowListen={type === "image" || isDiscover}
-                originalText={"text"}
+                originalText={"R1"}
                 handleNext={handleNextImage} // clicking next audio also advances image
                 enableNext={enableNext}
                 isShowCase={isShowCase || isDiscover}

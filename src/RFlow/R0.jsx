@@ -2238,7 +2238,11 @@ const R0 = ({
 
   const audioRef = useRef(null);
 
-  const currentAudio = playlist[currentIndex]?.item?.audio || null;
+  const currentAudio =
+    playlist[currentIndex]?.type === "UI2"
+      ? null
+      : playlist[currentIndex]?.item?.audio || null;
+
   const singleAudio = playlist[currentIndex]?.item?.singleAudio || null;
 
   //console.log("letters", singleAudio);
@@ -2368,7 +2372,7 @@ const R0 = ({
               pb: { xs: 2, md: 3 },
             }}
           >
-            <Box
+            {/* <Box
               sx={{
                 position: "absolute",
                 top: { xs: 18, md: 22 },
@@ -2388,7 +2392,7 @@ const R0 = ({
               }}
             >
               {item.id}
-            </Box>
+            </Box> */}
 
             {/* Title centered */}
             <Box sx={{ textAlign: "center", position: "relative", mb: 2 }}>
@@ -2474,10 +2478,18 @@ const R0 = ({
                   fontFamily: "Quicksand",
                   flex: 1,
                   textAlign: "center",
-                  p: { xs: 2, md: 4 },
+                  p: 2,
                 }}
               >
-                {item.letters}
+                {item.letters.length > 1 ? (
+                  <>
+                    <span style={{ color: "#C93128" }}>{item.letters[0]}</span>
+                    <span style={{ color: "#1c2752" }}>{item.letters[1]}</span>
+                    {item.letters.slice(2)}
+                  </>
+                ) : (
+                  <span style={{ color: "red" }}>{item.letters}</span>
+                )}
               </Typography>
 
               {/* Divider Line */}
@@ -2496,7 +2508,7 @@ const R0 = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  p: { xs: 2, md: 4 },
+                  p: 2,
                 }}
               >
                 <Box
@@ -2696,7 +2708,7 @@ const R0 = ({
               setVoiceAnimate={setVoiceAnimate}
               storyLine={storyLine}
               dontShowListen={type === "image" || isDiscover}
-              originalText={"text"}
+              originalText={`R0-${item?.letter}`}
               handleNext={handleNextWord}
               enableNext={enableNext}
               isShowCase={isShowCase || isDiscover}
