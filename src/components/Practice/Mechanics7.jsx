@@ -842,6 +842,7 @@ const Mechanics7 = ({
             //alignItems: "center",
             justifyContent: "space-evenly",
             height: "100%",
+            alignItems: "flex-start",
             //width: "80%"
           }}
         >
@@ -920,7 +921,17 @@ const Mechanics7 = ({
               alignSelf: "center",
             }}
           />
-          <Box textAlign="center">
+          <Box
+            textAlign="center"
+            sx={{
+              height: "500px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              alignSelf: "center",
+            }}
+          >
             <Box
               sx={{
                 marginTop: 3,
@@ -941,7 +952,7 @@ const Mechanics7 = ({
                 alignItems: "center",
                 padding: isMobile ? "10px 20px" : "10px 70px",
                 marginBottom: "16px",
-                width: "400px",
+                width: isMobile ? "300px" : "400px",
                 height: "150px",
               }}
             >
@@ -974,7 +985,7 @@ const Mechanics7 = ({
                         ? "#58CC02"
                         : "#58CC02",
                       fontWeight: 700,
-                      fontSize: isMobile ? "50px" : "72px",
+                      fontSize: isMobile ? "30px" : "72px",
                       lineHeight: isMobile ? "60px" : "87px",
                       letterSpacing: isMobile ? "1%" : "2%",
                       fontFamily: "Quicksand",

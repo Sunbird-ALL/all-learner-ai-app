@@ -8,7 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { ListenButton } from "../../utils/constants";
-import playingMusic from "../../assets/playingMusic.gif";
+import * as Assets from "../../utils/imageAudioLinks";
 
 const AudioTooltipModal = ({ audioSrc, description, children }) => {
   const [showModal, setShowModal] = useState(false);
@@ -52,7 +52,7 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
             top: "100%",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "150px",
+            //width: "150px",
             background: "#fff",
             border: "2px solid #ff8c52",
             borderRadius: "16px",
@@ -82,10 +82,9 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
               }}
             >
               <img
-                src={playingMusic}
-                alt={"Playing Music"}
-                height={"60px"}
-                //height={"50px"}
+                src={Assets.graph}
+                alt="graph"
+                style={{ height: "40px", margin: "10px" }}
               />
             </Box>
           </div>
