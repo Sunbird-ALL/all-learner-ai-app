@@ -35,6 +35,10 @@ import S3Client from "../config/awsS3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import usePreloadAudio from "../hooks/usePreloadAudio";
 import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
+import { initialize } from "../services/telementryService";
+import { startEvent } from "../services/callTelemetryIntract";
+import { end } from "../services/telementryService";
 /* eslint-disable */
 
 const AudioPath = {
@@ -614,7 +618,47 @@ function VoiceAnalyser(props) {
           "ET"
         );
       } else {
-        setApiResponse("error");
+        setApiResponse("telemetry error");
+        end({});
+        const token = getLocalData("apiToken");
+
+        const initService = async (visitorId) => {
+          await initialize({
+            context: {
+              mode: process.env.REACT_APP_MODE,
+              authToken: token,
+              did: localStorage.getItem("deviceId") || visitorId,
+              uid: username || "anonymous",
+              channel: process.env.REACT_APP_CHANNEL,
+              env: process.env.REACT_APP_ENV,
+              pdata: {
+                id: process.env.REACT_APP_ID,
+                ver: process.env.REACT_APP_VER,
+                pid: process.env.REACT_APP_PID,
+              },
+              tags: [""],
+              timeDiff: 0,
+              host: process.env.REACT_APP_HOST,
+              endpoint: process.env.REACT_APP_ENDPOINT,
+              apislug: process.env.REACT_APP_APISLUG,
+            },
+            config: {},
+            metadata: {},
+          });
+
+          if (!ranonce.current) {
+            if (!localStorage.getItem("contentSessionId")) {
+              startEvent();
+            }
+            ranonce.current = true;
+          }
+        };
+
+        (async () => {
+          const fp = await FingerprintJS.load();
+          const { visitorId } = await fp.get();
+          await initService(visitorId);
+        })();
       }
 
       console.error("err", error);
