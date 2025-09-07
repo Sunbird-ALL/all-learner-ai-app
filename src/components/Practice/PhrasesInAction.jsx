@@ -5246,14 +5246,9 @@ const PhrasesInAction = ({
                         marginBottom: "20px",
                       }}
                     >
-                      <AudioTooltipModal
-                        audioSrc={multilingual?.kn?.audio_url}
-                        description={levelData?.allwords[0]?.text}
-                      >
-                        <span style={{ margin: "0 10px" }}>
-                          {levelData?.allwords[0]?.text}
-                        </span>
-                      </AudioTooltipModal>
+                      <span style={{ margin: "0 10px" }}>
+                        {levelData?.allwords[0]?.text}
+                      </span>
                       {isPlaying ? (
                         <Box
                           sx={{
@@ -5318,6 +5313,54 @@ const PhrasesInAction = ({
                         >
                           {levelData?.allwords[0]?.text}
                         </p>
+                        <AudioTooltipModal
+                          audioSrc={multilingual?.kn?.audio_url}
+                          description={levelData?.allwords[0]?.text}
+                        >
+                          <Box
+                            sx={{
+                              marginLeft: "10px",
+                              display: "flex",
+                              marginTop: "5px",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              border: "2px solid #FF7F36",
+                              borderRadius: "16px",
+                              gap: "10px",
+                              padding: "15px",
+                              //width: "300px",
+                              backgroundColor: "#fff",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {/* Kannada Letter Box */}
+                            <Box
+                              sx={{
+                                backgroundColor: "#FEBC2F66",
+                                borderRadius: "4px",
+                                //width: "100px",
+                                //height: "100px",
+                                padding: "5px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  fontSize: "40px",
+                                  fontWeight: "400",
+                                  color: "#333F61",
+                                  fontStyle: "Quicksand",
+                                }}
+                              >
+                                ಕಾ
+                              </span>
+                            </Box>
+
+                            <ListenButton height={50} width={50} />
+                          </Box>
+                        </AudioTooltipModal>
                       </div>
                       <div
                         onClick={goToNextStep}
@@ -5460,14 +5503,9 @@ const PhrasesInAction = ({
                           marginBottom: "20px",
                         }}
                       >
-                        <AudioTooltipModal
-                          audioSrc={multilingual?.kn?.audio_url}
-                          description={levelData?.correctWordTwo}
-                        >
-                          <span style={{ margin: "0 10px", color: textColor }}>
-                            {levelData?.correctWordTwo}
-                          </span>
-                        </AudioTooltipModal>
+                        <span style={{ margin: "0 10px", color: textColor }}>
+                          {levelData?.correctWordTwo}
+                        </span>
                         {isPlaying ? (
                           <Box
                             sx={{
@@ -5758,6 +5796,54 @@ const PhrasesInAction = ({
                         >
                           {levelData?.correctWordTwo}
                         </p>
+                        <AudioTooltipModal
+                          audioSrc={multilingual?.kn?.audio_url}
+                          description={levelData?.correctWordTwo}
+                        >
+                          <Box
+                            sx={{
+                              marginLeft: "10px",
+                              display: "flex",
+                              marginTop: "5px",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              border: "2px solid #FF7F36",
+                              borderRadius: "16px",
+                              gap: "10px",
+                              padding: "15px",
+                              //width: "300px",
+                              backgroundColor: "#fff",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {/* Kannada Letter Box */}
+                            <Box
+                              sx={{
+                                backgroundColor: "#FEBC2F66",
+                                borderRadius: "4px",
+                                //width: "100px",
+                                //height: "100px",
+                                padding: "5px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  fontSize: "40px",
+                                  fontWeight: "400",
+                                  color: "#333F61",
+                                  fontStyle: "Quicksand",
+                                }}
+                              >
+                                ಕಾ
+                              </span>
+                            </Box>
+
+                            <ListenButton height={50} width={50} />
+                          </Box>
+                        </AudioTooltipModal>
                       </div>
                       <div
                         onClick={goToNextStep}
