@@ -1200,7 +1200,7 @@ const dataKn = [
       {
         id: 20,
         title: "Consonant Sounds",
-        letters: "ग",
+        letters: "ಗ",
         letter: "ಗ",
         word: "ಗರಿ",
         image: getAssetUrl(s3Assets.featherAlpTelImage),
