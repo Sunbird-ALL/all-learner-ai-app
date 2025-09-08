@@ -694,6 +694,7 @@ const BingoCard = ({
       పన్ను: ["పన్", "ను"],
       ముక్కు: ["ముక్", "కు"],
       చొక్కా: ["చోక్", "కా"],
+      ಪಾರಿಜಾತ: ["ಪಾರಿ", "ಜಾತ"],
     };
 
     const currentWord = transformed?.arrM[currentWordIndex];

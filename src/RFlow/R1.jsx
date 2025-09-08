@@ -61,7 +61,7 @@ const dataEn = [
     word: "fish",
     image: getAssetUrl(s3Assets.fishSixImg),
     audio: getAssetAudioUrl(s3Assets.fishPhonemeAudioYT),
-    phonemeAudio: s3Assets.FPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.FPhonemeAudio),
   },
   {
     id: 4,
@@ -70,7 +70,7 @@ const dataEn = [
     word: "grapes",
     image: getAssetUrl(s3Assets.grapes),
     audio: getAssetAudioUrl(s3Assets.grapesPhonemeAudioYT),
-    phonemeAudio: s3Assets.GPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.GPhonemeAudio),
   },
   {
     id: 5,
@@ -79,7 +79,7 @@ const dataEn = [
     word: "hand",
     image: getAssetUrl(s3Assets.handEightImg),
     audio: getAssetAudioUrl(s3Assets.handPhonemeAudioYT),
-    phonemeAudio: s3Assets.HPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.HPhonemeAudio),
   },
   {
     id: 6,
@@ -88,7 +88,7 @@ const dataEn = [
     word: "jam",
     image: getAssetUrl(s3Assets.jam),
     audio: getAssetAudioUrl(s3Assets.jamPhonemeAudioYT),
-    phonemeAudio: s3Assets.JPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.JPhonemeAudio),
   },
   {
     id: 7,
@@ -97,7 +97,7 @@ const dataEn = [
     word: "car",
     image: getAssetUrl(s3Assets.carEighteenImg),
     audio: getAssetAudioUrl(s3Assets.carPhonemeAudioYT),
-    phonemeAudio: s3Assets.KPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.KPhonemeAudio),
   },
   {
     id: 8,
@@ -106,7 +106,7 @@ const dataEn = [
     word: "lollipop",
     image: getAssetUrl(s3Assets.lolipop),
     audio: getAssetAudioUrl(s3Assets.lollipopPhonemeAudioYT),
-    phonemeAudio: s3Assets.LPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.LPhonemeAudio),
   },
   {
     id: 9,
@@ -115,7 +115,7 @@ const dataEn = [
     word: "monkey",
     image: getAssetUrl(s3Assets.monkey),
     audio: getAssetAudioUrl(s3Assets.monkeyPhonemeAudioYT),
-    phonemeAudio: s3Assets.MPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.MPhonemeAudio),
   },
   {
     id: 10,
@@ -124,7 +124,7 @@ const dataEn = [
     word: "nest",
     image: getAssetUrl(s3Assets.nest),
     audio: getAssetAudioUrl(s3Assets.nestPhonemeAudioYT),
-    phonemeAudio: s3Assets.NPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.NPhonemeAudio),
   },
   {
     id: 11,
@@ -141,7 +141,7 @@ const dataEn = [
     word: "rainbow",
     image: getAssetUrl(s3Assets.rainbow),
     audio: getAssetAudioUrl(s3Assets.rainbowPhonemeAudioYT),
-    phonemeAudio: s3Assets.RPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.RPhonemeAudio),
   },
   {
     id: 13,
@@ -150,7 +150,7 @@ const dataEn = [
     word: "sun",
     image: getAssetUrl(s3Assets.sun),
     audio: getAssetAudioUrl(s3Assets.sunPhonemeAudioYT),
-    phonemeAudio: s3Assets.SPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.SPhonemeAudio),
   },
   {
     id: 14,
@@ -159,7 +159,7 @@ const dataEn = [
     word: "treasure",
     image: getAssetUrl(s3Assets.treasure),
     audio: getAssetAudioUrl(s3Assets.treasurePhonemeAudioYT),
-    phonemeAudio: s3Assets.TPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.TPhonemeAudio),
   },
   {
     id: 15,
@@ -168,7 +168,7 @@ const dataEn = [
     word: "tree",
     image: getAssetUrl(s3Assets.tree),
     audio: getAssetAudioUrl(s3Assets.treePhonemeAudioYT),
-    phonemeAudio: s3Assets.TPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.TPhonemeAudio),
   },
   {
     id: 16,
@@ -177,7 +177,7 @@ const dataEn = [
     word: "van",
     image: getAssetUrl(s3Assets.van),
     audio: getAssetAudioUrl(s3Assets.vanPhonemeAudioYT),
-    phonemeAudio: s3Assets.VPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.VPhonemeAudio),
   },
   {
     id: 17,
@@ -186,7 +186,7 @@ const dataEn = [
     word: "window",
     image: getAssetUrl(s3Assets.window),
     audio: getAssetAudioUrl(s3Assets.windowPhonemeAudioYT),
-    phonemeAudio: s3Assets.WPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.WPhonemeAudio),
   },
   {
     id: 18,
@@ -195,7 +195,7 @@ const dataEn = [
     word: "yak",
     image: getAssetUrl(s3Assets.yak),
     audio: getAssetAudioUrl(s3Assets.yakPhonemeAudioYT),
-    phonemeAudio: s3Assets.YPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.YPhonemeAudio),
   },
   {
     id: 19,
@@ -204,7 +204,7 @@ const dataEn = [
     word: "zip",
     image: getAssetUrl(s3Assets.zip),
     audio: getAssetAudioUrl(s3Assets.zipPhonemeAudioYT),
-    phonemeAudio: s3Assets.ZPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.ZPhonemeAudio),
   },
   {
     id: 20,
@@ -213,16 +213,16 @@ const dataEn = [
     word: "fox",
     image: getAssetUrl(s3Assets.fox),
     audio: getAssetAudioUrl(s3Assets.foxPhonemeAudioYT),
-    phonemeAudio: s3Assets.XPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.XPhonemeAudio),
   },
   {
     id: 21,
     title: "Consonant Sounds",
     letter: "qu",
-    word: "quit",
-    image: getAssetUrl(s3Assets.quilt),
-    audio: getAssetAudioUrl(s3Assets.quiltPhonemeAudioYT),
-    phonemeAudio: s3Assets.QPhonemeAudio,
+    word: "queen",
+    image: getAssetUrl(s3Assets.queenSixteenImg),
+    audio: getAssetAudioUrl(s3Assets.queenAud),
+    phonemeAudio: getAssetAudioUrl(s3Assets.QPhonemeAudio),
   },
   {
     id: 22,
@@ -231,7 +231,7 @@ const dataEn = [
     word: "chain",
     image: getAssetUrl(s3Assets.chain),
     audio: getAssetAudioUrl(s3Assets.chainPhonemeAudioYT),
-    phonemeAudio: s3Assets.CPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.CPhonemeAudio),
   },
   {
     id: 23,
@@ -240,7 +240,7 @@ const dataEn = [
     word: "sheep",
     image: getAssetUrl(s3Assets.sheep),
     audio: getAssetAudioUrl(s3Assets.sheepPhonemeAudioYT),
-    phonemeAudio: s3Assets.SPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.SPhonemeAudio),
   },
   {
     id: 24,
@@ -249,7 +249,7 @@ const dataEn = [
     word: "mother",
     image: getAssetUrl(s3Assets.motherGif),
     audio: getAssetAudioUrl(s3Assets.motherPhonemeAudioYT),
-    phonemeAudio: s3Assets.HPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.HPhonemeAudio),
   },
   {
     id: 25,
@@ -258,7 +258,7 @@ const dataEn = [
     word: "sing",
     image: getAssetUrl(s3Assets.sing),
     audio: getAssetAudioUrl(s3Assets.singPhonemeAudioYT),
-    phonemeAudio: s3Assets.NPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.NPhonemeAudio),
   },
   {
     id: 26,
@@ -266,8 +266,8 @@ const dataEn = [
     letter: "a",
     word: "apple",
     image: getAssetUrl(s3Assets.apple),
-    audio: getAssetAudioUrl(s3Assets.applePhonemeAudioYT),
-    phonemeAudio: s3Assets.APhonemeAudio,
+    audio: getAssetAudioUrl(s3Assets.appleAud),
+    phonemeAudio: getAssetAudioUrl(s3Assets.APhonemeAudio),
   },
   {
     id: 27,
@@ -276,7 +276,7 @@ const dataEn = [
     word: "egg",
     image: getAssetUrl(s3Assets.egg),
     audio: getAssetAudioUrl(s3Assets.eggPhonemeAudioYT),
-    phonemeAudio: s3Assets.EPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.EPhonemeAudio),
   },
   {
     id: 28,
@@ -285,7 +285,7 @@ const dataEn = [
     word: "igloo",
     image: getAssetUrl(s3Assets.igloo),
     audio: getAssetAudioUrl(s3Assets.iglooPhonemeAudioYT),
-    phonemeAudio: s3Assets.IPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.IPhonemeAudio),
   },
   {
     id: 29,
@@ -294,7 +294,7 @@ const dataEn = [
     word: "orange",
     image: getAssetUrl(s3Assets.orange),
     audio: getAssetAudioUrl(s3Assets.orangePhonemeAudioYT),
-    phonemeAudio: s3Assets.OPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.OPhonemeAudio),
   },
   {
     id: 30,
@@ -303,7 +303,7 @@ const dataEn = [
     word: "umbrella",
     image: getAssetUrl(s3Assets.umbrella),
     audio: getAssetAudioUrl(s3Assets.umbrellaPhonemeAudioYT),
-    phonemeAudio: s3Assets.UPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.UPhonemeAudio),
   },
   {
     id: 31,
@@ -312,7 +312,7 @@ const dataEn = [
     word: "rain",
     image: getAssetUrl(s3Assets.rain),
     audio: getAssetAudioUrl(s3Assets.rainPhonemeAudioYT),
-    phonemeAudio: s3Assets.APhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.APhonemeAudio),
   },
   {
     id: 32,
@@ -321,7 +321,7 @@ const dataEn = [
     word: "bee",
     image: getAssetUrl(s3Assets.bee),
     audio: getAssetAudioUrl(s3Assets.beePhonemeAudioYT),
-    phonemeAudio: s3Assets.EPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.EPhonemeAudio),
   },
   {
     id: 33,
@@ -330,7 +330,7 @@ const dataEn = [
     word: "pie",
     image: getAssetUrl(s3Assets.pie),
     audio: getAssetAudioUrl(s3Assets.piePhonemeAudioYT),
-    phonemeAudio: s3Assets.IPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.IPhonemeAudio),
   },
   {
     id: 34,
@@ -339,7 +339,7 @@ const dataEn = [
     word: "boat",
     image: getAssetUrl(s3Assets.boat),
     audio: getAssetAudioUrl(s3Assets.boatPhonemeAudioYT),
-    phonemeAudio: s3Assets.APhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.APhonemeAudio),
   },
   {
     id: 35,
@@ -348,7 +348,7 @@ const dataEn = [
     word: "moon",
     image: getAssetUrl(s3Assets.moon),
     audio: getAssetAudioUrl(s3Assets.moonPhonemeAudioYT),
-    phonemeAudio: s3Assets.OPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.OPhonemeAudio),
   },
   {
     id: 36,
@@ -357,7 +357,7 @@ const dataEn = [
     word: "book",
     image: getAssetUrl(s3Assets.book),
     audio: getAssetAudioUrl(s3Assets.bookPhonemeAudio),
-    phonemeAudio: s3Assets.OPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.OPhonemeAudio),
   },
   {
     id: 37,
@@ -366,7 +366,7 @@ const dataEn = [
     word: "cloud",
     image: getAssetUrl(s3Assets.cloud),
     audio: getAssetAudioUrl(s3Assets.cloudPhonemeAudioYT),
-    phonemeAudio: s3Assets.UPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.UPhonemeAudio),
   },
   {
     id: 38,
@@ -375,7 +375,7 @@ const dataEn = [
     word: "coin",
     image: getAssetUrl(s3Assets.coin),
     audio: getAssetAudioUrl(s3Assets.coinPhonemeAudioYT),
-    phonemeAudio: s3Assets.OPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.OPhonemeAudio),
   },
   {
     id: 39,
@@ -384,7 +384,7 @@ const dataEn = [
     word: "saw",
     image: getAssetUrl(s3Assets.saw),
     audio: getAssetAudioUrl(s3Assets.sawPhonemeAudioYT),
-    phonemeAudio: s3Assets.WPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.WPhonemeAudio),
   },
   {
     id: 40,
@@ -393,7 +393,7 @@ const dataEn = [
     word: "star",
     image: getAssetUrl(s3Assets.star),
     audio: getAssetAudioUrl(s3Assets.starPhonemeAudioYT),
-    phonemeAudio: s3Assets.RPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.RPhonemeAudio),
   },
   {
     id: 41,
@@ -402,7 +402,7 @@ const dataEn = [
     word: "sister",
     image: getAssetUrl(s3Assets.sister),
     audio: getAssetAudioUrl(s3Assets.sisterPhonemeAudioYT),
-    phonemeAudio: s3Assets.EPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.EPhonemeAudio),
   },
   {
     id: 42,
@@ -419,7 +419,7 @@ const dataEn = [
     word: "chair",
     image: getAssetUrl(s3Assets.chair),
     audio: getAssetAudioUrl(s3Assets.chairPhonemeAudioYT),
-    phonemeAudio: s3Assets.APhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.APhonemeAudio),
   },
   {
     id: 45,
@@ -428,7 +428,7 @@ const dataEn = [
     word: "hear",
     image: getAssetUrl(s3Assets.hear),
     audio: getAssetAudioUrl(s3Assets.hearPhonemeAudioYT),
-    phonemeAudio: s3Assets.RPhonemeAudio,
+    phonemeAudio: getAssetAudioUrl(s3Assets.RPhonemeAudio),
   },
 ];
 
