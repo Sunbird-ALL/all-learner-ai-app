@@ -1,4 +1,4 @@
-name: ALL temp rig staging Deployment
+name: ALL temp rig staging Deployment 
 
 on:
   push:
