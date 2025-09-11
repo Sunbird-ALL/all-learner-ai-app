@@ -57,11 +57,13 @@ const App = () => {
             console.log("if logout!");
             localStorage.clear();
             sessionStorage.clear();
+            window.location.reload();
           } else {
             console.log("else logout!");
             localStorage.clear();
             sessionStorage.clear();
             navigate("/login");
+            window.location.reload();
           }
         }
       }
