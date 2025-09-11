@@ -1054,7 +1054,7 @@ const Mechanics7 = ({
                             fontStyle: "Quicksand",
                           }}
                         >
-                          ಕಾ
+                          ಕ
                         </span>
                       </Box>
 
