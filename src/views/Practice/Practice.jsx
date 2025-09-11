@@ -57,6 +57,7 @@ import {
   addLesson,
   addPointer,
   addCorrectPracticeWords,
+  addCorrectShowcaseWords,
   fetchUserPoints,
   createLearnerProgress,
   getLessonProgressByID,
@@ -4564,6 +4565,9 @@ const Practice = () => {
           }
 
           if (getSetData.sessionResult === "pass") {
+            if (level === 1 || level === 2) {
+              const addCorrectWords = await addCorrectShowcaseWords();
+            }
             if (
               level === 15 &&
               (currentLevel === "S1" || currentLevel === "S2")
@@ -4969,6 +4973,7 @@ const Practice = () => {
   useEffect(() => {
     fetchDetails();
     setLocalData("correctPracticeWords", null);
+    setLocalData("correctShowcaseWords", null);
   }, []);
 
   useEffect(() => {
