@@ -97,6 +97,34 @@ export const addCorrectPracticeWords = async () => {
   }
 };
 
+export const addCorrectShowcaseWords = async () => {
+  const correctShowcaseWords = getLocalData("correctShowcaseWords");
+  const token = localStorage.getItem("apiToken");
+
+  if (!correctShowcaseWords || correctShowcaseWords.length === 0) {
+    console.warn("No correct showcase words to send.");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_LEARNER_AI_APP_HOST}/api/towre/addCorrectWord`,
+      { correctShowcaseWords },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error sending correctPracticeWords:", error);
+    throw error;
+  }
+};
+
 export const updateCorrectPracticeWords = async (updates) => {
   const token = localStorage.getItem("apiToken");
 
