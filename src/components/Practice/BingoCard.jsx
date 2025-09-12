@@ -648,7 +648,7 @@ const BingoCard = ({
       L3: {
         words: [
           "सर्क",
-          "बास",
+          "बास्‌",
           "हेल",
           "स",
           "कृ",
@@ -677,12 +677,12 @@ const BingoCard = ({
             image: getAssetUrl(s3Assets.krishnM2),
             audio: getAssetAudioUrl(s3Assets.krishnM2Hin),
           },
-          टोकरी: {
+          बास्‌केट: {
             image: getAssetUrl(s3Assets.basketM2),
             audio: getAssetAudioUrl(s3Assets.basketM2Hin),
           },
         },
-        arrM: ["सर्कस", "हेलमेट", "गुब्बारा", "कृष्ण", "टोकरी"],
+        arrM: ["सर्कस", "हेलमेट", "गुब्बारा", "कृष्ण", "बास्‌केट"],
       },
       L4: {
         words: [
@@ -1342,7 +1342,6 @@ const BingoCard = ({
       हेलमेट: ["हेल", "मेट"],
       गुब्बारा: ["गुब्बा", "रा"],
       कृष्ण: ["कृ", "ष्ण"],
-      टोकरी: ["बास", "केट"],
       गुलाब: ["गु", "लाब"],
       शरबत: ["शर", "बत"],
       மூன்று: ["மூன", "்று"],
@@ -1405,6 +1404,7 @@ const BingoCard = ({
       పన్ను: ["ప", "న్ను"],
       ముక్కు: ["ముక్", "కు"],
       చొక్కా: ["చోక్", "కా"],
+      बास्‌केट: ["बास्‌", "केट"],
     };
 
     const currentWord = levels[currentLevel]?.arrM[currentWordIndex];

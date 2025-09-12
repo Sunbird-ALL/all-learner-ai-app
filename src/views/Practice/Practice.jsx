@@ -696,10 +696,10 @@ const Practice = () => {
             },
             {
               name: "டன்",
-              audio: getAssetAudioUrl(s3Assets.kurudanWord3Audio),
+              audio: getAssetAudioUrl(s3Assets.kurudanAudio),
             },
           ],
-          completeAudio: getAssetAudioUrl(s3Assets.kurudanAudio),
+          completeAudio: getAssetAudioUrl(s3Assets.kurudanWord3Audio),
         },
         {
           completeWord: "விவசாயி",
@@ -856,7 +856,7 @@ const Practice = () => {
           img: getAssetUrl(s3Assets.pomegranateM1Tam),
           syllablesAudio: [
             {
-              name: "ದಾமா",
+              name: "மா",
               audio: getAssetAudioUrl(s3Assets.pomegranateWord1Audio),
             },
             {
@@ -891,7 +891,7 @@ const Practice = () => {
               audio: getAssetAudioUrl(s3Assets.peacock2M1SylTam),
             },
           ],
-          completeAudio: getAssetAudioUrl(s3Assets.PeacockM1Tam),
+          completeAudio: getAssetAudioUrl(s3Assets.peacockTamAudio),
         },
         {
           completeWord: "தாமரை",
@@ -963,17 +963,33 @@ const Practice = () => {
       ],
       P3: [
         { completeWord: "தயிர்", syllable: ["த", "யிர்"], audio: "CurdM1Tam" },
-        { completeWord: "மேகம்", syllable: ["மே", "கம்"], audio: "CloudM1Tam" },
-        { completeWord: "குடில்", syllable: ["கு", "டில்"], audio: "hutM1Tam" },
+        {
+          completeWord: "மேகம்",
+          syllable: ["மே", "கம்"],
+          audio: "cloudTamAudio",
+        },
+        {
+          completeWord: "குடில்",
+          syllable: ["கு", "டில்"],
+          audio: "hutTamAudio",
+        },
         {
           completeWord: "மாலை",
           syllable: ["மா", "லை"],
           audio: "necklaceM1Tam",
         },
-        { completeWord: "கொடரி", syllable: ["கொ", "டரி"], audio: "AxeM1Tam" },
+        {
+          completeWord: "கொடரி",
+          syllable: ["கொ", "டரி"],
+          audio: "axeTamAudio",
+        },
       ],
       P4: [
-        { completeWord: "முரலி", syllable: ["மு", "ரலி"], audio: "FluteM1Tam" },
+        {
+          completeWord: "முரலி",
+          syllable: ["மு", "ரலி"],
+          audio: "muraliTamAudio",
+        },
         { completeWord: "சிறகு", syllable: ["சி", "றகு"], audio: "wingM1Tam" },
         {
           completeWord: "கோபம்",
