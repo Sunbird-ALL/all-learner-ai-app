@@ -5354,7 +5354,7 @@ const PhrasesInAction = ({
                                   fontStyle: "Quicksand",
                                 }}
                               >
-                                ಕ
+                                ಕಾ
                               </span>
                             </Box>
 
@@ -5837,7 +5837,7 @@ const PhrasesInAction = ({
                                   fontStyle: "Quicksand",
                                 }}
                               >
-                                ಕ
+                                ಕಾ
                               </span>
                             </Box>
 

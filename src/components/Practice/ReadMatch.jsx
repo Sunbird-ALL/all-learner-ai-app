@@ -26,48 +26,7 @@ import {
 
 const theme = createTheme();
 
-const ReadMatch = ({
-  setVoiceText,
-  setRecordedAudio,
-  setVoiceAnimate,
-  storyLine,
-  type,
-  handleNext,
-  parentWords = "",
-  enableNext,
-  showTimer,
-  points,
-  steps,
-  currentStep,
-  contentId,
-  contentType,
-  level,
-  isDiscover,
-  progressData,
-  showProgress,
-  playTeacherAudio = () => {},
-  callUpdateLearner,
-  disableScreen,
-  isShowCase,
-  handleBack,
-  setEnableNext,
-  loading,
-  setOpenMessageDialog,
-  audio,
-  currentImg,
-  fluency,
-  startShowCase,
-  setStartShowCase,
-  livesData,
-  setLivesData,
-  gameOverData,
-  highlightWords,
-  matchedChar,
-  isNextButtonCalled,
-  setIsNextButtonCalled,
-  vocabCount,
-  wordCount,
-}) => {
+const ReadMatch = (level) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const navigate = useNavigate();
