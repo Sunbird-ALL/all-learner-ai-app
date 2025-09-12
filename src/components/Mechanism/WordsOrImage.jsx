@@ -12,7 +12,6 @@ import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
 import hintsImg from "../../assets/hints.svg";
 import {
-  practiceSteps,
   PlayAudioButton,
   StopAudioButton,
   ListenButton,
@@ -137,45 +136,8 @@ const WordsOrImage = ({
   } = useSpeechRecognition();
   const [showWrongTick, setShowWrongTick] = useState(true);
   const [isTranscriptCorrect, setIsTranscriptCorrect] = useState(null);
-  const sessionId = getLocalData("sessionId");
-  const correctShowcaseWords = getLocalData("correctShowcaseWords");
-
-  let progressDatas = getLocalData("practiceProgress");
-  //const virtualId = String(getLocalData("virtualId"));
-
-  if (typeof progressDatas === "string") {
-    progressDatas = JSON.parse(progressDatas);
-  }
-
-  let currentPracticeStep;
-  if (progressDatas) {
-    currentPracticeStep = progressDatas?.currentPracticeStep;
-  }
-
-  let currentLevel = practiceSteps?.[currentPracticeStep]?.title || "L1";
 
   const handleNextWrapped = () => {
-    if (
-      [1, 2]?.includes(level) &&
-      (currentLevel === "S1" || currentLevel === "S2")
-    ) {
-      const newWordData = {
-        original_text: words,
-        content_id: contentId,
-        milestone_level: level === 1 ? "m1" : level === 2 ? "m2" : "m3",
-        practice_level: currentLevel,
-        session_id: sessionId,
-        practiced: true,
-        learned: true,
-        subsession_id: "session_123",
-      };
-
-      setLocalData("correctShowcaseWords", [
-        ...(correctShowcaseWords || []),
-        newWordData,
-      ]);
-    }
-
     setIsTranscriptCorrect(null);
     handleNext();
   };
