@@ -614,7 +614,7 @@ function VoiceAnalyser(props) {
           "ET"
         );
       } else {
-        setApiResponse("error");
+        setApiResponse("telemetry error");
       }
 
       console.error("err", error);
