@@ -1152,7 +1152,7 @@ const WordsOrImage = ({
                                   fontStyle: "Quicksand",
                                 }}
                               >
-                                ಕಾ
+                                ಕ
                               </span>
                             </Box>
 
