@@ -785,7 +785,7 @@ const levelData = {
           { img: getAssetUrl(s3Assets.coffeeR1HinImg), text: "Coffee" },
         ],
         correctWord: "Oil",
-        audio: getAssetAudioUrl(s3Assets.telR1HinAudio),
+        audio: getAssetAudioUrl(s3Assets.telHinAudio),
         flowName: "P25",
       },
       {
@@ -815,7 +815,7 @@ const levelData = {
           { img: getAssetUrl(s3Assets.EagleR1HinImg), text: "Eagle" },
         ],
         correctWord: "Crow",
-        audio: getAssetAudioUrl(s3Assets.kauwaR1HinAudio),
+        audio: getAssetAudioUrl(s3Assets.kauwaHinAudio),
         flowName: "P28",
       },
       {
@@ -1079,7 +1079,7 @@ const levelData = {
           { img: getAssetUrl(s3Assets.basketR1Tam), text: "Basket" },
         ],
         correctWord: "Cloth",
-        audio: getAssetAudioUrl(s3Assets.clothR1TamAudio),
+        audio: getAssetAudioUrl(s3Assets.clothTamAudio),
         flowName: "P4",
       },
       {

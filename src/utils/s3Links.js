@@ -4192,3 +4192,15 @@ export const lamp_M1Audio = "ce993498-f475-4afa-8e17-9cd63e961024.mp3";
 export const swimming_M1Audio = "a1740f7c-ff62-45b8-823a-8e5c66b42f78.mp3";
 export const city_M1Audio = "ded1136f-303e-498b-8ea0-6f565d794f00.mp3";
 export const sand_M1Audio = "6065480c-aa55-465c-bb92-b64fb9deef4e.mp3";
+
+export const hutTamAudio = "32049b3e-b0c8-4dea-93a7-957fcfba686b.mp3";
+export const peacockTamAudio = "68194a3c-6fdf-4b5b-af1b-d73dcd1fbb67.mp3";
+export const clothTamAudio = "e07b7ae9-6eca-4620-91bb-5106c2feb018.mp3";
+export const muraliTamAudio = "ba1d4b0c-c721-4a90-9682-fddf53a7ac27.mp3";
+export const axeTamAudio = "c973a808-92b0-4404-b767-d1f54fc00dee.mp3";
+export const cloudTamAudio = "0d9ba691-e8b2-4476-87db-637aa218286b.mp3";
+
+export const uvaTamAudio = "179326db-16ee-4bbe-96f4-8a0a489b714d.mp3";
+
+export const kauwaHinAudio = "edfc9f87-7efa-4dda-858f-1a5dfa611ee9.mp3";
+export const telHinAudio = "fcd96d28-f83e-4095-b1aa-d5cb8d3be3cb.mp3";
