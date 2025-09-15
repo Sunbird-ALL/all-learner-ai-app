@@ -3803,8 +3803,8 @@ const Practice = () => {
           audio: "hedrankwaterM3Tam",
         },
         {
-          completeWord: "யானை கர்ஜிக்கிறது",
-          syllable: ["யானை", "கர்ஜிக்கிறது"],
+          completeWord: "யானை பிளிறும்",
+          syllable: ["யானை", "பிளிறும்"],
           audio: "elephantroarsM3Tam",
         },
         {
