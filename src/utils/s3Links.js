@@ -4205,3 +4205,5 @@ export const slowR2Tam = "24be414c-8db7-48e5-bc93-3c6a151cdcbb.mp3";
 export const fruitR2Tam = "3ef61bc6-4988-478d-8981-9570c1aacac6.mp3";
 export const oldR2Tam = "dde3ac6f-bef2-41b3-9ee5-61e22a0efd42.mp3";
 export const parrotR1KanAudio = "ef3a73e4-d93c-4d64-bf8a-631a9f49edd7.mp3";
+export const atmosphereTam = "8e859f32-36ba-4e7e-8010-28e8a0d2ddfe.mp3";
+export const eveningTamAud = "da11bf0c-287f-43e0-9f51-743789a9d87a.mp3";
