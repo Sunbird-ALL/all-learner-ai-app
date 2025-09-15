@@ -888,10 +888,10 @@ const Practice = () => {
             { name: "ம", audio: getAssetAudioUrl(s3Assets.peacock1M1SylTam) },
             {
               name: "யில்",
-              audio: getAssetAudioUrl(s3Assets.peacock2M1SylTam),
+              audio: getAssetAudioUrl(s3Assets.peacockTamAudio),
             },
           ],
-          completeAudio: getAssetAudioUrl(s3Assets.peacockTamAudio),
+          completeAudio: getAssetAudioUrl(s3Assets.PeacockM1Tam),
         },
         {
           completeWord: "தாமரை",
@@ -926,7 +926,7 @@ const Practice = () => {
             { name: "கா", audio: getAssetAudioUrl(s3Assets.sky2M1SylTam) },
             { name: "யம்", audio: getAssetAudioUrl(s3Assets.sky3M1SylTam) },
           ],
-          completeAudio: getAssetAudioUrl(s3Assets.SkyM1Tam),
+          completeAudio: getAssetAudioUrl(s3Assets.atmosphereTam),
         },
         {
           completeWord: "நேரம்",
@@ -976,7 +976,7 @@ const Practice = () => {
         {
           completeWord: "மாலை",
           syllable: ["மா", "லை"],
-          audio: "necklaceM1Tam",
+          audio: "eveningTamAud",
         },
         {
           completeWord: "கொடரி",
