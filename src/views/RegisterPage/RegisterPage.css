@@ -1,5 +1,4 @@
-/* LoginPage.css */
-.login-container {
+.register-container {
   height: 100vh;
   display: flex;
   align-items: center;
@@ -14,13 +13,13 @@
   /* width: 500px; */
 }
 
-.loginBox {
+.registerBox {
   padding: 30px;
   border-radius: 2px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   max-width: 500px;   /* 👈 reduce width here */
-  width: 100%;
+  width: 100%;        
 }
 
 .textField {
@@ -28,14 +27,13 @@
   margin-bottom: 16px;
 }
 
-
 /* Mobile-only styles - only activate on small screens */
 @media (max-width: 600px) {
-  .login-container {
+  .register-container {
     padding: 0 20px;
   }
   
-  .loginBox {
+  .registerBox {
     width: 100%;
     padding: 25px;
   }

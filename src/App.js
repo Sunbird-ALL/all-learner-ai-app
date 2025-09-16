@@ -28,48 +28,48 @@ const App = () => {
     };
   }, []);
 
-  axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (
-        error.response &&
-        (error.response.status === 401 || error.response.status === 400)
-      ) {
-        const errorMessage = error?.response?.data?.message
-          ?.trim()
-          ?.toLowerCase();
-        if (
-          errorMessage?.includes("unauthorized") ||
-          errorMessage?.includes("token") ||
-          errorMessage?.includes("logged")
-        ) {
-          if (
-            localStorage.getItem("contentSessionId") &&
-            process.env.REACT_APP_IS_APP_IFRAME === "true"
-          ) {
-            window.parent.postMessage(
-              {
-                message: "Logged out!",
-              },
-              window?.location?.ancestorOrigins?.[0] ||
-                window.parent.location.origin
-            );
-            console.log("if logout!");
-            localStorage.clear();
-            sessionStorage.clear();
-            window.location.reload();
-          } else {
-            console.log("else logout!");
-            localStorage.clear();
-            sessionStorage.clear();
-            navigate("/login");
-            window.location.reload();
-          }
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
+  // axios.interceptors.response.use(
+  //   (response) => response,
+  //   (error) => {
+  //     if (
+  //       error.response &&
+  //       (error.response.status === 401 || error.response.status === 400)
+  //     ) {
+  //       const errorMessage = error?.response?.data?.message
+  //         ?.trim()
+  //         ?.toLowerCase();
+  //       if (
+  //         errorMessage?.includes("unauthorized") ||
+  //         errorMessage?.includes("token") ||
+  //         errorMessage?.includes("logged")
+  //       ) {
+  //         if (
+  //           localStorage.getItem("contentSessionId") &&
+  //           process.env.REACT_APP_IS_APP_IFRAME === "true"
+  //         ) {
+  //           window.parent.postMessage(
+  //             {
+  //               message: "Logged out!",
+  //             },
+  //             window?.location?.ancestorOrigins?.[0] ||
+  //               window.parent.location.origin
+  //           );
+  //           console.log("if logout!");
+  //           localStorage.clear();
+  //           sessionStorage.clear();
+  //           window.location.reload();
+  //         } else {
+  //           console.log("else logout!");
+  //           localStorage.clear();
+  //           sessionStorage.clear();
+  //           navigate("/login");
+  //           window.location.reload();
+  //         }
+  //       }
+  //     }
+  //     return Promise.reject(error);
+  //   }
+  // );
 
   return (
     <StyledEngineProvider injectFirst>

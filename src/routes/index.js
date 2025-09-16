@@ -66,6 +66,12 @@ const routData = [
     component: reviews.LoginPage,
     requiresAuth: false,
   },
+  {
+    id: "route-011",
+    path: "/register",
+    component: reviews.RegisterPage,
+    requiresAuth: false,
+  },
 ];
 // add login route for test rig
 const TOKEN = localStorage.getItem("apiToken");

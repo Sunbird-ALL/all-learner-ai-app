@@ -471,7 +471,7 @@ export const ProfileHeader = ({
       localStorage.clear();
       end({});
       navigate("/login");
-      window.location.reload();
+      // window.location.reload();
     }
   };
 
