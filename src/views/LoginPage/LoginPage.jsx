@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Typography,
   TextField,
@@ -65,74 +65,90 @@ const LoginPage = () => {
 
     try {
       const userCheckDetails = await fetchUserCheck(username);
-      if (
-        userCheckDetails?.message === "Login successful" ||
-        userCheckDetails?.message === "Registered successfully"
-      ) {
-        const usernameDetails = await fetchVirtualId(username);
-        let token = usernameDetails?.result?.token;
 
-        if (token) {
-          localStorage.setItem("apiToken", token);
-          setLocalData("profileName", username);
-
-          const initService = async (visitorId) => {
-            await initialize({
-              context: {
-                mode: process.env.REACT_APP_MODE,
-                authToken: token,
-                did: localStorage.getItem("deviceId") || visitorId,
-                uid: username || "anonymous",
-                channel: process.env.REACT_APP_CHANNEL,
-                env: process.env.REACT_APP_ENV,
-                pdata: {
-                  id: process.env.REACT_APP_ID,
-                  ver: process.env.REACT_APP_VER,
-                  pid: process.env.REACT_APP_PID,
-                },
-                tags: [""],
-                timeDiff: 0,
-                host: process.env.REACT_APP_HOST,
-                endpoint: process.env.REACT_APP_ENDPOINT,
-                apislug: process.env.REACT_APP_APISLUG,
-              },
-              config: {},
-              metadata: {},
-            });
-
-            if (!ranonce.current) {
-              if (!localStorage.getItem("contentSessionId")) {
-                startEvent();
-              }
-              ranonce.current = true;
-            }
-          };
-
-          const fp = await FingerprintJS.load();
-          const { visitorId } = await fp.get();
-          await initService(visitorId);
-
-          navigate("/discover-start");
-        } else {
-          alert("Enter correct username and password");
-        }
+      if (!isLoginSuccessful(userCheckDetails)) {
+        alert(userCheckDetails?.message || "Unexpected response from server.");
+        return;
       }
+
+      const usernameDetails = await fetchVirtualId(username);
+      const token = usernameDetails?.result?.token;
+
+      if (!token) {
+        alert("Enter correct username and password");
+        return;
+      }
+
+      await setupUserSession(token, username);
+      navigate("/discover-start");
     } catch (error) {
-      console.error("Login Error:", error);
+      handleLoginError(error);
+    }
+  };
 
-      if (error.response) {
-        const { status, data } = error.response;
+  // ✅ Helper: check login success
+  const isLoginSuccessful = (details) => {
+    return (
+      details?.message === "Login successful" ||
+      details?.message === "Registered successfully"
+    );
+  };
 
-        if (status === 400 && data?.message === "Required fields are missing") {
-          alert("Please register the user before login.");
-        } else if (status === 401 && data?.message === "unauthorized access") {
-          alert("Unauthorized access. Please register first.");
-        } else {
-          alert(data?.message || "Login failed. Please try again.");
-        }
-      } else {
-        alert("Something went wrong. Please try again after some time.");
+  // ✅ Helper: initialize user session
+  const setupUserSession = async (token, username) => {
+    localStorage.setItem("apiToken", token);
+    setLocalData("profileName", username);
+
+    const fp = await FingerprintJS.load();
+    const { visitorId } = await fp.get();
+
+    await initialize({
+      context: {
+        mode: process.env.REACT_APP_MODE,
+        authToken: token,
+        did: localStorage.getItem("deviceId") || visitorId,
+        uid: username || "anonymous",
+        channel: process.env.REACT_APP_CHANNEL,
+        env: process.env.REACT_APP_ENV,
+        pdata: {
+          id: process.env.REACT_APP_ID,
+          ver: process.env.REACT_APP_VER,
+          pid: process.env.REACT_APP_PID,
+        },
+        tags: [""],
+        timeDiff: 0,
+        host: process.env.REACT_APP_HOST,
+        endpoint: process.env.REACT_APP_ENDPOINT,
+        apislug: process.env.REACT_APP_APISLUG,
+      },
+      config: {},
+      metadata: {},
+    });
+
+    if (!ranonce.current) {
+      if (!localStorage.getItem("contentSessionId")) {
+        startEvent();
       }
+      ranonce.current = true;
+    }
+  };
+
+  // ✅ Helper: centralized error handler
+  const handleLoginError = (error) => {
+    console.error("Login Error:", error);
+
+    if (error.response) {
+      const { status, data } = error.response;
+
+      if (status === 400 && data?.message === "Required fields are missing") {
+        alert("Please register the user before login.");
+      } else if (status === 401 && data?.message === "unauthorized access") {
+        alert("Unauthorized access. Please register first.");
+      } else {
+        alert(data?.message || "Login failed. Please try again.");
+      }
+    } else {
+      alert("Something went wrong. Please try again after some time.");
     }
   };
 
@@ -211,16 +227,17 @@ const LoginPage = () => {
             <Grid item xs={12}>
               <Typography variant="body1" align="center">
                 Don’t have an account?{" "}
-                <span
-                  onClick={() => navigate("/register")}
+                <Link
+                  to="/register"
                   style={{
                     color: "#1976d2",
                     cursor: "pointer",
                     fontWeight: "bold",
+                    textDecoration: "none",
                   }}
                 >
                   Register
-                </span>
+                </Link>
               </Typography>
             </Grid>
           </Grid>

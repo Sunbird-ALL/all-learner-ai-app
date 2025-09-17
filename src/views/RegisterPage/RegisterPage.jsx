@@ -7,7 +7,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import "./RegisterPage.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../services/userservice/userService";
 
 const RegisterPage = () => {
@@ -156,16 +156,17 @@ const RegisterPage = () => {
             <Grid item xs={12}>
               <Typography variant="body1" align="center">
                 Already have an account?{" "}
-                <span
-                  onClick={() => navigate("/login")}
+                <Link
+                  to="/login"
                   style={{
                     color: "#1976d2",
                     cursor: "pointer",
                     fontWeight: "bold",
+                    textDecoration: "none",
                   }}
                 >
                   Login
-                </span>
+                </Link>
               </Typography>
             </Grid>
           </Grid>
