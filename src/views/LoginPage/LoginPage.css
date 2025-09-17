@@ -1,9 +1,16 @@
 /* LoginPage.css */
 .login-container {
   height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* Background image */
+  background-image: url("../../assets/loginBackgroundImage.png");
+  background-size: cover; /* make the image cover the whole container */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat; /* prevent tiling */
 }
 
 .container {
@@ -19,7 +26,7 @@
   border-radius: 2px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
-  max-width: 500px;   /* 👈 reduce width here */
+  max-width: 500px; /* 👈 reduce width here */
   width: 100%;
 }
 
@@ -28,18 +35,17 @@
   margin-bottom: 16px;
 }
 
-
 /* Mobile-only styles - only activate on small screens */
 @media (max-width: 600px) {
   .login-container {
     padding: 0 20px;
   }
-  
+
   .loginBox {
     width: 100%;
     padding: 25px;
   }
-  
+
   .textField {
     margin-bottom: 14px;
   }
