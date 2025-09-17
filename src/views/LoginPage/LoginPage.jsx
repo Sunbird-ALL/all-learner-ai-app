@@ -1,20 +1,19 @@
 import React, { useState, useRef } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   Typography,
   TextField,
   Button,
   Grid,
-  CircularProgress,
   Box,
   Tabs,
   Tab,
 } from "@mui/material";
-import config from "../../utils/urlConstants.json";
 import { useMediaQuery } from "@mui/material";
-import { fetchVirtualId } from "../../services/userservice/userService";
-import { jwtDecode } from "jwt-decode";
+import {
+  fetchUserCheck,
+  fetchVirtualId,
+} from "../../services/userservice/userService";
 import "./LoginPage.css";
 import { setLocalData } from "../../utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
@@ -51,29 +50,24 @@ const LoginPage = () => {
         value = "GT_" + value.replace(/^GT_*/, "");
       }
     }
-
     setUsername(value);
   };
 
-  const API_HOST_VIRTUAL_ID_HOST = process.env.REACT_APP_VIRTUAL_ID_HOST;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!username || !password) {
       alert("Please fill in all fields");
       return;
     }
+
     localStorage.clear();
 
     try {
-      const userCheckDetails = await axios.post(
-        `${API_HOST_VIRTUAL_ID_HOST}/api/student/login`,
-        { username: username }
-      );
-
+      const userCheckDetails = await fetchUserCheck(username);
       if (
-        userCheckDetails?.data?.message === "Login successful" ||
-        userCheckDetails?.data?.message === "Registered successfully"
+        userCheckDetails?.message === "Login successful" ||
+        userCheckDetails?.message === "Registered successfully"
       ) {
         const usernameDetails = await fetchVirtualId(username);
         let token = usernameDetails?.result?.token;
@@ -137,7 +131,7 @@ const LoginPage = () => {
           alert(data?.message || "Login failed. Please try again.");
         }
       } else {
-        alert("Network error. Please check your connection.");
+        alert("Something went wrong. Please try again after some time.");
       }
     }
   };
@@ -180,6 +174,7 @@ const LoginPage = () => {
                 fullWidth
                 value={username}
                 onChange={handleUsernameChange}
+                required
                 inputProps={{
                   minLength: activeTab === 1 ? 4 : undefined, // at least "GT_"
                 }}
@@ -195,6 +190,7 @@ const LoginPage = () => {
                 type="password"
                 fullWidth
                 value={password}
+                required
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>

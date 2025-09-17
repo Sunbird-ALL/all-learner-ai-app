@@ -4,51 +4,11 @@ import {
   TextField,
   Button,
   Typography,
-  //   MenuItem,
   useMediaQuery,
 } from "@mui/material";
 import "./RegisterPage.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-// const indianStates = [
-//   "Andhra Pradesh",
-//   "Arunachal Pradesh",
-//   "Assam",
-//   "Bihar",
-//   "Chhattisgarh",
-//   "Goa",
-//   "Gujarat",
-//   "Haryana",
-//   "Himachal Pradesh",
-//   "Jharkhand",
-//   "Karnataka",
-//   "Kerala",
-//   "Madhya Pradesh",
-//   "Maharashtra",
-//   "Manipur",
-//   "Meghalaya",
-//   "Mizoram",
-//   "Nagaland",
-//   "Odisha",
-//   "Punjab",
-//   "Rajasthan",
-//   "Sikkim",
-//   "Tamil Nadu",
-//   "Telangana",
-//   "Tripura",
-//   "Uttar Pradesh",
-//   "Uttarakhand",
-//   "West Bengal",
-//   "Andaman and Nicobar Islands",
-//   "Chandigarh",
-//   "Dadra and Nagar Haveli and Daman and Diu",
-//   "Delhi",
-//   "Jammu and Kashmir",
-//   "Ladakh",
-//   "Lakshadweep",
-//   "Puducherry",
-// ];
+import { register } from "../../services/userservice/userService";
 
 const RegisterPage = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -65,8 +25,6 @@ const RegisterPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const API_HOST_VIRTUAL_ID_HOST = process.env.REACT_APP_VIRTUAL_ID_HOST;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -76,20 +34,16 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${API_HOST_VIRTUAL_ID_HOST}/api/student/register?type=single`,
-        { username: formData.userName }
-      );
+      const response = await register(formData?.userName);
 
-      // ✅ Success
-      if (response?.data?.message === "Registered successfully") {
+      if (response?.message === "Registered successfully") {
         alert(
           "Registered successfully! Please go to the login page and login."
         );
-        navigate("/login"); // redirect to login page
+        navigate("/login");
       }
 
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Error during registration:", error);
 
@@ -104,7 +58,7 @@ const RegisterPage = () => {
           alert(data?.message || "Registration failed. Please try again.");
         }
       } else {
-        alert("Network error. Please check your connection.");
+        alert("Something went wrong. Please try again after some time.");
       }
     }
   };
@@ -205,7 +159,7 @@ const RegisterPage = () => {
                 <span
                   onClick={() => navigate("/login")}
                   style={{
-                    color: "#1976d2", // MUI primary blue
+                    color: "#1976d2",
                     cursor: "pointer",
                     fontWeight: "bold",
                   }}
