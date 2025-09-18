@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { ThemeProvider } from "@mui/material";
 import { useNavigate } from "../node_modules/react-router-dom/dist/index";
 import { StyledEngineProvider } from "@mui/material/styles";
@@ -10,7 +10,6 @@ import axios from "axios";
 
 const App = () => {
   const navigate = useNavigate();
-  const ranonce = useRef(false);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
