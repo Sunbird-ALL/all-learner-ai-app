@@ -1,68 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { ThemeProvider } from "@mui/material";
-import { BrowserRouter as Router } from "react-router-dom";
+import { useNavigate } from "../node_modules/react-router-dom/dist/index";
 import { StyledEngineProvider } from "@mui/material/styles";
-import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import routes from "./routes";
 import { AppContent } from "./views";
 import theme from "./assets/styles/theme";
-import { initialize, end } from "./services/telementryService";
-import { startEvent } from "./services/callTelemetryIntract";
 import "@tekdi/all-telemetry-sdk/index.js";
-import { getParameter } from "./utils/constants";
+import axios from "axios";
 
 const App = () => {
+  const navigate = useNavigate();
   const ranonce = useRef(false);
-  useEffect(() => {
-    const initService = async (visitorId) => {
-      await initialize({
-        context: {
-          mode: process.env.REACT_APP_MODE, // To identify preview used by the user to play/edit/preview
-          authToken: "", // Auth key to make  api calls
-          did: localStorage.getItem("deviceId") || visitorId, // Unique id to identify the device or browser
-          uid: "anonymous",
-          channel: process.env.REACT_APP_CHANNEL, // Unique id of the channel(Channel ID)
-          env: process.env.REACT_APP_ENV,
-
-          pdata: {
-            // optional
-            id: process.env.REACT_APP_ID, // Producer ID. For ex: For sunbird it would be "portal" or "genie"
-            ver: process.env.REACT_APP_VER, // Version of the App
-            pid: process.env.REACT_APP_PID, // Optional. In case the component is distributed, then which instance of that component
-          },
-          tags: [
-            // Defines the tags data
-            "",
-          ],
-          timeDiff: 0, // Defines the time difference// Defines the object roll up data
-          host: process.env.REACT_APP_HOST, // Defines the from which domain content should be load
-          endpoint: process.env.REACT_APP_ENDPOINT,
-          apislug: process.env.REACT_APP_APISLUG,
-        },
-        config: {},
-        // tslint:disable-next-line:max-line-length
-        metadata: {},
-      });
-      if (!ranonce.current) {
-        if (localStorage.getItem("contentSessionId") === null) {
-          startEvent();
-        }
-        ranonce.current = true;
-      }
-    };
-
-    const setFp = async () => {
-      const fp = await FingerprintJS.load();
-
-      const { visitorId } = await fp.get();
-      // //if (!localStorage.getItem("did")) {
-      //   localStorage.setItem("did", visitorId);
-      // //}
-      initService(visitorId);
-    };
-
-    setFp();
-  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -80,35 +28,53 @@ const App = () => {
     };
   }, []);
 
-  useEffect(() => {
-    let virtualId;
-
-    if (getParameter("virtualId", window.location.search)) {
-      virtualId = getParameter("virtualId", window.location.search);
-    } else {
-      virtualId = localStorage.getItem("virtualId");
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (
+        error.response &&
+        (error.response.status === 401 || error.response.status === 400)
+      ) {
+        const errorMessage = error?.response?.data?.message
+          ?.trim()
+          ?.toLowerCase();
+        if (
+          errorMessage?.includes("unauthorized") ||
+          errorMessage?.includes("token") ||
+          errorMessage?.includes("logged")
+        ) {
+          if (
+            localStorage.getItem("contentSessionId") &&
+            process.env.REACT_APP_IS_APP_IFRAME === "true"
+          ) {
+            window.parent.postMessage(
+              {
+                message: "Logged out!",
+              },
+              window?.location?.ancestorOrigins?.[0] ||
+                window.parent.location.origin
+            );
+            console.log("if logout!");
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.reload();
+          } else {
+            console.log("else logout!");
+            localStorage.clear();
+            sessionStorage.clear();
+            navigate("/login");
+            window.location.reload();
+          }
+        }
+      }
+      return Promise.reject(error);
     }
-    localStorage.setItem("virtualId", virtualId);
-
-    const contentSessionId = getParameter(
-      "contentSessionId",
-      window.location.search
-    );
-    if (contentSessionId) {
-      localStorage.setItem("contentSessionId", contentSessionId);
-    }
-    const token = getParameter("token", window.location.search);
-    if (token) {
-      localStorage.setItem("token", token);
-    }
-  }, []);
+  );
 
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <Router>
-          <AppContent routes={routes} />
-        </Router>
+        <AppContent routes={routes} />
       </ThemeProvider>
     </StyledEngineProvider>
   );

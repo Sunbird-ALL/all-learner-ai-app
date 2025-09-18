@@ -814,15 +814,15 @@ const ReadAloud = ({
   };
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
+  //const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas?.[virtualId]) {
-    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.title || "L1";

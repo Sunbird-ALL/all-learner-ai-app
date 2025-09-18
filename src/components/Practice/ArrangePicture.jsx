@@ -31,6 +31,14 @@ import {
 import correctSound from "../../assets/correct.wav";
 import raMic from "../../assets/listen.png";
 import raStop from "../../assets/pause.png";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
 const levelMap = {
   10: level10,
@@ -40,6 +48,8 @@ const levelMap = {
   14: level14,
   15: level15,
 };
+
+const theme = createTheme();
 
 const audioData = [
   {
@@ -99,6 +109,8 @@ function ArrangePicture({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) {
   const [placedImages, setPlacedImages] = useState([
     null,
@@ -122,8 +134,24 @@ function ArrangePicture({
   const utteranceRef = useRef(null);
   const [highlightedWord, setHighlightedWord] = useState(null);
   const [isReadAloudPlaying, setIsReadAloudPlaying] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const [isLandscape, setIsLandscape] = useState(
+    window.innerWidth > window.innerHeight
+  );
+  const lang = getLocalData("lang");
 
-  steps = 1;
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+
+    window.addEventListener("resize", handleOrientationChange);
+
+    return () => {
+      window.removeEventListener("resize", handleOrientationChange);
+    };
+  }, []);
 
   const getConversation = (level, currentLevel) => {
     const levelData = levelMap[level];
@@ -134,15 +162,15 @@ function ArrangePicture({
   };
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
+  //const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas?.[virtualId]) {
-    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.name || "P3";
@@ -263,6 +291,7 @@ function ArrangePicture({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={lang}
       //={recAudio}
       {...{
         steps,
@@ -274,174 +303,326 @@ function ArrangePicture({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          height: "100vh",
-          backgroundColor: "#BFE981",
-          padding: "0px",
-          position: "relative",
-        }}
-      >
+      <ThemeProvider theme={theme}>
         <div
           style={{
-            width: "90%",
-            height: "70%",
-            backgroundColor: "white",
-            borderRadius: "20px",
-            padding: "20px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#BFE981",
+            padding: "0px",
+            position: "relative",
           }}
         >
-          {step === 1 && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "20px",
-                alignItems: "center",
-                margin: "50px",
-              }}
-            >
-              <p style={{ fontSize: "20px", fontWeight: "600" }}>
-                Please listen to the audio {audioIndex + 1}
-              </p>
-              <div
-                style={{
-                  whiteSpace: "pre-wrap",
-                  width: "100%",
-                  lineHeight: "2",
-                  marginTop: "25px",
-                  // alignContent: "center",
-                  // display: "flex",
-                  // alignSelf: "center",
-                  // alignItems: "center",
-                  // justifyContent: "center"
-                }}
-              >
-                {allTexts?.split(" ").map((word, wordIndex) => (
-                  <span
-                    key={wordIndex}
-                    style={{
-                      backgroundColor:
-                        highlightedWord && highlightedWord.index === wordIndex
-                          ? "#833B1C40"
-                          : "transparent",
-                      transition: "background-color 0.2s ease",
-                      border:
-                        highlightedWord && highlightedWord.index === wordIndex
-                          ? "1px solid #42210B"
-                          : "none",
-                      color: "#000000",
-                      fontSize: "18px",
-                      fontWeight: "500",
-                      textAlign: "center",
-                      alignContent: "center",
-                      alignSelf: "center",
-                      alignItems: "center",
-                      width: "50px",
-                    }}
-                  >
-                    {word}{" "}
-                  </span>
-                ))}
-              </div>
-              <div style={{ display: "flex", gap: "20px", marginTop: "50px" }}>
-                <img
-                  src={isReadAloudPlaying ? spinnerStop : listenImg2}
-                  alt="Start"
-                  height={"50px"}
-                  width={"50px"}
-                  onClick={handleReadAloud}
-                  style={{ cursor: "pointer" }}
-                />
-                <div
-                  onClick={() => {
-                    if (isPressedOnce) {
-                      handleNextStep();
-                      handleNext();
-                    }
-                  }}
-                  className="flex items-center"
-                  style={{
-                    cursor: isPressedOnce ? "pointer" : "not-allowed",
-                  }}
-                >
-                  <NextButtonRound height={50} width={50} />
-                </div>
-              </div>
-            </div>
-          )}
-          {step === 2 && (
-            <>
-              <h2
-                style={{
-                  //fontFamily: "PoetsenOne",
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: "#000000",
-                  marginBottom: "20px",
-                }}
-              >
-                Arrange the Pictures
-              </h2>
-
-              {isAllCorrect && (
-                <p
-                  style={{
-                    //fontFamily: "DynaPuff",
-                    fontSize: "24px",
-                    fontWeight: "bold",
-                    color: "#58CC02",
-                    marginBottom: "20px",
-                  }}
-                >
-                  Great Work
-                </p>
-              )}
-
+          <div
+            style={{
+              width: "90%",
+              height: "90%",
+              backgroundColor: "white",
+              borderRadius: "20px",
+              margin: "20px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            {step === 1 && (
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "center",
+                  flexDirection: "column",
                   gap: "20px",
-                  margin: "20px 0",
+                  alignItems: "center",
+                  margin: "50px",
                 }}
               >
-                {Array.from({ length: 5 }).map((_, index) => (
+                <p
+                  style={{
+                    fontSize: isMobile ? "16px" : "20px",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
+                  Please listen to the audio {audioIndex + 1}
+                </p>
+                <div
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    width: "100%",
+                    lineHeight: "2",
+                    marginTop: "25px",
+                    textAlign: "center",
+                    // alignContent: "center",
+                    // display: "flex",
+                    // alignSelf: "center",
+                    // alignItems: "center",
+                    // justifyContent: "center"
+                  }}
+                >
+                  {allTexts?.split(" ").map((word, wordIndex) => (
+                    <span
+                      key={wordIndex}
+                      style={{
+                        backgroundColor:
+                          highlightedWord && highlightedWord.index === wordIndex
+                            ? "#833B1C40"
+                            : "transparent",
+                        transition: "background-color 0.2s ease",
+                        border:
+                          highlightedWord && highlightedWord.index === wordIndex
+                            ? "1px solid #42210B"
+                            : "none",
+                        color: "#000000",
+                        fontSize: isMobile ? "14px" : "18px",
+                        fontWeight: "500",
+                        textAlign: "center",
+                        alignContent: "center",
+                        alignSelf: "center",
+                        alignItems: "center",
+                        width: "50px",
+                      }}
+                    >
+                      {word}{" "}
+                    </span>
+                  ))}
+                </div>
+                <div
+                  style={{ display: "flex", gap: "20px", marginTop: "50px" }}
+                >
+                  <img
+                    src={isReadAloudPlaying ? spinnerStop : listenImg2}
+                    alt="Start"
+                    height={isMobile ? "35px" : "50px"}
+                    width={isMobile ? "35px" : "50px"}
+                    onClick={handleReadAloud}
+                    style={{ cursor: "pointer" }}
+                  />
                   <div
-                    key={index}
+                    onClick={() => {
+                      if (isPressedOnce) {
+                        handleNextStep();
+                        handleNext();
+                      }
+                    }}
+                    className="flex items-center"
                     style={{
-                      width: "120px",
-                      height: "120px",
-                      backgroundColor: "#FFEFE6",
-                      border: placedImages[index]
-                        ? "none"
-                        : "2px dashed #FF8C8C",
-                      borderRadius: "10px",
-                      position: "relative",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexDirection: "column",
+                      cursor: isPressedOnce ? "pointer" : "not-allowed",
                     }}
                   >
-                    {placedImages[index] && (
-                      <>
+                    <NextButtonRound
+                      height={isMobile ? 35 : 50}
+                      width={isMobile ? 35 : 50}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {step === 2 && (
+              <>
+                <h2
+                  style={{
+                    //fontFamily: "PoetsenOne",
+                    fontSize: isMobile ? "16px" : "24px",
+                    fontWeight: "bold",
+                    color: "#000000",
+                    marginBottom: "20px",
+                  }}
+                >
+                  Arrange the Pictures
+                </h2>
+
+                {isAllCorrect && (
+                  <p
+                    style={{
+                      //fontFamily: "DynaPuff",
+                      fontSize: isMobile ? "16px" : "24px",
+                      fontWeight: "bold",
+                      color: "#58CC02",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    Great Work
+                  </p>
+                )}
+
+                <div
+                  style={{
+                    display: isMobile ? "grid" : "flex",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    justifyItems: "center",
+                    gap: "20px",
+                    margin: "20px 0",
+                  }}
+                >
+                  {Array.from({ length: 5 }).map((_, index) => {
+                    const isLastRowFirstItem = index === 4;
+
+                    return (
+                      <div
+                        key={index}
+                        style={{
+                          gridColumn: isLastRowFirstItem ? "1 / -1" : undefined,
+                          width: isMobile
+                            ? "75px"
+                            : isLandscape
+                            ? "85px"
+                            : "120px",
+                          height: isMobile
+                            ? "75px"
+                            : isLandscape
+                            ? "85px"
+                            : "120px",
+                          backgroundColor: "#FFEFE6",
+                          border: placedImages[index]
+                            ? "none"
+                            : "2px dashed #FF8C8C",
+                          borderRadius: "10px",
+                          position: "relative",
+                          display: "flex",
+                          alignItems: "cen ter",
+                          justifyContent: "center",
+                          flexDirection: "column",
+                        }}
+                      >
+                        {placedImages[index] && (
+                          <>
+                            <img
+                              src={
+                                getAssetUrl(
+                                  s3Assets[placedImages[index].img]
+                                ) || Assets[placedImages[index].img]
+                              }
+                              alt={`Placed Image ${index + 1}`}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                borderRadius: "10px",
+                              }}
+                            />
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: "5px",
+                                left: "5px",
+                                width: "15px",
+                                height: "15px",
+                                backgroundColor: "white",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: isMobile ? "10px" : "14px",
+                                fontWeight: "bold",
+                                color: "black",
+                                border: "1px solid #000",
+                              }}
+                            >
+                              {index + 1}
+                            </div>
+                          </>
+                        )}
+
+                        {wrongAttempts[index] && (
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                            }}
+                          >
+                            <img
+                              src={crossImg}
+                              alt="Wrong Attempt"
+                              style={{
+                                width: isMobile ? "36px" : "30px",
+                                height: isMobile ? "36px" : "30px",
+                              }}
+                            />
+                            <p
+                              style={{
+                                marginTop: "5px",
+                                color: "#000000",
+                                fontSize: isMobile ? "12px" : "14px",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              Wrong
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {isAllCorrect && (
+                  <div
+                    onClick={handleNextTask}
+                    style={{ textAlign: "center", marginTop: "20px" }}
+                  >
+                    <NextButtonRound
+                      height={isMobile ? 35 : 50}
+                      width={isMobile ? 35 : 50}
+                    />
+                  </div>
+                )}
+
+                <div
+                  style={{
+                    display: isMobile ? "grid" : "flex",
+                    gridTemplateColumns: isMobile
+                      ? "repeat(2, 1fr)"
+                      : undefined,
+                    justifyContent: "center",
+                    justifyItems: "center",
+                    gap: "25px",
+                    margin: "20px 0px",
+                  }}
+                >
+                  {conversation?.images?.map((image, index) =>
+                    placedImages.some(
+                      (placed) => placed && placed.id === image.id
+                    ) ? null : (
+                      <div
+                        key={image.id}
+                        style={{
+                          gridColumn: index === 4 ? "1 / -1" : undefined,
+                          width: isMobile
+                            ? "75px"
+                            : isLandscape
+                            ? "85px"
+                            : "120px",
+                          height: isMobile
+                            ? "75px"
+                            : isLandscape
+                            ? "85px"
+                            : "120px",
+                          borderRadius: "10px",
+                          overflow: "hidden",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleImageClick(image)}
+                      >
                         <img
                           src={
-                            getAssetUrl(s3Assets[placedImages[index].img]) ||
-                            Assets[placedImages[index].img]
+                            getAssetUrl(s3Assets[image.img]) ||
+                            Assets[image.img]
                           }
-                          alt={`Placed Image ${index + 1}`}
+                          alt={`Image ${image.id}`}
                           style={{
                             width: "100%",
                             height: "100%",
@@ -449,109 +630,15 @@ function ArrangePicture({
                             borderRadius: "10px",
                           }}
                         />
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "5px",
-                            left: "5px",
-                            width: "15px",
-                            height: "15px",
-                            backgroundColor: "white",
-                            borderRadius: "50%",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            color: "black",
-                            border: "1px solid #000",
-                          }}
-                        >
-                          {index + 1}
-                        </div>
-                      </>
-                    )}
-
-                    {wrongAttempts[index] && (
-                      <>
-                        <img
-                          src={crossImg}
-                          alt="Wrong Attempt"
-                          style={{
-                            position: "absolute",
-                            width: "30px",
-                            height: "30px",
-                          }}
-                        />
-                        <p
-                          style={{
-                            position: "absolute",
-                            bottom: "15px",
-                            color: "#000000",
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Wrong
-                        </p>
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {isAllCorrect && (
-                <div
-                  onClick={handleNextTask}
-                  style={{ textAlign: "center", marginTop: "20px" }}
-                >
-                  <NextButtonRound height={50} width={50} />
+                      </div>
+                    )
+                  )}
                 </div>
-              )}
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "25px",
-                  marginTop: "20px",
-                }}
-              >
-                {conversation?.images?.map((image) =>
-                  placedImages.some(
-                    (placed) => placed && placed.id === image.id
-                  ) ? null : (
-                    <div
-                      key={image.id}
-                      style={{
-                        width: "120px",
-                        height: "120px",
-                        borderRadius: "10px",
-                        overflow: "hidden",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => handleImageClick(image)}
-                    >
-                      <img
-                        src={
-                          getAssetUrl(s3Assets[image.img]) || Assets[image.img]
-                        }
-                        alt={`Image ${image.id}`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          borderRadius: "10px",
-                        }}
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      </ThemeProvider>
     </MainLayout>
   );
 }

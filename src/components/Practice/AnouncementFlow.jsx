@@ -1,5 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import listenImg2 from "../../assets/listen.png";
 import Confetti from "react-confetti";
 import {
@@ -18,6 +25,7 @@ import { getAssetAudioUrl } from "../../utils/s3Links";
 import {
   practiceSteps,
   getLocalData,
+  setLocalData,
   NextButtonRound,
   RetryIcon,
   ListenButton,
@@ -37,7 +45,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
-
+import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 const levelMap = {
   10: level10,
   11: level11,
@@ -46,6 +54,8 @@ const levelMap = {
   14: level14,
   15: level15,
 };
+
+const theme = createTheme();
 
 const AnouncementFlow = ({
   setVoiceText,
@@ -87,6 +97,8 @@ const AnouncementFlow = ({
   matchedChar,
   isNextButtonCalled,
   setIsNextButtonCalled,
+  vocabCount,
+  wordCount,
 }) => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [conversationData, setConversationData] = useState([]);
@@ -116,6 +128,9 @@ const AnouncementFlow = ({
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isPressedOnce, setIsPressedOnce] = useState(false);
+  const [abusiveFound, setAbusiveFound] = useState(false);
+  const [detectedWord, setDetectedWord] = useState("");
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
   const {
     transcript,
     interimTranscript,
@@ -123,11 +138,31 @@ const AnouncementFlow = ({
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
     console.log("Live Transcript:", transcript);
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      if (filteredText.includes("*")) {
+        const count = parseInt(getLocalData("profanityCheck") || "0");
+
+        if (count > 2) {
+          setOpenMessageDialog({
+            open: true,
+            message: `Please speak appropriately.`,
+            severity: "warning",
+            isError: true,
+          });
+        }
+
+        handleStopRecording();
+
+        setLocalData("profanityCheck", (count + 1).toString());
+      }
+    }
   }, [transcript]);
 
   // let mediaRecorder;
@@ -172,15 +207,15 @@ const AnouncementFlow = ({
   };
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
+  //const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas?.[virtualId]) {
-    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.name || "P1";
@@ -210,16 +245,23 @@ const AnouncementFlow = ({
     setRecAudio(null);
     resetTranscript();
     setIsRecording(true);
+    setLanguage(language);
+    setAbusiveFound(false);
+    setDetectedWord("");
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
+      language: language || "en-US",
     });
   };
 
   const handleStopRecording = () => {
     SpeechRecognition.stopListening();
     setFinalTranscript(transcriptRef.current);
+    setAbusiveFound(false);
+
     setIsRecording(false);
+    setAbusiveFound(false);
     //console.log("Final Transcript:", transcriptRef.current);
   };
 
@@ -232,7 +274,6 @@ const AnouncementFlow = ({
       setRecAudio("");
     }
   };
-
   // const playAudio = (audioKey) => {
   //   if (Assets[audioKey]) {
   //     const audio = new Audio(Assets[audioKey]);
@@ -241,6 +282,8 @@ const AnouncementFlow = ({
   //     console.error("Audio file not found:", audioKey);
   //   }
   // };
+
+  console.log("token", localStorage.getItem("apiToken"));
 
   const handleHintClick = () => {
     if (isPlaying) {
@@ -575,6 +618,14 @@ const AnouncementFlow = ({
       audioInstance.currentTime = 0;
       setIsPlaying(false);
     }
+    // if (finalTranscript && filterBadWords(finalTranscript)) {
+    //   setOpenMessageDialog({
+    //     open: true,
+    //     message: `Cannot proceed - inappropriate language detected (${detectedWord}). Please try again.`,
+    //     severity: "error",
+    //   });
+    //   return;
+    // }
     setIsLoading(true);
 
     const sessionId = getLocalData("sessionId");
@@ -733,7 +784,7 @@ const AnouncementFlow = ({
       fontWeight: "bold",
       //display: "relative",
       border: "1px dashed #d8b6ff",
-      fontSize: "24px",
+      fontSize: isMobile ? "16px" : "24px",
       width: "50%",
       marginLeft: "auto",
       marginRight: "auto",
@@ -748,11 +799,12 @@ const AnouncementFlow = ({
     optionsContainer: {
       marginTop: "20px",
       display: "grid",
-      gridTemplateColumns:
-        tasks[currentTaskIndex]?.options?.length === 4 ||
-        tasks[currentTaskIndex]?.options?.length === 5
-          ? "repeat(2, 1fr)"
-          : "repeat(2, 1fr)",
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : tasks[currentTaskIndex]?.options?.length === 4 ||
+          tasks[currentTaskIndex]?.options?.length === 5
+        ? "repeat(2, 1fr)"
+        : "repeat(2, 1fr)",
       gap: "20px",
       width: "80%",
       marginLeft: "auto",
@@ -769,14 +821,14 @@ const AnouncementFlow = ({
       cursor: "pointer",
       textAlign: "center",
       boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-      fontSize: "18px",
+      fontSize: isMobile ? "14px" : "18px",
       transition: "background-color 0.3s ease",
     },
 
     thirdOption: {
       gridColumn: "1 / -1",
       justifySelf: "center",
-      width: "50%",
+      width: isMobile ? "80%" : "50%",
     },
 
     correctOption: {
@@ -799,6 +851,7 @@ const AnouncementFlow = ({
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
       fluency={false}
+      lang={language}
       //={recAudio}
       {...{
         steps,
@@ -817,80 +870,84 @@ const AnouncementFlow = ({
         livesData,
         gameOverData,
         setIsNextButtonCalled,
+        vocabCount,
+        wordCount,
       }}
     >
-      <div style={styles.mainContainer}>
-        {!showQuestion && (
-          <div
-            style={{
-              display: "flex",
-              position: "absolute",
-              justifyContent: "space-between",
-              width: "100%",
-              alignItems: "flex-end",
-            }}
-          >
-            <img
-              src={
-                getAssetUrl(s3Assets[imageData?.imageOne]) ||
-                Assets[imageData?.imageOne] ||
-                Assets.atm
-              }
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = Assets[imageData?.imageOne] || Assets.atm;
-              }}
-              alt="Next"
-              height={"130px"}
-              //width={"75px"}
-              //onClick={handleNextClick}
-              style={{ cursor: "pointer", marginTop: "0px", zIndex: "9999" }}
-            />
-            <img
-              src={
-                getAssetUrl(s3Assets[imageData?.imageTwo]) ||
-                Assets[imageData?.imageTwo] ||
-                Assets.mall
-              }
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = Assets[imageData?.imageTwo] || Assets.mall;
-              }}
-              alt="Next"
-              height={"130px"}
-              //width={"75px"}
-              //onClick={handleNextClick}
-              style={{ cursor: "pointer", marginTop: "0px", zIndex: "9999" }}
-            />
-          </div>
-        )}
-        {showConfetti && <Confetti height={"350px"} />}
-        <div style={styles.innerContainer}>
-          {!showQuestion ? (
+      <ThemeProvider theme={theme}>
+        <div style={styles.mainContainer}>
+          {!showQuestion && (
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                alignItems: "center",
+                position: "absolute",
+                justifyContent: "space-between",
+                width: "100%",
+                alignItems: "flex-end",
               }}
             >
-              {step !== "questions" &&
-                step !== "initiate" &&
-                step !== "finished" &&
-                step !== "stoppedRecording" &&
-                step !== "recording" && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "10px",
-                      marginTop: "20px",
-                    }}
-                  >
-                    {/* {allTexts.split(". ").map((sentence, index) => (
+              <img
+                src={
+                  getAssetUrl(s3Assets[imageData?.imageOne]) ||
+                  Assets[imageData?.imageOne] ||
+                  Assets.atm
+                }
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = Assets[imageData?.imageOne] || Assets.atm;
+                }}
+                alt="Next"
+                height={isMobile ? "" : "130px"}
+                width={isMobile ? "100px" : ""}
+                //onClick={handleNextClick}
+                style={{ cursor: "pointer", marginTop: "0px", zIndex: "9999" }}
+              />
+              <img
+                src={
+                  getAssetUrl(s3Assets[imageData?.imageTwo]) ||
+                  Assets[imageData?.imageTwo] ||
+                  Assets.mall
+                }
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = Assets[imageData?.imageTwo] || Assets.mall;
+                }}
+                alt="Next"
+                height={isMobile ? "" : "130px"}
+                width={isMobile ? "100px" : ""}
+                //width={"75px"}
+                //onClick={handleNextClick}
+                style={{ cursor: "pointer", marginTop: "0px", zIndex: "9999" }}
+              />
+            </div>
+          )}
+          {showConfetti && <Confetti height={"350px"} />}
+          <div style={styles.innerContainer}>
+            {!showQuestion ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  alignItems: "center",
+                }}
+              >
+                {step !== "questions" &&
+                  step !== "initiate" &&
+                  step !== "finished" &&
+                  step !== "stoppedRecording" &&
+                  step !== "recording" && (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "10px",
+                        marginTop: "20px",
+                      }}
+                    >
+                      {/* {allTexts.split(". ").map((sentence, index) => (
                               <div key={index}>
                                 {sentence.split(" ").map((word, wordIndex) => (
                                   <span
@@ -915,160 +972,294 @@ const AnouncementFlow = ({
                                 ))}
                               </div>
                             ))} */}
-                    <div
-                      style={{
-                        whiteSpace: "pre-wrap",
-                        width: "75%",
-                        lineHeight: "1.8",
-                      }}
-                    >
-                      {allTexts?.split(" ").map((word, wordIndex) => (
-                        <span
-                          key={wordIndex}
-                          style={{
-                            backgroundColor:
-                              highlightedWord &&
-                              highlightedWord.index === wordIndex
-                                ? "#833B1C40"
-                                : "transparent",
-                            transition: "background-color 0.2s ease",
-                            border:
-                              highlightedWord &&
-                              highlightedWord.index === wordIndex
-                                ? "1px solid #42210B"
-                                : "none",
-                            color: "#000000",
-                            fontSize: "18px",
-                            fontWeight: "600",
-                            textAlign: "center",
-                            alignContent: "center",
-                            alignSelf: "center",
-                            alignItems: "center",
-                            width: "50px",
-                            fontFamily: "Quicksand",
-                          }}
-                        >
-                          {word}{" "}
-                        </span>
-                      ))}
+                      <div
+                        style={{
+                          whiteSpace: "pre-wrap",
+                          width: "75%",
+                          lineHeight: isMobile ? "1.3" : "1.8",
+                        }}
+                      >
+                        {allTexts?.split(" ").map((word, wordIndex) => (
+                          <span
+                            key={wordIndex}
+                            style={{
+                              backgroundColor:
+                                highlightedWord &&
+                                highlightedWord.index === wordIndex
+                                  ? "#833B1C40"
+                                  : "transparent",
+                              transition: "background-color 0.2s ease",
+                              border:
+                                highlightedWord &&
+                                highlightedWord.index === wordIndex
+                                  ? "1px solid #42210B"
+                                  : "none",
+                              color: "#000000",
+                              fontSize: isMobile ? "14px" : "18px",
+                              fontWeight: "600",
+                              textAlign: "center",
+                              alignContent: "center",
+                              alignSelf: "center",
+                              alignItems: "center",
+                              width: "50px",
+                              fontFamily: "Quicksand",
+                            }}
+                          >
+                            {word}{" "}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-              {/* Start Button */}
-              {step === "initiate" && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    marginTop: "20px",
-                    marginBottom: "50px",
-                  }}
-                >
-                  {/* Circular Image + Play Button */}
+                {/* Start Button */}
+                {step === "initiate" && (
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      marginBottom: "40px",
+                      marginTop: "20px",
+                      marginBottom: "50px",
                     }}
                   >
-                    <img
-                      src={getAssetUrl(
-                        s3Assets[imageData?.imageThree] ||
-                          Assets[imageData?.imageThree] ||
-                          Assets.railAnouncementImg
-                      )}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src =
-                          Assets[
-                            imageData?.imageThree || Assets.railAnouncementImg
-                          ];
-                      }}
-                      alt="Circular"
-                      style={{
-                        width: "250px",
-                        height: "250px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <img
-                      src={isPlaying ? spinnerStop : listenImg2}
-                      alt="Audio"
-                      style={{
-                        height: "50px",
-                        width: "50px",
-                        marginTop: "-20px", // pulls it up to touch the image
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setIsPressedOnce(true);
-                        playAudio(conversationData[0]?.audio);
-                      }}
-                    />
-                  </div>
-
-                  {/* Bottom Buttons - Hint & Next */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginTop: "10px",
-                      gap: "45px",
-                    }}
-                  >
+                    {/* Circular Image + Play Button */}
                     <div
                       style={{
-                        backgroundColor: "transparent",
-                        border: "none",
-                        padding: "0",
-                        cursor: "pointer",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        marginBottom: "40px",
                       }}
-                      onClick={handleHintClick}
                     >
                       <img
-                        src={Assets.hintNew}
-                        alt="Hint"
+                        src={getAssetUrl(
+                          s3Assets[imageData?.imageThree] ||
+                            Assets[imageData?.imageThree] ||
+                            Assets.railAnouncementImg
+                        )}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            Assets[
+                              imageData?.imageThree || Assets.railAnouncementImg
+                            ];
+                        }}
+                        alt="Circular"
                         style={{
-                          width: "50px",
-                          height: "50px",
-                          marginLeft: "12px",
+                          width: isMobile ? "120px" : "250px",
+                          height: isMobile ? "120px" : "250px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <img
+                        src={isPlaying ? spinnerStop : listenImg2}
+                        alt="Audio"
+                        style={{
+                          height: isMobile ? "35px" : "50px",
+                          width: isMobile ? "35px" : "50px",
+                          marginTop: "-20px", // pulls it up to touch the image
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setIsPressedOnce(true);
+                          playAudio(conversationData[0]?.audio);
                         }}
                       />
                     </div>
 
+                    {/* Bottom Buttons - Hint & Next */}
                     <div
-                      onClick={() => {
-                        if (isPressedOnce) {
-                          handleNextClick();
-                        }
-                      }}
                       style={{
-                        cursor: isPressedOnce ? "pointer" : "not-allowed",
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "10px",
+                        gap: "45px",
                       }}
                     >
-                      <NextButtonRound height={50} width={50} />
+                      <div
+                        style={{
+                          backgroundColor: "transparent",
+                          border: "none",
+                          padding: "0",
+                          cursor: "pointer",
+                        }}
+                        onClick={handleHintClick}
+                      >
+                        <img
+                          src={Assets.hintNew}
+                          alt="Hint"
+                          style={{
+                            width: isMobile ? "35px" : "50px",
+                            height: isMobile ? "35px" : "50px",
+                            marginLeft: "12px",
+                          }}
+                        />
+                      </div>
+
+                      <div
+                        onClick={() => {
+                          if (isPressedOnce) {
+                            handleNextClick();
+                          }
+                        }}
+                        style={{
+                          cursor: isPressedOnce ? "pointer" : "not-allowed",
+                        }}
+                      >
+                        <NextButtonRound
+                          height={isMobile ? 35 : 50}
+                          width={isMobile ? 35 : 50}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {step === "start" && (
+                {step === "start" && (
+                  // <img
+                  //   src={raMic}
+                  //   alt="Start"
+                  //   height={"70px"}
+                  //   width={"70px"}
+                  //   onClick={() => {
+                  //     playAudio(conversationData[0]?.audio)
+                  //   }}
+                  //   style={{ cursor: "pointer", marginTop: "50px" }}
+                  // />
+                  <>
+                    {isPlaying ? (
+                      <Box
+                        sx={{
+                          marginTop: "7px",
+                          position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          playAudio(conversationData[0]?.audio);
+                          setStep("stopped");
+                        }}
+                      >
+                        <StopButton
+                          height={isMobile ? 35 : 50}
+                          width={isMobile ? 35 : 50}
+                        />
+                      </Box>
+                    ) : (
+                      <Box
+                        //className="walkthrough-step-1"
+                        sx={{
+                          marginTop: "7px",
+                          position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                          cursor: "pointer",
+                          //cursor: `url(${clapImage}) 32 24, auto`,
+                        }}
+                        onClick={() => {
+                          playAudio(conversationData[0]?.audio);
+                        }}
+                      >
+                        <ListenButton
+                          height={isMobile ? 35 : 50}
+                          width={isMobile ? 35 : 50}
+                        />
+                      </Box>
+                    )}
+                  </>
+                )}
+
+                {abusiveFound && (
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: "20px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      backgroundColor: "#ffebee",
+                      color: "#c62828",
+                      padding: "10px 20px",
+                      borderRadius: "5px",
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                      zIndex: 1000,
+                    }}
+                  >
+                    Warning: Inappropriate word detected ({detectedWord})
+                  </div>
+                )}
+
+                {/* Stop Button */}
+                {/* {step === "playing" && (
                 // <img
-                //   src={raMic}
-                //   alt="Start"
+                //   src={raStop}
+                //   alt="Stop"
                 //   height={"70px"}
                 //   width={"70px"}
-                //   onClick={() => {
-                //     playAudio(conversationData[0]?.audio)
-                //   }}
+                //   onClick={handleReadAloud}
                 //   style={{ cursor: "pointer", marginTop: "50px" }}
-                // />
-                <>
+              
+              )} */}
+
+                {/* Replay & Next Buttons */}
+                {step === "stopped" && (
+                  <div
+                    style={{ display: "flex", gap: "20px", marginTop: "50px" }}
+                  >
+                    {/* <img
+                    src={raRetry}
+                    alt="Retry"
+                    height={"70px"}
+                    width={"75px"}
+                    onClick={handleReplay}
+                    style={{ cursor: "pointer", marginTop: "80px" }}
+                  /> */}
+                    <div
+                      onClick={() => {
+                        setStep("start");
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <RetryIcon
+                        height={isMobile ? 35 : 50}
+                        width={isMobile ? 35 : 50}
+                      />
+                    </div>
+                    {/* <img
+                    src={raNext}
+                    alt="Next"
+                    height={"70px"}
+                    width={"75px"}
+                    onClick={handleNextClick}
+                    style={{ cursor: "pointer", marginTop: "80px" }}
+                  /> */}
+                    <div
+                      onClick={handleNextClick}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <NextButtonRound
+                        height={isMobile ? 35 : 50}
+                        width={isMobile ? 35 : 50}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              tasks[currentTaskIndex] && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
                   {isPlaying ? (
                     <Box
                       sx={{
@@ -1082,10 +1273,12 @@ const AnouncementFlow = ({
                       }}
                       onClick={() => {
                         playAudio(conversationData[0]?.audio);
-                        setStep("stopped");
                       }}
                     >
-                      <StopButton height={45} width={45} />
+                      <StopButton
+                        height={isMobile ? 35 : 50}
+                        width={isMobile ? 35 : 50}
+                      />
                     </Box>
                   ) : (
                     <Box
@@ -1104,146 +1297,54 @@ const AnouncementFlow = ({
                         playAudio(conversationData[0]?.audio);
                       }}
                     >
-                      <ListenButton height={45} width={45} />
+                      <ListenButton
+                        height={isMobile ? 35 : 50}
+                        width={isMobile ? 35 : 50}
+                      />
                     </Box>
                   )}
-                </>
-              )}
-
-              {/* Stop Button */}
-              {/* {step === "playing" && (
-                // <img
-                //   src={raStop}
-                //   alt="Stop"
-                //   height={"70px"}
-                //   width={"70px"}
-                //   onClick={handleReadAloud}
-                //   style={{ cursor: "pointer", marginTop: "50px" }}
-              
-              )} */}
-
-              {/* Replay & Next Buttons */}
-              {step === "stopped" && (
-                <div
-                  style={{ display: "flex", gap: "20px", marginTop: "50px" }}
-                >
-                  {/* <img
-                    src={raRetry}
-                    alt="Retry"
-                    height={"70px"}
-                    width={"75px"}
-                    onClick={handleReplay}
-                    style={{ cursor: "pointer", marginTop: "80px" }}
-                  /> */}
-                  <div
-                    onClick={() => {
-                      setStep("start");
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <RetryIcon height={45} width={45} />
+                  <div style={styles.questionBox}>
+                    {tasks[currentTaskIndex]?.question?.value}
                   </div>
-                  {/* <img
-                    src={raNext}
-                    alt="Next"
-                    height={"70px"}
-                    width={"75px"}
-                    onClick={handleNextClick}
-                    style={{ cursor: "pointer", marginTop: "80px" }}
-                  /> */}
-                  <div onClick={handleNextClick} style={{ cursor: "pointer" }}>
-                    <NextButtonRound height={45} width={45} />
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            tasks[currentTaskIndex] && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                {isPlaying ? (
-                  <Box
-                    sx={{
-                      marginTop: "7px",
-                      position: "relative",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      playAudio(conversationData[0]?.audio);
-                    }}
-                  >
-                    <StopButton height={45} width={45} />
-                  </Box>
-                ) : (
-                  <Box
-                    //className="walkthrough-step-1"
-                    sx={{
-                      marginTop: "7px",
-                      position: "relative",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                      cursor: "pointer",
-                      //cursor: `url(${clapImage}) 32 24, auto`,
-                    }}
-                    onClick={() => {
-                      playAudio(conversationData[0]?.audio);
-                    }}
-                  >
-                    <ListenButton height={50} width={50} />
-                  </Box>
-                )}
-                <div style={styles.questionBox}>
-                  {tasks[currentTaskIndex]?.question?.value}
-                </div>
-                {/* {recording === "no" && ( */}
-                {currentLevel !== "S1" && currentLevel !== "S2" && (
-                  <div style={styles.optionsContainer}>
-                    {tasks[currentTaskIndex]?.options.map((option, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          ...styles.option,
-                          ...(selectedOption === option.id &&
-                            (currentLevel === "S1" || currentLevel === "S2") &&
-                            styles.selectedNeutralOption),
-                          ...(currentLevel !== "S1" &&
-                            currentLevel !== "S2" &&
-                            selectedOption === option.id &&
-                            isCorrect === true &&
-                            styles.correctOption),
-                          ...(currentLevel !== "S1" &&
-                            currentLevel !== "S2" &&
-                            selectedOption === option.id &&
-                            isCorrect === false &&
-                            styles.incorrectOption),
-                          ...(tasks[currentTaskIndex].options.length === 3 &&
-                            index === 2 &&
-                            styles.thirdOption),
-                        }}
-                        onClick={() => {
-                          if (!showConfetti) {
-                            handleOptionClick(option.id);
-                          }
-                        }}
-                      >
-                        {option.value}
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {/* // )} */}
-                {/* {recording === "recording" && (
+                  {/* {recording === "no" && ( */}
+                  {currentLevel !== "S1" && currentLevel !== "S2" && (
+                    <div style={styles.optionsContainer}>
+                      {tasks[currentTaskIndex]?.options.map((option, index) => (
+                        <div
+                          key={index}
+                          style={{
+                            ...styles.option,
+                            ...(selectedOption === option.id &&
+                              (currentLevel === "S1" ||
+                                currentLevel === "S2") &&
+                              styles.selectedNeutralOption),
+                            ...(currentLevel !== "S1" &&
+                              currentLevel !== "S2" &&
+                              selectedOption === option.id &&
+                              isCorrect === true &&
+                              styles.correctOption),
+                            ...(currentLevel !== "S1" &&
+                              currentLevel !== "S2" &&
+                              selectedOption === option.id &&
+                              isCorrect === false &&
+                              styles.incorrectOption),
+                            ...(tasks[currentTaskIndex].options.length === 3 &&
+                              index === 2 &&
+                              styles.thirdOption),
+                          }}
+                          onClick={() => {
+                            if (!showConfetti) {
+                              handleOptionClick(option.id);
+                            }
+                          }}
+                        >
+                          {option.value}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {/* // )} */}
+                  {/* {recording === "recording" && (
                   <div
                     style={{
                       display: "flex",
@@ -1296,84 +1397,94 @@ const AnouncementFlow = ({
                   </div>
                 )} */}
 
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop:
-                      currentLevel === "S1" || currentLevel === "S2"
-                        ? "30px"
-                        : "15px",
-                    gap: "10px",
-                  }}
-                >
-                  {isLoading ? (
-                    <Box sx={{ display: "flex" }}>
-                      <CircularProgress size="3rem" sx={{ color: "#E15404" }} />
-                    </Box>
-                  ) : (
-                    <>
-                      {((currentLevel !== "S1" &&
-                        currentLevel !== "S2" &&
-                        selectedOption) ||
-                        currentLevel === "S1" ||
-                        currentLevel === "S2") && (
-                        <VoiceAnalyser
-                          pageName={"m8"}
-                          setVoiceText={setVoiceText}
-                          onAudioProcessed={handleRecordingComplete}
-                          setRecordedAudio={setRecordedAudio}
-                          setVoiceAnimate={setVoiceAnimate}
-                          storyLine={storyLine}
-                          dontShowListen={true}
-                          handleNext={handleNext}
-                          enableNext={enableNext}
-                          originalText={parentWords}
-                          audioLink={audio ? audio : completeAudio}
-                          buttonAnimation={selectedOption}
-                          handleStartRecording={handleStartRecording}
-                          handleStopRecording={handleStopRecording}
-                          {...{
-                            contentId,
-                            contentType,
-                            currentLine: currentStep - 1,
-                            playTeacherAudio,
-                            callUpdateLearner,
-                            isShowCase,
-                            setEnableNext,
-                            //showOnlyListen: answer !== "correct",
-                            showOnlyListen: false,
-                            setOpenMessageDialog,
-                          }}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop:
+                        currentLevel === "S1" || currentLevel === "S2"
+                          ? "30px"
+                          : "15px",
+                      gap: "10px",
+                    }}
+                  >
+                    {isLoading ? (
+                      <Box sx={{ display: "flex" }}>
+                        <CircularProgress
+                          size="3rem"
+                          sx={{ color: "#E15404" }}
                         />
-                      )}
-                      {currentLevel !== "S1" && currentLevel !== "S2"
-                        ? selectedOption !== null &&
-                          recAudio &&
-                          isCorrect && (
-                            <div
-                              onClick={loadNextTask}
-                              style={{ cursor: "pointer", marginLeft: "23px" }}
-                            >
-                              <NextButtonRound height={45} width={45} />
-                            </div>
-                          )
-                        : recAudio && (
-                            <div
-                              onClick={loadNextTask}
-                              style={{ cursor: "pointer", marginLeft: "23px" }}
-                            >
-                              <NextButtonRound height={45} width={45} />
-                            </div>
-                          )}
-                    </>
-                  )}
+                      </Box>
+                    ) : (
+                      <>
+                        {((currentLevel !== "S1" &&
+                          currentLevel !== "S2" &&
+                          selectedOption) ||
+                          currentLevel === "S1" ||
+                          currentLevel === "S2") && (
+                          <VoiceAnalyser
+                            pageName={"m8"}
+                            setVoiceText={setVoiceText}
+                            onAudioProcessed={handleRecordingComplete}
+                            setRecordedAudio={setRecordedAudio}
+                            setVoiceAnimate={setVoiceAnimate}
+                            storyLine={storyLine}
+                            dontShowListen={true}
+                            handleNext={handleNext}
+                            enableNext={enableNext}
+                            originalText={parentWords}
+                            audioLink={audio ? audio : completeAudio}
+                            buttonAnimation={selectedOption}
+                            handleStartRecording={handleStartRecording}
+                            handleStopRecording={handleStopRecording}
+                            {...{
+                              contentId,
+                              contentType,
+                              currentLine: currentStep - 1,
+                              playTeacherAudio,
+                              callUpdateLearner,
+                              isShowCase,
+                              setEnableNext,
+                              //showOnlyListen: answer !== "correct",
+                              showOnlyListen: false,
+                              setOpenMessageDialog,
+                            }}
+                          />
+                        )}
+                        {currentLevel !== "S1" && currentLevel !== "S2"
+                          ? selectedOption !== null &&
+                            recAudio &&
+                            isCorrect && (
+                              <div
+                                onClick={loadNextTask}
+                                style={{
+                                  cursor: "pointer",
+                                  marginLeft: "23px",
+                                }}
+                              >
+                                <NextButtonRound height={45} width={45} />
+                              </div>
+                            )
+                          : recAudio && (
+                              <div
+                                onClick={loadNextTask}
+                                style={{
+                                  cursor: "pointer",
+                                  marginLeft: "23px",
+                                }}
+                              >
+                                <NextButtonRound height={45} width={45} />
+                              </div>
+                            )}
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )
-          )}
+              )
+            )}
+          </div>
         </div>
-      </div>
+      </ThemeProvider>
     </MainLayout>
   );
 };

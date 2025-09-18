@@ -1,12 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Grid, Radio } from "@mui/material";
 import MainLayout from "../Layouts.jsx/MainLayout";
-import { PlayAudioButton, StopAudioButton } from "../../utils/constants";
+import {
+  PlayAudioButton,
+  StopAudioButton,
+  getLocalData,
+} from "../../utils/constants";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import PropTypes from "prop-types";
 import { Modal } from "@mui/material";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import CloseIcon from "@mui/icons-material/Close";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  CircularProgress,
+} from "@mui/material";
+const theme = createTheme();
 
 const Mechanics5 = ({
   background,
@@ -54,6 +65,8 @@ const Mechanics5 = ({
   correctness,
   audio,
   mechanism,
+  vocabCount,
+  wordCount,
 }) => {
   const audiosRef = useRef(
     new Array(options.length).fill(null).map(() => React.createRef())
@@ -62,8 +75,10 @@ const Mechanics5 = ({
   const questionAudioRef = useRef();
   const [playingIndex, setPlayingIndex] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null); // Add state to track selected radio button
-
+  const lang = getLocalData("lang");
   const [storedData, setStoredData] = useState([]);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   const updateStoredData = (audios, isCorrect) => {
     if (audios) {
@@ -139,6 +154,7 @@ const Mechanics5 = ({
       enableNext={enableNext}
       showTimer={showTimer}
       points={points}
+      lang={lang}
       {...{
         steps,
         currentStep,
@@ -160,6 +176,8 @@ const Mechanics5 = ({
         setLivesData,
         isNextButtonCalled,
         setIsNextButtonCalled,
+        vocabCount,
+        wordCount,
       }}
     >
       <div
@@ -169,12 +187,12 @@ const Mechanics5 = ({
           fontFamily: "Quicksand",
           fontStyle: "normal",
           fontWeight: 600,
-          fontSize: "36px",
+          fontSize: isMobile ? "22px" : "36px",
           lineHeight: "45px",
           alignItems: "center",
           textAlign: "center",
           color: "#333F61",
-          paddingTop: "12vh",
+          paddingTop: isMobile ? "17vh" : isTablet ? "16vh" : "12vh",
         }}
       >
         {header}
@@ -324,8 +342,8 @@ const Mechanics5 = ({
             <span
               style={{
                 color: "#262649",
-                fontWeight: 800,
-                fontSize: "26px",
+                fontWeight: isMobile ? 600 : 800,
+                fontSize: isMobile ? "20px" : "26px",
                 fontFamily: "Quicksand",
               }}
             >
@@ -386,8 +404,8 @@ const Mechanics5 = ({
                         src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${option.image_url}`}
                         style={{
                           borderRadius: "20px",
-                          width: "200px",
-                          height: "150px",
+                          width: isMobile ? "110px" : "200px",
+                          height: isMobile ? "70px" : "150px",
                         }}
                         alt=""
                       />
@@ -397,9 +415,9 @@ const Mechanics5 = ({
                       style={{
                         color: "#262649",
                         fontWeight: 600,
-                        fontSize: "24px",
+                        fontSize: isMobile ? "17px" : "24px",
                         fontFamily: "Quicksand",
-                        marginLeft: "10px",
+                        marginLeft: isMobile ? "15px" : "10px",
                       }}
                     >
                       {option?.text || "Text is missing"}

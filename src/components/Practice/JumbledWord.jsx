@@ -5,7 +5,7 @@ import {
   useMediaQuery,
   Grid,
   Box,
-  Button,
+  CircularProgress,
 } from "@mui/material";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import * as Assets from "../../utils/imageAudioLinks";
@@ -52,6 +52,8 @@ const levelMap = {
   15: level15,
 };
 
+const theme = createTheme();
+
 const JumbledWord = ({
   setVoiceText,
   setRecordedAudio,
@@ -82,6 +84,8 @@ const JumbledWord = ({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -92,9 +96,12 @@ const JumbledWord = ({
   const [incorrectWords, setIncorrectWords] = useState([]);
   const audioRef = useRef(null);
   const [audioInstance, setAudioInstance] = useState(null);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const [recordedBlob, setRecordedBlob] = useState(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  const lang = getLocalData("lang");
 
   const mimeType = "audio/webm;codecs=opus";
 
@@ -189,15 +196,15 @@ const JumbledWord = ({
   };
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
+  //const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas?.[virtualId]) {
-    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.name || "P1";
@@ -401,6 +408,7 @@ const JumbledWord = ({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={lang}
       //={recAudio}
       {...{
         steps,
@@ -412,103 +420,112 @@ const JumbledWord = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          height: "100v%",
-          backgroundColor: "#eae6ff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "40px 0px",
-        }}
-      >
+      <ThemeProvider theme={theme}>
         <div
           style={{
-            width: "90%",
-            height: "90%",
-            backgroundColor: "#ffffff",
-            borderRadius: "20px",
-            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#eae6ff",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            border: "1px solid #d9d2fc",
-            padding: "30px 0px",
+            padding: "40px 0px",
           }}
         >
           <div
             style={{
+              width: "90%",
+              height: "90%",
+              backgroundColor: "#ffffff",
+              borderRadius: "20px",
+              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              border: "1px solid #d9d2fc",
+              padding: "30px 0px",
             }}
           >
-            {currentSteps === "step3" && (
-              <div
-                className="game-container"
-                style={{
-                  textAlign: "center",
-                  padding: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {!isCorrect && !isRecording3 && !isRecordingStopped3 && (
-                  <div>
-                    <Box
-                      className="walkthrough-step-1"
-                      sx={{
-                        position: "relative",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                      }}
-                      onClick={toggleAudio}
-                    >
-                      {isAudioPlaying ? (
-                        <StopButton height={50} width={50} />
-                      ) : (
-                        <ListenButton height={50} width={50} />
-                      )}
-                    </Box>
-                  </div>
-                )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {currentSteps === "step3" && (
                 <div
-                  className="sentence-placeholder"
+                  className="game-container"
                   style={{
-                    margin: "20px 0",
-                    fontSize: "18px",
+                    textAlign: "center",
+                    padding: "20px",
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  {isCorrect && !isRecording3 && !isRecordingStopped3 ? (
-                    <>
-                      <img
-                        src={Assets.tickImg}
-                        alt="Correct"
-                        style={{ width: "30px", marginRight: "10px" }}
-                      />
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: "24px",
-                          //marginRight: "10px",
+                  {!isCorrect && !isRecording3 && !isRecordingStopped3 && (
+                    <div>
+                      <Box
+                        className="walkthrough-step-1"
+                        sx={{
+                          position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
                         }}
+                        onClick={toggleAudio}
                       >
-                        {levelData?.correctWord[0]?.correctSentence}
-                      </span>
+                        {isAudioPlaying ? (
+                          <StopButton
+                            height={isMobile ? 35 : 50}
+                            width={isMobile ? 35 : 50}
+                          />
+                        ) : (
+                          <ListenButton
+                            height={isMobile ? 35 : 50}
+                            width={isMobile ? 35 : 50}
+                          />
+                        )}
+                      </Box>
+                    </div>
+                  )}
+                  <div
+                    className="sentence-placeholder"
+                    style={{
+                      margin: "20px 0",
+                      fontSize: isMobile ? "14px" : "18px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {isCorrect && !isRecording3 && !isRecordingStopped3 ? (
+                      <>
+                        <img
+                          src={Assets.tickImg}
+                          alt="Correct"
+                          style={{ width: "30px", marginRight: "10px" }}
+                        />
+                        <span
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: isMobile ? "15px" : "24px",
+                            //marginRight: "10px",
+                          }}
+                        >
+                          {levelData?.correctWord[0]?.correctSentence}
+                        </span>
 
-                      {/* <Box
+                        {/* <Box
                         className="walkthrough-step-1"
                         sx={{
                           marginTop: "7px",
@@ -524,200 +541,236 @@ const JumbledWord = ({
                       >
                         <ListenButton height={50} width={50} />
                       </Box> */}
-                    </>
-                  ) : isRecording3 ? (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: "35px",
-                          marginBottom: "10px",
-                        }}
-                      >
-                        {levelData.correctWord[0].correctSentence}
-                      </span>
+                      </>
+                    ) : isRecording3 ? (
                       <div
                         style={{
                           display: "flex",
                           flexDirection: "column",
                           alignItems: "center",
-                          justifyContent: "center",
-                          marginTop: "40px",
-                          //position: "relative",
                         }}
                       >
-                        <Box>
-                          <RecordVoiceVisualizer />
-                        </Box>
-                        <Box
-                          sx={{
-                            marginTop: "50px",
-                            //position: "relative",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                            cursor: "pointer",
-                            //marginLeft: getMarginLeft(0),
+                        <span
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: isMobile ? "14px" : "35px",
+                            marginBottom: "10px",
+                            textAlign: "center",
+                            wordBreak: "break-word",
+                            whiteSpace: "normal",
+                            maxWidth: "70vw",
                           }}
-                          onClick={handleMicClick3}
                         >
-                          <StopButton height={50} width={50} />
-                        </Box>
+                          {levelData.correctWord[0].correctSentence}
+                        </span>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginTop: "40px",
+                            //position: "relative",
+                          }}
+                        >
+                          <Box>
+                            <RecordVoiceVisualizer />
+                          </Box>
+                          <Box
+                            sx={{
+                              marginTop: "50px",
+                              //position: "relative",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                              cursor: "pointer",
+                              //marginLeft: getMarginLeft(0),
+                            }}
+                            onClick={handleMicClick3}
+                          >
+                            <StopButton
+                              height={isMobile ? 35 : 50}
+                              width={isMobile ? 35 : 50}
+                            />
+                          </Box>
+                        </div>
                       </div>
+                    ) : isRecordingStopped3 ? (
+                      <div style={{ textAlign: "center", marginTop: "20px" }}>
+                        <p
+                          style={{
+                            fontSize: isMobile ? "14px" : "36px",
+                            fontWeight: "bold",
+                            color: "green",
+                            lineHeight: "1.2",
+                            //letterSpacing: "3px",
+                          }}
+                        >
+                          {levelData?.correctWord[0]?.correctSentence}
+                        </p>
+                        <button
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                            marginTop: "30px",
+                          }}
+                          onClick={goToNextStep}
+                        >
+                          <NextButtonRound
+                            height={isMobile ? 35 : 50}
+                            width={isMobile ? 35 : 50}
+                          />
+                        </button>
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          display: isMobile ? "grid" : "flex",
+                          gridTemplateColumns: isMobile
+                            ? "repeat(3, 1fr)"
+                            : "none",
+                          gap: isMobile ? "10px" : "0px",
+                          justifyContent: "center",
+                          marginTop: "20px",
+                        }}
+                      >
+                        {levelData?.jumbledWords?.map((_, index) => (
+                          <div
+                            key={index}
+                            onClick={() =>
+                              handleWordClick(selectedWords[index], index)
+                            }
+                            style={{
+                              margin: isMobile ? "0 2px" : "0 13px",
+                              borderBottom: "1.6px solid #754F4F80",
+                              minWidth: isMobile ? "20px" : "80px",
+                              display: "inline-block",
+                              textAlign: "center",
+                              height: "30px",
+                              //lineHeight: "30px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {selectedWords[index] || ""}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {isCorrect && !isRecording3 && !isRecordingStopped3 && (
+                    <div
+                      style={{
+                        marginTop: "30px",
+                        gap: "10px",
+                        display: "flex",
+                      }}
+                    >
+                      <Box
+                        className="walkthrough-step-1"
+                        sx={{
+                          //position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                        }}
+                        onClick={toggleAudio}
+                      >
+                        {isAudioPlaying ? (
+                          <StopButton
+                            height={isMobile ? 35 : 50}
+                            width={isMobile ? 35 : 50}
+                          />
+                        ) : (
+                          <ListenButton
+                            height={isMobile ? 35 : 50}
+                            width={isMobile ? 35 : 50}
+                          />
+                        )}
+                      </Box>
+                      <Box
+                        sx={{
+                          //position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                        }}
+                        onClick={handleMicClick3}
+                      >
+                        <SpeakButton
+                          height={isMobile ? 35 : 50}
+                          width={isMobile ? 35 : 50}
+                        />
+                      </Box>
                     </div>
-                  ) : isRecordingStopped3 ? (
-                    <div style={{ textAlign: "center", marginTop: "20px" }}>
-                      <p
-                        style={{
-                          fontSize: "36px",
-                          fontWeight: "bold",
-                          color: "green",
-                          lineHeight: "1.2",
-                          //letterSpacing: "3px",
-                        }}
-                      >
-                        {levelData?.correctWord[0]?.correctSentence}
-                      </p>
-                      <button
-                        style={{
-                          background: "transparent",
-                          border: "none",
-                          cursor: "pointer",
-                          marginTop: "30px",
-                        }}
-                        onClick={goToNextStep}
-                      >
-                        <NextButtonRound height={50} width={50} />
-                      </button>
+                  )}
+
+                  {!isCorrect && (
+                    <div
+                      className="word-container"
+                      style={{
+                        marginTop: "40px",
+                        display: "flex",
+                        justifyContent: "center",
+                        flexWrap: "wrap",
+                        gap: "22px",
+                        width: "100%",
+                        //marginLeft: "auto",
+                        marginRight: "auto",
+                        overflowX: "auto",
+                      }}
+                    >
+                      {levelData?.jumbledWords?.map((word, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleWordClick(word)}
+                          style={{
+                            padding: isMobile ? "8px 15px" : "10px 20px",
+                            fontSize: isMobile ? "14px" : "18px",
+                            border: "1px solid #1CB0F6",
+                            borderRadius: "5px",
+                            cursor: selectedWords.includes(word)
+                              ? "not-allowed"
+                              : "pointer",
+                            backgroundColor:
+                              incorrectWords.length > 0
+                                ? "#FF00001A"
+                                : selectedWords.includes(word)
+                                ? "#1CB0F61A"
+                                : "white",
+                            textAlign: "center",
+                            minWidth: "40px",
+                            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                            borderBottom: "3px solid #1CB0F6",
+                            paddingBottom: "10px",
+                            transition: "all 0.3s ease",
+                            color: selectedWords.includes(word)
+                              ? "transparent"
+                              : "black",
+                            userSelect: "none",
+                          }}
+                        >
+                          {word}
+                        </div>
+                      ))}
                     </div>
-                  ) : (
-                    levelData?.jumbledWords?.map((_, index) => (
-                      <span
-                        key={index}
-                        onClick={() =>
-                          handleWordClick(selectedWords[index], index)
-                        }
-                        style={{
-                          margin: "0 13px",
-                          borderBottom: "1.6px solid #754F4F80",
-                          minWidth: "80px",
-                          display: "inline-block",
-                          textAlign: "center",
-                          height: "30px",
-                          lineHeight: "30px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        {selectedWords[index] || ""}
-                      </span>
-                    ))
                   )}
                 </div>
-
-                {isCorrect && !isRecording3 && !isRecordingStopped3 && (
-                  <div
-                    style={{ marginTop: "30px", gap: "10px", display: "flex" }}
-                  >
-                    <Box
-                      className="walkthrough-step-1"
-                      sx={{
-                        //position: "relative",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                      }}
-                      onClick={toggleAudio}
-                    >
-                      {isAudioPlaying ? (
-                        <StopButton height={50} width={50} />
-                      ) : (
-                        <ListenButton height={50} width={50} />
-                      )}
-                    </Box>
-                    <Box
-                      sx={{
-                        //position: "relative",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                      }}
-                      onClick={handleMicClick3}
-                    >
-                      <SpeakButton height={50} width={50} />
-                    </Box>
-                  </div>
-                )}
-
-                {!isCorrect && (
-                  <div
-                    className="word-container"
-                    style={{
-                      marginTop: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      flexWrap: "wrap",
-                      gap: "22px",
-                      width: "100%",
-                      //marginLeft: "auto",
-                      marginRight: "auto",
-                      overflowX: "auto",
-                    }}
-                  >
-                    {levelData?.jumbledWords?.map((word, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleWordClick(word)}
-                        style={{
-                          padding: "10px 20px",
-                          fontSize: "18px",
-                          border: "1px solid #1CB0F6",
-                          borderRadius: "5px",
-                          cursor: selectedWords.includes(word)
-                            ? "not-allowed"
-                            : "pointer",
-                          backgroundColor:
-                            incorrectWords.length > 0
-                              ? "#FF00001A"
-                              : selectedWords.includes(word)
-                              ? "#1CB0F61A"
-                              : "white",
-                          textAlign: "center",
-                          minWidth: "40px",
-                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-                          borderBottom: "3px solid #1CB0F6",
-                          paddingBottom: "10px",
-                          transition: "all 0.3s ease",
-                          color: selectedWords.includes(word)
-                            ? "transparent"
-                            : "black",
-                          userSelect: "none",
-                        }}
-                      >
-                        {word}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
+          <audio
+            ref={audioRef}
+            onEnded={stopCompleteAudio}
+            src={audioElement}
+            hidden
+          />
         </div>
-        <audio
-          ref={audioRef}
-          onEnded={stopCompleteAudio}
-          src={audioElement}
-          hidden
-        />
-      </div>
+      </ThemeProvider>
     </MainLayout>
   );
 };

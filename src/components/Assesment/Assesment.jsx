@@ -7,7 +7,19 @@ import {
   Tooltip,
   Typography,
   Dialog,
+  isMuiElement,
+  createTheme,
+  Collapse,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Divider,
 } from "../../../node_modules/@mui/material/index";
+import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
+import TranslateIcon from "@mui/icons-material/Translate";
+import { useMediaQuery, useTheme } from "@mui/material";
 import LogoutImg from "../../assets/images/logout.svg";
 import { styled } from "@mui/material/styles";
 import {
@@ -46,6 +58,16 @@ import desktopLevel12 from "../../assets/images/desktopLevel12.png";
 import desktopLevel13 from "../../assets/images/desktopLevel13.png";
 import desktopLevel14 from "../../assets/images/desktopLevel14.png";
 import desktopLevel15 from "../../assets/images/desktopLevel15.png";
+import desktopLevel1Mobile from "../../assets/images/mobilebglevel1.png";
+import desktopLevel2Mobile from "../../assets/images/mobilebglevel2.png";
+import desktopLevel3Mobile from "../../assets/images/mobilebglevel3.png";
+import desktopLevel4Mobile from "../../assets/images/mobilebglevel4.png";
+import desktopLevel5Mobile from "../../assets/images/mobilebglevel5.png";
+import desktopLevel6Mobile from "../../assets/images/mobilebglevel6.png";
+import desktopLevel7Mobile from "../../assets/images/mobilebglevel7.png";
+import desktopLevel8Mobile from "../../assets/images/mobilebglevel8.png";
+import desktopLevel9Mobile from "../../assets/images/mobilebglevel9.png";
+import desktopLevel10Mobile from "../../assets/images/mobilebglevel10.png";
 import rOneImage from "../../assets/R1Back.png";
 import rTwoImage from "../../assets/R2Back.png";
 import rThreeImage from "../../assets/R3Back.png";
@@ -62,9 +84,20 @@ import { uniqueId } from "../../services/utilService";
 import { end } from "../../services/telementryService";
 import { levelMapping } from "../../utils/levelData";
 import scoreView from "../../assets/images/scoreView.svg";
+import {
+  fetchUserPoints,
+  logoutUser,
+} from "../../services/orchestration/orchestrationService";
+import { fetchVirtualId } from "../../services/userservice/userService";
+import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
+import * as Assets from "../../utils/imageAudioLinks";
+import NumberFlow from "@number-flow/react";
+
+const theme = createTheme();
 
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box
       sx={{
@@ -114,7 +147,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
             {languages.map((elem) => {
               const isSelectedLang = elem.lang === selectedLang;
               return (
-                <Grid xs={3} item key={elem.lang}>
+                <Grid xs={isMobile ? 4 : 2} item key={elem.lang}>
                   <Box
                     onClick={() => setSelectedLang(elem.lang)}
                     sx={{
@@ -238,6 +271,8 @@ export const MessageDialog = ({
   isError,
   dontShowHeader,
 }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box
       sx={{
@@ -269,7 +304,14 @@ export const MessageDialog = ({
           position: "relative",
         }}
       >
-        <Box sx={{ position: "absolute", left: 10, bottom: 0 }}>
+        <Box
+          sx={{
+            position: "absolute",
+            left: 10,
+            bottom: 0,
+            pointerEvents: "none",
+          }}
+        >
           {isError ? (
             <img src={cryPanda} alt="cryPanda" />
           ) : (
@@ -302,9 +344,9 @@ export const MessageDialog = ({
             style={{
               color: "#000000",
               fontWeight: 700,
-              fontSize: "40px",
+              fontSize: isMobile ? " 20px" : "40px",
               fontFamily: "Quicksand",
-              lineHeight: "62px",
+              lineHeight: isMobile ? "35px" : "62px",
               textAlign: "center",
             }}
           >
@@ -313,7 +355,7 @@ export const MessageDialog = ({
         </Box>
         <Box
           sx={{ width: "100%", display: "flex", justifyContent: "center" }}
-          mt="60px"
+          mt={isMobile ? "15px" : "60px"}
           // mr="110px"
           mb={2}
         >
@@ -331,13 +373,14 @@ export const MessageDialog = ({
               justifyContent: "center",
               alignItems: "center",
               padding: "0px 24px 0px 20px",
+              zIndex: "9999",
             }}
           >
             <span
               style={{
                 color: "#FFFFFF",
                 fontWeight: 600,
-                fontSize: "20px",
+                fontSize: isMobile ? "16px" : "20px",
                 fontFamily: "Quicksand",
               }}
             >
@@ -351,21 +394,65 @@ export const MessageDialog = ({
 };
 
 export const ProfileHeader = ({
+  level,
   setOpenLangModal,
   lang,
   profileName,
   points = 0,
   handleBack,
+  vocabCount = 0,
+  wordCount = 0,
 }) => {
   const language = lang || getLocalData("lang");
   const username = profileName || getLocalData("profileName");
   const navigate = useNavigate();
   const [openMessageDialog, setOpenMessageDialog] = useState("");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [menuOpen, setMenuOpen] = useState(false);
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const [animatedVocabCount, setAnimatedVocabCount] = useState(0);
+  const [animatedWordCount, setAnimatedWordCount] = useState(0);
+  const [milestone, setMilestone] = useState(0);
+
+  useEffect(() => {
+    const rawMilestone = getLocalData("getMilestone");
+
+    try {
+      const parsed = rawMilestone ? JSON.parse(rawMilestone) : null;
+      const levelStr = parsed?.data?.milestone_level || "m0";
+      const levelNum = parseInt(levelStr.replace("m", ""), 10);
+      setMilestone(levelNum);
+    } catch (e) {
+      console.error("Failed to parse milestone data:", e);
+      setMilestone(0);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAnimatedVocabCount(vocabCount);
+    }, 200);
+
+    return () => clearTimeout(timeout);
+  }, [vocabCount]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAnimatedWordCount(wordCount);
+    }, 200);
+
+    return () => clearTimeout(timeout);
+  }, [wordCount]);
 
   const handleProfileBack = () => {
     try {
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-        window.parent.postMessage({ type: "restore-iframe-content" }, "*");
+        window.parent.postMessage(
+          { type: "restore-iframe-content" },
+          window?.location?.ancestorOrigins?.[0] ||
+            window.parent.location.origin
+        );
         navigate("/");
       } else {
         navigate("/discover-start");
@@ -375,10 +462,17 @@ export const ProfileHeader = ({
     }
   };
 
-  const handleLogout = () => {
-    localStorage.clear();
-    end({});
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error("Logout failed, but proceeding with local logout");
+    } finally {
+      localStorage.clear();
+      end({});
+      navigate("/login");
+      window.location.reload();
+    }
   };
 
   const CustomIconButton = styled(IconButton)({
@@ -425,7 +519,7 @@ export const ProfileHeader = ({
           top: 0,
           left: 0,
           width: "100%",
-          height: { xs: "60px", sm: "70px" },
+          height: isMobile ? "75px" : "65px",
           background: "rgba(255, 255, 255, 0.2)",
           backdropFilter: "blur(3px)",
           display: "flex",
@@ -441,9 +535,13 @@ export const ProfileHeader = ({
           }}
         >
           {handleBack && (
-            <Box ml={{ xs: "10px", sm: "94px" }}>
+            <Box sx={{ ml: { xs: "10px", sm: "24px" } }}>
               <IconButton onClick={handleBack}>
-                <img src={back} alt="back" style={{ height: "30px" }} />
+                <img
+                  src={back}
+                  alt="back"
+                  style={{ height: isMobile ? "18px" : "30px" }}
+                />
               </IconButton>
             </Box>
           )}
@@ -452,7 +550,7 @@ export const ProfileHeader = ({
               <Box
                 ml={
                   handleBack
-                    ? { xs: "10px", sm: "12px" }
+                    ? { xs: "10px", sm: "8px" }
                     : { xs: "10px", sm: "94px" }
                 }
                 sx={{ cursor: "pointer" }}
@@ -461,15 +559,15 @@ export const ProfileHeader = ({
                 <img
                   src={profilePic}
                   alt="profile-pic"
-                  style={{ height: "30px" }}
+                  style={{ height: isMobile ? "25px" : "30px" }}
                 />
               </Box>
-              <Box ml="12px">
+              <Box ml={isMobile ? "5px" : "12px"}>
                 <span
                   style={{
                     color: "#000000",
                     fontWeight: 700,
-                    fontSize: { xs: "14px", sm: "16px" },
+                    fontSize: { xs: "10px", sm: "16px" },
                     fontFamily: "Quicksand",
                     lineHeight: "25px",
                   }}
@@ -479,84 +577,356 @@ export const ProfileHeader = ({
               </Box>
             </>
           )}
-        </Box>
-
-        <Box
-          sx={{
-            justifySelf: "flex-end",
-            width: { xs: "100%", sm: "50%" },
-            display: "flex",
-            justifyContent: { xs: "center", sm: "flex-end" },
-            alignItems: "center",
-          }}
-        >
-          {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
-            <Box sx={{ position: "relative" }} mr="10px">
-              <img
-                src={scoreView}
-                alt="scoreView"
-                width={"86px"}
-                height={"35px"}
-              />
-              <Box sx={{ position: "absolute", top: "6px", right: "16px" }}>
-                <span
-                  style={{
-                    color: "#FFDD39",
-                    fontWeight: 700,
-                    fontSize: "18px",
+          {milestone > 0 && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: isMobile ? 1 : 4,
+                mt: isMobile ? 1 : 0,
+                ml: isMobile ? 5 : 2,
+                flexDirection: {
+                  xs: "column",
+                  sm: "row",
+                },
+                alignItems: {
+                  xs: "center",
+                  sm: "initial",
+                },
+                width: isMobile ? "35%" : "auto",
+              }}
+            >
+              {/* Words Learnt */}
+              <Box
+                sx={{
+                  position: "relative",
+                  background:
+                    "linear-gradient(90deg, #7B2CBF 0%, #9D4EDD 100%)",
+                  border: "1px solid white",
+                  color: "#fff",
+                  borderRadius: "12px",
+                  px: 3,
+                  py: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  width: {
+                    xs: "100%",
+                    sm: "auto",
+                  },
+                  boxShadow: 2,
+                }}
+              >
+                <Box
+                  sx={{
+                    fontSize: isMobile ? "10px" : "20px",
+                    fontWeight: "bold",
+                    mr: 1,
                     fontFamily: "Quicksand",
                   }}
                 >
-                  {points}
-                </span>
-              </Box>
-            </Box>
-          )}
-
-          <Box
-            mr={{ xs: "10px", sm: "90px" }}
-            onClick={() =>
-              setOpenLangModal
-                ? setOpenLangModal(true)
-                : setOpenMessageDialog({
-                    message: "go to homescreen to change language",
-                    dontShowHeader: true,
-                  })
-            }
-          >
-            <Box sx={{ position: "relative", cursor: "pointer" }}>
-              <SelectLanguageButton />
-              <Box sx={{ position: "absolute", top: 9, left: 20 }}>
-                <span
-                  style={{
-                    color: "#000000",
-                    fontWeight: 700,
-                    fontSize: { xs: "14px", sm: "16px" },
+                  {vocabCount > 0 ? (
+                    <NumberFlow
+                      value={animatedVocabCount}
+                      decimals={0}
+                      duration={4000}
+                      style={{
+                        fontSize: isMobile ? "10px" : "18px",
+                        fontWeight: "bold",
+                        fontFamily: "Quicksand",
+                        color: "white",
+                      }}
+                    />
+                  ) : (
+                    "-"
+                  )}
+                </Box>
+                <Box
+                  sx={{
+                    fontSize: isMobile ? "8px" : "16px",
+                    fontWeight: 600,
+                    mr: 2,
                     fontFamily: "Quicksand",
-                    lineHeight: "25px",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {languages?.find((elem) => elem.lang === language)?.name ||
-                    "Select Language"}
-                </span>
+                  Words Learnt
+                </Box>
+                <Box
+                  component="img"
+                  src={Assets.books}
+                  alt="Books"
+                  sx={{
+                    position: "absolute",
+                    right: {
+                      xs: "8px",
+                      sm: "-20px",
+                    },
+                    top: {
+                      xs: "50%",
+                      sm: "auto",
+                    },
+                    transform: {
+                      xs: "translateY(-50%)",
+                      sm: "none",
+                    },
+                    width: isMobile ? "17px" : "40px",
+                    height: isMobile ? "17px" : "40px",
+                    border: "4px solid white",
+                    borderRadius: "50%",
+                    backgroundColor: "#fff",
+                  }}
+                />
               </Box>
-            </Box>
-          </Box>
-          {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
-            <CustomTooltip title="Logout">
-              <Box>
-                <CustomIconButton onClick={handleLogout}>
-                  <img
-                    className="logout-img"
-                    style={{ height: 30, width: 35 }}
-                    src={LogoutImg}
-                    alt="Logout"
+
+              {/* Words Per Minute */}
+              {lang === "en" && (
+                <Box
+                  sx={{
+                    position: "relative",
+                    background:
+                      "linear-gradient(90deg, #00C6FF 0%, #0072FF 100%)",
+                    border: "1px solid white",
+                    color: "#fff",
+                    borderRadius: "12px",
+                    px: 3,
+                    py: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    width: {
+                      xs: "100%",
+                      sm: "auto",
+                    },
+                    boxShadow: 2,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      fontSize: isMobile ? "10px" : "20px",
+                      fontWeight: "bold",
+                      mr: 1,
+                      fontFamily: "Quicksand",
+                    }}
+                  >
+                    {wordCount > 0 ? (
+                      <NumberFlow
+                        value={animatedWordCount}
+                        decimals={0}
+                        duration={1000}
+                        style={{
+                          fontSize: isMobile ? "10px" : "18px",
+                          fontWeight: "bold",
+                          fontFamily: "Quicksand",
+                          color: "white",
+                        }}
+                      />
+                    ) : (
+                      "-"
+                    )}
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: isMobile ? "8px" : "16px",
+                      fontWeight: 600,
+                      mr: 2,
+                      fontFamily: "Quicksand",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Words per minute
+                  </Box>
+                  <Box
+                    component="img"
+                    src={Assets.clock}
+                    alt="Clock"
+                    sx={{
+                      position: "absolute",
+                      right: {
+                        xs: "8px",
+                        sm: "-20px",
+                      },
+                      top: {
+                        xs: "50%",
+                        sm: "auto",
+                      },
+                      transform: {
+                        xs: "translateY(-50%)",
+                        sm: "none",
+                      },
+                      width: isMobile ? "17px" : "40px",
+                      height: isMobile ? "17px" : "40px",
+                      border: "4px solid white",
+                      borderRadius: "50%",
+                      backgroundColor: "#fff",
+                    }}
                   />
-                </CustomIconButton>
-              </Box>
-            </CustomTooltip>
+                </Box>
+              )}
+            </Box>
           )}
         </Box>
+
+        {isMobile && (
+          <Box sx={{ position: "relative", zIndex: 10, mr: 3 }}>
+            <IconButton
+              onClick={toggleMenu}
+              sx={{
+                backgroundColor: "#fff",
+                border: "2px solid #ccc",
+                borderRadius: "8px",
+                ml: 1,
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Collapse in={menuOpen}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  right: 0,
+                  top: "100%",
+                  mt: 1,
+                  bgcolor: "#fff",
+                  borderRadius: "12px",
+                  boxShadow: 3,
+                  width: "200px",
+                  overflow: "hidden",
+                }}
+              >
+                <List disablePadding>
+                  <ListItemButton
+                    onClick={() =>
+                      setOpenLangModal
+                        ? setOpenLangModal(true)
+                        : setOpenMessageDialog({
+                            message: "go to homescreen to change language",
+                            dontShowHeader: true,
+                          })
+                    }
+                  >
+                    <TranslateIcon sx={{ mr: 1 }} />
+                    <ListItemText
+                      primary="Select Language"
+                      primaryTypographyProps={{
+                        fontFamily: "Quicksand",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        color: "#333F61",
+                      }}
+                    />
+                  </ListItemButton>
+                  <Divider />
+                  <ListItemButton onClick={handleLogout}>
+                    <LogoutIcon sx={{ mr: 1 }} />
+                    <ListItemText
+                      primary="Logout"
+                      primaryTypographyProps={{
+                        fontFamily: "Quicksand",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        color: "#333F61",
+                      }}
+                    />
+                  </ListItemButton>
+                </List>
+              </Box>
+            </Collapse>
+          </Box>
+        )}
+
+        {!isMobile && (
+          <Box
+            sx={{
+              justifySelf: "flex-end",
+              width: { xs: "100%", sm: "50%" },
+              display: "flex",
+              justifyContent: { xs: "center", sm: "flex-end" },
+              alignItems: "center",
+            }}
+          >
+            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+              <Box sx={{ position: "relative" }} mr="10px">
+                <img
+                  src={scoreView}
+                  alt="scoreView"
+                  width={isMobile ? "47px" : "86px"}
+                  height={isMobile ? "25px" : "35px"}
+                />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: isMobile ? "40%" : "50%",
+                    left: isMobile ? "68%" : "70%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#FFDD39",
+                      fontWeight: 700,
+                      fontSize: isMobile ? "11px" : "18px",
+                      fontFamily: "Quicksand",
+                    }}
+                  >
+                    {points}
+                  </span>
+                </Box>
+              </Box>
+            )}
+
+            <Box
+              mr={{ xs: "10px", sm: "90px" }}
+              onClick={() =>
+                setOpenLangModal
+                  ? setOpenLangModal(true)
+                  : setOpenMessageDialog({
+                      message: "go to homescreen to change language",
+                      dontShowHeader: true,
+                    })
+              }
+            >
+              <Box sx={{ position: "relative", cursor: "pointer" }}>
+                <SelectLanguageButton width={isMobile ? 80 : 180} />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 9,
+                    left: isMobile ? 10 : 20,
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#000000",
+                      fontWeight: 700,
+                      fontSize: isMobile ? "10px" : "16px",
+                      fontFamily: "Quicksand",
+                      lineHeight: "25px",
+                    }}
+                  >
+                    {isMobile
+                      ? "Language"
+                      : languages?.find((elem) => elem.lang === language)
+                          ?.name || "Select Language"}
+                  </span>
+                </Box>
+              </Box>
+            </Box>
+            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+              <CustomTooltip title="Logout">
+                <Box>
+                  <CustomIconButton onClick={handleLogout}>
+                    <img
+                      className="logout-img"
+                      style={{ height: 30, width: 35 }}
+                      src={LogoutImg}
+                      alt="Logout"
+                    />
+                  </CustomIconButton>
+                </Box>
+              </CustomTooltip>
+            )}
+          </Box>
+        )}
       </Box>
     </>
   );
@@ -579,53 +949,25 @@ const Assesment = ({ discoverStart }) => {
   const [openLangModal, setOpenLangModal] = useState(false);
   const [lang, setLang] = useState(getLocalData("lang") || "en");
   const [points, setPoints] = useState(0);
+  const [vocabCount, setVocabCount] = useState(0);
+  const [wordCount, setWordCount] = useState(0);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    // const level = getLocalData('userLevel');
-    // setLevel(level);
     setLocalData("lang", lang);
-    dispatch(setVirtualId(localStorage.getItem("virtualId")));
     let contentSessionId = localStorage.getItem("contentSessionId");
-    localStorage.setItem("sessionId", contentSessionId);
-    if (discoverStart && username && !localStorage.getItem("virtualId")) {
+    setLocalData("sessionId", contentSessionId);
+
+    if (discoverStart && username && !TOKEN) {
       (async () => {
         setLocalData("profileName", username);
-        const usernameDetails = await axios.post(
-          `${process.env.REACT_APP_VIRTUAL_ID_HOST}/${config.URLS.GET_VIRTUAL_ID}?username=${username}`
-        );
-        const getMilestoneDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${usernameDetails?.data?.result?.virtualID}?language=${lang}`
-        );
+        const usernameDetails = await fetchVirtualId(username);
+        const getMilestoneDetails = await getFetchMilestoneDetails(lang);
 
-        localStorage.setItem(
+        setLocalData(
           "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails.data })
+          JSON.stringify({ ...getMilestoneDetails })
         );
-        setLevel(
-          getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
-        );
-
-        // if(usernameDetails?.data?.result?.virtualID === "6760800019"){
-        //   setLevel(12);
-        // }
-        // if(usernameDetails?.data?.result?.virtualID === "1621936833"){
-        //   setLevel(13);
-        // }
-        // if(usernameDetails?.data?.result?.virtualID === "9526496994"){
-        //   setLevel(14);
-        // }
-        // if(usernameDetails?.data?.result?.virtualID === "7656513916"){
-        //   setLevel(4);
-        // }
-        // if(usernameDetails?.data?.result?.virtualID === "3464419415"){
-        //   setLevel(5);
-        // }
-        // if(usernameDetails?.data?.result?.virtualID === "6131132191"){
-        //   setLevel(6);
-        // }
-        // if(usernameDetails?.data?.result?.virtualID === "8909322850"){
-        //   setLevel(7);
-        // }
 
         if (
           levelMapping[usernameDetails?.data?.result?.virtualID] !== undefined
@@ -653,71 +995,53 @@ const Assesment = ({ discoverStart }) => {
           "virtualId",
           usernameDetails?.data?.result?.virtualID
         );
-        let session_id = localStorage.getItem("sessionId");
+        //let session_id = localStorage.getItem("sessionId");
+        setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
+        setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
+        setWordCount(
+          getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
+            0
+        );
+        let session_id = getLocalData("sessionId");
 
         if (!session_id) {
           session_id = uniqueId();
-          localStorage.setItem("sessionId", session_id);
+          setLocalData("sessionId", session_id);
         }
 
-        localStorage.setItem("lang", lang || "ta");
+        setLocalData("lang", lang || "ta");
         if (
           process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
-          (localStorage.getItem("contentSessionId") !== null ||
-            process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+          localStorage.getItem("contentSessionId") !== null
         ) {
-          const getPointersDetails = await axios.get(
-            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${usernameDetails?.data?.result?.virtualID}/${session_id}?language=${lang}`
-          );
-          setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+          fetchUserPoints()
+            .then((points) => {
+              setPoints(points);
+            })
+            .catch((error) => {
+              console.error("Error fetching user points:", error);
+              setPoints(0);
+            });
         }
 
-        dispatch(setVirtualId(usernameDetails?.data?.result?.virtualID));
+        // dispatch(setVirtualId(virtualId));
       })();
     } else {
       (async () => {
-        let virtualId;
-
-        if (getParameter("virtualId", window.location.search)) {
-          virtualId = getParameter("virtualId", window.location.search);
-        } else {
-          virtualId = localStorage.getItem("virtualId");
-        }
-        localStorage.setItem("virtualId", virtualId);
         const language = lang;
-        const getMilestoneDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${virtualId}?language=${language}`
-        );
-        localStorage.setItem(
+        const getMilestoneDetails = await getFetchMilestoneDetails(language);
+        setLocalData(
           "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails.data })
+          JSON.stringify({ ...getMilestoneDetails })
         );
         setLevel(
-          Number(
-            getMilestoneDetails?.data.data?.milestone_level?.replace("m", "")
-          )
+          Number(getMilestoneDetails?.data?.milestone_level?.replace("m", ""))
         );
-        // if(virtualId === "6760800019"){
-        //   setLevel(12);
-        // }
-        // if(virtualId === "1621936833"){
-        //   setLevel(13);
-        // }
-        // if(virtualId === "9526496994"){
-        //   setLevel(14);
-        // }
-        // if(virtualId === "7656513916"){
-        //   setLevel(4);
-        // }
-        // if(virtualId === "3464419415"){
-        //   setLevel(5);
-        // }
-        // if(virtualId === "6131132191"){
-        //   setLevel(6);
-        // }
-        // if(virtualId === "8909322850"){
-        //   setLevel(7);
-        // }
+        setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
+        setWordCount(
+          getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
+            0
+        );
 
         if (levelMapping[virtualId] !== undefined) {
           setLevel(levelMapping[virtualId]);
@@ -743,25 +1067,33 @@ const Assesment = ({ discoverStart }) => {
 
         if (!sessionId || sessionId === "null") {
           sessionId = localStorage.getItem("contentSessionId") || uniqueId();
-          localStorage.setItem("sessionId", sessionId);
+          setLocalData("sessionId", sessionId);
         }
 
         if (
           process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
-          virtualId &&
-          (localStorage.getItem("contentSessionId") !== null ||
-            process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+          TOKEN &&
+          localStorage.getItem("contentSessionId") !== null
         ) {
-          const getPointersDetails = await axios.get(
-            `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
-          );
-          setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+          fetchUserPoints()
+            .then((points) => {
+              setPoints(points);
+            })
+            .catch((error) => {
+              console.error("Error fetching user points:", error);
+              setPoints(0);
+            });
         }
       })();
     }
   }, [lang]);
 
-  const { virtualId } = useSelector((state) => state.user);
+  const TOKEN = localStorage.getItem("apiToken");
+  let virtualId;
+  // if (TOKEN) {
+  //   const tokenDetails = jwtDecode(TOKEN);
+  //   virtualId = JSON.stringify(tokenDetails?.virtual_id);
+  // }
 
   const handleOpenVideo = () => {
     if (process.env.REACT_APP_SHOW_HELP_VIDEO === "true") {
@@ -800,7 +1132,7 @@ const Assesment = ({ discoverStart }) => {
   const navigate = useNavigate();
   const handleRedirect = () => {
     const profileName = getLocalData("profileName");
-    if (!username && !profileName && !virtualId && level === 0) {
+    if (!username && !profileName && !TOKEN && level === 0) {
       // alert("please add username in query param");
       setOpenMessageDialog({
         message: "please add username in query param",
@@ -831,9 +1163,25 @@ const Assesment = ({ discoverStart }) => {
     desktopLevel13,
     desktopLevel14,
     desktopLevel15,
+    desktopLevel1Mobile,
+    desktopLevel2Mobile,
+    desktopLevel3Mobile,
+    desktopLevel4Mobile,
+    desktopLevel5Mobile,
+    desktopLevel6Mobile,
+    desktopLevel7Mobile,
+    desktopLevel8Mobile,
+    desktopLevel9Mobile,
+    desktopLevel10Mobile,
   };
 
-  const rFlow = getLocalData("rFlow");
+  const imageKey =
+    isMobile && level <= 10
+      ? `desktopLevel${level || 1}Mobile`
+      : `desktopLevel${level || 1}`;
+
+  const rFlow = String(getLocalData("rFlow"));
+  const tFlow = String(getLocalData("tFlow"));
   const rStep = Number(getLocalData("rStep")) || 2;
 
   const sectionStyle = {
@@ -852,8 +1200,8 @@ const Assesment = ({ discoverStart }) => {
           ? rThreeImage
           : level == 2 && rStep === 4
           ? rFourImage
-          : images?.[`desktopLevel${level || 1}`]
-        : images?.[`desktopLevel${level || 1}`]
+          : images?.[imageKey]
+        : images?.[imageKey]
     })`,
     backgroundRepeat: "round",
     backgroundSize: "auto",
@@ -878,7 +1226,15 @@ const Assesment = ({ discoverStart }) => {
       {level > 0 ? (
         <Box style={sectionStyle}>
           <ProfileHeader
-            {...{ level, lang, setOpenLangModal, points, setOpenMessageDialog }}
+            {...{
+              level,
+              lang,
+              setOpenLangModal,
+              points,
+              setOpenMessageDialog,
+              vocabCount,
+              wordCount,
+            }}
           />
           <Box>
             {process.env.REACT_APP_SHOW_HELP_VIDEO === "true" && (
@@ -956,12 +1312,17 @@ const Assesment = ({ discoverStart }) => {
           <Box
             sx={{
               position: "absolute",
-              right: { xs: 20, md: 200 },
+              //right: { xs: 20, md: 200 },
+              //right: isMobile ? 20 : 200,
+              top: "30%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
               mt: { xs: 2, md: 5 },
+              textAlign: "center",
             }}
           >
             <Typography

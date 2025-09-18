@@ -1,4 +1,12 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+} from "@mui/material";
 import Stack from "@mui/material/Stack";
 import PropTypes from "prop-types";
 import practicebgstone from "../../assets/images/practice-bg-stone.svg";
@@ -10,6 +18,7 @@ import practicebg3 from "../../assets/images/practice-bg3.svg";
 import gameWon from "../../assets/images/gameWon.svg";
 import clouds from "../../assets/images/clouds.svg";
 import catLoading from "../../assets/images/catLoading.gif";
+import towreLoading from "../../assets/images/loaderGif.gif";
 import textureImage from "../../assets/images/textureImage.png";
 import timer from "../../assets/images/timer.svg";
 import playButton from "../../assets/listen.png";
@@ -41,7 +50,8 @@ import {
   ROneImg,
   setLocalData,
 } from "../../utils/constants";
-
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import { ProfileHeader } from "../Assesment/Assesment";
 import Confetti from "react-confetti";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
@@ -57,98 +67,104 @@ import rThreeMileImage from "../../assets/r3mile.png";
 import rFourMileImage from "../../assets/r4mile.png";
 import zIndex from "@mui/material/styles/zIndex";
 
+const theme = createTheme();
+
 const MainLayout = (props) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
   const levelsImages = {
     1: {
-      milestone: <LevelOne />,
+      milestone: <LevelOne height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone,
       background: practicebg,
     },
     2: {
-      milestone: <LevelTwo />,
+      milestone: <LevelTwo height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone2,
       background: practicebg2,
     },
     3: {
-      milestone: <LevelThree />,
+      milestone: <LevelThree height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
     },
     4: {
-      milestone: <LevelFour />,
+      milestone: <LevelFour height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone,
       background: practicebg3,
       backgroundColor: `${levelConfig[4].color}60`,
     },
     5: {
-      milestone: <LevelFive />,
+      milestone: <LevelFive height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[5].color}60`,
     },
     6: {
-      milestone: <LevelSix />,
+      milestone: <LevelSix height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[6].color}60`,
     },
     7: {
-      milestone: <LevelSeven />,
+      milestone: <LevelSeven height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[7].color}60`,
     },
     8: {
-      milestone: <LevelEight />,
+      milestone: <LevelEight height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[8].color}60`,
     },
     9: {
-      milestone: <LevelNine />,
+      milestone: <LevelNine height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     10: {
-      milestone: <LevelTen />,
+      milestone: <LevelTen height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     11: {
-      milestone: <LevelEleven />,
+      milestone: <LevelEleven height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     12: {
-      milestone: <LevelTwelve />,
+      milestone: <LevelTwelve height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     13: {
-      milestone: <LevelThirteen />,
+      milestone: <LevelThirteen height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     14: {
-      milestone: <LevelFourteen />,
+      milestone: <LevelFourteen height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     15: {
-      milestone: <LevelFifteen />,
+      milestone: <LevelFifteen height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
   };
 
-  const rFlow = getLocalData("rFlow");
+  const rFlow = String(getLocalData("rFlow"));
+  const tFlow = String(getLocalData("tFlow"));
   const mFlow = getLocalData("mFail");
   const allCompleted = getLocalData("allCompleted");
 
@@ -177,7 +193,7 @@ const MainLayout = (props) => {
     }
   }
 
-  console.log("Assigned LEVEL:", LEVEL, props.rStep);
+  //console.log("Assigned LEVEL:", LEVEL, props.rStep);
 
   const {
     handleNext,
@@ -209,6 +225,8 @@ const MainLayout = (props) => {
     isRecordingComplete,
     answer,
     isCorrect,
+    vocabCount,
+    wordCount,
   } = props;
 
   const [shake, setShake] = useState(false);
@@ -217,11 +235,11 @@ const MainLayout = (props) => {
 
   const language = getLocalData("lang");
 
-  useEffect(() => {
-    if (language !== "en") {
-      setLocalData("rFlow", false);
-    }
-  }, [language]);
+  // useEffect(() => {
+  //   if (language !== "en") {
+  //     setLocalData("rFlow", false);
+  //   }
+  // }, [language]);
 
   const handleAudioPlay = (index) => {
     const audioElem = audioRefs.current[index];
@@ -279,7 +297,7 @@ const MainLayout = (props) => {
     };
   }, []);
 
-  console.log("isCo", isCorrect);
+  //console.log("isCo", isCorrect);
 
   useEffect(() => {
     if (isRecordingComplete && answer && isCorrect) {
@@ -322,7 +340,35 @@ const MainLayout = (props) => {
   }, [startShowCase, isShowCase, gameOverData, audioCache]);
 
   let currentPracticeStep = progressData?.currentPracticeStep;
+  const [currentPageStart, setCurrentPageStart] = useState(0);
+  const prevActiveFlow = useRef(null);
 
+  useEffect(() => {
+    if (!flowNames || !activeFlow) return;
+
+    const activeIndex = flowNames.indexOf(activeFlow);
+    if (activeIndex === -1) return;
+
+    const currentPageEnd = currentPageStart + 9;
+
+    if (activeIndex > currentPageEnd && activeFlow !== prevActiveFlow.current) {
+      const newPageStart = Math.floor(activeIndex / 10) * 10;
+      setCurrentPageStart(newPageStart);
+    }
+
+    prevActiveFlow.current = activeFlow;
+  }, [activeFlow, flowNames]);
+
+  const handleNext1 = () => {
+    if (!flowNames) return;
+    const newStart = Math.min(flowNames.length - 10, currentPageStart + 10);
+    setCurrentPageStart(newStart);
+  };
+
+  const handlePrev = () => {
+    const newStart = Math.max(0, currentPageStart - 10);
+    setCurrentPageStart(newStart);
+  };
   const sectionStyle = {
     width: "100%",
     backgroundImage: `url(${
@@ -360,7 +406,15 @@ const MainLayout = (props) => {
   return (
     <Box sx={sectionStyle}>
       <ProfileHeader
-        {...{ level: LEVEL, setOpenLangModal, lang, points, handleBack }}
+        {...{
+          level: LEVEL,
+          setOpenLangModal,
+          lang: language,
+          points,
+          handleBack,
+          vocabCount,
+          wordCount,
+        }}
       />
 
       {LEVEL && (
@@ -403,9 +457,35 @@ const MainLayout = (props) => {
             mt: "50px",
           }}
         >
-          <Box>
-            <img src={catLoading} alt="catLoading" />
-          </Box>
+          {tFlow === "true" ? (
+            <Box textAlign="center">
+              <img
+                src={towreLoading}
+                alt="catLoading"
+                height={200}
+                style={{
+                  display: "block",
+                  margin: "0 auto",
+                  marginBottom: "2px",
+                }}
+              />
+              <p
+                style={{
+                  fontSize: "32px",
+                  fontWeight: "700",
+                  marginBottom: "5px",
+                  fontFamily: "Quicksand",
+                  color: "#333F61",
+                }}
+              >
+                Loading
+              </p>
+            </Box>
+          ) : (
+            <Box>
+              <img src={catLoading} alt="catLoading" />
+            </Box>
+          )}
         </Card>
       ) : (
         <>
@@ -414,8 +494,8 @@ const MainLayout = (props) => {
             !allCompleted && (
               <Card
                 sx={{
-                  position: { xs: "absolute", md: "relative" },
-                  left: { xs: "0px", md: "auto" },
+                  position: "relative",
+                  left: { xs: "auto", md: "auto" },
                   width: { xs: "100%", md: "85vw" },
                   minHeight: "80vh",
                   borderRadius: "20px",
@@ -530,7 +610,7 @@ const MainLayout = (props) => {
                           <img
                             src={Assets.rOneMileImage}
                             alt="R One"
-                            height={"250px"}
+                            height={isMobile ? "130px" : "200px"}
                           />
                         ) : LEVEL === 2 ? (
                           <img
@@ -544,7 +624,7 @@ const MainLayout = (props) => {
                                 : null
                             }
                             alt={`R Step ${props.rStep}`}
-                            height={"200px"}
+                            height={isMobile ? "130px" : "200px"}
                           />
                         ) : null
                       ) : (
@@ -609,13 +689,13 @@ const MainLayout = (props) => {
                                     key={i}
                                     sx={{
                                       width: {
-                                        xs: "24px",
+                                        xs: "16px",
                                         sm: "26px",
                                         md: "28px",
                                         lg: "36px",
                                       },
                                       height: {
-                                        xs: "24px",
+                                        xs: "16px",
                                         sm: "26px",
                                         md: "28px",
                                         lg: "36px",
@@ -651,13 +731,11 @@ const MainLayout = (props) => {
                                               : "#1E2937",
                                           fontWeight: 600,
                                           lineHeight: "20px",
-                                          fontSize: "16px",
+                                          fontSize: isMobile ? "13px" : "16px",
                                           fontFamily: "Quicksand",
                                         }}
                                       >
-                                        {language !== "en"
-                                          ? elem.name
-                                          : LEVEL === 1
+                                        {LEVEL === 1
                                           ? elem.title
                                           : LEVEL === 2
                                           ? elem.titleNew
@@ -686,71 +764,122 @@ const MainLayout = (props) => {
                               display: "flex",
                               flexDirection: "column",
                               justifyContent: "center",
+                              maxWidth: "100%",
+                              overflow: "hidden",
                             }}
                           >
                             <Box
                               sx={{
                                 display: "flex",
-                                justifyContent: "center",
                                 alignItems: "center",
                                 height: "48px",
-                                border: "1.5px solid rgba(51, 63, 97, 0.15)",
-                                ml: { xs: 10, sm: 15, lg: 25, md: 18 },
-                                borderRadius: "30px",
-                                background: "white",
                               }}
                             >
-                              {flowNames?.map((flow, i) => (
-                                <Box
-                                  key={i}
-                                  sx={{
-                                    width: {
-                                      xs: "24px",
-                                      sm: "26px",
-                                      md: "28px",
-                                      lg: "36px",
-                                    },
-                                    height: {
-                                      xs: "24px",
-                                      sm: "26px",
-                                      md: "28px",
-                                      lg: "36px",
-                                    },
-                                    background:
-                                      flow === activeFlow
-                                        ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                        : flowNames?.indexOf(flow) <
-                                          flowNames?.indexOf(activeFlow)
-                                        ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
-                                        : "rgba(0, 0, 0, 0.04)",
-                                    ml: { xs: 0.5, sm: 0.5, md: 1.5, lg: 2 },
-                                    mr: i === flowNames?.length - 1 ? 2 : 0,
-                                    borderRadius: "30px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  {flowNames?.indexOf(flow) <
-                                  flowNames?.indexOf(activeFlow) ? (
-                                    <GreenTick />
-                                  ) : (
-                                    <span
-                                      style={{
-                                        color:
+                              <IconButton
+                                onClick={handlePrev}
+                                disabled={currentPageStart === 0}
+                                sx={{
+                                  mr: 1,
+                                  visibility:
+                                    currentPageStart === 0
+                                      ? "hidden"
+                                      : "visible",
+                                }}
+                              >
+                                <ChevronLeft />
+                              </IconButton>
+
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  height: "48px",
+                                  border: "1.5px solid rgba(51, 63, 97, 0.15)",
+                                  borderRadius: "30px",
+                                  background: "white",
+                                  overflow: "hidden",
+                                }}
+                              >
+                                {flowNames
+                                  ?.slice(
+                                    currentPageStart,
+                                    currentPageStart + 10
+                                  )
+                                  .map((flow, i) => (
+                                    <Box
+                                      key={i}
+                                      sx={{
+                                        width: {
+                                          xs: "24px",
+                                          sm: "26px",
+                                          md: "28px",
+                                          lg: "36px",
+                                        },
+                                        height: {
+                                          xs: "24px",
+                                          sm: "26px",
+                                          md: "28px",
+                                          lg: "36px",
+                                        },
+                                        background:
                                           flow === activeFlow
-                                            ? "white"
-                                            : "#1E2937",
-                                        fontWeight: 600,
-                                        fontSize: "16px",
-                                        fontFamily: "Quicksand",
+                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
+                                            : flowNames?.indexOf(flow) <
+                                              flowNames?.indexOf(activeFlow)
+                                            ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
+                                            : "rgba(0, 0, 0, 0.04)",
+                                        ml: {
+                                          xs: 0.5,
+                                          sm: 0.5,
+                                          md: 1.5,
+                                          lg: 2,
+                                        },
+                                        mr: i === 9 ? 2 : 0,
+                                        borderRadius: "30px",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        flexShrink: 0,
                                       }}
                                     >
-                                      {flow}
-                                    </span>
-                                  )}
-                                </Box>
-                              ))}
+                                      {flowNames?.indexOf(flow) <
+                                      flowNames?.indexOf(activeFlow) ? (
+                                        <GreenTick />
+                                      ) : (
+                                        <span
+                                          style={{
+                                            color:
+                                              flow === activeFlow
+                                                ? "white"
+                                                : "#1E2937",
+                                            fontWeight: 600,
+                                            fontSize: "16px",
+                                            fontFamily: "Quicksand",
+                                          }}
+                                        >
+                                          {flow}
+                                        </span>
+                                      )}
+                                    </Box>
+                                  ))}
+                              </Box>
+
+                              <IconButton
+                                onClick={handleNext1}
+                                disabled={
+                                  currentPageStart + 10 >= flowNames.length
+                                }
+                                sx={{
+                                  ml: 1,
+                                  visibility:
+                                    currentPageStart + 10 >= flowNames.length
+                                      ? "hidden"
+                                      : "visible",
+                                }}
+                              >
+                                <ChevronRight />
+                              </IconButton>
                             </Box>
                           </Box>
                         </Box>
@@ -876,15 +1005,18 @@ const MainLayout = (props) => {
                       <Box
                         sx={{
                           position: "absolute",
-                          top: "-120px",
-                          left: "-70px",
+                          top: { xs: "-50px", md: "-120px" },
+                          left: { xs: "-20px", md: "-70px" },
                         }}
                       >
                         {!gameOverData?.userWon && (
                           <img
                             src={clouds}
                             alt="clouds"
-                            style={{ zIndex: -999 }}
+                            style={{
+                              zIndex: -999,
+                              height: { xs: 200, md: 340 },
+                            }}
                           />
                         )}
                       </Box>
@@ -906,14 +1038,16 @@ const MainLayout = (props) => {
                           <Stack
                             justifyContent="center"
                             alignItems="center"
-                            direction={"row"}
+                            direction={{ xs: "column", md: "row" }}
+                            spacing={{ xs: 2, md: 4 }}
                             zIndex={100}
+                            sx={{ width: "100%" }}
                           >
                             <Stack justifyContent="center" alignItems="center">
                               <img
                                 src={`https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.3/src/assets/images/gameLost.svg`}
                                 alt="gameLost"
-                                style={{ height: 340 }}
+                                height={"250px"}
                               />
                               <Typography
                                 sx={{ mb: 1, mt: 1, textAlign: "center" }}
@@ -922,7 +1056,7 @@ const MainLayout = (props) => {
                                   <span
                                     style={{
                                       fontWeight: 600,
-                                      fontSize: "24px",
+                                      fontSize: { xs: "16px", md: "24px" },
                                       lineHeight: "1.5",
                                       letterSpacing: "1px",
                                       fontFamily: "Quicksand",
@@ -947,33 +1081,27 @@ const MainLayout = (props) => {
                                   </Typography>
                                 ) : (
                                   <Typography textAlign="center" sx={{ mt: 2 }}>
-                                    You need{" "}
+                                    Oops! You need{" "}
                                     <span style={{ fontWeight: "bold" }}>
                                       {Math.abs(70 - percentage)}
                                     </span>{" "}
-                                    more.
+                                    more points to pass. You're almost there—try
+                                    again!
                                   </Typography>
                                 )}
                               </Typography>
-                            </Stack>
-                            {/* second stack below*/}
-                            <Stack
-                              direction={"column"}
-                              alignItems="center"
-                              spacing={2}
-                              marginLeft={"10px"}
-                            >
                               <Stack
                                 sx={{
                                   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
-                                  paddingY: "49px",
-                                  paddingX: "30px",
+                                  paddingY: { xs: "20px", md: "49px" },
+                                  paddingX: { xs: "15px", md: "30px" },
                                   borderRadius: "13px",
-                                  marginLeft: "80px",
+                                  marginLeft: { xs: 0, md: "80px" },
                                   bgcolor: "#FFFFFF",
                                   zIndex: 100,
+                                  width: { xs: "100%", md: "auto" },
                                 }}
-                                direction={"row"}
+                                direction={{ xs: "column", md: "row" }}
                               >
                                 <Stack
                                   sx={{
@@ -981,13 +1109,13 @@ const MainLayout = (props) => {
                                       (props.pageName === "wordsorimage" ||
                                         props.pageName === "m5") &&
                                       !fluency
-                                        ? "20px"
+                                        ? { xs: 0, md: "20px" }
                                         : "0px",
                                     borderRight:
                                       (props.pageName === "wordsorimage" ||
                                         props.pageName === "m5") &&
                                       !fluency
-                                        ? "1px dashed grey"
+                                        ? { xs: "none", md: "1px dashed grey" }
                                         : "none",
                                   }}
                                 >
@@ -999,11 +1127,18 @@ const MainLayout = (props) => {
                                         justifyContent={"start"}
                                         alignItems={"center"}
                                         direction={"row"}
-                                        mt={index > 0 ? "25px" : 0}
+                                        mt={
+                                          index > 0
+                                            ? { xs: "10px", md: "25px" }
+                                            : 0
+                                        }
                                       >
                                         <Box
                                           sx={{
-                                            marginLeft: "35px",
+                                            marginLeft: {
+                                              xs: "10px",
+                                              md: "35px",
+                                            },
                                             marginRight: "5px",
                                           }}
                                         >
@@ -1067,9 +1202,15 @@ const MainLayout = (props) => {
                                             color: "#1E2937",
                                             fontWeight: 700,
                                             lineHeight: "30px",
-                                            fontSize: "15px",
+                                            fontSize: {
+                                              xs: "12px",
+                                              md: "15px",
+                                            },
                                             fontFamily: "Quicksand",
-                                            minWidth: "100px",
+                                            minWidth: {
+                                              xs: "70px",
+                                              md: "100px",
+                                            },
                                           }}
                                         >
                                           {elem.selectedAnswer || "Binocular"}
@@ -1085,8 +1226,9 @@ const MainLayout = (props) => {
                                         (props.pageName === "wordsorimage" ||
                                           props.pageName === "m5") &&
                                         !fluency
-                                          ? "20px"
+                                          ? { xs: 0, md: "20px" }
                                           : "0px",
+                                      mt: { xs: 2, md: 0 },
                                     }}
                                     justifyContent={"center"}
                                     alignItems={"center"}
@@ -1094,6 +1236,9 @@ const MainLayout = (props) => {
                                     <img
                                       src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/turtle.svg"
                                       alt="turtleImage"
+                                      style={{
+                                        width: { xs: "80px", md: "100px" },
+                                      }}
                                     />
                                     <span
                                       style={{
@@ -1101,7 +1246,7 @@ const MainLayout = (props) => {
                                         color: "#1E2937",
                                         fontWeight: 700,
                                         lineHeight: "25px",
-                                        fontSize: "20px",
+                                        fontSize: { xs: "16px", md: "20px" },
                                         fontFamily: "Quicksand",
                                       }}
                                     >
@@ -1110,6 +1255,48 @@ const MainLayout = (props) => {
                                   </Stack>
                                 )}
                               </Stack>
+                            </Stack>
+                            {/* second stack below*/}
+                            <Stack
+                              direction={"column"}
+                              alignItems="center"
+                              spacing={2}
+                              marginLeft={{ xs: 0, md: "10px" }}
+                              sx={{ width: { xs: "90%", md: "auto" } }}
+                            >
+                              <Box
+                                component="img"
+                                src={Assets.wordsLearnt}
+                                alt="Words Learnt"
+                                sx={{
+                                  width: "100px",
+                                  height: "100px",
+                                }}
+                              />
+
+                              {/* Number */}
+                              <Typography
+                                sx={{
+                                  color: "#FF00B8",
+                                  fontWeight: "bold",
+                                  fontSize: "24px",
+                                  fontFamily: "Quicksand",
+                                }}
+                              >
+                                {vocabCount}
+                              </Typography>
+
+                              {/* Label */}
+                              <Typography
+                                sx={{
+                                  color: "#2E2E2E",
+                                  fontSize: "16px",
+                                  fontWeight: 600,
+                                  fontFamily: "Quicksand",
+                                }}
+                              >
+                                Words Learnt
+                              </Typography>
                               <Stack
                                 direction="row"
                                 alignItems="center"
@@ -1119,15 +1306,15 @@ const MainLayout = (props) => {
                                   border: "2px solid yellow",
                                   borderRadius: "40px",
                                   padding: "10px 20px",
-                                  //maxWidth: "100%",
+                                  width: { xs: "100%", md: "auto" },
                                 }}
                               >
                                 <img
                                   src={Assets.starNewImg}
                                   alt="Star"
                                   style={{
-                                    width: "100px",
-                                    height: "100px",
+                                    width: { xs: "60px", md: "100px" },
+                                    height: { xs: "60px", md: "100px" },
                                     flexShrink: 0,
                                   }}
                                 />
@@ -1136,9 +1323,9 @@ const MainLayout = (props) => {
                                   sx={{
                                     wordWrap: "break-word",
                                     whiteSpace: "normal",
-                                    maxWidth: "150px",
+                                    maxWidth: { xs: "120px", md: "120px" },
                                     fontWeight: "700",
-                                    fontSize: "16px",
+                                    fontSize: { xs: "14px", md: "16px" },
                                     fontFamily: "Quicksand",
                                   }}
                                 >
@@ -1296,12 +1483,22 @@ const MainLayout = (props) => {
                             onClick={() => {
                               if (
                                 (LEVEL === 1 || LEVEL === 2) &&
-                                (mFlow === true || mFlow === "true") &&
-                                language === "en"
+                                (mFlow === true || mFlow === "true")
                               ) {
-                                console.log("mFlow value:", mFlow);
+                                //console.log("mFlow value:", mFlow);
                                 setLocalData("rFlow", true);
                               }
+                              // if (
+                              //               LEVEL === 1 ||
+                              //               LEVEL === 2 ||
+                              //               LEVEL === 3 ||
+                              //               LEVEL === 4 ||
+                              //               LEVEL === 6 ||
+                              //               LEVEL === 9
+                              //             ) {
+                              //               setLocalData("tFlow", true);
+                              //               navigate("/_practice");
+                              //             }
                               if (
                                 props.pageName === "wordsorimage" ||
                                 props.pageName === "m5"

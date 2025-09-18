@@ -48,6 +48,8 @@ const Mechanics2 = ({
   setEnableNext,
   loading,
   setOpenMessageDialog,
+  vocabCount,
+  wordCount,
 }) => {
   const [words, setWords] = useState([]);
   const [sentences, setSentences] = useState([]);
@@ -194,6 +196,7 @@ const Mechanics2 = ({
       enableNext={enableNext}
       showTimer={showTimer}
       points={points}
+      lang={lang}
       {...{
         steps,
         currentStep,
@@ -204,6 +207,8 @@ const Mechanics2 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <div

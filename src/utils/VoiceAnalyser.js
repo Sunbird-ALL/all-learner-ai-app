@@ -19,7 +19,7 @@ import v7 from "../assets/audio/V7.m4a";
 import v8 from "../assets/audio/V8.m4a";
 import livesAdd from "../assets/audio/livesAdd.wav";
 import livesCut from "../assets/audio/livesCut.wav";
-import { response } from "../services/telementryService";
+import { Log, response } from "../services/telementryService";
 import AudioCompare from "./AudioCompare";
 import PropTypes from "prop-types";
 import {
@@ -34,6 +34,11 @@ import { filterBadWords } from "./Badwords";
 import S3Client from "../config/awsS3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import usePreloadAudio from "../hooks/usePreloadAudio";
+import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
+import { initialize } from "../services/telementryService";
+import { startEvent } from "../services/callTelemetryIntract";
+import { end } from "../services/telementryService";
 /* eslint-disable */
 
 const AudioPath = {
@@ -103,7 +108,7 @@ function VoiceAnalyser(props) {
       return;
     }
     const { audioLink } = props;
-    console.log("llink", audioLink);
+    //console.log("llink", audioLink);
 
     try {
       let audio = new Audio(
@@ -111,7 +116,7 @@ function VoiceAnalyser(props) {
           ? audioLink
           : `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${props.contentId}.wav`
       );
-      console.log("audo", audio);
+      //console.log("audo", audio);
       audio.addEventListener("canplaythrough", () => {
         set_temp_audio(audio);
         setPauseAudio(val);
@@ -155,7 +160,7 @@ function VoiceAnalyser(props) {
         alert("Failed to load the audio. Please try again.");
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -359,6 +364,8 @@ function VoiceAnalyser(props) {
       const virtualId = getLocalData("virtualId");
       const sessionId = getLocalData("sessionId");
       const sub_session_id = getLocalData("sub_session_id");
+      let milestoneData = getLocalData("getMilestone");
+      let milestone = JSON.parse(milestoneData);
       const { originalText, contentType, contentId, currentLine } = props;
       const responseStartTime = new Date().getTime();
       let responseText = "";
@@ -376,7 +383,8 @@ function VoiceAnalyser(props) {
         sub_session_id,
         contentId,
         contentType,
-        mechanics_id: localStorage.getItem("mechanism_id") || "",
+        mechanics_id: getLocalData("mechanism_id") || "",
+        milestone: milestone?.data?.milestone_level || "",
       };
 
       if (props.selectedOption) {
@@ -388,13 +396,8 @@ function VoiceAnalyser(props) {
       }
 
       if (callUpdateLearner) {
-        const { data: updateLearnerData } = await axios.post(
-          `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
-          requestBody
-        );
-
+        const updateLearnerData = await updateLearnerProfile(lang, requestBody);
         //TODO: handle  Errors
-
         data = updateLearnerData;
         responseText = data.responseText;
         profanityWord = await filterBadWords(data.responseText);
@@ -567,8 +570,98 @@ function VoiceAnalyser(props) {
         props.setIsNextButtonCalled(false);
       }
       setRecordedAudioBase64("");
-      setApiResponse("error");
-      console.log("err", error);
+      if (error?.response?.data?.message === "Profanity detected.") {
+        setApiResponse("profanity");
+
+        const { originalText, currentLine } = props;
+        const sessionId = getLocalData("sessionId");
+
+        let audioFileName = "";
+        if (process.env.REACT_APP_CAPTURE_AUDIO === "true") {
+          let getContentId = currentLine;
+          audioFileName = `${
+            process.env.REACT_APP_CHANNEL
+          }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+
+          const command = new PutObjectCommand({
+            Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
+            Key: audioFileName,
+            Body: Uint8Array.from(window.atob(base64Data), (c) =>
+              c.charCodeAt(0)
+            ),
+            ContentType: "audio/wav",
+          });
+          try {
+            await S3Client.send(command);
+          } catch (err) {}
+        }
+        response(
+          {
+            // Required
+            target:
+              process.env.REACT_APP_CAPTURE_AUDIO === "true"
+                ? `${audioFileName}`
+                : "", // Required. Target of the response
+            type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
+            values: [
+              { profanity: "true" },
+              { original_text: originalText },
+              // { response_text: "" },
+              // { response_correct_words_array: ""  },
+              // { response_incorrect_words_array: ""  },
+              // { response_word_array_result: ""  },
+              // { response_word_result: "" },
+              // { accuracy_percentage: "" },
+              // { duration: "" },
+            ],
+          },
+          "ET"
+        );
+      } else {
+        setApiResponse("telemetry error");
+        end({});
+        const token = getLocalData("apiToken");
+
+        const initService = async (visitorId) => {
+          await initialize({
+            context: {
+              mode: process.env.REACT_APP_MODE,
+              authToken: token,
+              did: localStorage.getItem("deviceId") || visitorId,
+              uid: username || "anonymous",
+              channel: process.env.REACT_APP_CHANNEL,
+              env: process.env.REACT_APP_ENV,
+              pdata: {
+                id: process.env.REACT_APP_ID,
+                ver: process.env.REACT_APP_VER,
+                pid: process.env.REACT_APP_PID,
+              },
+              tags: [""],
+              timeDiff: 0,
+              host: process.env.REACT_APP_HOST,
+              endpoint: process.env.REACT_APP_ENDPOINT,
+              apislug: process.env.REACT_APP_APISLUG,
+            },
+            config: {},
+            metadata: {},
+          });
+
+          if (!ranonce.current) {
+            if (!localStorage.getItem("contentSessionId")) {
+              startEvent();
+            }
+            ranonce.current = true;
+          }
+        };
+
+        (async () => {
+          const fp = await FingerprintJS.load();
+          const { visitorId } = await fp.get();
+          await initService(visitorId);
+        })();
+      }
+
+      console.error("err", error);
     }
   };
 
@@ -659,7 +752,7 @@ function VoiceAnalyser(props) {
         setLivesData(newLivesData);
       }
     } catch (e) {
-      console.log("error", e);
+      console.error("error", e);
     }
   };
 
@@ -689,7 +782,7 @@ function VoiceAnalyser(props) {
         setAudioPermission(true);
       })
       .catch((error) => {
-        console.log("Permission Denied");
+        console.error("Permission Denied");
         setAudioPermission(false);
         //alert("Microphone Permission Denied");
       });

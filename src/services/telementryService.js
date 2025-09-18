@@ -1,7 +1,7 @@
 import { CsTelemetryModule } from "@project-sunbird/client-services/telemetry";
 import { uniqueId } from "./utilService";
 import { jwtDecode } from "../../node_modules/jwt-decode/build/cjs/index";
-import { getLocalData } from "../utils/constants";
+import { getLocalData, setLocalData } from "../utils/constants";
 
 let startTime; // Variable to store the timestamp when the start event is raised
 let contentSessionId;
@@ -19,12 +19,20 @@ function checkTokenInLocalStorage() {
   return !!token; // Returns true if token is present, false if token is null or undefined
 }
 
-if (localStorage.getItem("contentSessionId") !== null) {
-  contentSessionId = localStorage.getItem("contentSessionId");
+// if (localStorage.getItem("contentSessionId") !== null) {
+//   contentSessionId = localStorage.getItem("contentSessionId");
+// } else {
+//   contentSessionId = localStorage.getItem("sessionId") || uniqueId();
+//   localStorage.setItem("sessionId", contentSessionId);
+//   localStorage.setItem("allAppContentSessionId", contentSessionId);
+// }
+
+if (getLocalData("contentSessionId") !== null) {
+  contentSessionId = getLocalData("contentSessionId");
 } else {
-  contentSessionId = localStorage.getItem("sessionId") || uniqueId();
-  localStorage.setItem("sessionId", contentSessionId);
-  localStorage.setItem("allAppContentSessionId", contentSessionId);
+  contentSessionId = getLocalData("sessionId") || uniqueId();
+  setLocalData("sessionId", contentSessionId);
+  setLocalData("allAppContentSessionId", contentSessionId);
 }
 
 let getUrl = window.location.href;
@@ -41,7 +49,7 @@ export const initialize = async ({ context, config, metadata }) => {
         channel: context.channel,
         did: context.did,
         authtoken: context.authToken || "",
-        uid: localStorage.getItem("virtualId") || "anonymous",
+        uid: "",
         sid: context.sid,
         batchsize: process.env.REACT_APP_BATCHSIZE,
         mode: context.mode,
@@ -62,7 +70,7 @@ export const initialize = async ({ context, config, metadata }) => {
         telemetryConfig
       );
     } catch (error) {
-      console.log(":e", error);
+      console.error(":e", error);
     }
   }
 };
@@ -81,7 +89,7 @@ export const start = (duration) => {
       },
     });
   } catch (error) {
-    console.log("err", error);
+    console.error("err", error);
   }
 };
 
@@ -213,8 +221,21 @@ function checkTelemetryMode(currentMode) {
   );
 }
 
+const getVirtualId = () => {
+  const TOKEN = localStorage.getItem("apiToken");
+  // let virtualId;
+  // if (TOKEN) {
+  //   const tokenDetails = jwtDecode(TOKEN);
+  //   virtualId = JSON.stringify(tokenDetails?.virtual_id);
+  // }
+  return TOKEN;
+};
+
 export const getEventOptions = () => {
-  var emis_username = localStorage.getItem("virtualId") || "anonymous";
+  var emis_username =
+    localStorage.getItem("virtualId") ||
+    localStorage.getItem("apiToken") ||
+    "anonymous";
   var buddyUserId = "";
 
   if (localStorage.getItem("token") !== null) {
@@ -232,7 +253,10 @@ export const getEventOptions = () => {
   const userType = isBuddyLogin ? "Buddy User" : "User";
   const userId = isBuddyLogin
     ? emis_username + "/" + buddyUserId
-    : emis_username || localStorage.getItem("virtualId") || "anonymous";
+    : emis_username ||
+      localStorage.getItem("virtualId") ||
+      localStorage.getItem("apiToken") ||
+      "anonymous";
 
   return {
     object: {},
@@ -244,26 +268,22 @@ export const getEventOptions = () => {
         pid: process.env.REACT_APP_PID, // Optional. In case the component is distributed, then which instance of that component
       },
       env: process.env.REACT_APP_ENV,
-      uid: `${
-        isBuddyLogin
-          ? emis_username + "/" + buddyUserId
-          : emis_username || localStorage.getItem("virtualId") || "anonymous"
-      }`,
+      uid: "",
       cdata: [
         {
-          id: localStorage.getItem("sessionId") || contentSessionId,
+          id: getLocalData("sessionId") || contentSessionId,
           type: "ContentSession",
         },
         { id: playSessionId, type: "PlaySession" },
-        { id: userId, type: userType },
-        { id: localStorage.getItem("lang") || "ta", type: "language" },
+        { id: "", type: userType },
+        { id: getLocalData("lang") || "ta", type: "language" },
         { id: userDetails?.school_name, type: "school_name" },
         {
           id: userDetails?.class_studying_id,
           type: "class_studying_id",
         },
         { id: userDetails?.udise_code, type: "udise_code" },
-        { id: localStorage.getItem("virtualId") || null, type: "virtualId" },
+        { id: "", type: "virtualId" },
       ],
       rollup: {},
     },

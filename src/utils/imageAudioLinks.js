@@ -41,11 +41,11 @@ export const CandleS =
 export const DisabledHint =
   "https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.4.0-dev/src/assets/DisabledHint.svg";
 export const Jacket =
-  "https://github.com/anik200002/imagesEkstep/blob/main/JacketImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/JacketImg.png?raw=true";
 export const Jack =
   "https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.4.0-dev/src/assets/Jack.wav";
 export const Ket =
-  "https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.4.0-dev/src/assets/et.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/Ket.wav";
 export const JacketS =
   "https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.4.0-dev/src/assets/Jacket.wav";
 export const Kitten =
@@ -300,7 +300,7 @@ export const busImg =
 export const buyerImg =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/Buyer.jpeg";
 export const childrenDayImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/childrenDayImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/childrenDayImg.png?raw=true";
 export const classroomImg =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/classroomImg.jpeg";
 export const concertStageImg =
@@ -553,7 +553,7 @@ export const museumDirectionsAudio =
 export const openTextbookAudio =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/openTextbookAudio.wav";
 export const patelRoadAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/patelAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/patelAudio.wav";
 export const patnaAudio =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/patnaAudio.wav";
 export const PianoAudio =
@@ -613,27 +613,27 @@ export const writeDateAudio =
 export const level12S1Audio =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level12S1Audio.wav";
 export const level12P2Audio_1 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_1.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_1.wav";
 export const level12P2Audio_2 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_2.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_2.wav";
 export const level12P2Audio_3 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_3.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_3.wav";
 export const level12P2Audio_4 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_4.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_4.wav";
 export const level12P2Audio_5 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_5.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_5.wav";
 export const level12P2Audio_6 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_6.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_6.wav";
 export const level12P2Audio_7 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_7.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_7.wav";
 export const level12P2Audio_8 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_8.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_8.wav";
 export const level12P2Audio_9 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_9.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_9.wav";
 export const level12P2Audio_10 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_10.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_10.wav";
 export const level12P2Audio_11 =
-  "https://github.com/mithunraptan/AudioAniketFileLinkGenaration/raw/refs/heads/main/level12P2Audio_11.wav";
+  "https://raw.githubusercontent.com/mithunraptan/AudioAniketFileLinkGenaration/main/level12P2Audio_11.wav";
 export const level10P1ImgOne =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/acc4ab72f1c68f1050c43f38ddd200841ef131b8/level10P1ImgOne.svg";
 export const level10P1ImgTwo =
@@ -744,384 +744,384 @@ export const babyCriesImg =
 export const sunShinesImg =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/refs/heads/main/sunShinesImg.svg";
 export const appleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/appleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/appleAudio.wav.wav";
 export const tigerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tigerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tigerAudio.wav.wav";
 export const happyAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/happyAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/happyAudio.wav.wav";
 export const pencilAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pencilAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pencilAudio.wav.wav";
 export const rocketAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/rocketAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/rocketAudio.wav.wav";
 export const basketAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/basketAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/basketAudio.wav.wav";
 export const dinnerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dinnerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dinnerAudio.wav.wav";
 export const windowAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/windowAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/windowAudio.wav.wav";
 export const magnetAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/magnetAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/magnetAudio.wav.wav";
 export const tennisAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tennisAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tennisAudio.wav.wav";
 export const pictureAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pictureAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pictureAudio.wav.wav";
 export const numberAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/numberAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/numberAudio.wav.wav";
 export const doctorAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/doctorAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/doctorAudio.wav.wav";
 export const paperAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/paperAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/paperAudio.wav.wav";
 export const monkeyAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/monkeyAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/monkeyAudio.wav.wav";
 export const gardenAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/gardenAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/gardenAudio.wav.wav";
 export const helmetAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/helmetAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/helmetAudio.wav.wav";
 export const pickleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pickleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pickleAudio.wav.wav";
 export const trafficAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/trafficAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/trafficAudio.wav.wav";
 export const musicAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/musicAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/musicAudio.wav.wav";
 export const showerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/showerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/showerAudio.wav.wav";
 export const puzzleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/puzzleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/puzzleAudio.wav.wav";
 export const riverAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/riverAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/riverAudio.wav.wav";
 export const signalAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/signalAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/signalAudio.wav.wav";
 export const boringAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/boringAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/boringAudio.wav.wav";
 export const tableAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tableAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tableAudio.wav.wav";
 export const carpetAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/carpetAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/carpetAudio.wav.wav";
 export const marketAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/marketAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/marketAudio.wav.wav";
 export const packetAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/packetAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/packetAudio.wav.wav";
 export const thunderAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/thunderAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/thunderAudio.wav.wav";
 export const fatherAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/fatherAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/fatherAudio.wav.wav";
 export const motherAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/motherAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/motherAudio.wav.wav";
 export const sisterAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sisterAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sisterAudio.wav.wav";
 export const shadowAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/shadowAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/shadowAudio.wav.wav";
 export const pocketAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pocketAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pocketAudio.wav.wav";
 export const villageAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/villageAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/villageAudio.wav.wav";
 export const bubbleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bubbleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bubbleAudio.wav.wav";
 export const muffinAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/muffinAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/muffinAudio.wav.wav";
 export const candleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/candleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/candleAudio.wav.wav";
 export const lemonAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/lemonAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/lemonAudio.wav.wav";
 export const ladderAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ladderAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ladderAudio.wav.wav";
 export const kittenAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/kittenAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/kittenAudio.wav.wav";
 export const buttonAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/buttonAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/buttonAudio.wav.wav";
 export const cherryAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cherryAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cherryAudio.wav.wav";
 export const butterAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/butterAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/butterAudio.wav.wav";
 export const summerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/summerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/summerAudio.wav.wav";
 export const winterAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/winterAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/winterAudio.wav.wav";
 export const fingerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/fingerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/fingerAudio.wav.wav";
 
 export const apAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/apAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/apAudio.wav.wav";
 export const tiAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tiAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tiAudio.wav.wav";
 export const hapAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/hapAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/hapAudio.wav.wav";
 export const penAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/penAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/penAudio.wav";
 export const rockAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/rockAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/rockAudio.wav.wav";
 export const basAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/basAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/basAudio.wav.wav";
 export const dinAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dinAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dinAudio.wav.wav";
 export const winAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/winAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/winAudio.wav.wav";
 export const magAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/magAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/magAudio.wav.wav";
 export const tenAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tenAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tenAudio.wav.wav";
 export const picAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/picAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/picAudio.wav.wav";
 export const numAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/numAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/numAudio.wav.wav";
 export const docAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/docAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/docAudio.wav.wav";
 export const paAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/paAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/paAudio.wav.wav";
 export const monAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/monAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/monAudio.wav.wav";
 export const garAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/garAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/garAudio.wav.wav";
 export const helAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/helAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/helAudio.wav.wav";
 export const pickAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pickAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pickAudio.wav.wav";
 export const trafAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/trafAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/trafAudio.wav.wav";
 export const muAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/muAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/muAudio.wav.wav";
 export const showAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/showAudio.wav.wav";
-//export const dinAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dinAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/showAudio.wav.wav";
+//export const dinAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dinAudio.wav.wav";
 export const puzAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/puzAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/puzAudio.wav.wav";
 export const rivAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/rivAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/rivAudio.wav.wav";
 export const sigAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sigAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sigAudio.wav.wav";
 export const borAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/borAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/borAudio.wav.wav";
 export const taAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/taAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/taAudio.wav.wav";
 export const carAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/carAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/carAudio.wav.wav";
 export const marAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/marAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/marAudio.wav.wav";
 export const packAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/packAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/packAudio.wav.wav";
 export const thunAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/thunAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/thunAudio.wav.wav";
 export const faAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/faAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/faAudio.wav.wav";
 export const moAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/moAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/moAudio.wav.wav";
 export const sisAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sisAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sisAudio.wav.wav";
 export const shaAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/shaAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/shaAudio.wav.wav";
 export const pockAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pockAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pockAudio.wav.wav";
 export const vilAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/vilAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/vilAudio.wav.wav";
 export const bubAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bubAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bubAudio.wav.wav";
 export const muffAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/muffAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/muffAudio.wav.wav";
 export const canAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/canAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/canAudio.wav.wav";
 export const lemAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/lemAudio.wav.wav";
-//export const dinAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dinAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/lemAudio.wav.wav";
+//export const dinAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dinAudio.wav.wav";
 export const ladAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ladAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ladAudio.wav.wav";
 export const kitAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/kitAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/kitAudio.wav.wav";
 export const butAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/butAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/butAudio.wav.wav";
 export const cherAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cherAudio.wav.wav";
-//export const butAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/butAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cherAudio.wav.wav";
+//export const butAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/butAudio.wav.wav";
 export const sumAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sumAudio.wav.wav";
-//export const winAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/winAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sumAudio.wav.wav";
+//export const winAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/winAudio.wav.wav";
 export const finAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/finAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/finAudio.wav.wav";
 
 export const pleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pleAudio.wav.wav";
 export const gerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/gerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/gerAudio.wav.wav";
 export const pyAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pyAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pyAudio.wav.wav";
 export const cilAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cilAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cilAudio.wav.wav";
 export const etAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/etAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/etAudio.wav.wav";
 export const ketAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ketAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ketAudio.wav.wav";
 export const nerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nerAudio.wav.wav";
 export const dowAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dowAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dowAudio.wav.wav";
 export const netAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/netAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/netAudio.wav.wav";
 export const nisAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nisAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nisAudio.wav.wav";
 export const tureAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tureAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tureAudio.wav.wav";
 export const berAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/berAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/berAudio.wav.wav";
 export const torAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/torAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/torAudio.wav.wav";
 export const perAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/perAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/perAudio.wav.wav";
 export const keyAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/keyAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/keyAudio.wav.wav";
 export const denAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/denAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/denAudio.wav.wav";
 export const metAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/metAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/metAudio.wav.wav";
 export const leAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/leAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/leAudio.wav.wav";
 export const ficAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ficAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ficAudio.wav.wav";
 export const sicAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sicAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sicAudio.wav.wav";
 export const erAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/erAudio.wav.wav";
-// const nerAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/erAudio.wav.wav";
+// const nerAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nerAudio.wav.wav";
 export const zleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/zleAudio.wav.wav";
-//export const erAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/erAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/zleAudio.wav.wav";
+//export const erAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/erAudio.wav.wav";
 export const nalAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nalAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nalAudio.wav.wav";
 export const ingAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ingAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ingAudio.wav.wav";
 export const bleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bleAudio.wav.wav";
 export const petAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/petAudio.wav.wav";
-//export const ketAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ketAudio.wav.wav";
-//export const etAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/etAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/petAudio.wav.wav";
+//export const ketAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ketAudio.wav.wav";
+//export const etAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/etAudio.wav.wav";
 export const derAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/derAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/derAudio.wav.wav";
 export const therAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/therAudio.wav.wav";
-//export const therAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/therAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/therAudio.wav.wav";
+//export const therAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/therAudio.wav.wav";
 export const terAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/terAudio.wav.wav";
-//export const dowAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dowAudio.wav.wav";
-//export const etAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/etAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/terAudio.wav.wav";
+//export const dowAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dowAudio.wav.wav";
+//export const etAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/etAudio.wav.wav";
 export const lageAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/lageAudio.wav.wav";
-//export const bleAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/lageAudio.wav.wav";
+//export const bleAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bleAudio.wav.wav";
 export const inAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/inAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/inAudio.wav.wav";
 export const dleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dleAudio.wav.wav";
 export const onAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/onAudio.wav.wav";
-// export const nerAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nerAudio.wav.wav";
-//export const derAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/derAudio.wav.wav";
-//export const tenAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tenAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/onAudio.wav.wav";
+// export const nerAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nerAudio.wav.wav";
+//export const derAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/derAudio.wav.wav";
+//export const tenAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tenAudio.wav.wav";
 export const tonAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tonAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tonAudio.wav.wav";
 export const ryAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ryAudio.wav.wav";
-//export const terAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/terAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ryAudio.wav.wav";
+//export const terAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/terAudio.wav.wav";
 export const merAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/merAudio.wav.wav";
-//export const terAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/terAudio.wav.wav";
-//export const gerAudio = "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/gerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/merAudio.wav.wav";
+//export const terAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/terAudio.wav.wav";
+//export const gerAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/gerAudio.wav.wav";
 
 export const iRunAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/iRunAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/iRunAudio.wav";
 export const wePlayAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/wePlayAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/wePlayAudio.wav";
 export const sheReadsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sheReadsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sheReadsAudio.wav";
 export const heEatsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/heEatsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/heEatsAudio.wav";
 export const theyJumpAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/theyJumpAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/theyJumpAudio.wav";
 export const weWalkAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/weWalkAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/weWalkAudio.wav";
 export const iSleepAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/iSleepAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/iSleepAudio.wav";
 export const youSwimAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/youSwimAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/youSwimAudio.wav";
 export const sheSingsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sheSingsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sheSingsAudio.wav";
 export const heDancesAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/heDancesAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/heDancesAudio.wav";
 export const itRainsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/itRainsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/itRainsAudio.wav";
 export const weWinAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/weWinAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/weWinAudio.wav";
 export const youCookAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/youCookAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/youCookAudio.wav";
 export const theyLaughAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/theyLaughAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/theyLaughAudio.wav";
 export const iDreamAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/iDreamAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/iDreamAudio.wav";
 export const youLearnAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/youLearnAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/youLearnAudio.wav";
 export const weTalkAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/weTalkAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/weTalkAudio.wav";
 export const heListensAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/heListensAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/heListensAudio.wav";
 export const sheSmilesAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sheSmilesAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sheSmilesAudio.wav";
 export const birdsFlyAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/birdsFlyAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/birdsFlyAudio.wav";
 export const catsMeowAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/catsMeowAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/catsMeowAudio.wav";
 export const dogsBarkAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dogsBarkAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dogsBarkAudio.wav";
 export const fishSwimAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/fishSwimAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/fishSwimAudio.wav";
 export const sunShinesAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sunShinesAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sunShinesAudio.wav";
 export const starsTwinkleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/starsTwinkleAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/starsTwinkleAudio.wav";
 export const babyCriesAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/babyCriesAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/babyCriesAudio.wav";
 export const fireBurnsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/fireBurnsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/fireBurnsAudio.wav";
 export const flowersBloomAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/flowersBloomAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/flowersBloomAudio.wav";
 export const windBlowsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/windBlowsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/windBlowsAudio.wav";
 export const bellsRingAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bellsRingAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bellsRingAudio.wav";
 export const timeFliesAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/timeFliesAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/timeFliesAudio.wav";
 export const carsRaceAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/carsRaceAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/carsRaceAudio.wav";
 export const clocksTickAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/clocksTickAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/clocksTickAudio.wav";
 export const grassGrowsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/grassGrowsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/grassGrowsAudio.wav";
 export const waterDripsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/waterDripsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/waterDripsAudio.wav";
 export const leavesFallAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/leavesFallAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/leavesFallAudio.wav";
 export const snowMeltsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/snowMeltsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/snowMeltsAudio.wav";
 export const cloudsMoveAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cloudsMoveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cloudsMoveAudio.wav";
 export const horsesRunAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/horsesRunAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/horsesRunAudio.wav";
 export const kidsLaughAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/kidsLaughAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/kidsLaughAudio.wav";
 export const rainFallsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/rainFallsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/rainFallsAudio.wav";
 export const iceMeltsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/iceMeltsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/iceMeltsAudio.wav";
 export const treesShakeAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/treesShakeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/treesShakeAudio.wav";
 export const wavesCrashAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/wavesCrashAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/wavesCrashAudio.wav";
 export const fireGlowsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/fireGlowsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/fireGlowsAudio.wav";
 export const windHowlsAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/windHowlsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/windHowlsAudio.wav";
 export const peopleTalkAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/peopleTalkAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/peopleTalkAudio.wav";
 export const beesBuzzAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/beesBuzzAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/beesBuzzAudio.wav";
 export const birdsChirpAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/birdsChirpAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/birdsChirpAudio.wav";
 
 export const naAudio =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/na.wav.wav";
@@ -1204,7 +1204,7 @@ export const flyAudio =
 export const phoneAudio =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/phone.wav.wav";
 export const nutAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nutAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nutAudio.wav.wav";
 export const scopeAudio =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/scope.wav.wav";
 export const laAudio =
@@ -1222,101 +1222,101 @@ export const zineAudio =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/main/zine.wav.wav";
 //export const tureAudio = "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ture.wav.wav";
 export const bananaAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bananaAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bananaAudio.wav.wav";
 export const potatoAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/potatoAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/potatoAudio.wav.wav";
 export const tomatoAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tomatoAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tomatoAudio.wav.wav";
 export const pajamaAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pajamaAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pajamaAudio.wav.wav";
 export const computerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/computerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/computerAudio.wav.wav";
 export const animalAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/animalAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/animalAudio.wav.wav";
 export const lemonadeAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/lemonadeAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/lemonadeAudio.wav.wav";
 export const chocolateAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/chocolateAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/chocolateAudio.wav.wav";
 export const butterflyAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/butterflyAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/butterflyAudio.wav.wav";
 export const telephoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/telephoneAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/telephoneAudio.wav.wav";
 export const coconutAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/coconutAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/coconutAudio.wav.wav";
 export const telescopeAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/telescopeAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/telescopeAudio.wav.wav";
 export const umbrellaAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/umbrellaAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/umbrellaAudio.wav.wav";
 export const pineappleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pineappleaudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pineappleaudio.wav.wav";
 export const bicycleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bicycleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bicycleAudio.wav.wav";
 export const broccoliAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/broccoliAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/broccoliAudio.wav.wav";
 export const kangarooAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/kangarooAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/kangarooAudio.wav.wav";
 export const calendarAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/calendarAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/calendarAudio.wav.wav";
 export const magazineAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/magazineAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/magazineAudio.wav.wav";
 export const furnitureAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/furnitureAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/furnitureAudio.wav.wav";
 export const envelopeAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/envelopeAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/envelopeAudio.wav.wav";
 export const monitorAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/monitorAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/monitorAudio.wav.wav";
 export const sunglassesAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sunglassesAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sunglassesAudio.wav.wav";
 export const waterfallAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/waterfallAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/waterfallAudio.wav.wav";
 export const blueberryAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/blueberryAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/blueberryAudio.wav.wav";
 export const octopusAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/octopusAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/octopusAudio.wav.wav";
 export const quiltTAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/quiltTAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/quiltTAudio.wav";
 export const marigoldAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/marigoldAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/marigoldAudio.wav.wav";
 export const candybarAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/candybarAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/candybarAudio.wav.wav";
 export const apricotAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/apricotAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/apricotAudio.wav.wav";
 export const mandarinAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/mandarinAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/mandarinAudio.wav.wav";
 export const omeletteAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/omeletteAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/omeletteAudio.wav.wav";
 export const vacuumAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/vacuumAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/vacuumAudio.wav.wav";
 export const dishwasherAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dishwasherAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dishwasherAudio.wav.wav";
 export const projectorAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/projectorAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/projectorAudio.wav.wav";
 export const cucumberAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cucumberAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cucumberAudio.wav.wav";
 export const popsicleAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/popsicleAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/popsicleAudio.wav.wav";
 export const hamburgerAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/hamburgerAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/hamburgerAudio.wav.wav";
 export const caramelAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/caramelAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/caramelAudio.wav.wav";
 export const microwaveAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/microwaveAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/microwaveAudio.wav.wav";
 export const violinAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/violinAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/violinAudio.wav.wav";
 export const dominoAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dominoAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dominoAudio.wav.wav";
 export const tangerineAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tangerineAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tangerineAudio.wav.wav";
 export const strawberryAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/strawberryAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/strawberryAudio.wav.wav";
 export const volcanoAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/volcanoAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/volcanoAudio.wav.wav";
 export const submarineAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/submarineAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/submarineAudio.wav.wav";
 export const cerealAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cerealAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cerealAudio.wav.wav";
 export const batteryAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/batteryAudio.wav.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/batteryAudio.wav.wav";
 export const tickImg =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/7965b68b564c1f3b5e8370d80daf1680b85550d8/tick.svg";
 export const tick =
@@ -1326,99 +1326,99 @@ export const cloudNewImg =
 export const xImg =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/992e427ccaecffd6ec6817944e1379657ad98b76/ximg.svg";
 export const bellRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bellRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bellRoneAudio.wav";
 export const henRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/henRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/henRoneAudio.wav";
 export const toyRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/toyRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/toyRoneAudio.wav";
 export const lidRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/lidRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/lidRoneAudio.wav";
 export const netRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/netRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/netRoneAudio.wav";
 export const zebraRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/zebraRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/zebraRoneAudio.wav";
 export const keyRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/keyRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/keyRoneAudio.wav";
 export const appleRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/appleRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/appleRoneAudio.wav";
 export const bagRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bagRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bagRoneAudio.wav";
 export const catRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/catRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/catRoneAudio.wav";
 export const dogRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dogRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dogRoneAudio.wav";
 export const eggRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/eggRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/eggRoneAudio.wav";
 export const fanRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/fanRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/fanRoneAudio.wav";
 export const goatRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/goatRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/goatRoneAudio.wav";
 export const hatRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/hatRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/hatRoneAudio.wav";
 export const inkRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/inkRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/inkRoneAudio.wav";
 export const kiteRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/kiteRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/kiteRoneAudio.wav";
 export const lampRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/lampRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/lampRoneAudio.wav";
 export const mangoRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/mangoRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/mangoRoneAudio.wav";
 export const nestRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nestRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nestRoneAudio.wav";
 export const orangeRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/orangeRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/orangeRoneAudio.wav";
 export const penRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/penRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/penRoneAudio.wav";
 export const jugRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/jugRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/jugRoneAudio.wav";
 export const quiltRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/quiltRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/quiltRoneAudio.wav";
 export const ratRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ratRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ratRoneAudio.wav";
 export const tableRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tableRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tableRoneAudio.wav";
 export const sunRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sunRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sunRoneAudio.wav";
 export const vanRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/vanRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/vanRoneAudio.wav";
 export const watchRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/watchRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/watchRoneAudio.wav";
 export const boxRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/boxRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/boxRoneAudio.wav";
 export const zipRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/zipRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/zipRoneAudio.wav";
 export const chairRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/chairRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/chairRoneAudio.wav";
 export const dollRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dollRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dollRoneAudio.wav";
 export const forkRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/forkRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/forkRoneAudio.wav";
 export const glassRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/glassRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/glassRoneAudio.wav";
 export const houseRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/houseRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/houseRoneAudio.wav";
 export const iceRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/iceRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/iceRoneAudio.wav";
 export const jellyRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/jellyRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/jellyRoneAudio.wav";
 export const lockRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/lockRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/lockRoneAudio.wav";
 export const maskRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/maskRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/maskRoneAudio.wav";
 export const nailRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nailRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nailRoneAudio.wav";
 export const onionRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/onionRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/onionRoneAudio.wav";
 export const pillowRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pillowRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pillowRoneAudio.wav";
 export const ropeRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ropeRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ropeRoneAudio.wav";
 export const sockRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sockRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sockRoneAudio.wav";
 export const tigerRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tigerRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tigerRoneAudio.wav";
 export const vaseRoneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/vaseRoneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/vaseRoneAudio.wav";
 export const rOneImage =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/2b1f798cb23724f1d01c417e2c9f7193847a5f00/DesktopImageR3.svg";
 export const GardenNewImg =
@@ -1624,241 +1624,241 @@ export const kiteR1OneImg =
 export const kiteR1TwoImg =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/refs/heads/main/kiteR1TwoImg.svg";
 export const dogR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dogR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dogR1OneAudio.wav";
 export const eggR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/eggR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/eggR1OneAudio.wav";
 export const fanR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/fanR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/fanR1OneAudio.wav";
 export const goatR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/goatR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/goatR1OneAudio.wav";
 export const hatR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/hatR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/hatR1OneAudio.wav";
 export const jugR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/jugR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/jugR1OneAudio.wav";
 export const knifeR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/knifeR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/knifeR1OneAudio.wav";
 export const kiteR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/kiteR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/kiteR1OneAudio.wav";
 export const MangoR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/MangoR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/MangoR1OneAudio.wav";
 export const ratR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ratR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ratR1OneAudio.wav";
 export const vanR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/vanR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/vanR1OneAudio.wav";
 export const maskR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/maskR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/maskR1OneAudio.wav";
 export const onionR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/onionR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/onionR1OneAudio.wav";
 export const PillowR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/PillowR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/PillowR1OneAudio.wav";
 export const ropeR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/ropeR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/ropeR1OneAudio.wav";
 export const bellR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bellR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bellR1OneAudio.wav";
 export const nestR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/nestR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/nestR1OneAudio.wav";
 export const appleR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/appleR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/appleR1OneAudio.wav";
 export const bagR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bagR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bagR1OneAudio.wav";
 export const capR1OneAudio =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/capR1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/capR1OneAudio.wav";
 export const eggRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/eggRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/eggRs.wav";
 export const goatRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/goatRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/goatRs.wav";
 export const hatRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/hatRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/hatRs.wav";
 export const inkRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/inkRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/inkRs.wav";
 export const jugRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/jugRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/jugRs.wav";
 export const appleRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/appleRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/appleRs.wav";
 export const bagRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/bagRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bagRs.wav";
 export const capRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/capRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/capRs.wav";
 export const dogRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dogRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dogRs.wav";
 export const fanRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/fanRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/fanRs.wav";
 export const jamRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/jamRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/jamRs.wav";
 export const gasRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/gasRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/gasRs.wav";
 export const batRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/batRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/batRs.wav";
 export const matRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/matRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/matRs.wav";
 export const cupRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cupRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cupRs.wav";
 export const dotRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dotRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dotRs.wav";
 export const thinRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/thinRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/thinRs.wav";
 export const brushRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/brushRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/brushRs.wav";
 export const wheelRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/wheelRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/wheelRs.wav";
 export const phoneRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/phoneRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/phoneRs.wav";
 export const photoRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/photoRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/photoRs.wav";
 export const shipRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/shipRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/shipRs.wav";
 export const shopRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/shopRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/shopRs.wav";
 export const chopRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/chopRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/chopRs.wav";
 export const chipRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/chipRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/chipRs.wav";
 export const thickRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/thickRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/thickRs.wav";
 export const skinRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/skinRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/skinRs.wav";
 export const stepRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/stepRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/stepRs.wav";
 export const stopRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/stopRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/stopRs.wav";
 export const skipRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/skipRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/skipRs.wav";
 export const stoneRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/stoneRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/stoneRs.wav";
 export const truckRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/truckRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/truckRs.wav";
 export const dropRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dropRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dropRs.wav";
 export const grapeRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/grapeRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/grapeRs.wav";
 export const spoonRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/spoonRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/spoonRs.wav";
 export const spaceRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/spaceRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/spaceRs.wav";
 export const cotImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cotImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cotImg.svg";
 export const jetImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/jetImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/jetImg.svg";
 export const pitImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pitImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pitImg.svg";
 export const vetImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/vetImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/vetImg.svg";
 export const Group =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/Group.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/Group.svg";
 export const tenImgRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/tenImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/tenImg.svg";
 export const sipImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sipImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sipImg.svg";
 export const mopImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/mopImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/mopImg.svg";
 export const manImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/manImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/manImg.svg";
 export const lipImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/lipImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/lipImg.svg";
 export const logImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/logImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/logImg.svg";
 export const gunImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/gunImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/gunImg.svg";
 export const figImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/figImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/figImg.svg";
 export const dotImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dotImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dotImg.svg";
 export const flagImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/flagImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/flagImg.svg";
 export const planeImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/planeImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/planeImg.svg";
 export const glassImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/glassImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/glassImg.svg";
 export const whipImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/whipImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/whipImg.svg";
 export const wheelImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/wheelImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/wheelImg.svg";
 export const phoneImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/phoneImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/phoneImg.svg";
 export const rainImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/rainImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/rainImg.svg";
 export const painImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/painImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/painImg.svg";
 export const boatImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/boatImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/boatImg.svg";
 export const goatImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/goatImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/goatImg.svg";
 export const treeImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/treeImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/treeImg.svg";
 export const beeImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/beeImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/beeImg.svg";
 export const shoeImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/shoeImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/shoeImg.svg";
 export const carImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/carImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/carImg.svg";
 export const starImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/starImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/starImg.svg";
 export const forkImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/forkImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/forkImg.svg";
 export const cornImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cornImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cornImg.svg";
 export const clapImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/clapImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/clapImg.svg";
 export const sproutImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/sproutImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sproutImg.svg";
 export const crowdImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/crowdImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/crowdImg.svg";
 export const clownImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/clownImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/clownImg.svg";
 export const pondImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/pondImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/pondImg.svg";
 export const cloudImgRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cloudImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cloudImg.svg";
 export const stopImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/stopImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/stopImg.svg";
 export const truckImg =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/refs/heads/main/truckImg.png";
 export const dropImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/dropImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/dropImg.svg";
 export const grapeImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/grapeImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/grapeImg.svg";
 export const photoImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/photoImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/photoImg.svg";
 export const spaceImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/spaceImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/spaceImg.svg";
 export const stripeImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/stripeImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/stripeImg.svg";
 export const splatImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/splatImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/splatImg.svg";
 export const throneImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/throneImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/throneImg.svg";
 export const throwImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/throwImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/throwImg.svg";
 export const shrubImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/shrubImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/shrubImg.svg";
 export const scrubImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/scrubImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/scrubImg.svg";
 export const screechImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/screechImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/screechImg.svg";
 export const screamImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/screamImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/screamImg.svg";
 export const splashImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/splashImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/splashImg.svg";
 export const spoonImg =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/spoonImg.svg";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/spoonImg.svg";
 export const screamRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/screamRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/screamRs.wav";
 export const splashRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/splashRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/splashRs.wav";
 export const throwRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/throwRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/throwRs.wav";
 export const starRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/starRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/starRs.wav";
 export const carRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/carRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/carRs.wav";
 export const treeRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/treeRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/treeRs.wav";
 export const rainRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/rainRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/rainRs.wav";
 export const throneRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/throneRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/throneRs.wav";
 export const cloudRs =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/cloudRs.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/cloudRs.wav";
 export const popsicleImg =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/refs/heads/main/popsicleImg.png";
 export const projectorImg =
@@ -1890,7 +1890,7 @@ export const violinImg =
 export const dishwasherImg =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/refs/heads/main/dishwasherImg.png";
 export const shopImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/shopImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/shopImg.png?raw=true";
 
 export const chopImg =
   "https://raw.githubusercontent.com/anik200002/EkstepImg/4821e92fe2bf4c8166205de4e6c243383503fd45/ChoppImg.svg";
@@ -1908,58 +1908,58 @@ export const reporter1 =
 export const reporter2 =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/a1b59b46126de0f287f2b73c4b23899e8fa156cb/reporter2.svg";
 export const gymAudio =
-  "https://github.com/Ayansaha20/EkStepImages/raw/refs/heads/main/gymAudio.wav";
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/main/gymAudio.wav";
 export const readInstructionsImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/readInstructionsImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/readInstructionsImg.png?raw=true";
 export const questionPaperImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/questionPaperImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/questionPaperImg.jpg?raw=true";
 export const highlighterImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/highlighterImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/highlighterImg.png?raw=true";
 export const submitHomeworkImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/submitHomeworkImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/submitHomeworkImg.png?raw=true";
 export const vegetablesImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/vegetablesImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/vegetablesImg.png?raw=true";
 export const platformImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/platformImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/platformImg.png?raw=true";
 export const noteBookAudio =
-  "https://github.com/Ayansaha20/EkStepImages/raw/refs/heads/main/noteBookAudio.wav";
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/main/noteBookAudio.wav";
 export const level10S2Five =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2Five.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2Five.wav";
 export const level10S2Four =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2Four.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2Four.wav";
 export const level10S2Three =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2Three.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2Three.wav";
 export const level10S2Two =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2Two.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2Two.wav";
 export const level10S2One =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2One.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2One.wav";
 export const level10S2Nine =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2Nine.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2Nine.wav";
 export const level10S2Eight =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2Eight.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2Eight.wav";
 export const level10S2Seven =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2Seven.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2Seven.wav";
 export const level10S2Six =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level10S2Six.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level10S2Six.wav";
 export const salesPerson =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/87ad60cf61024d89666b96af0c7bb6f56b5e0467/salesPerson.svg";
 
 export const deskImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/desksImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/desksImg.png?raw=true";
 export const exerciseImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/exercisesImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/exercisesImg.png?raw=true";
 export const sitProperlyImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/sitProperlysImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/sitProperlysImg.png?raw=true";
 export const studentImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/studentsImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/studentsImg.png?raw=true";
 export const workPairImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/workPairsImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/workPairsImg.png?raw=true";
 export const writeDateImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/writeDatesImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/writeDatesImg.png?raw=true";
 export const bellImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/bellsImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/bellsImg.png?raw=true";
 export const blackboardImg =
-  "https://github.com/anik200002/EkstepImg/blob/main/blackboardsImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/blackboardsImg.png?raw=true";
 export const helmetImg =
   "https://raw.githubusercontent.com/anik200002/imagesEkstep/80c0c78d90d5921e398ecb01624320a3ff1b3780/helmetImg.svg";
 export const avatar1 =
@@ -1975,111 +1975,111 @@ export const boyChildImg =
 export const humanImg =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/a8d3cdb2f0ef051731f53acb104060043e285bbd/manImg.svg";
 export const fairFiveImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/fairFiveImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairFiveImg.jpg?raw=true";
 export const fairFourImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/fairFourImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairFourImg.jpg?raw=true";
 export const fairOneImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/fairOneImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairOneImg.jpg?raw=true";
 export const fairThreeImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/fairThreeImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairThreeImg.jpg?raw=true";
 export const fairTwoImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/fairTwoImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairTwoImg.jpg?raw=true";
 export const puppyTwoImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/puppyTwoImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyTwoImg.jpg?raw=true";
 export const puppyOneImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/puppyOneImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyOneImg.jpg?raw=true";
 export const puppyFiveImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/puppyFiveImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyFiveImg.jpg?raw=true";
 export const puppyFourImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/puppyFourImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyFourImg.jpg?raw=true";
 export const puppyThreeImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/puppyThreeImg.jpg?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyThreeImg.jpg?raw=true";
 export const fairTwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/fairTwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairTwoAudio.wav";
 export const puppyFiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/puppyFiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyFiveAudio.wav";
 export const puppyFourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/puppyFourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyFourAudio.wav";
 export const puppyOneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/puppyOneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyOneAudio.wav";
 export const puppyThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/puppyThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyThreeAudio.wav";
 export const puppyTwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/puppyTwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyTwoAudio.wav";
 export const fairFiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/fairFiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairFiveAudio.wav";
 export const fairFourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/fairFourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairFourAudio.wav";
 export const fairOneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/fairOneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairOneAudio.wav";
 export const fairThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/fairThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fairThreeAudio.wav";
 export const level13S2Audio1 =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level13S2Audio1.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level13S2Audio1.wav";
 export const level13S2Audio2 =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level13S2Audio2.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level13S2Audio2.wav";
 export const level13S2Audio3 =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level13S2Audio3.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level13S2Audio3.wav";
 export const level13S2Audio4 =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level13S2Audio4.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level13S2Audio4.wav";
 export const level13S2Audio5 =
-  "https://github.com/anik200002/EkstepImg/raw/refs/heads/main/level13S2Audio5.wav";
+  "https://raw.githubusercontent.com/anik200002/EkstepImg/main/level13S2Audio5.wav";
 export const level13S1Audio1 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13S1Audio1.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13S1Audio1.wav";
 export const level13S1Audio2 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13S1Audio2.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13S1Audio2.wav";
 export const level13S1Audio3 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13S1Audio3.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13S1Audio3.wav";
 export const level13S1Audio4 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13S1Audio4.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13S1Audio4.wav";
 export const level13S1Audio5 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13S1Audio5.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13S1Audio5.wav";
 export const level13S1Audio6 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13S1Audio6.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13S1Audio6.wav";
 export const level13P1Audio1 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio1.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio1.wav";
 export const level13P1Audio2 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio2.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio2.wav";
 export const level13P1Audio3 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio3.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio3.wav";
 export const level13P1Audio4 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio4.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio4.wav";
 export const level13P1Audio5 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio5.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio5.wav";
 export const level13P1Audio6 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio6.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio6.wav";
 export const level13P1Audio7 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio7.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio7.wav";
 export const level13P1Audio8 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio8.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio8.wav";
 export const level13P1Audio9 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio9.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio9.wav";
 export const level13P1Audio10 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P1Audio10.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P1Audio10.wav";
 export const level13P5Audio1 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio1.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio1.wav";
 export const level13P5Audio2 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio2.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio2.wav";
 export const level13P5Audio3 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio3.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio3.wav";
 export const level13P5Audio4 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio4.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio4.wav";
 export const level13P5Audio5 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio5.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio5.wav";
 export const level13P5Audio6 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio6.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio6.wav";
 export const level13P5Audio7 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio7.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio7.wav";
 export const level13P5Audio8 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio8.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio8.wav";
 export const level13P5Audio9 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio9.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio9.wav";
 export const level13P5Audio10 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio10.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio10.wav";
 export const level13P5Audio11 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio11.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio11.wav";
 export const level13P5Audio12 =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level13P5Audio12.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level13P5Audio12.wav";
 export const roadSafetyImg1 =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/739ce3a4b8cbb5a644260552606fb403e0529d40/roadSafetyImgOne.svg";
 export const roadSafetyImg2 =
@@ -2091,11 +2091,11 @@ export const notebookImg =
 export const nutImg =
   "https://raw.githubusercontent.com/anik200002/imagesEkstep/74434830fb675948b35e7cf1a9cbf86f069f3951/nutImg.png";
 export const jacketImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/JacketImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/JacketImg.png?raw=true";
 export const catImage =
-  "https://github.com/anik200002/imagesEkstep/blob/main/catImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/catImg.png?raw=true";
 export const pocketImage =
-  "https://github.com/anik200002/imagesEkstep/blob/main/pocketImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/pocketImg.png?raw=true";
 export const DinnerNewImg =
   "https://raw.githubusercontent.com/anik200002/all-learner-ai-app/80fc411fa3d57a97dca97d182cb0459cbf439ece/dinnerImg.svg";
 export const WindowNewImg =
@@ -2107,9 +2107,9 @@ export const trainImgTwo =
 export const gradenAnouncementImg =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/refs/heads/main/gardenimg-removebg-preview.png";
 export const toyTrainAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/toyTrainsAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/toyTrainsAudio.wav";
 export const gardenAnouncementAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/gardenAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/gardenAudio.wav";
 export const skyRImg =
   "https://raw.githubusercontent.com/anik200002/imagesEkstep/7d0cff56616e590d93653df37a88c90715467e37/skyRImg.svg";
 export const shoutRImg =
@@ -2205,161 +2205,161 @@ export const bicycleRImg =
 export const mathsRImg =
   "https://raw.githubusercontent.com/anik200002/imagesEkstep/2f0fc3acbe93192aa8a3a246427ecf05ea33ff4d/mathsRImg.svg";
 export const ladderRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/ladderRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/ladderRAudio.wav";
 export const drumRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/drumRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/drumRAudio.wav";
 export const cardRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/cardRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/cardRAudio.wav";
 export const coffeeRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/coffeeRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/coffeeRAudio.wav";
 export const busRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/busRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/busRAudio.wav";
 export const graphRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/graphRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/graphRAudio.wav";
 export const ovenRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/ovenRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/ovenRAudio.wav";
 export const tableRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/tableRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/tableRAudio.wav";
 export const basketRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/basketRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/basketRAudio.wav";
 export const frogRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/frogRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/frogRAudio.wav";
 export const panRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/panRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/panRAudio.wav";
 export const batRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/batRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/batRAudio.wav";
 export const puzzleRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/puzzleRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puzzleRAudio.wav";
 export const lemonRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/lemonRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/lemonRAudio.wav";
 export const kingRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/kingRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/kingRAudio.wav";
 export const glassRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/glassRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/glassRAudio.wav";
 export const plantRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/plantRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/plantRAudio.wav";
 export const sleepRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/sleepRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/sleepRAudio.wav";
 export const elephantRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/elephantRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/elephantRAudio.wav";
 export const muscleRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/muscleRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/muscleRAudio.wav";
 export const fieldRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/fieldRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fieldRAudio.wav";
 export const bicycleRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/bicycleRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/bicycleRAudio.wav";
 export const teacherRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/teacherRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/teacherRAudio.wav";
 export const mathsRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/mathsRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/mathsRAudio.wav";
 export const flowerRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/flowerRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/flowerRAudio.wav";
 export const clockRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/clockRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/clockRAudio.wav";
 export const orangeRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/orangeeRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/orangeeRAudio.wav";
 export const boatRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/boatRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/boatRAudio.wav";
 export const aimRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/aimRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/aimRAudio.wav";
 export const phoneRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/phoneRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/phoneRAudio.wav";
 export const whaleRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/whaleRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/whaleRAudio.wav";
 export const spinRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/spinRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/spinRAudio.wav";
 export const skyRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/skyRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/skyRAudio.wav";
 export const treeRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/treeRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/treeRAudio.wav";
 export const dragonRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/dragonRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/dragonRAudio.wav";
 export const oilRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/oilRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/oilRAudio.wav";
 export const streetRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/streetRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/streetRAudio.wav";
 export const pantherRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/pantherRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/pantherRAudio.wav";
 export const listenRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/listenRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/listenRAudio.wav";
 export const threeRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/threeRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/threeRAudio.wav";
 export const drawRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/drawRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/drawRAudio.wav";
 export const scratchRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/scratchRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/scratchRAudio.wav";
 export const treasureRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/treasureRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/treasureRAudio.wav";
 export const deskRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/deskRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/deskRAudio.wav";
 export const shoutRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/shoutRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/shoutRAudio.wav";
 export const constructRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/constructRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/constructRAudio.wav";
 export const starRAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/starRAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/starRAudio.wav";
 export const cricketImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/cricketImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/cricketImg.png?raw=true";
 export const doctorImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/doctorImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/doctorImg.png?raw=true";
 export const musicImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/musicImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/musicImg.png?raw=true";
 export const puppyImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/puppyImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyImg.png?raw=true";
 export const scooterImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/scooterImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/scooterImg.png?raw=true";
 export const balloonImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/balloonImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/balloonImg.png?raw=true";
 export const candleImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/candleImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/candleImg.png?raw=true";
 export const paperImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/papeerImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/papeerImg.png?raw=true";
 export const marketImg =
-  "https://github.com/anik200002/imagesEkstep/blob/main/marketImg.png?raw=true";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/marketImg.png?raw=true";
 export const scooterNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/scooterNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/scooterNewAudio.wav";
 export const cycleNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/cycleNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/cycleNewAudio.wav";
 export const flowerNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/flowerNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/flowerNewAudio.wav";
 export const musicNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/musicNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/musicNewAudio.wav";
 export const puppyNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/puppyNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/puppyNewAudio.wav";
 export const studentNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/studentNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/studentNewAudio.wav";
 export const paperNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/paperNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/paperNewAudio.wav";
 export const mangoNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/mangoNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/mangoNewAudio.wav";
 export const waterNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/waterNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/waterNewAudio.wav";
 export const motherNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/motherNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/motherNewAudio.wav";
 export const fatherNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/fatherNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/fatherNewAudio.wav";
 export const pencilNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/pencilNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/pencilNewAudio.wav";
 export const doctorNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/doctorNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/doctorNewAudio.wav";
 export const marketNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/marketNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/marketNewAudio.wav";
 export const basketNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/basketNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/basketNewAudio.wav";
 export const cricketNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/cricketNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/cricketNewAudio.wav";
 export const windowNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/windowNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/windowNewAudio.wav";
 export const balloonNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/balloonNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/balloonNewAudio.wav";
 export const gardenNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/gardenNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/gardenNewAudio.wav";
 export const candleNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/candleNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/candleNewAudio.wav";
 export const appleNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/appleNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/appleNewAudio.wav";
 export const penNewAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/penNewAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/penNewAudio.wav";
 export const cowStep =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/5d5054404ee5b7505b6bf791dbc905aefc67e770/cowWalkthrough.svg";
 export const catintroductionAnouncementImg =
@@ -2389,332 +2389,332 @@ export const listeningImg =
 export const voiceImg =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/refs/heads/main/gif1.gif";
 export const level15P1TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1TwoAudio.wav";
 export const level15P1TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1TwoUAudio.wav";
 export const level15P2FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2FiveAudio.wav";
 export const level15P2FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2FiveUAudio.wav";
 export const level15P2FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2FourAudio.wav";
 export const level15P2FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2FourUAudio.wav";
 export const level15P2OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2OneAudio.wav";
 export const level15P2OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2OneUAudio.wav";
 export const level15P2ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2ThreeAudio.wav";
 export const level15P2ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2ThreeUAudio.wav";
 export const level15P2TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2TwoAudio.wav";
 export const level15P2TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P2TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P2TwoUAudio.wav";
 export const level15S1FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1FiveAudio.wav";
 export const level15S1FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1FiveUAudio.wav";
 export const level15S1FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1FourAudio.wav";
 export const level15S1FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1FourUAudio.wav";
 export const level15S1OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1OneAudio.wav";
 export const level15S1OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1OneUAudio.wav";
 export const level15S1ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1ThreeAudio.wav";
 export const level15S1ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1ThreeUAudio.wav";
 export const level15S1TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1TwoAudio.wav";
 export const level15S1TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15S1TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15S1TwoUAudio.wav";
 export const level15P1FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1FiveAudio.wav";
 export const level15P1FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1FiveUAudio.wav";
 export const level15P1FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1FourAudio.wav";
 export const level15P1FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1FourUAudio.wav";
 export const level15P1OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1OneAudio.wav";
 export const level15P1OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1OneUAudio.wav";
 export const level15P1SixAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1SixAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1SixAudio.wav";
 export const level15P1SixUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1SixUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1SixUAudio.wav";
 export const level15P1ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1ThreeAudio.wav";
 export const level15P1ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P1ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P1ThreeUAudio.wav";
 export const level11P3ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3ThreeUAudio.wav";
 export const level11P3TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3TwoAudio.wav";
 export const level11P3TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3TwoUAudio.wav";
 export const level11P4FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4FiveAudio.wav";
 export const level11P4FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4FiveUAudio.wav";
 export const level11P4FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4FourAudio.wav";
 export const level11P4FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4FourUAudio.wav";
 export const level11P4OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4OneAudio.wav";
 export const level11P4OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4OneUAudio.wav";
 export const level11P4ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4ThreeAudio.wav";
 export const level11P4ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4ThreeUAudio.wav";
 export const level11P4TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4TwoAudio.wav";
 export const level11P4TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P4TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P4TwoUAudio.wav";
 export const level11P7FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7FiveAudio.wav";
 export const level11P7FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7FiveUAudio.wav";
 export const level11P7FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7FourAudio.wav";
 export const level11P7FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7FourUAudio.wav";
 export const level11P7OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7OneAudio.wav";
 export const level11P7OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7OneUAudio.wav";
 export const level11P7ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7ThreeAudio.wav";
 export const level11P7ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7ThreeUAudio.wav";
 export const level11P7TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7TwoAudio.wav";
 export const level11P7TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P7TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P7TwoUAudio.wav";
 export const level11P3FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3FiveAudio.wav";
 export const level11P3FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3FiveUAudio.wav";
 export const level11P3FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3FourAudio.wav";
 export const level11P3FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3FourUAudio.wav";
 export const level11P3OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3OneAudio.wav";
 export const level11P3OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3OneUAudio.wav";
 export const level11P3ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P3ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P3ThreeAudio.wav";
 export const level14P6SixUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P6SixUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P6SixUAudio.wav";
 export const level14P6FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P6FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P6FiveUAudio.wav";
 export const level14P6FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P6FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P6FourUAudio.wav";
 export const level14P6ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P6ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P6ThreeUAudio.wav";
 export const level14P6TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P6TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P6TwoUAudio.wav";
 export const level14P6OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P6OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P6OneUAudio.wav";
 
 export const level14P5SixUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P5SixUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P5SixUAudio.wav";
 export const level14P5FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P5FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P5FiveUAudio.wav";
 export const level14P5FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P5FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P5FourUAudio.wav";
 export const level14P5ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P5ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P5ThreeUAudio.wav";
 export const level14P5TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P5TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P5TwoUAudio.wav";
 export const level14P5OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P5OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P5OneUAudio.wav";
 
 export const level14P4FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P4FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P4FiveUAudio.wav";
 export const level14P4FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P4FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P4FourUAudio.wav";
 export const level14P4ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P4ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P4ThreeUAudio.wav";
 export const level14P4TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P4TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P4TwoUAudio.wav";
 export const level14P4OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P4OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P4OneUAudio.wav";
 
 export const level14P3FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P3FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P3FiveUAudio.wav";
 export const level14P3FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P3FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P3FourUAudio.wav";
 export const level14P3ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P3ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P3ThreeUAudio.wav";
 export const level14P3TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P3TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P3TwoUAudio.wav";
 export const level14P3OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P3OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P3OneUAudio.wav";
 
 export const level14P2SixUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P2SixUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P2SixUAudio.wav";
 export const level14P2FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P2FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P2FiveUAudio.wav";
 export const level14P2FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P2FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P2FourUAudio.wav";
 export const level14P2ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P2ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P2ThreeUAudio.wav";
 export const level14P2TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P2TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P2TwoUAudio.wav";
 export const level14P2OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P2OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P2OneUAudio.wav";
 
 export const level14P1FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P1FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P1FiveUAudio.wav";
 export const level14P1FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P1FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P1FourUAudio.wav";
 export const level14P1ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P1ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P1ThreeUAudio.wav";
 export const level14P1TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P1TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P1TwoUAudio.wav";
 export const level14P1OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P1OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P1OneUAudio.wav";
 
 export const level14S2FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S2FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S2FiveUAudio.wav";
 export const level14S2FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S2FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S2FourUAudio.wav";
 export const level14S2ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S2ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S2ThreeUAudio.wav";
 export const level14S2TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S2TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S2TwoUAudio.wav";
 export const level14S2OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S2OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S2OneUAudio.wav";
 
 export const level14S1FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S1FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S1FiveUAudio.wav";
 export const level14S1FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S1FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S1FourUAudio.wav";
 export const level14S1ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S1ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S1ThreeUAudio.wav";
 export const level14S1TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S1TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S1TwoUAudio.wav";
 export const level14S1OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14S1OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14S1OneUAudio.wav";
 
 export const level14P8FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P8FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P8FiveUAudio.wav";
 export const level14P8FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P8FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P8FourUAudio.wav";
 export const level14P8ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P8ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P8ThreeUAudio.wav";
 export const level14P8TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P8TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P8TwoUAudio.wav";
 export const level14P8OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P8OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P8OneUAudio.wav";
 
 export const level14P7FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P7FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P7FiveUAudio.wav";
 export const level14P7FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P7FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P7FourUAudio.wav";
 export const level14P7ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P7ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P7ThreeUAudio.wav";
 export const level14P7TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P7TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P7TwoUAudio.wav";
 export const level14P7OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level14P7OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level14P7OneUAudio.wav";
 export const level15P6FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6FourUAudio.wav";
 export const level15P6FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6FiveUAudio.wav";
 export const level15P6FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6FiveAudio.wav";
 export const level15P6FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6FourAudio.wav";
 export const level15P6ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6ThreeAudio.wav";
 export const level15P6TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6TwoAudio.wav";
 export const level15P6OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6OneAudio.wav";
 export const level15P5FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5FiveUAudio.wav";
 export const level15P5FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5FourUAudio.wav";
 export const level15P5ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5ThreeUAudio.wav";
 export const level15P5TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5TwoUAudio.wav";
 export const level15P5OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5OneUAudio.wav";
 export const level15P5FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5FiveAudio.wav";
 export const level15P5FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5FourAudio.wav";
 export const level15P5ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5ThreeAudio.wav";
 export const level15P5TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5TwoAudio.wav";
 export const level15P5OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P5OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P5OneAudio.wav";
 export const level15P6OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6OneUAudio.wav";
 export const level15P6TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6TwoUAudio.wav";
 export const level15P6ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level15P6ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level15P6ThreeUAudio.wav";
 export const cycloneAnouncementImg =
   "https://raw.githubusercontent.com/anik200002/imagesEkstep/be1c441b8aef50cd90037ad4356a216ffb19bb60/cycloneAnouncementImg.svg";
 export const supermarketAnouncementImg =
   "https://raw.githubusercontent.com/anik200002/imagesEkstep/be1c441b8aef50cd90037ad4356a216ffb19bb60/supermarketAnouncementImg.svg";
 export const level10S2Announcement =
-  "https://github.com/Ayansaha20/EkStepImages/raw/refs/heads/main/level10S2Announcement.wav";
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/main/level10S2Announcement.wav";
 export const musicIcon =
   "https://raw.githubusercontent.com/anik200002/imagesEkstep/39a0a3000ab3d1bde895db9670d419f2419233db/speakerImg.svg";
 export const level12P3OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P3OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P3OneAudio.wav";
 export const level12P8FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P8FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P8FiveAudio.wav";
 export const level12P8FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P8FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P8FourAudio.wav";
 export const level12P8ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P8ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P8ThreeAudio.wav";
 export const level12P8TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P8TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P8TwoAudio.wav";
 export const level12P8OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P8OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P8OneAudio.wav";
 export const level12P7FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P7FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P7FiveAudio.wav";
 export const level12P7FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P7FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P7FourAudio.wav";
 export const level12P7ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P7ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P7ThreeAudio.wav";
 export const level12P7TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P7TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P7TwoAudio.wav";
 export const level12P7OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P7OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P7OneAudio.wav";
 export const level12P4FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P4FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P4FiveAudio.wav";
 export const level12P4FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P4FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P4FourAudio.wav";
 export const level12P4ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P4ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P4ThreeAudio.wav";
 export const level12P4TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P4TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P4TwoAudio.wav";
 export const level12P4OneAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P4OneAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P4OneAudio.wav";
 export const level12P3FiveAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P3FiveAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P3FiveAudio.wav";
 export const level12P3FourAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P3FourAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P3FourAudio.wav";
 export const level12P3ThreeAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P3ThreeAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P3ThreeAudio.wav";
 export const level12P3TwoAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level12P3TwoAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level12P3TwoAudio.wav";
 export const sadBear =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/e559f51e9830bde05f85e3e18c1880bb80c93380/sadBear.svg";
 export const chatLoader =
@@ -2722,15 +2722,15 @@ export const chatLoader =
 export const starNewImg =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/5d597391e16156cddd7d740eed8fdac0c1bb4365/starImg.svg";
 export const level11P8TwoUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P8TwoUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P8TwoUAudio.wav";
 export const level11P8OneUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P8OneUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P8OneUAudio.wav";
 export const level11P8FiveUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P8FiveUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P8FiveUAudio.wav";
 export const level11P8FourUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P8FourUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P8FourUAudio.wav";
 export const level11P8ThreeUAudio =
-  "https://github.com/anik200002/imagesEkstep/raw/refs/heads/main/level11P8ThreeUAudio.wav";
+  "https://raw.githubusercontent.com/anik200002/imagesEkstep/main/level11P8ThreeUAudio.wav";
 export const zoomIcon =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/5ecf50600f5f2487f304e5cd8d8277aa7ab26300/zoomIcon.svg";
 export const closeIcon =
@@ -2753,3 +2753,252 @@ export const r3Reset =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/bf41e73150a28d6d818aa10806ca84ce4882bccc/r3Reset.svg";
 export const correctTick =
   "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/bf41e73150a28d6d818aa10806ca84ce4882bccc/correctTick.svg";
+export const tyreImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/tayar.png";
+export const gaganImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/gagan.png";
+export const gayakImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/gayak.png";
+export const auratImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/aurat.png";
+export const kadImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/kadh.png";
+export const tyreAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/tayarAudio.wav";
+export const kadAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/kadhAudio.wav";
+export const gaganAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/gaganAudio.wav";
+export const gayakAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/gayakAudio.wav";
+export const auratAudio =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/main/AuratAudio.wav";
+export const gagan1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gagan1Audio.wav";
+export const gayak1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gayak1Audio.wav";
+export const aurat1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/aurat1Audio.wav";
+export const gagan2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gagan2Audio.wav";
+export const gagan3Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gagan3Audio.wav";
+export const gayak2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gayak2Audio.wav";
+export const gayak3Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gayak3Audio.wav";
+export const aurat2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/aurat2Audio.wav";
+export const aurat3Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/aurat3Audio.wav";
+export const tayar1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/tayar1Audio.wav";
+export const tayar2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/tayar2Audio.wav";
+export const tayar3Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/tayar3Audio.wav";
+export const kad1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kad1Audio.wav";
+export const kadh2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kadh2Audio.wav";
+export const books =
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/9be3bcb01bd39a34f2572c7497efb53b10a81918/books.svg";
+export const clock =
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/9be3bcb01bd39a34f2572c7497efb53b10a81918/clock.svg";
+export const badalM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/badalM1Hin.svg";
+export const kalamM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/kalamM1Hin.svg";
+export const koyalM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/koyalM1Hin.svg";
+export const chawalM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/chawalM1Hin.svg";
+export const tablaM1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/719521c379fc8b76641a43f50d7edb3662fd1ca8/tablaM1Hin.svg";
+export const walM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/walM1Audio.wav";
+export const chawalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/chawalM1Audio.wav";
+export const koyalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/koyalM1Audio.wav";
+export const koM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/koM1Audio.wav";
+export const yalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/yalM1Audio.wav";
+export const kalamM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kalamM1Audio.wav";
+export const kaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kaM1Audio.wav";
+export const laaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/laaM1Audio.wav";
+export const amM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/amM1Audio.wav";
+export const baM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/baM1Audio.wav";
+export const dalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/dalM1Audio.wav";
+export const badalM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/badalM1Audio.wav";
+export const tablaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/tablaM1Audio.wav";
+export const taM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/taM1Audio.wav";
+export const baaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/baaM1Audio.wav";
+export const laM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/laM1Audio.wav";
+export const chaM1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/chaM1Audio.wav";
+export const palangM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/palangM2Hin.svg";
+export const matkaM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/matkaM2Hin.svg";
+export const mandirM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/mandirM2Hin.svg";
+export const kadduM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/kadduM2Hin.svg";
+export const matarM2Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/d36fe6b5c455971f13080f625c620e854caaaed4/matarM2Hin.svg";
+export const wordsLearnt =
+  "https://raw.githubusercontent.com/Ayansaha20/EkStepImages/94aa9a6a9a056469223905c10a6883e1fa2a45c0/wordsLearnt.svg";
+export const saltR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/saltR1Hin.svg";
+export const carrotR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/carrotR1Hin.svg";
+export const rubberR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/rubberR1Hin.svg";
+export const kiteR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/kiteR1Hin.svg";
+export const dandaR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/dandaR1Hin.svg";
+export const batR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/batR1Hin.svg";
+export const featherR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/featherR1Hin.svg";
+export const BrushR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/BrushR1Hin.svg";
+export const kalasR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/kalasR1Hin.svg";
+export const bodyR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/bodyR1Hin.svg";
+export const coldR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/coldR1Hin.svg";
+export const hockeyR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/hockeyR1Hin.svg";
+export const eidR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/eidR1Hin.svg";
+export const coffeeR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/coffeeR1Hin.svg";
+export const cheetahR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/cheetahR1Hin.svg";
+export const donkeyR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/donkeyR1Hin.svg";
+export const peacockR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/peacockR1Hin.svg";
+export const gamlaR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/gamlaR1Hin.svg";
+export const lockR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/lockR1Hin.svg";
+export const TyreR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/TyreR1Hin.svg";
+export const singerR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/singerR1Hin.svg";
+export const snakeR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/snakeR1Hin.svg";
+export const EagleR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/EagleR1Hin.svg";
+export const AutoR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/AutoR1Hin.svg";
+export const legR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/legR1Hin.svg";
+export const houseR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/houseR1Hin.svg";
+export const chandR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/chandR1Hin.svg";
+export const teaR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/teaR1Hin.svg";
+export const neckR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/neckR1Hin.svg";
+export const mugR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/mugR1Hin.svg";
+export const dressR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/dressR1Hin.svg";
+export const fireR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/fireR1Hin.svg";
+export const parrotR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/parrotR1Hin.svg";
+export const knifeR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/knifeR1Hin.svg";
+export const crowR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/crowR1Hin.svg";
+export const eggR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/eggR1Hin.svg";
+export const ballR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/ballR1Hin.svg";
+export const lionR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/lionR1Hin.svg";
+export const mathR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/mathR1Hin.svg";
+export const womanR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/womanR1Hin.svg";
+export const duckR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/duckR1Hin.svg";
+export const oilR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/oilR1Hin.svg";
+export const bagR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/bagR1Hin.svg";
+export const medicineR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/medicineR1Hin.svg";
+export const tigerR1Hin =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/77e7aae7f43659d2b63c612d64877699f96a7c9a/tigerR1Hin.svg";
+export const matkaM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/matkaM2Audio.wav";
+export const matarM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/matarM2Audio.wav";
+export const palangM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/palangM2Audio.wav";
+export const mandirM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/mandirM2Audio.wav";
+export const kadduM2Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/kadduM2Audio.wav";
+export const batR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/batR1Audio.wav";
+export const namakR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/namakR1Audio.wav";
+export const auratR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/auratR1Audio.wav";
+export const sherR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/sherR1Audio.wav";
+export const chakuR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/chakuR1Audio.wav";
+export const aagR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/aagR1Audio.wav";
+export const teaR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/teaR1Audio.wav";
+export const gharR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/gharR1Audio.wav";
+export const baghR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/baghR1Audio.wav";
+export const saphR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/saphR1Audio.wav";
+export const talaR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/talaR1Audio.wav";
+export const morR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/morR1Audio.wav";
+export const eidR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/eidR1Audio.wav";
+export const thandR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/thandR1Audio.wav";
+export const pankhR1Audio =
+  "https://github.com/anik200002/ekstephindi/raw/refs/heads/main/pankhR1Audio.wav";
+
+export const startNewButtonImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/refs/heads/main/start.png";
+export const startButtonImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/startButton.svg";
+export const birthdayBoxImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/birthdayBox.svg";
+export const confettiImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/confetti.svg";
+export const yellowLightImg =
+  "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/yellowLight.svg";

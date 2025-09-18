@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import HomophonesFinder from "homophones";
 import React, { createRef, useEffect, useState } from "react";
 import {
@@ -19,7 +19,15 @@ import { Modal } from "@mui/material";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import CloseIcon from "@mui/icons-material/Close";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  CircularProgress,
+} from "@mui/material";
 
+const theme = createTheme();
 // TODO: update it as per File name OR update file name as per export variable name
 const Mechanics2 = ({
   page,
@@ -58,6 +66,12 @@ const Mechanics2 = ({
   audio,
   isNextButtonCalled,
   setIsNextButtonCalled,
+  vocabCount,
+  wordCount,
+  startShowCase,
+  setStartShowCase,
+  livesData,
+  gameOverData,
 }) => {
   const [words, setWords] = useState([]);
   const [sentences, setSentences] = useState([]);
@@ -70,6 +84,9 @@ const Mechanics2 = ({
   const correctSoundAudio = usePreloadAudio(correctSound);
   const wrongSoundAudio = usePreloadAudio(wrongSound);
   const removeSoundAudio = usePreloadAudio(removeSound);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
   const [answer, setAnswer] = useState({
     text: "",
     audio_url: "",
@@ -78,7 +95,8 @@ const Mechanics2 = ({
   });
 
   const lang = getLocalData("lang");
-
+  const correctOption = options?.find((opt) => opt.isAns)?.text;
+  const filledSentence = parentWords?.replace(/_+/g, correctOption);
   //console.log('Mechanics3', answer);
 
   useEffect(() => {
@@ -142,6 +160,7 @@ const Mechanics2 = ({
       showTimer={showTimer}
       points={points}
       pageName={"m3"}
+      lang={lang}
       {...{
         steps,
         currentStep,
@@ -152,374 +171,386 @@ const Mechanics2 = ({
         handleBack,
         disableScreen,
         loading,
+        isShowCase,
+        startShowCase,
+        setStartShowCase,
+        livesData,
+        gameOverData,
+        setIsNextButtonCalled,
+        vocabCount,
+        wordCount,
       }}
     >
-      <div
-        style={{
-          left: `calc(50% - 258px / 2)`,
-          top: `calc(50% - 45px / 2 - 235.5px)`,
-          fontFamily: "Quicksand",
-          fontStyle: "normal",
-          fontWeight: 600,
-          fontSize: "36px",
-          lineHeight: "45px",
-          alignItems: "center",
-          textAlign: "center",
-          color: "#333F61",
-        }}
-      >
-        {header}
-      </div>
+      <ThemeProvider theme={theme}>
+        <div
+          style={{
+            left: `calc(50% - 258px / 2)`,
+            top: `calc(50% - 45px / 2 - 235.5px)`,
+            fontFamily: "Quicksand",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: isMobile ? "20px" : "36px",
+            lineHeight: "45px",
+            alignItems: "center",
+            textAlign: "center",
+            color: "#333F61",
+          }}
+        >
+          {header}
+        </div>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "60px",
-          letterSpacing: "5px",
-          height: "100%",
-          flexWrap: "wrap",
-        }}
-      >
-        {type === "audio" ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-            }}
-          >
-            {/* <ReactAudioPlayer src={v11} controls /> */}
-
-            {contentId && (
-              <audio
-                ref={audioRef}
-                preload="metadata"
-                onDurationChange={(e) => setDuration(e.currentTarget.duration)}
-                onCanPlay={(e) => {
-                  setIsReady(true);
-                }}
-                onPlaying={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onTimeUpdate={(e) => {
-                  setCurrrentProgress(e.currentTarget.currentTime);
-                }}
-              >
-                <source
-                  type="audio/mp3"
-                  src={
-                    contentId
-                      ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
-                      : ""
-                  }
-                />
-              </audio>
-            )}
-
-            <Box position="relative" sx={{ width: "403px" }}>
-              <AudioPlayerSvg />
-              <Box
-                position="absolute"
-                sx={{ cursor: "pointer", top: "13px", left: "96px" }}
-              >
-                <AudioBarSvg />
-              </Box>
-              <Box
-                position="absolute"
-                sx={{ cursor: "pointer", top: "13px", left: "96px" }}
-              >
-                <AudioBarColoredSvg width={progressBarWidth * 275} />
-              </Box>
-              <Box
-                position="absolute"
-                sx={{ cursor: "pointer", top: "15px", left: "25px" }}
-                onClick={() => {
-                  togglePlayPause();
-                  setDisabledWords(false);
-                }}
-              >
-                {isReady && (
-                  <>{isPlaying ? <StopAudioButton /> : <PlayAudioButton />}</>
-                )}
-              </Box>
-            </Box>
-          </Box>
-        ) : (
-          <>
-            <Grid
-              item
-              xs={4}
-              sx={{
-                position: {
-                  xs: "relative", // For extra small screens
-                  sm: "relative", // For small screens
-                  md: "relative", // For medium screens
-                  lg: "relative", // Change as needed for large screens
-                  xl: "relative", // Change as needed for extra-large screens
-                },
-                left: {
-                  xs: 0, // For extra small screens
-                  sm: 0, // For small screens
-                  md: "0px", // Adjust position for medium screens
-                  lg: "0px",
-                  xl: "0px",
-                },
-              }}
-            >
-              {image?.split("/")?.[4] && (
-                <Box sx={{ position: "relative", cursor: "zoom-in" }}>
-                  <img
-                    onClick={() => setZoomOpen(true)}
-                    src={image}
-                    style={{
-                      borderRadius: "20px",
-                      maxWidth: "100%",
-                      height: "clamp(150px, 20vw, 220px)",
-                    }}
-                    alt=""
-                  />
-
-                  {/* Subtle gradient overlay across the top */}
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: "40px", // Height of the gradient overlay
-                      background:
-                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
-                      borderTopLeftRadius: "20px",
-                      borderTopRightRadius: "20px",
-                      display: "flex",
-                      alignItems: "center",
-                      paddingLeft: "8px",
-                    }}
-                  >
-                    {/* Zoom icon positioned in the top-left corner */}
-                    <ZoomInIcon
-                      onClick={() => setZoomOpen(true)}
-                      sx={{
-                        color: "white",
-                        fontSize: "22px",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </Box>
-                </Box>
-              )}
-              <Modal
-                open={zoomOpen}
-                onClose={() => setZoomOpen(false)}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    position: "relative",
-                    outline: "none",
-                    height: "500px",
-                    width: "500px",
-                  }}
-                >
-                  {/* Subtle gradient overlay at the top of the zoomed image */}
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: "40px", // Adjust height as needed
-                      background:
-                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      paddingRight: "8px",
-                      borderTopLeftRadius: "8px",
-                      borderTopRightRadius: "8px",
-                    }}
-                  >
-                    {/* Close icon positioned within the gradient overlay */}
-                    <CloseIcon
-                      onClick={() => setZoomOpen(false)}
-                      sx={{
-                        color: "white",
-                        fontSize: "24px",
-                        cursor: "pointer",
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                        borderRadius: "50%",
-                        padding: "4px",
-                      }}
-                    />
-                  </Box>
-
-                  <img
-                    src={image}
-                    alt="Zoomed content"
-                    style={{
-                      // maxWidth: "90vw",
-                      // maxHeight: "90vh",
-                      // height:"500px",
-                      width: "100%",
-                      borderRadius: "8px",
-                    }}
-                  />
-                </Box>
-              </Modal>
-            </Grid>
-
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "60px",
+            letterSpacing: "5px",
+            height: "100%",
+            flexWrap: "wrap",
+          }}
+        >
+          {type === "audio" ? (
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
-                mt: { xs: "20px", sm: "40px" },
-                width: "75%",
+                flexDirection: "column",
               }}
             >
-              <Typography
-                variant="h5"
-                component="h4"
+              {/* <ReactAudioPlayer src={v11} controls /> */}
+
+              {contentId && (
+                <audio
+                  ref={audioRef}
+                  preload="metadata"
+                  onDurationChange={(e) =>
+                    setDuration(e.currentTarget.duration)
+                  }
+                  onCanPlay={(e) => {
+                    setIsReady(true);
+                  }}
+                  onPlaying={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                  onTimeUpdate={(e) => {
+                    setCurrrentProgress(e.currentTarget.currentTime);
+                  }}
+                >
+                  <source
+                    type="audio/mp3"
+                    src={
+                      contentId
+                        ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
+                        : ""
+                    }
+                  />
+                </audio>
+              )}
+
+              <Box position="relative" sx={{ width: "403px" }}>
+                <AudioPlayerSvg />
+                <Box
+                  position="absolute"
+                  sx={{ cursor: "pointer", top: "13px", left: "96px" }}
+                >
+                  <AudioBarSvg />
+                </Box>
+                <Box
+                  position="absolute"
+                  sx={{ cursor: "pointer", top: "13px", left: "96px" }}
+                >
+                  <AudioBarColoredSvg width={progressBarWidth * 275} />
+                </Box>
+                <Box
+                  position="absolute"
+                  sx={{ cursor: "pointer", top: "15px", left: "25px" }}
+                  onClick={() => {
+                    togglePlayPause();
+                    setDisabledWords(false);
+                  }}
+                >
+                  {isReady && (
+                    <>{isPlaying ? <StopAudioButton /> : <PlayAudioButton />}</>
+                  )}
+                </Box>
+              </Box>
+            </Box>
+          ) : (
+            <>
+              <Grid
+                item
+                xs={4}
                 sx={{
-                  mb: { xs: 2, sm: 3, md: 4 },
-                  fontSize: { xs: "24px", sm: "32px", md: "40px" },
-                  color: "#303050",
-                  textAlign: "center",
-                  fontFamily: "Quicksand",
-                  lineHeight: "normal",
+                  position: {
+                    xs: "relative", // For extra small screens
+                    sm: "relative", // For small screens
+                    md: "relative", // For medium screens
+                    lg: "relative", // Change as needed for large screens
+                    xl: "relative", // Change as needed for extra-large screens
+                  },
+                  left: {
+                    xs: 0, // For extra small screens
+                    sm: 0, // For small screens
+                    md: "0px", // Adjust position for medium screens
+                    lg: "0px",
+                    xl: "0px",
+                  },
                 }}
               >
-                {answer?.text !== "" ? (
-                  <>
-                    {parentWords?.split(/_+/)[0]}
-                    <span
-                      className={!answer.isAns && shake ? "shakeImage" : ""}
+                {image?.split("/")?.[4] && (
+                  <Box sx={{ position: "relative", cursor: "zoom-in" }}>
+                    <img
+                      onClick={() => setZoomOpen(true)}
+                      src={image}
                       style={{
-                        color: answer.isAns ? "#58CC02" : "#C30303",
-                        border: answer.isAns
-                          ? "2px solid #58CC02"
-                          : "2px solid rgb(195, 3, 3)",
-                        borderBottom: answer.isAns
-                          ? "2px solid #58CC02"
-                          : "2px solid rgb(195, 3, 3)",
-                        borderRadius: "10px",
-                        padding: "10px",
-                        cursor: "pointer",
-                        display: "inline-block",
+                        borderRadius: "20px",
+                        maxWidth: "100%",
+                        height: "clamp(150px, 20vw, 220px)",
                       }}
-                      onClick={handleRemoveWord}
+                      alt=""
+                    />
+
+                    {/* Subtle gradient overlay across the top */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "40px", // Height of the gradient overlay
+                        background:
+                          "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
+                        borderTopLeftRadius: "20px",
+                        borderTopRightRadius: "20px",
+                        display: "flex",
+                        alignItems: "center",
+                        paddingLeft: "8px",
+                      }}
                     >
-                      {answer?.text}
-                    </span>
-                    {parentWords?.split(/_+/)[1]}
-                  </>
-                ) : (
-                  <>{parentWords}</>
+                      {/* Zoom icon positioned in the top-left corner */}
+                      <ZoomInIcon
+                        onClick={() => setZoomOpen(true)}
+                        sx={{
+                          color: "white",
+                          fontSize: "22px",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </Box>
+                  </Box>
                 )}
-              </Typography>
-            </Box>
-          </>
-        )}
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "20px",
-          marginBottom: "30px",
-          flexWrap: "wrap",
-        }}
-      >
-        <>
-          {type === "fillInTheBlank" &&
-            Array.isArray(options) &&
-            options.map(
-              (elem, ind) =>
-                answer?.text !== elem.text && (
+                <Modal
+                  open={zoomOpen}
+                  onClose={() => setZoomOpen(false)}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: isMobile ? "0px" : isTablet ? "45px" : "0px",
+                  }}
+                >
                   <Box
-                    key={ind}
-                    className={`${
-                      type === "audio" && selectedWord === elem
-                        ? selectedWord === parentWords
-                          ? `audioSelectedWord`
-                          : `audioSelectedWrongWord ${
-                              shake ? "shakeImage" : ""
-                            }`
-                        : ""
-                    }`}
-                    onClick={() => handleAnswerFillInTheBlank(elem)}
                     sx={{
-                      textAlign: "center",
-                      px: { xs: "10px", sm: "20px", md: "25px" }, // Responsive padding
-                      py: { xs: "8px", sm: "10px", md: "12px" }, // Responsive padding
-                      m: 1,
-                      textTransform: "none",
-                      borderRadius: "12px",
-                      border: `1px solid rgba(51, 63, 97, 0.10)`,
-                      background: "#FFF",
-                      cursor: "pointer",
-                      opacity: disabledWords ? 0.25 : 1,
-                      pointerEvents: disabledWords ? "none" : "initial",
-                      display: "flex", // Flex display for better alignment
-                      justifyContent: "center", // Centering text
-                      alignItems: "center", // Centering text vertically
+                      position: "relative",
+                      outline: "none",
+                      height: "500px",
+                      width: "500px",
                     }}
                   >
-                    <span
-                      style={{
-                        color:
-                          type === "audio" && selectedWord === elem
-                            ? selectedWord === parentWords
-                              ? "#58CC02"
-                              : "#C30303"
-                            : "#333F61",
-                        fontWeight: 600,
-                        fontSize: "30px", // Responsive font size
-                        fontFamily: "Quicksand",
+                    {/* Subtle gradient overlay at the top of the zoomed image */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "40px", // Adjust height as needed
+                        background:
+                          "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        paddingRight: "8px",
+                        borderTopLeftRadius: "8px",
+                        borderTopRightRadius: "8px",
                       }}
                     >
-                      {elem?.text}
-                    </span>
+                      {/* Close icon positioned within the gradient overlay */}
+                      <CloseIcon
+                        onClick={() => setZoomOpen(false)}
+                        sx={{
+                          color: "white",
+                          fontSize: isMobile ? "20px" : "24px",
+                          cursor: "pointer",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                          borderRadius: "50%",
+                          padding: "4px",
+                        }}
+                      />
+                    </Box>
+
+                    <img
+                      src={image}
+                      alt="Zoomed content"
+                      style={{
+                        // maxWidth: "90vw",
+                        // maxHeight: "90vh",
+                        // height:"500px",
+                        width: "100%",
+                        borderRadius: "8px",
+                      }}
+                    />
                   </Box>
-                )
-            )}
-        </>
-      </Box>
-      {
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <VoiceAnalyser
-            setVoiceText={setVoiceText}
-            pageName={"m3"}
-            setRecordedAudio={setRecordedAudio}
-            setVoiceAnimate={setVoiceAnimate}
-            storyLine={storyLine}
-            dontShowListen={type === "image" || isDiscover}
-            // updateStory={updateStory}
-            originalText={parentWords}
-            enableNext={enableNext}
-            handleNext={handleNext}
-            audioLink={audio ? audio : null}
-            {...{
-              contentId,
-              contentType,
-              currentLine: currentStep - 1,
-              playTeacherAudio,
-              callUpdateLearner,
-              isShowCase,
-              setEnableNext,
-              showOnlyListen: !answer?.isAns,
-              setOpenMessageDialog,
-              isNextButtonCalled,
-              setIsNextButtonCalled,
-            }}
-          />
+                </Modal>
+              </Grid>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mt: { xs: "20px", sm: "40px" },
+                  width: "75%",
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  component="h4"
+                  sx={{
+                    mb: { xs: 2, sm: 2, md: 4 },
+                    fontSize: { xs: "24px", sm: "25px", md: "40px" },
+                    color: "#303050",
+                    textAlign: "center",
+                    fontFamily: "Quicksand",
+                    lineHeight: "normal",
+                  }}
+                >
+                  {answer?.text !== "" ? (
+                    <>
+                      {parentWords?.split(/_+/)[0]}
+                      <span
+                        className={!answer.isAns && shake ? "shakeImage" : ""}
+                        style={{
+                          color: answer.isAns ? "#58CC02" : "#C30303",
+                          border: answer.isAns
+                            ? "2px solid #58CC02"
+                            : "2px solid rgb(195, 3, 3)",
+                          borderBottom: answer.isAns
+                            ? "2px solid #58CC02"
+                            : "2px solid rgb(195, 3, 3)",
+                          borderRadius: "10px",
+                          padding: "10px",
+                          cursor: "pointer",
+                          display: "inline-block",
+                        }}
+                        onClick={handleRemoveWord}
+                      >
+                        {answer?.text}
+                      </span>
+                      {parentWords?.split(/_+/)[1]}
+                    </>
+                  ) : (
+                    <>{parentWords}</>
+                  )}
+                </Typography>
+              </Box>
+            </>
+          )}
         </Box>
-      }
-      {/* <Box
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+            marginBottom: "30px",
+            flexWrap: "wrap",
+          }}
+        >
+          <>
+            {type === "fillInTheBlank" &&
+              Array.isArray(options) &&
+              options.map(
+                (elem, ind) =>
+                  answer?.text !== elem.text && (
+                    <Box
+                      key={ind}
+                      className={`${
+                        type === "audio" && selectedWord === elem
+                          ? selectedWord === parentWords
+                            ? `audioSelectedWord`
+                            : `audioSelectedWrongWord ${
+                                shake ? "shakeImage" : ""
+                              }`
+                          : ""
+                      }`}
+                      onClick={() => handleAnswerFillInTheBlank(elem)}
+                      sx={{
+                        textAlign: "center",
+                        px: { xs: "10px", sm: "20px", md: "25px" }, // Responsive padding
+                        py: { xs: "8px", sm: "5px", md: "12px" }, // Responsive padding
+                        m: 1,
+                        textTransform: "none",
+                        borderRadius: "12px",
+                        border: `1px solid rgba(51, 63, 97, 0.10)`,
+                        background: "#FFF",
+                        cursor: "pointer",
+                        opacity: disabledWords ? 0.25 : 1,
+                        pointerEvents: disabledWords ? "none" : "initial",
+                        display: "flex", // Flex display for better alignment
+                        justifyContent: "center", // Centering text
+                        alignItems: "center", // Centering text vertically
+                      }}
+                    >
+                      <span
+                        style={{
+                          color:
+                            type === "audio" && selectedWord === elem
+                              ? selectedWord === parentWords
+                                ? "#58CC02"
+                                : "#C30303"
+                              : "#333F61",
+                          fontWeight: 600,
+                          fontSize: isMobile ? "15px" : "30px",
+                          fontFamily: "Quicksand",
+                        }}
+                      >
+                        {elem?.text}
+                      </span>
+                    </Box>
+                  )
+              )}
+          </>
+        </Box>
+        {
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <VoiceAnalyser
+              setVoiceText={setVoiceText}
+              pageName={"m3"}
+              setRecordedAudio={setRecordedAudio}
+              setVoiceAnimate={setVoiceAnimate}
+              storyLine={storyLine}
+              dontShowListen={type === "image" || isDiscover}
+              // updateStory={updateStory}
+              originalText={filledSentence}
+              enableNext={enableNext}
+              handleNext={handleNext}
+              audioLink={audio ? audio : null}
+              {...{
+                contentId,
+                contentType,
+                currentLine: currentStep - 1,
+                playTeacherAudio,
+                callUpdateLearner,
+                isShowCase,
+                setEnableNext,
+                showOnlyListen: !answer?.isAns,
+                setOpenMessageDialog,
+                isNextButtonCalled,
+                setIsNextButtonCalled,
+              }}
+            />
+          </Box>
+        }
+        {/* <Box
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -530,6 +561,7 @@ const Mechanics2 = ({
       >
         <SubmitButton opacity={selectedWord ? 1 : 0.3} />
       </Box> */}
+      </ThemeProvider>
     </MainLayout>
   );
 };

@@ -27,160 +27,7 @@ import {
 } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 
-// const content = {
-//   L1: [
-//     {
-//       allwords: [
-//         { img: Assets.Apple, text: "Apple" },
-//         { img: Assets.StarRImg, text: "Star" },
-//         { img: Assets.jugR1OneImg, text: "Mug" },
-//       ],
-//       correctWord: "Star",
-//       audio: Assets.starRAudio,
-//       flowName: "P1",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.sunsetImg, text: "Sunset" },
-//         { img: Assets.basketImg, text: "Basket" },
-//         { img: Assets.spinRImg, text: "Spin" },
-//       ],
-//       correctWord: "Spin",
-//       audio: Assets.spinRAudio,
-//       flowName: "P2",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.skyRImg, text: "Sky" },
-//         { img: Assets.bagR1TwoImg, text: "Shoes" },
-//         { img: Assets.bagR1ThreeImg, text: "Watch" },
-//       ],
-//       correctWord: "Sky",
-//       audio: Assets.skyRAudio,
-//       flowName: "P3",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.capR1TwoImg, text: "Belt" },
-//         { img: Assets.treeRImg, text: "Tree" },
-//         { img: Assets.capR1ThreeImg, text: "Tie" },
-//       ],
-//       correctWord: "Tree",
-//       audio: Assets.treeRAudio,
-//       flowName: "P4",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.dragonRImg, text: "Dragon" },
-//         { img: Assets.dogR1TwoImg, text: "Cat" },
-//         { img: Assets.dogR1ThreeImg, text: "Horse" },
-//       ],
-//       correctWord: "Dragon",
-//       audio: Assets.dragonRAudio,
-//       flowName: "P5",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.eggR1TwoImg, text: "Fan" },
-//         { img: Assets.oilRImg, text: "Oil" },
-//         { img: Assets.eggR1ThreeImg, text: "Goat" },
-//       ],
-//       correctWord: "Oil",
-//       audio: Assets.oilRAudio,
-//       flowName: "P6",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.streetRImg, text: "Street" },
-//         { img: Assets.fanR1TwoImg, text: "Table" },
-//         { img: Assets.fanR1ThreeImg, text: "Lamp" },
-//       ],
-//       correctWord: "Street",
-//       audio: Assets.streetRAudio,
-//       flowName: "P7",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.pantherRImg, text: "Panther" },
-//         { img: Assets.hatR1TwoImg, text: "Bat" },
-//         { img: Assets.hatR1ThreeImg, text: "Carpet" },
-//       ],
-//       correctWord: "Panther",
-//       audio: Assets.pantherRAudio,
-//       flowName: "P8",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.shopImg, text: "Shop" },
-//         { img: Assets.listenRImg, text: "Listen" },
-//         { img: Assets.pillowR1ThreeImg, text: "Mug" },
-//       ],
-//       correctWord: "Listen",
-//       audio: Assets.listenRAudio,
-//       flowName: "P9",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.threeRImg, text: "Three" },
-//         { img: Assets.ropeR1OneImg, text: "Rope" },
-//         { img: Assets.ropeR1ThreeImg, text: "Pen" },
-//       ],
-//       correctWord: "Three",
-//       audio: Assets.threeRAudio,
-//       flowName: "P10",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.drawRImg, text: "Draw" },
-//         { img: Assets.bagR1TwoImg, text: "Shoes" },
-//         { img: Assets.bagR1ThreeImg, text: "Watch" },
-//       ],
-//       correctWord: "Draw",
-//       audio: Assets.drawRAudio,
-//       flowName: "P11",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.capR1TwoImg, text: "Belt" },
-//         { img: Assets.scratchRImg, text: "Scratch" },
-//         { img: Assets.capR1ThreeImg, text: "Tie" },
-//       ],
-//       correctWord: "Scratch",
-//       audio: Assets.scratchRAudio,
-//       flowName: "P12",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.treasureRImg, text: "Treasure" },
-//         { img: Assets.dogR1TwoImg, text: "Cat" },
-//         { img: Assets.dogR1ThreeImg, text: "Horse" },
-//       ],
-//       correctWord: "Treasure",
-//       audio: Assets.treasureRAudio,
-//       flowName: "P13",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.eggR1TwoImg, text: "Fan" },
-//         { img: Assets.deskRImg, text: "Desk" },
-//         { img: Assets.eggR1ThreeImg, text: "Goat" },
-//       ],
-//       correctWord: "Desk",
-//       audio: Assets.deskRAudio,
-//       flowName: "P14",
-//     },
-//     {
-//       allwords: [
-//         { img: Assets.fanR1OneImg, text: "Fan" },
-//         { img: Assets.shoutRImg, text: "Shout" },
-//         { img: Assets.fanR1ThreeImg, text: "Lamp" },
-//       ],
-//       correctWord: "Shout",
-//       audio: Assets.shoutRAudio,
-//       flowName: "P15",
-//     },
-//   ],
-// };
+const theme = createTheme();
 
 const content = {
   L1: [
@@ -489,6 +336,8 @@ const R4 = ({
   audio,
   currentImg,
   rStep,
+  vocabCount,
+  wordCount,
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedWord, setSelectedWord] = useState(null);
@@ -499,6 +348,8 @@ const R4 = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isAudioPlayedOnce, setIsAudioPlayedOnce] = useState(false);
   const [scale, setScale] = useState(1);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -586,6 +437,8 @@ const R4 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       {currentQuestion?.allwords ? (
@@ -723,8 +576,8 @@ const R4 = ({
                         borderRadius: "24px",
                         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                         border: "2px solid rgba(255, 255, 255, 0.5)",
-                        width: "128px",
-                        height: "128px",
+                        width: isMobile ? "60px" : "128px",
+                        height: isMobile ? "60px" : "128px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -743,7 +596,10 @@ const R4 = ({
                       <img
                         src={item.img}
                         alt={item.text}
-                        style={{ width: "110px", height: "110px" }}
+                        style={{
+                          width: isMobile ? "55px" : "110px",
+                          height: isMobile ? "55px" : "110px",
+                        }}
                       />
                     </div>
                   );

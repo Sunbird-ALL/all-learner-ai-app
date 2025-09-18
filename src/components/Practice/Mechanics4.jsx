@@ -15,7 +15,14 @@ import removeSound from "../../assets/remove.wav";
 import { splitGraphemes } from "split-graphemes";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import { practiceSteps, getLocalData } from "../../utils/constants";
-
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  CircularProgress,
+} from "@mui/material";
+const theme = createTheme();
 const Mechanics4 = ({
   page,
   setPage,
@@ -51,6 +58,8 @@ const Mechanics4 = ({
   audio,
   isNextButtonCalled,
   setIsNextButtonCalled,
+  vocabCount,
+  wordCount,
 }) => {
   const [words, setWords] = useState(
     type === "word" ? [] : ["Friend", "She is", "My"]
@@ -60,17 +69,20 @@ const Mechanics4 = ({
   const addSoundAudio = usePreloadAudio(addSound);
   const removeSoundAudio = usePreloadAudio(removeSound);
   const [wordsAfterSplit, setWordsAfterSplit] = useState([]);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const lang = getLocalData("lang");
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
+  //const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas?.[virtualId]) {
-    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
   let currentLevel = practiceSteps?.[currentPracticeStep]?.name || "L1";
@@ -230,6 +242,7 @@ const Mechanics4 = ({
       showTimer={showTimer}
       points={points}
       pageName={"m4"}
+      lang={lang}
       {...{
         steps,
         currentStep,
@@ -240,6 +253,8 @@ const Mechanics4 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <div
@@ -249,7 +264,7 @@ const Mechanics4 = ({
           fontFamily: "Quicksand",
           fontStyle: "normal",
           fontWeight: 600,
-          fontSize: "36px",
+          fontSize: isMobile ? "30px" : "36px",
           lineHeight: "45px",
           alignItems: "center",
           textAlign: "center",
@@ -316,7 +331,9 @@ const Mechanics4 = ({
                     ? "#C30303"
                     : "#333F61",
                 fontWeight: type === "word" ? 600 : 700,
-                fontSize: "clamp(1.5rem, 2.5vw, 2.5rem)",
+                fontSize: isMobile
+                  ? "clamp(1rem, 2vw, 2rem)"
+                  : "clamp(1.5rem, 2.5vw, 2.5rem)",
                 fontFamily: "Quicksand",
                 cursor: "pointer",
                 marginLeft:

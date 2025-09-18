@@ -1,4 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import listenImg from "../../assets/listenmike.svg";
 import clockImg from "../../assets/chronometer.svg";
 import wordImg from "../../assets/words.svg";
@@ -47,6 +55,11 @@ import {
 } from "../../utils/constants";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
+import {
+  fetchASROutput,
+  handleTextEvaluation,
+  callTelemetryApi,
+} from "../../utils/apiUtil";
 
 const levelMap = {
   10: level10,
@@ -56,6 +69,8 @@ const levelMap = {
   14: level14,
   15: level15,
 };
+
+const theme = createTheme();
 
 const content = {
   question: {
@@ -129,6 +144,8 @@ const R3 = ({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) => {
   const [selectedLetters, setSelectedLetters] = useState([]);
   const [error, setError] = useState(false);
@@ -158,8 +175,10 @@ const R3 = ({
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const transcriptRef = useRef("");
+  const lang = getLocalData("lang");
 
   useEffect(() => {
     transcriptRef.current = transcript;
@@ -176,15 +195,15 @@ const R3 = ({
   };
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
+  //const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas?.[virtualId]) {
-    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.name || "P1";
@@ -210,6 +229,22 @@ const R3 = ({
     }, 3000);
   };
 
+  const callTelemetry = async () => {
+    const sessionId = getLocalData("sessionId");
+    const responseStartTime = new Date().getTime();
+    let responseText = "";
+    let base64Data = "";
+    //console.log("bvlobss", recordedBlob);
+
+    await callTelemetryApi(
+      conversation[currentStep - 1]?.answer,
+      sessionId,
+      currentStep - 1,
+      base64Data,
+      responseStartTime,
+      responseText?.responseText || ""
+    );
+  };
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     setActiveIndex((prev) =>
@@ -332,6 +367,7 @@ const R3 = ({
         setShowRecordButton(false);
         setShowReset(false);
         handleNext();
+        callTelemetry();
         reset();
       }, 4000);
     } else {
@@ -368,6 +404,7 @@ const R3 = ({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={lang}
       //={recAudio}
       {...{
         steps,
@@ -379,6 +416,8 @@ const R3 = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
       <div
@@ -422,8 +461,8 @@ const R3 = ({
                   style={{
                     position: "relative",
                     left: `${(progress / 100) * 260}px`,
-                    width: "50px",
-                    height: "55px",
+                    width: isMobile ? "45px" : "50px",
+                    height: isMobile ? "50px" : "55px",
                     transition: "left 0.2s linear",
                     marginBottom: "-10px",
                     marginLeft: "-10px",
@@ -483,13 +522,13 @@ const R3 = ({
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "10px",
-                  maxWidth: "80%",
+                  maxWidth: isMobile ? "90%" : "80%",
                   textAlign: "center",
                 }}
               >
                 <span
                   style={{
-                    fontSize: "28px",
+                    fontSize: isMobile ? "18px" : "28px",
                     fontWeight: "700",
                     fontStyle: "Quicksand",
                     color: "##000000",
@@ -510,7 +549,7 @@ const R3 = ({
               <div
                 style={{
                   display: "flex",
-                  gap: "50px",
+                  gap: isMobile ? "20px" : "50px",
                   marginTop: "20px",
                 }}
               >
@@ -545,7 +584,7 @@ const R3 = ({
                                   left: "-30px",
                                   transform: "rotate(-120deg)",
                                 }),
-                            height: "80px",
+                            height: isMobile ? "70px" : "80px",
                             zIndex: "9999",
                             transition: "all 0.3s ease",
                           }}
@@ -565,7 +604,7 @@ const R3 = ({
                             color: "#000000",
                             fontFamily: "Quicksand",
                             fontWeight: 700,
-                            fontSize: "36px",
+                            fontSize: isMobile ? "20px" : "36px",
                             lineHeight: "60px",
                             letterSpacing: "0%",
                             textAlign: "center",
@@ -578,8 +617,8 @@ const R3 = ({
                         <div
                           style={{
                             gap: "5px",
-                            width: "80px",
-                            height: "80px",
+                            width: isMobile ? "50px" : "80px",
+                            height: isMobile ? "50px" : "80px",
                             background:
                               selectedText === audio.id
                                 ? isMatch
@@ -614,8 +653,8 @@ const R3 = ({
                             src={Assets.musicIcon}
                             alt="Mike"
                             style={{
-                              width: "40px",
-                              height: "40px",
+                              width: isMobile ? "30px" : "40px",
+                              height: isMobile ? "30px" : "40px",
                               cursor: "pointer",
                             }}
                           />
@@ -623,8 +662,8 @@ const R3 = ({
                       </div>
                       <div
                         style={{
-                          width: "60px",
-                          height: "60px",
+                          width: isMobile ? "50px" : "60px",
+                          height: isMobile ? "50px" : "60px",
                           backgroundColor:
                             selectedCheckbox === audio.id
                               ? "#58CC02"
@@ -637,7 +676,7 @@ const R3 = ({
                           alignItems: "center",
                           justifyContent: "center",
                           marginTop: "15px",
-                          marginLeft: "30px",
+                          marginLeft: isMobile ? "20px" : "30px",
                         }}
                         onClick={() => handleCheckboxChange(audio.id)}
                       >
@@ -652,7 +691,7 @@ const R3 = ({
                         />
                         <span
                           style={{
-                            fontSize: "36px",
+                            fontSize: isMobile ? "24px" : "36px",
                             fontWeight: "900",
                             color: "white",
                             lineHeight: 1,
@@ -670,7 +709,7 @@ const R3 = ({
             {showNextButton && (
               <div
                 style={{
-                  position: "fixed",
+                  position: isMobile ? "none" : "fixed",
                   bottom: "180px",
                   right: "60px",
                   zIndex: 1000,
@@ -683,7 +722,10 @@ const R3 = ({
                   onClick={handleNextClick}
                 /> */}
                 <div onClick={handleNextClick} style={{ cursor: "pointer" }}>
-                  <NextButtonRound height={60} width={60} />
+                  <NextButtonRound
+                    height={isMobile ? 45 : 60}
+                    width={isMobile ? 45 : 60}
+                  />
                 </div>
               </div>
             )}
@@ -701,7 +743,7 @@ const R3 = ({
                   src={isMatch ? Assets.correctTick : Assets.r3WrongTick}
                   alt="Effect"
                   style={{
-                    height: "80px",
+                    height: isMobile ? "45px" : "80px",
                     transition: "opacity 0.4s ease-in-out",
                   }}
                 />
@@ -721,7 +763,7 @@ const R3 = ({
                   src={Assets.r3Reset}
                   alt="Effect"
                   style={{
-                    height: "80px",
+                    height: isMobile ? "45px" : "80px",
                     transition: "opacity 0.4s ease-in-out",
                     cursor: "pointer",
                   }}

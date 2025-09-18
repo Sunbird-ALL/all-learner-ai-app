@@ -19,6 +19,8 @@ import desktopLevel5 from "../../assets/images/assesmentComplete.png";
 import config from "../../utils/urlConstants.json";
 import { uniqueId } from "../../services/utilService";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
+import { fetchUserPoints } from "../../services/orchestration/orchestrationService";
+import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 
 const AssesmentEnd = () => {
   const [shake, setShake] = useState(true);
@@ -26,6 +28,9 @@ const AssesmentEnd = () => {
   const [previousLevel, setPreviousLevel] = useState("");
   const [points, setPoints] = useState(0);
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
+  const [vocabCount, setVocabCount] = useState(0);
+  const [wordCount, setWordCount] = useState(0);
+  const lang = getLocalData("lang");
 
   useEffect(() => {
     (async () => {
@@ -37,26 +42,29 @@ const AssesmentEnd = () => {
       const lang = getLocalData("lang");
       const previous_level = getLocalData("previous_level");
       setPreviousLevel(previous_level?.replace("m", ""));
-      const getMilestoneDetails = await axios.get(
-        `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.GET_MILESTONE}/${virtualId}?language=${lang}`
-      );
+      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
       const { data } = getMilestoneDetails;
-      setLevel(data.data.milestone_level);
-      setLocalData("userLevel", data.data.milestone_level?.replace("m", ""));
+      setLevel(data.milestone_level);
+      setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+      setVocabCount(data?.extra?.vocabulary_count || 0);
+      setWordCount(data?.extra?.latest_towre_data?.wordsPerMinute || 0);
       let sessionId = getLocalData("sessionId");
       if (!sessionId) {
         sessionId = uniqueId();
-        localStorage.setItem("sessionId", sessionId);
+        setLocalData("sessionId", sessionId);
       }
       if (
         process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
-        (localStorage.getItem("contentSessionId") !== null ||
-          process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+        localStorage.getItem("contentSessionId") !== null
       ) {
-        const getPointersDetails = await axios.get(
-          `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.GET_POINTER}/${virtualId}/${sessionId}?language=${lang}`
-        );
-        setPoints(getPointersDetails?.data?.result?.totalLanguagePoints || 0);
+        fetchUserPoints()
+          .then((points) => {
+            setPoints(points);
+          })
+          .catch((error) => {
+            console.error("Error fetching user points:", error);
+            setPoints(0);
+          });
       }
     })();
     setTimeout(() => {
@@ -81,7 +89,9 @@ const AssesmentEnd = () => {
   };
   return true ? (
     <Box style={sectionStyle}>
-      <ProfileHeader {...{ level: newLevel, points }} />
+      <ProfileHeader
+        {...{ level: newLevel, points, wordCount, vocabCount, lang }}
+      />
       <Box sx={{ position: "absolute", top: 5, left: 0 }}>
         <Box sx={{ position: "relative" }} className="plane">
           <AssesmentCompletePlane />

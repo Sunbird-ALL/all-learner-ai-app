@@ -1,5 +1,12 @@
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import React, { useState, useRef, useCallback } from "react";
-import { Box } from "@mui/material";
 import schoolsImg from "../../assets/schools.svg";
 import parkImg from "../../assets/park.svg";
 import marketImg from "../../assets/market.svg";
@@ -50,6 +57,8 @@ const levelMap = {
   15: level15,
 };
 
+const theme = createTheme();
+
 const content = {
   L1: [
     {
@@ -90,63 +99,72 @@ const BottomBar = ({ children }) => (
   </div>
 );
 
-const AnswerBox = ({ word, isSelected, isCorrect, onClick }) => (
-  <div
-    onClick={onClick}
-    style={{
-      textAlign: "center",
-      width: "180px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      cursor: "pointer",
-      borderRadius: "8px",
-      backgroundColor: isSelected
-        ? isCorrect
-          ? "#58CC023D"
-          : "#FF000033"
-        : "transparent",
-      transition: "background-color 0.5s ease",
-    }}
-  >
+const AnswerBox = ({ word, isSelected, isCorrect, onClick }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  return (
     <div
+      onClick={onClick}
       style={{
-        border: "0.1px solid #ccc",
-        borderRadius: "8px",
-        padding: "10px",
-        width: "89%",
+        textAlign: "center",
+        width: isMobile ? "100px" : "180px",
         display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <img
-        src={getAssetUrl(s3Assets[word.img]) || Assets[word.img]}
-        alt={word.text}
-        style={{ width: "140px", height: "140px", marginBottom: "40px" }}
-      />
-    </div>
-    <div
-      style={{
-        width: "100%",
-        height: "30px",
-        background: "#FF7F361A",
-        marginTop: "-30px",
-        display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        fontSize: "14px",
-        fontWeight: "bold",
-        borderTop: "none",
-        borderLeft: "0.5px solid #ccc",
-        borderRight: "0.5px solid #ccc",
-        borderBottomLeftRadius: "8px",
-        borderBottomRightRadius: "8px",
+        cursor: "pointer",
+        borderRadius: "8px",
+        backgroundColor: isSelected
+          ? isCorrect
+            ? "#58CC023D"
+            : "#FF000033"
+          : "transparent",
+        transition: "background-color 0.5s ease",
       }}
     >
-      {word.text}
+      <div
+        style={{
+          border: "0.1px solid #ccc",
+          borderRadius: "8px",
+          padding: "10px",
+          width: "89%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <img
+          src={getAssetUrl(s3Assets[word.img]) || Assets[word.img]}
+          alt={word.text}
+          style={{
+            width: isMobile ? "70px" : "140px",
+            height: isMobile ? "70px" : "140px",
+            marginBottom: "40px",
+          }}
+        />
+      </div>
+      <div
+        style={{
+          width: "100%",
+          height: "30px",
+          background: "#FF7F361A",
+          marginTop: "-30px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: isMobile ? "12px" : "14px",
+          fontWeight: "bold",
+          borderTop: "none",
+          borderLeft: "0.5px solid #ccc",
+          borderRight: "0.5px solid #ccc",
+          borderBottomLeftRadius: "8px",
+          borderBottomRightRadius: "8px",
+        }}
+      >
+        {word.text}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 function Step2({ handleNext, level, currentStep }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -158,6 +176,8 @@ function Step2({ handleNext, level, currentStep }) {
   const [showNext, setShowNext] = useState(false);
   const [showEffect, setShowEffect] = useState(false);
   const [showRedRectangle, setShowRedRectangle] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const [recordedBlob, setRecordedBlob] = useState(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
@@ -251,15 +271,15 @@ function Step2({ handleNext, level, currentStep }) {
   };
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
+  //const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas?.[virtualId]) {
-    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.name || "P1";
@@ -269,6 +289,12 @@ function Step2({ handleNext, level, currentStep }) {
   const conversation = getConversation(level, currentLevel);
 
   console.log("lvlstep", currentPracticeStep);
+
+  const items = finalState
+    ? conversation[currentStep - 1]?.allwords.filter(
+        (word) => word.text === conversation[currentStep - 1]?.correctAnswer
+      )
+    : conversation[currentStep - 1]?.allwords;
 
   const handleSelect = (word) => {
     setSelectedAnswer(word.text);
@@ -338,11 +364,11 @@ function Step2({ handleNext, level, currentStep }) {
                 backgroundColor: "#FFFFFF",
                 height: "35px",
                 padding: "0px 15px",
-                minWidth: "240px",
+                minWidth: isMobile ? "180px" : "240px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "16px",
+                fontSize: isMobile ? "12px" : "16px",
                 color: "#333F61",
                 fontWeight: "bold",
                 border: "1px solid white",
@@ -363,7 +389,10 @@ function Step2({ handleNext, level, currentStep }) {
             <img
               src={hintsImg}
               alt="Hints"
-              style={{ width: "40px", height: "40px" }}
+              style={{
+                width: isMobile ? "30px" : "40px",
+                height: isMobile ? "30px" : "40px",
+              }}
             />
           </div>
         )}
@@ -371,7 +400,7 @@ function Step2({ handleNext, level, currentStep }) {
 
       <div
         style={{
-          fontSize: "30px",
+          fontSize: isMobile ? "16px" : "30px",
           fontWeight: "600",
           fontFamily: "Quicksand",
           textAlign: "center",
@@ -388,28 +417,31 @@ function Step2({ handleNext, level, currentStep }) {
 
       <div
         style={{
-          display: "flex",
+          display: isMobile ? "grid" : "flex",
+          gridTemplateColumns: items?.length === 1 ? "1fr" : "repeat(2, 1fr)",
+          justifyItems: "center",
+          alignItems: "center",
           justifyContent: "center",
-          gap: "40px",
+          gap: isMobile ? "35px" : "40px",
           marginBottom: "80px",
         }}
       >
-        {!finalState
-          ? conversation[currentStep - 1]?.allwords.map((word, index) => (
+        {items?.map((word, index) => {
+          const style =
+            items.length === 3 && index === 2
+              ? { gridColumn: "1 / -1", justifySelf: "center" }
+              : {};
+          return (
+            <div key={index} style={style}>
               <AnswerBox
-                key={index}
                 word={word}
                 isSelected={selectedAnswer === word.text}
                 isCorrect={isCorrect}
                 onClick={() => handleSelect(word)}
               />
-            ))
-          : conversation[currentStep - 1]?.allwords
-              .filter(
-                (word) =>
-                  word.text === conversation[currentStep - 1]?.correctAnswer
-              )
-              .map((word, index) => <AnswerBox key={index} word={word} />)}
+            </div>
+          );
+        })}
       </div>
 
       {/* <BottomBar> */}
@@ -577,10 +609,13 @@ function WhatsMissing({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) {
   const [currentSteps, setCurrentSteps] = useState(2);
 
   const handleNextStep = () => setCurrentSteps(2);
+  const lang = getLocalData("lang");
 
   console.log("lvls", currentStep);
 
@@ -595,6 +630,7 @@ function WhatsMissing({
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
+      lang={lang}
       //={recAudio}
       {...{
         steps,
@@ -606,18 +642,22 @@ function WhatsMissing({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
-      <div>
-        {/* {currentStep - 1 === 1 && <Step1 onNext={handleNextStep} />} */}
-        {currentSteps === 2 && (
-          <Step2
-            handleNext={handleNext}
-            level={level}
-            currentStep={currentStep}
-          />
-        )}
-      </div>
+      <ThemeProvider theme={theme}>
+        <div>
+          {/* {currentStep - 1 === 1 && <Step1 onNext={handleNextStep} />} */}
+          {currentSteps === 2 && (
+            <Step2
+              handleNext={handleNext}
+              level={level}
+              currentStep={currentStep}
+            />
+          )}
+        </div>
+      </ThemeProvider>
     </MainLayout>
   );
 }

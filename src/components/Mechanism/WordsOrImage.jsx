@@ -20,6 +20,7 @@ import {
   SpeakButton,
   NextButtonRound,
   getLocalData,
+  setLocalData,
 } from "../../utils/constants";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import PropTypes from "prop-types";
@@ -33,16 +34,20 @@ import teacherImg from "../../assets/teacher.png";
 import studentImg from "../../assets/student.png";
 import listenImg2 from "../../assets/listen.png";
 import spinnerStop from "../../assets/pause.png";
+import { ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import {
   fetchASROutput,
   handleTextEvaluation,
   callTelemetryApi,
 } from "../../utils/apiUtil";
+import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
 //   /Google Inc/.test(navigator.vendor) &&
 //   !/Edg/.test(navigator.userAgent);
+
+const theme = createTheme();
 
 const isChrome = true;
 
@@ -90,6 +95,8 @@ const WordsOrImage = ({
   isNextButtonCalled,
   setIsNextButtonCalled,
   audioLink,
+  vocabCount,
+  wordCount,
 }) => {
   const audioRefs = createRef(null);
   const [audioInstance, setAudioInstance] = useState(null);
@@ -105,7 +112,14 @@ const WordsOrImage = ({
   const [recordedAudioBlob, setRecordedAudioBlob] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const [abusiveFound, setAbusiveFound] = useState(false);
+  const [detectedWord, setDetectedWord] = useState("");
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
+  const [recAudio, setRecAudio] = useState("");
+  const [finalTranscript, setFinalTranscript] = useState("");
+  const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const audioRef = useRef(null);
   const audioRefNew = useRef(null);
   const currentWordRef = useRef(null);
@@ -122,14 +136,75 @@ const WordsOrImage = ({
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
+    //console.log("Live Transcript:", transcript);
+
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      //console.log("filteredText", filteredText);
+
+      if (filteredText.includes("*")) {
+        const count = parseInt(getLocalData("profanityCheck") || "0");
+
+        if (count > 2) {
+          setOpenMessageDialog({
+            open: true,
+            message: `Please speak properly.`,
+            severity: "warning",
+            isError: true,
+          });
+        }
+
+        handleStopRecording();
+
+        setLocalData("profanityCheck", (count + 1).toString());
+      }
+    }
   }, [transcript]);
   const [recordedBlob, setRecordedBlob] = useState(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  //console.log('audios', audioLink);
 
-  const language = getLocalData("lang");
+  // const language = getLocalData("lang");
 
   const mimeType = "audio/webm;codecs=opus";
+
+  const handleStartRecording = () => {
+    // if (!browserSupportsSpeechRecognition) {
+    //   //alert("Speech recognition is not supported in your browser.");
+    //   return;
+    // }
+    setRecAudio(null);
+    resetTranscript();
+    setIsRecording(true);
+    setLanguage(language);
+    setAbusiveFound(false);
+    setDetectedWord("");
+    SpeechRecognition.startListening({
+      continuous: true,
+      interimResults: true,
+      language: language || "en-US",
+    });
+  };
+
+  const handleStopRecording = () => {
+    SpeechRecognition.stopListening();
+    setFinalTranscript(transcriptRef.current);
+    setAbusiveFound(false);
+
+    setIsRecording(false);
+    //console.log("Final Transcript:", transcriptRef.current);
+  };
+
+  const handleRecordingComplete = (base64Data) => {
+    if (base64Data) {
+      setIsRecordingComplete(true);
+      setRecAudio(base64Data);
+    } else {
+      setIsRecordingComplete(false);
+      setRecAudio("");
+    }
+  };
 
   const startAudioRecording = useCallback(async () => {
     setRecordedBlob(null);
@@ -183,7 +258,7 @@ const WordsOrImage = ({
   }, []);
 
   const playRecordings = useCallback(() => {
-    console.log("play", isPlaying);
+    //console.log("play", isPlaying);
 
     if (!recordedBlob || !(recordedBlob instanceof Blob)) {
       console.error("No valid audio blob to play:", recordedBlob);
@@ -197,7 +272,7 @@ const WordsOrImage = ({
       return;
     }
 
-    console.log("bls", recordedBlob);
+    //console.log("bls", recordedBlob);
 
     const audioUrl = URL.createObjectURL(recordedBlob);
     const audio = new Audio(audioUrl);
@@ -209,7 +284,7 @@ const WordsOrImage = ({
     audio.play();
     setIsPlaying(true);
 
-    console.log("play", isPlaying);
+    //console.log("play", isPlaying);
 
     audio.onended = () => {
       setIsPlaying(false);
@@ -323,7 +398,7 @@ const WordsOrImage = ({
       SpeechRecognition.stopListening();
       stopAudioRecording();
       const finalTranscript = transcriptRef.current;
-      console.log("transcript", finalTranscript, currentWordRef.current);
+      //console.log("transcript", finalTranscript, currentWordRef.current);
 
       const matchPercentage = phoneticMatch(
         currentWordRef.current,
@@ -379,7 +454,7 @@ const WordsOrImage = ({
     const responseStartTime = new Date().getTime();
     let responseText = "";
     const base64Data = await blobToBase64(recordedBlob);
-    console.log("bvlobss", recordedBlob);
+    //console.log("bvlobss", recordedBlob);
 
     await callTelemetryApi(
       words,
@@ -499,7 +574,7 @@ const WordsOrImage = ({
     return "#333F61";
   };
 
-  console.log("wds", words, matchedChar, answer);
+  //console.log("wds", words, matchedChar, answer);
 
   return (
     <MainLayout
@@ -530,6 +605,8 @@ const WordsOrImage = ({
         gameOverData,
         loading,
         setIsNextButtonCalled,
+        vocabCount,
+        wordCount,
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -538,12 +615,12 @@ const WordsOrImage = ({
           component="h4"
           sx={{
             color: "#333F61",
-            fontSize: "30px",
+            fontSize: isMobile ? "20px" : isTablet ? "25px" : "30px",
             letterSpacing: "1.5px",
             lineHeight: "normal",
             fontWeight: 600,
             fontFamily: "Quicksand",
-            marginLeft: "20px",
+            marginLeft: isMobile ? "0px" : "20px",
             textAlign: "center",
           }}
         >
@@ -553,7 +630,7 @@ const WordsOrImage = ({
       <CardContent
         sx={{
           overflow: "hidden",
-          pt: "100px",
+          pt: isMobile ? "40px" : isTablet ? "70px" : "100px",
           opacity: disableScreen ? 0.25 : 1,
           pointerEvents: disableScreen ? "none" : "initial",
         }}
@@ -564,9 +641,9 @@ const WordsOrImage = ({
               <img
                 src={image}
                 style={{
-                  maxWidth: "450px",
-                  maxHeight: "130px",
-                  marginBottom: "40px",
+                  maxWidth: isMobile ? "150px" : isTablet ? "350px" : "450px",
+                  maxHeight: isMobile ? "10px" : isTablet ? "110px" : "130px",
+                  marginBottom: isMobile ? "10px" : "40px",
                 }}
               />
             </Box>
@@ -577,16 +654,16 @@ const WordsOrImage = ({
                 width: "100%",
                 display: "flex",
                 justifyContent: "center",
-                mb: "40px",
+                mb: isMobile ? "20px" : "40px",
               }}
             >
               <Box
                 position="relative"
                 sx={{
-                  minWidth: "403px",
+                  minWidth: isMobile ? "280px" : isTablet ? "350px" : "403px",
                   borderRadius: "15px",
                   background: "rgba(255, 161, 50, 0.1)",
-                  height: "88px",
+                  height: isMobile ? "70px" : "88px",
                   display: "flex",
                 }}
               >
@@ -604,7 +681,7 @@ const WordsOrImage = ({
 
                 <Box
                   sx={{
-                    height: "88px",
+                    height: isMobile ? "70px" : "88px",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -613,7 +690,7 @@ const WordsOrImage = ({
                   <Box
                     sx={{
                       cursor: "pointer",
-                      marginLeft: "20px",
+                      marginLeft: isMobile ? "10px" : "20px",
                       marginTop: "5px",
                     }}
                     onClick={() => {
@@ -622,9 +699,15 @@ const WordsOrImage = ({
                   >
                     {isReady &&
                       (isPlaying ? (
-                        <StopAudioButton color={"#FFA132"} />
+                        <StopAudioButton
+                          color={"#FFA132"}
+                          size={isMobile ? "small" : "medium"}
+                        />
                       ) : (
-                        <PlayAudioButton color={"#FFA132"} />
+                        <PlayAudioButton
+                          color={"#FFA132"}
+                          size={isMobile ? "small" : "medium"}
+                        />
                       ))}
                   </Box>
                   <Typography
@@ -632,12 +715,12 @@ const WordsOrImage = ({
                     component="h4"
                     sx={{
                       color: "#333F61",
-                      fontSize: "44px",
+                      fontSize: isMobile ? "28px" : isTablet ? "36px" : "44px",
                       letterSpacing: "2.2px",
                       lineHeight: "normal",
                       fontWeight: 600,
                       fontFamily: "Quicksand",
-                      marginLeft: "20px",
+                      marginLeft: isMobile ? "10px" : "20px",
                     }}
                   >
                     {"REF LECTION"}
@@ -655,6 +738,7 @@ const WordsOrImage = ({
                 },
                 justifyContent: "center",
                 width: "100%",
+                flexDirection: isMobile ? "column" : "row",
               }}
             >
               {image && (
@@ -663,6 +747,7 @@ const WordsOrImage = ({
                     display: "flex",
                     justifyContent: "center",
                     width: "100%",
+                    mb: isMobile ? 2 : 0,
                   }}
                 >
                   <Box sx={{ position: "relative" }}>
@@ -675,11 +760,20 @@ const WordsOrImage = ({
                       }}
                       style={{
                         width: "100%", // Image will take full width of the parent container
-                        maxWidth: "400px", // Limit the width to 500px
-                        marginBottom: "40px",
+                        maxWidth: isMobile
+                          ? "150px"
+                          : isTablet
+                          ? "350px"
+                          : "400px",
+                        marginBottom: isMobile ? "10px" : "40px",
                         height: "auto", // Maintain aspect ratio
-                        maxHeight: "340px", // Cap the height at 200px
+                        maxHeight: isMobile
+                          ? "200px"
+                          : isTablet
+                          ? "280px"
+                          : "340px",
                         objectFit: "contain", // Ensures the image fits well within the dimensions
+                        marginRight: isMobile ? "30px" : "0px",
                       }}
                       alt="Responsive content" // Adding alt text for accessibility
                     />
@@ -687,30 +781,94 @@ const WordsOrImage = ({
                       <Box
                         sx={{
                           position: "absolute",
-                          right: "-100px",
-                          top: "0px",
+                          right: isMobile ? "-37px" : "-100px",
+                          top: isMobile ? "90px" : isTablet ? "35px" : "0px",
                           textAlign: "center",
                           cursor: "pointer",
-                          width: "100px",
-                          zIndex: 1000,
+                          width: isMobile ? "60px" : "100px",
+                          zIndex: 9999,
                         }}
                         onClick={() => setShowHint(!showHint)}
                       >
-                        <img style={{ height: "55px" }} src={hintsImg} alt="" />
-                        <p>Hint</p>
-                        {showHint && (
+                        {isMobile && showHint && (
                           <Box
-                            sx={(theme) => ({
+                            sx={{
+                              position: "absolute",
+                              bottom: "100%",
+                              left: "50%",
+                              transform: "translateX(-50%)",
+                              backgroundColor: "#ffff12",
+                              padding: "8px 12px",
+                              borderRadius: isMobile
+                                ? "7px"
+                                : isTablet
+                                ? "10px"
+                                : "20px",
+                              fontSize: isMobile
+                                ? "10px"
+                                : isTablet
+                                ? "8px"
+                                : "16px",
+                              color: "#333F61",
+                              fontWeight: isMobile ? 500 : isTablet ? 200 : 600,
+                              fontFamily:
+                                '"Comic Sans MS", cursive, sans-serif',
+                              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                              maxWidth: "120px",
+                              textAlign: "center",
+                              lineHeight: "1.4",
+                              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+                              mb: 1,
+                              "&::after": {
+                                content: '""',
+                                position: "absolute",
+                                top: "100%",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                width: 0,
+                                height: 0,
+                                borderLeft: "8px solid transparent",
+                                borderRight: "8px solid transparent",
+                                borderTop: "8px solid #ffff12",
+                              },
+                            }}
+                          >
+                            {hints}
+                          </Box>
+                        )}
+                        <img
+                          style={{
+                            height: isMobile ? "40px" : "55px",
+                            marginLeft: isMobile
+                              ? "auto"
+                              : isTablet
+                              ? "18px"
+                              : "0",
+                            marginRight: isMobile ? "auto" : "0",
+                            display: "block",
+                            zIndex: 9999,
+                          }}
+                          src={hintsImg}
+                          alt="Hint"
+                        />
+                        {!isMobile && <p style={{ fontSize: "14px" }}></p>}
+                        {!isMobile && showHint && (
+                          <Box
+                            sx={{
                               position: "absolute",
                               bottom: "0px",
                               left: "90px",
-                              width: "150px",
+                              width: isMobile
+                                ? "60px"
+                                : isTablet
+                                ? "70px"
+                                : "150px",
                               backgroundColor: "#ffff12",
                               padding: "10px 15px",
                               borderRadius: "20px",
-                              fontSize: "20px",
+                              fontSize: isTablet ? "9px" : "20px",
                               color: "#333F61",
-                              fontWeight: 600,
+                              fontWeight: isTablet ? 100 : 600,
                               fontFamily:
                                 '"Comic Sans MS", cursive, sans-serif',
                               boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
@@ -730,16 +888,7 @@ const WordsOrImage = ({
                                 borderRadius: "50%",
                                 boxShadow: "10px 10px 0 0 #ffff12",
                               },
-                              [theme.breakpoints.down(1120)]: {
-                                left: "auto",
-                                right: "90px",
-                                "&::before": {
-                                  left: "auto",
-                                  right: "-15px",
-                                  boxShadow: "-10px 10px 0 0 #ffff12", // Flip direction
-                                },
-                              },
-                            })}
+                            }}
                           >
                             {hints}
                           </Box>
@@ -756,13 +905,17 @@ const WordsOrImage = ({
                   justifyContent: "space-around", // Centers content vertically
                   alignItems: "center", // Centers content horizontally
                   width: "100%",
-                  gap: 4,
-                  marginBottom: "40px",
+                  gap: isMobile ? 2 : 4,
+                  marginBottom: isMobile ? "20px" : "40px",
+                  flexDirection: isMobile ? "column" : "row",
                 }}
               >
                 {!words && (
                   <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <CircularProgress size="3rem" sx={{ color: "#E15404" }} />
+                    <CircularProgress
+                      size={isMobile ? "2rem" : "3rem"}
+                      sx={{ color: "#E15404" }}
+                    />
                   </Box>
                 )}
                 {words && !matchedChar && (
@@ -772,8 +925,8 @@ const WordsOrImage = ({
                         ? {
                             display: "flex",
                             alignItems: "center",
-                            gap: 2,
-                            mb: 8,
+                            gap: isMobile ? 1 : 2,
+                            mb: isMobile ? 4 : 8,
                           }
                         : ""),
                     }}
@@ -781,7 +934,15 @@ const WordsOrImage = ({
                     {mechanism_id === "mechanic_15" && (
                       <Avatar
                         src={teacherImg}
-                        sx={{ bgcolor: "green", height: "60px", width: "60px" }}
+                        sx={{
+                          bgcolor: "green",
+                          height: isMobile
+                            ? "40px"
+                            : isTablet
+                            ? "50px"
+                            : "60px",
+                          width: isMobile ? "40px" : isTablet ? "50px" : "60px",
+                        }}
                       >
                         Teacher
                       </Avatar>
@@ -791,15 +952,19 @@ const WordsOrImage = ({
                       variant="h5"
                       component="h4"
                       sx={{
-                        fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                        fontSize: isMobile
+                          ? "1.4rem"
+                          : isTablet
+                          ? "2rem"
+                          : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: 700,
                         fontFamily: "Quicksand",
-                        lineHeight: "50px",
+                        lineHeight: isMobile ? "30px" : "50px",
                         ...(mechanism_id === "mechanic_15"
                           ? {
                               position: "relative",
                               backgroundColor: "#FAD7A0",
-                              padding: "10px 20px",
+                              padding: isMobile ? "8px 16px" : "10px 20px",
                               borderRadius: "20px",
                               boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                               "&::before": {
@@ -816,7 +981,7 @@ const WordsOrImage = ({
                               },
                             }
                           : {
-                              mb: 4,
+                              mb: isMobile ? 2 : 4,
                               color: getAnswerColor(answer),
                               textAlign: "center",
                             }),
@@ -828,19 +993,29 @@ const WordsOrImage = ({
                   </Box>
                 )}
                 {mechanism_id === "mechanic_15" && (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: isMobile ? 1 : 2,
+                    }}
+                  >
                     <Typography
                       variant="h5"
                       component="h4"
                       sx={{
                         position: "relative",
                         backgroundColor: "#D7BDE2",
-                        padding: "10px 20px",
+                        padding: isMobile ? "8px 16px" : "10px 20px",
                         borderRadius: "20px",
-                        fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                        fontSize: isMobile
+                          ? "1.4rem"
+                          : isTablet
+                          ? "2rem"
+                          : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: 700,
                         fontFamily: "Quicksand",
-                        lineHeight: "50px",
+                        lineHeight: isMobile ? "30px" : "50px",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                         "&::after": {
                           content: '""',
@@ -859,7 +1034,11 @@ const WordsOrImage = ({
                     >
                       <motion.div style={{ display: "flex", gap: "5px" }}>
                         <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: isMobile ? 1 : 2,
+                          }}
                         >
                           Speak
                           {[...Array(3)].map((_, i) => (
@@ -884,7 +1063,11 @@ const WordsOrImage = ({
                     </Typography>
                     <Avatar
                       src={studentImg}
-                      sx={{ bgcolor: "green", height: "60px", width: "60px" }}
+                      sx={{
+                        bgcolor: "green",
+                        height: isMobile ? "40px" : isTablet ? "50px" : "60px",
+                        width: isMobile ? "40px" : isTablet ? "50px" : "60px",
+                      }}
                     >
                       N
                     </Avatar>
@@ -896,10 +1079,14 @@ const WordsOrImage = ({
                       variant="h5"
                       component="h4"
                       sx={{
-                        fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                        fontSize: isMobile
+                          ? "1.4rem"
+                          : isTablet
+                          ? "2rem"
+                          : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: 700,
                         fontFamily: "Quicksand",
-                        lineHeight: "50px",
+                        lineHeight: isMobile ? "30px" : "50px",
                         //background: "#FFF0BD",
                         color: "black",
                       }}
@@ -909,7 +1096,7 @@ const WordsOrImage = ({
                   ) : (
                     <Box
                       display={"flex"}
-                      mb={4}
+                      mb={isMobile ? 2 : 4}
                       sx={{
                         color: "red",
                         width: "100%",
@@ -928,17 +1115,21 @@ const WordsOrImage = ({
             </Box>
           )}
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          {language === "en" &&
-          (level === 1 || level === 2 || level === 3) &&
-          !isShowCase ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mt: isMobile ? 2 : 0,
+          }}
+        >
+          {level === 15 && !isShowCase ? (
             <div>
               {showSpeakButton && (
                 <Box
                   sx={{ cursor: "pointer" }}
                   onClick={() => startRecording(words, true)}
                 >
-                  <SpeakButton />
+                  <SpeakButton size={isMobile ? "small" : "medium"} />
                 </Box>
               )}
               {showStopButton && (
@@ -955,9 +1146,14 @@ const WordsOrImage = ({
                     sx={{ cursor: "pointer" }}
                     onClick={() => stopRecording(words)}
                   >
-                    <StopButton />
+                    <StopButton size={isMobile ? "small" : "medium"} />
                   </Box>
-                  <Box style={{ marginTop: "50px", marginBottom: "50px" }}>
+                  <Box
+                    style={{
+                      marginTop: isMobile ? "30px" : "50px",
+                      marginBottom: isMobile ? "30px" : "50px",
+                    }}
+                  >
                     <RecordVoiceVisualizer />
                   </Box>
                 </div>
@@ -1066,6 +1262,9 @@ const WordsOrImage = ({
               handleNext={handleNext}
               enableNext={enableNext}
               isShowCase={isShowCase || isDiscover}
+              handleRecordingComplete={handleRecordingComplete}
+              handleStartRecording={handleStartRecording}
+              handleStopRecording={handleStopRecording}
               audioLink={audioLink ? audioLink : null}
               {...{
                 contentId,
@@ -1110,12 +1309,12 @@ WordsOrImage.propTypes = {
   setEnableNext: PropTypes.func.isRequired,
   startShowCase: PropTypes.bool,
   setStartShowCase: PropTypes.func,
-  setLivesData: PropTypes.func.isRequired,
+  setLivesData: PropTypes.func,
   loading: PropTypes.bool,
   setOpenMessageDialog: PropTypes.func.isRequired,
   isNextButtonCalled: PropTypes.bool,
   setIsNextButtonCalled: PropTypes.func,
-  background: PropTypes.bool,
+  background: PropTypes.string,
   type: PropTypes.any,
   words: PropTypes.any,
   storyLine: PropTypes.number,

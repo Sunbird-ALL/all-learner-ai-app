@@ -6,6 +6,16 @@ import { response } from "../services/telementryService";
 import S3Client from "../config/awsS3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
+const getHeaders = () => {
+  const token = localStorage.getItem("apiToken");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+};
+
 export const fetchASROutput = async (base64Data, options, setLoader) => {
   try {
     setLoader(true);
@@ -31,9 +41,19 @@ export const fetchASROutput = async (base64Data, options, setLoader) => {
       question_text: [`1. ${options.questionText}` || ""],
     };
 
+    for (let key in requestBody) {
+      if (typeof requestBody[key] === "string") {
+        requestBody[key] = requestBody[key]
+          .replace(/<script.*?>.*?<\/script>/gi, "")
+          .replace(/javascript:/gi, "")
+          .trim();
+      }
+    }
+
     const { data } = await axios.post(
       `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/${config.URLS.UPDATE_LEARNER_PROFILE}/${lang}`,
-      requestBody
+      requestBody,
+      getHeaders()
     );
 
     return data;
@@ -85,7 +105,8 @@ export const callTelemetryApi = async (
   currentLine,
   base64Data,
   responseStartTime,
-  responseText
+  responseText,
+  level
 ) => {
   //const responseStartTime = new Date().getTime();
   const responseEndTime = new Date().getTime();
@@ -187,6 +208,7 @@ export const callTelemetryApi = async (
         { response_word_result: word_result },
         { accuracy_percentage: finalScore },
         { duration: responseDuration },
+        ...(level ? [{ level }] : []),
       ],
     },
     "ET"

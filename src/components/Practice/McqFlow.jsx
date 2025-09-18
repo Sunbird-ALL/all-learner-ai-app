@@ -1,7 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box } from "@mui/material";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import listenImg2 from "../../assets/listen.png";
 import Confetti from "react-confetti";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import {
   level13,
   level14,
@@ -15,11 +25,13 @@ import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
 import { getAssetAudioUrl } from "../../utils/s3Links";
+
 import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
   RetryIcon,
+  setLocalData,
 } from "../../utils/constants";
 import spinnerStop from "../../assets/pause.png";
 import raMic from "../../assets/listen.png";
@@ -30,6 +42,8 @@ import wrongSound from "../../assets/audio/wrong.wav";
 import { Modal } from "@mui/material";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import CloseIcon from "@mui/icons-material/Close";
+import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
+
 import {
   fetchASROutput,
   handleTextEvaluation,
@@ -44,6 +58,8 @@ const levelMap = {
   14: level14,
   15: level15,
 };
+
+const theme = createTheme();
 
 const McqFlow = ({
   setVoiceText,
@@ -75,6 +91,8 @@ const McqFlow = ({
   setOpenMessageDialog,
   audio,
   currentImg,
+  vocabCount,
+  wordCount,
 }) => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [conversationData, setConversationData] = useState([]);
@@ -90,6 +108,20 @@ const McqFlow = ({
   const [completeAudio, setCompleteAudio] = useState(null);
   const [imageData, setImageData] = useState({});
   const [zoomOpen, setZoomOpen] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const [abusiveFound, setAbusiveFound] = useState(false);
+  const [detectedWord, setDetectedWord] = useState("");
+  const [language, setLanguage] = useState(getLocalData("lang") || "en");
+  const [finalTranscript, setFinalTranscript] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const {
+    transcript,
+    interimTranscript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
 
   const handleRecordingComplete = (base64Data) => {
     if (base64Data) {
@@ -103,6 +135,25 @@ const McqFlow = ({
 
   const handleStartRecording = () => {
     setRecAudio(null);
+    resetTranscript();
+    setIsRecording(true);
+    setLanguage(language);
+    setAbusiveFound(false);
+    setDetectedWord("");
+    SpeechRecognition.startListening({
+      continuous: true,
+      interimResults: true,
+      language: language || "en-US",
+    });
+  };
+
+  const handleStopRecording = () => {
+    SpeechRecognition.stopListening();
+    setFinalTranscript(transcriptRef.current);
+    setAbusiveFound(false);
+
+    setIsRecording(false);
+    //console.log("Final Transcript:", transcriptRef.current)
   };
 
   const playAudioCorrect = () => {
@@ -126,15 +177,15 @@ const McqFlow = ({
   };
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
+  //const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
 
   let currentPracticeStep;
-  if (progressDatas?.[virtualId]) {
-    currentPracticeStep = progressDatas[virtualId].currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.name || "P1";
@@ -159,6 +210,32 @@ const McqFlow = ({
     setShowQuestion(false);
   }, [currentLevel]);
 
+  const transcriptRef = useRef("");
+  useEffect(() => {
+    transcriptRef.current = transcript;
+    console.log("Live Transcript:", transcript);
+
+    if (transcript) {
+      const filteredText = filterBadWords(transcript, language);
+      if (filteredText.includes("*")) {
+        const count = parseInt(getLocalData("profanityCheck") || "0");
+
+        if (count > 2) {
+          setOpenMessageDialog({
+            open: true,
+            message: `Please speak appropriately.`,
+            severity: "warning",
+            isError: true,
+          });
+        }
+
+        handleStopRecording();
+
+        setLocalData("profanityCheck", (count + 1).toString());
+      }
+    }
+  }, [transcript]);
+
   const task = conversation?.tasks[currentStep - 1];
   const correctAnswer = task?.options.find(
     (option) => option.id === task.answer
@@ -177,7 +254,7 @@ const McqFlow = ({
     let responseText = "";
     //console.log("apiResp", responseText);
     await callTelemetryApi(
-      conversation?.tasks[currentStep - 1]?.answer,
+      correctAnswer,
       sessionId,
       currentStep - 1,
       recAudio,
@@ -204,6 +281,7 @@ const McqFlow = ({
       points={points}
       pageName={"m7"}
       parentWords={parentWords}
+      lang={language}
       {...{
         steps,
         currentStep,
@@ -214,145 +292,149 @@ const McqFlow = ({
         handleBack,
         disableScreen,
         loading,
+        vocabCount,
+        wordCount,
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          //justifyContent: "center",
-          alignItems: "center",
-          //gap: "20px",
-          //margin: "30px 30px",
-        }}
-      >
-        {conversation?.instruction?.content[0]?.text && (
-          <span
-            style={{
-              fontFamily: "Quicksand",
-              fontWeight: "600",
-              fontSize: "28px",
-              marginTop: "30px",
-            }}
-          >
-            {conversation?.instruction?.content[0]?.text}
-          </span>
-        )}
-
+      <ThemeProvider theme={theme}>
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
+            flexDirection: "column",
+            height: "100%",
+            //justifyContent: "center",
             alignItems: "center",
-            gap: "20px",
-            width: "90%",
-            margin: "30px 30px",
+            //gap: "20px",
+            //margin: "30px 30px",
           }}
         >
-          {/* Image on the left */}
+          {conversation?.instruction?.content[0]?.text && (
+            <span
+              style={{
+                fontFamily: "Quicksand",
+                fontWeight: "600",
+                fontSize: isMobile ? "14px" : "28px",
+                marginTop: "30px",
+              }}
+            >
+              {conversation?.instruction?.content[0]?.text}
+            </span>
+          )}
 
-          {conversation?.instruction?.content[0]?.value && (
-            // <img
-            //   src={Assets[conversation?.instruction?.content[0]?.value]}
-            //   alt="Children's Day"
-            //   style={{ width: "250px", height: "250px", borderRadius: "15px" }}
-            // />
-            <Box sx={{ position: "relative", cursor: "zoom-in" }}>
-              <img
-                src={
-                  getAssetUrl(
-                    s3Assets[conversation?.instruction?.content[0]?.value]
-                  ) || Assets[conversation?.instruction?.content[0]?.value]
-                }
-                style={{
-                  borderRadius: "20px",
-                  maxWidth: "100%",
-                  height: "250px",
-                }}
-                alt="contentImage"
-                onClick={() => setZoomOpen(true)} // Open modal on click
-              />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: "center",
+              gap: "20px",
+              width: "90%",
+              margin: "30px 30px",
+            }}
+          >
+            {/* Image on the left */}
 
-              {/* Subtle gradient overlay across the top */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: "40px", // Height of the gradient overlay
-                  background:
-                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
-                  borderTopLeftRadius: "20px",
-                  borderTopRightRadius: "20px",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "8px",
-                }}
-              >
-                {/* Zoom icon positioned in the top-left corner */}
-                {/* <ZoomInIcon
-                  onClick={() => setZoomOpen(true)}
-                  sx={{ color: "white", fontSize: "22px", cursor: "pointer" }}
-                /> */}
+            {conversation?.instruction?.content[0]?.value && (
+              // <img
+              //   src={Assets[conversation?.instruction?.content[0]?.value]}
+              //   alt="Children's Day"
+              //   style={{ width: "250px", height: "250px", borderRadius: "15px" }}
+              // />
+              <Box sx={{ position: "relative", cursor: "zoom-in" }}>
+                <img
+                  src={
+                    getAssetUrl(
+                      s3Assets[conversation?.instruction?.content[0]?.value]
+                    ) || Assets[conversation?.instruction?.content[0]?.value]
+                  }
+                  style={{
+                    borderRadius: "20px",
+                    maxWidth: "100%",
+                    height: "250px",
+                  }}
+                  alt="contentImage"
+                  onClick={() => setZoomOpen(true)} // Open modal on click
+                />
+
+                {/* Subtle gradient overlay across the top */}
                 <Box
                   sx={{
                     position: "absolute",
-                    top: 180,
-                    right: 6,
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "40px", // Height of the gradient overlay
+                    background:
+                      "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
+                    borderTopLeftRadius: "20px",
+                    borderTopRightRadius: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: "8px",
                   }}
                 >
-                  <img
-                    src={Assets.zoomIcon}
-                    onClick={() => setZoomOpen(true)}
-                    height={"65px"}
-                    width={"65px"}
-                  />
+                  {/* Zoom icon positioned in the top-left corner */}
+                  {/* <ZoomInIcon
+                  onClick={() => setZoomOpen(true)}
+                  sx={{ color: "white", fontSize: "22px", cursor: "pointer" }}
+                /> */}
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 180,
+                      right: 6,
+                    }}
+                  >
+                    <img
+                      src={Assets.zoomIcon}
+                      onClick={() => setZoomOpen(true)}
+                      height={"65px"}
+                      width={"65px"}
+                    />
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-          )}
+            )}
 
-          <Modal
-            open={zoomOpen}
-            onClose={() => setZoomOpen(false)}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: "99999",
-            }}
-          >
-            <Box
+            <Modal
+              open={zoomOpen}
+              onClose={() => setZoomOpen(false)}
               sx={{
-                position: "relative",
-                outline: "none",
-                height: "500px",
-                marginTop: "30px",
-                //width: "500px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: "99999",
               }}
             >
-              {/* Subtle gradient overlay at the top of the zoomed image */}
               <Box
                 sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: "40px", // Adjust height as needed
-                  background:
-                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  paddingRight: "8px",
-                  borderTopLeftRadius: "8px",
-                  borderTopRightRadius: "8px",
+                  position: "relative",
+                  outline: "none",
+                  height: isMobile ? "300px" : "500px",
+                  marginTop: "30px",
+                  //width: "500px",
                 }}
               >
-                {/* Close icon positioned within the gradient overlay */}
-                {/* <CloseIcon
+                {/* Subtle gradient overlay at the top of the zoomed image */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "40px", // Adjust height as needed
+                    background:
+                      "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    paddingRight: "8px",
+                    borderTopLeftRadius: "8px",
+                    borderTopRightRadius: "8px",
+                  }}
+                >
+                  {/* Close icon positioned within the gradient overlay */}
+                  {/* <CloseIcon
                   onClick={() => setZoomOpen(false)}
                   sx={{
                     color: "white",
@@ -363,166 +445,169 @@ const McqFlow = ({
                     padding: "4px",
                   }}
                 /> */}
+                  <img
+                    src={Assets.closeIcon}
+                    onClick={() => setZoomOpen(false)}
+                    style={{ marginTop: "20px", cursor: "pointer" }}
+                  />
+                </Box>
+
                 <img
-                  src={Assets.closeIcon}
-                  onClick={() => setZoomOpen(false)}
-                  style={{ marginTop: "20px", cursor: "pointer" }}
+                  src={
+                    getAssetUrl(
+                      s3Assets[conversation?.instruction?.content[0]?.value]
+                    ) || Assets[conversation?.instruction?.content[0]?.value]
+                  }
+                  alt="Zoomed content"
+                  style={{
+                    // maxWidth: "90vw",
+                    // maxHeight: "90vh",
+                    height: "90%",
+                    //width: "100%",
+                    borderRadius: "8px",
+                  }}
                 />
               </Box>
+            </Modal>
 
-              <img
-                src={
-                  getAssetUrl(
-                    s3Assets[conversation?.instruction?.content[0]?.value]
-                  ) || Assets[conversation?.instruction?.content[0]?.value]
-                }
-                alt="Zoomed content"
+            {!conversation?.instruction?.content[0]?.text && (
+              <Box
                 style={{
-                  // maxWidth: "90vw",
-                  // maxHeight: "90vh",
-                  height: "90%",
-                  //width: "100%",
-                  borderRadius: "8px",
+                  width: isMobile ? "80%" : "1px",
+                  backgroundColor: "#E0E2E7",
+                  height: isMobile ? "1px" : "280px",
+                  margin: "0px 30px",
+                  border: "1px solid #E0E2E7",
                 }}
               />
-            </Box>
-          </Modal>
+            )}
 
-          {!conversation?.instruction?.content[0]?.text && (
-            <Box
-              style={{
-                width: "1px",
-                backgroundColor: "#E0E2E7",
-                height: "280px",
-                margin: "0px 30px",
-                border: "1px solid #E0E2E7",
-              }}
-            />
-          )}
-
-          {/* MCQ Section on the right */}
-          <div style={{ width: "50%" }}>
-            {typeof tasks?.[currentStep - 1]?.question === "string" ? (
-              <h3
-                style={{
-                  fontFamily: "Quicksand",
-                  fontSize: "22px",
-                  fontWeight: "800",
-                }}
-              >
-                {tasks[currentStep - 1].question}
-              </h3>
-            ) : null}
-
-            <div>
-              {conversation?.tasks?.[currentStep - 1]?.options.map((option) => (
-                <div
-                  key={option.id}
+            {/* MCQ Section on the right */}
+            <div style={{ width: isMobile ? "80%" : "50%" }}>
+              {typeof tasks?.[currentStep - 1]?.question === "string" ? (
+                <h3
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "10px",
+                    fontFamily: "Quicksand",
+                    fontSize: isMobile ? "16px" : "22px",
+                    fontWeight: "800",
                   }}
                 >
-                  <input
-                    type="radio"
-                    name="mcq"
-                    value={option.id}
-                    checked={selectedOption === option.id}
-                    onChange={() => {
-                      setSelectedOption(option.id);
-                      if (
-                        option.id ===
-                        conversation?.tasks[currentStep - 1]?.answer
-                      ) {
-                        playAudioCorrect();
-                      } else {
-                        playAudioWrong();
-                      }
-                    }}
-                    style={{
-                      marginRight: "10px",
-                      transform: "scale(1.5)",
-                      cursor: "pointer",
-                    }}
-                  />
-                  <label
-                    style={{
-                      fontSize: "17px",
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      fontFamily: "Quicksand",
-                    }}
-                  >
-                    {option.value}
-                  </label>
-                </div>
-              ))}
+                  {tasks[currentStep - 1].question}
+                </h3>
+              ) : null}
+
+              <div>
+                {conversation?.tasks?.[currentStep - 1]?.options.map(
+                  (option) => (
+                    <div
+                      key={option.id}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="mcq"
+                        value={option.id}
+                        checked={selectedOption === option.id}
+                        onChange={() => {
+                          setSelectedOption(option.id);
+                          if (
+                            option.id ===
+                            conversation?.tasks[currentStep - 1]?.answer
+                          ) {
+                            playAudioCorrect();
+                          } else {
+                            playAudioWrong();
+                          }
+                        }}
+                        style={{
+                          marginRight: "10px",
+                          transform: "scale(1.5)",
+                          cursor: "pointer",
+                        }}
+                      />
+                      <label
+                        style={{
+                          fontSize: isMobile ? "14px" : "17px",
+                          cursor: "pointer",
+                          fontWeight: "600",
+                          fontFamily: "Quicksand",
+                        }}
+                      >
+                        {option.value}
+                      </label>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {selectedOption && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop:
-                currentLevel === "S1" || currentLevel === "S2"
-                  ? "30px"
-                  : "10px",
-              gap: "10px",
-            }}
-          >
-            <VoiceAnalyser
-              pageName={"m8"}
-              setVoiceText={setVoiceText}
-              onAudioProcessed={handleRecordingComplete}
-              setRecordedAudio={setRecordedAudio}
-              setVoiceAnimate={setVoiceAnimate}
-              storyLine={storyLine}
-              dontShowListen={true}
-              handleNext={handleNext}
-              enableNext={enableNext}
-              originalText={parentWords}
-              audioLink={audio ? audio : completeAudio}
-              buttonAnimation={selectedOption}
-              handleStartRecording={handleStartRecording}
-              //handleStopRecording={handleStopRecording}
-              {...{
-                contentId,
-                contentType,
-                currentLine: currentStep - 1,
-                playTeacherAudio,
-                callUpdateLearner,
-                isShowCase,
-                setEnableNext,
-                //showOnlyListen: answer !== "correct",
-                showOnlyListen: false,
-                setOpenMessageDialog,
+          {selectedOption && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop:
+                  currentLevel === "S1" || currentLevel === "S2"
+                    ? "30px"
+                    : "10px",
+                gap: "10px",
               }}
-            />
-            {currentLevel !== "S1" && currentLevel !== "S2"
-              ? selectedOption !== null &&
-                recAudio && (
-                  <div
-                    onClick={loadNextTask}
-                    style={{ cursor: "pointer", marginLeft: "23px" }}
-                  >
-                    <NextButtonRound height={45} width={45} />
-                  </div>
-                )
-              : recAudio && (
-                  <div
-                    onClick={loadNextTask}
-                    style={{ cursor: "pointer", marginLeft: "23px" }}
-                  >
-                    <NextButtonRound height={45} width={45} />
-                  </div>
-                )}
-          </div>
-        )}
-      </div>
+            >
+              <VoiceAnalyser
+                pageName={"m8"}
+                setVoiceText={setVoiceText}
+                onAudioProcessed={handleRecordingComplete}
+                setRecordedAudio={setRecordedAudio}
+                setVoiceAnimate={setVoiceAnimate}
+                storyLine={storyLine}
+                dontShowListen={true}
+                handleNext={handleNext}
+                enableNext={enableNext}
+                originalText={parentWords}
+                audioLink={audio ? audio : completeAudio}
+                buttonAnimation={selectedOption}
+                handleStartRecording={handleStartRecording}
+                handleStopRecording={handleStopRecording}
+                {...{
+                  contentId,
+                  contentType,
+                  currentLine: currentStep - 1,
+                  playTeacherAudio,
+                  callUpdateLearner,
+                  isShowCase,
+                  setEnableNext,
+                  //showOnlyListen: answer !== "correct",
+                  showOnlyListen: false,
+                  setOpenMessageDialog,
+                }}
+              />
+              {currentLevel !== "S1" && currentLevel !== "S2"
+                ? selectedOption !== null &&
+                  recAudio && (
+                    <div
+                      onClick={loadNextTask}
+                      style={{ cursor: "pointer", marginLeft: "23px" }}
+                    >
+                      <NextButtonRound height={45} width={45} />
+                    </div>
+                  )
+                : recAudio && (
+                    <div
+                      onClick={loadNextTask}
+                      style={{ cursor: "pointer", marginLeft: "23px" }}
+                    >
+                      <NextButtonRound height={45} width={45} />
+                    </div>
+                  )}
+            </div>
+          )}
+        </div>
+      </ThemeProvider>
     </MainLayout>
   );
 };
