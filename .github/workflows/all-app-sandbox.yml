@@ -3,7 +3,7 @@ name: ALL sandbox prod Deployment
 on:
   push:
     branches:
-      - main_
+      - main
 
 jobs:
   deploy:
