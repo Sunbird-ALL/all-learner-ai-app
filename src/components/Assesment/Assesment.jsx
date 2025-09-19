@@ -956,7 +956,11 @@ const Assesment = ({ discoverStart }) => {
   useEffect(() => {
     setLocalData("lang", lang);
     let contentSessionId = localStorage.getItem("contentSessionId");
-    setLocalData("sessionId", contentSessionId);
+    let session_id = getLocalData("sessionId");
+
+    if (!session_id) {
+      setLocalData("sessionId", contentSessionId);
+    }
 
     if (discoverStart && username && !TOKEN) {
       (async () => {
