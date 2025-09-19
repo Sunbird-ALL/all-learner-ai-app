@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { Log } from "../../services/telementryService";
 import { useNavigate } from "react-router-dom";
-import { setLocalData } from "../../utils/constants";
+import { getLocalData, setLocalData } from "../../utils/constants";
 import {
   getCorrectPracticeWords,
   updateCorrectPracticeWords,
@@ -93,17 +93,15 @@ const ReadMatch = ({
     { word: "Fire", img: fireImg, match: "Fire" },
     { word: "Tie", img: tieImg, match: "Tie" },
   ];
-
+  const [firstAttemptCorrect, setFirstAttemptCorrect] = useState({});
   const [wordImagePairs, setWordImagePairs] = useState(null);
-
-  console.log("level", level);
 
   useEffect(() => {
     if (level === 1) {
       setLocalData("readMatch", false);
       navigate("/practice");
     }
-  }, []);
+  }, [level]);
 
   useEffect(() => {
     const fetchCorrectWords = async () => {
@@ -161,7 +159,7 @@ const ReadMatch = ({
         content_id: item.content_id,
         practice: true,
         learned: true,
-        understood: true,
+        understood: firstAttemptCorrect[item.content_id] === true,
       }));
 
       updateCorrectPracticeWords(formattedData)
@@ -196,21 +194,28 @@ const ReadMatch = ({
     setSelectedImage(imageIndex);
     setShowInitialSelection(true);
 
-    if (wordImagePairs[imageIndex]?.match === selectedWord?.word) {
-      setCorrectMatch({
-        wordIndex: selectedWord?.wordIndex,
-        imageIndex: imageIndex,
-      });
+    const wordItem = wordImagePairs.find(
+      (item) => item.word === selectedWord.word
+    );
+    const imageItem = wordImagePairs[imageIndex];
 
+    const isCorrect = imageItem.match === wordItem.word;
+
+    if (firstAttemptCorrect[wordItem.content_id] === undefined) {
+      setFirstAttemptCorrect((prev) => ({
+        ...prev,
+        [wordItem.content_id]: isCorrect,
+      }));
+    }
+
+    if (isCorrect) {
+      setCorrectMatch({ wordIndex: selectedWord.wordIndex, imageIndex });
       setTimeout(() => {
         setShowConfetti(true);
         setTimeout(() => {
           setMatches([
             ...matches,
-            {
-              sourceIndex: imageIndex,
-              wordIndex: selectedWord?.wordIndex,
-            },
+            { sourceIndex: imageIndex, wordIndex: selectedWord.wordIndex },
           ]);
           setCorrectMatch(null);
           setShowConfetti(false);
@@ -222,11 +227,7 @@ const ReadMatch = ({
       }, 500);
     } else {
       setTimeout(() => {
-        setWrongMatch({
-          wordIndex: selectedWord.wordIndex,
-          imageIndex: imageIndex,
-        });
-
+        setWrongMatch({ wordIndex: selectedWord.wordIndex, imageIndex });
         setTimeout(() => {
           setSelectedWord(null);
           setSelectedImage(null);

@@ -5189,7 +5189,7 @@ const PhrasesInAction = ({
         <div
           style={{
             width: "100%",
-            height: "100%",
+            height: "56vh",
             backgroundColor: "#eae6ff",
             display: "flex",
             alignItems: "center",
@@ -5238,12 +5238,12 @@ const PhrasesInAction = ({
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        fontSize: "36px",
+                        fontSize: "30px",
                         fontWeight: "bold",
                         color: "#1a1a1a",
                         letterSpacing: "3px",
                         position: "relative",
-                        marginBottom: "20px",
+                        marginBottom: "-5px",
                       }}
                     >
                       <span style={{ margin: "0 10px" }}>
@@ -5305,7 +5305,7 @@ const PhrasesInAction = ({
                         />
                         <p
                           style={{
-                            fontSize: "36px",
+                            fontSize: "30px",
                             fontWeight: "bold",
                             color: "#1a1a1a",
                             letterSpacing: "3px",
@@ -5384,8 +5384,8 @@ const PhrasesInAction = ({
                         <div
                           key={item.text}
                           style={{
-                            width: "200px",
-                            height: "220px",
+                            width: "180px",
+                            height: "190px",
                             border: "1px solid #000",
                             margin: "10px",
                             display: "flex",
@@ -5393,6 +5393,7 @@ const PhrasesInAction = ({
                             alignItems: "center",
                             cursor: "pointer",
                             flexDirection: "column",
+                            marginBottom: "30px",
                           }}
                           onClick={() => setSelectedDiv(item.text)}
                         >
@@ -5405,8 +5406,8 @@ const PhrasesInAction = ({
                             }
                             alt={item.text}
                             style={{
-                              width: "200px",
-                              height: "230px",
+                              width: "180px",
+                              height: "200px",
                               objectFit: "contain",
                               border: "1px solid #00000033",
                             }}
@@ -5430,11 +5431,11 @@ const PhrasesInAction = ({
                           flexDirection: "column",
                           justifyContent: "center",
                           alignItems: "center",
-                          marginBottom: "15px",
+                          marginBottom: "5px",
                         }}
                       >
                         <Box
-                          style={{ marginTop: "10px", marginBottom: "50px" }}
+                          style={{ marginTop: "-45px", marginBottom: "55px" }}
                         >
                           <RecordVoiceVisualizer />
                         </Box>
@@ -5443,14 +5444,14 @@ const PhrasesInAction = ({
                             background: "transparent",
                             border: "none",
                             cursor: "pointer",
-                            marginTop: "10px",
+                            marginTop: "-18px",
                           }}
                           onClick={handleMicClick}
                         >
                           <img
                             src={Assets.pause}
                             alt="Stop Recording"
-                            style={{ width: "60px", height: "60px" }}
+                            style={{ width: "45px", height: "45px" }}
                           />
                         </button>
                       </div>
@@ -5462,14 +5463,14 @@ const PhrasesInAction = ({
                           background: "transparent",
                           border: "none",
                           cursor: "pointer",
-                          marginTop: "10px",
+                          marginTop: "0px",
                         }}
                         onClick={handleMicClick}
                       >
                         <img
                           src={Assets.mic}
                           alt="Start Recording"
-                          style={{ width: "60px", height: "60px" }}
+                          style={{ width: "50px", height: "50px" }}
                         />
                       </button>
                     )}
@@ -5495,12 +5496,12 @@ const PhrasesInAction = ({
                             ? "24px"
                             : isTablet
                             ? "30px"
-                            : "36px",
+                            : "30px",
                           fontWeight: "bold",
                           color: "#1a1a1a",
                           letterSpacing: "3px",
                           position: "relative",
-                          marginBottom: "20px",
+                          marginBottom: "5px",
                         }}
                       >
                         <span style={{ margin: "0 10px", color: textColor }}>
@@ -5562,7 +5563,7 @@ const PhrasesInAction = ({
                                 ? "170px"
                                 : isTablet
                                 ? "200px"
-                                : "220px",
+                                : "190px",
                               display: "flex",
                               justifyContent: "center",
                               alignItems: "center",
@@ -5707,7 +5708,7 @@ const PhrasesInAction = ({
                         }}
                       >
                         <Box
-                          style={{ marginTop: "10px", marginBottom: "50px" }}
+                          style={{ marginTop: "-25px", marginBottom: "67px" }}
                         >
                           <RecordVoiceVisualizer />
                         </Box>
@@ -5716,7 +5717,7 @@ const PhrasesInAction = ({
                             background: "transparent",
                             border: "none",
                             cursor: "pointer",
-                            marginTop: "10px",
+                            marginTop: "-25px",
                           }}
                           onClick={handleMicClick2}
                         >
@@ -5724,8 +5725,8 @@ const PhrasesInAction = ({
                             src={Assets.pause}
                             alt="Stop Recording"
                             style={{
-                              width: "60px",
-                              height: "60px",
+                              width: "49px",
+                              height: "49px",
                             }}
                           />
                         </button>

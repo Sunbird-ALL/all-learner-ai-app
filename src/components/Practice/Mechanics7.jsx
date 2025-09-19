@@ -841,7 +841,7 @@ const Mechanics7 = ({
             flexDirection: isMobile ? "column" : "row",
             //alignItems: "center",
             justifyContent: "space-evenly",
-            height: "100%",
+            height: "80%",
             alignItems: "flex-start",
             //width: "80%"
           }}
@@ -884,7 +884,7 @@ const Mechanics7 = ({
               alignItems: "center",
               alignSelf: "center",
               maskBorderWidth: 6,
-              height: "300px",
+              height: "200px",
             }}
           >
             <span
@@ -924,7 +924,7 @@ const Mechanics7 = ({
           <Box
             textAlign="center"
             sx={{
-              height: "500px",
+              height: "350px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -985,8 +985,8 @@ const Mechanics7 = ({
                         ? "#58CC02"
                         : "#58CC02",
                       fontWeight: 700,
-                      fontSize: isMobile ? "30px" : "72px",
-                      lineHeight: isMobile ? "60px" : "87px",
+                      fontSize: isMobile ? "30px" : "50px",
+                      lineHeight: isMobile ? "60px" : "70px",
                       letterSpacing: isMobile ? "1%" : "2%",
                       fontFamily: "Quicksand",
                       textTransform: "uppercase",
@@ -1003,8 +1003,8 @@ const Mechanics7 = ({
                         ? "#58CC02"
                         : "#58CC02",
                       fontWeight: 700,
-                      fontSize: isMobile ? "50px" : "72px",
-                      lineHeight: isMobile ? "60px" : "87px",
+                      fontSize: isMobile ? "50px" : "50px",
+                      lineHeight: isMobile ? "60px" : "70px",
                       letterSpacing: isMobile ? "1%" : "2%",
                       fontFamily: "Quicksand",
                       textTransform: "uppercase",
@@ -1027,7 +1027,7 @@ const Mechanics7 = ({
                         border: "2px solid #FF7F36",
                         borderRadius: "16px",
                         gap: "10px",
-                        padding: "15px",
+                        padding: "10px",
                         //width: "300px",
                         backgroundColor: "#fff",
                         cursor: "pointer",
@@ -1048,7 +1048,7 @@ const Mechanics7 = ({
                       >
                         <span
                           style={{
-                            fontSize: "40px",
+                            fontSize: "35px",
                             fontWeight: "400",
                             color: "#333F61",
                             fontStyle: "Quicksand",
@@ -1058,7 +1058,7 @@ const Mechanics7 = ({
                         </span>
                       </Box>
 
-                      <ListenButton height={50} width={50} />
+                      <ListenButton height={40} width={40} />
                     </Box>
                   </AudioTooltipModal>
                 )}
@@ -1067,7 +1067,7 @@ const Mechanics7 = ({
                 <img
                   src={Assets.graph}
                   alt="graph"
-                  style={{ height: "40px", margin: "10px" }}
+                  style={{ height: "30px", margin: "10px" }}
                 />
               )}
             </Box>
@@ -1089,7 +1089,7 @@ const Mechanics7 = ({
                   <div>
                     <Box
                       sx={{
-                        marginTop: "7px",
+                        marginTop: "5px",
                         position: "relative",
                         display: "flex",
                         justifyContent: "center",
@@ -1108,7 +1108,7 @@ const Mechanics7 = ({
                     <Box
                       className="walkthrough-step-1"
                       sx={{
-                        marginTop: "7px",
+                        marginTop: "5px",
                         position: "relative",
                         display: "flex",
                         justifyContent: "center",
@@ -1406,6 +1406,7 @@ const Mechanics7 = ({
                   </Box>
                   <Box
                     className="walkthrough-step-5"
+                    mb={2}
                     onClick={() => {
                       setIsRecorded(false);
 
