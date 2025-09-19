@@ -5409,6 +5409,7 @@ const Practice = () => {
             parentWords: parentWords,
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
+            multilingual: questions[currentQuestion]?.multilingual,
             setVoiceText,
             setRecordedAudio,
             setVoiceAnimate,

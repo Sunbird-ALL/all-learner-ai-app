@@ -148,6 +148,7 @@ const WordWall = ({
   loading,
   vocabCount,
   wordCount,
+  multilingual,
 }) => {
   const [dropText, setDropText] = useState("");
   const [showQuiz, setShowQuiz] = useState(false);
@@ -1170,24 +1171,32 @@ const WordWall = ({
                 />
                 <span>English</span>
               </div>
-              {/* <div
-                style={{ 
-                  display: "flex", 
-                  alignItems: "center", 
-                  gap: "8px", 
-                  cursor: "pointer", 
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  cursor: "pointer",
                   color: "#333F61",
                   padding: "5px 10px",
                   borderRadius: "20px",
-                  fontFamily:"Quicksand",
-                  fontStyle:"Bold",
-                  fontWeight:800
+                  fontFamily: "Quicksand",
+                  fontStyle: "Bold",
+                  fontWeight: 800,
                 }}
-                onClick={() => playAudio(currentAnswer?.audio_hi)}
+                onClick={() =>
+                  playAudio(
+                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${multilingual?.kn?.audio_url}`
+                  )
+                }
               >
-                <img src={listenvioletImg} alt="Listen" style={{ height: "40px" }} />
-                <span>हिंदी</span>
-              </div> */}
+                <img
+                  src={listenvioletImg}
+                  alt="Listen"
+                  style={{ height: "40px" }}
+                />
+                <span>ಕನ್ನಡ</span>
+              </div>
             </div>
           </div>
 

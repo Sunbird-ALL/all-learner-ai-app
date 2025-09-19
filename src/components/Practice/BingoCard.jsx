@@ -545,7 +545,7 @@ const BingoCard = ({
   }, []);
 
   const getSize = () =>
-    screenWidth < 480 ? "40px" : screenWidth < 768 ? "50px" : "60px";
+    screenWidth < 480 ? "40px" : screenWidth < 768 ? "53px" : "75px";
 
   const handleWordClick = (word) => {
     // if (!selectedWords.includes(word)) {
@@ -824,7 +824,7 @@ const BingoCard = ({
         <div
           style={{
             width: "100%",
-            height: "85vh",
+            height: "70vh",
             position: "relative",
             overflowX: "hidden",
             backgroundColor: "#1CB0F6",
@@ -874,10 +874,10 @@ const BingoCard = ({
             <div
               style={{
                 position: "absolute",
-                left: screenWidth < 768 ? "30%" : "280px",
-                bottom: screenWidth < 768 ? "220px" : "318px",
-                width: screenWidth < 768 ? "140px" : "240px",
-                height: screenWidth < 768 ? "90px" : "130px",
+                left: screenWidth < 768 ? "30%" : "260px",
+                bottom: screenWidth < 768 ? "220px" : "277px",
+                width: screenWidth < 768 ? "140px" : "170px",
+                height: screenWidth < 768 ? "90px" : "90px",
                 zIndex: 1000,
               }}
             >
@@ -887,7 +887,7 @@ const BingoCard = ({
                 style={{
                   transform: "translateX(-50%)",
                   //width: screenWidth < 768 ? "120px" : "170px",
-                  height: screenWidth < 768 ? "90px" : "165px",
+                  height: screenWidth < 768 ? "90px" : "150px",
                   zIndex: 100,
                   cursor: "pointer",
                 }}
@@ -947,8 +947,8 @@ const BingoCard = ({
               src={showWrongWord ? Assets.sadBear : Assets.monkeyImg}
               alt="Monkey"
               style={{
-                width: screenWidth < 768 ? "150px" : "250px",
-                height: screenWidth < 768 ? "250px" : "450px",
+                width: screenWidth < 768 ? "150px" : "193px",
+                height: screenWidth < 768 ? "250px" : "514px",
                 cursor: "pointer",
               }}
             />
@@ -967,11 +967,11 @@ const BingoCard = ({
                   src={Assets.play}
                   alt="Start"
                   style={{
-                    width: screenWidth < 768 ? "40px" : "50px",
-                    height: screenWidth < 768 ? "40px" : "50px",
+                    width: screenWidth < 768 ? "40px" : "45px",
+                    height: screenWidth < 768 ? "40px" : "45px",
                     position: "absolute",
-                    left: screenWidth < 768 ? "72%" : "51%",
-                    top: screenWidth < 768 ? "10%" : "5%",
+                    left: screenWidth < 768 ? "72%" : "42%",
+                    top: screenWidth < 768 ? "10%" : "22%",
                     //transform: "translateX(-50%)",
                     transform: `scale(${scale})`,
                     transition: "transform 0.5s ease-in-out",
@@ -993,11 +993,11 @@ const BingoCard = ({
                   alt="Empty Placeholder"
                   style={{
                     position: "absolute",
-                    left: screenWidth < 768 ? "85%" : "72%",
-                    top: screenWidth < 768 ? "-19%" : "-20%",
+                    left: screenWidth < 768 ? "85%" : "65%",
+                    top: screenWidth < 768 ? "-25%" : "-2%",
                     transform: "translateX(-50%)",
                     //width: screenWidth < 768 ? "120px" : "170px",
-                    height: screenWidth < 768 ? "90px" : "175px",
+                    height: screenWidth < 768 ? "80px" : "140px",
                     zIndex: 10,
                   }}
                 />
@@ -1056,7 +1056,7 @@ const BingoCard = ({
               style={{
                 position: "absolute",
                 left: screenWidth < 768 ? "30%" : "280px",
-                bottom: screenWidth < 768 ? "220px" : "318px",
+                bottom: screenWidth < 768 ? "220px" : "277px",
                 width: screenWidth < 768 ? "140px" : "240px",
                 height: screenWidth < 768 ? "90px" : "130px",
                 zIndex: 1000,
@@ -1121,7 +1121,7 @@ const BingoCard = ({
               style={{
                 position: "absolute",
                 left: screenWidth < 768 ? "20%" : "15%",
-                bottom: screenWidth < 768 ? "220px" : "330px",
+                bottom: screenWidth < 768 ? "220px" : "280px",
                 width: screenWidth < 768 ? "140px" : "240px",
                 height: screenWidth < 768 ? "90px" : "130px",
                 zIndex: 1000,
@@ -1132,7 +1132,7 @@ const BingoCard = ({
                 alt="Cloud"
                 style={{
                   //width: screenWidth < 768 ? "170px" : "230px",
-                  height: screenWidth < 768 ? "100px" : "185px",
+                  height: screenWidth < 768 ? "100px" : "160px",
                   zIndex: 21,
                   cursor: "pointer",
                 }}
@@ -1158,8 +1158,8 @@ const BingoCard = ({
               <div
                 style={{
                   position: "absolute",
-                  left: screenWidth < 768 ? "20%" : "15%",
-                  bottom: screenWidth < 768 ? "220px" : "320px",
+                  left: screenWidth < 768 ? "20%" : "13%",
+                  bottom: screenWidth < 768 ? "220px" : "230px",
                   //width: screenWidth < 768 ? "140px" : "240px",
                   //height: screenWidth < 768 ? "90px" : "130px",
                   zIndex: 1000,
@@ -1196,8 +1196,8 @@ const BingoCard = ({
               <div
                 style={{
                   position: "absolute",
-                  left: screenWidth < 768 ? "20%" : "15%",
-                  bottom: screenWidth < 768 ? "220px" : "320px",
+                  left: screenWidth < 768 ? "20%" : "13%",
+                  bottom: screenWidth < 768 ? "220px" : "230px",
                   //width: screenWidth < 768 ? "140px" : "240px",
                   //height: screenWidth < 768 ? "90px" : "130px",
                   zIndex: 1000,
@@ -1273,8 +1273,8 @@ const BingoCard = ({
               <div
                 style={{
                   position: "absolute",
-                  left: screenWidth < 768 ? "30%" : "170px",
-                  bottom: screenWidth < 768 ? "220px" : "310px",
+                  left: screenWidth < 768 ? "30%" : "160px",
+                  bottom: screenWidth < 768 ? "220px" : "230px",
                   display: "flex",
                   gap: screenWidth < 768 ? "10px" : "20px",
                   zIndex: 20,
@@ -1331,7 +1331,7 @@ const BingoCard = ({
               display: "grid",
               gridTemplateColumns: isMobile
                 ? "repeat(2, 1fr)"
-                : "repeat(3, 1fr)",
+                : "repeat(4, 1fr)",
               gap: screenWidth < 768 ? "10px 30px" : "20px 50px",
               position: "absolute",
               right: screenWidth < 768 ? "10%" : "10%",
@@ -1446,8 +1446,8 @@ const BingoCard = ({
                         screenWidth < 480
                           ? "10px"
                           : screenWidth < 768
-                          ? "12px"
-                          : "15px",
+                          ? "15px"
+                          : "22px",
                     }}
                   >
                     {word}
