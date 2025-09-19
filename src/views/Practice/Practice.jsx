@@ -4233,10 +4233,9 @@ const Practice = () => {
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.title || "P1";
-  const milestoneType =
-    currentLevel?.includes("S1") || currentLevel?.includes("S2")
-      ? "showcase"
-      : "practice";
+  const milestoneType = ["S1", "S2"].includes(currentLevel)
+    ? "showcase"
+    : "practice";
 
   //console.log("prog", progressDatas);
 
