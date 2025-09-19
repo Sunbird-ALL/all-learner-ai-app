@@ -415,6 +415,13 @@ export const ProfileHeader = ({
   const [animatedWordCount, setAnimatedWordCount] = useState(0);
   const [milestone, setMilestone] = useState(0);
 
+  console.log(
+    "IS_IN_APP_AUTHORISATION:",
+    process.env.REACT_APP_IS_IN_APP_AUTHORISATION,
+    "Type:",
+    typeof process.env.REACT_APP_IS_IN_APP_AUTHORISATION
+  );
+
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
 
