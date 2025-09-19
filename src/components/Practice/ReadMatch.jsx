@@ -97,7 +97,7 @@ const ReadMatch = ({
   const [wordImagePairs, setWordImagePairs] = useState(null);
 
   useEffect(() => {
-    if (level === 2) {
+    if (level === 1) {
       setLocalData("readMatch", false);
       navigate("/practice");
     }
