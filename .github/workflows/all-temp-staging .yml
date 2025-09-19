@@ -3,7 +3,7 @@ name: ALL temp rig staging Deployment
 on:
   push:
     branches:
-      - all-2.0.0.2
+      - all-2.0.0.3
 
 jobs:
   deploy:
