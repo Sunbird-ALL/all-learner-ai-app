@@ -4233,6 +4233,9 @@ const Practice = () => {
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.title || "P1";
+  const milestoneType = ["S1", "S2"].includes(currentLevel)
+    ? "showcase"
+    : "practice";
 
   //console.log("prog", progressDatas);
 
@@ -4585,7 +4588,7 @@ const Practice = () => {
             try {
               await addLesson({
                 sessionId,
-                milestone: `practice`,
+                milestone: milestoneType,
                 lesson: "0",
                 progress: 0,
                 language: lang,
@@ -4613,7 +4616,7 @@ const Practice = () => {
         }
         await addLesson({
           sessionId: sessionId,
-          milestone: `practice`,
+          milestone: milestoneType,
           lesson: newPracticeStep,
           progress: currentPracticeProgress,
           language: lang,
@@ -5002,7 +5005,7 @@ const Practice = () => {
       };
       await addLesson({
         sessionId: sessionId,
-        milestone: "practice",
+        milestone: milestoneType,
         lesson: newCurrentPracticeStep,
         progress: (newCurrentPracticeStep / practiceSteps.length) * 100,
         language: lang,
