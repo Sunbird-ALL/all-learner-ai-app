@@ -545,7 +545,7 @@ const BingoCard = ({
   }, []);
 
   const getSize = () =>
-    screenWidth < 480 ? "40px" : screenWidth < 768 ? "53px" : "75px";
+    screenWidth < 480 ? "40px" : screenWidth < 768 ? "53px" : "65px";
 
   const handleWordClick = (word) => {
     // if (!selectedWords.includes(word)) {
@@ -994,7 +994,7 @@ const BingoCard = ({
                   style={{
                     position: "absolute",
                     left: screenWidth < 768 ? "85%" : "65%",
-                    top: screenWidth < 768 ? "-25%" : "-2%",
+                    top: screenWidth < 768 ? "-25%" : "2%",
                     transform: "translateX(-50%)",
                     //width: screenWidth < 768 ? "120px" : "170px",
                     height: screenWidth < 768 ? "80px" : "140px",
@@ -1056,7 +1056,7 @@ const BingoCard = ({
               style={{
                 position: "absolute",
                 left: screenWidth < 768 ? "30%" : "280px",
-                bottom: screenWidth < 768 ? "220px" : "277px",
+                bottom: screenWidth < 768 ? "220px" : "250px",
                 width: screenWidth < 768 ? "140px" : "240px",
                 height: screenWidth < 768 ? "90px" : "130px",
                 zIndex: 1000,
@@ -1120,8 +1120,8 @@ const BingoCard = ({
             <div
               style={{
                 position: "absolute",
-                left: screenWidth < 768 ? "20%" : "15%",
-                bottom: screenWidth < 768 ? "220px" : "280px",
+                left: screenWidth < 768 ? "20%" : "10%",
+                bottom: screenWidth < 768 ? "220px" : "265px",
                 width: screenWidth < 768 ? "140px" : "240px",
                 height: screenWidth < 768 ? "90px" : "130px",
                 zIndex: 1000,
@@ -1334,8 +1334,8 @@ const BingoCard = ({
                 : "repeat(4, 1fr)",
               gap: screenWidth < 768 ? "10px 30px" : "20px 50px",
               position: "absolute",
-              right: screenWidth < 768 ? "10%" : "10%",
-              top: screenWidth < 768 ? "15%" : "17%",
+              right: screenWidth < 768 ? "10%" : "8%",
+              top: screenWidth < 768 ? "15%" : "25%",
               //transform: screenWidth < 768 ? "translateX(50%)" : "none",
               zIndex: 1,
             }}
@@ -1375,8 +1375,18 @@ const BingoCard = ({
                 <div
                   key={index}
                   style={{
-                    width: getSize(),
-                    height: getSize(),
+                    width:
+                      screenWidth < 480
+                        ? "40px"
+                        : screenWidth < 768
+                        ? "53px"
+                        : "110px",
+                    height:
+                      screenWidth < 480
+                        ? "40px"
+                        : screenWidth < 768
+                        ? "53px"
+                        : "65px",
                     backgroundColor: isCorrectWord
                       ? "#58CC02"
                       : selectedWords.includes(word)
@@ -1389,11 +1399,9 @@ const BingoCard = ({
                     color:
                       selectedWords.includes(word) || isCorrectWord
                         ? "#ffffff"
-                        : "#1CB0F6",
-                    borderRadius: "30% 70% 30% 70% / 70% 30% 70% 30%",
-                    boxShadow:
-                      "0 6px 8px rgba(0, 0, 0, 0.2), 0 -4px 6px rgba(255, 255, 255, 0.5) inset",
-                    transform: "rotate(-12deg)",
+                        : "rgba(28, 176, 246, 1)",
+                    borderRadius: "12px",
+                    boxShadow: "0 4px 6px rgba(0,0,0,0.2)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1402,12 +1410,13 @@ const BingoCard = ({
                         ? "14px"
                         : screenWidth < 768
                         ? "16px"
-                        : "18px",
-                    fontWeight: "bold",
+                        : "15px",
+                    fontWeight: 700,
                     border:
                       highlightedButtonIndex === index
-                        ? "0.3px solid #4DBD25"
-                        : "0.3px solid #000000",
+                        ? "1px solid #4DBD25"
+                        : "1px solid #000000",
+                    fontStyle: "normal",
                     fontFamily: "Quicksand",
                     cursor:
                       showRecording ||
@@ -1441,13 +1450,14 @@ const BingoCard = ({
                 >
                   <p
                     style={{
-                      transform: "rotate(12deg)",
                       fontSize:
                         screenWidth < 480
-                          ? "10px"
+                          ? "12px"
                           : screenWidth < 768
-                          ? "15px"
-                          : "22px",
+                          ? "16px"
+                          : "20px",
+                      margin: 0,
+                      color: "#333F61",
                     }}
                   >
                     {word}
