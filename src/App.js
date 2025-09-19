@@ -7,10 +7,13 @@ import { AppContent } from "./views";
 import theme from "./assets/styles/theme";
 import "@tekdi/all-telemetry-sdk/index.js";
 import axios from "axios";
+import { getLocalData } from "./utils/constants";
 
 const App = () => {
   const navigate = useNavigate();
   const ranonce = useRef(false);
+
+  console.log("appSessionid", getLocalData("sessionId"));
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
