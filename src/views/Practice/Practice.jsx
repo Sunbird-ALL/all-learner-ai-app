@@ -4477,7 +4477,8 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true"
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+          lang === "en"
         ? getContentNew
         : getContent;
 
@@ -4886,7 +4887,8 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true"
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+          lang === "en"
         ? getContentNew
         : getContent;
 
@@ -5018,7 +5020,8 @@ const Practice = () => {
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true"
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+          lang === "en"
         ? getContentNew
         : getContent;
 
