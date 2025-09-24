@@ -44,12 +44,16 @@ const LoginPage = () => {
   const handleUsernameChange = (e) => {
     let value = e.target.value;
 
-    if (activeTab === 1) {
-      // Always enforce "GT_" prefix
+    if (activeTab === 0) {
+      // Student → only digits
+      value = value.replace(/\D/g, ""); // strip non-numeric
+    } else if (activeTab === 1) {
+      // Guest → enforce GT_ prefix
       if (!value.startsWith("GT_")) {
         value = "GT_" + value.replace(/^GT_*/, "");
       }
     }
+
     setUsername(value);
   };
 
@@ -194,6 +198,7 @@ const LoginPage = () => {
                 inputProps={{
                   minLength: activeTab === 1 ? 4 : undefined, // at least "GT_"
                 }}
+                type={activeTab === 0 ? "number" : "text"} // 👈 switch type here
               />
             </Grid>
 
