@@ -205,7 +205,8 @@ const WordWall = ({
         const correctWords = response?.data || [];
 
         const formattedItems = correctWords?.map((item) => ({
-          image_url: item.mechanics_data?.[0]?.image_url,
+          image_url:
+            level === 4 ? item?.imagePath : item.mechanics_data?.[0].image_url,
           text: item.contentSourceData?.[0]?.text,
           audio_en: item.contentSourceData?.[0]?.audioUrl,
           audio_hi: item.contentSourceData?.[0]?.audio_url_hi,

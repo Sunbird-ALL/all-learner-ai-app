@@ -1,0 +1,815 @@
+import React, { useState, useEffect, useRef } from "react";
+import Confetti from "react-confetti";
+import headerImg from "../../assets/headerImg.svg";
+import speakButton from "../../assets/speakButton.svg";
+import listenBear from "../../assets/bearlisten.svg";
+import graphImg from "../../assets/graphImg.svg";
+import pauseImg from "../../assets/pauseImg.svg";
+import bearImg from "../../assets/bearImg.svg";
+import listenImg from "../../assets/listenImg.svg";
+import nextImg from "../../assets/nextImg.svg";
+import backgroundImg from "../../assets/starsandclouds.png";
+import meterImg from "../../assets/meterimg.svg";
+import tortoiseImg from "../../assets/tortoiseImg.svg";
+import dogImg from "../../assets/dogimg.svg";
+import langhint from "../../assets/laguagehint.svg";
+import paraudio from "../../assets/parrotR1KanAudio.wav";
+import MainLayout from "../Layouts.jsx/MainLayout";
+import {
+  practiceSteps,
+  WordRedCircle,
+  StopButton,
+  SpeakButton,
+  ListenButton,
+  NextButtonRound,
+  RetryIcon,
+  getLocalData,
+  setLocalData,
+} from "../../utils/constants";
+import { phoneticMatch } from "../../utils/phoneticUtils";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
+import Joyride from "react-joyride";
+import LanguageModalNew from "../../utils/LanguageModal";
+import {
+  fetchASROutput,
+  handleTextEvaluation,
+  callTelemetryApi,
+} from "../../utils/apiUtil";
+import AudioTooltipModal from "./AudioTooltipModal";
+import { loadTranscriber } from "../../utils/transcriber";
+import { doubleMetaphone } from "double-metaphone";
+import correctSound from "../../assets/correct.wav";
+
+const sentencesData = [
+  {
+    id: 1,
+    sentence: "The monkey is jumping",
+    underlinedWords: ["monkey", "jumping"],
+    hints: {
+      monkey: paraudio,
+      jumping: paraudio,
+    },
+  },
+  {
+    id: 2,
+    sentence: "A child sleeps",
+    underlinedWords: ["child", "sleeps"],
+    hints: {
+      child: paraudio,
+      sleeps: paraudio,
+    },
+  },
+  {
+    id: 3,
+    sentence: "Two birds are flying",
+    underlinedWords: ["birds", "flying"],
+    hints: {
+      birds: paraudio,
+      flying: paraudio,
+    },
+  },
+  {
+    id: 4,
+    sentence: "Boys play soccer",
+    underlinedWords: ["play", "boys"],
+    hints: {
+      play: paraudio,
+      boys: paraudio,
+    },
+  },
+  {
+    id: 5,
+    sentence: "The well has water",
+    underlinedWords: ["well", "water"],
+    hints: {
+      well: paraudio,
+      water: paraudio,
+    },
+  },
+];
+
+const UnderlinedSentence = ({
+  sentence,
+  underlinedWords,
+  hints,
+  showUnderlines,
+  onWordHover,
+}) => {
+  const words = sentence.split(" ");
+
+  return (
+    <p
+      style={{
+        fontSize: "40px",
+        fontWeight: "600",
+        color: "rgba(51, 63, 97, 1)",
+        fontFamily: "Quicksand",
+        fontStyle: "bold",
+        textAlign: "center",
+        lineHeight: "1.5",
+        position: "relative",
+      }}
+    >
+      {words.map((word, index) => {
+        const isUnderlined = underlinedWords.includes(word);
+        const cleanWord = word.replace(/[.,!?;]/g, "");
+
+        return (
+          <span
+            key={index}
+            style={{ position: "relative", display: "inline-block" }}
+          >
+            <span
+              style={{
+                position: "relative",
+                display: "inline-block",
+                margin: "0 7px",
+                cursor: isUnderlined && showUnderlines ? "pointer" : "default",
+              }}
+              onMouseEnter={(e) => {
+                if (isUnderlined && showUnderlines) {
+                  const rect = e.target.getBoundingClientRect();
+                  onWordHover(cleanWord, {
+                    top: rect.bottom + 5,
+                    left: rect.left + rect.width / 2,
+                  });
+                }
+              }}
+              onMouseLeave={() => {
+                if (isUnderlined && showUnderlines) {
+                  onWordHover(null, { top: 0, left: 0 });
+                }
+              }}
+            >
+              {word}
+              {isUnderlined && showUnderlines && (
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: "-3px",
+                    left: "0",
+                    width: "100%",
+                    height: "3px",
+                    backgroundColor: "rgba(255, 127, 54, 0.5)",
+                    borderRadius: "2px",
+                  }}
+                />
+              )}
+            </span>
+            {index < words.length - 1 && " "}
+          </span>
+        );
+      })}
+    </p>
+  );
+};
+
+const LanguageHint = ({ hint }) => {
+  if (!hint) return null;
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        bottom: "-60px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 1000,
+      }}
+    >
+      <img
+        src={langhint}
+        alt="hint icon"
+        style={{
+          width: "200px",
+          height: "auto",
+        }}
+      />
+    </div>
+  );
+};
+
+function CircularTimer({ duration = 30, isActive = true }) {
+  const [timeLeft, setTimeLeft] = React.useState(duration);
+  const [elapsed, setElapsed] = React.useState(0);
+
+  const radius = 30;
+  const cx = 40;
+  const cy = 40;
+  const circumference = 2 * Math.PI * radius;
+
+  // Decrease timeLeft every 1s
+  React.useEffect(() => {
+    if (timeLeft <= 0 || !isActive) return;
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft, isActive]);
+
+  React.useEffect(() => {
+    if (!isActive) return;
+    let start = performance.now();
+
+    const tick = (now) => {
+      const diff = now - start;
+      setElapsed(diff / 1000);
+      if (timeLeft > 0) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  }, [timeLeft, isActive]);
+
+  const totalElapsed = duration - timeLeft + elapsed;
+  const progress = Math.max(0, (1 - totalElapsed / duration) * 100);
+
+  return (
+    <div
+      style={{
+        width: "100px",
+        height: "100px",
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <svg width="80" height="80">
+        <circle
+          cx={cx}
+          cy={cy}
+          r={radius}
+          stroke="rgba(255, 187, 150, 0.3)"
+          strokeWidth="8"
+          fill="transparent"
+        />
+
+        <circle
+          cx={cx}
+          cy={cy}
+          r={radius}
+          stroke="#F39F27"
+          strokeWidth="8"
+          fill="transparent"
+          strokeDasharray={`${circumference} ${circumference}`}
+          strokeDashoffset={circumference * (1 - progress / 100)}
+          strokeLinecap="round"
+          style={{
+            transform: "rotate(-90deg)",
+            transformOrigin: "50% 50%",
+            transition: "stroke-dashoffset 0.1s linear",
+          }}
+        />
+      </svg>
+
+      <div
+        style={{
+          position: "absolute",
+          width: "80px",
+          height: "80px",
+          transform: `rotate(${-360 * (1 - progress / 100)}deg)`,
+          transition: "transform 0.1s linear",
+        }}
+      >
+        <img
+          src={dogImg}
+          alt="dog"
+          style={{
+            position: "absolute",
+            width: "27px",
+            height: "27px",
+            top: "-13px",
+            left: "calc(50% - 13.5px)",
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+        />
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          fontWeight: "700",
+          fontSize: "20px",
+          color: timeLeft === 0 ? "red" : "#ff6600",
+        }}
+      >
+        {timeLeft}
+      </div>
+    </div>
+  );
+}
+
+const FluencyP4 = ({
+  setVoiceText,
+  setRecordedAudio,
+  setVoiceAnimate,
+  storyLine,
+  type,
+  handleNext,
+  background,
+  parentWords = "",
+  enableNext,
+  showTimer,
+  points,
+  steps,
+  currentStep,
+  contentId,
+  contentType,
+  level,
+  isDiscover,
+  progressData,
+  showProgress,
+  playTeacherAudio = () => {},
+  callUpdateLearner,
+  disableScreen,
+  isShowCase,
+  handleBack,
+  setEnableNext,
+  loading,
+  setOpenMessageDialog,
+  audio,
+  currentImg,
+  vocabCount,
+  wordCount,
+  multilingual,
+  contentSourceData,
+}) => {
+  steps = 1;
+
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showExtras, setShowExtras] = useState(false);
+  const [showFinalResult, setShowFinalResult] = useState(false);
+  const [showTimers, setShowTimers] = useState(true);
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const [hoverPosition, setHoverPosition] = useState({ top: 0, left: 0 });
+  const [isRecordingComplete, setIsRecordingComplete] = useState(false);
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+
+  const buildSentencesData = (apiData) => {
+    return apiData?.map((item, index) => {
+      const sentence = item?.contentSourceData[0].text;
+      const audio = item?.contentSourceData[0].audioUrl;
+      const multilingualData = item?.multilingual_data || {};
+
+      const underlinedWords = Object?.keys(multilingualData);
+
+      const hints = underlinedWords?.reduce((acc, word) => {
+        acc[word] = multilingualData[word]?.kn?.audio_url || null;
+        return acc;
+      }, {});
+
+      return {
+        id: index + 1,
+        sentence,
+        underlinedWords,
+        hints,
+        audio,
+      };
+    });
+  };
+
+  let sentencesData = [];
+
+  if (contentSourceData && contentSourceData.length > 0) {
+    sentencesData = buildSentencesData(contentSourceData);
+  }
+
+  const handleStart = () => {
+    setStartTime(Date.now());
+    setSpeed(null);
+  };
+
+  useEffect(() => {
+    handleStart();
+  }, []);
+
+  const handleStop = () => {
+    if (!startTime) return;
+    const duration = (Date.now() - startTime) / 1000;
+    if (duration <= 30) {
+      setSpeed("Fast");
+    } else {
+      setSpeed("Slow");
+    }
+  };
+
+  console.log("speed", speed);
+
+  const currentSentence = sentencesData[currentSentenceIndex];
+
+  const playAudio = (word) => {
+    const wordAudio = currentSentence.hints[word];
+    if (wordAudio) {
+      const audio = new Audio(wordAudio);
+      audio.play().catch((err) => console.log("Audio play error:", err));
+    }
+  };
+
+  const playWordAudio = (audio) => {
+    if (!audio || !audioRef.current) return;
+
+    if (!audioRef.current.paused) {
+      console.log("Already playing, skipping...");
+      return;
+    }
+
+    audioRef.current.src = audio;
+    audioRef.current.currentTime = 0;
+    audioRef.current
+      .play()
+      .then(() => {
+        setIsPlaying(true);
+        console.log("Playing word audio once:", audio);
+      })
+      .catch((error) => {
+        console.error("Error playing audio:", error);
+      });
+  };
+
+  const handleAudioEnd = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+    }
+  };
+
+  const handleWordHover = (word, position) => {
+    setHoveredWord(word);
+    setHoverPosition(position);
+
+    if (word) {
+      playWordAudio(
+        `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
+      );
+    }
+  };
+
+  const handleSpeakClick = () => {
+    setIsSpeaking(true);
+  };
+
+  const handlePauseClick = () => {
+    //setShowTimers(false);
+    //setShowResult(true);
+    setShowConfetti(true);
+    const audio = new Audio(correctSound);
+    audio.play();
+
+    setTimeout(() => {
+      setShowConfetti(false);
+      setShowExtras(true);
+      if (currentSentenceIndex === sentencesData?.length - 1) {
+        setShowTimers(false);
+        setShowResult(true);
+        setCurrentSentenceIndex(0);
+        setShowExtras(true);
+        setIsSpeaking(true);
+        handleStop();
+      } else {
+        const nextIndex = (currentSentenceIndex + 1) % sentencesData.length;
+        setCurrentSentenceIndex(nextIndex);
+        setShowResult(false);
+        setShowExtras(false);
+        setIsSpeaking(false);
+      }
+
+      //setShowTimers(true);
+      setHoveredWord(null);
+    }, 100);
+  };
+
+  const handleNextClick = () => {
+    const nextIndex = (currentSentenceIndex + 1) % sentencesData.length;
+    setCurrentSentenceIndex(nextIndex);
+
+    // setIsSpeaking(false);
+    // setShowResult(true);
+    // setShowExtras(false);
+    // setShowTimers(true);
+    // setHoveredWord(null);
+  };
+
+  const handleNextToFinal = () => {
+    setShowFinalResult(true);
+  };
+
+  return (
+    <MainLayout
+      background={background}
+      handleNext={handleNext}
+      enableNext={enableNext}
+      showTimer={showTimer}
+      points={points}
+      pageName={"m7"}
+      answer={"answer"}
+      isRecordingComplete={isRecordingComplete}
+      parentWords={parentWords}
+      recAudio={"recAudio"}
+      isCorrect={true}
+      lang={"language"}
+      {...{
+        steps,
+        currentStep,
+        level,
+        progressData,
+        showProgress,
+        playTeacherAudio,
+        handleBack,
+        disableScreen,
+        loading,
+        vocabCount,
+        wordCount,
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          //height: "100vh",
+          margin: "20px 0px",
+          background: "linear-gradient(to bottom, #fff7ef, #ffeede)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <audio ref={audioRef} onEnded={handleAudioEnd} hidden />
+
+        {showConfetti && (
+          <Confetti width={window.innerWidth} height={window.innerHeight} />
+        )}
+
+        {!showFinalResult ? (
+          <div
+            style={{
+              width: "90%",
+              maxWidth: "1500px",
+              //height: "00px",
+              background: "#fff",
+              borderRadius: "12px",
+              boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "20px",
+              position: "relative",
+            }}
+          >
+            <div
+              style={{
+                width: "103.5%",
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "-19px",
+              }}
+            >
+              <img
+                src={headerImg}
+                alt="header"
+                style={{ width: "100%", borderRadius: "18px" }}
+              />
+            </div>
+
+            {showTimers && (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <CircularTimer duration={30} isActive={true} />
+              </div>
+            )}
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                marginBottom: showResult ? "80px" : "30px",
+                position: "relative",
+                marginTop: showExtras ? "50px" : "0px",
+              }}
+            >
+              {showExtras && (
+                <img
+                  src={listenImg}
+                  onClick={() => {
+                    playWordAudio(
+                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${sentencesData[currentSentenceIndex].audio}`
+                    );
+                  }}
+                  alt="listen"
+                  style={{ width: "40px", height: "40px", cursor: "pointer" }}
+                />
+              )}
+              <div
+                style={{
+                  position: "relative",
+                  display: "inline-block",
+                }}
+              >
+                <UnderlinedSentence
+                  sentence={currentSentence.sentence}
+                  underlinedWords={currentSentence.underlinedWords}
+                  hints={currentSentence.hints}
+                  showUnderlines={showExtras}
+                  onWordHover={handleWordHover}
+                />
+
+                <LanguageHint
+                  hint={hoveredWord ? currentSentence.hints[hoveredWord] : null}
+                  position={hoverPosition}
+                />
+              </div>
+            </div>
+
+            <div style={{ textAlign: "center" }}>
+              {!isSpeaking ? (
+                <img
+                  src={speakButton}
+                  alt="speak"
+                  style={{ width: "60px", cursor: "pointer" }}
+                  onClick={handleSpeakClick}
+                />
+              ) : !showResult ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <img
+                    src={graphImg}
+                    alt="graph"
+                    style={{ width: "220px", marginBottom: "40px" }}
+                  />
+                  <img
+                    src={pauseImg}
+                    alt="pause"
+                    style={{ width: "50px", cursor: "pointer" }}
+                    onClick={handlePauseClick}
+                  />
+                </div>
+              ) : (
+                <img
+                  src={nextImg}
+                  alt="next"
+                  onClick={() => {
+                    if (currentSentenceIndex > 0) {
+                      handleNext();
+                    }
+
+                    if (currentSentenceIndex === sentencesData?.length - 1) {
+                      handleNextToFinal();
+                    } else {
+                      handleNextClick();
+                    }
+                  }}
+                  style={{
+                    width: "50px",
+                    position: "absolute",
+                    bottom: "20px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    cursor: "pointer",
+                    marginTop: "20px",
+                  }}
+                />
+              )}
+            </div>
+
+            {isSpeaking && !showResult && (
+              <img
+                src={listenBear}
+                alt="listen-bear"
+                style={{
+                  position: "absolute",
+                  bottom: "0px",
+                  left: "10px",
+                  width: "250px",
+                }}
+              />
+            )}
+          </div>
+        ) : (
+          <div
+            style={{
+              width: "90%",
+              //maxWidth: "1500px",
+              //height: "400px",
+              background: `url(${backgroundImg}) center/cover no-repeat`,
+              borderRadius: "12px",
+              boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              position: "relative",
+              //backgroundColor: "linear-gradient(to bottom, #fff7ef, #ffeede)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "10px",
+              }}
+            >
+              <img
+                src={meterImg}
+                alt="meter"
+                style={{ width: "70px", marginRight: "8px" }}
+              />
+              <h2
+                style={{
+                  color: "#333f61",
+                  fontWeight: "700",
+                  fontSize: "35px",
+                  fontFamily: "Quicksand",
+                }}
+              >
+                Your Reading Speed
+              </h2>
+            </div>
+
+            <div
+              style={{
+                marginTop: "10px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <img src={tortoiseImg} alt="tortoise" style={{ width: "70px" }} />
+            </div>
+
+            <h2
+              style={{
+                color: "#A66CFF",
+                fontWeight: "700",
+                fontSize: "28px",
+                marginBottom: "10px",
+                fontFamily: "Quicksand",
+              }}
+            >
+              {speed}
+            </h2>
+            <p
+              style={{
+                color: "#333f61",
+                fontSize: "24px",
+                margin: "10px 20px",
+                fontFamily: "Quicksand",
+                fontStyle: "bold",
+                fontWeight: 600,
+              }}
+            >
+              {speed === "Fast"
+                ? "Great speed, keep it up!"
+                : "Try reading faster"}
+            </p>
+
+            <img
+              src={nextImg}
+              onClick={() => {
+                handleNext();
+              }}
+              alt="next"
+              style={{
+                marginTop: "20px",
+                width: "45px",
+                height: "45px",
+                margin: "10px 20px",
+                cursor: "pointer",
+              }}
+            />
+          </div>
+        )}
+      </div>
+    </MainLayout>
+  );
+};
+
+export default FluencyP4;

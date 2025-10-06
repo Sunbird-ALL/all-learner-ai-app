@@ -42,6 +42,10 @@ import { MessageDialog } from "../../components/Assesment/Assesment";
 import { Log } from "../../services/telementryService";
 import Mechanics6 from "../../components/Practice/Mechanics6";
 import Mechanics7 from "../../components/Practice/Mechanics7";
+import FluencyP1 from "../../components/Practice/FluencyP1";
+import FluencyP2 from "../../components/Practice/FluencyP2";
+import FluencyP3 from "../../components/Practice/FluencyP3";
+import FluencyP4 from "../../components/Practice/FluencyP4";
 import ReadMatch from "../../components/Practice/ReadMatch";
 import WordWall from "../../components/Practice/WordWall";
 import * as Assets from "../../utils/imageAudioLinks";
@@ -4510,7 +4514,7 @@ const Practice = () => {
             return;
           }
 
-          if (level === 1 || level === 2) {
+          if (level === 1 || level === 2 || level === 4) {
             const addCorrectWords = await addCorrectPracticeWords();
           }
 
@@ -4830,7 +4834,10 @@ const Practice = () => {
 
       // TODO: validate the getMilestoneDetails API return
       setLocalData("getMilestone", JSON.stringify({ ...getMilestoneDetails }));
-      setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
+      setVocabCount(
+        getMilestoneDetails?.data?.extra?.vocabulary_count +
+          getMilestoneDetails?.data?.extra?.learned_voc_count || 0
+      );
       setWordCount(
         getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute || 0
       );
@@ -5765,6 +5772,196 @@ const Practice = () => {
             //
             currentImg: currentImage,
             parentWords: questions[currentQuestion]?.mechanics_data?.[0],
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (mechanism.name === "fluencyP1") {
+      return (
+        <FluencyP1
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: questions[currentQuestion]?.multilingual_data,
+            contentSourceData:
+              questions[currentQuestion]?.contentSourceData?.[0],
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (mechanism.name === "fluencyP2") {
+      return (
+        <FluencyP2
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: questions[currentQuestion]?.multilingual_data,
+            contentSourceData:
+              questions[currentQuestion]?.contentSourceData?.[0],
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (mechanism.name === "fluencyP3") {
+      return (
+        <FluencyP3
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: questions[currentQuestion]?.multilingual_data,
+            contentSourceData: questions,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (mechanism.name === "fluencyP4") {
+      return (
+        <FluencyP4
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: questions[currentQuestion]?.multilingual_data,
+            contentSourceData: questions,
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,

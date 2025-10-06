@@ -111,7 +111,8 @@ const ReadMatch = ({
 
         const formattedCorrectWords = correctWords?.map((item) => ({
           word: item?.contentSourceData?.[0]?.text,
-          img: item.mechanics_data?.[0].image_url,
+          img:
+            level === 4 ? item?.imagePath : item.mechanics_data?.[0].image_url,
           match: item?.contentSourceData?.[0]?.text,
           content_id: item?.contentId,
         }));

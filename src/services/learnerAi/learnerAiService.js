@@ -25,7 +25,11 @@ export const getContent = async (
   try {
     let url = `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT}/${criteria}?language=${lang}&contentlimit=${limit}&gettargetlimit=${limit}`;
 
-    if (options.mechanismId && ![2, 3].includes(level))
+    if (
+      options.mechanismId &&
+      ![2, 3].includes(level) &&
+      !options.mechanismId.startsWith("Fluency")
+    )
       url += `&mechanics_id=${options.mechanismId}`;
     if (options.competency) url += `&level_competency=${options.competency}`;
     if (options.tags && (lang === "en" || lang === "kn"))
@@ -49,7 +53,7 @@ export const getContentNew = async (criteria, lang, limit, options = {}) => {
       language: lang,
       content_type: "Word",
     };
-    const response = await axios.post(url, data, getHeaders());
+    const response = await axios.get(url, data, getHeaders());
     return response.data;
   } catch (error) {
     console.error("Error fetching content:", error);

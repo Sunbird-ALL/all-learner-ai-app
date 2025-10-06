@@ -96,7 +96,9 @@ const AudioRecorder = (props) => {
           if (blob) {
             setAudioBlob(blob);
             saveBlob(blob);
-            if (props.noOffline !== true) {
+            console.log("isShowCase", props.isShowCase);
+
+            if (props.noOffline !== true && !props.isShowCase) {
               try {
                 // setLoading(true);
                 const transcriber = await loadTranscriber();
@@ -134,7 +136,7 @@ const AudioRecorder = (props) => {
                 props.setIsCorrect?.(false);
               }
             }
-            if (props.noOffline === true) {
+            if (props.noOffline === true || props.isShowCase) {
               setShowLoader(false);
               setStatus("inactive");
               props.setIsCorrect?.(false);
