@@ -9,6 +9,7 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import {
   fetchUserCheck,
@@ -24,10 +25,22 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState(0); // 0 = Student, 1 = Guest
-
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info", // 'error', 'success', 'warning', 'info'
+  });
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:600px)");
   const ranonce = useRef(false);
+
+  const showSnackbar = (message, severity = "info") => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   // Handle tab switch
   const handleTabChange = (event, newValue) => {
@@ -61,7 +74,7 @@ const LoginPage = () => {
     e.preventDefault();
 
     if (!username || !password) {
-      alert("Please fill in all fields");
+      showSnackbar("Please fill in all fields", "warning");
       return;
     }
 
@@ -71,7 +84,10 @@ const LoginPage = () => {
       const userCheckDetails = await fetchUserCheck(username);
 
       if (!isLoginSuccessful(userCheckDetails)) {
-        alert(userCheckDetails?.message || "Unexpected response from server.");
+        showSnackbar(
+          userCheckDetails?.message || "Unexpected response from server.",
+          "error"
+        );
         return;
       }
 
@@ -79,7 +95,7 @@ const LoginPage = () => {
       const token = usernameDetails?.result?.token;
 
       if (!token) {
-        alert("Enter correct username and password");
+        showSnackbar("Enter correct username and password", "error");
         return;
       }
 
@@ -146,22 +162,27 @@ const LoginPage = () => {
       const message = data?.message;
 
       if (message === "Required fields are missing") {
-        alert("Please enter the correct PEN's ID");
+        showSnackbar("Please enter the correct PEN's ID", "warning");
       } else if (status === 401 && message === "Unauthorized access") {
-        alert("User not found. Please register to continue.");
+        showSnackbar("User not found. Please register to continue.", "error");
       } else if (status === 400) {
-        alert(message || "Bad request. Please check your input.");
+        showSnackbar(
+          message || "Bad request. Please check your input.",
+          "error"
+        );
       } else {
-        alert(message || "Login failed. Please try again.");
+        showSnackbar(message || "Login failed. Please try again.", "error");
       }
     } else if (error.request) {
-      // Error made but no response received (e.g., network issue)
-      alert(
-        "No response from the server. Please check your network connection."
+      showSnackbar(
+        "No response from the server. Please check your network connection.",
+        "error"
       );
     } else {
-      // Something else happened
-      alert("Something went wrong. Please try again after some time.");
+      showSnackbar(
+        "Something went wrong. Please try again after some time.",
+        "error"
+      );
     }
   };
 
@@ -259,6 +280,20 @@ const LoginPage = () => {
           </Grid>
         </form>
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
