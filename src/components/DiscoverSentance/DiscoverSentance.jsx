@@ -17,7 +17,6 @@ import { MessageDialog } from "../Assesment/Assesment";
 import { Log } from "../../services/telementryService";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import {
-  addLesson,
   addPointer,
   fetchUserPoints,
   createLearnerProgress,
@@ -51,7 +50,6 @@ const SpeakSentenceComponent = () => {
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
-  const sessionId = getLocalData("sessionId");
 
   const callConfettiAndPlay = () => {
     let audio = new Audio(levelCompleteAudioSrc);
@@ -268,14 +266,6 @@ const SpeakSentenceComponent = () => {
         } else {
           navigate("/discover-end");
         }
-        await addLesson({
-          sessionId,
-          milestone: `showcase`,
-          lesson: "0",
-          progress: 50,
-          language: lang,
-          milestoneLevel: "m0",
-        });
       }
     } catch (error) {
       console.error(error);
@@ -301,15 +291,6 @@ const SpeakSentenceComponent = () => {
         const resPagination = await fetchPaginatedContent(
           sentences.collectionId
         );
-
-        await addLesson({
-          sessionId,
-          milestone: `showcase`,
-          lesson: "0",
-          progress: 0,
-          language: lang,
-          milestoneLevel: "m1",
-        });
 
         // Update state
         setCurrentContentType("Sentence");
