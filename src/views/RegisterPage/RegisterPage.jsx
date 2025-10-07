@@ -38,7 +38,7 @@ const RegisterPage = () => {
 
       if (response?.message === "Registered successfully") {
         alert(
-          "Registered successfully! Please go to the login page and login."
+          "Registered successfully! Please go to the login page and log in."
         );
         navigate("/login");
       }
@@ -49,14 +49,21 @@ const RegisterPage = () => {
 
       if (error.response) {
         const { status, data } = error.response;
+        const message = data?.message;
 
-        if (status === 400 && data?.message === "Required fields are missing") {
-          alert("Please fill in all fields correctly.");
-        } else if (status === 401 && data?.message === "unauthorized access") {
-          alert("Unauthorized access. Please check your details.");
+        if (message === "Required fields are missing") {
+          alert("Please enter the correct PEN's ID.");
+        } else if (status === 401 && message === "Unauthorized access") {
+          alert("Unauthorized access. Please check your PEN's ID.");
+        } else if (status === 400) {
+          alert(message || "Bad request. Please check your input.");
         } else {
-          alert(data?.message || "Registration failed. Please try again.");
+          alert(message || "Registration failed. Please try again.");
         }
+      } else if (error.request) {
+        alert(
+          "No response from the server. Please check your network connection."
+        );
       } else {
         alert("Something went wrong. Please try again after some time.");
       }

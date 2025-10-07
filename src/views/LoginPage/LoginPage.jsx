@@ -143,15 +143,24 @@ const LoginPage = () => {
 
     if (error.response) {
       const { status, data } = error.response;
+      const message = data?.message;
 
-      if (status === 400 && data?.message === "Required fields are missing") {
-        alert("Please register the user before login.");
-      } else if (status === 401 && data?.message === "unauthorized access") {
-        alert("Unauthorized access. Please register first.");
+      if (message === "Required fields are missing") {
+        alert("Please enter the correct PEN's ID");
+      } else if (status === 401 && message === "Unauthorized access") {
+        alert("User not found. Please register to continue.");
+      } else if (status === 400) {
+        alert(message || "Bad request. Please check your input.");
       } else {
-        alert(data?.message || "Login failed. Please try again.");
+        alert(message || "Login failed. Please try again.");
       }
+    } else if (error.request) {
+      // Error made but no response received (e.g., network issue)
+      alert(
+        "No response from the server. Please check your network connection."
+      );
     } else {
+      // Something else happened
       alert("Something went wrong. Please try again after some time.");
     }
   };
@@ -229,22 +238,24 @@ const LoginPage = () => {
             </Grid>
 
             {/* Register Link */}
-            <Grid item xs={12}>
-              <Typography variant="body1" align="center">
-                Don’t have an account?{" "}
-                <Link
-                  to="/register"
-                  style={{
-                    color: "#1976d2",
-                    cursor: "pointer",
-                    fontWeight: "bold",
-                    textDecoration: "none",
-                  }}
-                >
-                  Register
-                </Link>
-              </Typography>
-            </Grid>
+            {activeTab === 0 && (
+              <Grid item xs={12}>
+                <Typography variant="body1" align="center">
+                  Don’t have an account?{" "}
+                  <Link
+                    to="/register"
+                    style={{
+                      color: "#1976d2",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Register
+                  </Link>
+                </Typography>
+              </Grid>
+            )}
           </Grid>
         </form>
       </div>
