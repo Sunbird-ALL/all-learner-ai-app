@@ -238,7 +238,7 @@ const LoginPage = () => {
             </Grid>
 
             {/* Register Link */}
-            {activeTab === 0 && (
+            {/* {activeTab === 0 && (
               <Grid item xs={12}>
                 <Typography variant="body1" align="center">
                   Don’t have an account?{" "}
@@ -255,7 +255,7 @@ const LoginPage = () => {
                   </Link>
                 </Typography>
               </Grid>
-            )}
+            )} */}
           </Grid>
         </form>
       </div>
