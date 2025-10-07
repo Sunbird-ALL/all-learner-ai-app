@@ -9,4 +9,3 @@ export { AssesmentEnd } from "./AssesmentEnd";
 export { DiscoverStart } from "./DiscoverStart";
 export { PracticeRedirectPage } from "./PracticeRedirectPage";
 export { LoginPage } from "./LoginPage";
-export { RegisterPage } from "./RegisterPage";
