@@ -15,6 +15,9 @@ import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
 import MainLayout from "../Layouts.jsx/MainLayout";
+import backimg from "../../assets/bacck.svg";
+import bookImg from "../../assets/bookimg.svg";
+
 import {
   practiceSteps,
   WordRedCircle,
@@ -461,8 +464,6 @@ const FluencyP4 = ({
   };
 
   const handlePauseClick = () => {
-    //setShowTimers(false);
-    //setShowResult(true);
     setShowConfetti(true);
     const audio = new Audio(correctSound);
     audio.play();
@@ -485,7 +486,6 @@ const FluencyP4 = ({
         setIsSpeaking(false);
       }
 
-      //setShowTimers(true);
       setHoveredWord(null);
     }, 100);
   };
@@ -493,17 +493,18 @@ const FluencyP4 = ({
   const handleNextClick = () => {
     const nextIndex = (currentSentenceIndex + 1) % sentencesData.length;
     setCurrentSentenceIndex(nextIndex);
-
-    // setIsSpeaking(false);
-    // setShowResult(true);
-    // setShowExtras(false);
-    // setShowTimers(true);
-    // setHoveredWord(null);
   };
 
   const handleNextToFinal = () => {
     setShowFinalResult(true);
   };
+  const handleBackClick = () => {
+    if (currentSentenceIndex > 0) {
+      setCurrentSentenceIndex(currentSentenceIndex - 1);
+    }
+  };
+
+  const isFirstSentence = currentSentenceIndex === 0;
 
   return (
     <MainLayout
@@ -536,8 +537,7 @@ const FluencyP4 = ({
       <div
         style={{
           width: "100%",
-          //height: "100vh",
-          margin: "20px 0px",
+          margin: "10px 0px",
           background: "linear-gradient(to bottom, #fff7ef, #ffeede)",
           display: "flex",
           justifyContent: "center",
@@ -555,7 +555,7 @@ const FluencyP4 = ({
             style={{
               width: "90%",
               maxWidth: "1500px",
-              //height: "00px",
+              height: "400px",
               background: "#fff",
               borderRadius: "12px",
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -604,7 +604,7 @@ const FluencyP4 = ({
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "10px",
-                marginBottom: showResult ? "80px" : "30px",
+                marginBottom: showResult ? "99px" : "30px",
                 position: "relative",
                 marginTop: showExtras ? "50px" : "0px",
               }}
@@ -671,30 +671,80 @@ const FluencyP4 = ({
                   />
                 </div>
               ) : (
-                <img
-                  src={nextImg}
-                  alt="next"
-                  onClick={() => {
-                    if (currentSentenceIndex > 0) {
-                      handleNext();
-                    }
-
-                    if (currentSentenceIndex === sentencesData?.length - 1) {
-                      handleNextToFinal();
-                    } else {
-                      handleNextClick();
-                    }
-                  }}
+                <div
                   style={{
-                    width: "50px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "40px",
                     position: "absolute",
                     bottom: "20px",
                     left: "50%",
                     transform: "translateX(-50%)",
-                    cursor: "pointer",
                     marginTop: "20px",
                   }}
-                />
+                >
+                  <img
+                    src={backimg}
+                    alt="back"
+                    onClick={handleBackClick}
+                    style={{
+                      width: "40px",
+                      cursor: isFirstSentence ? "not-allowed" : "pointer",
+                      opacity: isFirstSentence ? 0.5 : 1,
+                    }}
+                  />
+
+                  {/* Next Button */}
+                  <img
+                    src={nextImg}
+                    alt="next"
+                    onClick={() => {
+                      if (currentSentenceIndex > 0) {
+                        handleNext();
+                      }
+
+                      if (currentSentenceIndex === sentencesData?.length - 1) {
+                        handleNextToFinal();
+                      } else {
+                        handleNextClick();
+                      }
+                    }}
+                    style={{
+                      width: "40px",
+                      cursor: "pointer",
+                    }}
+                  />
+                </div>
+              )}
+              {showResult && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    position: "absolute",
+                    bottom: "80px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                  }}
+                >
+                  {sentencesData.map((_, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        width: "7px",
+                        height: "7px",
+                        borderRadius: "50%",
+                        margin: "0 5px",
+                        backgroundColor:
+                          index === currentSentenceIndex
+                            ? "rgba(0, 160, 255, 1)"
+                            : "rgba(0, 160, 255, 0.3)",
+                        transition: "background-color 0.3s ease",
+                      }}
+                    />
+                  ))}
+                </div>
               )}
             </div>
 
@@ -715,8 +765,7 @@ const FluencyP4 = ({
           <div
             style={{
               width: "90%",
-              //maxWidth: "1500px",
-              //height: "400px",
+              height: "400px",
               background: `url(${backgroundImg}) center/cover no-repeat`,
               borderRadius: "12px",
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -726,7 +775,6 @@ const FluencyP4 = ({
               alignItems: "center",
               padding: "10px",
               position: "relative",
-              //backgroundColor: "linear-gradient(to bottom, #fff7ef, #ffeede)",
             }}
           >
             <div
@@ -734,7 +782,7 @@ const FluencyP4 = ({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginTop: "10px",
+                marginTop: "5px",
               }}
             >
               <img
@@ -756,7 +804,7 @@ const FluencyP4 = ({
 
             <div
               style={{
-                marginTop: "10px",
+                marginTop: "5px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -791,20 +839,54 @@ const FluencyP4 = ({
                 : "Try reading faster"}
             </p>
 
-            <img
-              src={nextImg}
-              onClick={() => {
-                handleNext();
-              }}
-              alt="next"
+            <div
               style={{
-                marginTop: "20px",
-                width: "45px",
-                height: "45px",
-                margin: "10px 20px",
-                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "15px",
               }}
-            />
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#FFF4E6",
+                  border: "1px solid rgba(241, 153, 32, 1)",
+                  borderRadius: "12px",
+                  padding: "10px 25px",
+                  fontFamily: "Quicksand",
+                  fontWeight: 600,
+                  fontSize: "22px",
+                  color: "rgba(51, 63, 97, 1)",
+                  boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)",
+                  marginBottom: "30px",
+                  gap: "10px",
+                }}
+              >
+                <img
+                  src={bookImg}
+                  alt="book"
+                  style={{ width: "30px", height: "35px" }}
+                />
+                <span>You read 10 sentences in 30 seconds</span>
+              </div>
+
+              <img
+                src={nextImg}
+                onClick={() => {
+                  handleNext();
+                }}
+                alt="next"
+                style={{
+                  width: "45px",
+                  height: "45px",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
           </div>
         )}
       </div>

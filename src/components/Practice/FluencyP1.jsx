@@ -504,7 +504,6 @@ const FluencyP1 = ({
       <div
         style={{
           width: "100%",
-          //height: "100vh",
           margin: "10px 0",
           background: "linear-gradient(to bottom, #fff7ef, #ffeede)",
           display: "flex",
@@ -523,7 +522,7 @@ const FluencyP1 = ({
             style={{
               width: "90%",
               maxWidth: "1500px",
-              //height: "500px",
+              height: "400px",
               background: "#fff",
               borderRadius: "12px",
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -572,9 +571,8 @@ const FluencyP1 = ({
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "10px",
-                marginBottom: showResult ? "80px" : "30px",
+                marginBottom: isSpeaking ? "0" : "30px",
                 position: "relative",
-                minHeight: "120px",
               }}
             >
               {showExtras && (
@@ -690,7 +688,7 @@ const FluencyP1 = ({
             style={{
               width: "90%",
               //maxWidth: "1500px",
-              //height: "400px",
+              height: "400px",
               background: `url(${backgroundImg}) center/cover no-repeat`,
               borderRadius: "12px",
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",

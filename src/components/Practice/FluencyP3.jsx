@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import headerImg from "../../assets/headerImg.svg";
+import nextImg from "../../assets/nextImg.svg";
 import beardanceImg from "../../assets/beardance.svg";
 import Confetti from "react-confetti";
 import rabbitImg from "../../assets/rabbit.svg";
@@ -7,6 +8,8 @@ import cheetahImg from "../../assets/cheetah.svg";
 import tortoiseImg from "../../assets/tortoise.svg";
 import meterImg from "../../assets/meterimg.svg";
 import MainLayout from "../Layouts.jsx/MainLayout";
+import SpeedSelector from "../../utils/SpeedSelector";
+import { tickImg } from "../../utils/imageAudioLinks";
 import {
   practiceSteps,
   WordRedCircle,
@@ -33,9 +36,36 @@ import {
 import AudioTooltipModal from "./AudioTooltipModal";
 import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
-import nextImg from "../../assets/nextImg.svg";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
+
+function CircularTimer({ duration = 3, onComplete }) {
+  const [timeLeft, setTimeLeft] = useState(duration);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      onComplete();
+      return;
+    }
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timeLeft, onComplete]);
+
+  return (
+    <div
+      style={{
+        fontWeight: "700",
+        fontSize: "36px",
+        color: "#FF6600",
+        textAlign: "center",
+      }}
+    >
+      {timeLeft > 0 ? timeLeft : null}
+    </div>
+  );
+}
 
 const FluencyP3 = ({
   setVoiceText,
@@ -83,6 +113,14 @@ const FluencyP3 = ({
   const [randomFinalWord, setRandomFinalWord] = useState({});
   const [showResultScreen, setShowResultScreen] = useState(false);
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
+  const [showWordAfterYes, setShowWordAfterYes] = useState(false);
+
+  const [selected, setSelected] = useState(() => {
+    const savedSpeed = getLocalData("speed");
+    return savedSpeed || "Slow";
+  });
+  const [showContent, setShowContent] = useState(false);
+  const [resetTimer, setResetTimer] = useState(false);
 
   const allSentences = contentSourceData?.map((item) => {
     const sentence = item?.contentSourceData[0]?.text || "";
@@ -96,45 +134,65 @@ const FluencyP3 = ({
 
   const currentSentence = allSentences[currentSentenceIndex];
 
-  // word cycle
-  useEffect(() => {
-    if (
-      !showFinalScreen &&
-      !showResultScreen &&
-      currentWordIndex < currentSentence.length - 1
-    ) {
-      const timer = setTimeout(() => {
-        setCurrentWordIndex((prev) => prev + 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (
-      !showFinalScreen &&
-      !showResultScreen &&
-      currentWordIndex === currentSentence.length - 1
-    ) {
-      const lastWordTimer = setTimeout(() => {
-        setShowFinalScreen(true);
-      }, 1000);
-      return () => clearTimeout(lastWordTimer);
+  const getSpeedBackground = () => {
+    switch (selected) {
+      case "Fast":
+        return "linear-gradient(to bottom, #e8f4fd, #c2e6ff)";
+      case "Medium":
+        return "linear-gradient(to bottom, #fff0e6, #ffd9b3)";
+      case "Slow":
+      default:
+        return "linear-gradient(to bottom, #fff7ef, #ffeede)";
     }
-  }, [
-    currentWordIndex,
-    showFinalScreen,
-    showResultScreen,
-    currentSentence.length,
-  ]);
+  };
+
+  const startReadingFlow = () => {
+    setShowContent(false);
+    setCurrentWordIndex(0);
+    setShowFinalScreen(false);
+    setShowWordAfterYes(false);
+    setYesClicked(false);
+    setNoClicked(false);
+
+    setResetTimer(true);
+  };
+
+  useEffect(() => {
+    if (showContent) {
+      if (currentWordIndex < currentSentence.length - 1) {
+        const timer = setTimeout(() => {
+          setCurrentWordIndex((prev) => prev + 1);
+        }, getWordSpeed());
+        return () => clearTimeout(timer);
+      } else if (currentWordIndex === currentSentence.length - 1) {
+        const lastWordTimer = setTimeout(() => {
+          setShowFinalScreen(true);
+        }, getWordSpeed());
+        return () => clearTimeout(lastWordTimer);
+      }
+    }
+  }, [showContent, currentWordIndex, currentSentence]);
+
+  const getWordSpeed = () => {
+    switch (selected) {
+      case "Fast":
+        return 500;
+      case "Medium":
+        return 1000;
+      case "Slow":
+      default:
+        return 1500;
+    }
+  };
 
   useEffect(() => {
     if (currentSentence && currentSentence.length > 0) {
       setRandomFinalWord((prev) => {
-        // if already set for this index, return as is
         if (prev[currentSentenceIndex]) {
           return prev;
         }
-
         const randomIndex = Math.floor(Math.random() * currentSentence.length);
         const randomWord = currentSentence[randomIndex]?.word;
-
         return {
           ...prev,
           [currentSentenceIndex]: randomWord,
@@ -143,29 +201,29 @@ const FluencyP3 = ({
     }
   }, [currentSentence, currentSentenceIndex]);
 
-  console.log("randomFinalWord:", randomFinalWord, currentSentence);
+  useEffect(() => {
+    if (getLocalData("speed")) {
+      startReadingFlow();
+    }
+  }, []);
+
+  const handleSpeedSelect = (speedValue) => {
+    setSelected(speedValue);
+    setLocalData("speed", speedValue);
+    startReadingFlow();
+  };
 
   const handleYesClick = () => {
     setYesClicked(true);
     setNoClicked(false);
     setShowConfetti(true);
+    setShowWordAfterYes(true);
     const audio = new Audio(correctSound);
     audio.play();
 
     setTimeout(() => {
-      if (currentSentenceIndex + 1 < allSentences.length) {
-        setCurrentSentenceIndex((prev) => prev + 1);
-      } else {
-        setShowResultScreen(true);
-      }
-      if (currentSentenceIndex > 0) {
-        handleNext();
-      }
       setShowConfetti(false);
       setYesClicked(false);
-      setShowFinalScreen(false);
-      setCurrentWordIndex(0);
-      //setRandomFinalWord("");
     }, 2000);
   };
 
@@ -178,6 +236,26 @@ const FluencyP3 = ({
     setTimeout(() => {
       setNoClicked(false);
     }, 2000);
+  };
+
+  const handleNextWord = () => {
+    setShowWordAfterYes(false);
+    setShowFinalScreen(false);
+
+    if (currentSentenceIndex + 1 < allSentences.length) {
+      setCurrentSentenceIndex((prev) => prev + 1);
+      startReadingFlow();
+    } else {
+      setShowResultScreen(true);
+    }
+
+    if (currentSentenceIndex > 0) {
+      handleNext();
+    }
+  };
+
+  const handleRetry = () => {
+    startReadingFlow();
   };
 
   return (
@@ -211,8 +289,7 @@ const FluencyP3 = ({
       <div
         style={{
           width: "100%",
-          //height: "100vh",
-          background: "linear-gradient(to bottom, #fff7ef, #ffeede)",
+          background: getSpeedBackground(),
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -224,7 +301,7 @@ const FluencyP3 = ({
           style={{
             width: "90%",
             maxWidth: "1200px",
-            //height: "500px",
+            height: "400px",
             background: "#fff",
             borderRadius: "12px",
             boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -236,7 +313,6 @@ const FluencyP3 = ({
             overflow: "hidden",
           }}
         >
-          {/* Header */}
           <div style={{ width: "103.2%" }}>
             <img
               src={headerImg}
@@ -261,7 +337,7 @@ const FluencyP3 = ({
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "12px",
-                  marginBottom: "40px",
+                  marginBottom: "30px",
                 }}
               >
                 <img
@@ -298,7 +374,7 @@ const FluencyP3 = ({
                     opacity: 0.5,
                   }}
                 >
-                  <img src={tortoiseImg} alt="tortoise" height={80} />
+                  <img src={tortoiseImg} alt="tortoise" height={50} />
                   <div style={{ marginTop: "10px", fontWeight: "600" }}>
                     Slow
                   </div>
@@ -312,7 +388,7 @@ const FluencyP3 = ({
                     border: "1px solid #ff9900",
                   }}
                 >
-                  <img src={rabbitImg} alt="rabbit" height={80} />
+                  <img src={rabbitImg} alt="rabbit" height={50} />
                   <div style={{ marginTop: "10px", fontWeight: "600" }}>
                     Medium
                   </div>
@@ -327,7 +403,7 @@ const FluencyP3 = ({
                     opacity: 0.5,
                   }}
                 >
-                  <img src={cheetahImg} alt="cheetah" height={80} />
+                  <img src={cheetahImg} alt="cheetah" height={50} />
                   <div style={{ marginTop: "10px", fontWeight: "600" }}>
                     Fast
                   </div>
@@ -347,7 +423,99 @@ const FluencyP3 = ({
                 }}
               />
             </div>
-          ) : !showFinalScreen ? (
+          ) : showWordAfterYes ? (
+            <div
+              style={{
+                marginTop: "40px",
+                textAlign: "center",
+                flex: 1,
+                position: "relative",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "20px",
+                  marginBottom: "60px",
+                }}
+              >
+                <img
+                  src={tickImg}
+                  alt="Correct"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                  }}
+                />
+
+                <div
+                  style={{
+                    fontWeight: "700",
+                    fontSize: "42px",
+                    color: "rgba(51, 63, 97, 1)",
+                    textAlign: "center",
+                  }}
+                >
+                  {randomFinalWord[currentSentenceIndex]}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "40px",
+                  marginTop: "20px",
+                }}
+              >
+                <div
+                  onClick={handleRetry}
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <RetryIcon
+                    height={50}
+                    width={50}
+                    style={{ cursor: "pointer" }}
+                    onClick={handleRetry}
+                  />
+                </div>
+
+                <div
+                  onClick={handleNextWord}
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <img
+                    src={nextImg}
+                    alt="Next"
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : !showFinalScreen && !showContent ? (
+            // UPDATE: Show countdown timer before word animation
             <div
               style={{
                 marginTop: "40px",
@@ -364,18 +532,52 @@ const FluencyP3 = ({
                 overflow: "hidden",
               }}
             >
+              <CircularTimer
+                key={resetTimer ? `timer-${Date.now()}` : "timer"}
+                duration={3}
+                onComplete={() => {
+                  setShowContent(true);
+                  setResetTimer(false);
+                }}
+              />
+            </div>
+          ) : !showFinalScreen ? (
+            <>
               <div
                 style={{
-                  fontWeight: "700",
-                  fontSize: "28px",
-                  color: "rgba(51, 63, 97, 1)",
-                  textAlign: "center",
-                  whiteSpace: "nowrap",
+                  marginTop: "40px",
+                  width: "80%",
+                  maxWidth: "500px",
+                  height: "100px",
+                  border: "1px dashed rgba(241, 153, 32, 1)",
+                  borderRadius: "18px",
+                  background: "rgba(255, 102, 0, 0.05)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "20px",
+                  overflow: "hidden",
                 }}
               >
-                {currentSentence[currentWordIndex]?.word}
+                <div
+                  style={{
+                    fontWeight: "700",
+                    fontSize: "28px",
+                    color: "rgba(51, 63, 97, 1)",
+                    textAlign: "center",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {currentSentence[currentWordIndex]?.word}
+                </div>
               </div>
-            </div>
+              <div style={{ marginTop: "40px" }}>
+                <SpeedSelector
+                  onSelect={handleSpeedSelect}
+                  selected={selected}
+                />
+              </div>
+            </>
           ) : (
             <div
               style={{

@@ -13,6 +13,7 @@ import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
 import rabbitImg from "../../assets/rabbit.svg";
 import tortoiseimage from "../../assets/tortoise.svg";
+import SpeedSelector from "../../utils/SpeedSelector";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
   practiceSteps,
@@ -135,6 +136,10 @@ const FluencyP2 = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [selected, setSelected] = useState("Slow");
   const [speed, setSpeed] = useState(getLocalData("speed"));
+  const [resetTimer, setResetTimer] = useState(false);
+  const [hasSpeedBeenSelected, setHasSpeedBeenSelected] = useState(
+    !!getLocalData("speed")
+  );
 
   console.log("speed value in fluency p2:", speed, getLocalData("speed"));
 
@@ -154,6 +159,25 @@ const FluencyP2 = ({
   ];
 
   const currentSentence = sentencesData[currentSentenceIndex];
+
+  useEffect(() => {
+    if (getLocalData("speed")) {
+      startReadingFlow();
+    }
+  }, []);
+
+  const startReadingFlow = () => {
+    setShowContent(false);
+    setShowSentence(false);
+    setAnimationCompleted(false);
+    setPaused(false);
+    setShowBearDance(false);
+    setShowConfetti(false);
+    setShowFinalState(false);
+    setHoveredWord(null);
+
+    setResetTimer(true);
+  };
 
   useEffect(() => {
     if (showContent) {
@@ -190,7 +214,12 @@ const FluencyP2 = ({
 
   const handleNextClick = (e) => {
     e.stopPropagation();
-    setShowReadingSpeed(true);
+    handleReadingSpeedNext();
+  };
+
+  const handleRetryClick = (e) => {
+    e.stopPropagation();
+    startReadingFlow();
   };
 
   const playWordAudio = (audio) => {
@@ -226,7 +255,7 @@ const FluencyP2 = ({
 
   const handleReadingSpeedNext = () => {
     setLocalData("speed", selected);
-    setSpeed(null);
+
     handleNext();
     setShowReadingSpeed(false);
     setShowContent(false);
@@ -241,6 +270,14 @@ const FluencyP2 = ({
     setCurrentSentenceIndex(
       (prevIndex) => (prevIndex + 1) % sentencesData.length
     );
+  };
+
+  const handleSpeedSelect = (speedValue) => {
+    setSelected(speedValue);
+    setHasSpeedBeenSelected(true);
+    setLocalData("speed", speedValue);
+
+    startReadingFlow();
   };
 
   const handleWordHover = (word, event) => {
@@ -328,8 +365,8 @@ const FluencyP2 = ({
       className="whiteContainer"
       style={{
         width: "90%",
+        height: "400px",
         maxWidth: "1200px",
-        //height: "500px",
         background: "#fff",
         borderRadius: "12px",
         boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -353,7 +390,6 @@ const FluencyP2 = ({
 
       <div
         style={{
-          marginTop: "40px",
           width: "80%",
           maxWidth: "500px",
           height: "100px",
@@ -366,10 +402,19 @@ const FluencyP2 = ({
           padding: "20px",
           position: "relative",
           overflow: "hidden",
+          marginTop: "40px",
+          marginBottom: "20px",
         }}
       >
         {!showContent ? (
-          <CircularTimer duration={3} onComplete={() => setShowContent(true)} />
+          <CircularTimer
+            key={resetTimer ? `timer-${Date.now()}` : "timer"}
+            duration={3}
+            onComplete={() => {
+              setShowContent(true);
+              setResetTimer(false);
+            }}
+          />
         ) : (
           <div
             style={{
@@ -384,6 +429,8 @@ const FluencyP2 = ({
                 ? "none"
                 : selected === "Fast"
                 ? "left 2s linear"
+                : selected === "Medium"
+                ? "left 5s linear"
                 : "left 10s linear",
               whiteSpace: "nowrap",
               display: "flex",
@@ -416,6 +463,10 @@ const FluencyP2 = ({
           </div>
         )}
       </div>
+
+      {!showFinalState && (
+        <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
+      )}
 
       {showFinalState && hoveredWord && currentSentence?.hints[hoveredWord] && (
         <div
@@ -452,10 +503,6 @@ const FluencyP2 = ({
 
       <div
         style={{
-          // position: "absolute",
-          // bottom: "20px",
-          // left: "50%",
-          // transform: "translateX(-50%)",
           marginTop: "20px",
           display: "flex",
           flexDirection: "column",
@@ -486,205 +533,35 @@ const FluencyP2 = ({
             style={{
               width: "160px",
               height: "160px",
-              marginTop: "10px",
-              // position: "absolute",
-              // bottom: "-20px",
-              // left: "50%",
-              // transform: "translateX(-50%)",
+              //marginTop: "10px",
             }}
           />
         )}
 
         {showFinalState && (
-          <img
-            src={nextImg}
-            alt="next"
-            style={{ width: "50px", cursor: "pointer", marginTop: "20px" }}
-            onClick={(e) => handleNextClick(e)}
-          />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "30px",
+              marginTop: "20px",
+            }}
+          >
+            <RetryIcon
+              height={50}
+              width={50}
+              style={{ cursor: "pointer" }}
+              onClick={handleRetryClick}
+            />
+            <img
+              src={nextImg}
+              alt="next"
+              style={{ width: "50px", cursor: "pointer" }}
+              onClick={(e) => handleNextClick(e)}
+            />
+          </div>
         )}
       </div>
-    </div>
-  );
-
-  const renderReadingSpeedScreen = () => (
-    <div
-      style={{
-        width: "90%",
-        maxWidth: "1200px",
-        //height: "500px",
-        background: `url(${backgroundImg}) center/cover no-repeat`,
-        borderRadius: "16px",
-        boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "20px",
-        position: "relative",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginTop: "30px",
-          marginBottom: "10px",
-        }}
-      >
-        <img
-          src={meterImg}
-          alt="meter"
-          style={{ width: "70px", marginRight: "10px" }}
-        />
-        <h2
-          style={{
-            color: "#333F61",
-            fontWeight: "700",
-            fontSize: "28px",
-            margin: 0,
-          }}
-        >
-          Current Speed
-        </h2>
-      </div>
-
-      <div
-        style={{
-          marginTop: "30px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <img
-          src={tortoiseImg}
-          alt="tortoise"
-          style={{ width: "80px", marginBottom: "10px" }}
-        />
-        <h2
-          style={{
-            color: "#A66CFF",
-            fontWeight: "700",
-            fontSize: "35px",
-            margin: "0 0 8px 0",
-            fontFamily: "Quicksand",
-          }}
-        >
-          {selected || "Slow"}
-        </h2>
-        <p
-          style={{
-            color: "#333F61",
-            fontSize: "18px",
-            fontWeight: "700",
-            fontFamily: "Quicksand",
-            margin: 0,
-          }}
-        >
-          Change Speed?
-        </p>
-      </div>
-
-      <div
-        style={{
-          marginTop: "25px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "30px",
-        }}
-      >
-        <div
-          onClick={() => {
-            setSelected("Slow");
-          }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            background:
-              selected === "Slow"
-                ? "linear-gradient(90deg, #FFF5CC 0%, #FFE0CF 100%)"
-                : "#fff",
-            borderRadius: "14px",
-            padding: "15px 20px",
-            minWidth: "200px",
-            boxShadow: "0px 2px 6px rgba(0,0,0,0.1)",
-            cursor: "pointer",
-            gap: "15px",
-            marginBottom: "15px",
-          }}
-        >
-          <img
-            src={tortoiseimage}
-            alt="tortoise"
-            style={{
-              width: "40px",
-              height: "40px",
-              objectFit: "contain",
-            }}
-          />
-          <span
-            style={{
-              color: "#333F61",
-              fontWeight: "600",
-              fontSize: "20px",
-            }}
-          >
-            Slow
-          </span>
-        </div>
-
-        <div
-          onClick={() => {
-            setSelected("Fast");
-          }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            background:
-              selected === "Fast"
-                ? "linear-gradient(90deg, #FFF5CC 0%, #FFE0CF 100%)"
-                : "#fff",
-            borderRadius: "14px",
-            padding: "15px 20px",
-            minWidth: "200px",
-            boxShadow: "0px 2px 6px rgba(0,0,0,0.1)",
-            cursor: "pointer",
-            gap: "15px",
-            marginBottom: "15px",
-          }}
-        >
-          <img
-            src={rabbitImg}
-            alt="rabbit"
-            style={{
-              width: "40px",
-              height: "40px",
-              objectFit: "contain",
-            }}
-          />
-          <span
-            style={{
-              color: "#333F61",
-              fontWeight: "600",
-              fontSize: "20px",
-            }}
-          >
-            Fast
-          </span>
-        </div>
-      </div>
-
-      <img
-        src={nextImg}
-        alt="next"
-        style={{
-          width: "45px",
-          height: "45px",
-          cursor: "pointer",
-        }}
-        onClick={handleReadingSpeedNext}
-      />
     </div>
   );
 
@@ -716,18 +593,16 @@ const FluencyP2 = ({
         wordCount,
       }}
     >
-      {/* <audio ref={audioRef} onEnded={handleAudioEnd} hidden /> */}
       <div
         style={{
           width: "100%",
-          //height: "100vh",
           background: "linear-gradient(to bottom, #fff7ef, #ffeede)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        {showReadingSpeed ? renderReadingSpeedScreen() : renderReadingScreen()}
+        {renderReadingScreen()}
       </div>
     </MainLayout>
   );
