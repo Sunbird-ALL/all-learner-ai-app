@@ -1017,7 +1017,10 @@ const Assesment = ({ discoverStart }) => {
         );
         //let session_id = localStorage.getItem("sessionId");
         setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
-        setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
+        setVocabCount(
+          getMilestoneDetails?.data?.extra?.vocabulary_count +
+            getMilestoneDetails?.data?.extra?.learned_voc_count || 0
+        );
         setWordCount(
           getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
             0

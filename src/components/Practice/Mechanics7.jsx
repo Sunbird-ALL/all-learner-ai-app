@@ -213,6 +213,7 @@ const Mechanics7 = ({
   const [showModal, setShowModal] = useState(false);
   const [selectedWord, setSelectedWord] = useState("");
   const [isLoading, setIsLoading] = useState(null);
+  const [showMultiLingual, setShowMultiLingual] = useState(false);
 
   function sanitize(text) {
     return text
@@ -1013,7 +1014,7 @@ const Mechanics7 = ({
                     {currentText}
                   </span>
                 )}
-                {isLastSyllable && isRecorded && (
+                {showMultiLingual && (
                   <AudioTooltipModal
                     audioSrc={multilingual?.kn?.audio_url}
                     description={currentText}
@@ -1063,7 +1064,7 @@ const Mechanics7 = ({
                   </AudioTooltipModal>
                 )}
               </Box>
-              {isRecorded && (
+              {isRecorded && !showMultiLingual && (
                 <img
                   src={Assets.graph}
                   alt="graph"
@@ -1072,8 +1073,67 @@ const Mechanics7 = ({
               )}
             </Box>
 
+            {showMultiLingual && (
+              <img
+                src={Assets.graph}
+                alt="graph"
+                style={{ height: "40px", margin: "10px" }}
+              />
+            )}
+
+            {showMultiLingual && (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "30px",
+                  gap: "10px",
+                  height: "250px",
+                  //maskBorderWidth: 6,
+                }}
+              >
+                <Box
+                  className="walkthrough-step-5"
+                  mb={2}
+                  onClick={() => {
+                    setIsRecorded(false);
+                    setShowMultiLingual(false);
+                    setIsRecorded(false);
+
+                    const newWordData = {
+                      original_text: currentText,
+                      content_id: contentId,
+                      milestone_level: "m1",
+                      practice_level: currentLevel,
+                      session_id: sessionId,
+                      practiced: true,
+                      learned: isWordCorrect ? true : false,
+                      subsession_id: "session_123",
+                    };
+
+                    callTelemetry();
+                    setLocalData("correctPracticeWords", [
+                      ...(correctPracticeWords || []),
+                      newWordData,
+                    ]);
+                    handleNext();
+                    setStepIndex(0);
+                  }}
+                  sx={{
+                    marginTop: "30px",
+                    cursor: "pointer",
+                    //marginLeft: "30px",
+                  }}
+                >
+                  <NextButtonRound height={50} width={50} />
+                </Box>
+              </Box>
+            )}
+
             {/* Action Buttons */}
-            {!isRecording && !isRecorded && (
+            {!isRecording && !isRecorded && !showMultiLingual && (
               <Box
                 sx={{
                   display: "flex",
@@ -1181,7 +1241,7 @@ const Mechanics7 = ({
               </Box>
             )}
 
-            {isRecording && (
+            {isRecording && !showMultiLingual && (
               <Box
                 sx={{
                   display: "flex",
@@ -1285,6 +1345,7 @@ const Mechanics7 = ({
             )}
 
             {isRecorded &&
+              !showMultiLingual &&
               (isLoading ? (
                 <div
                   style={{
@@ -1408,29 +1469,11 @@ const Mechanics7 = ({
                     className="walkthrough-step-5"
                     mb={2}
                     onClick={() => {
-                      setIsRecorded(false);
-
-                      const newWordData = {
-                        original_text: currentText,
-                        content_id: contentId,
-                        milestone_level: "m1",
-                        practice_level: currentLevel,
-                        session_id: sessionId,
-                        practiced: true,
-                        learned: isWordCorrect ? true : false,
-                        subsession_id: "session_123",
-                      };
-
                       if (isLastSyllable) {
-                        callTelemetry();
-                        setLocalData("correctPracticeWords", [
-                          ...(correctPracticeWords || []),
-                          newWordData,
-                        ]);
-                        handleNext();
-                        setStepIndex(0);
+                        setShowMultiLingual(true);
                       } else {
                         setStepIndex((prev) => prev + 1);
+                        setIsRecorded(false);
                       }
                     }}
                     sx={{

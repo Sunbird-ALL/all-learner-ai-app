@@ -108,10 +108,11 @@ const ReadMatch = ({
       try {
         const response = await getCorrectPracticeWords("false");
         const correctWords = response?.data || [];
+        console.log("level api", level);
 
         const formattedCorrectWords = correctWords?.map((item) => ({
           word: item?.contentSourceData?.[0]?.text,
-          img: item.mechanics_data?.[0].image_url,
+          img: item?.imagePath || item?.mechanics_data?.[0]?.image_url,
           match: item?.contentSourceData?.[0]?.text,
           content_id: item?.contentId,
         }));
@@ -337,16 +338,16 @@ const ReadMatch = ({
       transition: "all 0.3s ease",
       opacity: isDisabled ? 0.5 : 1,
       fontFamily: "Quicksand, sans-serif",
-      fontWeight: 400,
-      fontSize: isMobile ? "16px" : isTablet ? "20px" : "24px",
+      fontWeight: 600,
+      fontSize: isMobile ? "16px" : isTablet ? "20px" : "36px",
       lineHeight: isMobile ? "16px" : isTablet ? "20px" : "24px",
       letterSpacing: "0px",
-      color: "#1D2C5B",
+      color: "#333F61",
       textAlign: "center",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      height: isMobile ? "20px" : isTablet ? "22px" : "25px",
+      height: isMobile ? "20px" : isTablet ? "22px" : "90px",
       width: isMobile ? "80px" : isTablet ? "120px" : "150px",
     };
   };
@@ -447,14 +448,37 @@ const ReadMatch = ({
           >
             <Box
               sx={{
-                display: "flex",
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 3fr)",
                 flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: isMobile ? "4px" : "20px",
+                fontFamily: "Quicksand",
+                width: isMobile ? "30%" : "auto",
+              }}
+            >
+              {shuffledRef?.current?.map((word, i) => (
+                <Box
+                  key={i}
+                  onClick={() => !isMatchedWord(i) && handleWordClick(word, i)}
+                  sx={getWordStyle(i)}
+                >
+                  {word}
+                </Box>
+              ))}
+            </Box>
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 3fr)",
                 gap: isMobile ? "13px" : "20px",
                 alignItems: "center",
                 width: isMobile ? "30%" : "auto",
               }}
             >
-              {wordImagePairs?.slice(0, 3)?.map((item, index) => (
+              {wordImagePairs?.slice(0, 6)?.map((item, index) => (
                 <Box
                   key={index}
                   onClick={() =>
@@ -470,59 +494,6 @@ const ReadMatch = ({
                       width: isMobile ? "30px" : "85px",
                       height: isMobile ? "30px" : "85px",
                       opacity: isMatchedImage(index) && isFaded ? 0.7 : 1,
-                    }}
-                  />
-                </Box>
-              ))}
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: isMobile ? "4px" : "20px",
-                fontFamily: "Quicksand",
-                width: isMobile ? "30%" : "auto",
-              }}
-            >
-              {shuffledRef.current?.map((word, i) => (
-                <Box
-                  key={i}
-                  onClick={() => !isMatchedWord(i) && handleWordClick(word, i)}
-                  sx={getWordStyle(i)}
-                >
-                  {word}
-                </Box>
-              ))}
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: isMobile ? "13px" : "20px",
-                alignItems: "center",
-                width: isMobile ? "30%" : "auto",
-              }}
-            >
-              {wordImagePairs?.slice(3)?.map((item, index) => (
-                <Box
-                  key={index + 3}
-                  onClick={() =>
-                    !isMatchedImage(index + 3) && handleImageClick(index + 3)
-                  }
-                  sx={getImageStyle(index + 3)}
-                >
-                  <Box
-                    component="img"
-                    src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${item.img}`}
-                    alt={`image-${index + 3}`}
-                    sx={{
-                      width: isMobile ? "30px" : "85px",
-                      height: isMobile ? "30px" : "85px",
-                      opacity: isMatchedImage(index + 3) && isFaded ? 0.7 : 1,
                     }}
                   />
                 </Box>
