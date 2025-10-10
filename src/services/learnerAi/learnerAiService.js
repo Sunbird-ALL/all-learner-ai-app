@@ -53,7 +53,7 @@ export const getContentNew = async (criteria, lang, limit, options = {}) => {
       language: lang,
       content_type: "Word",
     };
-    const response = await axios.get(url, data, getHeaders());
+    const response = await axios.post(url, data, getHeaders());
     return response.data;
   } catch (error) {
     console.error("Error fetching content:", error);
