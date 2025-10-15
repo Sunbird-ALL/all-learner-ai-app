@@ -46,6 +46,7 @@ import FluencyP1 from "../../components/Practice/FluencyP1";
 import FluencyP2 from "../../components/Practice/FluencyP2";
 import FluencyP3 from "../../components/Practice/FluencyP3";
 import FluencyP4 from "../../components/Practice/FluencyP4";
+import AserFlow from "../../components/Practice/AserFlow";
 import ReadMatch from "../../components/Practice/ReadMatch";
 import WordWall from "../../components/Practice/WordWall";
 import * as Assets from "../../utils/imageAudioLinks";
@@ -124,7 +125,7 @@ const Practice = () => {
     return () => clearInterval(interval);
   }, []);
 
-  console.log("practice rStepZero", rStepZero);
+  //console.log("practice rStepZero", rStepZero);
 
   const levels = {
     en: {
@@ -4248,6 +4249,7 @@ const Practice = () => {
   const readMatch = String(getLocalData("readMatch"));
   //const setWordWall = setLocalData("wordWall", true);
   const wordWallFlow = String(getLocalData("wordWall"));
+  const aserFlow = level === "B";
   // useEffect(() => {
   //   if (lang !== "en") {
   //     setLocalData("rFlow", false);
@@ -4307,7 +4309,7 @@ const Practice = () => {
     const meetsFluencyCriteria = livesData?.meetsFluencyCriteria;
     setGameOverData({ gameOver: true, userWon, ...data, meetsFluencyCriteria });
   };
-  console.log("data", currentImage, parentWords);
+  //console.log("data", currentImage, parentWords);
 
   useEffect(() => {
     if (startShowCase) {
@@ -4841,13 +4843,14 @@ const Practice = () => {
       setWordCount(
         getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute || 0
       );
-      let level =
-        Number(getMilestoneDetails?.data?.milestone_level?.replace("m", "")) ||
-        1;
-
-      //console.log("curGetCont3", level, getMilestoneDetails);
-
-      setLevel(level);
+      const levels = getMilestoneDetails?.data?.milestone_level;
+      let newLevel = levels?.startsWith("m")
+        ? Number(levels.replace("m", ""))
+        : levels;
+      setLevel(
+        levels?.startsWith("m") ? Number(levels.replace("m", "")) : levels
+      );
+      console.log("newLevel", levels);
 
       const resLessons = await getLessonProgressByID(lang);
 
@@ -4884,13 +4887,15 @@ const Practice = () => {
 
       const getCurrentContent = (stepKey) => {
         const lang = getLocalData("lang") || "en";
-        //console.log("curGetCont2", lang, level);
-        return levelGetContent[lang]?.[level]?.find(
+        console.log("curGetCont2", lang, levels);
+        return levelGetContent[lang]?.[newLevel]?.find(
           (elem) => elem.title === practiceSteps?.[stepKey]?.name
         );
       };
 
       const currentGetContent = getCurrentContent(userState);
+
+      console.log("curContent", currentGetContent, userState);
 
       const getContentFn = currentGetContent?.mechanism
         ? getContent
@@ -5231,7 +5236,7 @@ const Practice = () => {
     }
   }, [questions[currentQuestion]]);
 
-  console.log("mecc", wordWallFlow);
+  //console.log("mecc", wordWallFlow);
 
   const renderMechanics = () => {
     if (
@@ -5239,12 +5244,14 @@ const Practice = () => {
         rFlow !== "true" &&
         tFlow !== "true" &&
         readMatch !== "true" &&
-        wordWallFlow !== "true") ||
+        wordWallFlow !== "true" &&
+        aserFlow !== true) ||
       (mechanism?.id === "mechanic_15" &&
         rFlow !== "true" &&
         tFlow !== "true" &&
         readMatch !== "true" &&
-        wordWallFlow !== "true")
+        wordWallFlow !== "true" &&
+        aserFlow !== true)
     ) {
       const mechanics_data = questions[currentQuestion]?.mechanics_data;
 
@@ -5772,6 +5779,54 @@ const Practice = () => {
             //
             currentImg: currentImage,
             parentWords: questions[currentQuestion]?.mechanics_data?.[0],
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (aserFlow === true) {
+      return (
+        <AserFlow
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: questions[currentQuestion]?.multilingual_data,
+            contentSourceData:
+              questions[currentQuestion]?.contentSourceData?.[0],
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,

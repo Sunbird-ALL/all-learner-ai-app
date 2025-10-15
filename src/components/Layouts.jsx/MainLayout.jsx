@@ -49,6 +49,7 @@ import {
   LevelFifteen,
   ROneImg,
   setLocalData,
+  LevelBeginner,
 } from "../../utils/constants";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
@@ -76,6 +77,11 @@ const MainLayout = (props) => {
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   const levelsImages = {
+    B: {
+      milestone: <LevelBeginner height={isMobile ? 120 : 168} />,
+      backgroundAddOn: practicebgstone,
+      background: practicebg,
+    },
     1: {
       milestone: <LevelOne height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone,

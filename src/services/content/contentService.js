@@ -32,11 +32,7 @@ export const fetchAssessmentData = async (lang) => {
   }
 };
 
-export const fetchPaginatedContent = async (
-  collectionId,
-  page = 1,
-  limit = 5
-) => {
+export const fetchPaginatedContent = async (collectionId, limit, page = 1) => {
   try {
     const response = await axios.get(
       `${API_BASE_URL_CONTENT_SERVICE}/${config.URLS.GET_PAGINATION}?page=${page}&limit=${limit}&collectionId=${collectionId}&multilingual=true`,

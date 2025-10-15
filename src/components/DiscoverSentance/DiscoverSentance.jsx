@@ -60,6 +60,8 @@ const SpeakSentenceComponent = () => {
     window.telemetry?.syncEvents && window.telemetry.syncEvents();
   };
 
+  console.log("questions", questions);
+
   useEffect(() => {
     if (questions?.length) setAssesmentcount(assesmentCount + 1);
   }, [questions]);
@@ -210,13 +212,15 @@ const SpeakSentenceComponent = () => {
         ) {
           if (getSetData.currentLevel !== "m0") {
             navigate("/discover-end");
+            setLocalData("tFlow", true);
           }
           const newSentencePassedCounter = sentencePassedCounter + 1;
           const sentences = assessmentResponse?.data?.filter(
             (elem) => elem.category === "Sentence"
           );
           const resSentencesPagination = await fetchPaginatedContent(
-            sentences?.[newSentencePassedCounter]?.collectionId
+            sentences?.[newSentencePassedCounter]?.collectionId,
+            5
           );
           setCurrentContentType("Sentence");
           setTotalSyllableCount(resSentencesPagination?.totalSyllableCount);
@@ -240,7 +244,8 @@ const SpeakSentenceComponent = () => {
             (elem) => elem.category === "Word"
           );
           const resWordsPagination = await fetchPaginatedContent(
-            words?.collectionId
+            words?.collectionId,
+            5
           );
           setCurrentContentType("Word");
           setTotalSyllableCount(resWordsPagination?.totalSyllableCount);
@@ -299,7 +304,8 @@ const SpeakSentenceComponent = () => {
         }
         // Fetch paginated content
         const resPagination = await fetchPaginatedContent(
-          sentences.collectionId
+          sentences.collectionId,
+          5
         );
 
         await addLesson({
