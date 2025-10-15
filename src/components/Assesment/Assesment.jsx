@@ -43,6 +43,7 @@ import axios from "../../../node_modules/axios/index";
 import { setVirtualId } from "../../store/slices/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
+import desktopLevelB from "../../assets/images/beginnerLevel.png";
 import desktopLevel1 from "../../assets/images/desktopLevel1.png";
 import desktopLevel2 from "../../assets/images/desktopLevel2.png";
 import desktopLevel3 from "../../assets/images/desktopLevel3.jpg";
@@ -967,7 +968,7 @@ const Assesment = ({ discoverStart }) => {
     }
   }, []);
 
-  console.log("nLang", nativeLang, nativeLangEnable);
+  console.log("nLang", nativeLang, nativeLangEnable, level);
 
   useEffect(() => {
     setLocalData("lang", lang);
@@ -1016,7 +1017,10 @@ const Assesment = ({ discoverStart }) => {
           usernameDetails?.data?.result?.virtualID
         );
         //let session_id = localStorage.getItem("sessionId");
-        setLevel(getMilestoneDetails?.data?.milestone_level?.replace("m", ""));
+        const level = getMilestoneDetails?.data?.milestone_level;
+        setLevel(
+          level?.startsWith("m") ? Number(level.replace("m", "")) : level
+        );
         setVocabCount(
           getMilestoneDetails?.data?.extra?.vocabulary_count +
             getMilestoneDetails?.data?.extra?.learned_voc_count || 0
@@ -1057,8 +1061,9 @@ const Assesment = ({ discoverStart }) => {
           "getMilestone",
           JSON.stringify({ ...getMilestoneDetails })
         );
+        const level = getMilestoneDetails?.data?.milestone_level;
         setLevel(
-          Number(getMilestoneDetails?.data?.milestone_level?.replace("m", ""))
+          level?.startsWith("m") ? Number(level.replace("m", "")) : level
         );
         setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
         setWordCount(
@@ -1171,6 +1176,7 @@ const Assesment = ({ discoverStart }) => {
   };
 
   const images = {
+    desktopLevelB,
     desktopLevel1,
     desktopLevel2,
     desktopLevel3,
@@ -1246,7 +1252,7 @@ const Assesment = ({ discoverStart }) => {
       {openLangModal && (
         <LanguageModal {...{ lang, setLang, setOpenLangModal }} />
       )}
-      {level > 0 ? (
+      {level > 0 || level === "B" ? (
         <Box style={sectionStyle}>
           <ProfileHeader
             {...{

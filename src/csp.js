@@ -17,7 +17,7 @@ export const getCSP = (envVariables) => {
       media-src 'self' blob: ${REACT_APP_AWS_S3_BUCKET_URL} ${REACT_APP_AWS_S3_BUCKET_CONTENT_URL} https://raw.githubusercontent.com https://github.com ;
       connect-src 'self' *.theall.ai ${REACT_APP_HOST} ${REACT_APP_LEARNER_AI_BASE_URL} ${REACT_APP_AWS_S3_BUCKET_URL} ${REACT_APP_AWS_S3_BUCKET_CONTENT_URL} blob: https://huggingface.co https://cas-bridge.xethub.hf.co https://cdn.jsdelivr.net ;
       form-action 'self';
-      frame-src 'self' https://www.google.com https://www.gstatic.com;
+      frame-src 'self' https://www.google.com https://www.gstatic.com https://www.youtube.com https://www.youtube-nocookie.com;
       object-src 'none';
       base-uri 'none';
       worker-src 'self' blob:;

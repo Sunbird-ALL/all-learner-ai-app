@@ -148,7 +148,8 @@ export const getCorrectPracticeWords = async (understood) => {
 export const createLearnerProgress = async (
   subSessionId,
   milestoneLevel,
-  totalSyllableCount
+  totalSyllableCount,
+  ansSelectionStatus
 ) => {
   const sessionId = getLocalData("sessionId");
   const language = getLocalData("lang");
@@ -159,6 +160,7 @@ export const createLearnerProgress = async (
       subSessionId: subSessionId,
       milestoneLevel: milestoneLevel,
       language: language,
+      ansSelectionStatus: ansSelectionStatus,
     };
     if (totalSyllableCount !== undefined) {
       requestBody.totalSyllableCount = totalSyllableCount;
