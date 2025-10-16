@@ -871,7 +871,7 @@ const FluencyP4 = ({
                   alt="book"
                   style={{ width: "30px", height: "35px" }}
                 />
-                <span>You read 10 sentences in 30 seconds</span>
+                <span>You read 5 sentences in 30 seconds</span>
               </div>
 
               <img

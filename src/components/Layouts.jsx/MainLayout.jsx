@@ -81,6 +81,7 @@ const MainLayout = (props) => {
       milestone: <LevelBeginner height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone,
       background: practicebg,
+      backgroundColor: `#FFB31F`,
     },
     1: {
       milestone: <LevelOne height={isMobile ? 120 : 168} />,

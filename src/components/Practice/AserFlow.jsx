@@ -37,7 +37,7 @@ import LanguageModalNew from "../../utils/LanguageModal";
 import {
   fetchASROutput,
   handleTextEvaluation,
-  callTelemetryApi,
+  callTelemetryDiscovery,
 } from "../../utils/apiUtil";
 import AudioTooltipModal from "./AudioTooltipModal";
 import { loadTranscriber } from "../../utils/transcriber";
@@ -58,6 +58,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { uniqueId } from "../../services/utilService";
 import { updateLearnerProfile } from "../../services/learnerAi/learnerAiService";
+import bubbleImg from "../../assets/bubble.png";
+import magnifier from "../../assets/magnifier.png";
+import { Box } from "@mui/material";
 
 const AserFlow = ({
   // setVoiceText,
@@ -125,6 +128,7 @@ const AserFlow = ({
   const [ansSelectionStatus, setAnsSelectionStatus] = useState({});
   const lang = getLocalData("lang");
   const virtualId = getLocalData("virtualId");
+  const [clickedIndex, setClickedIndex] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -185,7 +189,7 @@ const AserFlow = ({
 
   const handlePlayAudio = () => {
     const audio = new Audio(
-      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/en/${currentItem?.contentId}.wav`
+      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentItem?.contentId}.wav`
     );
     audio.play();
   };
@@ -265,6 +269,65 @@ const AserFlow = ({
     navigate("/discover-start");
   };
 
+  const handleBubbleClick = (letter, index) => {
+    setClickedIndex(index);
+    setTimeout(() => setClickedIndex(null), 1000);
+
+    setSelectedLetter(letter);
+    const correct = letter === correctLetter;
+    setIsCorrect(correct);
+    setShowNext(true);
+
+    const characterSets = {
+      en: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+      hi: "अआइईउऊएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह".split(""),
+      ta: "அஆஇஈஉஊஎஏஐஒஓஔகஙசஞடணதநபமயரலவழளறன".split(""),
+      te: "అఆఇఈఉఊఎఏఐఒఓఔకఖగఘఙచఛజఝఞటఠడఢణతథదధనపఫబభమయరలవశషసహ".split(""),
+      kn: "ಅಆಇಈಉಊಎಏಐಒಓಔಕಖಗಘಙಚಛಜಝಞಟಠಡಢಣತಥದಧನಪಫಬಭಮಯರಲವಶಷಸಹಳ".split(""),
+    };
+
+    const currentLang = lang || "en";
+    const alphabets = characterSets[currentLang] || characterSets.en;
+
+    setQuestions((prev) => {
+      const existingLetters = prev.map((q) => q.contentSourceData?.[0]?.text);
+
+      let newLetter;
+      const availableLetters = alphabets.filter(
+        (char) => !existingLetters.includes(char)
+      );
+
+      if (availableLetters.length === 0) {
+        newLetter = alphabets[Math.floor(Math.random() * alphabets.length)];
+      } else {
+        newLetter =
+          availableLetters[Math.floor(Math.random() * availableLetters.length)];
+      }
+
+      return prev.map((q, i) => {
+        if (i === index) {
+          return {
+            ...q,
+            contentSourceData: [{ ...q.contentSourceData[0], text: newLetter }],
+          };
+        }
+        return q;
+      });
+    });
+
+    setAnsSelectionStatus((prev) => ({
+      ...prev,
+      [letter]: correct,
+    }));
+
+    if (correct) correctAudio.play();
+    else wrongAudio.play();
+
+    setTimeout(() => {
+      handleNextClick();
+    }, 1000);
+  };
+
   const handleNextClick = async () => {
     setSelectedLetter("");
     setIsCorrect(null);
@@ -274,24 +337,9 @@ const AserFlow = ({
       setCurrentIndex((prev) => prev + 1);
     } else {
       await handleCompletion();
+      callTelemetryDiscovery("Discovery-AserFlow");
       handleNext?.();
     }
-  };
-
-  const handleSelect = (letter) => {
-    setSelectedLetter(letter);
-    const correct = letter === correctLetter;
-    setIsCorrect(correct);
-    setShowNext(true);
-    setAnsSelectionStatus((prev) => ({
-      ...prev,
-      [letter]: correct,
-    }));
-    if (correct) correctAudio.play();
-    else wrongAudio.play();
-    setTimeout(() => {
-      handleNextClick();
-    }, 1000);
   };
 
   return (
@@ -326,87 +374,193 @@ const AserFlow = ({
         style={{
           width: "100%",
           margin: "10px 0",
-          background: "linear-gradient(to bottom, #fff7ef, #ffeede)",
+          background: "#fff",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        {/* --- Audio Button --- */}
-        <div style={{ marginBottom: "20px" }}>
-          <img
-            src={speakButton}
-            alt="Speak"
-            onClick={handlePlayAudio}
-            style={{
-              width: 60,
-              height: 60,
-              cursor: "pointer",
-              filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
-            }}
-          />
-        </div>
-
-        {/* --- Letter Grid --- */}
+        {/* --- Title --- */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 80px)",
-            gridGap: "20px",
-            background: "#fff",
-            padding: "15px",
-            borderRadius: "20px",
-            boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
-            marginBottom: "20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "15px",
           }}
         >
-          {questionLetters?.map((char, index) => (
-            <div
-              key={index}
-              onClick={() => handleSelect(char)}
-              style={{
-                width: 60,
-                height: 50,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "12px",
-                background:
-                  selectedLetter === char
-                    ? isCorrect
-                      ? "linear-gradient(135deg,#A7F3D0,#34D399)"
-                      : "linear-gradient(135deg,#FCA5A5,#EF4444)"
-                    : "#f8f8f8",
-                color: "#333",
-                fontSize: "28px",
-                fontWeight: "600",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-              }}
-            >
-              {char}
-            </div>
-          ))}
+          <img
+            src={magnifier}
+            alt="Magnifier"
+            style={{
+              width: 40,
+              height: 40,
+              cursor: "pointer",
+            }}
+          />
+          <span
+            style={{
+              marginLeft: 10,
+              fontSize: "45px",
+              fontWeight: "800",
+              color: "#1a1a1a",
+              fontFamily: "Quicksand",
+              pointerEvents: "none",
+            }}
+          >
+            {"Letter Hunt"}
+          </span>
         </div>
 
-        {/* --- Next Button ---
-        {showNext && (
-          <div style={{ marginBottom: "30px" }}>
-            <img
-              src={nextImg}
-              alt="Next"
-              onClick={handleNextClick}
-              style={{
-                width: 60,
-                cursor: "pointer",
-                transition: "transform 0.2s ease",
+        {/* --- Bubble Area --- */}
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "300px",
+            //background: "#fff",
+            borderRadius: "20px",
+            //boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
+            overflow: "hidden",
+          }}
+        >
+          {questionLetters?.map((char, index) => {
+            const positions = [
+              { top: "20%", left: "20%" },
+              { top: "70%", left: "15%" },
+              { top: "55%", left: "30%" },
+              { top: "48%", left: "53%" },
+              { top: "18%", left: "62%" },
+              { top: "56%", left: "70%" },
+              { top: "20%", left: "80%" },
+              { top: "73%", left: "85%" },
+              { top: "20%", left: "40%" },
+              { top: "75%", left: "43%" },
+            ];
+
+            const pos = positions[index % positions.length];
+
+            return (
+              <div
+                key={index}
+                onClick={() => handleBubbleClick(char, index)}
+                style={{
+                  position: "absolute",
+                  top: pos.top,
+                  left: pos.left,
+                  transform: "translate(-50%, -50%)",
+                  cursor: "pointer",
+                  textAlign: "center",
+                }}
+              >
+                {/* Bubble image */}
+                <div style={{ position: "relative", display: "inline-block" }}>
+                  <img
+                    src={bubbleImg}
+                    alt="bubble"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      filter:
+                        selectedLetter === char
+                          ? isCorrect
+                            ? "drop-shadow(0 0 10px #34D399)"
+                            : "drop-shadow(0 0 10px #EF4444)"
+                          : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
+                      transition: "filter 0.3s ease",
+                    }}
+                  />
+
+                  {clickedIndex === index && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "rgba(31, 155, 222, 0.48)",
+                        borderRadius: "50%",
+                        transition: "opacity 0.3s ease",
+                      }}
+                    />
+                  )}
+
+                  {/* Letter inside bubble */}
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      fontSize: "68px",
+                      fontWeight: "800",
+                      fontFamily: "Quicksand",
+                      color: "#333F61",
+                      pointerEvents: "none",
+                      userSelect: "none",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {char}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* --- Audio Button --- */}
+        <div>
+          <Box
+            sx={{
+              position: "relative",
+              width: "90px",
+              height: "90px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "7px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              handlePlayAudio();
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                width: "90px",
+                height: "90px",
+                backgroundColor: "#A856FF",
+                borderRadius: "50%",
+                animation: "pulse 1.2s linear infinite",
+                "@keyframes pulse": {
+                  "0%": {
+                    transform: "scale(0.6)",
+                    opacity: 0,
+                  },
+                  "50%": {
+                    opacity: 1,
+                  },
+                  "100%": {
+                    transform: "scale(1.4)",
+                    opacity: 0,
+                  },
+                },
               }}
-              onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-              onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
             />
-          </div>
-        )} */}
+            <Box
+              sx={{
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              <ListenButton height={50} width={50} />
+            </Box>
+          </Box>
+        </div>
       </div>
     </MainLayout>
   );
