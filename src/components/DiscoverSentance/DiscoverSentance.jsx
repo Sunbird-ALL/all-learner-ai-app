@@ -212,7 +212,7 @@ const SpeakSentenceComponent = () => {
         ) {
           if (getSetData.currentLevel !== "m0") {
             navigate("/discover-end");
-            setLocalData("tFlow", true);
+            //setLocalData("tFlow", true);
           }
           const newSentencePassedCounter = sentencePassedCounter + 1;
           const sentences = assessmentResponse?.data?.filter(
@@ -233,6 +233,7 @@ const SpeakSentenceComponent = () => {
           setQuestions(quesArr);
         } else if (getSetData.sessionResult === "pass") {
           navigate("/discover-end");
+          setLocalData("tFlow", true);
         } else if (
           getSetData.sessionResult === "fail" &&
           currentContentType === "Sentence"
