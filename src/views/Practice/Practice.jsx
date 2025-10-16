@@ -10,6 +10,7 @@ import R3 from "../../components/Practice/R3";
 import R0 from "../../RFlow/R0";
 import R1 from "../../RFlow/R1";
 import R2 from "../../RFlow/R2";
+import Barakhadi from "../../RFlow/Barakhadi";
 import R3Flow from "../../RFlow/R3";
 import R4 from "../../RFlow/R4";
 import TowreFlow from "../../components/Practice/TowreFlow";
@@ -5507,9 +5508,65 @@ const Practice = () => {
           }}
         />
       );
-    } else if (rFlow === "true" && level === 1 && rStepZero === 1) {
+    } else if (
+      rFlow === "true" &&
+      level === 1 &&
+      rStepZero === 1 &&
+      lang === "en"
+    ) {
       return (
         <R1
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (
+      rFlow === "true" &&
+      level === 1 &&
+      rStepZero === 1 &&
+      lang !== "en"
+    ) {
+      return (
+        <Barakhadi
           page={page}
           setPage={setPage}
           {...{

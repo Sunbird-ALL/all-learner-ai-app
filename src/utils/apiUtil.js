@@ -214,3 +214,16 @@ export const callTelemetryApi = async (
     "ET"
   );
 };
+
+export const callTelemetryDiscovery = async (originalText) => {
+  response(
+    {
+      // Required
+      target: "", // Required. Target of the response
+      //"qid": "", // Required. Unique assessment/question id
+      type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE
+      values: [{ original_text: originalText }],
+    },
+    "ET"
+  );
+};
