@@ -270,7 +270,7 @@ const SpeakSentenceComponent = () => {
         }
         await addLesson({
           sessionId,
-          milestone: `showcase`,
+          milestone: `discovery`,
           lesson: "0",
           progress: 50,
           language: lang,
@@ -301,15 +301,6 @@ const SpeakSentenceComponent = () => {
         const resPagination = await fetchPaginatedContent(
           sentences.collectionId
         );
-
-        await addLesson({
-          sessionId,
-          milestone: `showcase`,
-          lesson: "0",
-          progress: 0,
-          language: lang,
-          milestoneLevel: "m1",
-        });
 
         // Update state
         setCurrentContentType("Sentence");
