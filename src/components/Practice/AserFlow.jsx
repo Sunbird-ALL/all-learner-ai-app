@@ -130,6 +130,10 @@ const AserFlow = ({
   const virtualId = getLocalData("virtualId");
   const [clickedIndex, setClickedIndex] = useState(null);
 
+  background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
+  showTimer = false;
+  level = "B";
+
   useEffect(() => {
     (async () => {
       let quesArr = [];
@@ -278,43 +282,6 @@ const AserFlow = ({
     setIsCorrect(correct);
     setShowNext(true);
 
-    const characterSets = {
-      en: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
-      hi: "अआइईउऊएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह".split(""),
-      ta: "அஆஇஈஉஊஎஏஐஒஓஔகஙசஞடணதநபமயரலவழளறன".split(""),
-      te: "అఆఇఈఉఊఎఏఐఒఓఔకఖగఘఙచఛజఝఞటఠడఢణతథదధనపఫబభమయరలవశషసహ".split(""),
-      kn: "ಅಆಇಈಉಊಎಏಐಒಓಔಕಖಗಘಙಚಛಜಝಞಟಠಡಢಣತಥದಧನಪಫಬಭಮಯರಲವಶಷಸಹಳ".split(""),
-    };
-
-    const currentLang = lang || "en";
-    const alphabets = characterSets[currentLang] || characterSets.en;
-
-    setQuestions((prev) => {
-      const existingLetters = prev.map((q) => q.contentSourceData?.[0]?.text);
-
-      let newLetter;
-      const availableLetters = alphabets.filter(
-        (char) => !existingLetters.includes(char)
-      );
-
-      if (availableLetters.length === 0) {
-        newLetter = alphabets[Math.floor(Math.random() * alphabets.length)];
-      } else {
-        newLetter =
-          availableLetters[Math.floor(Math.random() * availableLetters.length)];
-      }
-
-      return prev.map((q, i) => {
-        if (i === index) {
-          return {
-            ...q,
-            contentSourceData: [{ ...q.contentSourceData[0], text: newLetter }],
-          };
-        }
-        return q;
-      });
-    });
-
     setAnsSelectionStatus((prev) => ({
       ...prev,
       [letter]: correct,
@@ -336,9 +303,14 @@ const AserFlow = ({
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      await handleCompletion();
+      // await handleCompletion();
       callTelemetryDiscovery("Discovery-AserFlow");
       handleNext?.();
+      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        navigate("/");
+      } else {
+        navigate("/discover-start");
+      }
     }
   };
 

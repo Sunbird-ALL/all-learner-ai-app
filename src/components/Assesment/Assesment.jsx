@@ -968,6 +968,12 @@ const Assesment = ({ discoverStart }) => {
     }
   }, []);
 
+  if (level === "B" && (rStepNo !== 1 || rStepNo === "1")) {
+    setLocalData("mFail", "true");
+    setLocalData("rFlow", "true");
+    setLocalData("rStepZero", 0);
+  }
+
   console.log("nLang", nativeLang, nativeLangEnable, level);
 
   useEffect(() => {
@@ -1320,8 +1326,8 @@ const Assesment = ({ discoverStart }) => {
                 >
                   {rFlow === "true"
                     ? `Start Refresher ${
-                        level === 1
-                          ? rStepNo == null || rStep === 0 || rStep === "0"
+                        (1, "B")?.includes(level)
+                          ? rStepNo == null || rStepNo === 0 || rStepNo === "0"
                             ? "0"
                             : "1"
                           : rStep

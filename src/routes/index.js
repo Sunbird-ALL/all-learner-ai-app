@@ -66,6 +66,12 @@ const routData = [
     component: reviews.LoginPage,
     requiresAuth: false,
   },
+  {
+    id: "route-011",
+    path: "/letter-hunt",
+    component: reviews.LetterHunt,
+    requiresAuth: true,
+  },
 ];
 // add login route for test rig
 const TOKEN = localStorage.getItem("apiToken");

@@ -21,6 +21,7 @@ import {
   NextButtonRound,
   RetryIcon,
   setLocalData,
+  sendTestRigScore,
 } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telementryService";
@@ -32,6 +33,18 @@ import VoiceAnalyser from "../utils/VoiceAnalyser";
 import * as s3Assets from "../utils/rFlowS3Links";
 import { getAssetUrl } from "../utils/rFlowS3Links";
 import { getAssetAudioUrl } from "../utils/rFlowS3Links";
+import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
+import {
+  addLesson,
+  addPointer,
+  fetchUserPoints,
+  createLearnerProgress,
+} from "../services/orchestration/orchestrationService";
+import { fetchGetSetResult } from "../services/learnerAi/learnerAiService";
+import {
+  fetchAssessmentData,
+  fetchPaginatedContent,
+} from "../services/content/contentService";
 
 const theme = createTheme();
 
@@ -716,6 +729,74 @@ const R1 = ({
 
   const audioRef = useRef(null);
 
+  const sessionId = getLocalData("sessionId");
+  const virtualId = getLocalData("virtualId");
+  const [currentCollectionId, setCurrentCollectionId] = useState("");
+  const [totalSyllableCount, setTotalSyllableCount] = useState("");
+
+  const langWiseAnswers = {
+    en: {
+      c: true,
+      j: true,
+      x: true,
+      k: true,
+      h: true,
+      n: true,
+      p: true,
+      u: true,
+      s: true,
+      o: true,
+    },
+    ta: {
+      அ: true,
+      ஆ: true,
+      இ: true,
+      ஈ: true,
+      உ: true,
+      ஊ: true,
+      எ: true,
+      ஏ: true,
+      ஐ: true,
+      ஒ: true,
+    },
+    te: {
+      అ: true,
+      ఆ: true,
+      ఇ: true,
+      ఈ: true,
+      ఉ: true,
+      ఊ: true,
+      ఎ: true,
+      ఏ: true,
+      ఐ: true,
+      ఒ: true,
+    },
+    kn: {
+      ಅ: true,
+      ಆ: true,
+      ಇ: true,
+      ಈ: true,
+      ಉ: true,
+      ಊ: true,
+      ಎ: true,
+      ಏ: true,
+      ಐ: true,
+      ಒ: true,
+    },
+    hi: {
+      अ: true,
+      आ: true,
+      इ: true,
+      ई: true,
+      उ: true,
+      ऊ: true,
+      ए: true,
+      ऐ: true,
+      ओ: true,
+      औ: true,
+    },
+  };
+
   const currentAudio =
     isUI1 && (lang === "en" ? item?.audio : currentItem?.audios?.[imgIndex]);
 
@@ -751,7 +832,7 @@ const R1 = ({
     };
   }, [stepIndex]);
 
-  const handleNextImage = () => {
+  const handleNextImage = async () => {
     if (imgIndex < currentItem.images.length - 1) {
       setImgIndex((i) => i + 1);
     } else {
@@ -760,6 +841,7 @@ const R1 = ({
         setImgIndex(0);
       } else {
         setLocalData("rFlow", false);
+        await handleCompletion();
         if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
           navigate("/");
         } else {
@@ -772,13 +854,119 @@ const R1 = ({
     setEnableNext(false);
   };
 
-  const handleNextWord = () => {
+  useEffect(() => {
+    (async () => {
+      try {
+        const lang = getLocalData("lang");
+        // Fetch assessment data
+        const resAssessment = await fetchAssessmentData(lang);
+        const sentences = resAssessment?.data?.find(
+          (elem) => elem.category === "Char"
+        );
+
+        if (!sentences?.collectionId) {
+          console.error("No collection ID found for sentences.");
+          return;
+        }
+
+        const resPagination = await fetchPaginatedContent(
+          sentences.collectionId,
+          10
+        );
+
+        setTotalSyllableCount(resPagination?.totalSyllableCount);
+        setCurrentCollectionId(sentences?.collectionId);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    })();
+  }, []);
+
+  const handleCompletion = async () => {
+    const sub_session_id = getLocalData("sub_session_id");
+    let currentContentType = "Char";
+
+    try {
+      const milestoneLevel = "B";
+
+      let requestBody = {
+        original_text: "Char",
+        audio: "",
+        user_id: virtualId,
+        session_id: sessionId,
+        language: lang,
+        date: new Date(),
+        sub_session_id,
+        contentId: contentId,
+        contentType: "Char",
+        mechanics_id: getLocalData("mechanism_id") || "",
+        milestone: milestoneLevel,
+        ansSelectionStatus: langWiseAnswers[lang],
+      };
+
+      const result = await updateLearnerProfile(lang, requestBody);
+      console.log("Learner progress result:", result);
+    } catch (error) {
+      console.error("Error creating learner progress:", error);
+    }
+
+    try {
+      const getSetResultRes = await fetchGetSetResult(
+        sub_session_id,
+        currentContentType,
+        currentCollectionId,
+        totalSyllableCount
+      );
+      console.log("GetSet result:", getSetResultRes);
+    } catch (error) {
+      console.error("Error fetching set result:", error);
+    }
+
+    if (!(localStorage.getItem("contentSessionId") !== null)) {
+      let point = 1;
+      let milestone = "B";
+
+      if (point !== 1) {
+        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          navigate("/");
+        } else {
+          navigate("/discover-start");
+        }
+        return;
+      }
+
+      try {
+        const result = await addPointer(point, milestone);
+        const awardedPoints = result?.result?.points;
+        if (awardedPoints !== 1) {
+          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            navigate("/");
+          } else {
+            navigate("/discover-start");
+          }
+          return;
+        }
+      } catch (error) {
+        console.error("Error adding points:", error);
+      }
+    } else {
+      sendTestRigScore(5);
+    }
+    navigate("/discover-start");
+  };
+
+  const handleNextWord = async () => {
     console.log("datas", stepIndex, totalSteps, blockSize);
 
     if (stepIndex < totalSteps * blockSize - 1) {
       setStepIndex((i) => i + 1);
     } else {
       setLocalData("rFlow", false);
+      if (level === "B") {
+        await handleCompletion();
+        navigate("/discover-end");
+        return;
+      }
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
         navigate("/");
       } else {
