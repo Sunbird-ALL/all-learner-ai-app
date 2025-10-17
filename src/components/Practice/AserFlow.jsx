@@ -130,6 +130,10 @@ const AserFlow = ({
   const virtualId = getLocalData("virtualId");
   const [clickedIndex, setClickedIndex] = useState(null);
 
+  background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
+  showTimer = false;
+  level = "B";
+
   useEffect(() => {
     (async () => {
       let quesArr = [];
@@ -336,9 +340,14 @@ const AserFlow = ({
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      await handleCompletion();
+      // await handleCompletion();
       callTelemetryDiscovery("Discovery-AserFlow");
       handleNext?.();
+      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        navigate("/");
+      } else {
+        navigate("/discover-start");
+      }
     }
   };
 

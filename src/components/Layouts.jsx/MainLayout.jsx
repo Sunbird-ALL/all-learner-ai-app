@@ -618,7 +618,7 @@ const MainLayout = (props) => {
                   >
                     <footer>
                       {rFlow === "true" ? (
-                        LEVEL == 1 ? (
+                        (1, "B")?.includes(LEVEL) ? (
                           <img
                             src={
                               rStep == null || rStep === 0 || rStep === "0"
@@ -767,7 +767,7 @@ const MainLayout = (props) => {
                           </Box>
                         </Box>
                       )}
-                      {rFlow === "true" && LEVEL !== 1 && (
+                      {rFlow === "true" && !(1, "B")?.includes(LEVEL) && (
                         <Box
                           sx={{
                             display: "flex",

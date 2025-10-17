@@ -4250,7 +4250,11 @@ const Practice = () => {
   const readMatch = String(getLocalData("readMatch"));
   //const setWordWall = setLocalData("wordWall", true);
   const wordWallFlow = String(getLocalData("wordWall"));
-  const aserFlow = level === "B";
+  if (level === "B" && rStepZero !== 1) {
+    setLocalData("mFail", "true");
+    setLocalData("rFlow", "true");
+    setLocalData("rStepZero", 0);
+  }
   // useEffect(() => {
   //   if (lang !== "en") {
   //     setLocalData("rFlow", false);
@@ -5245,14 +5249,12 @@ const Practice = () => {
         rFlow !== "true" &&
         tFlow !== "true" &&
         readMatch !== "true" &&
-        wordWallFlow !== "true" &&
-        aserFlow !== true) ||
+        wordWallFlow !== "true") ||
       (mechanism?.id === "mechanic_15" &&
         rFlow !== "true" &&
         tFlow !== "true" &&
         readMatch !== "true" &&
-        wordWallFlow !== "true" &&
-        aserFlow !== true)
+        wordWallFlow !== "true")
     ) {
       const mechanics_data = questions[currentQuestion]?.mechanics_data;
 
@@ -5461,7 +5463,11 @@ const Practice = () => {
           }}
         />
       );
-    } else if (rFlow === "true" && level === 1 && rStepZero === 0) {
+    } else if (
+      rFlow === "true" &&
+      (level === 1 || level === "B") &&
+      rStepZero === 0
+    ) {
       return (
         <R0
           page={page}
@@ -5510,7 +5516,7 @@ const Practice = () => {
       );
     } else if (
       rFlow === "true" &&
-      level === 1 &&
+      (level === 1 || level === "B") &&
       rStepZero === 1 &&
       lang === "en"
     ) {
@@ -5561,7 +5567,7 @@ const Practice = () => {
       );
     } else if (
       rFlow === "true" &&
-      level === 1 &&
+      (level === 1 || level === "B") &&
       rStepZero === 1 &&
       lang !== "en"
     ) {
@@ -5836,54 +5842,6 @@ const Practice = () => {
             //
             currentImg: currentImage,
             parentWords: questions[currentQuestion]?.mechanics_data?.[0],
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-          }}
-        />
-      );
-    } else if (aserFlow === true) {
-      return (
-        <AserFlow
-          page={page}
-          setPage={setPage}
-          {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: currentImage,
-            parentWords: questions[currentQuestion]?.multilingual_data,
-            contentSourceData:
-              questions[currentQuestion]?.contentSourceData?.[0],
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,

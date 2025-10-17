@@ -239,7 +239,7 @@ const SpeakSentenceComponent = () => {
           currentContentType === "Sentence"
         ) {
           if (getSetData.currentLevel !== "m0") {
-            navigate("/discover-end");
+            navigate("/letter-hunt");
           }
           const words = assessmentResponse?.data?.find(
             (elem) => elem.category === "Word"
@@ -258,7 +258,8 @@ const SpeakSentenceComponent = () => {
           getSetData.sessionResult === "fail" &&
           currentContentType === "Word"
         ) {
-          navigate("/discover-end");
+          navigate("/letter-hunt");
+          console.log("fail 2");
 
           // const char = assessmentResponse?.data?.find(
           //   (elem) => elem.category === "Char"
@@ -272,7 +273,8 @@ const SpeakSentenceComponent = () => {
           // let quesArr = [...(resCharPagination?.data?.data || [])];
           // setQuestions(quesArr);
         } else {
-          navigate("/discover-end");
+          navigate("/letter-hunt");
+          console.log("fail 3");
         }
         await addLesson({
           sessionId,
