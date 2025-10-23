@@ -735,3 +735,48 @@ export const chillyAud = "dcfbb0ed-a599-4cba-be8a-7b9d6a8031ec.mp3";
 export const appleAud = "09c6b580-37d7-4b18-9d6a-6f1282b1612c.mp3";
 export const queenAud = "59263633-4265-4838-9199-4fc25532ae63.mp3";
 export const chilliImg = "2ecfdeab-a97f-4926-84a0-a9345ac09676.png";
+
+export const kelaaudio = "babd2269-35b6-4c6b-8a19-c5e104d29d6c.mp3";
+export const pahadaudio = "d4b9b0c3-2704-49f3-b4bf-8a5d0e45f723.mp3";
+export const bhaluaudio = "0b25846c-da4a-4177-8108-ec6cf3328758.mp3";
+export const papitaaudio = "5e233007-0e7f-4b56-a9df-a55f86ce74eb.mp3";
+export const bharataudio = "33de1c41-a4df-43fb-86e1-e4f8e256aa80.mp3";
+export const kitabaudio = "33df959f-c81d-460c-b90e-a693088698f3.mp3";
+export const sebaudio = "0700066c-7e38-46e3-921e-189ed2144e15.mp3";
+export const nadiaudio = "ac751bea-1d89-4340-81cf-12608bd431f4.mp3";
+export const jalaudio = "b95b6c4f-0230-41c2-ae37-199fa6b0b661.mp3";
+export const rajaaudio = "eb9da286-7bc2-4392-b543-a1b42ebe5e08.mp3";
+//tam
+export const மலைAudio = "2e60cafc-6f37-4c29-bc4a-f11d762285ef.mp3";
+export const நதிAudio = "4af31e39-369b-4494-9aa8-a92528f1e99f.mp3";
+export const மாடுAudio = "e9a11a73-acef-4ec5-9b71-7f1d186e9c2b.mp3";
+export const வலிAudio = "22ff767b-0dd0-4450-ac0f-ffe3d08f28df.mp3";
+export const தலைAudio = "2ae465cf-84f5-4ba1-9a4f-cea6912c54f8.mp3";
+export const நாடுAudio = "4de3abcd-0cb1-455e-af4a-f969c0a5e3ad.mp3";
+export const புழுAudio = "ecbe0ce9-16d8-41a2-b9ed-9e1ee2b447a3.mp3";
+export const மழைAudio = "f3df4c5d-fe27-4762-b099-95e6c2187385.mp3";
+export const கடைAudio = "23e02933-f5b0-40d0-a71a-7e4ca3dbf781.mp3";
+export const வீடுAudio = "a4d9553b-968a-44a3-9b16-240232e7314b.mp3";
+
+//tel
+export const నీరుAudio = "41c82465-5fbf-475e-a452-57fd9142c4d9.mp3";
+export const పాలుAudio = "4f37d514-4592-40df-a82b-89cc2880e27a.mp3";
+export const చేపAudio = "5ce3ed5c-8bce-4e34-8815-9516b831db51.mp3";
+export const పక్షిAudio = "5bf7ec6f-a0e2-471a-b930-b369a5d767d9.mp3";
+export const నదిAudio = "3a7958ff-f99d-495d-ad78-cb078ebeba29.mp3";
+export const కుక్కAudio = "a3899b6f-7585-4626-8dcc-ea5e5124fa0d.mp3";
+export const పిల్లిAudio = "d3d9fef3-02e6-4991-8392-5bd2d77d1a3b.mp3";
+export const మనిషిAudio = "e0424d53-ab20-4620-81b1-f6c26688b297.mp3";
+export const బడిAudio = "9d3357a5-f210-494a-ac52-2161dda4bbde.mp3";
+export const ఇల్లుAudio = "6293bf53-a836-4ad4-8d8d-a012c54ae4a7.mp3";
+
+export const ನೀರುAudio = "1c85fc5a-4541-46e1-bca6-4821c7eb5020.mp3";
+export const ಹಾಲುAudio = "2d8285c6-4145-433c-b4d3-022cab43514c.mp3";
+export const ಮೀನುAudio = "50759a48-4acb-4e3f-a80d-6d58f3dea73a.mp3";
+export const ಹಕ್ಕಿAudio = "91605a6f-eaa5-46a9-ac59-d2ffe2496d65.mp3";
+export const ನದಿAudio = "e6d751e9-79c0-4a0e-9cc4-677b89bc6703.mp3";
+export const ನಾಯಿAudio = "04ac99e0-fdde-41c1-9fb7-f50fb7de06a8.mp3";
+export const ಬೆಕ್ಕುAudio = "bd6e15e6-5f56-4bc4-baa9-cb1dd7f2bf22.mp3";
+export const ಮನೆAudio = "a851a652-cb93-4293-9f3c-b4cb7497296f.mp3";
+export const ಪಾಠAudio = "630654ec-639e-4207-b8fb-b877a808206f.mp3";
+export const ಬಳ್ಳಿAudio = "4e5efecf-a825-45f8-ac49-9ef2964f4347.mp3";

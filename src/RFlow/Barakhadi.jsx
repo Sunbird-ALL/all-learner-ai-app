@@ -19,7 +19,6 @@ import {
   NextButtonRound,
   RetryIcon,
   setLocalData,
-  sendTestRigScore,
 } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telementryService";
@@ -32,7 +31,6 @@ import * as s3Assets from "../utils/rFlowS3Links";
 import { getAssetUrl } from "../utils/rFlowS3Links";
 import { getAssetAudioUrl } from "../utils/rFlowS3Links";
 
-// Import Barakhadi assets
 import ballonImg from "../assets/ballon.svg";
 import bearImg from "../assets/bear.svg";
 import boyImg from "../assets/boy.svg";
@@ -45,18 +43,7 @@ import dottimg from "../assets/dottimg.svg";
 import nextImg from "../assets/nextImg.svg";
 import closebuttonImg from "../assets/closebtn.svg";
 import { callTelemetryDiscovery } from "../utils/apiUtil";
-import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
-import {
-  addLesson,
-  addPointer,
-  fetchUserPoints,
-  createLearnerProgress,
-} from "../services/orchestration/orchestrationService";
-import { fetchGetSetResult } from "../services/learnerAi/learnerAiService";
-import {
-  fetchAssessmentData,
-  fetchPaginatedContent,
-} from "../services/content/contentService";
+import audiowaveImg from "../assets/audiowave.svg";
 
 const theme = createTheme();
 
@@ -2066,172 +2053,213 @@ const wordData = {
     {
       text: "भारत",
       audio: "e0babcda-d6ff-4fed-a36d-5ccdd831b1f2.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.bharataudio),
     },
     {
       text: "राजा",
       audio: "b4edcfa0-91cf-4343-91f9-35fd8c691fcf.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.rajaaudio),
     },
     {
       text: "जल",
       audio: "551fee7a-fad6-4c0b-a384-5cee9aa7c7c2.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.jalaudio),
     },
     {
       text: "भालू",
       audio: "18cf4ec8-4669-49eb-81dc-622196bd226a.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.bhaluaudio),
     },
     {
       text: "किताब",
       audio: "42dfd842-8e09-4ab1-b14a-5b2afab33b5c.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.kitabaudio),
     },
     {
       text: "नदी",
       audio: "07346231-fd5b-4a41-82e8-c1f0be6a7a85.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.nadiaudio),
     },
     {
       text: "केला",
       audio: "1b1b2c77-88e1-46e0-b8a9-f94561d34d4a.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.kelaaudio),
     },
     {
       text: "पपीता",
       audio: "7ffaaae5-31ff-413c-ae1f-eb51780cf4d3.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.papitaaudio),
     },
     {
-      text: "पहाड़",
+      text: "पहाड",
       audio: "97cd336e-0495-4aaa-8f64-6764f2714f6f.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.pahadaudio),
     },
     {
       text: "सेब",
       audio: "1ce9cb46-6761-4c97-b184-ed123ea49de5.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.sebaudio),
     },
   ],
+
   ta: [
     {
       text: "மலை",
       audio: "bf0f13d5-f206-4fe2-b0fc-39462362b948.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.மலைAudio),
     },
     {
       text: "நதி",
       audio: "47c2b4ee-88bf-4b4f-92e6-07716978b021.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.நதிAudio),
     },
     {
-      text: "படம்",
-      audio: "58b2a939-b622-42cd-8218-acbd71c07fbf.mp3",
+      text: "புழு",
+      audio: "49500432-222b-475c-81c9-d331adfbca3a.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.புழுAudio),
     },
     {
       text: "வலி",
       audio: "5c7cdc08-b216-4317-80e2-a2995aeb1239.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.வலிAudio),
     },
     {
       text: "தலை",
       audio: "e782655f-6da9-4dc8-9f36-ce404c4c53c2.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.தலைAudio),
     },
     {
       text: "நாடு",
-      audio: "a7a00436-25f7-46af-a5da-7fe0e269fe79.mp3",
+      audio: "37a8ced6-8fa4-451d-a712-627c09bd8398.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.நாடுAudio),
     },
     {
-      text: "பலம்",
-      audio: "1074d084-6337-48e6-a11d-17c756bb1754.mp3",
+      text: "மாடு",
+      audio: "37a8ced6-8fa4-451d-a712-627c09bd8398.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.மாடுAudio),
     },
     {
       text: "மழை",
       audio: "0d6e3293-7cd1-40ac-a971-46062a2c5bda.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.மழைAudio),
     },
     {
       text: "கடை",
       audio: "81bf37f3-4517-4af1-94d6-d8f801e20534.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.கடைAudio),
     },
     {
       text: "வீடு",
       audio: "7837a882-d5c5-40b6-b4d2-3d72d42427c7.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.வீடுAudio),
     },
   ],
+
   te: [
     {
       text: "నీరు",
       audio: "b2a623f9-e4d1-427f-a50a-83471aeb8d6e.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నీరుAudio),
     },
     {
       text: "పాలు",
       audio: "6a5b2232-1afe-49eb-a467-d0d86b1e5daf.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పాలుAudio),
     },
     {
       text: "చేప",
       audio: "4b9977d3-2b1a-4819-ab81-eae005b93192.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చేపAudio),
     },
     {
-      text: "పక్షి",
+      text: "లేడి",
       audio: "4204ec95-d07c-452f-884b-8a625ef23bb7.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పక్షిAudio),
     },
     {
       text: "నది",
       audio: "ab310a2b-a6d4-435a-bcd2-589b33689c23.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నదిAudio),
     },
     {
-      text: "కుక్క",
+      text: "కథలు",
       audio: "fb3d428a-cd3f-45e5-85a8-162c823cfecb.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.కుక్కAudio),
     },
     {
-      text: "పిల్లి",
+      text: "తిను",
       audio: "8017f67a-1f3c-4286-82fa-5fb8a290d500.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పిల్లిAudio),
     },
     {
       text: "మనిషి",
       audio: "6dc6f74e-44e2-4c1d-99d0-c08dbd740caf.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మనిషిAudio),
     },
     {
       text: "బడి",
       audio: "4a3fafe7-b90c-4341-9c38-c40caed08494.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.బడిAudio),
     },
     {
-      text: "ఇల్లు",
+      text: "పని",
       audio: "9f7f13c0-95b4-4fec-ae0f-28308d8261a8.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ఇల్లుAudio),
     },
   ],
   kn: [
     {
-      text: "ನೀರು",
+      text: "ತಂಡ",
       audio: "e90023db-551d-462a-a132-dd2d93fd026a.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ನೀರುAudio),
     },
     {
       text: "ಹಾಲು",
       audio: "c8b3656f-1f13-404e-8409-864fd33c56ac.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ಹಾಲುAudio),
     },
     {
       text: "ಮೀನು",
       audio: "18ae34eb-1151-4692-bef4-6c4e9d45c68e.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ಮೀನುAudio),
     },
     {
-      text: "ಹಕ್ಕಿ",
+      text: "ಕಮಲ",
       audio: "6c751bea-e1d2-440a-8d1c-b8847f59312d.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ಹಕ್ಕಿAudio),
     },
     {
       text: "ನದಿ",
       audio: "a11f0fe3-431f-4e15-9f85-0e50c6927e1e.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ನದಿAudio),
     },
     {
       text: "ನಾಯಿ",
       audio: "be34bf1d-1a30-4244-a9fc-93872eac28d9.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ನಾಯಿAudio),
     },
     {
-      text: "ಬೆಕ್ಕು",
+      text: "ಸಿಹಿ",
       audio: "cb55bceb-11c9-4eeb-bd4f-28835fdccfdd.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ಬೆಕ್ಕುAudio),
     },
     {
       text: "ಮನೆ",
       audio: "9d2e0804-5d26-456f-bcae-6d92d39d4091.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ಮನೆAudio),
     },
     {
       text: "ಪಾಠ",
       audio: "26a8679c-cbc5-4a55-84bf-eb87de6678a6.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ಪಾಠAudio),
     },
     {
-      text: "ಬಳ್ಳಿ",
+      text: "ತಂಡ",
       audio: "ebf6d7ed-84f3-48f7-999b-61ba7ba67e5d.mp3",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ಬಳ್ಳಿAudio),
     },
   ],
 };
-
 function getScriptFromLang(lang) {
   const scriptMap = {
     hi: "devanagari",
@@ -2330,85 +2358,56 @@ const Barakhadi = ({
   const [showFullChart, setShowFullChart] = useState(false);
   const [currentBarakhadi, setCurrentBarakhadi] = useState({});
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [incorrectCell, setIncorrectCell] = useState(null);
+  const [voicesReady, setVoicesReady] = useState(false);
+  const [voiceStatus, setVoiceStatus] = useState("");
   const navigate = useNavigate();
   const correctAudio = new Audio(correctSound);
+  const wrongAudio = new Audio(wrongSound);
   const lang = getLocalData("lang") || "hi";
+  const [showAudioWave, setShowAudioWave] = useState(false);
+  const [showWordAudioWave, setShowWordAudioWave] = useState(false);
 
   const swar = vowelsData[lang] || vowelsData.hi;
   const vowels = vowelsData[lang] || vowelsData.hi;
 
+  useEffect(() => {
+    const loadVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        setVoicesReady(true);
+        console.log(
+          "Voices loaded successfully:",
+          voices.map((v) => ({ name: v.name, lang: v.lang }))
+        );
+
+        const hasTamil = voices.some(
+          (v) => v.lang === "ta-IN" || v.lang.startsWith("ta")
+        );
+        if (!hasTamil && lang === "ta") {
+          setVoiceStatus("Tamil voice not available. Using Hindi instead.");
+        } else {
+          setVoiceStatus("");
+        }
+      }
+    };
+
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    loadVoices();
+
+    return () => {
+      speechSynthesis.onvoiceschanged = null;
+    };
+  }, [lang]);
+
   const getWordData = () => {
     return wordData[lang] || wordData.hi;
   };
-  const sessionId = getLocalData("sessionId");
-  const virtualId = getLocalData("virtualId");
-  const [currentCollectionId, setCurrentCollectionId] = useState("");
-  const [totalSyllableCount, setTotalSyllableCount] = useState("");
 
   const wordDataList = getWordData();
-
-  const langWiseAnswers = {
-    en: {
-      c: true,
-      j: true,
-      x: true,
-      k: true,
-      h: true,
-      n: true,
-      p: true,
-      u: true,
-      s: true,
-      o: true,
-    },
-    ta: {
-      அ: true,
-      ஆ: true,
-      இ: true,
-      ஈ: true,
-      உ: true,
-      ஊ: true,
-      எ: true,
-      ஏ: true,
-      ஐ: true,
-      ஒ: true,
-    },
-    te: {
-      అ: true,
-      ఆ: true,
-      ఇ: true,
-      ఈ: true,
-      ఉ: true,
-      ఊ: true,
-      ఎ: true,
-      ఏ: true,
-      ఐ: true,
-      ఒ: true,
-    },
-    kn: {
-      ಅ: true,
-      ಆ: true,
-      ಇ: true,
-      ಈ: true,
-      ಉ: true,
-      ಊ: true,
-      ಎ: true,
-      ಏ: true,
-      ಐ: true,
-      ಒ: true,
-    },
-    hi: {
-      अ: true,
-      आ: true,
-      इ: true,
-      ई: true,
-      उ: true,
-      ऊ: true,
-      ए: true,
-      ऐ: true,
-      ओ: true,
-      औ: true,
-    },
-  };
 
   const getTitle = () => {
     const titles = {
@@ -2418,107 +2417,6 @@ const Barakhadi = ({
       kn: "ಕನ್ನಡ ಬಾರಾಖಡಿ ಚಾರ್ಟ್",
     };
     return titles[lang] || titles.hi;
-  };
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const lang = getLocalData("lang");
-        // Fetch assessment data
-        const resAssessment = await fetchAssessmentData(lang);
-        const sentences = resAssessment?.data?.find(
-          (elem) => elem.category === "Char"
-        );
-
-        if (!sentences?.collectionId) {
-          console.error("No collection ID found for sentences.");
-          return;
-        }
-
-        const resPagination = await fetchPaginatedContent(
-          sentences.collectionId,
-          10
-        );
-
-        setTotalSyllableCount(resPagination?.totalSyllableCount);
-        setCurrentCollectionId(sentences?.collectionId);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    })();
-  }, []);
-
-  const handleCompletion = async () => {
-    const sub_session_id = getLocalData("sub_session_id");
-    let currentContentType = "Char";
-
-    try {
-      const milestoneLevel = "B";
-
-      let requestBody = {
-        original_text: "Char",
-        audio: "",
-        user_id: virtualId,
-        session_id: sessionId,
-        language: lang,
-        date: new Date(),
-        sub_session_id,
-        contentId: contentId,
-        contentType: "Char",
-        mechanics_id: getLocalData("mechanism_id") || "",
-        milestone: milestoneLevel,
-        ansSelectionStatus: langWiseAnswers[lang],
-      };
-
-      const result = await updateLearnerProfile(lang, requestBody);
-      console.log("Learner progress result:", result);
-    } catch (error) {
-      console.error("Error creating learner progress:", error);
-    }
-
-    try {
-      const getSetResultRes = await fetchGetSetResult(
-        sub_session_id,
-        currentContentType,
-        currentCollectionId,
-        totalSyllableCount
-      );
-      console.log("GetSet result:", getSetResultRes);
-    } catch (error) {
-      console.error("Error fetching set result:", error);
-    }
-
-    if (!(localStorage.getItem("contentSessionId") !== null)) {
-      let point = 1;
-      let milestone = "B";
-
-      if (point !== 1) {
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-          navigate("/");
-        } else {
-          navigate("/discover-start");
-        }
-        return;
-      }
-
-      try {
-        const result = await addPointer(point, milestone);
-        const awardedPoints = result?.result?.points;
-        if (awardedPoints !== 1) {
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-            navigate("/");
-          } else {
-            navigate("/discover-start");
-          }
-          return;
-        }
-      } catch (error) {
-        console.error("Error adding points:", error);
-      }
-    } else {
-      sendTestRigScore(5);
-    }
-    navigate("/discover-start");
   };
 
   const getButtonTexts = () => {
@@ -2570,7 +2468,37 @@ const Barakhadi = ({
       te: "te-IN",
       kn: "kn-IN",
     };
-    return langCodes[lang] || "hi-IN";
+
+    const requestedCode = langCodes[lang] || "hi-IN";
+    const voices = speechSynthesis.getVoices();
+
+    const isVoiceAvailable = voices.some(
+      (voice) =>
+        voice.lang === requestedCode ||
+        voice.lang.startsWith(requestedCode.split("-")[0])
+    );
+
+    console.log("Voice availability check:", {
+      requested: requestedCode,
+      available: isVoiceAvailable,
+      allVoices: voices.map((v) => v.lang),
+    });
+
+    if (!isVoiceAvailable) {
+      console.log(`Voice for ${requestedCode} not available, using fallback`);
+
+      if (voices.some((v) => v.lang === "hi-IN" || v.lang.startsWith("hi"))) {
+        return "hi-IN";
+      } else if (
+        voices.some((v) => v.lang === "en-US" || v.lang.startsWith("en"))
+      ) {
+        return "en-US";
+      } else if (voices.length > 0) {
+        return voices[0].lang;
+      }
+    }
+
+    return requestedCode;
   };
 
   const getInstructionAltText = () => {
@@ -2597,16 +2525,11 @@ const Barakhadi = ({
     }
   }, [targetWord, lang]);
 
-  const handleNextWord = async () => {
+  const handleNextWord = () => {
     const nextIndex = currentWordIndex + 1;
 
     if (nextIndex >= wordDataList.length) {
       setLocalData("rFlow", false);
-      if (level === "B") {
-        await handleCompletion();
-        navigate("/discover-end");
-        return;
-      }
 
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
         navigate("/");
@@ -2622,42 +2545,207 @@ const Barakhadi = ({
     setTargetWord(wordDataList[nextIndex].text);
     setWord("");
     setShowConfetti(false);
+    setIncorrectCell(null);
   };
 
-  const handleLetterClick = (letter) => {
+  const handleLetterClick = (letter, rowIndex, colIndex) => {
+    const remainingTarget = targetWord.slice(word.length);
+
+    const isCorrect = remainingTarget.startsWith(letter);
+
     const newWord = word + letter;
     setWord(newWord);
 
-    if (newWord === targetWord) {
-      correctAudio.play();
-      setShowConfetti(true);
-      setTimeout(() => {
-        setShowConfetti(false);
-      }, 3000);
+    if (isCorrect) {
+      if (newWord === targetWord) {
+        correctAudio.play();
+        setShowConfetti(true);
+        setTimeout(() => {
+          setShowConfetti(false);
+        }, 3000);
+      }
     }
   };
 
   const handleErase = () => {
     setWord("");
+    setIncorrectCell(null);
   };
 
   const handleDelete = () => {
     setWord((prevWord) => prevWord.slice(0, -1));
+    setIncorrectCell(null);
+  };
+  const handleListen = () => {
+    if (word.length > 0) {
+      console.log("Playing audio for user-typed word:", word);
+
+      if (word === targetWord) {
+        playSegmentedAudio(currentWordData);
+      } else {
+        playTTS(word);
+      }
+    }
   };
 
-  const handleListen = () => {
-    if ("speechSynthesis" in window && word.length > 0) {
-      const utterance = new SpeechSynthesisUtterance(word);
-      utterance.lang = getSpeechLang();
+  const playTTS = (textToSpeak) => {
+    if (!voicesReady) {
+      console.log("Voices not loaded yet, retrying in 500ms...");
+      setTimeout(() => playTTS(textToSpeak), 500);
+      return;
+    }
+
+    if ("speechSynthesis" in window) {
+      speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      const requestedLang = getSpeechLang();
+      const voices = speechSynthesis.getVoices();
+
+      // Find the best available voice
+      let selectedVoice = null;
+
+      // First try: Exact match
+      selectedVoice = voices.find((voice) => voice.lang === requestedLang);
+
+      // Second try: Language family match (e.g., ta-IN for ta)
+      if (!selectedVoice) {
+        const langFamily = requestedLang.split("-")[0];
+        selectedVoice = voices.find((voice) =>
+          voice.lang.startsWith(langFamily)
+        );
+      }
+
+      // Third try: Hindi fallback
+      if (!selectedVoice) {
+        selectedVoice = voices.find(
+          (voice) => voice.lang === "hi-IN" || voice.lang.startsWith("hi")
+        );
+      }
+
+      if (!selectedVoice) {
+        selectedVoice = voices.find(
+          (voice) => voice.lang === "en-US" || voice.lang.startsWith("en")
+        );
+      }
+
+      if (!selectedVoice && voices.length > 0) {
+        selectedVoice = voices[0];
+      }
+
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+        utterance.lang = selectedVoice.lang;
+        console.log("Using voice:", selectedVoice.name, selectedVoice.lang);
+      } else {
+        utterance.lang = requestedLang;
+        console.log("No suitable voice found, using default");
+      }
+
+      utterance.rate = 0.8;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+
+      console.log("TTS Final Settings:", {
+        text: textToSpeak,
+        requestedLang: requestedLang,
+        actualLang: utterance.lang,
+        voice: utterance.voice?.name,
+      });
+
+      utterance.onstart = () => {
+        console.log("TTS started successfully");
+        setShowAudioWave(true);
+      };
+
+      utterance.onend = () => {
+        console.log("TTS ended");
+        setShowAudioWave(false);
+      };
+
+      utterance.onerror = (event) => {
+        console.error("TTS error:", event);
+        setShowAudioWave(false);
+      };
+
       speechSynthesis.speak(utterance);
+    } else {
+      console.error("Speech synthesis not supported");
+      alert("Text-to-speech is not supported in your browser.");
+    }
+  };
+
+  const playSegmentedAudio = (wordData) => {
+    if (wordData && wordData.segmentedAudio) {
+      setShowAudioWave(true);
+
+      const audio = new Audio(wordData.segmentedAudio);
+
+      audio.play().catch((error) => {
+        console.error("Error playing segmented audio:", error);
+        setShowAudioWave(false);
+        playTTS(wordData.text);
+      });
+
+      audio.onended = () => {
+        setShowAudioWave(false);
+      };
+
+      setTimeout(() => {
+        setShowAudioWave(false);
+      }, 5000);
+    } else {
+      playTTS(wordData.text);
     }
   };
 
   const playWordAudio = (wordData) => {
     if (wordData && wordData.audio) {
+      setShowWordAudioWave(true);
+
       const audioUrl = `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${wordData.audio}`;
-      playAudio(audioUrl);
+      console.log("Attempting to play audio from:", audioUrl);
+
+      const audio = new Audio(audioUrl);
+
+      audio.play().catch((error) => {
+        console.error("Error playing audio:", error);
+        setShowWordAudioWave(false);
+        playTTS(wordData.text);
+      });
+
+      audio.onended = () => {
+        console.log("Audio playback completed");
+        setShowWordAudioWave(false);
+      };
+
+      audio.onerror = (e) => {
+        console.error("Audio element error:", e);
+        setShowWordAudioWave(false);
+      };
+    } else {
+      console.log("No audio found, using TTS");
+      playTTS(wordData.text);
     }
+  };
+
+  const debugVoices = () => {
+    const voices = speechSynthesis.getVoices();
+    console.log("=== VOICE DEBUG INFO ===");
+    console.log("Total voices:", voices.length);
+    console.log(
+      "Available languages:",
+      [...new Set(voices.map((v) => v.lang))].sort()
+    );
+    console.log(
+      "Detailed voices:",
+      voices.map((v) => ({
+        name: v.name,
+        lang: v.lang,
+        localService: v.localService,
+        default: v.default,
+      }))
+    );
   };
 
   const currentWordData =
@@ -2671,15 +2759,14 @@ const Barakhadi = ({
   const containerStyle = {
     fontFamily: "sans-serif",
     background: "#f2fbe9",
-    padding: "20px",
+    padding: "0px",
     textAlign: "center",
-    //height: "75vh",
     overflow: "hidden",
   };
 
   const cardStyle = {
     background: "#fff",
-    padding: "30px",
+    padding: "23px",
     borderRadius: "12px",
     display: "inline-block",
     position: "relative",
@@ -2770,6 +2857,7 @@ const Barakhadi = ({
     width: "59px",
     cursor: "pointer",
     fontWeight: 800,
+    transition: "background-color 0.3s ease",
   };
 
   const circleStyle = {
@@ -2828,6 +2916,41 @@ const Barakhadi = ({
     >
       <div style={containerStyle}>
         {showConfetti && <Confetti />}
+
+        {voiceStatus && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: 10,
+              left: 10,
+              background: "yellow",
+              padding: "5px",
+              fontSize: "12px",
+              borderRadius: "5px",
+              border: "1px solid orange",
+            }}
+          >
+            {voiceStatus}
+          </div>
+        )}
+
+        <style>
+          {`
+            @keyframes pulse {
+              0% {
+                transform: scale(0.6);
+                opacity: 0;
+              }
+              50% {
+                opacity: 1;
+              }
+              100% {
+                transform: scale(1.4);
+                opacity: 0;
+              }
+            }
+          `}
+        </style>
 
         {showFullChart && (
           <div
@@ -3012,7 +3135,14 @@ const Barakhadi = ({
         )}
 
         <div style={cardStyle}>
-          <div style={titleStyle}>{getTitle()}</div>
+          <div style={titleStyle}>
+            <img
+              src={wordbanaoImg}
+              alt={getInstructionAltText()}
+              height={"30px"}
+              style={{ display: "block", margin: "0 auto" }}
+            />
+          </div>
 
           <div style={wordBoxStyle}>
             <div
@@ -3020,39 +3150,81 @@ const Barakhadi = ({
                 fontWeight: "bold",
                 fontSize: "20px",
                 marginBottom: "10px",
+                width: "100%",
               }}
             >
-              <img
-                src={wordbanaoImg}
-                alt={getInstructionAltText()}
-                height={"25px"}
-              />
-
               <div
                 style={{
-                  display: "inline-flex",
+                  display: "flex",
                   alignItems: "center",
+                  justifyContent: "center",
                   gap: "15px",
-                  marginLeft: "15px",
-                  marginTop: "-70px",
+                  width: "100%",
                 }}
               >
                 <span
                   style={{
                     background: "rgba(51, 63, 97, 1)",
                     color: "#fff",
-                    padding: "5px 10px",
+                    padding: "3px 26px",
                     borderRadius: "6px",
+                    minWidth: "80px",
+                    textAlign: "center",
+                    display: "inline-block",
                   }}
                 >
                   {currentWordData.text}
                 </span>
-                <img
-                  src={listenImg}
-                  alt="listen"
-                  style={{ width: "25px", cursor: "pointer" }}
-                  onClick={() => playWordAudio(currentWordData)}
-                />
+
+                <div
+                  style={{
+                    position: "relative",
+                    display: "inline-block",
+                    minWidth: "50px",
+                    textAlign: "center",
+                  }}
+                >
+                  {showWordAudioWave ? (
+                    <img
+                      src={audiowaveImg}
+                      alt="audio playing"
+                      style={{
+                        width: "100px",
+                        cursor: "pointer",
+                        position: "relative",
+                        zIndex: 1,
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <img
+                        src={listenImg}
+                        alt="listen"
+                        style={{
+                          width: "25px",
+                          cursor: "pointer",
+                          position: "relative",
+                          zIndex: 1,
+                        }}
+                        onClick={() => playWordAudio(currentWordData)}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          width: "40px",
+                          height: "40px",
+                          backgroundColor: "#A856FF",
+                          borderRadius: "50%",
+                          animation: "pulse 1.2s linear infinite",
+                          top: "-23%",
+                          left: "8%",
+                          transform: "translate(-50%, -50%)",
+                          zIndex: -1,
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -3158,16 +3330,15 @@ const Barakhadi = ({
                 </tr>
               </thead>
               <tbody>
-                {vyajan.map((v, rIdx) => (
-                  <tr key={rIdx}>
-                    {currentBarakhadi[v]?.map((cell, cIdx) => (
+                {vyajan.map((consonant, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {currentBarakhadi[consonant]?.map((cell, colIndex) => (
                       <td
-                        key={cIdx}
-                        style={{
-                          ...tdStyle,
-                          background: "white",
-                        }}
-                        onClick={() => handleLetterClick(cell)}
+                        key={colIndex}
+                        style={tdStyle}
+                        onClick={() =>
+                          handleLetterClick(cell, rowIndex, colIndex)
+                        }
                       >
                         {cell}
                       </td>

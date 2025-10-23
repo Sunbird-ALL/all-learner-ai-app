@@ -47,6 +47,8 @@ import FluencyP1 from "../../components/Practice/FluencyP1";
 import FluencyP2 from "../../components/Practice/FluencyP2";
 import FluencyP3 from "../../components/Practice/FluencyP3";
 import FluencyP4 from "../../components/Practice/FluencyP4";
+import FluencyP5 from "../../components/Practice/FluencyP5";
+import ParagraphFlow from "../../components/Practice/ParagraphFlow";
 import AserFlow from "../../components/Practice/AserFlow";
 import ReadMatch from "../../components/Practice/ReadMatch";
 import WordWall from "../../components/Practice/WordWall";
@@ -6032,6 +6034,102 @@ const Practice = () => {
             currentImg: currentImage,
             parentWords: questions[currentQuestion]?.multilingual_data,
             contentSourceData: questions,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (mechanism.name === "fluencyP5") {
+      return (
+        <FluencyP5
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: questions[currentQuestion]?.multilingual_data,
+            contentSourceData:
+              questions[currentQuestion]?.contentSourceData?.[0],
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (mechanism.name === "fluencyP6") {
+      return (
+        <ParagraphFlow
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: questions[currentQuestion]?.multilingual_data,
+            contentSourceData:
+              questions[currentQuestion]?.contentSourceData?.[0],
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,
