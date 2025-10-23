@@ -884,12 +884,12 @@ const MainLayout = (props) => {
                               <IconButton
                                 onClick={handleNext1}
                                 disabled={
-                                  currentPageStart + 10 >= flowNames.length
+                                  currentPageStart + 10 >= flowNames?.length
                                 }
                                 sx={{
                                   ml: 1,
                                   visibility:
-                                    currentPageStart + 10 >= flowNames.length
+                                    currentPageStart + 10 >= flowNames?.length
                                       ? "hidden"
                                       : "visible",
                                 }}
