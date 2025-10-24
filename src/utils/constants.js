@@ -10983,15 +10983,15 @@ export const levelGetContent = {
     9: [
       {
         title: "P1",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG_M",
+        tags: "CEFR_GENERAL_ENG-M",
         mechanism: { id: "Fluency_P6", name: "fluencyP6" },
         multilingual: true,
       },
       {
         title: "P2",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG_M",
         mechanism: { id: "Fluency_P6", name: "fluencyP6" },

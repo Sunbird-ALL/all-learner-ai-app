@@ -16,6 +16,9 @@ import meterImg from "../../assets/meterimg.svg";
 import tortoiseImg from "../../assets/tortoiseImg.svg";
 import audioone from "../../assets/audio1.wav";
 import correctSound from "../../assets/correct.wav";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 const paragraphPages = [
   {
@@ -166,6 +169,36 @@ const ParagraphFlow = ({
   const utteranceRef = useRef(null);
   const wordMapRef = useRef([]);
   const [startTime, setStartTime] = useState(null);
+  const {
+    transcript,
+    interimTranscript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+  const transcriptRef = useRef("");
+  const [finalTranscript, setFinalTranscript] = useState("");
+  const [isMatch, setIsMatch] = useState(false);
+
+  const getSimilarity = (str1, str2) => {
+    const a = str1.toLowerCase().trim().split(" ");
+    const b = str2.toLowerCase().trim().split(" ");
+    const matches = a.filter((word) => b.includes(word)).length;
+    const total = Math.max(a.length, b.length);
+    return matches / total;
+  };
+
+  useEffect(() => {
+    transcriptRef.current = transcript;
+    const similarity = getSimilarity(transcript, paragraphData.highlightedText);
+    setIsMatch(similarity * 10); // Scale to 0-10
+    console.log(
+      "Live Transcript:",
+      transcript,
+      paragraphData.highlightedText,
+      similarity
+    );
+  }, [transcript]);
 
   const handleStart = () => {
     setStartTime(Date.now());
@@ -636,6 +669,7 @@ const ParagraphFlow = ({
     if (isSpeaking) {
       const audio = new Audio(correctSound);
       audio.play();
+      SpeechRecognition.stopListening();
       handleStop();
       setShowBearDance(true);
       setShowConfetti(true);
@@ -645,6 +679,12 @@ const ParagraphFlow = ({
         setShowBearDance(false);
         prepareTextMapping();
       }, 3000);
+    } else {
+      resetTranscript();
+      SpeechRecognition.startListening({
+        continuous: true,
+        interimResults: true,
+      });
     }
     setIsSpeaking(!isSpeaking);
   };
@@ -772,31 +812,67 @@ const ParagraphFlow = ({
               <img src={tortoiseImg} alt="tortoise" style={{ width: "70px" }} />
             </div>
 
-            <h2
-              style={{
-                color: "#A66CFF",
-                fontWeight: "700",
-                fontSize: "28px",
-                marginBottom: "10px",
-                fontFamily: "Quicksand",
-              }}
-            >
-              {speed}
-            </h2>
-            <p
-              style={{
-                color: "#333f61",
-                fontSize: "24px",
-                margin: "10px",
-                fontFamily: "Quicksand",
-                fontStyle: "bold",
-                fontWeight: 600,
-              }}
-            >
-              {speed === "Fast"
-                ? "Great speed, keep it up!"
-                : "Try reading faster"}
-            </p>
+            {isMatch === 0 ? (
+              <>
+                <h2
+                  style={{
+                    color: "#333f61",
+                    fontWeight: "700",
+                    fontSize: "28px",
+                    marginBottom: "10px",
+                    fontFamily: "Quicksand",
+                  }}
+                >
+                  No voice detected, please speak
+                </h2>
+              </>
+            ) : isMatch > 0 && isMatch < 5 ? (
+              <>
+                <h2
+                  style={{
+                    color: "#333f61",
+                    fontWeight: "700",
+                    fontSize: "28px",
+                    marginBottom: "10px",
+                    fontFamily: "Quicksand",
+                  }}
+                >
+                  Please try again, your speech didn’t match enough
+                </h2>
+              </>
+            ) : (
+              <>
+                <h2
+                  style={{
+                    color: "#A66CFF",
+                    fontWeight: "700",
+                    fontSize: "28px",
+                    marginBottom: "10px",
+                    fontFamily: "Quicksand",
+                  }}
+                >
+                  {speed}
+                </h2>
+
+                {/* show this paragraph only if isMatch > 6 */}
+                {isMatch >= 5 && (
+                  <p
+                    style={{
+                      color: "#333f61",
+                      fontSize: "24px",
+                      margin: "10px",
+                      fontFamily: "Quicksand",
+                      fontStyle: "bold",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {speed === "Fast"
+                      ? "Great speed, keep it up!"
+                      : "Try reading faster"}
+                  </p>
+                )}
+              </>
+            )}
 
             <img
               src={nextImg}
