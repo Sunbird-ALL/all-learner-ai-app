@@ -702,7 +702,7 @@ const R1 = ({
   //const item = data[itemIndex];
   // Figure out block and phase
   const blockIndex = Math.floor(stepIndex / (blockSize * 2)); // which block
-  const inBlockStep = stepIndex % (blockSize * 2); // position inside block’s 2 phases
+  const inBlockStep = stepIndex % (blockSize * 2); // position inside block's 2 phases
   const blockStart = blockIndex * blockSize;
   const blockEnd = Math.min(blockStart + blockSize, totalItems);
 
@@ -831,6 +831,29 @@ const R1 = ({
       }
     };
   }, [stepIndex]);
+
+  // Back functionality for English flow
+  const handlePreviousWord = () => {
+    if (stepIndex > 0) {
+      setStepIndex((i) => i - 1);
+      setRecAudio(null);
+      setIsNextButtonCalled(false);
+      setEnableNext(false);
+    }
+  };
+
+  // Back functionality for non-English (UI3) flow
+  const handlePreviousImage = () => {
+    if (imgIndex > 0) {
+      setImgIndex((i) => i - 1);
+    } else if (itemIndexUi > 0) {
+      setItemIndexUi((i) => i - 1);
+      setImgIndex(dataKn[itemIndexUi - 1]?.images?.length - 1 || 0);
+    }
+    setRecAudio(null);
+    setIsNextButtonCalled(false);
+    setEnableNext(false);
+  };
 
   const handleNextImage = async () => {
     if (imgIndex < currentItem.images.length - 1) {
@@ -978,6 +1001,30 @@ const R1 = ({
     setEnableNext(false);
   };
 
+  const handleBackNavigation = () => {
+    if (lang !== "en") {
+      if (imgIndex > 0 || itemIndexUi > 0) {
+        handlePreviousImage();
+      } else {
+        if (handleBack) {
+          handleBack();
+        } else {
+          navigate(-1);
+        }
+      }
+    } else {
+      if (stepIndex > 0) {
+        handlePreviousWord();
+      } else {
+        if (handleBack) {
+          handleBack();
+        } else {
+          navigate(-1);
+        }
+      }
+    }
+  };
+
   const handleRetry = () => {
     console.log("audio playing!");
     playAudio(currentAudio);
@@ -1019,17 +1066,22 @@ const R1 = ({
     const UI1 = () => {
       console.log("ui1");
 
+      //  const TOTAL_ITEMS = dataEn.length;
+
+      const TOTAL_ITEMS = lang === "en" ? dataEn.length : dataKn.length;
+      const currentProgress = itemIndex + 1;
+      const completionPercentage = Math.round(
+        (currentProgress / TOTAL_ITEMS) * 100
+      );
+
       return (
         <Box>
-          {/* BOARD with notebook background */}
           <Box
             sx={{
               position: "relative",
               mx: "auto",
-              width: "min(100%, 1024px)",
-              //aspectRatio: "16/9",
+              width: "min(100%, 900px)",
               borderRadius: 2,
-              // notebook lines
               backgroundImage:
                 "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
               backgroundColor: "#fff",
@@ -1039,95 +1091,146 @@ const R1 = ({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "flex-start",
-              //px: { xs: 2.5, md: 5 },
-              pt: { xs: 3, md: 4 },
-              pb: { xs: 2, md: 3 },
+              pt: { xs: 2, md: 3 },
+              pb: { xs: 1, md: 2 },
             }}
           >
-            {/* <Box
+            <Box
               sx={{
                 position: "absolute",
-                top: { xs: 18, md: 22 },
-                left: { xs: 18, md: 24 },
-                width: { xs: 60, md: 72 },
-                height: { xs: 60, md: 72 },
-                bgcolor: red,
-                color: "#fff",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 800,
-                fontSize: { xs: 30, md: 40 },
-                lineHeight: 1,
-                fontFamily: "Quicksand",
+                top: 16,
+                right: 16,
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "20px",
+                padding: "12px 16px",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                border: "2px solid #1CB0F6",
+                zIndex: 10,
+                backdropFilter: "blur(5px)",
+                minWidth: "100px",
               }}
             >
-              {item.id}
-            </Box> */}
-
-            {/* Title centered */}
-            <Box sx={{ textAlign: "center", position: "relative", mb: 2 }}>
-              {/* Train Image */}
-              <img
-                src={trainImg}
-                alt="train"
-                style={{ width: "100%", maxWidth: "400px" }}
-              />
-
-              {/* Letters mapped over the train */}
-              <Box
+              <Typography
                 sx={{
-                  position: "absolute",
-                  top: "15%",
-                  left: "60%",
-                  transform: "translateX(-50%)",
-                  display: "flex",
-                  gap: 2,
-                  justifyContent: "center",
-                  width: "100%",
+                  fontFamily: "Quicksand",
+                  fontWeight: 800,
+                  fontSize: "16px",
+                  color: navy,
+                  whiteSpace: "nowrap",
+                  textAlign: "center",
+                  lineHeight: 1.2,
                 }}
               >
-                <AnimatePresence>
-                  {letters?.map((ch, i) => (
-                    <motion.div
-                      key={ch + i}
-                      initial={{ y: 100, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -50, opacity: 0 }}
-                      transition={{ duration: 1.0, ease: "easeOut" }}
-                    >
-                      <Box
-                        sx={{
-                          minWidth: 40,
-                          minHeight: 40,
-                          borderRadius: "10px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontWeight: "bold",
-                          background: COLORS[i % COLORS.length],
-                          boxShadow: 2,
-                        }}
-                      >
-                        <span
-                          style={{ fontFamily: "Quicksand", color: "#FFFFFF" }}
-                        >
-                          {ch}
-                        </span>
-                      </Box>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                {currentProgress} / {TOTAL_ITEMS}
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Quicksand",
+                  fontWeight: 600,
+                  fontSize: "12px",
+                  color: "#1CB0F6",
+                  whiteSpace: "nowrap",
+                  textAlign: "center",
+                  mt: 0.5,
+                }}
+              >
+                Progress
+              </Typography>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "4px",
+                  backgroundColor: "#e0e0e0",
+                  borderRadius: "2px",
+                  mt: 1,
+                  overflow: "hidden",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: `${completionPercentage}%`,
+                    height: "100%",
+                    backgroundColor: "#58CC02",
+                    borderRadius: "2px",
+                    transition: "width 0.3s ease",
+                  }}
+                />
               </Box>
             </Box>
 
-            {/* Middle row: big letter + image */}
             <Box
               sx={{
-                //mt: { xs: 2, md: 2 },
+                textAlign: "center",
+                position: "relative",
+                mb: 1,
                 width: "100%",
-                ml: "25%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Box sx={{ position: "relative", display: "inline-block" }}>
+                <img
+                  src={trainImg}
+                  alt="train"
+                  style={{ width: "100%", maxWidth: "400px" }}
+                />
+
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "28%",
+                    left: "63%",
+                    transform: "translate(-50%, -50%)",
+                    display: "flex",
+                    gap: 1.5,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "auto",
+                  }}
+                >
+                  <AnimatePresence>
+                    {letters?.map((ch, i) => (
+                      <motion.div
+                        key={ch + i}
+                        initial={{ y: 100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -50, opacity: 0 }}
+                        transition={{ duration: 1.0, ease: "easeOut" }}
+                      >
+                        <Box
+                          sx={{
+                            minWidth: 64,
+                            minHeight: 64,
+                            borderRadius: "8px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontWeight: "bold",
+                            background: COLORS[i % COLORS.length],
+                            boxShadow: 1,
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "Quicksand",
+                              color: "#FFFFFF",
+                              fontSize: "25px",
+                            }}
+                          >
+                            {ch}
+                          </span>
+                        </Box>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                width: "100%",
+                ml: "20%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -1138,9 +1241,9 @@ const R1 = ({
                 sx={{
                   color: red,
                   fontWeight: 500,
-                  fontSize: { xs: 160, md: 200 },
+                  fontSize: { xs: 120, md: 160 },
                   lineHeight: 1,
-                  ml: { xs: 2, md: 4 },
+                  ml: { xs: 1, md: 2 },
                   fontFamily: "Quicksand",
                 }}
               >
@@ -1149,7 +1252,7 @@ const R1 = ({
 
               <Box
                 sx={{
-                  mt: { xs: 2, md: 2 },
+                  mt: { xs: 1, md: 1 },
                   width: "100%",
                   display: "flex",
                   flexDirection: "column",
@@ -1162,23 +1265,23 @@ const R1 = ({
                   src={item.image}
                   alt={item.word}
                   sx={{
-                    width: { xs: 200, md: 220 },
-                    height: { xs: 200, md: 220 },
+                    width: { xs: 160, md: 180 },
+                    height: { xs: 160, md: 180 },
                     objectFit: "contain",
-                    mr: { xs: 2, md: 4 },
+                    mr: { xs: 1, md: 2 },
                   }}
                 />
                 <Typography
                   sx={{
-                    //mt: { xs: 1, md: 1.5 },
                     fontWeight: 800,
-                    fontSize: { xs: 28, md: 40 },
-                    mr: 4,
-                    letterSpacing: 1,
+                    fontSize: { xs: 22, md: 32 },
+                    mr: 2,
+                    letterSpacing: 0.5,
                     display: "flex",
                     alignItems: "center",
                     fontFamily: "Quicksand",
-                    gap: 0.5,
+                    gap: 0.3,
+                    mt: 1,
                   }}
                 >
                   {item?.word?.split("").map((ch, idx) => (
@@ -1199,13 +1302,12 @@ const R1 = ({
               </Box>
             </Box>
 
-            {/* Buttons */}
             <Stack
               direction="row"
-              spacing={3}
+              spacing={2}
               sx={{
                 position: "absolute",
-                bottom: 20,
+                bottom: 15,
                 left: "50%",
                 transform: "translateX(-50%)",
                 zIndex: 10,
@@ -1214,65 +1316,63 @@ const R1 = ({
               <IconButton
                 onClick={handleRetry}
                 sx={{
-                  width: 56,
-                  height: 56,
+                  width: 48,
+                  height: 48,
                   bgcolor: pink,
                   color: "#fff",
                   borderRadius: "50%",
-                  boxShadow: "0 6px 14px rgba(234,76,137,0.35)",
+                  boxShadow: "0 4px 10px rgba(234,76,137,0.35)",
                   "&:hover": { bgcolor: pink },
                 }}
               >
-                <RotateCcw size={26} />
+                <RotateCcw size={22} />
               </IconButton>
 
               <IconButton
                 onClick={handleNextWord}
-                //disabled={itemIndex === data.length - 1}
                 sx={{
-                  width: 56,
-                  height: 56,
+                  width: 48,
+                  height: 48,
                   bgcolor: orange,
                   color: "#fff",
                   borderRadius: "50%",
-                  boxShadow: "0 6px 14px rgba(242,139,29,0.35)",
+                  boxShadow: "0 4px 10px rgba(242,139,29,0.35)",
                   "&:hover": { bgcolor: orange },
-                  //opacity: itemIndex === data.length - 1 ? 0.5 : 1,
                 }}
               >
-                <ArrowRight size={26} />
+                <ArrowRight size={22} />
               </IconButton>
             </Stack>
           </Box>
         </Box>
       );
     };
-
     const UI2 = () => {
       console.log("ui2");
       return (
-        <Box>
-          {/* BOARD with notebook background */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "hidden",
+            height: "70vh",
+          }}
+        >
           <Box
             sx={{
               position: "relative",
               mx: "auto",
               width: "min(100%, 1024px)",
-              //aspectRatio: "16/9",
               borderRadius: 2,
-              // notebook lines
-              // backgroundImage:
-              //   "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
               backgroundColor: "#fff",
               overflow: "hidden",
-              //boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "flex-start",
-              //px: { xs: 2.5, md: 5 },
-              pt: { xs: 3, md: 4 },
-              pb: { xs: 2, md: 3 },
+              justifyContent: "center",
+              padding: "20px 0px",
             }}
           >
             <Box
@@ -1284,92 +1384,151 @@ const R1 = ({
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "10px 70px",
-                marginBottom: "26px",
+                padding: "0px 40px",
+                marginBottom: "40px",
+                maxWidth: "75%",
+                height: "140px",
+                width: recAudio ? "auto" : "200px",
+                minWidth: "200px",
+                flexShrink: 0,
               }}
             >
               <Box
                 sx={{
-                  display: "inline-flex",
+                  display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  height: "100%",
+                  width: "100%",
+                  gap: recAudio ? 2 : 0,
                 }}
               >
-                {/* {recAudio && (
-                  <img
-                    //src={!isIncorrectWord ? Assets.tick : Assets.wrongTick}
-                    src={Assets.tick}
-                    alt="tick"
-                    style={{
-                      marginRight: "16px",
-                      width: "56px",
-                      height: "56px",
-                    }}
-                  />
-                )} */}
                 <span
                   style={{
                     color: "#333F61",
-                    //color: isRecorded ? "#58CC02" : "#333F61",
                     fontWeight: 700,
-                    fontSize: recAudio ? "72px" : "96px",
-                    lineHeight: "87px",
+                    fontSize: recAudio ? "75px" : "110px",
+                    lineHeight: "1",
                     letterSpacing: "2%",
                     fontFamily: "Quicksand",
-                    //textTransform: "uppercase",
+                    transition: "font-size 0.2s ease",
                   }}
                 >
                   {item.letter}
                 </span>
+
+                {recAudio && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: "#333F61",
+                        fontWeight: 600,
+                        fontSize: "24px",
+                        fontFamily: "Quicksand",
+                      }}
+                    >
+                      -
+                    </span>
+                    <span
+                      style={{
+                        color: "#333F61",
+                        fontWeight: 600,
+                        fontSize: "28px",
+                        fontFamily: "Quicksand",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {item.word}
+                    </span>
+                  </Box>
+                )}
               </Box>
+
               {recAudio && (
-                <img
-                  src={Assets.graph}
-                  alt="graph"
-                  style={{ height: "40px", margin: "10px" }}
-                />
+                <Box
+                  sx={{
+                    height: "28px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "4px",
+                    width: "100%",
+                  }}
+                >
+                  <img
+                    src={Assets.graph}
+                    alt="graph"
+                    style={{
+                      height: "100%",
+                      maxWidth: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
               )}
             </Box>
 
-            <VoiceAnalyser
-              key={currentIndex}
-              pageName={"wordsorimage"}
-              setVoiceText={setVoiceText}
-              updateStoredData={updateStoredData}
-              setRecordedAudio={setRecordedAudio}
-              setVoiceAnimate={setVoiceAnimate}
-              storyLine={storyLine}
-              dontShowListen={type === "image" || isDiscover}
-              originalText={`R1-${item?.letter}`}
-              handleNext={handleNextWord}
-              enableNext={enableNext}
-              isShowCase={isShowCase || isDiscover}
-              handleRecordingComplete={handleRecordingComplete}
-              handleStartRecording={handleStartRecording}
-              handleStopRecording={handleStopRecording}
-              audioLink={singleAudio}
-              noOffline={true}
-              isNextButtonCalled={isNextButtonCalled}
-              setIsNextButtonCalled={setIsNextButtonCalled}
-              setEnableNext={setEnableNext}
-              //setIsCorrect={setIsTranscriptCorrect}
-              {...{
-                contentId,
-                contentType,
-                currentLine: currentStep - 1,
-                playTeacherAudio,
-                callUpdateLearner,
-                //setEnableNext,
-                setOpenMessageDialog,
-                //isNextButtonCalled,
-                //setIsNextButtonCalled,
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: "380px",
+                height: "110px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                marginTop: "20px",
+                padding: "14px 22px",
               }}
-            />
+            >
+              <VoiceAnalyser
+                key={`voice-analyser-${currentIndex}`}
+                pageName={"wordsorimage"}
+                setVoiceText={setVoiceText}
+                updateStoredData={updateStoredData}
+                setRecordedAudio={setRecordedAudio}
+                setVoiceAnimate={setVoiceAnimate}
+                storyLine={storyLine}
+                dontShowListen={type === "image" || isDiscover}
+                originalText={`R0-${item?.letter}`}
+                handleNext={handleNextWord}
+                enableNext={enableNext}
+                isShowCase={isShowCase || isDiscover}
+                handleRecordingComplete={handleRecordingComplete}
+                handleStartRecording={handleStartRecording}
+                handleStopRecording={handleStopRecording}
+                audioLink={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${singleAudio}`}
+                noOffline={true}
+                isNextButtonCalled={isNextButtonCalled}
+                setIsNextButtonCalled={setIsNextButtonCalled}
+                setEnableNext={setEnableNext}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  minHeight: "110px",
+                  maxHeight: "110px",
+                  borderRadius: "12px",
+                }}
+                {...{
+                  contentId,
+                  contentType,
+                  currentLine: currentStep - 1,
+                  playTeacherAudio,
+                  callUpdateLearner,
+                  setOpenMessageDialog,
+                }}
+              />
+            </Box>
           </Box>
         </Box>
       );
     };
-
     const UI3 = () => {
       console.log("ui3");
       return (
@@ -1384,7 +1543,6 @@ const R1 = ({
               gap: 2,
             }}
           >
-            {/* LEFT SIDE (all images with opacity logic) */}
             <Box
               sx={{
                 flex: 1,
@@ -1509,13 +1667,9 @@ const R1 = ({
       showTimer={showTimer}
       points={points}
       pageName={"m14"}
-      //answer={answer}
-      //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
-      flowNames={flowNames} // Pass all flows
-      //   activeFlow={activeFlow} // Pass current active flow
-      //   lang={lang}
-      //={recAudio}
+      flowNames={flowNames}
+      handleBack={handleBackNavigation} // Pass the unified back handler
       {...{
         steps,
         currentStep,
@@ -1523,7 +1677,7 @@ const R1 = ({
         progressData,
         showProgress,
         playTeacherAudio,
-        handleBack,
+        handleBack: handleBackNavigation,
         disableScreen,
         loading,
         vocabCount,

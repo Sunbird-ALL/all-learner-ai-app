@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
 import {
@@ -32,6 +32,7 @@ import VoiceAnalyser from "../utils/VoiceAnalyser";
 import * as s3Assets from "../utils/rFlowS3Links";
 import { getAssetUrl } from "../utils/rFlowS3Links";
 import { getAssetAudioUrl } from "../utils/rFlowS3Links";
+import { ArrowLeft } from "lucide-react"; // or your icon library
 
 const theme = createTheme();
 
@@ -2162,7 +2163,7 @@ const R0 = ({
   callUpdateLearner,
   disableScreen,
   isShowCase,
-  handleBack,
+  handleBack, // This might be going to homepage
   //setEnableNext,
   loading,
   setOpenMessageDialog,
@@ -2189,7 +2190,6 @@ const R0 = ({
     for (let i = 0; i < data.length; i += 5) {
       const block = data.slice(i, i + 5);
 
-      // UI1: push all items of each letter
       block.forEach((letterObj) => {
         letterObj.items.forEach((item) => {
           playlist.push({
@@ -2250,20 +2250,17 @@ const R0 = ({
   const playAudio = (src) => {
     if (!src) return;
 
-    // Stop any existing audio
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
 
-    // Create new audio and play
     audioRef.current = new Audio(src);
     audioRef.current.play().catch((err) => {
       console.log("Audio play error:", err);
     });
   };
 
-  // Play on flow start / index change
   useEffect(() => {
     if (currentAudio) {
       playAudio(currentAudio);
@@ -2275,6 +2272,10 @@ const R0 = ({
       }
     };
   }, [currentIndex]);
+
+  const currentUI = useMemo(() => {
+    return playlist[currentIndex]?.type;
+  }, [currentIndex, playlist]);
 
   const handleNextWord = () => {
     const currentLetter = playlist[currentIndex]?.item?.letter || "";
@@ -2302,6 +2303,33 @@ const R0 = ({
     setIsNextButtonCalled(true);
     setEnableNext(false);
   };
+
+  const handlePreviousWord = () => {
+    if (currentIndex > 0) {
+      const currentLetter = playlist[currentIndex]?.item?.letter || "";
+      if (currentLetter && current.type === "UI1") {
+        setLetters((prev) => prev.filter((letter) => letter !== currentLetter));
+      }
+
+      setCurrentIndex((i) => i - 1);
+      setRecAudio(null);
+      setIsNextButtonCalled(false);
+      setEnableNext(false);
+    }
+  };
+
+  const handleBackNavigation = () => {
+    if (currentIndex > 0) {
+      handlePreviousWord();
+    } else {
+      if (handleBack) {
+        handleBack();
+      } else {
+        navigate(-1);
+      }
+    }
+  };
+
   const handleRetry = () => {
     console.log("audio playing!");
     playAudio(currentAudio);
@@ -2332,6 +2360,7 @@ const R0 = ({
   const red = "#C93128";
   const pink = "#ea4c89";
   const orange = "#f28b1d";
+  const blue = "#f28b1d";
 
   const flowNames = [...new Set(data.map((item) => item.id))];
 
@@ -2344,20 +2373,40 @@ const R0 = ({
 
     //console.log('ui?', currentIndex, block, isUI1, letters);
 
+    const totalLetters = data.length;
+    const completedLetters = letters.length;
+
+    // Calculate total items in playlist
+    const totalItemsInPlaylist = playlist.length;
+
+    const completionPercentage =
+      totalLetters > 0
+        ? Math.round((completedLetters / totalLetters) * 100)
+        : 0;
     const UI1 = () => {
       console.log("ui1", item, current);
 
+      const TOTAL_ITEMS = 78;
+
+      const currentProgress = letters?.length || 0;
+      const completionPercentage = Math.round((item?.id / TOTAL_ITEMS) * 100);
+
       return (
-        <Box>
-          {/* BOARD with notebook background */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            overflow: "hidden",
+            height: "60vh",
+          }}
+        >
           <Box
             sx={{
               position: "relative",
               mx: "auto",
               width: "min(100%, 1024px)",
-              //aspectRatio: "16/9",
               borderRadius: 2,
-              // notebook lines
               backgroundImage:
                 "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
               backgroundColor: "#fff",
@@ -2367,51 +2416,101 @@ const R0 = ({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "flex-start",
-              //px: { xs: 2.5, md: 5 },
-              pt: { xs: 3, md: 4 },
-              pb: { xs: 2, md: 3 },
+              paddingTop: 4,
+              minHeight: "50vh",
             }}
           >
-            {/* <Box
+            <Box
               sx={{
                 position: "absolute",
-                top: { xs: 18, md: 22 },
-                left: { xs: 18, md: 24 },
-                width: { xs: 60, md: 72 },
-                height: { xs: 60, md: 72 },
-                bgcolor: red,
-                color: "#fff",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 800,
-                fontSize: { xs: 30, md: 40 },
-                lineHeight: 1,
-                fontFamily: "Quicksand",
+                top: 16,
+                right: 16,
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "24px",
+                padding: "14px 18px",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                border: "2px solid #1CB0F6",
+                zIndex: 10,
+                backdropFilter: "blur(5px)",
+                minWidth: "110px",
               }}
             >
-              {item.id}
-            </Box> */}
+              <Typography
+                sx={{
+                  fontFamily: "Quicksand",
+                  fontWeight: 800,
+                  fontSize: "18px",
+                  color: navy,
+                  whiteSpace: "nowrap",
+                  textAlign: "center",
+                  lineHeight: 1.2,
+                }}
+              >
+                {item?.id} / {TOTAL_ITEMS}
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Quicksand",
+                  fontWeight: 600,
+                  fontSize: "14px",
+                  color: "#1CB0F6",
+                  whiteSpace: "nowrap",
+                  textAlign: "center",
+                  mt: 0.5,
+                }}
+              >
+                Progress
+              </Typography>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "6px",
+                  backgroundColor: "#e0e0e0",
+                  borderRadius: "3px",
+                  mt: 1,
+                  overflow: "hidden",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: `${completionPercentage}%`,
+                    height: "100%",
+                    backgroundColor: "#58CC02",
+                    borderRadius: "3px",
+                    transition: "width 0.3s ease",
+                  }}
+                />
+              </Box>
+            </Box>
 
-            {/* Title centered */}
-            <Box sx={{ textAlign: "center", position: "relative", mb: 2 }}>
-              {/* Train Image */}
+            <Box
+              sx={{
+                textAlign: "center",
+                position: "relative",
+                mb: 0,
+                mt: 0.5,
+              }}
+            >
               <img
                 src={trainImg}
                 alt="train"
-                style={{ width: "100%", maxWidth: "400px" }}
+                style={{
+                  width: "100%",
+                  maxWidth: "480px",
+                  maxHeight: "70px",
+                  objectFit: "contain",
+                  marginTop: "2px",
+                }}
               />
 
-              {/* Letters mapped over the train */}
               <Box
                 sx={{
                   position: "absolute",
-                  top: "15%",
-                  left: "60%",
+                  top: "-11%",
+                  left: "68%",
                   transform: "translateX(-50%)",
                   display: "flex",
-                  gap: 2,
+                  gap: 0.6,
                   justifyContent: "center",
                   width: "100%",
                 }}
@@ -2427,9 +2526,9 @@ const R0 = ({
                     >
                       <Box
                         sx={{
-                          minWidth: 40,
-                          minHeight: 40,
-                          borderRadius: "10px",
+                          minWidth: 60,
+                          minHeight: 60,
+                          borderRadius: "6px",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -2439,7 +2538,11 @@ const R0 = ({
                         }}
                       >
                         <span
-                          style={{ fontFamily: "Quicksand", color: "#FFFFFF" }}
+                          style={{
+                            fontFamily: "Quicksand",
+                            color: "#FFFFFF",
+                            fontSize: "28px",
+                          }}
                         >
                           {ch}
                         </span>
@@ -2450,35 +2553,34 @@ const R0 = ({
               </Box>
             </Box>
 
-            {/* Middle row: big letter + image */}
             <Box
               sx={{
-                width: "100%",
-                maxWidth: 700, // optional: keep it nicely sized
-                mx: "auto", // center horizontally
+                width: "75%",
+                maxWidth: 380,
+                height: "auto",
+                mx: "auto",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 border: "1px solid #1CB0F6",
-                borderRadius: "32px",
+                borderRadius: "14px",
                 backgroundColor: "#F1FAFE",
-                //p: { xs: 2, md: 4 },
-                position: "relative",
-                alignItems: "stretch",
+                mb: 0.5,
+                padding: "4px",
+                marginTop: 1,
               }}
             >
-              {/* Left - Letter */}
               <Typography
                 component="div"
                 sx={{
                   color: red,
                   fontWeight: 500,
-                  fontSize: { xs: 140, md: 180 },
+                  fontSize: { xs: 50, md: 75 },
                   lineHeight: 1,
                   fontFamily: "Quicksand",
                   flex: 1,
                   textAlign: "center",
-                  p: 2,
+                  p: 0.2,
                 }}
               >
                 {item.letters.length > 1 ? (
@@ -2492,7 +2594,6 @@ const R0 = ({
                 )}
               </Typography>
 
-              {/* Divider Line */}
               <Box
                 sx={{
                   width: "1px",
@@ -2501,14 +2602,13 @@ const R0 = ({
                 }}
               />
 
-              {/* Right - Image */}
               <Box
                 sx={{
                   flex: 1,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  p: 2,
+                  p: 0.2,
                 }}
               >
                 <Box
@@ -2516,131 +2616,118 @@ const R0 = ({
                   src={item.image}
                   alt={item.word}
                   sx={{
-                    width: { xs: 200, md: 220 },
-                    height: { xs: 200, md: 220 },
+                    width: { xs: 60, md: 85 },
+                    height: { xs: 60, md: 85 },
                     objectFit: "contain",
                   }}
                 />
               </Box>
             </Box>
 
-            {/* Buttons */}
-            <Stack
-              direction="column"
-              spacing={3}
+            <Typography
               sx={{
-                //position: "absolute",
-                //bottom: 20,
-                //left: "50%",
-                //transform: "translateX(-50%)",
-                zIndex: 10,
+                fontWeight: 800,
+                fontSize: { xs: 24, md: 34 },
+                letterSpacing: 1,
                 display: "flex",
-                justifyContent: "center",
                 alignItems: "center",
+                fontFamily: "Quicksand",
+                gap: 0.4,
+                textAlign: "center",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                mb: 0.3,
+                mt: 0.3,
               }}
             >
-              <Typography
-                sx={{
-                  //mt: { xs: 1, md: 1.5 },
-                  fontWeight: 800,
-                  fontSize: { xs: 28, md: 40 },
-                  mr: 4,
-                  letterSpacing: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  fontFamily: "Quicksand",
-                  gap: 0.5,
-                }}
-              >
-                {item?.word?.split("").map((ch, idx) => (
-                  <Box
-                    key={idx}
-                    component="span"
-                    sx={{
-                      color:
-                        ch.toLowerCase() === item?.letter?.toLowerCase()
-                          ? red
-                          : navy,
-                    }}
-                  >
-                    {ch}
-                  </Box>
-                ))}
-              </Typography>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 2,
-                  bottom: 20,
-                  //left: "50%",
-                  //transform: "translateX(-50%)",
-                  zIndex: 10,
-                }}
-              >
-                <IconButton
-                  onClick={handleRetry}
+              {item?.word?.split("").map((ch, idx) => (
+                <Box
+                  key={idx}
+                  component="span"
                   sx={{
-                    width: 56,
-                    height: 56,
-                    bgcolor: pink,
-                    color: "#fff",
-                    borderRadius: "50%",
-                    boxShadow: "0 6px 14px rgba(234,76,137,0.35)",
-                    "&:hover": { bgcolor: pink },
+                    color:
+                      ch.toLowerCase() === item?.letter?.toLowerCase()
+                        ? red
+                        : navy,
                   }}
                 >
-                  <RotateCcw size={26} />
-                </IconButton>
+                  {ch}
+                </Box>
+              ))}
+            </Typography>
 
-                <IconButton
-                  onClick={handleNextWord}
-                  //disabled={itemIndex === data.length - 1}
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    bgcolor: orange,
-                    color: "#fff",
-                    borderRadius: "50%",
-                    boxShadow: "0 6px 14px rgba(242,139,29,0.35)",
-                    "&:hover": { bgcolor: orange },
-                    //opacity: itemIndex === data.length - 1 ? 0.5 : 1,
-                  }}
-                >
-                  <ArrowRight size={26} />
-                </IconButton>
-              </Box>
-            </Stack>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1.5,
+                zIndex: 10,
+                justifyContent: "center",
+                alignItems: "center",
+                mb: 1,
+                mt: 1,
+              }}
+            >
+              <IconButton
+                onClick={handleRetry}
+                sx={{
+                  width: 48,
+                  height: 48,
+                  bgcolor: pink,
+                  color: "#fff",
+                  borderRadius: "50%",
+                  boxShadow: "0 6px 14px rgba(234,76,137,0.35)",
+                  "&:hover": { bgcolor: pink },
+                }}
+              >
+                <RotateCcw size={22} />
+              </IconButton>
+
+              <IconButton
+                onClick={handleNextWord}
+                sx={{
+                  width: 48,
+                  height: 48,
+                  bgcolor: orange,
+                  color: "#fff",
+                  borderRadius: "50%",
+                  boxShadow: "0 6px 14px rgba(242,139,29,0.35)",
+                  "&:hover": { bgcolor: orange },
+                }}
+              >
+                <ArrowRight size={22} />
+              </IconButton>
+            </Box>
           </Box>
         </Box>
       );
     };
-
     const UI2 = () => {
       console.log("ui2");
+
       return (
-        <Box>
-          {/* BOARD with notebook background */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "hidden",
+            height: "70vh",
+          }}
+        >
           <Box
             sx={{
               position: "relative",
               mx: "auto",
               width: "min(100%, 1024px)",
-              //aspectRatio: "16/9",
               borderRadius: 2,
-              // notebook lines
-              // backgroundImage:
-              //   "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
               backgroundColor: "#fff",
               overflow: "hidden",
-              //boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "flex-start",
-              //px: { xs: 2.5, md: 5 },
-              pt: { xs: 3, md: 4 },
-              pb: { xs: 2, md: 3 },
+              justifyContent: "center",
+              padding: "20px 0",
             }}
           >
             <Box
@@ -2652,87 +2739,147 @@ const R0 = ({
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "10px 70px",
-                marginBottom: "26px",
+                padding: "0px 40px",
+                marginBottom: "40px",
+                maxWidth: "75%",
+                height: "140px",
+                width: recAudio ? "auto" : "200px",
+                minWidth: "200px",
+                flexShrink: 0,
               }}
             >
               <Box
                 sx={{
-                  display: "inline-flex",
+                  display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  height: "100%",
+                  width: "100%",
+                  gap: recAudio ? 2 : 0,
                 }}
               >
-                {/* {recAudio && (
-                  <img
-                    //src={!isIncorrectWord ? Assets.tick : Assets.wrongTick}
-                    src={Assets.tick}
-                    alt="tick"
-                    style={{
-                      marginRight: "16px",
-                      width: "56px",
-                      height: "56px",
-                    }}
-                  />
-                )} */}
                 <span
                   style={{
                     color: "#333F61",
-                    //color: isRecorded ? "#58CC02" : "#333F61",
                     fontWeight: 700,
-                    fontSize: recAudio ? "72px" : "96px",
-                    lineHeight: "87px",
+                    fontSize: recAudio ? "75px" : "110px",
+                    lineHeight: "1",
                     letterSpacing: "2%",
                     fontFamily: "Quicksand",
-                    //textTransform: "uppercase",
+                    transition: "font-size 0.2s ease",
                   }}
                 >
                   {item.letter}
                 </span>
+
+                {recAudio && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: "#333F61",
+                        fontWeight: 600,
+                        fontSize: "24px",
+                        fontFamily: "Quicksand",
+                      }}
+                    >
+                      -
+                    </span>
+                    <span
+                      style={{
+                        color: "#333F61",
+                        fontWeight: 600,
+                        fontSize: "28px",
+                        fontFamily: "Quicksand",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {item.word}
+                    </span>
+                  </Box>
+                )}
               </Box>
+
               {recAudio && (
-                <img
-                  src={Assets.graph}
-                  alt="graph"
-                  style={{ height: "40px", margin: "10px" }}
-                />
+                <Box
+                  sx={{
+                    height: "28px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "4px",
+                    width: "100%",
+                  }}
+                >
+                  <img
+                    src={Assets.graph}
+                    alt="graph"
+                    style={{
+                      height: "100%",
+                      maxWidth: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
               )}
             </Box>
 
-            <VoiceAnalyser
-              key={currentIndex}
-              pageName={"wordsorimage"}
-              setVoiceText={setVoiceText}
-              updateStoredData={updateStoredData}
-              setRecordedAudio={setRecordedAudio}
-              setVoiceAnimate={setVoiceAnimate}
-              storyLine={storyLine}
-              dontShowListen={type === "image" || isDiscover}
-              originalText={`R0-${item?.letter}`}
-              handleNext={handleNextWord}
-              enableNext={enableNext}
-              isShowCase={isShowCase || isDiscover}
-              handleRecordingComplete={handleRecordingComplete}
-              handleStartRecording={handleStartRecording}
-              handleStopRecording={handleStopRecording}
-              audioLink={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${singleAudio}`}
-              noOffline={true}
-              isNextButtonCalled={isNextButtonCalled}
-              setIsNextButtonCalled={setIsNextButtonCalled}
-              setEnableNext={setEnableNext}
-              //setIsCorrect={setIsTranscriptCorrect}
-              {...{
-                contentId,
-                contentType,
-                currentLine: currentStep - 1,
-                playTeacherAudio,
-                callUpdateLearner,
-                //setEnableNext,
-                setOpenMessageDialog,
-                //isNextButtonCalled,
-                //setIsNextButtonCalled,
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: "380px",
+                height: "110px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                marginTop: "15px",
+                padding: "10px 10px",
               }}
-            />
+            >
+              <VoiceAnalyser
+                key={`voice-analyser-${currentIndex}`}
+                pageName={"wordsorimage"}
+                setVoiceText={setVoiceText}
+                updateStoredData={updateStoredData}
+                setRecordedAudio={setRecordedAudio}
+                setVoiceAnimate={setVoiceAnimate}
+                storyLine={storyLine}
+                dontShowListen={type === "image" || isDiscover}
+                originalText={`R0-${item?.letter}`}
+                handleNext={handleNextWord}
+                enableNext={enableNext}
+                isShowCase={isShowCase || isDiscover}
+                handleRecordingComplete={handleRecordingComplete}
+                handleStartRecording={handleStartRecording}
+                handleStopRecording={handleStopRecording}
+                audioLink={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${singleAudio}`}
+                noOffline={true}
+                isNextButtonCalled={isNextButtonCalled}
+                setIsNextButtonCalled={setIsNextButtonCalled}
+                setEnableNext={setEnableNext}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  minHeight: "100px",
+                  maxHeight: "100px",
+                  borderRadius: "12px",
+                }}
+                {...{
+                  contentId,
+                  contentType,
+                  currentLine: currentStep - 1,
+                  playTeacherAudio,
+                  callUpdateLearner,
+                  setOpenMessageDialog,
+                }}
+              />
+            </Box>
           </Box>
         </Box>
       );
@@ -2753,13 +2900,9 @@ const R0 = ({
       showTimer={showTimer}
       points={points}
       pageName={"m14"}
-      //answer={answer}
-      //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
-      flowNames={flowNames} // Pass all flows
-      //   activeFlow={activeFlow} // Pass current active flow
-      //   lang={lang}
-      //={recAudio}
+      flowNames={flowNames}
+      handleBack={handleBackNavigation}
       {...{
         steps,
         currentStep,
@@ -2767,14 +2910,22 @@ const R0 = ({
         progressData,
         showProgress,
         playTeacherAudio,
-        handleBack,
+        handleBack: handleBackNavigation,
         disableScreen,
         loading,
         vocabCount,
         wordCount,
       }}
     >
-      {renderUI()}
+      <Box
+        sx={{
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {renderUI()}
+      </Box>
     </MainLayout>
   );
 };

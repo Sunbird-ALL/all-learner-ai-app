@@ -72,6 +72,12 @@ const routData = [
     component: reviews.LetterHunt,
     requiresAuth: true,
   },
+  {
+    id: "route-012",
+    path: "/towre-flow",
+    component: reviews.TowreFlowPage,
+    requiresAuth: true,
+  },
 ];
 // add login route for test rig
 const TOKEN = localStorage.getItem("apiToken");

@@ -232,8 +232,8 @@ const SpeakSentenceComponent = () => {
           setSentencePassedCounter(newSentencePassedCounter);
           setQuestions(quesArr);
         } else if (getSetData.sessionResult === "pass") {
-          navigate("/discover-end");
-          setLocalData("tFlow", true);
+          //navigate("/discover-end");
+          navigate("/towre-flow");
         } else if (
           getSetData.sessionResult === "fail" &&
           currentContentType === "Sentence"

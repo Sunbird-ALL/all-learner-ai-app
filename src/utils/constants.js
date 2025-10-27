@@ -10316,6 +10316,83 @@ export const practiceSteps = [
 
 export const levelGetContent = {
   en: {
+    B: [
+      {
+        title: "P1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L1",
+        storyMode: true,
+        mechanism: { id: "mechanic_7", name: "formAWord2" },
+        multilingual: true,
+      },
+      {
+        title: "P2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L2",
+        mechanism: { id: "mechanic_7", name: "formAWord2" },
+        multilingual: true,
+      },
+      {
+        title: "P3",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P1",
+        multilingual: true,
+      },
+      {
+        title: "P4",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P2",
+        multilingual: true,
+      },
+      {
+        title: "S1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_S1",
+        multilingual: true,
+      },
+      {
+        title: "P5",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L3",
+        mechanism: { id: "mechanic_7", name: "formAWord2" },
+        multilingual: true,
+      },
+      {
+        title: "P6",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L4",
+        mechanism: { id: "mechanic_7", name: "formAWord2" },
+        multilingual: true,
+      },
+      {
+        title: "P7",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P3",
+        multilingual: true,
+      },
+      {
+        title: "P8",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P4",
+        multilingual: true,
+      },
+      {
+        title: "S2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_S2",
+        multilingual: true,
+      },
+    ],
     0: [
       {
         title: "P1",

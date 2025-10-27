@@ -22,7 +22,7 @@ import booksStackImg from "../../assets/totalWord.svg";
 import reportPandaImg from "../../assets/pandaa.svg";
 import reportImg from "../../assets/reportImg.svg";
 import { setLocalData, getLocalData } from "../../utils/constants";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -188,6 +188,7 @@ const CombinedReportPage = ({
   const theme = createTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
+  const location = useLocation();
   const wordCount = transcript.trim().split(/\s+/).length;
   //const wordsPerMinute = Math.round((wordCount / totalSec) * 60);
   const totalWordsInCurrentSets = (currentWordSetIndex + 1) * 12;
@@ -366,7 +367,9 @@ const CombinedReportPage = ({
           onClick={() => {
             setLocalData("tFlow", false);
             //window.location.reload();
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            if (location.pathname.includes("/towre-flow")) {
+              navigate("/discover-end");
+            } else if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
@@ -667,6 +670,9 @@ const TowreFlow = ({
   const currentWordSet = allWordSets[currentWordSetIndex];
   const transcriptRef = useRef("");
   const lang = getLocalData("lang");
+  const location = useLocation();
+  background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
+  showTimer = false;
 
   useEffect(() => {
     transcriptRef.current = transcript;
@@ -1219,7 +1225,7 @@ const TowreFlow = ({
                           style={{
                             position: "relative",
                             width: 180,
-                            height: 110,
+                            height: 85,
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
@@ -1255,7 +1261,7 @@ const TowreFlow = ({
                 <div
                   style={{
                     position: "absolute",
-                    bottom: 20,
+                    bottom: location.pathname.includes("/towre-flow") ? 55 : 20,
                     left: "50%",
                     transform: "translateX(-50%)",
                     textAlign: "center",
@@ -1361,7 +1367,7 @@ const TowreFlow = ({
                             style={{
                               position: "relative",
                               width: isMobile ? 200 : 180,
-                              height: 110,
+                              height: 100,
                               display: "flex",
                               justifyContent: "center",
                               alignItems: "center",
@@ -1643,14 +1649,14 @@ const TowreFlow = ({
                 style={{
                   fontFamily: "Quicksand",
                   fontWeight: 1200,
-                  fontSize: "56px",
+                  fontSize: "54px",
                   lineHeight: "60px",
                   textAlign: "center",
                   color: "#FF9050",
                   marginBottom: "20px",
                 }}
               >
-                Bonus Round!
+                Towre Flow
               </h2>
               <img
                 src={Assets.birthdayBoxImg}
@@ -1658,7 +1664,7 @@ const TowreFlow = ({
                 style={{
                   maxWidth: "200px",
                   width: "100%",
-                  marginBottom: "20px",
+                  marginBottom: "10px",
                 }}
               />
               <img
