@@ -10,3 +10,4 @@ export { DiscoverStart } from "./DiscoverStart";
 export { PracticeRedirectPage } from "./PracticeRedirectPage";
 export { LoginPage } from "./LoginPage";
 export { LetterHunt } from "./LetterHunt";
+export { TowreFlowPage } from "./TowreFlow";

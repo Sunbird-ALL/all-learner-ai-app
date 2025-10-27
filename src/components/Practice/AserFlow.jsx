@@ -132,7 +132,6 @@ const AserFlow = ({
 
   background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
   showTimer = false;
-  level = "B";
 
   useEffect(() => {
     (async () => {
@@ -170,7 +169,30 @@ const AserFlow = ({
         setCurrentCollectionId(sentences?.collectionId);
         setAssessmentResponse(resAssessment);
         setLocalData("storyTitle", sentences?.name);
-        quesArr = [...quesArr, ...(resPagination?.data || [])];
+        quesArr = [...(resPagination?.data || [])];
+
+        const existingLetters = quesArr.map(
+          (q) => q?.contentSourceData?.[0]?.text
+        );
+
+        const allChars = "abcdefghijklmnopqrstuvwxyz".split("");
+
+        const availableChars = allChars.filter(
+          (ch) => !existingLetters.includes(ch)
+        );
+
+        const extraChars = availableChars
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 1);
+
+        const extraQuestions = extraChars.map((ch) => ({
+          contentId: `fake_${ch}`,
+          contentSourceData: [{ text: ch }],
+          isFake: true,
+        }));
+
+        quesArr = [...quesArr, ...extraQuestions];
+
         setQuestions(quesArr);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -186,8 +208,6 @@ const AserFlow = ({
 
   const currentItem = questions?.[currentIndex];
   const correctLetter = currentItem?.contentSourceData[0].text;
-
-  console.log("audio", currentItem?.contentId);
 
   const questionLetters = questions.map((q) => q.contentSourceData[0].text);
 
@@ -300,10 +320,21 @@ const AserFlow = ({
     setIsCorrect(null);
     setShowNext(false);
 
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < questions.length - 2) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      // await handleCompletion();
+      const totalAnswered = Object.keys(ansSelectionStatus).length;
+      const correctCount = Object.values(ansSelectionStatus).filter(
+        (val) => val === true
+      ).length;
+
+      const correctPercentage =
+        totalAnswered > 0 ? (correctCount / totalAnswered) * 100 : 0;
+
+      if (correctPercentage >= 80) {
+        await handleCompletion();
+        setLocalData("rFlow", false);
+      }
       callTelemetryDiscovery("Discovery-AserFlow");
       handleNext?.();
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
@@ -354,36 +385,6 @@ const AserFlow = ({
         }}
       >
         {/* --- Title --- */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: "15px",
-          }}
-        >
-          <img
-            src={magnifier}
-            alt="Magnifier"
-            style={{
-              width: 40,
-              height: 40,
-              cursor: "pointer",
-            }}
-          />
-          <span
-            style={{
-              marginLeft: 10,
-              fontSize: "45px",
-              fontWeight: "800",
-              color: "#1a1a1a",
-              fontFamily: "Quicksand",
-              pointerEvents: "none",
-            }}
-          >
-            {"Letter Hunt"}
-          </span>
-        </div>
 
         {/* --- Bubble Area --- */}
         <div
@@ -409,6 +410,7 @@ const AserFlow = ({
               { top: "73%", left: "85%" },
               { top: "20%", left: "40%" },
               { top: "75%", left: "43%" },
+              { top: "79%", left: "61%" },
             ];
 
             const pos = positions[index % positions.length];
@@ -435,10 +437,10 @@ const AserFlow = ({
                       width: "100px",
                       height: "100px",
                       filter:
-                        selectedLetter === char
-                          ? isCorrect
-                            ? "drop-shadow(0 0 10px #34D399)"
-                            : "drop-shadow(0 0 10px #EF4444)"
+                        ansSelectionStatus[char] === true
+                          ? "drop-shadow(0 0 10px #34D399)"
+                          : ansSelectionStatus[char] === false
+                          ? "drop-shadow(0 0 10px #EF4444)"
                           : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
                       transition: "filter 0.3s ease",
                     }}
