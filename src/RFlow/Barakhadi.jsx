@@ -2773,15 +2773,15 @@ const Barakhadi = ({
     boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
     width: "95%",
     maxWidth: "1200px",
-    height: "485px",
+    height: "70vh",
   };
 
   const titleStyle = {
     fontSize: "15px",
     fontWeight: "bold",
     color: "rgba(51, 63, 97, 1)",
-    marginBottom: "15px",
-    marginTop: "-7px",
+    marginBottom: "10px",
+    marginTop: "-12px",
     fontFamily: "Quicksand",
     gap: "10px",
   };
@@ -2811,7 +2811,7 @@ const Barakhadi = ({
   };
 
   const buttonStyle = {
-    padding: "12px 50px",
+    padding: "8px 30px",
     borderRadius: "8px",
     border: "none",
     cursor: "pointer",
@@ -2822,11 +2822,11 @@ const Barakhadi = ({
     justifyContent: "center",
     gap: "8px",
     fontSize: "13px",
-    height: "40px",
+    height: "35px",
   };
 
   const disabledButtonStyle = {
-    padding: "12px 50px",
+    padding: "8px 30px",
     borderRadius: "8px",
     border: "none",
     fontWeight: "bold",
@@ -2837,12 +2837,12 @@ const Barakhadi = ({
     alignItems: "center",
     justifyContent: "center",
     gap: "8px",
-    fontSize: "14px",
-    height: "40px",
+    fontSize: "13px",
+    height: "35px",
   };
 
   const tableStyle = {
-    marginTop: "15px",
+    marginTop: "10px",
     borderCollapse: "collapse",
     width: "100%",
     tableLayout: "fixed",
@@ -2850,19 +2850,19 @@ const Barakhadi = ({
   };
 
   const tdStyle = {
-    padding: "8px",
+    padding: "4px",
     border: "1px solid #ccc",
-    fontSize: "19px",
+    fontSize: "15px",
     textAlign: "center",
-    width: "59px",
+    width: "58px",
     cursor: "pointer",
     fontWeight: 800,
     transition: "background-color 0.3s ease",
   };
 
   const circleStyle = {
-    width: "30px",
-    height: "30px",
+    width: "22px",
+    height: "22px",
     borderRadius: "50%",
     background: "#2c3e50",
     color: "#fff",
@@ -2878,8 +2878,8 @@ const Barakhadi = ({
 
   const leftCircleStyle = {
     position: "absolute",
-    width: "30px",
-    height: "30px",
+    width: "22px",
+    height: "22px",
     borderRadius: "50%",
     background: "#ffeb3b",
     color: "#000",
@@ -2887,7 +2887,7 @@ const Barakhadi = ({
     alignItems: "center",
     justifyContent: "center",
     fontWeight: "bold",
-    fontSize: "16px",
+    fontSize: "12px",
     boxShadow: "0px 4px 6px rgba(0,0,0,0.15)",
     border: "1px solid black",
   };
@@ -3139,7 +3139,7 @@ const Barakhadi = ({
             <img
               src={wordbanaoImg}
               alt={getInstructionAltText()}
-              height={"30px"}
+              height={"25px"}
               style={{ display: "block", margin: "0 auto" }}
             />
           </div>
@@ -3166,7 +3166,7 @@ const Barakhadi = ({
                   style={{
                     background: "rgba(51, 63, 97, 1)",
                     color: "#fff",
-                    padding: "3px 26px",
+                    padding: "2px 24px",
                     borderRadius: "6px",
                     minWidth: "80px",
                     textAlign: "center",
@@ -3189,7 +3189,7 @@ const Barakhadi = ({
                       src={audiowaveImg}
                       alt="audio playing"
                       style={{
-                        width: "100px",
+                        width: "90px",
                         cursor: "pointer",
                         position: "relative",
                         zIndex: 1,
@@ -3232,13 +3232,13 @@ const Barakhadi = ({
               style={{
                 border: "1px solid orange",
                 borderRadius: "10px",
-                height: "39px",
+                height: "34px",
                 marginBottom: "10px",
                 width: "90%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "24px",
+                fontSize: "22px",
                 fontWeight: "bold",
                 color: word === targetWord ? "#27ae60" : "#2c3e50",
                 background: word === targetWord ? "#e8f5e8" : "#ffffff",
@@ -3272,7 +3272,7 @@ const Barakhadi = ({
                   alt="listen"
                   style={{ height: "17px" }}
                 />
-                <span>{buttonTexts.listen}</span>
+                {/* <span>{buttonTexts.listen}</span> */}
               </button>
 
               <button
@@ -3282,8 +3282,8 @@ const Barakhadi = ({
                 }}
                 onClick={handleDelete}
               >
-                <img src={deleteImg} alt="delete" style={{ height: "17px" }} />
-                <span>{buttonTexts.delete}</span>
+                <img src={eraseImg} alt="delete" style={{ height: "17px" }} />
+                {/* <span>{buttonTexts.delete}</span> */}
               </button>
 
               <button
@@ -3293,8 +3293,8 @@ const Barakhadi = ({
                 }}
                 onClick={handleErase}
               >
-                <img src={eraseImg} alt="erase" style={{ height: "17px" }} />
-                <span>{buttonTexts.erase}</span>
+                <img src={deleteImg} alt="erase" style={{ height: "17px" }} />
+                {/* <span>{buttonTexts.erase}</span> */}
               </button>
             </div>
           </div>
@@ -3303,7 +3303,7 @@ const Barakhadi = ({
             style={{
               position: "relative",
               paddingLeft: "60px",
-              height: "360px",
+              //height: "300px",
             }}
           >
             {vyajan.map((v, i) => (
@@ -3312,7 +3312,7 @@ const Barakhadi = ({
                 style={{
                   ...leftCircleStyle,
                   left: "19px",
-                  top: `${i * 45 + 40}px`,
+                  top: `${i * 32 + 25}px`,
                 }}
               >
                 {v}
@@ -3350,7 +3350,7 @@ const Barakhadi = ({
 
             <div
               style={{
-                marginTop: "15px",
+                marginTop: "10px",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -3372,10 +3372,10 @@ const Barakhadi = ({
                 }}
                 onClick={() => setShowFullChart(true)}
               >
-                <img src={dottimg} alt="dots" style={{ height: "28px" }} />
+                <img src={dottimg} alt="dots" style={{ height: "24px" }} />
                 <span
                   style={{
-                    fontSize: "16px",
+                    fontSize: "14px",
                     fontWeight: "600",
                     color: "rgba(51,63,97,1)",
                     fontFamily: "Quicksand",
@@ -3388,7 +3388,7 @@ const Barakhadi = ({
               <img
                 src={nextImg}
                 alt="next"
-                style={{ height: "36px", cursor: "pointer" }}
+                style={{ height: "32px", cursor: "pointer" }}
                 onClick={handleNextWord}
               />
             </div>
@@ -3422,7 +3422,7 @@ const Barakhadi = ({
             style={{
               position: "absolute",
               bottom: "-40px",
-              right: "20px",
+              right: "-10px",
               width: "170px",
             }}
           />
