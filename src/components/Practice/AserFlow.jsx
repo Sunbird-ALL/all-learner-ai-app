@@ -61,6 +61,7 @@ import { updateLearnerProfile } from "../../services/learnerAi/learnerAiService"
 import bubbleImg from "../../assets/bubble.png";
 import magnifier from "../../assets/magnifier.png";
 import { Box } from "@mui/material";
+import listenBearGif from "../../assets/beardances.gif";
 
 const AserFlow = ({
   // setVoiceText,
@@ -129,6 +130,7 @@ const AserFlow = ({
   const lang = getLocalData("lang");
   const virtualId = getLocalData("virtualId");
   const [clickedIndex, setClickedIndex] = useState(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
   showTimer = false;
@@ -183,7 +185,7 @@ const AserFlow = ({
 
         const extraChars = availableChars
           .sort(() => 0.5 - Math.random())
-          .slice(0, 1);
+          .slice(0, 2);
 
         const extraQuestions = extraChars.map((ch) => ({
           contentId: `fake_${ch}`,
@@ -215,6 +217,7 @@ const AserFlow = ({
     const audio = new Audio(
       `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentItem?.contentId}.wav`
     );
+    setIsAudioPlaying(true);
     audio.play();
   };
 
@@ -295,6 +298,7 @@ const AserFlow = ({
 
   const handleBubbleClick = (letter, index) => {
     setClickedIndex(index);
+    setIsAudioPlaying(false);
     setTimeout(() => setClickedIndex(null), 1000);
 
     setSelectedLetter(letter);
@@ -319,8 +323,9 @@ const AserFlow = ({
     setSelectedLetter("");
     setIsCorrect(null);
     setShowNext(false);
+    setIsAudioPlaying(false);
 
-    if (currentIndex < questions.length - 2) {
+    if (currentIndex < questions.length - 3) {
       setCurrentIndex((prev) => prev + 1);
     } else {
       const totalAnswered = Object.keys(ansSelectionStatus).length;
@@ -391,7 +396,7 @@ const AserFlow = ({
           style={{
             position: "relative",
             width: "100%",
-            height: "300px",
+            height: "350px",
             //background: "#fff",
             borderRadius: "20px",
             //boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
@@ -402,15 +407,16 @@ const AserFlow = ({
             const positions = [
               { top: "20%", left: "20%" },
               { top: "70%", left: "15%" },
-              { top: "55%", left: "30%" },
+              { top: "48%", left: "30%" },
               { top: "48%", left: "53%" },
               { top: "18%", left: "62%" },
-              { top: "56%", left: "70%" },
+              { top: "52%", left: "73%" },
               { top: "20%", left: "80%" },
               { top: "73%", left: "85%" },
               { top: "20%", left: "40%" },
               { top: "75%", left: "43%" },
               { top: "79%", left: "61%" },
+              { top: "83%", left: "30%" },
             ];
 
             const pos = positions[index % positions.length];
@@ -426,10 +432,17 @@ const AserFlow = ({
                   transform: "translate(-50%, -50%)",
                   cursor: "pointer",
                   textAlign: "center",
+                  zIndex: 99999,
                 }}
               >
                 {/* Bubble image */}
-                <div style={{ position: "relative", display: "inline-block" }}>
+                <div
+                  style={{
+                    position: "relative",
+                    display: "inline-block",
+                    zIndex: 99999,
+                  }}
+                >
                   <img
                     src={bubbleImg}
                     alt="bubble"
@@ -438,9 +451,9 @@ const AserFlow = ({
                       height: "100px",
                       filter:
                         ansSelectionStatus[char] === true
-                          ? "drop-shadow(0 0 10px #34D399)"
+                          ? "drop-shadow(0 0 10px #08a169ff)"
                           : ansSelectionStatus[char] === false
-                          ? "drop-shadow(0 0 10px #EF4444)"
+                          ? "drop-shadow(0 0 10px #d31818ff)"
                           : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
                       transition: "filter 0.3s ease",
                     }}
@@ -486,7 +499,13 @@ const AserFlow = ({
         </div>
 
         {/* --- Audio Button --- */}
-        <div>
+        <div
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
+          }}
+        >
           <Box
             sx={{
               position: "relative",
@@ -505,11 +524,13 @@ const AserFlow = ({
             <Box
               sx={{
                 position: "absolute",
-                width: "90px",
-                height: "90px",
+                width: isAudioPlaying ? "0px" : "90px",
+                height: isAudioPlaying ? "0px" : "90px",
                 backgroundColor: "#A856FF",
                 borderRadius: "50%",
-                animation: "pulse 1.2s linear infinite",
+                animation: isAudioPlaying
+                  ? "none"
+                  : "pulse 1.2s linear infinite",
                 "@keyframes pulse": {
                   "0%": {
                     transform: "scale(0.6)",
@@ -534,6 +555,23 @@ const AserFlow = ({
               <ListenButton height={50} width={50} />
             </Box>
           </Box>
+          <img
+            src={nextImg}
+            alt="next"
+            style={{ width: "50px", cursor: "pointer", marginLeft: "10px" }}
+            onClick={() => handleNextClick()}
+          />
+          <img
+            src={listenBearGif}
+            alt="bear"
+            style={{
+              position: "absolute",
+              zIndex: "9999",
+              bottom: "40px",
+              left: "-20px",
+              width: "230px",
+            }}
+          />
         </div>
       </div>
     </MainLayout>
