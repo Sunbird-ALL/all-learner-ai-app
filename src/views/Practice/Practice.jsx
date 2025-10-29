@@ -4247,16 +4247,18 @@ const Practice = () => {
 
   //console.log("prog", progressDatas);
 
+  if (level === "B" && rStepZero !== 1) {
+    setLocalData("mFail", true);
+    setLocalData("rFlow", true);
+    setLocalData("rStepZero", 0);
+  }
+
   const rFlow = String(getLocalData("rFlow"));
   const tFlow = String(getLocalData("tFlow"));
   const readMatch = String(getLocalData("readMatch"));
   //const setWordWall = setLocalData("wordWall", true);
   const wordWallFlow = String(getLocalData("wordWall"));
-  if (level === "B" && rStepZero !== 1) {
-    setLocalData("mFail", "true");
-    setLocalData("rFlow", "true");
-    setLocalData("rStepZero", 0);
-  }
+
   // useEffect(() => {
   //   if (lang !== "en") {
   //     setLocalData("rFlow", false);

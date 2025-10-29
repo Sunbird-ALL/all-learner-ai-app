@@ -10323,7 +10323,6 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_L1",
         storyMode: true,
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -10331,7 +10330,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L2",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -10360,7 +10358,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L3",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -10368,7 +10365,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L4",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11525,7 +11521,6 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_L1",
         storyMode: true,
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11533,7 +11528,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L2",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11562,7 +11556,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L3",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11570,7 +11563,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L4",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11724,7 +11716,6 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_L1",
         storyMode: true,
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11732,7 +11723,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L2",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11761,7 +11751,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L3",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11769,7 +11758,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L4",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11923,7 +11911,6 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_L1",
         storyMode: true,
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11931,7 +11918,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L2",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11960,7 +11946,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L3",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -11968,7 +11953,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L4",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -12323,7 +12307,6 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_L1",
         storyMode: true,
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -12331,7 +12314,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L2",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -12360,7 +12342,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L3",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
@@ -12368,7 +12349,6 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L4",
-        mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
       {
