@@ -957,6 +957,7 @@ const Assesment = ({ discoverStart }) => {
   const nativeLangEnable = getLocalData("nativeLangEnable");
   const nativeLang = getLocalData("nativeLang");
   const rStepNo = getLocalData("rStepZero");
+  const rFlows = String(getLocalData("rFlow"));
 
   const handleWordClick = () => {
     setShowModal(true);
@@ -968,7 +969,10 @@ const Assesment = ({ discoverStart }) => {
     }
   }, []);
 
-  if (level === "B" && (rStepNo !== 1 || rStepNo === "1")) {
+  if (
+    (level === "B" && (rStepNo !== 1 || rStepNo === "1")) ||
+    (level === "B" && rFlows !== "true")
+  ) {
     setLocalData("mFail", "true");
     setLocalData("rFlow", "true");
     setLocalData("rStepZero", 0);
