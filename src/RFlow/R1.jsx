@@ -864,7 +864,11 @@ const R1 = ({
         setImgIndex(0);
       } else {
         setLocalData("rFlow", false);
-        await handleCompletion();
+        if (level === "B") {
+          await handleCompletion();
+          navigate("/discover-end");
+          return;
+        }
         if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
           navigate("/");
         } else {

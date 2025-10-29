@@ -63,6 +63,12 @@ export const initialize = async ({ context, config, metadata }) => {
         cdata: [
           { id: contentSessionId, type: "ContentSession" },
           { id: playSessionId, type: "PlaySession" },
+          {
+            id: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+              ? "Mobile"
+              : "Desktop",
+            type: "Device",
+          },
         ],
       },
       userOrgDetails: {},
@@ -294,6 +300,12 @@ export const getEventOptions = () => {
         },
         { id: userDetails?.udise_code, type: "udise_code" },
         { id: getVirtualId() || null, type: "virtualId" },
+        {
+          id: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+            ? "Mobile"
+            : "Desktop",
+          type: "Device",
+        },
       ],
       rollup: {},
     },
