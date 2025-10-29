@@ -208,7 +208,7 @@ const Mechanics7 = ({
   const [detectedWord, setDetectedWord] = useState("");
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
   const syllableCount = parentWords?.syllable?.length || 0;
-  const isLastSyllable = stepIndex === syllableCount;
+  const isLastSyllable = true;
   const [currentText, setCurrentText] = useState("");
   const sessionId = getLocalData("sessionId");
   const correctPracticeWords = getLocalData("correctPracticeWords");
@@ -216,6 +216,7 @@ const Mechanics7 = ({
   const [selectedWord, setSelectedWord] = useState("");
   const [isLoading, setIsLoading] = useState(null);
   const [showMultiLingual, setShowMultiLingual] = useState(false);
+  const lang = getLocalData("lang") || "en";
 
   function sanitize(text) {
     return text
@@ -322,13 +323,7 @@ const Mechanics7 = ({
             //console.log("Transcription resultss 1:", transcripts);
             //console.log("Transcription resultss 2:", target);
 
-            if (language === "kn") {
-              const knLatin = transliterateKannadaToLatin(target);
-              const comparison = compareWords(transcripts, knLatin);
-              setIsWordCorrect(comparison?.isFine);
-            } else {
-              setIsWordCorrect(isCorrect);
-            }
+            setIsWordCorrect(true);
 
             setIsLoading(false);
             // setStatus("inactive");
@@ -1258,7 +1253,7 @@ const Mechanics7 = ({
                       }}
                       onClick={() => {
                         playWordAudio(
-                          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentAudio}`
+                          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentAudio}`
                         );
                       }}
                     >
