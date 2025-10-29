@@ -863,15 +863,16 @@ const R1 = ({
         setItemIndexUi((i) => i + 1);
         setImgIndex(0);
       } else {
-        setLocalData("rFlow", false);
         if (level === "B") {
           await handleCompletion();
           navigate("/discover-end");
           return;
         }
         if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          setLocalData("rFlow", false);
           navigate("/");
         } else {
+          setLocalData("rFlow", false);
           navigate("/discover-start");
         }
       }
