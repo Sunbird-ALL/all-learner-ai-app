@@ -38,7 +38,6 @@ import {
   handleTextEvaluation,
   callTelemetryApi,
 } from "../../utils/apiUtil";
-import AudioTooltipModal from "./AudioTooltipModal";
 import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
@@ -119,6 +118,7 @@ const FluencyP2 = ({
   contentSourceData,
 }) => {
   const whiteContainerRef = useRef(null);
+  const sentenceRef = useRef(null);
   const audioRef = useRef(null);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [showContent, setShowContent] = useState(false);
@@ -140,6 +140,7 @@ const FluencyP2 = ({
   const [hasSpeedBeenSelected, setHasSpeedBeenSelected] = useState(
     !!getLocalData("speed")
   );
+  const [animationKey, setAnimationKey] = useState(0);
 
   console.log("speed value in fluency p2:", speed, getLocalData("speed"));
 
@@ -175,6 +176,7 @@ const FluencyP2 = ({
     setShowConfetti(false);
     setShowFinalState(false);
     setHoveredWord(null);
+    setAnimationKey((prev) => prev + 1); // Reset animation key
 
     setResetTimer(true);
   };
@@ -188,6 +190,7 @@ const FluencyP2 = ({
   }, [showContent]);
 
   const handleAnimationComplete = () => {
+    setAnimationCompleted(true);
     setShowBearDance(true);
     setShowConfetti(false);
 
@@ -200,6 +203,7 @@ const FluencyP2 = ({
 
   const handlePauseClick = () => {
     setPaused(true);
+    setAnimationCompleted(true);
     setShowBearDance(true);
     setShowConfetti(true);
     const audio = new Audio(correctSound);
@@ -285,20 +289,23 @@ const FluencyP2 = ({
       event.target.classList.contains("underlined-word") &&
       currentSentence.underlinedWords.includes(word)
     ) {
-      setHoveredWord(word);
+      // only update if hovered word changed
+      if (hoveredWord !== word) {
+        setHoveredWord(word);
 
-      const rect = event.target.getBoundingClientRect();
-      const containerRect = whiteContainerRef.current.getBoundingClientRect();
+        const rect = event.target.getBoundingClientRect();
+        const containerRect = whiteContainerRef.current.getBoundingClientRect();
 
-      setHintPosition({
-        x: rect.left - containerRect.left + rect.width / 2,
-        y: rect.bottom - containerRect.top + 5,
-      });
+        setHintPosition({
+          x: rect.left - containerRect.left + rect.width / 2,
+          y: rect.bottom - containerRect.top + 5,
+        });
 
-      if (showFinalState && currentSentence.hints[word]) {
-        playWordAudio(
-          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
-        );
+        if (showFinalState && currentSentence.hints[word]) {
+          playWordAudio(
+            `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
+          );
+        }
       }
     }
   };
@@ -359,6 +366,13 @@ const FluencyP2 = ({
     });
   };
 
+  // Get animation duration based on selected speed
+  const getAnimationDuration = () => {
+    if (selected === "Fast") return "2s";
+    if (selected === "Medium") return "5s";
+    return "10s";
+  };
+
   const renderReadingScreen = () => (
     <div
       ref={whiteContainerRef}
@@ -391,7 +405,7 @@ const FluencyP2 = ({
       <div
         style={{
           width: "80%",
-          maxWidth: "500px",
+          maxWidth: "600px",
           height: "100px",
           border: "2px dashed #FF6600",
           borderRadius: "18px",
@@ -418,48 +432,88 @@ const FluencyP2 = ({
         ) : (
           <div
             style={{
-              fontWeight: "700",
-              fontSize: "38px",
-              color: "rgba(51, 63, 97, 1)",
-              textAlign: "center",
-              position: "absolute",
-              left: showSentence ? (paused ? "50%" : "-100%") : "100%",
-              transform: paused ? "translateX(-50%)" : "translateX(0%)",
-              transition: paused
-                ? "none"
-                : selected === "Fast"
-                ? "left 2s linear"
-                : selected === "Medium"
-                ? "left 5s linear"
-                : "left 10s linear",
-              whiteSpace: "nowrap",
+              width: "100%",
+              minHeight: "100%",
               display: "flex",
-              alignItems: "center",
+              justifyContent: "flex-start",
+              alignItems: showFinalState || showBearDance ? "center" : "center",
+              position: "relative",
+              overflow: showFinalState || showBearDance ? "visible" : "hidden",
+              padding: showFinalState || showBearDance ? "10px 0" : "0",
             }}
           >
-            {showFinalState && (
-              <img
-                src={listenImg}
-                onClick={() => {
-                  playWordAudio(
-                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentSentence?.audio}`
-                  );
-                }}
-                alt="listen"
-                style={{
-                  width: "35px",
-                  height: "35px",
-                  marginRight: "10px",
-                  cursor: "pointer",
-                }}
-              />
-            )}
-            {showFinalState
-              ? renderUnderlinedText(
-                  currentSentence.sentence,
-                  currentSentence.underlinedWords
-                )
-              : currentSentence.sentence}
+            <div
+              ref={sentenceRef}
+              key={animationKey}
+              style={{
+                fontWeight: "700",
+                fontSize: showFinalState || showBearDance ? "26px" : "30px",
+                color: "rgba(51, 63, 97, 1)",
+                textAlign: "left",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: showFinalState || showBearDance ? "wrap" : "nowrap",
+                position:
+                  showFinalState || showBearDance ? "relative" : "absolute",
+                left:
+                  showFinalState || showBearDance
+                    ? "0"
+                    : paused
+                    ? "50%"
+                    : "100%",
+                transform:
+                  showFinalState || showBearDance || paused
+                    ? "none"
+                    : "translateX(-50%)",
+                animation:
+                  showSentence && !paused && !showFinalState
+                    ? `scrollText ${getAnimationDuration()} linear infinite`
+                    : "none",
+                whiteSpace:
+                  showFinalState || showBearDance ? "normal" : "nowrap",
+                wordBreak: "break-word",
+                width: showFinalState || showBearDance ? "100%" : "auto",
+              }}
+            >
+              {showFinalState && (
+                <img
+                  src={listenImg}
+                  onClick={() => {
+                    playWordAudio(
+                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentSentence?.audio}`
+                    );
+                  }}
+                  alt="listen"
+                  style={{
+                    width: "35px",
+                    height: "35px",
+                    marginRight: "10px",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+              {showFinalState
+                ? renderUnderlinedText(
+                    currentSentence.sentence,
+                    currentSentence.underlinedWords
+                  )
+                : currentSentence.sentence}
+            </div>
+
+            {/* CSS Animation */}
+            <style>
+              {`
+                @keyframes scrollText {
+                  0% {
+                    left: 100%;
+                  }
+                  100% {
+                    left: -100%;
+                  }
+                }
+              `}
+            </style>
           </div>
         )}
       </div>
@@ -475,11 +529,8 @@ const FluencyP2 = ({
             left: hintPosition.x,
             top: hintPosition.y,
             transform: "translateX(-50%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
             zIndex: 1000,
-            marginTop: "-30px",
+            pointerEvents: "none",
           }}
         >
           <img
@@ -488,6 +539,7 @@ const FluencyP2 = ({
             style={{
               width: "190px",
               height: "140px",
+              userSelect: "none",
             }}
           />
         </div>
@@ -503,7 +555,7 @@ const FluencyP2 = ({
 
       <div
         style={{
-          marginTop: "20px",
+          marginTop: "10px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -533,7 +585,6 @@ const FluencyP2 = ({
             style={{
               width: "160px",
               height: "160px",
-              //marginTop: "10px",
             }}
           />
         )}

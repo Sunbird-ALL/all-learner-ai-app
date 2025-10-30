@@ -34,7 +34,7 @@ const SpeedSelector = ({ onSelect, selected: propSelected }) => {
       style={{
         position: "absolute",
         right: "20px",
-        top: "50%",
+        top: "59%",
         transform: "translateY(-50%)",
         display: "flex",
         flexDirection: "column",
@@ -42,7 +42,7 @@ const SpeedSelector = ({ onSelect, selected: propSelected }) => {
         background: "#fff",
         borderRadius: "16px",
         boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
-        padding: "20px 5px",
+        padding: "-5px 5px",
       }}
     >
       <div
@@ -145,7 +145,7 @@ const SpeedSelector = ({ onSelect, selected: propSelected }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "16px",
+          gap: "10px",
           width: "100%",
         }}
       >
