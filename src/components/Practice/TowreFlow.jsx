@@ -193,14 +193,12 @@ const CombinedReportPage = ({
   //const wordsPerMinute = Math.round((wordCount / totalSec) * 60);
   const totalWordsInCurrentSets = (currentWordSetIndex + 1) * 12;
 
-  //console.log("transcript", wordCount);
-
   const attemptedWordsCount = wordCount;
   const correctWordsCount = allWords.filter((word) => word.isCorrect).length;
   const wordsPerMinute = Math.round((correctWordsCount / totalSec) * 60);
   const unattemptedWordsCount = allWords.length - correctWordsCount;
   const newWordsLearnt = correctWordsCount;
-  const totalWordsLearnt = correctWordsCount + wpm;
+  const totalWordsLearnt = Number(correctWordsCount || 0) + Number(wpm || 0);
   const renderResults = () => (
     <div
       style={{

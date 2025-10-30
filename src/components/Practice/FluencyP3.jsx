@@ -102,8 +102,6 @@ const FluencyP3 = ({
   multilingual,
   contentSourceData,
 }) => {
-  steps = 1;
-
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [showFinalScreen, setShowFinalScreen] = useState(false);
@@ -114,6 +112,31 @@ const FluencyP3 = ({
   const [showResultScreen, setShowResultScreen] = useState(false);
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const [showWordAfterYes, setShowWordAfterYes] = useState(false);
+  const [questionStage, setQuestionStage] = useState(0); // 0 = first question, 1 = second question
+  const [currentQuestionWord, setCurrentQuestionWord] = useState("");
+
+  const wordList = [
+    "Ebullient",
+    "Obfuscate",
+    "Ubiquitous",
+    "Pernicious",
+    "Vicissitude",
+    "Ephemeral",
+    "Loquacious",
+    "Recalcitrant",
+    "Pulchritudinous",
+    "Sagacious",
+    "Munificent",
+    "Perfunctory",
+    "Inscrutable",
+    "Quintessential",
+    "Ineffable",
+    "Perspicacious",
+    "Obstreperous",
+    "Intransigent",
+    "Mellifluous",
+    "Supercilious",
+  ];
 
   const [selected, setSelected] = useState(() => {
     const savedSpeed = getLocalData("speed");
@@ -121,6 +144,7 @@ const FluencyP3 = ({
   });
   const [showContent, setShowContent] = useState(false);
   const [resetTimer, setResetTimer] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const allSentences = contentSourceData?.map((item) => {
     const sentence = item?.contentSourceData[0]?.text || "";
@@ -153,7 +177,7 @@ const FluencyP3 = ({
     setShowWordAfterYes(false);
     setYesClicked(false);
     setNoClicked(false);
-
+    setQuestionStage(0); // Reset to first question
     setResetTimer(true);
   };
 
@@ -167,6 +191,8 @@ const FluencyP3 = ({
       } else if (currentWordIndex === currentSentence.length - 1) {
         const lastWordTimer = setTimeout(() => {
           setShowFinalScreen(true);
+          // Set the word for first question
+          setCurrentQuestionWord(randomFinalWord[currentSentenceIndex]);
         }, getWordSpeed());
         return () => clearTimeout(lastWordTimer);
       }
@@ -213,49 +239,147 @@ const FluencyP3 = ({
     startReadingFlow();
   };
 
+  // YES click - FIXED: Always show word with tick for both questions
   const handleYesClick = () => {
     setYesClicked(true);
     setNoClicked(false);
-    setShowConfetti(true);
-    setShowWordAfterYes(true);
-    const audio = new Audio(correctSound);
-    audio.play();
 
-    setTimeout(() => {
-      setShowConfetti(false);
-      setYesClicked(false);
-    }, 2000);
+    if (questionStage === 0) {
+      // ✅ First question YES = Correct
+      const audio = new Audio(correctSound);
+      audio.play();
+      setShowConfetti(true);
+
+      setTimeout(() => {
+        setShowConfetti(false);
+        setShowWordAfterYes(true); // show tick + next
+        setYesClicked(false);
+      }, 1500);
+    } else {
+      // ❌ Second question YES = Wrong
+      const audio = new Audio(wrongSound);
+      audio.play();
+
+      // FIX: Still show the word with tick even for wrong answer
+      setTimeout(() => {
+        setShowWordAfterYes(true); // show tick + next
+        setYesClicked(false);
+      }, 1000);
+    }
   };
 
+  // NO click - FIXED: Always show word with tick for both questions
   const handleNoClick = () => {
     setNoClicked(true);
     setYesClicked(false);
-    const audio = new Audio(wrongSound);
-    audio.play();
 
-    setTimeout(() => {
-      setNoClicked(false);
-    }, 2000);
+    if (questionStage === 0) {
+      // ❌ First question NO = Wrong
+      const audio = new Audio(wrongSound);
+      audio.play();
+
+      // FIX: Still show the word with tick even for wrong answer
+      setTimeout(() => {
+        setShowWordAfterYes(true); // show tick + next
+        setNoClicked(false);
+      }, 1000);
+    } else {
+      const audio = new Audio(correctSound);
+      audio.play();
+      setShowConfetti(true);
+
+      setTimeout(() => {
+        setShowConfetti(false);
+        setShowWordAfterYes(true);
+        setNoClicked(false);
+      }, 1500);
+    }
   };
 
   const handleNextWord = () => {
     setShowWordAfterYes(false);
-    setShowFinalScreen(false);
+    setYesClicked(false);
+    setNoClicked(false);
 
-    if (currentSentenceIndex + 1 < allSentences.length) {
-      setCurrentSentenceIndex((prev) => prev + 1);
-      startReadingFlow();
+    if (questionStage === 0) {
+      // Move directly to 2nd question
+      setQuestionStage(1);
+      setShowContent(false);
+      const wordIndex = currentSentenceIndex % wordList.length;
+      setCurrentQuestionWord(wordList[wordIndex]);
     } else {
+      // Move to next sentence or show results
+      setShowFinalScreen(false);
+      setShowWordAfterYes(false);
+      setIsTransitioning(true);
       setShowResultScreen(true);
-    }
 
-    if (currentSentenceIndex > 0) {
-      handleNext();
+      if (currentSentenceIndex + 1 < allSentences.length) {
+        setCurrentSentenceIndex((prev) => prev + 1);
+        setQuestionStage(0);
+
+        setTimeout(() => {
+          startReadingFlow();
+          setIsTransitioning(false);
+        }, 800);
+      } else {
+        setShowResultScreen(true);
+        setIsTransitioning(false);
+      }
     }
   };
 
   const handleRetry = () => {
     startReadingFlow();
+  };
+
+  // Helper function to render bear animation with correct positioning
+  const renderBearAnimation = () => {
+    // First question: Bear appears for YES (centered)
+    if (yesClicked && questionStage === 0) {
+      return (
+        <img
+          src={beardanceImg}
+          alt="Beardance"
+          style={{
+            position: "absolute",
+            bottom: -42,
+            left: "50%",
+            transform: "translateX(-50%)",
+            height: "200px",
+            animation: "jump 1.3s ease-in-out infinite",
+            userSelect: "none",
+            pointerEvents: "none",
+            zIndex: 1000,
+          }}
+          draggable={false}
+        />
+      );
+    }
+
+    // Second question: Bear appears for NO (centered)
+    if (noClicked && questionStage === 1) {
+      return (
+        <img
+          src={beardanceImg}
+          alt="Beardance"
+          style={{
+            position: "absolute",
+            bottom: -42,
+            left: "50%",
+            transform: "translateX(-50%)",
+            height: "200px",
+            animation: "jump 1.3s ease-in-out infinite",
+            userSelect: "none",
+            pointerEvents: "none",
+            zIndex: 1000,
+          }}
+          draggable={false}
+        />
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -304,7 +428,7 @@ const FluencyP3 = ({
             height: "400px",
             background: "#fff",
             borderRadius: "12px",
-            boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
+            boxShadow: "0px 2px8px rgba(0,0,0,0.1)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -324,7 +448,8 @@ const FluencyP3 = ({
           {showResultScreen ? (
             <div
               style={{
-                marginTop: "40px",
+                marginTop: "20px",
+                marginBottom: "20px",
                 textAlign: "center",
                 flex: 1,
                 position: "relative",
@@ -337,7 +462,7 @@ const FluencyP3 = ({
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "12px",
-                  marginBottom: "30px",
+                  marginBottom: "20px",
                 }}
               >
                 <img
@@ -347,7 +472,7 @@ const FluencyP3 = ({
                 />
                 <h2
                   style={{
-                    fontSize: "28px",
+                    fontSize: "26px",
                     fontWeight: "600",
                     color: "#333F61",
                     margin: 0,
@@ -367,7 +492,7 @@ const FluencyP3 = ({
               >
                 <div
                   style={{
-                    padding: "30px",
+                    padding: "20px",
                     borderRadius: "12px",
                     background: "#f9f9f9",
                     border: "1px solid #ddd",
@@ -382,7 +507,7 @@ const FluencyP3 = ({
 
                 <div
                   style={{
-                    padding: "30px",
+                    padding: "20px",
                     borderRadius: "12px",
                     background: "#fff7e6",
                     border: "1px solid #ff9900",
@@ -396,7 +521,7 @@ const FluencyP3 = ({
 
                 <div
                   style={{
-                    padding: "30px",
+                    padding: "20px",
                     borderRadius: "12px",
                     background: "#f9f9f9",
                     border: "1px solid #ddd",
@@ -415,9 +540,11 @@ const FluencyP3 = ({
                 alt="next"
                 onClick={() => {
                   handleNext();
+                  setShowResultScreen(false);
                 }}
                 style={{
-                  marginTop: "20px",
+                  marginTop: "16px",
+                  marginBottom: "15px",
                   width: "50px",
                   cursor: "pointer",
                 }}
@@ -462,7 +589,7 @@ const FluencyP3 = ({
                     textAlign: "center",
                   }}
                 >
-                  {randomFinalWord[currentSentenceIndex]}
+                  {currentQuestionWord}
                 </div>
               </div>
 
@@ -509,13 +636,13 @@ const FluencyP3 = ({
                     style={{
                       width: "50px",
                       height: "50px",
+                      cursor: "pointer",
                     }}
                   />
                 </div>
               </div>
             </div>
           ) : !showFinalScreen && !showContent ? (
-            // UPDATE: Show countdown timer before word animation
             <div
               style={{
                 marginTop: "40px",
@@ -596,7 +723,7 @@ const FluencyP3 = ({
                   marginBottom: "20px",
                 }}
               >
-                Did you see the word ?
+                Did you see the word?
               </div>
 
               <div
@@ -607,7 +734,7 @@ const FluencyP3 = ({
                   marginBottom: "64px",
                 }}
               >
-                {randomFinalWord[currentSentenceIndex]}
+                {currentQuestionWord}
               </div>
 
               <div
@@ -616,7 +743,7 @@ const FluencyP3 = ({
                   justifyContent: "center",
                   alignItems: "center",
                   gap: "40px",
-                  marginTop: "120px",
+                  marginTop: "50px",
                   position: "relative",
                   zIndex: 10,
                 }}
@@ -627,12 +754,20 @@ const FluencyP3 = ({
                     padding: "14px 54px",
                     fontSize: "26px",
                     borderRadius: "12px",
-                    border: noClicked
-                      ? "1px solid rgba(255, 127, 54, 1)"
-                      : "1px solid #ccc",
+                    border:
+                      noClicked && questionStage === 1
+                        ? "1px solid rgba(88, 204, 2, 1)"
+                        : noClicked && questionStage === 0
+                        ? "1px solid rgba(255, 127, 54, 1)"
+                        : "1px solid #ccc",
                     background: "#fff",
                     cursor: "pointer",
-                    color: noClicked ? "rgba(255, 127, 54, 1)" : "inherit",
+                    color:
+                      noClicked && questionStage === 1
+                        ? "rgba(88, 204, 2, 1)"
+                        : noClicked && questionStage === 0
+                        ? "rgba(255, 127, 54, 1)"
+                        : "inherit",
                     fontWeight: noClicked ? "700" : "normal",
                     display: "flex",
                     alignItems: "center",
@@ -644,7 +779,12 @@ const FluencyP3 = ({
                     style={{
                       fontSize: "20px",
                       fontWeight: "bold",
-                      color: noClicked ? "rgba(255, 127, 54, 1)" : "#888",
+                      color:
+                        noClicked && questionStage === 1
+                          ? "rgba(88, 204, 2, 1)"
+                          : noClicked && questionStage === 0
+                          ? "rgba(255, 127, 54, 1)"
+                          : "#888",
                     }}
                   >
                     ✖
@@ -658,12 +798,20 @@ const FluencyP3 = ({
                     padding: "14px 54px",
                     fontSize: "26px",
                     borderRadius: "12px",
-                    border: yesClicked
-                      ? "1px solid rgba(88, 204, 2, 1)"
-                      : "1px solid #ccc",
+                    border:
+                      yesClicked && questionStage === 0
+                        ? "1px solid rgba(88, 204, 2, 1)"
+                        : yesClicked && questionStage === 1
+                        ? "1px solid rgba(255, 127, 54, 1)"
+                        : "1px solid #ccc",
                     background: "#fff",
                     cursor: "pointer",
-                    color: yesClicked ? "rgba(88, 204, 2, 1)" : "inherit",
+                    color:
+                      yesClicked && questionStage === 0
+                        ? "rgba(88, 204, 2, 1)"
+                        : yesClicked && questionStage === 1
+                        ? "rgba(255, 127, 54, 1)"
+                        : "inherit",
                     fontWeight: yesClicked ? "700" : "normal",
                     display: "flex",
                     alignItems: "center",
@@ -675,7 +823,12 @@ const FluencyP3 = ({
                     style={{
                       fontSize: "20px",
                       fontWeight: "bold",
-                      color: yesClicked ? "rgba(88, 204, 2, 1)" : "#888",
+                      color:
+                        yesClicked && questionStage === 0
+                          ? "rgba(88, 204, 2, 1)"
+                          : yesClicked && questionStage === 1
+                          ? "rgba(255, 127, 54, 1)"
+                          : "#888",
                     }}
                   >
                     ✔
@@ -684,43 +837,8 @@ const FluencyP3 = ({
                 </button>
               </div>
 
-              {yesClicked && (
-                <img
-                  src={beardanceImg}
-                  alt="Beardance"
-                  style={{
-                    position: "absolute",
-                    bottom: -42,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    height: "200px",
-                    animation: "jump 1.3s ease-in-out infinite",
-                    userSelect: "none",
-                    pointerEvents: "none",
-                    zIndex: 1000,
-                  }}
-                  draggable={false}
-                />
-              )}
-
-              {noClicked && (
-                <img
-                  src={beardanceImg}
-                  alt="Beardance"
-                  style={{
-                    position: "absolute",
-                    bottom: -42,
-                    left: "10%",
-                    transform: "translateX(-50%)",
-                    height: "200px",
-                    animation: "jump 1.3s ease-in-out infinite",
-                    userSelect: "none",
-                    pointerEvents: "none",
-                    zIndex: 1000,
-                  }}
-                  draggable={false}
-                />
-              )}
+              {/* Render bear animation */}
+              {renderBearAnimation()}
             </div>
           )}
         </div>

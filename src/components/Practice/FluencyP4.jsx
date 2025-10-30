@@ -106,7 +106,7 @@ const UnderlinedSentence = ({
   return (
     <p
       style={{
-        fontSize: "40px",
+        fontSize: "32px",
         fontWeight: "600",
         color: "rgba(51, 63, 97, 1)",
         fontFamily: "Quicksand",
@@ -189,6 +189,7 @@ const LanguageHint = ({ hint }) => {
         style={{
           width: "200px",
           height: "auto",
+          userSelect: "none",
         }}
       />
     </div>
@@ -555,7 +556,7 @@ const FluencyP4 = ({
             style={{
               width: "90%",
               maxWidth: "1500px",
-              height: "400px",
+              height: "70vh",
               background: "#fff",
               borderRadius: "12px",
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -635,10 +636,32 @@ const FluencyP4 = ({
                   onWordHover={handleWordHover}
                 />
 
-                <LanguageHint
+                {/* <LanguageHint
                   hint={hoveredWord ? currentSentence.hints[hoveredWord] : null}
                   position={hoverPosition}
-                />
+                /> */}
+                {hoveredWord && currentSentence?.hints[hoveredWord] && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "-80px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      zIndex: 1000,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <img
+                      src={langhint}
+                      alt="language hint"
+                      style={{
+                        width: "190px",
+                        height: "140px",
+                        userSelect: "none",
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -656,17 +679,22 @@ const FluencyP4 = ({
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
+                    marginBottom: "10px",
                   }}
                 >
                   <img
                     src={graphImg}
                     alt="graph"
-                    style={{ width: "220px", marginBottom: "40px" }}
+                    style={{ width: "180px", marginBottom: "20px" }}
                   />
                   <img
                     src={pauseImg}
                     alt="pause"
-                    style={{ width: "50px", cursor: "pointer" }}
+                    style={{
+                      width: "50px",
+                      cursor: "pointer",
+                      marginBottom: "15px",
+                    }}
                     onClick={handlePauseClick}
                   />
                 </div>
@@ -681,7 +709,7 @@ const FluencyP4 = ({
                     bottom: "20px",
                     left: "50%",
                     transform: "translateX(-50%)",
-                    marginTop: "20px",
+                    marginTop: "10px",
                   }}
                 >
                   <img
@@ -755,8 +783,8 @@ const FluencyP4 = ({
                 style={{
                   position: "absolute",
                   bottom: "0px",
-                  left: "10px",
-                  width: "250px",
+                  left: "-20px",
+                  width: "210px",
                 }}
               />
             )}
@@ -765,7 +793,7 @@ const FluencyP4 = ({
           <div
             style={{
               width: "90%",
-              height: "400px",
+              height: "68vh",
               background: `url(${backgroundImg}) center/cover no-repeat`,
               borderRadius: "12px",
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -788,13 +816,13 @@ const FluencyP4 = ({
               <img
                 src={meterImg}
                 alt="meter"
-                style={{ width: "70px", marginRight: "8px" }}
+                style={{ width: "65px", marginRight: "8px" }}
               />
               <h2
                 style={{
                   color: "#333f61",
                   fontWeight: "700",
-                  fontSize: "35px",
+                  fontSize: "30px",
                   fontFamily: "Quicksand",
                 }}
               >
@@ -810,14 +838,14 @@ const FluencyP4 = ({
                 alignItems: "center",
               }}
             >
-              <img src={tortoiseImg} alt="tortoise" style={{ width: "70px" }} />
+              <img src={tortoiseImg} alt="tortoise" style={{ width: "60px" }} />
             </div>
 
             <h2
               style={{
                 color: "#A66CFF",
                 fontWeight: "700",
-                fontSize: "28px",
+                fontSize: "27px",
                 marginBottom: "10px",
                 fontFamily: "Quicksand",
               }}
@@ -827,8 +855,9 @@ const FluencyP4 = ({
             <p
               style={{
                 color: "#333f61",
-                fontSize: "24px",
-                margin: "10px 20px",
+                fontSize: "22px",
+                marginTop: "5px",
+                marginBottom: "10px",
                 fontFamily: "Quicksand",
                 fontStyle: "bold",
                 fontWeight: 600,
@@ -845,7 +874,7 @@ const FluencyP4 = ({
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: "15px",
+                marginTop: "5px",
               }}
             >
               <div
@@ -856,10 +885,10 @@ const FluencyP4 = ({
                   backgroundColor: "#FFF4E6",
                   border: "1px solid rgba(241, 153, 32, 1)",
                   borderRadius: "12px",
-                  padding: "10px 25px",
+                  padding: "8px 25px",
                   fontFamily: "Quicksand",
                   fontWeight: 600,
-                  fontSize: "22px",
+                  fontSize: "20px",
                   color: "rgba(51, 63, 97, 1)",
                   boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)",
                   marginBottom: "30px",
@@ -869,7 +898,7 @@ const FluencyP4 = ({
                 <img
                   src={bookImg}
                   alt="book"
-                  style={{ width: "30px", height: "35px" }}
+                  style={{ width: "30px", height: "25px" }}
                 />
                 <span>You read 5 sentences in 30 seconds</span>
               </div>
@@ -884,6 +913,7 @@ const FluencyP4 = ({
                   width: "45px",
                   height: "45px",
                   cursor: "pointer",
+                  marginBottom: "30px",
                 }}
               />
             </div>
