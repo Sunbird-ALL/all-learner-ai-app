@@ -247,12 +247,6 @@ const FluencyP5 = ({
     transcriptRef.current = transcript;
     const similarity = getSimilarity(transcript, currentSentence.sentence);
     setIsMatch(similarity >= 0.6);
-    console.log(
-      "Live Transcript:",
-      transcript,
-      currentSentence.sentence,
-      similarity
-    );
   }, [transcript]);
 
   const sentencesData = [
@@ -562,7 +556,7 @@ const FluencyP5 = ({
         <div
           style={{
             width: "90%",
-            height: "400px",
+            height: "68vh",
             background: `url(${backgroundImg}) center/cover no-repeat`,
             borderRadius: "12px",
             boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -678,7 +672,7 @@ const FluencyP5 = ({
         className="whiteContainer"
         style={{
           width: "90%",
-          height: "400px",
+          height: "68vh",
           maxWidth: "1200px",
           background: "#fff",
           borderRadius: "12px",
@@ -747,7 +741,7 @@ const FluencyP5 = ({
 
         <div
           style={{
-            width: "400px",
+            width: "60%",
             height: "200px",
             border: "2px dashed #FF6600",
             borderRadius: "18px",
@@ -768,12 +762,12 @@ const FluencyP5 = ({
               width: "80%",
               textAlign: "center",
               fontWeight: "700",
-              fontSize: "18px",
+              fontSize: "17px",
               lineHeight: "1.3",
               color: "rgba(51, 63, 97, 1)",
               animation: showBearDance
                 ? null
-                : `floatUp ${getDuration()} linear forwards`,
+                : `floatUp ${getDuration()} linear infinite`,
             }}
           >
             {currentSentence.sentence}
@@ -797,7 +791,7 @@ const FluencyP5 = ({
           opacity: 1;
         }
         100% {
-          top: -20%; /* above and gone */
+          top: -90%; /* above and gone */
           opacity: 0;
         }
       }
@@ -834,6 +828,7 @@ const FluencyP5 = ({
                 flexDirection: "column",
                 alignItems: "center",
                 gap: "3px",
+                marginTop: "8px",
               }}
             >
               <img

@@ -2370,9 +2370,9 @@ const R0 = ({
         ? Math.round((completedLetters / totalLetters) * 100)
         : 0;
     const UI1 = () => {
-      console.log("ui1", item, current);
+      //console.log("ui1", item, current);
 
-      const TOTAL_ITEMS = lang === "en" ? 101 : 130;
+      const TOTAL_ITEMS = lang === "en" ? 101 : 142;
 
       // FIXED: Use currentIndex + 1 instead of item?.id
       const currentItemNumber = currentIndex + 1;
@@ -2723,9 +2723,9 @@ const R0 = ({
       );
     };
     const UI2 = () => {
-      console.log("ui2");
+      //console.log("ui2");
 
-      const TOTAL_ITEMS = lang === "en" ? 101 : 130;
+      const TOTAL_ITEMS = lang === "en" ? 101 : 142;
 
       const currentItemNumber = currentIndex + 1;
       const completionPercentage = Math.round(
@@ -2761,14 +2761,6 @@ const R0 = ({
           </>
         );
       };
-
-      console.log("UI2 Audio Debug:", {
-        singleAudio: singleAudio,
-        itemWord: item.word,
-        itemLetter: item.letter,
-        currentIndex: currentIndex,
-        currentItemNumber: currentItemNumber,
-      });
 
       return (
         <Box
