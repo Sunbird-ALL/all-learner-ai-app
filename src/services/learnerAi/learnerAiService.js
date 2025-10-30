@@ -46,12 +46,18 @@ export const getContent = async (
   }
 };
 
-export const getContentNew = async (criteria, lang, limit, options = {}) => {
+export const getContentNew = async (
+  criteria,
+  lang,
+  limit,
+  options = {},
+  level
+) => {
   try {
     let url = `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT_NEW}`;
     const data = {
       language: lang,
-      content_type: "Word",
+      content_type: criteria,
     };
     const response = await axios.post(url, data, getHeaders());
     return response.data;
