@@ -783,10 +783,6 @@ const FluencyP5 = ({
         10% {
           opacity: 1;
         }
-        50% {
-          top: 50%; /* fully visible in the middle */
-          opacity: 1;
-        }
         90% {
           opacity: 1;
         }

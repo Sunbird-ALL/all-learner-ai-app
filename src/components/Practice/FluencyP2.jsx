@@ -141,8 +141,7 @@ const FluencyP2 = ({
     !!getLocalData("speed")
   );
   const [animationKey, setAnimationKey] = useState(0);
-
-  console.log("speed value in fluency p2:", speed, getLocalData("speed"));
+  const lang = getLocalData("lang");
 
   const sentencesData = [
     {
@@ -368,9 +367,9 @@ const FluencyP2 = ({
 
   // Get animation duration based on selected speed
   const getAnimationDuration = () => {
-    if (selected === "Fast") return "2s";
-    if (selected === "Medium") return "5s";
-    return "10s";
+    if (selected === "Fast") return "5s";
+    if (selected === "Medium") return "10s";
+    return "15s";
   };
 
   const renderReadingScreen = () => (
@@ -481,7 +480,7 @@ const FluencyP2 = ({
                   src={listenImg}
                   onClick={() => {
                     playWordAudio(
-                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentSentence?.audio}`
+                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentSentence?.audio}`
                     );
                   }}
                   alt="listen"
