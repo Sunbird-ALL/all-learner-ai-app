@@ -5266,7 +5266,7 @@ const Practice = () => {
         <WordsOrImage
           {...{
             level: level,
-            audioLink: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${questions[currentQuestion]?.contentSourceData[0]?.audioUrl}`,
+            audioLink: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${questions[currentQuestion]?.contentSourceData[0]?.audioUrl}`,
             mechanism_id: mechanism?.id,
             header:
               mechanism?.id &&
@@ -6130,8 +6130,7 @@ const Practice = () => {
             //
             currentImg: currentImage,
             parentWords: questions[currentQuestion]?.multilingual_data,
-            contentSourceData:
-              questions[currentQuestion]?.contentSourceData?.[0],
+            contentSourceData: questions[currentQuestion],
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,

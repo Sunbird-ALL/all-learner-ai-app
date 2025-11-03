@@ -38,6 +38,7 @@ import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
+import { Log } from "../../services/telementryService";
 
 function CircularTimer({ duration = 3, onComplete }) {
   const [timeLeft, setTimeLeft] = useState(duration);
@@ -145,6 +146,8 @@ const FluencyP3 = ({
   const [showContent, setShowContent] = useState(false);
   const [resetTimer, setResetTimer] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [readingSpeed, setReadingSpeed] = useState(null);
+  const [startTime, setStartTime] = useState(null);
 
   const allSentences = contentSourceData?.map((item) => {
     const sentence = item?.contentSourceData[0]?.text || "";
@@ -208,6 +211,20 @@ const FluencyP3 = ({
       case "Slow":
       default:
         return 1500;
+    }
+  };
+
+  const handleStop = () => {
+    //if (!startTime) return;
+    const duration = (Date.now() - startTime) / 1000;
+    console.log("time taken........", duration);
+
+    if (duration <= 10) {
+      setReadingSpeed("Fast");
+    } else if (duration <= 20) {
+      setReadingSpeed("Medium");
+    } else {
+      setReadingSpeed("Slow");
     }
   };
 
@@ -315,6 +332,7 @@ const FluencyP3 = ({
       setShowResultScreen(true);
 
       if (currentSentenceIndex + 1 < allSentences.length) {
+        handleStop();
         setCurrentSentenceIndex((prev) => prev + 1);
         setQuestionStage(0);
 
@@ -494,9 +512,12 @@ const FluencyP3 = ({
                   style={{
                     padding: "20px",
                     borderRadius: "12px",
-                    background: "#f9f9f9",
-                    border: "1px solid #ddd",
-                    opacity: 0.5,
+                    background: readingSpeed === "Slow" ? "#fff7e6" : "#f9f9f9",
+                    border:
+                      readingSpeed === "Slow"
+                        ? "1px solid #ff9900"
+                        : "1px solid #ddd",
+                    opacity: readingSpeed === "Slow" ? 1 : 0.5,
                   }}
                 >
                   <img src={tortoiseImg} alt="tortoise" height={50} />
@@ -509,8 +530,13 @@ const FluencyP3 = ({
                   style={{
                     padding: "20px",
                     borderRadius: "12px",
-                    background: "#fff7e6",
-                    border: "1px solid #ff9900",
+                    background:
+                      readingSpeed === "Medium" ? "#fff7e6" : "#f9f9f9",
+                    border:
+                      readingSpeed === "Medium"
+                        ? "1px solid #ff9900"
+                        : "1px solid #ddd",
+                    opacity: readingSpeed === "Medium" ? 1 : 0.5,
                   }}
                 >
                   <img src={rabbitImg} alt="rabbit" height={50} />
@@ -523,9 +549,12 @@ const FluencyP3 = ({
                   style={{
                     padding: "20px",
                     borderRadius: "12px",
-                    background: "#f9f9f9",
-                    border: "1px solid #ddd",
-                    opacity: 0.5,
+                    background: readingSpeed === "Fast" ? "#fff7e6" : "#f9f9f9",
+                    border:
+                      readingSpeed === "Fast"
+                        ? "1px solid #ff9900"
+                        : "1px solid #ddd",
+                    opacity: readingSpeed === "Fast" ? 1 : 0.5,
                   }}
                 >
                   <img src={cheetahImg} alt="cheetah" height={50} />
@@ -540,6 +569,8 @@ const FluencyP3 = ({
                 alt="next"
                 onClick={() => {
                   handleNext();
+                  setReadingSpeed(null);
+                  setStartTime(null);
                   setShowResultScreen(false);
                 }}
                 style={{
@@ -663,6 +694,8 @@ const FluencyP3 = ({
                 key={resetTimer ? `timer-${Date.now()}` : "timer"}
                 duration={3}
                 onComplete={() => {
+                  setReadingSpeed(null);
+                  setStartTime(Date.now());
                   setShowContent(true);
                   setResetTimer(false);
                 }}

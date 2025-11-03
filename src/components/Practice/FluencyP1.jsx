@@ -10,7 +10,6 @@ import listenImg from "../../assets/listenImg.svg";
 import nextImg from "../../assets/nextImg.svg";
 import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
-import tortoiseImg from "../../assets/tortoiseImg.svg";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
@@ -42,6 +41,9 @@ import AudioTooltipModal from "./AudioTooltipModal";
 import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
+import tortoiseImg from "../../assets/TurtleCircle.gif";
+import rabbitImg from "../../assets/RabbitCircle.gif";
+import rocketImg from "../../assets/RocketCircle.gif";
 
 const UnderlinedSentence = ({
   sentence,
@@ -306,6 +308,7 @@ const FluencyP1 = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const correctPracticeWords = getLocalData("correctPracticeWords");
   const sessionId = getLocalData("sessionId");
+  const lang = getLocalData("lang");
 
   const handleStart = () => {
     setStartTime(Date.now());
@@ -580,7 +583,7 @@ const FluencyP1 = ({
                   src={listenImg}
                   onClick={() => {
                     playWordAudio(
-                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${sentencesData[currentSentenceIndex].audio}`
+                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${sentencesData[currentSentenceIndex].audio}`
                     );
                   }}
                   alt="listen"
@@ -734,7 +737,11 @@ const FluencyP1 = ({
                 alignItems: "center",
               }}
             >
-              <img src={tortoiseImg} alt="tortoise" style={{ width: "70px" }} />
+              <img
+                src={speed === "Fast" ? rocketImg : tortoiseImg}
+                alt="tortoise"
+                style={{ width: "70px" }}
+              />
             </div>
 
             <h2

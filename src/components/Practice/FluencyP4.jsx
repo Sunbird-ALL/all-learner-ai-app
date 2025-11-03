@@ -10,7 +10,9 @@ import listenImg from "../../assets/listenImg.svg";
 import nextImg from "../../assets/nextImg.svg";
 import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
-import tortoiseImg from "../../assets/tortoiseImg.svg";
+import tortoiseImg from "../../assets/TurtleCircle.gif";
+import rabbitImg from "../../assets/RabbitCircle.gif";
+import rocketImg from "../../assets/RocketCircle.gif";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
@@ -359,6 +361,7 @@ const FluencyP4 = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(null);
   const [startTime, setStartTime] = useState(null);
+  const lang = getLocalData("lang");
 
   const buildSentencesData = (apiData) => {
     return apiData?.map((item, index) => {
@@ -615,7 +618,7 @@ const FluencyP4 = ({
                   src={listenImg}
                   onClick={() => {
                     playWordAudio(
-                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${sentencesData[currentSentenceIndex].audio}`
+                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${sentencesData[currentSentenceIndex].audio}`
                     );
                   }}
                   alt="listen"
@@ -838,7 +841,11 @@ const FluencyP4 = ({
                 alignItems: "center",
               }}
             >
-              <img src={tortoiseImg} alt="tortoise" style={{ width: "60px" }} />
+              <img
+                src={speed === "Fast" ? rocketImg : tortoiseImg}
+                alt="tortoise"
+                style={{ width: "60px" }}
+              />
             </div>
 
             <h2

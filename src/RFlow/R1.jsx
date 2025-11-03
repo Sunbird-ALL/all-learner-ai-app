@@ -1149,61 +1149,51 @@ const R1 = ({
           <Box
             sx={{
               position: "absolute",
-              top: 16,
-              right: 16,
-              backgroundColor: "rgba(255, 255, 255, 0.95)",
-              borderRadius: "20px",
-              padding: "12px 16px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-              border: "2px solid #1CB0F6",
-              zIndex: 10,
-              backdropFilter: "blur(5px)",
-              minWidth: "100px",
+              top: 10,
+              right: 20,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "120px",
             }}
           >
-            <Typography
+            <Box
               sx={{
+                backgroundColor: "#fff",
+                border: "2px solid #1CB0F6",
+                borderRadius: "50%",
+                padding: "6px 12px",
                 fontFamily: "Quicksand",
-                fontWeight: 800,
-                fontSize: "16px",
-                color: navy,
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                lineHeight: 1.2,
+                fontWeight: 700,
+                fontSize: "14px",
+                color: "#000",
+                position: "relative",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                marginBottom: "-8px",
               }}
             >
-              {currentItemNumber} / {TOTAL_ITEMS}
-            </Typography>
-            <Typography
-              sx={{
-                fontFamily: "Quicksand",
-                fontWeight: 600,
-                fontSize: "12px",
-                color: "#1CB0F6",
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                mt: 0.5,
-              }}
-            >
-              Progress
-            </Typography>
+              {currentItemNumber}/{TOTAL_ITEMS}
+            </Box>
+
             <Box
               sx={{
                 width: "100%",
-                height: "4px",
-                backgroundColor: "#e0e0e0",
-                borderRadius: "2px",
-                mt: 1,
+                height: "18px",
+                backgroundColor: "#E3F2FD",
+                borderRadius: "20px",
                 overflow: "hidden",
+                position: "relative",
+                zIndex: 1,
+                border: "2px solid #BBDEFB",
               }}
             >
               <Box
                 sx={{
                   width: `${completionPercentage}%`,
                   height: "100%",
-                  backgroundColor: "#58CC02",
-                  borderRadius: "2px",
-                  transition: "width 0.3s ease",
+                  backgroundColor: "#1CB0F6",
+                  borderRadius: "20px",
+                  transition: "width 0.4s ease",
                 }}
               />
             </Box>
@@ -1494,62 +1484,52 @@ const R1 = ({
         >
           <Box
             sx={{
-              position: "fixed",
-              top: 20,
-              right: 38,
-              backgroundColor: "rgba(255, 255, 255, 0.95)",
-              borderRadius: "24px",
-              padding: "14px 18px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-              border: "2px solid #1CB0F6",
-              zIndex: 10,
-              backdropFilter: "blur(5px)",
-              minWidth: "110px",
+              position: "absolute",
+              top: 10,
+              right: 20,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "120px",
             }}
           >
-            <Typography
+            <Box
               sx={{
+                backgroundColor: "#fff",
+                border: "2px solid #1CB0F6",
+                borderRadius: "50%",
+                padding: "6px 12px",
                 fontFamily: "Quicksand",
-                fontWeight: 800,
-                fontSize: "18px",
-                color: navy,
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                lineHeight: 1.2,
-              }}
-            >
-              {currentItemNumber} / {TOTAL_ITEMS}
-            </Typography>
-            <Typography
-              sx={{
-                fontFamily: "Quicksand",
-                fontWeight: 600,
+                fontWeight: 700,
                 fontSize: "14px",
-                color: "#1CB0F6",
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                mt: 0.5,
+                color: "#000",
+                position: "relative",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                marginBottom: "-8px",
               }}
             >
-              Progress
-            </Typography>
+              {currentItemNumber}/{TOTAL_ITEMS}
+            </Box>
+
             <Box
               sx={{
                 width: "100%",
-                height: "6px",
-                backgroundColor: "#e0e0e0",
-                borderRadius: "3px",
-                mt: 1,
+                height: "18px",
+                backgroundColor: "#E3F2FD",
+                borderRadius: "20px",
                 overflow: "hidden",
+                position: "relative",
+                zIndex: 1,
+                border: "2px solid #BBDEFB",
               }}
             >
               <Box
                 sx={{
                   width: `${completionPercentage}%`,
                   height: "100%",
-                  backgroundColor: "#58CC02",
-                  borderRadius: "3px",
-                  transition: "width 0.3s ease",
+                  backgroundColor: "#1CB0F6",
+                  borderRadius: "20px",
+                  transition: "width 0.4s ease",
                 }}
               />
             </Box>

@@ -1253,7 +1253,7 @@ const Mechanics7 = ({
                       }}
                       onClick={() => {
                         playWordAudio(
-                          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentAudio}`
+                          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentAudio}`
                         );
                       }}
                     >

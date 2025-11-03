@@ -146,6 +146,8 @@ const ParagraphFlow = ({
   loading,
   vocabCount,
   wordCount,
+  contentSourceData,
+  parentWords,
 }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showBearDance, setShowBearDance] = useState(false);
@@ -180,6 +182,22 @@ const ParagraphFlow = ({
   const [finalTranscript, setFinalTranscript] = useState("");
   const [isMatch, setIsMatch] = useState(false);
 
+  console.log("audios", parentWords);
+
+  const paragraphPages = [
+    {
+      page: 1,
+      bookImage: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${contentSourceData?.imagePath}`,
+      highlightedText: contentSourceData?.contentSourceData?.[0]?.text || "",
+      keywords: Object.entries(parentWords || {}).map(([word, data]) => ({
+        word,
+        audio: `${
+          process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL
+        }/multilingual_audios/${data?.kn?.audio_url || ""}`,
+      })),
+    },
+  ];
+
   const getSimilarity = (str1, str2) => {
     const a = str1.toLowerCase().trim().split(" ");
     const b = str2.toLowerCase().trim().split(" ");
@@ -191,7 +209,7 @@ const ParagraphFlow = ({
   useEffect(() => {
     transcriptRef.current = transcript;
     const similarity = getSimilarity(transcript, paragraphData.highlightedText);
-    setIsMatch(similarity * 10); // Scale to 0-10
+    setIsMatch(similarity * 10);
     console.log(
       "Live Transcript:",
       transcript,
@@ -231,8 +249,7 @@ const ParagraphFlow = ({
   }, []);
 
   // ✅ Get current page data
-  const paragraphData =
-    paragraphPages.find((p) => p.page === currentStep) || paragraphPages[0];
+  const paragraphData = paragraphPages[0];
 
   // ✅ Track reading start time when highlighted text is shown
   useEffect(() => {
@@ -690,6 +707,11 @@ const ParagraphFlow = ({
   };
 
   const handleNextClick = () => {
+    if (speechSynthesisRef.current) {
+      speechSynthesisRef.current.cancel();
+    }
+    setIsPlayingAudio(false);
+    clearHighlight();
     setTimeout(() => {
       //calculateReadingSpeed();
       setShowReadingSpeed(true);
