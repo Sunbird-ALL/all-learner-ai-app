@@ -5189,7 +5189,7 @@ const PhrasesInAction = ({
         <div
           style={{
             width: "100%",
-            height: "56vh",
+            height: "65vh",
             backgroundColor: "#eae6ff",
             display: "flex",
             alignItems: "center",

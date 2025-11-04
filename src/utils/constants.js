@@ -10413,7 +10413,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L1",
-        storyMode: true,
+        //storyMode: true,
         mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
