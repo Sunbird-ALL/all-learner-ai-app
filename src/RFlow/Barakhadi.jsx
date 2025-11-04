@@ -2714,6 +2714,7 @@ const Barakhadi = ({
 
     if (nextIndex >= wordDataList.length) {
       setLocalData("rFlow", false);
+      setLocalData("mFail", false);
       if (level === "B") {
         await handleCompletion();
         navigate("/discover-end");

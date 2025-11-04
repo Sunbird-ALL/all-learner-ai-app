@@ -874,6 +874,7 @@ const R1 = ({
       } else {
         // End of playlist - handle completion
         setLocalData("rFlow", false);
+        setLocalData("mFail", false);
         if (level === "B") {
           await handleCompletion();
           navigate("/discover-end");
@@ -916,9 +917,11 @@ const R1 = ({
         }
         if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
           setLocalData("rFlow", false);
+          setLocalData("mFail", false);
           navigate("/");
         } else {
           setLocalData("rFlow", false);
+          setLocalData("mFail", false);
           navigate("/discover-start");
         }
       }
