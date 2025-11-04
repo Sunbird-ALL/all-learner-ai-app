@@ -5266,7 +5266,7 @@ const Practice = () => {
         <WordsOrImage
           {...{
             level: level,
-            audioLink: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${questions[currentQuestion]?.contentSourceData[0]?.audioUrl}`,
+            audioLink: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${questions[currentQuestion]?.contentId}.wav`,
             mechanism_id: mechanism?.id,
             header:
               mechanism?.id &&

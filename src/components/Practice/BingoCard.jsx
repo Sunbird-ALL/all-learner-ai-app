@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
@@ -47,15 +53,429 @@ import {
   transliterateKannadaToLatin,
   compareWords,
 } from "../../utils/textUtils";
+import VoiceAnalyser from "../../utils/VoiceAnalyser";
 
-// const isChrome =
-//   /Chrome/.test(navigator.userAgent) &&
-//   /Google Inc/.test(navigator.vendor) &&
-//   !/Edg/.test(navigator.userAgent);
+import bearimg from "../../assets/bearspek.svg";
+import iconimg from "../../assets/icon.svg";
+import listeenimg from "../../assets/listeen.svg";
+import wordheadingimg from "../../assets/wordhead.svg";
+import emptyimg from "../../assets/Empty.svg";
+import starimg from "../../assets/star.svg";
+import nextimg from "../../assets/nextImg.svg";
+import beariconimg from "../../assets/bearicon.svg";
+import bearclapimg from "../../assets/bearclap.svg";
+import starbackgroundimg from "../../assets/starsandclouds.png";
+import bearrdanceimg from "../../assets/bearrdance.svg";
 
 const isChrome = true;
-
 const theme = createTheme();
+
+const BingoPage = React.memo(
+  ({
+    transformed,
+    setVoiceText,
+    setRecordedAudio,
+    setVoiceAnimate,
+    storyLine,
+    enableNext,
+    isShowCase,
+    isDiscover,
+    contentId,
+    contentType,
+    currentStep,
+    playTeacherAudio,
+    callUpdateLearner,
+    setOpenMessageDialog,
+    setEnableNext,
+    vocabCount,
+    wordCount,
+    handleNext,
+  }) => {
+    const firstWord = transformed?.arrM?.[0];
+    const [localShowConfetti, setLocalShowConfetti] = useState(false);
+    const [localCurrent, setLocalCurrent] = useState(0);
+    const [localIsNextButtonCalled, setLocalIsNextButtonCalled] =
+      useState(false);
+    const [localIsRecordingComplete, setLocalIsRecordingComplete] =
+      useState(false);
+    const [localRecAudio, setLocalRecAudio] = useState("");
+    const [currentWordIndex, setCurrentWordIndex] = useState(0); // Track current word index
+    const [isRecordingDone, setIsRecordingDone] = useState(false); // Track if recording is completed
+    const correctPracticeWords = getLocalData("correctPracticeWords");
+    const [currentText, setCurrentText] = useState("");
+    const sessionId = getLocalData("sessionId");
+
+    let progressDatas = getLocalData("practiceProgress");
+    //const virtualId = String(getLocalData("virtualId"));
+
+    if (typeof progressDatas === "string") {
+      progressDatas = JSON.parse(progressDatas);
+    }
+
+    let currentPracticeStep;
+    if (progressDatas) {
+      currentPracticeStep = progressDatas?.currentPracticeStep;
+    }
+
+    let currentLevel = practiceSteps?.[currentPracticeStep]?.title || "L1";
+
+    const currentWord = useMemo(() => {
+      return transformed?.arrM?.[currentWordIndex];
+    }, [transformed, currentWordIndex]);
+
+    console.log(
+      "currentWord",
+      transformed?.imageAudioMap?.[currentWord]?.audio
+    );
+
+    const updateStoredData = useCallback((audio, isCorrect) => {}, []);
+
+    const handleRecordingComplete = useCallback((base64Data) => {
+      if (base64Data) {
+        setLocalIsRecordingComplete(true);
+        setLocalRecAudio(base64Data);
+        setIsRecordingDone(true);
+      } else {
+        setLocalIsRecordingComplete(false);
+        setLocalRecAudio(null);
+        setIsRecordingDone(false);
+      }
+    }, []);
+
+    const handleStartRecording = useCallback(() => {
+      setLocalRecAudio(null);
+      setIsRecordingDone(false);
+    }, []);
+
+    const handleStopRecording = useCallback(() => {}, []);
+
+    const handleNextWord = useCallback(() => {
+      handleNext();
+      // const newWordData = {
+      //   original_text: currentWord,
+      //   content_id: contentId,
+      //   milestone_level: "m2",
+      //   practice_level: currentLevel,
+      //   session_id: sessionId,
+      //   practiced: true,
+      //   learned: true,
+      //   subsession_id: "session_123",
+      // };
+
+      // setLocalData("correctPracticeWords", [
+      //   ...(correctPracticeWords || []),
+      //   newWordData,
+      // ]);
+      if (currentWordIndex < transformed?.arrM?.length - 1) {
+        setCurrentWordIndex((prev) => prev + 1);
+        setIsRecordingDone(false);
+        setLocalIsRecordingComplete(false);
+        setLocalRecAudio(null);
+        setLocalShowConfetti(false);
+      } else {
+        console.log("All words completed!");
+      }
+    }, [currentWordIndex, transformed]);
+
+    useEffect(() => {
+      if (localIsRecordingComplete) {
+        setLocalShowConfetti(true);
+        setTimeout(() => {
+          setLocalShowConfetti(false);
+        }, 3000);
+      }
+    }, [localIsRecordingComplete]);
+
+    return (
+      <div
+        style={{
+          backgroundColor: "#fff",
+          borderRadius: "20px",
+          padding: "40px 60px",
+          textAlign: "center",
+          position: "relative",
+          width: "1130px",
+          maxWidth: "90%",
+          boxShadow: "0px 0px 16.9px 0px rgba(219,242,254,1)",
+          border: "2px solid rgba(231,232,236,1)",
+          minHeight: "450px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {localShowConfetti && <Confetti />}
+
+        <div>
+          <img
+            src={wordheadingimg}
+            alt="Bingo Puzzle"
+            style={{ height: "38px", objectFit: "contain", marginTop: "40px" }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "40px",
+            marginBottom: "10px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "50px",
+                fontWeight: "700",
+                color: "rgba(51,63,97,1)",
+                textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+              }}
+            >
+              {currentWord}
+            </span>
+          </div>
+
+          <div
+            style={{
+              marginTop: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+          >
+            <VoiceAnalyser
+              key={`voice-${currentWordIndex}`}
+              pageName={"wordsorimage"}
+              setVoiceText={setVoiceText}
+              updateStoredData={updateStoredData}
+              setRecordedAudio={setRecordedAudio}
+              setVoiceAnimate={setVoiceAnimate}
+              storyLine={storyLine}
+              originalText={currentWord}
+              handleNext={handleNextWord}
+              enableNext={enableNext}
+              isShowCase={isShowCase || isDiscover}
+              handleRecordingComplete={handleRecordingComplete}
+              handleStartRecording={handleStartRecording}
+              handleStopRecording={handleStopRecording}
+              audioLink={transformed?.imageAudioMap?.[currentWord]?.audio}
+              noOffline={true}
+              isNextButtonCalled={localIsNextButtonCalled}
+              setIsNextButtonCalled={setLocalIsNextButtonCalled}
+              setEnableNext={setEnableNext}
+              autoStart={false}
+              showAnimation={false}
+              contentId={contentId}
+              contentType={contentType}
+              currentLine={currentStep - 1}
+              playTeacherAudio={playTeacherAudio}
+              callUpdateLearner={callUpdateLearner}
+              setOpenMessageDialog={setOpenMessageDialog}
+            />
+
+            {/* Next Button - Only show after recording is completed */}
+            {/* {isRecordingDone && (
+            <div 
+              style={{
+                marginTop: "20px",
+                cursor: "pointer",
+                transition: "transform 0.2s ease"
+              }}
+              onClick={handleNextWord}
+              onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+              onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+            >
+              <img 
+                src={nextimg} 
+                alt="next" 
+                style={{ 
+                  width: "80px", 
+                  height: "40px",
+                }} 
+              />
+              <div style={{
+                fontSize: "12px",
+                color: "rgba(51,63,97,0.7)",
+                marginTop: "5px"
+              }}>
+                Next Word
+              </div>
+            </div>
+          )} */}
+          </div>
+        </div>
+
+        <div style={{ position: "absolute", bottom: "-30px", left: "-35px" }}>
+          <img
+            src={bearimg}
+            alt="bear"
+            style={{ width: "150px", height: "200px" }}
+          />
+        </div>
+
+        {localShowConfetti && (
+          <img
+            src={bearrdanceimg}
+            alt="bear dancing"
+            style={{
+              position: "absolute",
+              bottom: "-42px",
+              left: "40%",
+              transform: "translateX(-50%)",
+              height: "200px",
+              animation: "jump 1.3s ease-in-out infinite",
+              userSelect: "none",
+              pointerEvents: "none",
+              zIndex: 1000,
+            }}
+            draggable={false}
+          />
+        )}
+      </div>
+    );
+  }
+);
+
+const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
+  console.log("SuccessPage rendering");
+
+  return (
+    <div
+      style={{
+        backgroundColor: "#fff",
+        borderRadius: "20px",
+        padding: "40px 60px",
+        textAlign: "center",
+        position: "relative",
+        width: "1130px",
+        maxWidth: "90%",
+        boxShadow: "0px 0px 16.9px 0px rgba(219,242,254,1)",
+        border: "2px solid rgba(231,232,236,1)",
+        backgroundImage: `url(${starbackgroundimg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "450px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: "70px",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <img
+          src={beariconimg}
+          alt="bear icon"
+          style={{ width: "80px", height: "80px" }}
+        />
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          top: "150px",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "32px",
+            fontWeight: "700",
+            color: "rgba(255, 127, 54, 1)",
+            margin: 0,
+            textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+          }}
+        >
+          Well done!
+        </h1>
+      </div>
+
+      <div
+        style={{
+          position: "relative",
+          width: "100px",
+          height: "100px",
+          marginTop: "60px",
+          marginBottom: "30px",
+        }}
+      >
+        <img
+          src={starimg}
+          alt="star"
+          style={{ width: "100%", height: "100px", objectFit: "contain" }}
+        />
+        <span
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontSize: "26px",
+            fontWeight: "700",
+            color: "#181414ff",
+            textShadow: "1px 1px 3px rgba(0,0,0,0.5)",
+          }}
+        >
+          {score}
+        </span>
+      </div>
+
+      <div style={{ marginBottom: "10px" }}>
+        <p
+          style={{
+            fontSize: "18px",
+            fontWeight: "600",
+            color: "rgba(51, 63, 97, 1)",
+            margin: 0,
+          }}
+        >
+          You found {completedPairs.length} words
+        </p>
+      </div>
+
+      <div style={{ marginTop: "10px" }}>
+        <img
+          src={nextimg}
+          alt="next"
+          style={{
+            width: "100px",
+            height: "45px",
+            cursor: "pointer",
+          }}
+          onClick={onNext}
+        />
+      </div>
+
+      <div style={{ position: "absolute", bottom: "-37px", left: "-26px" }}>
+        <img
+          src={bearclapimg}
+          alt="bear clapping"
+          style={{ width: "150px", height: "160px" }}
+        />
+      </div>
+    </div>
+  );
+});
 
 const BingoCard = ({
   setVoiceText,
@@ -105,7 +525,7 @@ const BingoCard = ({
   const [showNextButton, setShowNextButton] = useState(false);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [showInitialEffect, setShowInitialEffect] = useState(false);
-  const [startGame, setStartGame] = useState(true);
+  const [startGame, setStartGame] = useState(false);
   const [showRecording, setShowRecording] = useState(false);
   const [abusiveFound, setAbusiveFound] = useState(false);
   const [detectedWord, setDetectedWord] = useState("");
@@ -121,7 +541,85 @@ const BingoCard = ({
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
   const [transformed, setTransformed] = useState(null);
-  const correctPracticeWords = getLocalData("correctPracticeWords");
+
+  // New UI states
+  const [selected, setSelected] = useState([]);
+  const [correct, setCorrect] = useState([]);
+  const [completedPairs, setCompletedPairs] = useState([]);
+  const [wrongPair, setWrongPair] = useState([]);
+  const [score, setScore] = useState(0);
+  const [matchedPair, setMatchedPair] = useState(null);
+  const [showSuccessPage, setShowSuccessPage] = useState(false);
+  const [currentHintPair, setCurrentHintPair] = useState(null);
+  const [showFlyingStar, setShowFlyingStar] = useState(false);
+  const [disabledWords, setDisabledWords] = useState([]);
+  const [showBingoPage, setShowBingoPage] = useState(true);
+  const [current, setCurrent] = useState(0);
+  const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
+
+  const validPairs = {
+    sun: ["su", "n"],
+    zoo: ["zo", "o"],
+    zip: ["zi", "p"],
+    leg: ["le", "g"],
+    day: ["da", "y"],
+    railway: ["rail", "way"],
+    cow: ["c", "ow"],
+    out: ["ou", "t"],
+    joy: ["jo", "y"],
+    saw: ["sa", "w"],
+    water: ["wat", "er"],
+    brother: ["brot", "her"],
+    ear: ["ea", "r"],
+    hair: ["ha", "ir"],
+    sunset: ["sun", "set"],
+    lazy: ["la", "zy"],
+    onion: ["oni", "on"],
+    ray: ["ra", "y"],
+    lemon: ["le", "mon"],
+    coffee: ["cof", "fee"],
+    ಅಂಗಡಿ: ["ಅಂಗ", "ಡಿ"],
+    ಕಿಟಕಿ: ["ಕಿ", "ಟಕಿ"],
+    ರೂಪಾಯಿ: ["ರೂ", "ಪಾಯಿ"],
+    ದಿನಾಂಕ: ["ದಿನಾಂ", "ಕ"],
+    ಜೋಕಾಲಿ: ["ಜೋ", "ಕಾಲಿ"],
+    ಮೂಸಂಬಿ: ["ಮೂ", "ಸಂಬಿ"],
+    ಮೃಗಾಲಯ: ["ಮೃಗಾ", "ಲಯ"],
+    ಬೆಂಗಳೂರು: ["ಬೆಂಗ", "ಳೂರು"],
+    ಮಹಾರಾಜ: ["ಮಹಾ", "ರಾಜ"],
+    ಅಜ್ಜ: ["ಅ", "ಜ್ಜ"],
+    ಶಿಲ್ಪಿ: ["ಶಿ", "ಲ್ಪಿ"],
+    ಜಾತ್ರೆ: ["ಜಾ", "ತ್ರೆ"],
+    ಸೂರ್ಯ: ["ಸೂ", "ರ್ಯ"],
+    ಧಾನ್ಯ: ["ಧಾ", "ನ್ಯ"],
+    ಅಕ್ಷರ: ["ಅ", "ಕ್ಷರ"],
+    ಶಿಕ್ಷಕಿ: ["ಶಿ", "ಕ್ಷಕಿ"],
+    ಕಬ್ಬಿಣ: ["ಕ", "ಬ್ಬಿಣ"],
+    ಗುದ್ದಲಿ: ["ಗು", "ದ್ದಲಿ"],
+    ಪುಸ್ತಕ: ["ಪು", "ಸ್ತಕ"],
+    ತುತ್ತೂರಿ: ["ತುತ್ತೂ", "ರಿ"],
+
+    సంతోషం: ["సం", "తోషం"],
+    బంగారం: ["బం", "గారం"],
+    గులాబీ: ["గులా", "బీ"],
+    కాగితం: ["కా", "గితం"],
+    మైదాకు: ["మై", "దాకు"],
+    చామంతి: ["చా", "మంతి"],
+    బాలుడు: ["బా", "లుడు"],
+    చదరంగం: ["చద", "రంగం"],
+    తేనెటీగ: ["తేనె", "టీగ"],
+    పెదవులు: ["పెద", "వులు"],
+    చక్రం: ["చ", "క్రం"],
+    చుక్క: ["చు", "క్క"],
+    పండ్లు: ["పం", "డ్లు"],
+    అమ్మ: ["అ", "మ్మ"],
+    కాళ్ళు: ["కా", "ళ్ళు"],
+    పుష్పం: ["పు", "ష్పం"],
+    నవ్వు: ["న", "వ్వు"],
+    కొబ్బరి: ["కొబ్బ", "రి"],
+    కట్టడం: ["కట్ట", "డం"],
+    ఉయ్యాల: ["ఉయ్యా", "ల"],
+  };
 
   useEffect(() => {
     if (parentWords && parentWords.imageAudioMap) {
@@ -140,13 +638,7 @@ const BingoCard = ({
     }
   }, [parentWords]);
 
-  //console.log(transformed);
-
-  //console.log('words', transformed);
-
   let progressDatas = getLocalData("practiceProgress");
-  //const virtualId = String(getLocalData("virtualId"));
-
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
   }
@@ -157,21 +649,16 @@ const BingoCard = ({
   }
 
   const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
-
   let apiLevel = `M${level}-${currentLevel}`;
 
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
-    //console.log("Live Transcript:", transcript);
 
     if (transcript) {
       const filteredText = filterBadWords(transcript, language);
-      //console.log("filteredText", filteredText);
-
       if (filteredText.includes("*")) {
         const count = parseInt(getLocalData("profanityCheck") || "0");
-
         if (count > 2) {
           setOpenMessageDialog({
             open: true,
@@ -180,9 +667,7 @@ const BingoCard = ({
             isError: true,
           });
         }
-
         stopRecording();
-
         setLocalData("profanityCheck", (count + 1).toString());
       }
     }
@@ -190,7 +675,6 @@ const BingoCard = ({
 
   const [wordsAfterSplit, setWordsAfterSplit] = useState([]);
   const [recAudio, setRecAudio] = useState("");
-
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -215,7 +699,7 @@ const BingoCard = ({
   function sanitize(text) {
     return text
       .toLowerCase()
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"\[\]'’]/g, "")
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"\[\]'']/g, "")
       .replace(/\s{2,}/g, " ")
       .trim();
   }
@@ -228,90 +712,82 @@ const BingoCard = ({
 
   const mimeType = "audio/webm;codecs=opus";
 
-  const startAudioRecording = useCallback(async (word) => {
-    setRecordedBlob(null);
-    recordedChunksRef.current = [];
+  const startAudioRecording = useCallback(
+    async (word) => {
+      setRecordedBlob(null);
+      recordedChunksRef.current = [];
 
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        console.error("MIME type not supported:", mimeType);
-        return;
-      }
-
-      const mediaRecorder = new MediaRecorder(stream, { mimeType });
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          recordedChunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        if (recordedChunksRef.current.length === 0) {
-          console.warn("No audio data captured.");
-          setRecordedBlob(null);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+        if (!MediaRecorder.isTypeSupported(mimeType)) {
+          console.error("MIME type not supported:", mimeType);
           return;
         }
 
-        const blob = new Blob(recordedChunksRef.current, { type: mimeType });
-        setRecordedBlob(blob);
-        recordedChunksRef.current = [];
+        const mediaRecorder = new MediaRecorder(stream, { mimeType });
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunksRef.current.push(event.data);
+          }
+        };
 
-        try {
-          setIsLoading(true);
-          const transcriber = await loadTranscriber();
-          console.log("Transcriber is:", transcriber);
-          const audioUrl = URL.createObjectURL(blob);
-          const output = await transcriber(audioUrl, {
-            chunk_length_s: 20,
-            stride_length_s: 5,
-            task: "transcribe",
-            language: "en",
-          });
-
-          const transcripts = sanitize(output.text);
-
-          console.log("Transcribsss", transcripts, word);
-
-          const isCorrect =
-            transcripts.includes(word) || phoneticMatch(transcripts, word);
-
-          console.log("Transcription resultss 1:", transcripts);
-          console.log("Transcription resultss 2:", word, isCorrect);
-
-          if (language === "kn") {
-            const knLatin = transliterateKannadaToLatin(word);
-            const comparison = compareWords(transcripts, knLatin);
-            setIsWordCorrect(comparison?.isFine);
-          } else {
-            setIsWordCorrect(isCorrect);
+        mediaRecorder.onstop = async () => {
+          if (recordedChunksRef.current.length === 0) {
+            console.warn("No audio data captured.");
+            setRecordedBlob(null);
+            return;
           }
 
-          setIsLoading(false);
-          // setStatus("inactive");
-        } catch (error) {
-          console.error("Transcription error:", error);
-          setIsLoading(false);
-          setIsWordCorrect(false);
-          // setStatus("inactive");
-          // props.setIsCorrect?.(false);
-        }
-      };
+          const blob = new Blob(recordedChunksRef.current, { type: mimeType });
+          setRecordedBlob(blob);
+          recordedChunksRef.current = [];
 
-      mediaRecorderRef.current = mediaRecorder;
-      mediaRecorder.start(100); // Emit data every 100ms
-      setIsRecording(true);
-    } catch (err) {
-      console.error("Error starting audio recording:", err);
-    }
-  }, []);
+          try {
+            setIsLoading(true);
+            const transcriber = await loadTranscriber();
+            const audioUrl = URL.createObjectURL(blob);
+            const output = await transcriber(audioUrl, {
+              chunk_length_s: 20,
+              stride_length_s: 5,
+              task: "transcribe",
+              language: "en",
+            });
+
+            const transcripts = sanitize(output.text);
+            const isCorrect =
+              transcripts.includes(word) || phoneticMatch(transcripts, word);
+
+            if (language === "kn") {
+              const knLatin = transliterateKannadaToLatin(word);
+              const comparison = compareWords(transcripts, knLatin);
+              setIsWordCorrect(comparison?.isFine);
+            } else {
+              setIsWordCorrect(isCorrect);
+            }
+            setIsLoading(false);
+          } catch (error) {
+            console.error("Transcription error:", error);
+            setIsLoading(false);
+            setIsWordCorrect(false);
+          }
+        };
+
+        mediaRecorderRef.current = mediaRecorder;
+        mediaRecorder.start(100);
+        setIsRecording(true);
+      } catch (err) {
+        console.error("Error starting audio recording:", err);
+      }
+    },
+    [language]
+  );
 
   const stopAudioRecording = useCallback(() => {
     const recorder = mediaRecorderRef.current;
     if (recorder && recorder.state !== "inactive") {
-      recorder.requestData(); // Flush remaining data
+      recorder.requestData();
       recorder.stop();
       setIsRecording(false);
     }
@@ -334,7 +810,6 @@ const BingoCard = ({
     const responseStartTime = new Date().getTime();
     let responseText = "";
     const base64Data = await blobToBase64(recordedBlob);
-    //console.log("bvlobss", recordedBlob);
 
     await callTelemetryApi(
       transformed?.arrM?.[currentWordIndex],
@@ -351,7 +826,6 @@ const BingoCard = ({
     const interval = setInterval(() => {
       setScale((prev) => (prev === 1 ? 1.2 : 1));
     }, 500);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -365,17 +839,11 @@ const BingoCard = ({
     } else {
       setShowWrongTick(true);
     }
-
     return () => clearTimeout(timer);
   }, [showWrongWord]);
 
   const startRecording = (word, isSelected) => {
-    //console.log('recs', recognition);
     if (isChrome) {
-      // if (!browserSupportsSpeechRecognition) {
-      //   //alert("Speech recognition is not supported in your browser.");
-      //   return;
-      // }
       resetTranscript();
       startAudioRecording(word);
       setAbusiveFound(false);
@@ -401,9 +869,6 @@ const BingoCard = ({
       setIsProcessing(false);
       setAbusiveFound(false);
     } else {
-      // if (recognition) {
-      //   recognition.stop();
-      // }
       setIsProcessing(true);
     }
     setIsRecording(false);
@@ -419,7 +884,6 @@ const BingoCard = ({
 
     setTimeout(() => {
       setShowCoinsImg(true);
-
       setTimeout(() => {
         setShowEmptyImg(true);
         setShowNextButton(true);
@@ -438,288 +902,235 @@ const BingoCard = ({
     }, 3000);
   };
 
-  // useEffect(() => {
-  //   if (isRecording && recognition && recognition.state !== "recording") {
-  //     recognition.start();
-  //   }
-  // }, [isRecording, recognition]);
-
-  // useEffect(() => {
-  //   if (!isChrome) {
-  //     initializeRecognition();
-  //   }
-  // }, []);
-
-  //console.log("loggslevel", currentLevel, currentPracticeStep);
-
   useEffect(() => {
-    setShowHint(false);
-    setHideButtons(false);
-    setSelectedWords([]);
-    setWinEffect(false);
-    setCoins(0);
-    setShowWrongWord(false);
-    setHighlightCorrectWords(false);
-    setHighlightedButtonIndex(-1);
-    setShowCoinsImg(false);
-    setShowEmptyImg(false);
-    setHideCoinsImg(false);
-    setShowConfetti(false);
-    setShowNextButton(false);
-    setCurrentWordIndex(0);
-    setShowInitialEffect(false);
-    setStartGame(true);
-    setShowRecording(false);
-    setShowWrongTick(true);
-    setWordsAfterSplit([]);
-    setRecAudio("");
-    setIsRecordingComplete(false);
-    setIsRecording(false);
-    setIsProcessing(false);
-    setCurrentWord("");
-    setCurrentIsSelected(false);
-    setRecognition(null);
-    setSelectedWordsNew([]);
-    setIncorrectWords({});
-    setIsMicOn(false);
-    setSyllAudios([]);
-    setIsPlaying(false);
-    setScale(1);
+    if (currentLevel) {
+      setCurrentWordIndex(0);
+      setScore(0);
+      setShowBingoPage(false);
+      setShowSuccessPage(false);
+    }
   }, [currentLevel]);
+
+  const updateStoredData = useCallback((audio, isCorrect) => {}, []);
+
+  const handleRecordingComplete = useCallback((base64Data) => {
+    if (base64Data) {
+      setIsRecordingComplete(true);
+      setRecAudio(base64Data);
+    } else {
+      setIsRecordingComplete(false);
+      setRecAudio(null);
+    }
+  }, []);
+
+  const handleStartRecording = useCallback(() => {
+    setRecAudio(null);
+  }, []);
+
+  const handleStopRecording = useCallback(() => {
+    setRecAudio(true);
+  }, []);
 
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
-
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // const currentData =
-  //   transformed?.imageAudioMap[
-  //     transformed?.arrM[currentWordIndex]
-  //   ];
-
   const currentData =
     transformed?.imageAudioMap?.[transformed?.arrM?.[currentWordIndex]];
-
   const currentImage = currentData?.image;
 
-  const startAudio = (index) => {
-    const currentData = transformed?.imageAudioMap[transformed?.arrM[index]];
-    const audio = new Audio(currentData?.audio);
-    audio
-      .play()
-      .then(() => {
+  const startAudio = useCallback(
+    (index) => {
+      const currentWord = transformed?.arrM?.[index];
+      const currentData = transformed?.imageAudioMap?.[currentWord];
+      if (currentData?.audio) {
+        const audio = new Audio(currentData.audio);
+        audio
+          .play()
+          .then(() => {
+            setShowInitialEffect(true);
+            audio.onended = () => {
+              setShowInitialEffect(false);
+            };
+          })
+          .catch((error) => console.error("Audio play failed:", error));
+        setStartGame(false);
         setShowInitialEffect(true);
-        audio.onended = () => {
-          setShowInitialEffect(false);
-        };
-      })
-      .catch((error) => console.error("Audio play failed:", error));
-    setStartGame(false);
-    setShowInitialEffect(true);
-  };
+      }
+    },
+    [transformed]
+  );
 
-  const handleHintClick = () => {
+  const getCurrentWordParts = useCallback(() => {
+    const currentWord = transformed?.arrM?.[currentWordIndex];
+    return validPairs[currentWord] || [];
+  }, [transformed, currentWordIndex]);
+
+  const correctPairs = useMemo(() => {
+    return (
+      transformed?.arrM
+        ?.map((fullWord) => {
+          const parts = validPairs[fullWord];
+          return parts
+            ? {
+                fullWord,
+                parts,
+                hintImage: transformed?.imageAudioMap[fullWord]?.image,
+              }
+            : null;
+        })
+        .filter(Boolean) || []
+    );
+  }, [transformed]);
+
+  const handleHintClick = useCallback(() => {
+    const currentWord = transformed?.arrM?.[currentWordIndex];
+    if (currentWord) {
+      setCurrentHintPair({
+        fullWord: currentWord,
+        parts: validPairs[currentWord],
+        hintImage: transformed?.imageAudioMap[currentWord]?.image,
+      });
+    }
+
     setShowHint(true);
-    setHideButtons(true);
     setTimeout(() => {
       setShowHint(false);
-      setHideButtons(false);
-    }, 2500);
-  };
+    }, 2000);
+  }, [transformed, currentWordIndex]);
 
-  useEffect(() => {
-    transformed?.words?.forEach((_, index) => {
-      setTimeout(() => {
-        setHighlightedButtonIndex(index);
-      }, index * 500);
-    });
+  const handleWordClick = useCallback(
+    (word) => {
+      if (correct.includes(word) || showNextButton || showSuccessPage) return;
+      if (selected.includes(word)) return;
 
-    setTimeout(() => {
-      setHighlightedButtonIndex(-1);
-    }, transformed?.words?.length * 500);
+      const newSelected = [...selected, word];
+      setSelected(newSelected);
+
+      if (newSelected.length === 2) {
+        const currentWord = transformed?.arrM?.[currentWordIndex];
+        const requiredParts = validPairs[currentWord] || [];
+
+        const isCorrectPair =
+          newSelected.length === requiredParts.length &&
+          requiredParts.every((part) => newSelected.includes(part));
+
+        if (isCorrectPair) {
+          setMatchedPair({ fullWord: currentWord, parts: requiredParts });
+
+          setTimeout(() => setShowConfetti(true), 500);
+
+          setTimeout(() => {
+            setShowConfetti(false);
+            setShowFlyingStar(true);
+
+            setTimeout(() => {
+              setShowFlyingStar(false);
+              const newScore = score + 1;
+              setScore(newScore);
+
+              if (newScore === correctPairs.length) {
+                setShowNextButton(true);
+              }
+            }, 2000);
+          }, 3500);
+
+          setTimeout(() => {
+            setShowNextButton(true);
+            setCorrect((prev) => [...prev, ...newSelected]);
+            setCompletedPairs((prev) => [...prev, currentWord]);
+            setCurrentHintPair(null);
+          }, 3500);
+        } else {
+          setWrongPair(newSelected);
+          setTimeout(() => {
+            setWrongPair([]);
+            setSelected([]);
+          }, 2000);
+        }
+      }
+    },
+    [
+      correct,
+      showNextButton,
+      showSuccessPage,
+      selected,
+      transformed,
+      currentWordIndex,
+      score,
+      correctPairs.length,
+    ]
+  );
+
+  const handleNextClick = useCallback(() => {
+    if (currentWordIndex < transformed?.arrM.length - 1) {
+      setCurrentWordIndex(currentWordIndex + 1);
+      setShowNextButton(false);
+      setShowHint(false);
+      setSelected([]);
+      setWrongPair([]);
+      setMatchedPair(null);
+      setCurrentHintPair(null);
+      setShowConfetti(false);
+      setShowFlyingStar(false);
+
+      //startAudio(currentWordIndex + 1);
+
+      if (score >= 5) {
+        setShowSuccessPage(true);
+      }
+    } else {
+      if (score >= 5) {
+        setShowSuccessPage(true);
+      }
+    }
+  }, [currentWordIndex, transformed, score, startAudio]);
+
+  const handleSuccessNextClick = useCallback(() => {
+    setShowBingoPage(true);
+    setShowSuccessPage(false);
   }, []);
 
-  const getSize = () =>
-    screenWidth < 480 ? "40px" : screenWidth < 768 ? "53px" : "65px";
-
-  const handleWordClick = (word) => {
-    // if (!selectedWords.includes(word)) {
-    //   const updatedWords = [...selectedWords, word];
-    //   setSelectedWords(updatedWords);
-    // }
-
-    let updatedWords;
-
-    if (selectedWords.includes(word)) {
-      updatedWords = selectedWords.filter((w) => w !== word);
-      setSelectedWords(updatedWords);
-    } else {
-      updatedWords = [...selectedWords, word];
-      setSelectedWords(updatedWords);
+  useEffect(() => {
+    if (score >= 5) {
+      setShowSuccessPage(true);
     }
+  }, [score]);
 
-    const validPairs = {
-      MANGO: ["MAN", "GO"],
-      WATER: ["WA", "TER"],
-      MOTHER: ["MO", "THER"],
-      FATHER: ["FA", "THER"],
-      PENCIL: ["PEN", "CIL"],
-      DOCTOR: ["DOC", "TOR"],
-      MARKET: ["MAR", "KET"],
-      BASKET: ["BAS", "KET"],
-      TABLE: ["TA", "BLE"],
-      WINDOW: ["WIN", "DOW"],
-      POCKET: ["POCK", "ET"],
-      WINDOW: ["WIN", "DOW"],
-      CRICKET: ["CRICK", "ET"],
-      BALLOON: ["BAL", "LOON"],
-      GARDEN: ["GAR", "DEN"],
-      CANDLE: ["CAN", "DLE"],
-      SCOOTER: ["SCOO", "TER"],
-      CYCLE: ["CY", "CLE"],
-      FLOWER: ["FLOW", "ER"],
-      MUSIC: ["MUS", "IC"],
-      PUPPY: ["PUP", "PY"],
-      STUDENT: ["STU", "DENT"],
-      PAPER: ["PA", "PER"],
-      कद: ["क", "द"],
-      गगन: ["ग", "गन"],
-      गायक: ["गाय", "क"],
-      औरत: ["औ", "रत"],
-      टायर: ["टा", "यर"],
-      मटर: ["म", "टर"],
-      पलंग: ["प", "लंग"],
-      मटका: ["मट", "का"],
-      मंदिर: ["मं", "दिर"],
-      कददू: ["क", "ददू"],
-      TEACHER: ["TEA", "CHER"],
-      CHERRY: ["CHE", "RRY"],
-      DRAGONFLY: ["DRAG", "ONFLY"],
-      WOOLLEN: ["WOO", "LLEN"],
-      FOOTPATH: ["FOOT", "PATH"],
-      CHOCOLATE: ["CHOCO", "LATE"],
-      SPROUT: ["SPR", "OUT"],
-      CLOWN: ["CL", "OWN"],
-      UTENSILS: ["UTEN", "SILS"],
-      HANDKERCHIEF: ["HANDKE", "RCHIEF"],
-      FLOWERS: ["FLO", "WERS"],
-      MOUNTAINS: ["MOUN", "TAINS"],
-      THINKING: ["THIN", "KING"],
-      SUGAR: ["SU", "GAR"],
-      CHAIR: ["CH", "AIR"],
-      TEETH: ["TE", "ETH"],
-      CLOUDS: ["CLO", "UDS"],
-      BOOK: ["BO", "OK"],
-      KITCHEN: ["KIT", "CHEN"],
-      MOUTH: ["MO", "UTH"],
-      मोबाइल: ["मो", "बाइल"],
-      बंदगोभी: ["बंद", "गोभी"],
-      मिर्च: ["मि", "र्च"],
-      मस्जिद: ["मस", "जिद"],
-      मूँगफली: ["मूँग", "फली"],
-      मच्छर: ["मच्छ", "र"],
-      डॉक्टर: ["डॉ", "क्टर"],
-      खेलकूद: ["खेल", "कूद"],
-      पुष्प: ["पु", "ष्प"],
-      स्कूटर: ["स्कू", "टर"],
-      सर्कस: ["सर्क", "स"],
-      हेलमेट: ["हेल", "मेट"],
-      गुब्बारा: ["गुब्बा", "रा"],
-      कृष्ण: ["कृ", "ष्ण"],
-      टोकरी: ["बास", "केट"],
-      गुलाब: ["गु", "लाब"],
-      शरबत: ["शर", "बत"],
-      மூன்று: ["மூன", "்று"],
-      தொப்பி: ["தொப", "்பி"],
-      சீப்பு: ["சீப", "்பு"],
-      பேருந்து: ["பேரு", "ந்து"],
-      சட்டை: ["சட", "்டை"],
-      உப்பு: ["உப", "்பு"],
-      நாற்காலி: ["நாற்", "காலி"],
-      ரொட்டி: ["ரொட", "்டி"],
-      கொய்யா: ["கொய", "்யா"],
-      வெள்ளாடு: ["வெள்", "ளாடு"],
-      முட்டை: ["முட", "்டை"],
-      பாம்பு: ["பாம", "்பு"],
-      நண்டு: ["நண", "்டு"],
-      கத்தி: ["கத", "்தி"],
-      நாக்கு: ["நாக", "்கு"],
-      பொம்மை: ["பொம", "்மை"],
-      செருப்பு: ["செரு", "ப்பு"],
-      ஆந்தை: ["ஆந", "்தை"],
-      மூக்கு: ["மூக", "்கு"],
-      தட்டு: ["தட", "்டு"],
-      ಗಡಿಯಾರ: ["ಗಡಿ", "ಯಾರ"],
-      ತರಕಾರಿ: ["ತರ", "ಕಾರಿ"],
-      ಚಳಿಗಾಲ: ["ಚಳಿ", "ಗಾಲ"],
-      ಗಾಳಿಪಟ: ["ಗಾಳಿ", "ಪಟ"],
-      ಗುಡಿಸಲು: ["ಗುಡಿ", "ಸಲು"],
-      ಕಂಠಹಾರ: ["ಕಂಠ", "ಹಾರ"],
-      ದಾಸವಾಳ: ["ದಾಸ", "ವಾಳ"],
-      ಪಾರಿವಾಳ: ["ಪಾರಿ", "ವಾಳ"],
-      ಅನಾನಸ್: ["ಅನಾ", "ನಸ್"],
-      ಸಿಹಿತಿಂಡಿ: ["ಸಿಹಿ", "ತಿಂಡಿ"],
-      ಕತ್ತರಿ: ["ಕತ್ತ", "ರಿ"],
-      ಕತ್ತೆ: ["ಕ", "ತ್ತೆ"],
-      ಈರುಳ್ಳಿ: ["ಈರು", "ಳ್ಳಿ"],
-      ಪಪ್ಪಾಯಿ: ["ಪ", "ಪ್ಪಾಯಿ"],
-      ಉಣ್ಣೆ: ["ಉ", "ಣ್ಣೆ"],
-      ಚಾಕೋಲೇಟು: ["ಚಾಕೋ", "ಲೇಟು"],
-      ಚಿಟ್ಟೆ: ["ಚಿ", "ಟ್ಟೆ"],
-      ರೊಟ್ಟಿ: ["ರೊ", "ಟ್ಟಿ"],
-      ಬೆಕ್ಕು: ["ಬೆ", "ಕ್ಕು"],
-      ಬಾತುಕೋಳಿ: ["ಬಾತು", "ಕೋಳಿ"],
-      రచయిత: ["రచ", "యిత"],
-      గాలిపటం: ["గాలి", "పటం"],
-      చలికాలం: ["చలి", "కాలం"],
-      ఊరగాయ: ["ఊర", "గాయ"],
-      గడియారం: ["గడి", "యారం"],
-      పాలకూర: ["పాల", "కూర"],
-      బటానీలు: ["బటా", "నీలు"],
-      కనుబొమ: ["కను", "బొమ"],
-      దోసకాయ: ["దోస", "కాయ"],
-      మానవుడు: ["మాన", "వుడు"],
-      సైనికుడు: ["సై", "నికుడు"],
-      తాళంచెవి: ["తాళం", "చెవి"],
-      ముగ్గు: ["ము", "గ్గు"],
-      కన్ను: ["క", "న్ను"],
-      జుట్టు: ["జుట్", "టు"],
-      చెట్టు: ["చెట్", "టు"],
-      తేనెటీగ: ["తేనె", "టీగ"],
-      పన్ను: ["పన్", "ను"],
-      ముక్కు: ["ముక్", "కు"],
-      చొక్కా: ["చోక్", "కా"],
-      ಪಾರಿಜಾತ: ["ಪಾರಿ", "ಜಾತ"],
-    };
+  const getButtonStyle = useCallback(
+    (word) => {
+      if (correct.includes(word))
+        return {
+          backgroundColor: "#F8FBFF",
+          color: "rgba(51,63,97,0.3)",
+          opacity: 0.9,
+          pointerEvents: "none",
+          boxShadow: "0px 0px 10px rgba(219,242,254,1)",
+        };
+      if (wrongPair.includes(word))
+        return { backgroundColor: "rgba(255,127,54,1)", color: "#fff" };
+      if (selected.includes(word)) {
+        const currentWord = transformed?.arrM?.[currentWordIndex];
+        const requiredParts = validPairs[currentWord] || [];
+        if (requiredParts.includes(word))
+          return { backgroundColor: "rgba(76,175,80,1)", color: "#fff" };
+        return { backgroundColor: "rgba(28,176,246,1)", color: "#fff" };
+      }
+      return { backgroundColor: "#F8FBFF", color: "rgba(51,63,97,1)" };
+    },
+    [correct, wrongPair, selected, transformed, currentWordIndex]
+  );
 
-    const currentWord = transformed?.arrM[currentWordIndex];
+  const getHintImage = useCallback(() => {
+    const currentWord = transformed?.arrM?.[currentWordIndex];
+    return transformed?.imageAudioMap?.[currentWord]?.image;
+  }, [transformed, currentWordIndex]);
 
-    // const isCorrectPair = validPairs[currentWord]?.every((part) =>
-    //   updatedWords.includes(part)
-    // );
-
-    const requiredParts = validPairs[currentWord] || [];
-
-    const isCorrectPair =
-      updatedWords.length === requiredParts.length &&
-      requiredParts.every((part) => updatedWords.includes(part));
-
-    if (isCorrectPair) {
-      setShowRecording(true);
-    } else if (updatedWords.length >= requiredParts.length && !winEffect) {
-      setShowHint(false);
-      setShowWrongWord(true);
-      const audio = new Audio(wrongSound);
-      audio.play();
-    }
-  };
-
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setShowHint(false);
     setHideButtons(false);
     setSelectedWords([]);
@@ -732,10 +1143,17 @@ const BingoCard = ({
     setShowConfetti(false);
     setShowNextButton(false);
     setShowInitialEffect(true);
-    startAudio(currentWordIndex);
-  };
 
-  const retry = () => {
+    setSelected([]);
+    setCorrect([]);
+    setWrongPair([]);
+    setMatchedPair(null);
+    setCurrentHintPair(null);
+
+    //startAudio(currentWordIndex);
+  }, [currentWordIndex, startAudio]);
+
+  const retry = useCallback(() => {
     setShowHint(false);
     setHideButtons(false);
     setSelectedWords([]);
@@ -748,50 +1166,230 @@ const BingoCard = ({
     setShowConfetti(false);
     setShowNextButton(false);
     setShowInitialEffect(true);
-  };
+
+    setSelected([]);
+    setWrongPair([]);
+    setMatchedPair(null);
+    setCurrentHintPair(null);
+  }, []);
 
   useEffect(() => {
     if (showEmptyImg) {
       const timer = setTimeout(() => {
         setHideCoinsImg(true);
       });
-
       return () => clearTimeout(timer);
     }
   }, [showEmptyImg]);
 
-  const handleNextButton = () => {
-    const newWordData = {
-      original_text: transformed?.arrM?.[currentWordIndex],
-      content_id: contentId,
-      milestone_level: "m1",
-      practice_level: currentLevel,
-      session_id: sessionId,
-      practiced: true,
-      learned: isWordCorrect ? true : false,
-      subsession_id: "session_123",
-    };
-
-    setLocalData("correctPracticeWords", [
-      ...(correctPracticeWords || []),
-      newWordData,
-    ]);
-
-    if (currentWordIndex < transformed?.arrM.length - 1) {
-      callTelemetry();
-      setCurrentWordIndex(currentWordIndex + 1);
+  useEffect(() => {
+    if (
+      transformed?.arrM &&
+      currentWordIndex < transformed.arrM.length &&
+      !showBingoPage
+    ) {
+      setSelected([]);
       setShowNextButton(false);
+      setShowSuccessPage(false);
       setShowHint(false);
-      setSelectedWords([]);
-      setShowEmptyImg(false);
-      setShowCoinsImg(false);
-      startAudio(currentWordIndex + 1);
-      handleNext();
-    } else {
-      callTelemetry();
-      handleNext();
+      setShowConfetti(false);
+      setShowFlyingStar(false);
+      setMatchedPair(null);
+      setCurrentHintPair(null);
+      setWrongPair([]);
+      setStartGame(true);
+
+      const timer = setTimeout(() => {
+        //startAudio(currentWordIndex);
+      }, 500);
+
+      return () => clearTimeout(timer);
     }
-  };
+  }, [currentWordIndex, transformed, showBingoPage, startAudio]);
+
+  const GamePage = useMemo(() => {
+    return () => (
+      <div
+        style={{
+          backgroundColor: "#fff",
+          borderRadius: "20px",
+          padding: "40px 60px",
+          textAlign: "center",
+          position: "relative",
+          width: "1130px",
+          maxWidth: "90%",
+          boxShadow: "0px 0px 16.9px 0px rgba(219,242,254,1)",
+          border: "2px solid rgba(231,232,236,1)",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: "63px",
+            right: "30px",
+            width: "70px",
+            height: "70px",
+          }}
+        >
+          <img
+            src={starimg}
+            alt="star"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          />
+          <span
+            style={{
+              position: "absolute",
+              top: "55%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              fontSize: "19px",
+              fontWeight: "700",
+              color: "#181414ff",
+              textShadow: "1px 1px 3px rgba(0,0,0,0.5)",
+            }}
+          >
+            {score}
+          </span>
+        </div>
+
+        <div style={{ marginBottom: "50px", marginTop: "10px" }}>
+          <img
+            src={wordheadingimg}
+            alt="Bingo Puzzle"
+            style={{ height: "30px", objectFit: "contain" }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4,1fr)",
+            gap: "25px",
+            justifyItems: "center",
+          }}
+        >
+          {transformed?.words?.map((word, index) => (
+            <div
+              key={index}
+              onClick={() => handleWordClick(word)}
+              style={{
+                ...getButtonStyle(word),
+                borderRadius: "12px",
+                padding: "16px 33px",
+                textAlign: "center",
+                fontSize: "19px",
+                fontWeight: "600",
+                minWidth: "80px",
+                border: "1px solid rgba(231,232,236,1)",
+                cursor: correct.includes(word) ? "default" : "pointer",
+                userSelect: "none",
+                transition: "all 0.3s ease",
+              }}
+            >
+              {word}
+            </div>
+          ))}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "40px",
+            marginTop: "5px",
+            position: "relative",
+            height: "40px",
+          }}
+        >
+          {!showNextButton ? (
+            <>
+              <img
+                src={iconimg}
+                alt="hint"
+                style={{ width: "55px", height: "55px", cursor: "pointer" }}
+                onClick={handleHintClick}
+              />
+              <img
+                src={listeenimg}
+                alt="listen"
+                style={{ width: "55px", height: "55px", cursor: "pointer" }}
+                onClick={() => startAudio(currentWordIndex)}
+              />
+            </>
+          ) : (
+            <img
+              src={nextimg}
+              alt="next"
+              style={{ width: "100px", height: "45px", cursor: "pointer" }}
+              onClick={handleNextClick}
+            />
+          )}
+        </div>
+
+        <div style={{ position: "absolute", bottom: "-30px", left: "-35px" }}>
+          <img
+            src={bearimg}
+            alt="bear"
+            style={{ width: "150px", height: "200px", position: "relative" }}
+          />
+          {showHint && (
+            <div
+              style={{
+                position: "absolute",
+                top: "-160px",
+                left: "210px",
+                transform: "translateX(-50%)",
+                width: "400px",
+                height: "200px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={emptyimg}
+                alt="empty"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  objectFit: "contain",
+                  top: 0,
+                  left: 0,
+                }}
+              />
+              <img
+                src={getHintImage()}
+                alt="hint"
+                style={{
+                  width: "110px",
+                  height: "110px",
+                  objectFit: "contain",
+                  position: "relative",
+                  zIndex: 2,
+                  margin: "auto",
+                  display: "block",
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }, [
+    transformed,
+    score,
+    showNextButton,
+    showHint,
+    currentWordIndex,
+    handleWordClick,
+    getButtonStyle,
+    correct,
+    handleHintClick,
+    startAudio,
+    handleNextClick,
+    getHintImage,
+  ]);
 
   return (
     <MainLayout
@@ -801,11 +1399,8 @@ const BingoCard = ({
       showTimer={showTimer}
       points={points}
       pageName={"m14"}
-      //answer={answer}
-      //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
       lang={language}
-      //={recAudio}
       {...{
         steps,
         currentStep,
@@ -827,649 +1422,141 @@ const BingoCard = ({
             height: "70vh",
             position: "relative",
             overflowX: "hidden",
-            backgroundColor: "#1CB0F6",
-            filter: "brightness(1.1)",
+            backgroundColor: "#DDF3FF",
             overflowY: "hidden",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontFamily: "'Quicksand', sans-serif",
+            color: "rgba(51,63,97,1)",
           }}
         >
-          {showConfetti && (
-            <Confetti width={window.innerWidth} height={window.innerHeight} />
-          )}
+          {showConfetti && <Confetti />}
 
-          <style>
-            {`
-          .focusHint {
-            animation: hintPulse 1s ease-in-out;
-          }
-          @keyframes hintPulse {
-            0% {
-              transform: scale(1);
-              box-shadow: 0 0 0px rgba(188, 182, 66, 0.8);
-            }
-            50% {
-              transform: scale(1.2);
-              box-shadow: 0 0 0px rgb(236, 204, 0);
-            }
-            100% {
-              transform: scale(1);
-              box-shadow: 0 0 0px rgba(255, 208, 0, 0.8);
-            }
-          }
-        `}
-          </style>
-          <div
-            style={{
-              position: "absolute",
-              width: "95%",
-              height: "83%",
-              backgroundColor: "#FFFFFF40",
-              zIndex: 1,
-              top: "10%",
-              left: "2.5%",
-              borderRadius: "33px",
-            }}
-          ></div>
-
-          {showEmptyImg && (
+          {showFlyingStar && (
             <div
               style={{
                 position: "absolute",
-                left: screenWidth < 768 ? "30%" : "260px",
-                bottom: screenWidth < 768 ? "220px" : "277px",
-                width: screenWidth < 768 ? "140px" : "170px",
-                height: screenWidth < 768 ? "90px" : "90px",
+                bottom: "20px",
+                left: "30px",
+                animation: "flyStarToCenterOpposite 2s ease-in-out forwards",
                 zIndex: 1000,
               }}
             >
-              <img
-                src={Assets.emptyImg}
-                alt="Empty Placeholder"
-                style={{
-                  transform: "translateX(-50%)",
-                  //width: screenWidth < 768 ? "120px" : "170px",
-                  height: screenWidth < 768 ? "90px" : "150px",
-                  zIndex: 100,
-                  cursor: "pointer",
-                }}
-              />
-              <div style={{ display: "flex", marginTop: "10px", gap: "15px" }}>
-                <button
-                  style={{
-                    position: "absolute",
-                    right: "90%",
-                    border: "none",
-                    background: "transparent",
-                    cursor: "pointer",
-                    zIndex: "5",
-                  }}
-                  onClick={handleReset}
-                >
-                  <RetryIcon
-                    height={screenWidth < 768 ? 40 : 50}
-                    width={screenWidth < 768 ? 40 : 50}
-                  />
-                </button>
-
-                {showNextButton && (
-                  <button
-                    style={{
-                      position: "absolute",
-                      right: "55%",
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                      zIndex: "5",
-                    }}
-                    onClick={handleNextButton}
-                  >
-                    <NextButtonRound
-                      height={screenWidth < 768 ? 40 : 50}
-                      width={screenWidth < 768 ? 40 : 50}
-                    />
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
-          <div
-            style={{
-              position: "absolute",
-              left: screenWidth < 768 ? "20%" : "10px",
-              bottom: screenWidth < 768 ? "13%" : "0%",
-              height: screenWidth < 768 ? "200px" : "390px",
-              width: screenWidth < 768 ? "200px" : "390px",
-              zIndex: "2",
-              transform: screenWidth < 768 ? "translateX(-50%)" : "none",
-            }}
-          >
-            <img
-              src={showWrongWord ? Assets.sadBear : Assets.monkeyImg}
-              alt="Monkey"
-              style={{
-                width: screenWidth < 768 ? "150px" : "193px",
-                height: screenWidth < 768 ? "250px" : "514px",
-                cursor: "pointer",
-              }}
-            />
-            {!hideButtons &&
-              !showWrongWord &&
-              !winEffect &&
-              !showCoinsImg &&
-              !showEmptyImg &&
-              !showInitialEffect &&
-              !showInitialEffect &&
-              startGame && (
-                <img
-                  onClick={() => {
-                    startAudio(currentWordIndex);
-                  }}
-                  src={Assets.play}
-                  alt="Start"
-                  style={{
-                    width: screenWidth < 768 ? "40px" : "45px",
-                    height: screenWidth < 768 ? "40px" : "45px",
-                    position: "absolute",
-                    left: screenWidth < 768 ? "72%" : "42%",
-                    top: screenWidth < 768 ? "10%" : "22%",
-                    //transform: "translateX(-50%)",
-                    transform: `scale(${scale})`,
-                    transition: "transform 0.5s ease-in-out",
-                    zIndex: 100,
-                    padding: screenWidth < 768 ? "8px 16px" : "10px 20px",
-                    cursor: "pointer",
-                  }}
-                />
-              )}
-            {!hideButtons &&
-              !showWrongWord &&
-              !winEffect &&
-              !showCoinsImg &&
-              !showEmptyImg &&
-              showInitialEffect &&
-              !startGame && (
-                <img
-                  src={Assets.emptyImg}
-                  alt="Empty Placeholder"
-                  style={{
-                    position: "absolute",
-                    left: screenWidth < 768 ? "85%" : "65%",
-                    top: screenWidth < 768 ? "-25%" : "2%",
-                    transform: "translateX(-50%)",
-                    //width: screenWidth < 768 ? "120px" : "170px",
-                    height: screenWidth < 768 ? "80px" : "140px",
-                    zIndex: 10,
-                  }}
-                />
-              )}
-            {!hideButtons &&
-              !showWrongWord &&
-              !winEffect &&
-              !showCoinsImg &&
-              !showEmptyImg &&
-              !showInitialEffect &&
-              !startGame &&
-              !showRecording && (
-                <>
-                  <button
-                    style={{
-                      position: "absolute",
-                      left: "55%",
-                      top: screenWidth < 768 ? "10%" : "5%",
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                    }}
-                    onClick={handleHintClick}
-                  >
-                    <img
-                      src={Assets.hintImg}
-                      alt="Hint"
-                      style={{
-                        width: screenWidth < 768 ? "40px" : "50px",
-                        height: screenWidth < 768 ? "40px" : "70px",
-                      }}
-                    />
-                  </button>
-                  <button
-                    style={{
-                      position: "absolute",
-                      left: screenWidth < 768 ? "80%" : "55%",
-                      top: screenWidth < 768 ? "10%" : "25%",
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                    }}
-                    onClick={handleReset}
-                  >
-                    <RetryIcon
-                      height={screenWidth < 768 ? 40 : 50}
-                      width={screenWidth < 768 ? 40 : 50}
-                    />
-                  </button>
-                </>
-              )}
-          </div>
-
-          {showWrongWord && (
-            <div
-              style={{
-                position: "absolute",
-                left: screenWidth < 768 ? "30%" : "280px",
-                bottom: screenWidth < 768 ? "220px" : "250px",
-                width: screenWidth < 768 ? "140px" : "240px",
-                height: screenWidth < 768 ? "90px" : "130px",
-                zIndex: 1000,
-              }}
-            >
-              <img
-                src={Assets.emptyImg}
-                alt="Empty Placeholder"
-                style={{
-                  transform: "translateX(-50%)",
-                  //width: screenWidth < 768 ? "120px" : "170px",
-                  height: screenWidth < 768 ? "90px" : "165px",
-                  zIndex: 100,
-                  cursor: "pointer",
-                }}
-              />
-              <div style={{ display: "flex", marginTop: "10px", gap: "15px" }}>
-                <button
-                  style={{
-                    position: "absolute",
-                    right: "90%",
-                    border: "none",
-                    background: "transparent",
-                    cursor: "pointer",
-                    zIndex: "5",
-                  }}
-                  onClick={handleReset}
-                >
-                  <RetryIcon
-                    height={screenWidth < 768 ? 40 : 50}
-                    width={screenWidth < 768 ? 40 : 50}
-                  />
-                </button>
-
-                {/* {showNextButton && ( */}
-                <button
-                  style={{
-                    position: "absolute",
-                    right: "55%",
-                    border: "none",
-                    background: "transparent",
-                    cursor: "pointer",
-                    zIndex: "5",
-                  }}
-                  onClick={() => {
-                    retry();
-                    handleNextButton();
-                  }}
-                >
-                  <NextButtonRound
-                    height={screenWidth < 768 ? 40 : 50}
-                    width={screenWidth < 768 ? 40 : 50}
-                  />
-                </button>
-                {/* )} */}
-              </div>
-            </div>
-          )}
-
-          {showHint && !winEffect && (
-            <div
-              style={{
-                position: "absolute",
-                left: screenWidth < 768 ? "20%" : "10%",
-                bottom: screenWidth < 768 ? "220px" : "265px",
-                width: screenWidth < 768 ? "140px" : "240px",
-                height: screenWidth < 768 ? "90px" : "130px",
-                zIndex: 1000,
-              }}
-            >
-              <img
-                src={Assets.cloudText}
-                alt="Cloud"
-                style={{
-                  //width: screenWidth < 768 ? "170px" : "230px",
-                  height: screenWidth < 768 ? "100px" : "160px",
-                  zIndex: 21,
-                  cursor: "pointer",
-                }}
-              />
-              <img
-                src={currentImage}
-                alt={transformed?.arrM[currentWordIndex]}
-                style={{
-                  position: "absolute",
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                  height: screenWidth < 768 ? "40px" : "100px",
-                  zIndex: 22,
-                  cursor: "pointer",
-                }}
-              />
-            </div>
-          )}
-
-          {showRecording &&
-            (!isRecording && !isProcessing ? (
               <div
-                style={{
-                  position: "absolute",
-                  left: screenWidth < 768 ? "20%" : "13%",
-                  bottom: screenWidth < 768 ? "220px" : "230px",
-                  //width: screenWidth < 768 ? "140px" : "240px",
-                  //height: screenWidth < 768 ? "90px" : "130px",
-                  zIndex: 1000,
-                }}
+                style={{ position: "relative", width: "50px", height: "50px" }}
               >
                 <img
-                  src={Assets.cloudText}
-                  alt="Cloud"
+                  src={starimg}
+                  alt="star"
                   style={{
-                    width: screenWidth < 768 ? "170px" : "230px",
-                    //height: screenWidth < 768 ? "85px" : "160px",
-                    zIndex: 21,
-                    cursor: "pointer",
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    filter: "drop-shadow(0px 0px 8px rgba(255, 215, 0, 0.8))",
                   }}
                 />
-                <img
-                  src={Assets.mic}
-                  alt={"Start Recording"}
+                <span
                   style={{
                     position: "absolute",
+                    top: "55%",
                     left: "50%",
-                    top: "45%",
                     transform: "translate(-50%, -50%)",
-                    height: screenWidth < 786 ? "40px" : "50px",
-                    zIndex: 22,
-                    cursor: "pointer",
-                  }}
-                  onClick={() =>
-                    startRecording(transformed?.arrM[currentWordIndex])
-                  }
-                />
-              </div>
-            ) : (
-              <div
-                style={{
-                  position: "absolute",
-                  left: screenWidth < 768 ? "20%" : "13%",
-                  bottom: screenWidth < 768 ? "220px" : "230px",
-                  //width: screenWidth < 768 ? "140px" : "240px",
-                  //height: screenWidth < 768 ? "90px" : "130px",
-                  zIndex: 1000,
-                }}
-              >
-                <img
-                  src={Assets.cloudText}
-                  alt="Cloud"
-                  style={{
-                    width: screenWidth < 768 ? "170px" : "230px",
-                    //height: screenWidth < 768 ? "85px" : "160px",
-                    zIndex: 21,
-                    cursor: "pointer",
-                  }}
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
+                    fontSize: "17px",
+                    fontWeight: "700",
+                    color: "#181414ff",
+                    textShadow: "1px 1px 3px rgba(0,0,0,0.5)",
                   }}
                 >
-                  <img
-                    src={Assets.graph}
-                    alt={"Start Visualizer"}
-                    style={{
-                      position: "absolute",
-                      left: "50%",
-                      top: "30%",
-                      transform: "translate(-50%, -50%)",
-                      height: screenWidth < 786 ? "15px" : "30px",
-                      zIndex: 22,
-                      cursor: "pointer",
-                    }}
-                  />
-                  <img
-                    src={Assets.pause}
-                    alt={"Start Recording"}
-                    style={{
-                      position: "absolute",
-                      left: "50%",
-                      top: "60%",
-                      transform: "translate(-50%, -50%)",
-                      height: screenWidth < 786 ? "40px" : "50px",
-                      zIndex: 22,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => stopRecording()}
-                  />
-                </div>
+                  +1
+                </span>
               </div>
-            ))}
-
-          {winEffect && (
-            <>
-              {showConfetti && (
-                <Confetti
-                  width={200}
-                  height={100}
-                  numberOfPieces={50}
-                  recycle={false}
-                  particleSize={10}
-                  gravity={0.3}
-                  style={{
-                    position: "absolute",
-                    left: "180px",
-                    bottom: "420px",
-                    zIndex: 25,
-                  }}
-                />
-              )}
-
-              <div
-                style={{
-                  position: "absolute",
-                  left: screenWidth < 768 ? "30%" : "160px",
-                  bottom: screenWidth < 768 ? "220px" : "230px",
-                  display: "flex",
-                  gap: screenWidth < 768 ? "10px" : "20px",
-                  zIndex: 20,
-                  transform: screenWidth < 768 ? "translateX(-50%)" : "none",
-                }}
-              >
-                <div
-                  style={{
-                    position: "relative",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <img
-                    src={Assets.rockImg}
-                    alt="Rock Word"
-                    style={{
-                      width: screenWidth < 768 ? "130px" : "220px",
-                      height: screenWidth < 768 ? "90px" : "140px",
-                      zIndex: 21,
-                    }}
-                  />
-                  <p
-                    style={{
-                      position: "absolute",
-                      top: "42%",
-                      left: "52%",
-                      transform: "translate(-50%, -50%)",
-                      color: "#333F61",
-                      fontWeight: "700",
-                      fontSize: screenWidth < 768 ? "12px" : "18px",
-                    }}
-                  >
-                    {transformed?.arrM[currentWordIndex]}
-                  </p>
-                </div>
-
-                <img
-                  src={Assets.etImg}
-                  alt="Et Word"
-                  style={{
-                    width: screenWidth < 768 ? "80px" : "100px",
-                    height: screenWidth < 768 ? "90px" : "120px",
-                    zIndex: 22,
-                    marginLeft: screenWidth < 768 ? "-120px" : "-160px",
-                  }}
-                />
-              </div>
-            </>
+            </div>
           )}
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isMobile
-                ? "repeat(2, 1fr)"
-                : "repeat(4, 1fr)",
-              gap: screenWidth < 768 ? "10px 30px" : "20px 50px",
-              position: "absolute",
-              right: screenWidth < 768 ? "10%" : "8%",
-              top: screenWidth < 768 ? "15%" : "25%",
-              //transform: screenWidth < 768 ? "translateX(50%)" : "none",
-              zIndex: 1,
-            }}
-          >
-            {transformed?.words?.map((word, index) => {
-              const validPairs = {
-                MANGO: ["MAN", "GO"],
-                WATER: ["WA", "TER"],
-                MOTHER: ["MO", "THER"],
-                FATHER: ["FA", "THER"],
-                PENCIL: ["PEN", "CIL"],
-                DOCTOR: ["DOC", "TOR"],
-                MARKET: ["MAR", "KET"],
-                BASKET: ["BAS", "KET"],
-                TABLE: ["TA", "BLE"],
-                WINDOW: ["WIN", "DOW"],
-                CRICKET: ["CRICK", "ET"],
-                BALLOON: ["BAL", "LOON"],
-                GARDEN: ["GAR", "DEN"],
-                CANDLE: ["CAN", "DLE"],
-                SCOOTER: ["SCOO", "TER"],
-                CYCLE: ["CY", "CLE"],
-                FLOWER: ["FLOW", "ER"],
-                MUSIC: ["MUS", "IC"],
-                PUPPY: ["PUP", "PY"],
-                STUDENT: ["STU", "DENT"],
-                PAPER: ["PA", "PER"],
-              };
+          {showConfetti && (
+            <img
+              src={bearrdanceimg}
+              alt="bear dancing"
+              style={{
+                position: "absolute",
+                bottom: "-42px",
+                left: "40%",
+                transform: "translateX(-50%)",
+                height: "200px",
+                animation: "jump 1.3s ease-in-out infinite",
+                userSelect: "none",
+                pointerEvents: "none",
+                zIndex: 1000,
+              }}
+              draggable={false}
+            />
+          )}
 
-              const isCorrectWord =
-                highlightCorrectWords &&
-                validPairs[
-                  transformed?.transformed?.arrM[currentWordIndex]
-                ].includes(word);
+          {showBingoPage ? (
+            <BingoPage
+              transformed={transformed}
+              setVoiceText={setVoiceText}
+              setRecordedAudio={setRecordedAudio}
+              setVoiceAnimate={setVoiceAnimate}
+              storyLine={storyLine}
+              enableNext={enableNext}
+              isShowCase={isShowCase}
+              isDiscover={isDiscover}
+              contentId={contentId}
+              contentType={contentType}
+              currentStep={currentStep}
+              playTeacherAudio={playTeacherAudio}
+              callUpdateLearner={callUpdateLearner}
+              setOpenMessageDialog={setOpenMessageDialog}
+              setEnableNext={setEnableNext}
+              handleNext={handleNext}
+            />
+          ) : showSuccessPage || score >= 5 ? (
+            <SuccessPage
+              score={score}
+              completedPairs={completedPairs}
+              onNext={handleSuccessNextClick}
+            />
+          ) : (
+            <GamePage />
+          )}
 
-              return (
-                <div
-                  key={index}
-                  style={{
-                    width:
-                      screenWidth < 480
-                        ? "40px"
-                        : screenWidth < 768
-                        ? "53px"
-                        : "110px",
-                    height:
-                      screenWidth < 480
-                        ? "40px"
-                        : screenWidth < 768
-                        ? "53px"
-                        : "65px",
-                    backgroundColor: isCorrectWord
-                      ? "#58CC02"
-                      : selectedWords.includes(word)
-                      ? showConfetti
-                        ? "#58CC02"
-                        : showWrongWord
-                        ? "#FF7F36"
-                        : "#58CC02"
-                      : "#ffffff",
-                    color:
-                      selectedWords.includes(word) || isCorrectWord
-                        ? "#ffffff"
-                        : "rgba(28, 176, 246, 1)",
-                    borderRadius: "12px",
-                    boxShadow: "0 4px 6px rgba(0,0,0,0.2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize:
-                      screenWidth < 480
-                        ? "14px"
-                        : screenWidth < 768
-                        ? "16px"
-                        : "15px",
-                    fontWeight: 700,
-                    border:
-                      highlightedButtonIndex === index
-                        ? "1px solid #4DBD25"
-                        : "1px solid #000000",
-                    fontStyle: "normal",
-                    fontFamily: "Quicksand",
-                    cursor:
-                      showRecording ||
-                      startGame ||
-                      isCorrectWord ||
-                      showWrongWord ||
-                      showInitialEffect ||
-                      showCoinsImg ||
-                      winEffect ||
-                      showNextButton
-                        ? "not-allowed"
-                        : "pointer",
-                    zIndex: 2,
-                  }}
-                  onClick={() => {
-                    if (
-                      !(
-                        showRecording ||
-                        startGame ||
-                        isCorrectWord ||
-                        showWrongWord ||
-                        showInitialEffect ||
-                        showCoinsImg ||
-                        winEffect ||
-                        showNextButton
-                      )
-                    ) {
-                      handleWordClick(word);
-                    }
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize:
-                        screenWidth < 480
-                          ? "12px"
-                          : screenWidth < 768
-                          ? "16px"
-                          : "20px",
-                      margin: 0,
-                      color: "#333F61",
-                    }}
-                  >
-                    {word}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+          <style>{`
+            @keyframes flyStarToCenterOpposite {
+              0% {
+                transform: translate(0, 0);
+                opacity: 1;
+                width: 50px;
+                height: 50px;
+              }
+              50% {
+                transform: translate(calc(50vw - 60px), calc(-50vh + 60px));
+                opacity: 0.8;
+                width: 60px;
+                height: 60px;
+              }
+              100% {
+                transform: translate(calc(50vw - 60px), calc(-50vh + 60px));
+                opacity: 0;
+                width: 70px;
+                height: 70px;
+              }
+            }
+
+            @keyframes jump {
+              0%, 100% {
+                transform: translateY(0);
+              }
+              50% {
+                transform: translateY(-20px);
+              }
+            }
+          `}</style>
         </div>
       </ThemeProvider>
     </MainLayout>
   );
 };
 
-export default BingoCard;
+export default React.memo(BingoCard);

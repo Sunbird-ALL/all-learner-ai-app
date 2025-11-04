@@ -618,7 +618,7 @@ const FluencyP4 = ({
                   src={listenImg}
                   onClick={() => {
                     playWordAudio(
-                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${sentencesData[currentSentenceIndex].audio}`
+                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
                     );
                   }}
                   alt="listen"
