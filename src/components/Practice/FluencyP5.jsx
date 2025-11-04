@@ -234,6 +234,7 @@ const FluencyP5 = ({
   const transcriptRef = useRef("");
   const [finalTranscript, setFinalTranscript] = useState("");
   const [isMatch, setIsMatch] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const getSimilarity = (str1, str2) => {
     const a = str1.toLowerCase().trim().split(" ");
@@ -686,7 +687,6 @@ const FluencyP5 = ({
         }}
       >
         <audio ref={audioRefs} onEnded={handleAudioEnd} hidden />
-
         <img
           src={hintimg}
           alt="hint"
@@ -699,9 +699,68 @@ const FluencyP5 = ({
             cursor: "pointer",
             zIndex: 1000,
           }}
-          onClick={() => {}}
+          onClick={() => setOpen(true)}
         />
 
+        {/* ✅ Common Modal */}
+        {open && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100vh",
+              backgroundColor: "rgba(0,0,0,0.7)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 2000,
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                background: "#000",
+                padding: "10px",
+                borderRadius: "12px",
+                maxWidth: "90%",
+                width: "600px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  position: "absolute",
+                  top: "-10px",
+                  right: "-10px",
+                  background: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "30px",
+                  height: "30px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
+
+              <iframe
+                width="100%"
+                height="340"
+                src="https://www.youtube.com/embed/a0CqaBnLiro?autoplay=1"
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ borderRadius: "8px" }}
+              ></iframe>
+            </div>
+          </div>
+        )}
         {!showBearDance && (
           <div
             style={{
