@@ -206,9 +206,9 @@ const WordWall = ({
 
         const formattedItems = correctWords?.map((item) => ({
           image_url: item?.imagePath || item.mechanics_data?.[0].image_url,
-          text: item.contentSourceData?.[0]?.text,
-          audio_en: item.contentSourceData?.[0]?.audioUrl,
-          audio_hi: item.contentSourceData?.[0]?.audio_url_hi,
+          text: item?.contentSourceData?.[0]?.text,
+          audio_en: `${item?.contentId}.wav`,
+          audio_hi: item?.multilingual?.kn?.audio_url,
         }));
 
         if (correctWords?.length < 3) {
@@ -1092,6 +1092,8 @@ const WordWall = ({
 
   const renderReviewView = () => {
     const currentAnswer = wrongAnswersAllQuestions?.[currentReviewIndex]?.item;
+    const lang = getLocalData("lang");
+
     if (!currentAnswer) return null;
 
     return (
@@ -1160,7 +1162,7 @@ const WordWall = ({
                 }}
                 onClick={() =>
                   playAudio(
-                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentAnswer?.audio_en}`
+                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentAnswer?.audio_en}`
                   )
                 }
               >
@@ -1186,7 +1188,7 @@ const WordWall = ({
                 }}
                 onClick={() =>
                   playAudio(
-                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${multilingual?.kn?.audio_url}`
+                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentAnswer?.audio_hi}`
                   )
                 }
               >
