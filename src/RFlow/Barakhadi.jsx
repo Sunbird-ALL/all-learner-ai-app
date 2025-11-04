@@ -45,6 +45,8 @@ import nextImg from "../assets/nextImg.svg";
 import closebuttonImg from "../assets/closebtn.svg";
 import { callTelemetryDiscovery } from "../utils/apiUtil";
 import audiowaveImg from "../assets/audiowave.svg";
+import hintimg from "../assets/hintsicon.svg";
+
 import {
   addLesson,
   addPointer,
@@ -2384,6 +2386,7 @@ const Barakhadi = ({
   const virtualId = getLocalData("virtualId");
   const [currentCollectionId, setCurrentCollectionId] = useState("");
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
+  const [open, setOpen] = useState(false);
 
   const langWiseAnswers = {
     en: {
@@ -3101,7 +3104,82 @@ const Barakhadi = ({
     >
       <div style={containerStyle}>
         {showConfetti && <Confetti />}
+        <img
+          src={hintimg}
+          alt="hint"
+          style={{
+            width: "50px",
+            height: "50px",
+            position: "absolute",
+            top: "20px",
+            left: "0px",
+            cursor: "pointer",
+            zIndex: 1000,
+          }}
+          onClick={() => setOpen(true)}
+        />
 
+        {/* Modal */}
+        {open && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "90vh",
+              backgroundColor: "rgba(0,0,0,0.7)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 2000,
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                background: "#000",
+                padding: "10px",
+                borderRadius: "12px",
+                maxWidth: "90%",
+                width: "600px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  position: "absolute",
+                  top: "-10px",
+                  right: "-10px",
+                  background: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "30px",
+                  height: "30px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
+
+              {/* YouTube Video */}
+              <iframe
+                width="100%"
+                height="340"
+                src={`https://www.youtube.com/embed/GrPT4e_aTvM?autoplay=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ borderRadius: "8px", zIndex: 99999 }}
+              ></iframe>
+            </div>
+          </div>
+        )}
         {voiceStatus && (
           <div
             style={{

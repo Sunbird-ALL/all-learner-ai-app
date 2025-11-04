@@ -62,6 +62,7 @@ import bubbleImg from "../../assets/bubble.png";
 import magnifier from "../../assets/magnifier.png";
 import { Box } from "@mui/material";
 import listenBearGif from "../../assets/beardances.gif";
+import hintimg from "../../assets/hintsicon.svg";
 
 const AserFlow = ({
   // setVoiceText,
@@ -131,6 +132,7 @@ const AserFlow = ({
   const virtualId = getLocalData("virtualId");
   const [clickedIndex, setClickedIndex] = useState(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [open, setOpen] = useState(false);
 
   background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
   showTimer = false;
@@ -389,6 +391,82 @@ const AserFlow = ({
           alignItems: "center",
         }}
       >
+        <img
+          src={hintimg}
+          alt="hint"
+          style={{
+            width: "50px",
+            height: "50px",
+            position: "absolute",
+            top: "20px",
+            left: "10px",
+            cursor: "pointer",
+            zIndex: 1000,
+          }}
+          onClick={() => setOpen(true)}
+        />
+
+        {/* Modal */}
+        {open && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "90vh",
+              backgroundColor: "rgba(0,0,0,0.7)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 999999,
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                background: "#000",
+                padding: "10px",
+                borderRadius: "12px",
+                maxWidth: "90%",
+                width: "600px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  position: "absolute",
+                  top: "-10px",
+                  right: "-10px",
+                  background: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "30px",
+                  height: "30px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
+
+              {/* YouTube Video */}
+              <iframe
+                width="100%"
+                height="340"
+                src={`https://www.youtube.com/embed/Itq9s44p2-o?autoplay=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ borderRadius: "8px", zIndex: 99999 }}
+              ></iframe>
+            </div>
+          </div>
+        )}
         {/* --- Title --- */}
 
         {/* --- Bubble Area --- */}

@@ -47,6 +47,7 @@ import AudioTooltipModal from "./AudioTooltipModal";
 import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
+import hintimg from "../../assets/hintsicon.svg";
 
 const sentencesData = [
   {
@@ -362,6 +363,7 @@ const FluencyP4 = ({
   const [speed, setSpeed] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const lang = getLocalData("lang");
+  const [open, setOpen] = useState(false);
 
   const buildSentencesData = (apiData) => {
     return apiData?.map((item, index) => {
@@ -548,6 +550,82 @@ const FluencyP4 = ({
           alignItems: "center",
         }}
       >
+        <img
+          src={hintimg}
+          alt="hint"
+          style={{
+            width: "50px",
+            height: "50px",
+            position: "absolute",
+            top: "20px",
+            left: "0px",
+            cursor: "pointer",
+            zIndex: 1000,
+          }}
+          onClick={() => setOpen(true)}
+        />
+
+        {/* Modal */}
+        {open && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "90vh",
+              backgroundColor: "rgba(0,0,0,0.7)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 2000,
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                background: "#000",
+                padding: "10px",
+                borderRadius: "12px",
+                maxWidth: "90%",
+                width: "600px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  position: "absolute",
+                  top: "-10px",
+                  right: "-10px",
+                  background: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "30px",
+                  height: "30px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
+
+              {/* YouTube Video */}
+              <iframe
+                width="100%"
+                height="340"
+                src={`https://www.youtube.com/embed/gWuvShUt94g?autoplay=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ borderRadius: "8px" }}
+              ></iframe>
+            </div>
+          </div>
+        )}
         <audio ref={audioRef} onEnded={handleAudioEnd} hidden />
 
         {showConfetti && (
