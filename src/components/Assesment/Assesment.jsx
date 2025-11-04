@@ -1330,7 +1330,7 @@ const Assesment = ({ discoverStart }) => {
                 >
                   {rFlow === "true"
                     ? `Start Refresher ${
-                        (1, "B")?.includes(level)
+                        [1, "B"]?.includes(level)
                           ? rStepNo == null || rStepNo === 0 || rStepNo === "0"
                             ? "0"
                             : "1"

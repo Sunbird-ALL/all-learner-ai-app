@@ -247,6 +247,8 @@ const MainLayout = (props) => {
 
   const language = getLocalData("lang");
 
+  console.log("levelss", LEVEL);
+
   // useEffect(() => {
   //   if (language !== "en") {
   //     setLocalData("rFlow", false);
@@ -620,7 +622,7 @@ const MainLayout = (props) => {
                   >
                     <footer>
                       {rFlow === "true" ? (
-                        (1, "B")?.includes(LEVEL) ? (
+                        [1, "B"]?.includes(LEVEL) ? (
                           <img
                             src={
                               rStep == null || rStep === 0 || rStep === "0"
@@ -769,7 +771,7 @@ const MainLayout = (props) => {
                           </Box>
                         </Box>
                       )}
-                      {rFlow === "true" && !(1, "B")?.includes(LEVEL) && (
+                      {rFlow === "true" && ![1, "B"]?.includes(LEVEL) && (
                         <Box
                           sx={{
                             display: "flex",
