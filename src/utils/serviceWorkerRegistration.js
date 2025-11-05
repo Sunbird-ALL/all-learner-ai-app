@@ -10,17 +10,26 @@ const isLocalhost = Boolean(
 export function register(config) {
   if ("serviceWorker" in navigator) {
     // The URL constructor is available in all browsers that support SW.
-    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
-    if (publicUrl.origin !== window.location.origin) {
+    const publicUrl = new URL(
+      process.env.PUBLIC_URL || "",
+      window.location.href
+    );
+    if (publicUrl.origin !== window.location.origin && process.env.PUBLIC_URL) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
       // serve assets; see https://github.com/facebook/create-react-app/issues/2374
+      console.warn(
+        "Service worker not registered: PUBLIC_URL is on different origin"
+      );
       return;
     }
 
-    window.addEventListener("load", () => {
+    // Register immediately if DOM is ready, otherwise wait for load
+    const registerSW = () => {
       const publicUrl = process.env.PUBLIC_URL || "";
       const swUrl = publicUrl ? `${publicUrl}/sw.js` : "/sw.js";
+
+      console.log("[Service Worker] Attempting to register:", swUrl);
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
@@ -38,20 +47,47 @@ export function register(config) {
         // Is not localhost. Just register service worker
         registerValidSW(swUrl, config);
       }
-    });
+    };
+
+    // Try to register immediately if DOM is ready
+    if (document.readyState === "loading") {
+      window.addEventListener("load", registerSW);
+    } else {
+      // DOM is already ready, register immediately
+      registerSW();
+    }
+  } else {
+    console.warn("Service workers are not supported in this browser.");
   }
 }
 
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
-    .register(swUrl)
+    .register(swUrl, { scope: "/" })
     .then((registration) => {
+      console.log(
+        "[Service Worker] Registration successful:",
+        registration.scope
+      );
+
+      // Check if service worker is already active
+      if (registration.active) {
+        console.log("[Service Worker] Service worker is already active");
+        if (config && config.onSuccess) {
+          config.onSuccess(registration);
+        }
+      }
+
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
           return;
         }
         installingWorker.onstatechange = () => {
+          console.log(
+            "[Service Worker] State changed:",
+            installingWorker.state
+          );
           if (installingWorker.state === "installed") {
             if (navigator.serviceWorker.controller) {
               // At this point, the updated precached content has been fetched,
@@ -77,12 +113,18 @@ function registerValidSW(swUrl, config) {
                 config.onSuccess(registration);
               }
             }
+          } else if (installingWorker.state === "activated") {
+            console.log("[Service Worker] Activated successfully");
+            if (config && config.onSuccess) {
+              config.onSuccess(registration);
+            }
           }
         };
       };
     })
     .catch((error) => {
-      console.error("Error during service worker registration:", error);
+      console.error("[Service Worker] Error during registration:", error);
+      console.error("[Service Worker] Registration failed for URL:", swUrl);
     });
 }
 
