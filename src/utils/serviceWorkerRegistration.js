@@ -26,8 +26,19 @@ export function register(config) {
 
     // Register immediately if DOM is ready, otherwise wait for load
     const registerSW = () => {
+      // Always use absolute path for service worker
       const publicUrl = process.env.PUBLIC_URL || "";
-      const swUrl = publicUrl ? `${publicUrl}/sw.js` : "/sw.js";
+      let swUrl = publicUrl ? `${publicUrl}/sw.js` : "/sw.js";
+
+      // Ensure absolute path (remove leading ./ if present)
+      if (swUrl.startsWith("./")) {
+        swUrl = swUrl.replace("./", "/");
+      }
+
+      // Ensure it starts with /
+      if (!swUrl.startsWith("/")) {
+        swUrl = "/" + swUrl;
+      }
 
       console.log("[Service Worker] Attempting to register:", swUrl);
 
