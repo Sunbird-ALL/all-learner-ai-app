@@ -16,7 +16,8 @@ import meterImg from "../../assets/meterimg.svg";
 import tortoiseImg from "../../assets/tortoiseImg.svg";
 import audioone from "../../assets/audio1.wav";
 import correctSound from "../../assets/correct.wav";
-
+import { callTelemetryApi } from "../../utils/apiUtil";
+import { practiceSteps, getLocalData } from "../../utils/constants";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -536,6 +537,35 @@ const ParagraphFlow = ({
     }
   };
 
+  let progressDatas = getLocalData("practiceProgress");
+  if (typeof progressDatas === "string") {
+    progressDatas = JSON.parse(progressDatas);
+  }
+
+  let currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
+  }
+
+  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let apiLevel = `M${level}-${currentLevel}`;
+
+  const callTelemetry = async () => {
+    const sessionId = getLocalData("sessionId");
+    const responseStartTime = new Date().getTime();
+    const base64Data = "";
+    const sentenceText = paragraphData?.highlightedText || "";
+
+    await callTelemetryApi(
+      sentenceText,
+      sessionId,
+      currentStep - 1,
+      base64Data,
+      responseStartTime,
+      sentenceText,
+      apiLevel
+    );
+  };
   // ✅ Play audio function
   const playAudio = (audioUrl) => {
     if (audio) {
@@ -746,6 +776,7 @@ const ParagraphFlow = ({
     // Call handleNext after a small delay
     setTimeout(() => {
       handleNext();
+      callTelemetry();
     }, 200);
   };
 

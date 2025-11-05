@@ -370,6 +370,7 @@ const FluencyP4 = ({
       const sentence = item?.contentSourceData[0].text;
       const audio = item?.contentSourceData[0].audioUrl;
       const multilingualData = item?.multilingual_data || {};
+      const contentId = item?.contentId;
 
       const underlinedWords = Object?.keys(multilingualData);
 
@@ -384,6 +385,7 @@ const FluencyP4 = ({
         underlinedWords,
         hints,
         audio,
+        contentId,
       };
     });
   };
@@ -414,8 +416,37 @@ const FluencyP4 = ({
   };
 
   console.log("speed", speed);
+  let progressDatas = getLocalData("practiceProgress");
+  if (typeof progressDatas === "string") {
+    progressDatas = JSON.parse(progressDatas);
+  }
+
+  let currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
+  }
+
+  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let apiLevel = `M${level}-${currentLevel}`;
+
+  const callTelemetry = async () => {
+    const sessionId = getLocalData("sessionId");
+    const responseStartTime = new Date().getTime();
+    const base64Data = "";
+
+    await callTelemetryApi(
+      currentSentence?.sentence,
+      sessionId,
+      currentStep - 1,
+      base64Data,
+      responseStartTime,
+      currentSentence?.sentence,
+      apiLevel
+    );
+  };
 
   const currentSentence = sentencesData[currentSentenceIndex];
+  console.log("sentence", currentSentence);
 
   const playAudio = (word) => {
     const wordAudio = currentSentence.hints[word];
@@ -696,7 +727,7 @@ const FluencyP4 = ({
                   src={listenImg}
                   onClick={() => {
                     playWordAudio(
-                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
+                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentSentence.contentId}.wav`
                     );
                   }}
                   alt="listen"
@@ -809,10 +840,10 @@ const FluencyP4 = ({
                     src={nextImg}
                     alt="next"
                     onClick={() => {
+                      callTelemetry();
                       if (currentSentenceIndex > 0) {
                         handleNext();
                       }
-
                       if (currentSentenceIndex === sentencesData?.length - 1) {
                         handleNextToFinal();
                       } else {
