@@ -55,48 +55,85 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Skip non-GET requests (POST, PUT, DELETE, etc.)
+  if (request.method !== 'GET') {
     return;
   }
 
-  // Skip cross-origin requests
-  if (!event.request.url.startsWith(self.location.origin)) {
+  // Skip cross-origin requests (API calls) - let them go through normally
+  if (!url.origin.startsWith(self.location.origin)) {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+  // Skip API requests - don't cache API endpoints
+  const isApiRequest = 
+    url.pathname.includes('/api/') ||
+    url.pathname.includes('/content/') ||
+    url.pathname.includes('/learner/') ||
+    url.pathname.includes('/orchestration/') ||
+    url.searchParams.has('api') ||
+    request.headers.get('Authorization');
 
-      return fetch(event.request)
+  // For API requests, always go to network
+  if (isApiRequest) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  // Only cache static assets (HTML, CSS, JS, images, fonts)
+  const isStaticAsset = 
+    request.destination === 'document' ||
+    request.destination === 'style' ||
+    request.destination === 'script' ||
+    request.destination === 'image' ||
+    request.destination === 'font' ||
+    url.pathname.endsWith('.js') ||
+    url.pathname.endsWith('.css') ||
+    url.pathname.endsWith('.png') ||
+    url.pathname.endsWith('.jpg') ||
+    url.pathname.endsWith('.svg') ||
+    url.pathname.endsWith('.ico') ||
+    url.pathname.endsWith('.woff') ||
+    url.pathname.endsWith('.woff2') ||
+    url.pathname === '/' ||
+    url.pathname === '/index.html';
+
+  // Network-first strategy for static assets (always try network first)
+  if (isStaticAsset) {
+    event.respondWith(
+      fetch(request)
         .then((response) => {
-          // Don't cache if not a valid response
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
+          // Only cache successful responses
+          if (response && response.status === 200 && response.type === 'basic') {
+            const responseToCache = response.clone();
+            caches.open(RUNTIME_CACHE).then((cache) => {
+              cache.put(request, responseToCache);
+            });
           }
-
-          // Clone the response
-          const responseToCache = response.clone();
-
-          // Cache the response
-          caches.open(RUNTIME_CACHE).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-
           return response;
         })
         .catch((error) => {
-          console.error('[Service Worker] Fetch failed:', error);
-          // Return offline page or fallback if available
-          if (event.request.destination === 'document') {
-            return caches.match('/index.html');
-          }
-        });
-    })
-  );
+          // If network fails, try cache
+          console.log('[Service Worker] Network failed, trying cache:', request.url);
+          return caches.match(request).then((cachedResponse) => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+            // If it's a document request and we have index.html cached, return that
+            if (request.destination === 'document') {
+              return caches.match('/index.html');
+            }
+            throw error;
+          });
+        })
+    );
+  } else {
+    // For everything else, just pass through to network
+    event.respondWith(fetch(request));
+  }
 });
 
 // Handle background sync (if needed in future)
