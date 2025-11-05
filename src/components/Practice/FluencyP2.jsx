@@ -251,6 +251,34 @@ const FluencyP2 = ({
       });
   };
 
+  let progressDatas = getLocalData("practiceProgress");
+  if (typeof progressDatas === "string") {
+    progressDatas = JSON.parse(progressDatas);
+  }
+
+  let currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
+  }
+
+  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let apiLevel = `M${level}-${currentLevel}`;
+
+  const callTelemetry = async () => {
+    const sessionId = getLocalData("sessionId");
+    const responseStartTime = new Date().getTime();
+    const base64Data = "";
+
+    await callTelemetryApi(
+      currentSentence?.sentence,
+      sessionId,
+      currentStep - 1,
+      base64Data,
+      responseStartTime,
+      currentSentence?.sentence,
+      apiLevel
+    );
+  };
   const handleAudioEnd = () => {
     if (audioRefs.current) {
       audioRefs.current.pause();
@@ -263,6 +291,7 @@ const FluencyP2 = ({
     setLocalData("speed", selected);
 
     handleNext();
+    callTelemetry();
     setShowReadingSpeed(false);
     setShowContent(false);
     setShowSentence(false);

@@ -148,7 +148,7 @@ const FluencyP3 = ({
   const [showContent, setShowContent] = useState(false);
   const [resetTimer, setResetTimer] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [readingSpeed, setReadingSpeed] = useState(null);
+  const [readingSpeed, setReadingSpeed] = useState("Slow");
   const [startTime, setStartTime] = useState(null);
 
   const allSentences = contentSourceData?.map((item) => {
@@ -174,6 +174,37 @@ const FluencyP3 = ({
         return "linear-gradient(to bottom, #fff7ef, #ffeede)";
     }
   };
+  let progressDatas = getLocalData("practiceProgress");
+  if (typeof progressDatas === "string") {
+    progressDatas = JSON.parse(progressDatas);
+  }
+
+  let currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
+  }
+
+  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let apiLevel = `M${level}-${currentLevel}`;
+
+  const callTelemetry = async () => {
+    const sessionId = getLocalData("sessionId");
+    const responseStartTime = new Date().getTime();
+    const base64Data = "";
+    const sentenceText =
+      currentSentence?.map((wordObj) => wordObj.word).join(" ") || "";
+
+    await callTelemetryApi(
+      sentenceText,
+      sessionId,
+      currentStep - 1,
+      base64Data,
+      responseStartTime,
+      sentenceText,
+      apiLevel
+    );
+  };
+  console.log("cur", currentSentence.sentence);
 
   const startReadingFlow = () => {
     setShowContent(false);
@@ -647,7 +678,8 @@ const FluencyP3 = ({
                 alt="next"
                 onClick={() => {
                   handleNext();
-                  setReadingSpeed(null);
+                  callTelemetry();
+                  setReadingSpeed("Slow");
                   setStartTime(null);
                   setShowResultScreen(false);
                 }}
@@ -772,7 +804,7 @@ const FluencyP3 = ({
                 key={resetTimer ? `timer-${Date.now()}` : "timer"}
                 duration={3}
                 onComplete={() => {
-                  setReadingSpeed(null);
+                  setReadingSpeed("Slow");
                   setStartTime(Date.now());
                   setShowContent(true);
                   setResetTimer(false);

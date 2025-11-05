@@ -405,6 +405,35 @@ const FluencyP5 = ({
     }
   };
 
+  let progressDatas = getLocalData("practiceProgress");
+  if (typeof progressDatas === "string") {
+    progressDatas = JSON.parse(progressDatas);
+  }
+
+  let currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
+  }
+
+  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let apiLevel = `M${level}-${currentLevel}`;
+
+  const callTelemetry = async () => {
+    const sessionId = getLocalData("sessionId");
+    const responseStartTime = new Date().getTime();
+    const base64Data = "";
+
+    await callTelemetryApi(
+      currentSentence?.sentence,
+      sessionId,
+      currentStep - 1,
+      base64Data,
+      responseStartTime,
+      currentSentence?.sentence,
+      apiLevel
+    );
+  };
+
   const playWordAudio = (audio) => {
     console.log("playWordAudio called with:", audio, audioRefs.current);
 
@@ -438,7 +467,7 @@ const FluencyP5 = ({
 
   const handleReadingSpeedNext = () => {
     setLocalData("speed", selected);
-
+    callTelemetry();
     handleNext();
     setShowReadingSpeed(false);
     setShowContent(false);
@@ -801,7 +830,7 @@ const FluencyP5 = ({
         <div
           style={{
             width: "60%",
-            height: "200px",
+            height: showBearDance ? "" : "90%",
             border: "2px dashed #FF6600",
             borderRadius: "18px",
             background: "rgba(255, 102, 0, 0.05)",
@@ -817,12 +846,12 @@ const FluencyP5 = ({
           <div
             key={animationKey}
             style={{
-              position: "absolute",
+              position: showBearDance ? "relative" : "absolute",
               width: "80%",
               textAlign: "center",
               fontWeight: "700",
-              fontSize: "17px",
-              lineHeight: "1.3",
+              fontSize: "20px",
+              lineHeight: "1.1",
               color: "rgba(51, 63, 97, 1)",
               animation: showBearDance
                 ? null
@@ -836,7 +865,7 @@ const FluencyP5 = ({
             {`
       @keyframes floatUp {
         0% {
-          top: 120%; /* start well below */
+          top: 100%; /* start well below */
           opacity: 0;
         }
         10% {

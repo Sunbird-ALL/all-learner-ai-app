@@ -14,6 +14,7 @@ import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
 import MainLayout from "../Layouts.jsx/MainLayout";
+
 import {
   practiceSteps,
   WordRedCircle,
@@ -329,6 +330,21 @@ const FluencyP1 = ({
     currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
+  const callTelemetry = async () => {
+    const sessionId = getLocalData("sessionId");
+    const responseStartTime = new Date().getTime();
+    const base64Data = "";
+
+    await callTelemetryApi(
+      currentSentence?.sentence,
+      sessionId,
+      currentStep - 1,
+      base64Data,
+      responseStartTime,
+      currentSentence?.sentence,
+      apiLevel
+    );
+  };
   let currentLevel = practiceSteps?.[currentPracticeStep]?.title || "L1";
 
   let apiLevel = `M${level}-${currentLevel}`;
@@ -396,6 +412,7 @@ const FluencyP1 = ({
 
   const handleNextWord = () => {
     handleNext();
+    callTelemetry();
     setStartTime(null);
     setIsSpeaking(false);
     setShowResult(false);
