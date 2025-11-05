@@ -2,11 +2,14 @@
   "short_name": "ALL",
   "name": "Sunbird - Language Learning App",
   "description": "Interactive language learning platform with stories and practice exercises",
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "purpose": "any"
     },
     {
       "src": "logo192.png",
@@ -21,12 +24,25 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#000000",
   "background_color": "#ffffff",
   "scope": "/",
   "categories": ["education", "lifestyle"],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "iarc_rating_id": "",
+  "screenshots": [],
+  "shortcuts": [],
+  "share_target": null,
+  "related_applications": [],
+  "protocol_handlers": [],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
 }
