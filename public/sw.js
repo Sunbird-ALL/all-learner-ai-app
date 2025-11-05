@@ -1,6 +1,6 @@
-// Service Worker for StoryLingo PWA
-const CACHE_NAME = 'storylingo-v1';
-const RUNTIME_CACHE = 'storylingo-runtime-v1';
+// Service Worker for ALL PWA
+const CACHE_NAME = 'all-pwa-v1';
+const RUNTIME_CACHE = 'all-pwa-runtime-v1';
 
 // Assets to cache on install
 const PRECACHE_ASSETS = [
