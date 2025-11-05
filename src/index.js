@@ -38,18 +38,27 @@ render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
-serviceWorkerRegistration.register({
-  onSuccess: () => {
-    console.log("Service Worker registered successfully");
-  },
-  onUpdate: (registration) => {
-    console.log(
-      "New service worker available. Update will be applied when all tabs are closed."
-    );
-    // Optional: Show update notification to user
-    if (window.confirm("New version available! Reload to update?")) {
-      registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-      window.location.reload();
-    }
-  },
-});
+
+// TEMPORARY: Set to true to disable service worker for testing
+const DISABLE_SERVICE_WORKER = false;
+
+if (DISABLE_SERVICE_WORKER) {
+  console.log("[Service Worker] Service worker disabled for testing");
+  serviceWorkerRegistration.unregister();
+} else {
+  serviceWorkerRegistration.register({
+    onSuccess: () => {
+      console.log("Service Worker registered successfully");
+    },
+    onUpdate: (registration) => {
+      console.log(
+        "New service worker available. Update will be applied when all tabs are closed."
+      );
+      // Optional: Show update notification to user
+      if (window.confirm("New version available! Reload to update?")) {
+        registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+        window.location.reload();
+      }
+    },
+  });
+}

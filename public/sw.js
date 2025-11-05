@@ -60,23 +60,27 @@ self.addEventListener('fetch', (event) => {
   
   // CRITICAL: Don't intercept non-GET requests (POST, PUT, DELETE, etc.)
   // These are API calls that must go directly to the network
+  // Return immediately without calling event.respondWith()
   if (request.method !== 'GET') {
     // Log for debugging (remove in production if needed)
     console.log('[SW] Skipping non-GET request:', request.method, request.url);
-    return; // Let browser handle it normally
+    return; // Let browser handle it normally - don't call event.respondWith()
   }
 
   // CRITICAL: Don't intercept cross-origin requests
   // All API calls to external domains must go through normally
+  // Return immediately without calling event.respondWith()
   if (url.origin !== self.location.origin) {
     // Log for debugging (remove in production if needed)
     console.log('[SW] Skipping cross-origin request:', request.url);
-    return; // Let browser handle it normally
+    return; // Let browser handle it normally - don't call event.respondWith()
   }
 
   // Don't intercept requests with Authorization headers (API calls)
-  if (request.headers.get('Authorization')) {
-    return; // Let browser handle it normally
+  // Return immediately without calling event.respondWith()
+  if (request.headers && request.headers.get && request.headers.get('Authorization')) {
+    console.log('[SW] Skipping request with Authorization header:', request.url);
+    return; // Let browser handle it normally - don't call event.respondWith()
   }
 
   // Don't intercept API-like paths
