@@ -40,7 +40,7 @@ render(
 // Learn more about service workers: https://cra.link/PWA
 
 // TEMPORARY: Set to true to disable service worker for testing
-const DISABLE_SERVICE_WORKER = false;
+const DISABLE_SERVICE_WORKER = true;
 
 if (DISABLE_SERVICE_WORKER) {
   console.log("[Service Worker] Service worker disabled for testing");
