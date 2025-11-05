@@ -57,33 +57,44 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-
-  // Skip non-GET requests (POST, PUT, DELETE, etc.)
+  
+  // CRITICAL: Don't intercept non-GET requests (POST, PUT, DELETE, etc.)
+  // These are API calls that must go directly to the network
   if (request.method !== 'GET') {
-    return;
+    // Log for debugging (remove in production if needed)
+    console.log('[SW] Skipping non-GET request:', request.method, request.url);
+    return; // Let browser handle it normally
   }
 
-  // Skip cross-origin requests (API calls) - let them go through normally
-  if (!url.origin.startsWith(self.location.origin)) {
-    return;
+  // CRITICAL: Don't intercept cross-origin requests
+  // All API calls to external domains must go through normally
+  if (url.origin !== self.location.origin) {
+    // Log for debugging (remove in production if needed)
+    console.log('[SW] Skipping cross-origin request:', request.url);
+    return; // Let browser handle it normally
   }
 
-  // Skip API requests - don't cache API endpoints
-  const isApiRequest = 
+  // Don't intercept requests with Authorization headers (API calls)
+  if (request.headers.get('Authorization')) {
+    return; // Let browser handle it normally
+  }
+
+  // Don't intercept API-like paths
+  const isApiPath = 
     url.pathname.includes('/api/') ||
     url.pathname.includes('/content/') ||
     url.pathname.includes('/learner/') ||
     url.pathname.includes('/orchestration/') ||
-    url.searchParams.has('api') ||
-    request.headers.get('Authorization');
+    url.pathname.includes('/virtual-id') ||
+    url.pathname.includes('/auth/') ||
+    url.pathname.includes('/login') ||
+    url.pathname.includes('/signin');
 
-  // For API requests, always go to network
-  if (isApiRequest) {
-    event.respondWith(fetch(request));
-    return;
+  if (isApiPath) {
+    return; // Let browser handle it normally
   }
 
-  // Only cache static assets (HTML, CSS, JS, images, fonts)
+  // Only handle static assets (HTML, CSS, JS, images, fonts) from same origin
   const isStaticAsset = 
     request.destination === 'document' ||
     request.destination === 'style' ||
@@ -94,14 +105,17 @@ self.addEventListener('fetch', (event) => {
     url.pathname.endsWith('.css') ||
     url.pathname.endsWith('.png') ||
     url.pathname.endsWith('.jpg') ||
+    url.pathname.endsWith('.jpeg') ||
+    url.pathname.endsWith('.gif') ||
     url.pathname.endsWith('.svg') ||
     url.pathname.endsWith('.ico') ||
     url.pathname.endsWith('.woff') ||
     url.pathname.endsWith('.woff2') ||
+    url.pathname.endsWith('.ttf') ||
     url.pathname === '/' ||
     url.pathname === '/index.html';
 
-  // Network-first strategy for static assets (always try network first)
+  // Network-first strategy for static assets only
   if (isStaticAsset) {
     event.respondWith(
       fetch(request)
@@ -131,8 +145,8 @@ self.addEventListener('fetch', (event) => {
         })
     );
   } else {
-    // For everything else, just pass through to network
-    event.respondWith(fetch(request));
+    // For everything else, don't intercept - let browser handle normally
+    return;
   }
 });
 
