@@ -3,7 +3,7 @@ name: ALL rig prod Deployment
 on:
   push:
     branches:
-      - all-2.5.0-pwa
+      - all-2.5.0-pwa-debug
 
 jobs:
   deploy:
