@@ -32,7 +32,7 @@ export const getContent = async (
     )
       url += `&mechanics_id=${options.mechanismId}`;
     if (options.competency) url += `&level_competency=${options.competency}`;
-    if (options.tags && (lang === "en" || lang === "kn"))
+    if (options.tags && (lang === "en" || lang === "kn" || lang === "te"))
       url += `&tags=${options.tags}`;
     if (options.storyMode) url += `&story_mode=${options.storyMode}`;
     if (options.CEFR_level) url += `&CEFR_level=${options.CEFR_level}`;
