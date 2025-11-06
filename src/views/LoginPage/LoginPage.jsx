@@ -120,6 +120,24 @@ const LoginPage = () => {
         errorMessage = "No internet connection. Please check your network.";
       }
 
+      // Check if it's a mobile device and SSL-related error
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+      if (
+        isMobile &&
+        (error?.code === "ERR_NETWORK" ||
+          error?.code === "ERR_CERT_AUTHORITY_INVALID")
+      ) {
+        console.error(
+          "[Login] Mobile SSL/Certificate Error - This is likely why it works on desktop but not mobile"
+        );
+        console.error(
+          "[Login] Mobile browsers block invalid SSL certificates. The API server needs a valid SSL certificate."
+        );
+      }
+
       alert(errorMessage);
     }
   };

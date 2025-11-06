@@ -4,6 +4,13 @@ import { jwtDecode } from "jwt-decode";
 
 const API_HOST_VIRTUAL_ID_HOST = process.env.REACT_APP_VIRTUAL_ID_HOST;
 
+// Detect if running on mobile device
+const isMobileDevice = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+};
+
 export const fetchVirtualId = async (username) => {
   try {
     // Check if API host is configured
@@ -12,6 +19,11 @@ export const fetchVirtualId = async (username) => {
       console.error("[Login] Configuration error:", error.message);
       throw error;
     }
+
+    // Log device type for debugging
+    const isMobile = isMobileDevice();
+    console.log("[Login] Device type:", isMobile ? "Mobile" : "Desktop");
+    console.log("[Login] User Agent:", navigator.userAgent);
 
     // Determine if we're using React dev server (has proxy) or production build
     // React dev server: scripts are from webpack-dev-server (no /static/ path)
@@ -99,13 +111,62 @@ export const fetchVirtualId = async (username) => {
     });
 
     // Provide more specific error message
+    const isMobile = isMobileDevice();
+
     if (error?.code === "ECONNABORTED") {
       error.message = "Request timeout - server took too long to respond";
     } else if (error?.code === "ERR_NETWORK") {
-      error.message =
-        "Network error - unable to reach server. Check your connection and CORS settings.";
+      // Check if it's an SSL certificate error
+      if (
+        error?.message?.includes("CERT") ||
+        error?.message?.includes("certificate")
+      ) {
+        if (isMobile) {
+          error.message =
+            "SSL certificate error detected on mobile. The API server's certificate is invalid. This is a server-side issue that must be fixed by the administrator. Desktop browsers may allow bypassing this, but mobile browsers block it for security.";
+        } else {
+          error.message =
+            "SSL certificate error - the API server's certificate is invalid or expired. Please contact the server administrator.";
+        }
+      } else {
+        if (isMobile) {
+          error.message =
+            "Network error on mobile device. This could be due to: 1) SSL certificate issues (mobile browsers are stricter), 2) CORS blocking, or 3) Network connectivity. Please check your connection.";
+        } else {
+          error.message =
+            "Network error - unable to reach server. Check your connection and CORS settings.";
+        }
+      }
+    } else if (
+      error?.code === "ERR_CERT_AUTHORITY_INVALID" ||
+      error?.code === "ERR_CERT_COMMON_NAME_INVALID"
+    ) {
+      if (isMobile) {
+        error.message =
+          "SSL certificate error on mobile: The API server's certificate is invalid or expired. Mobile browsers (especially Chrome on Android) block requests with invalid certificates for security. This must be fixed on the server side. Desktop browsers may show a warning but allow bypassing.";
+      } else {
+        error.message =
+          "SSL certificate error - the API server's certificate is invalid. Please contact the server administrator.";
+      }
     } else if (error?.code === "ERR_CANCELED") {
       error.message = "Request was canceled";
+    }
+
+    // Log mobile-specific diagnostic info
+    if (isMobile) {
+      console.error("[Login] Mobile device error - Additional diagnostics:", {
+        userAgent: navigator.userAgent,
+        onLine: navigator.onLine,
+        connection: navigator.connection
+          ? {
+              effectiveType: navigator.connection.effectiveType,
+              downlink: navigator.connection.downlink,
+              rtt: navigator.connection.rtt,
+            }
+          : "Not available",
+        errorCode: error?.code,
+        errorMessage: error?.message,
+      });
     }
 
     throw error;
