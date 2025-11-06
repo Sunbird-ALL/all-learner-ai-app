@@ -36,7 +36,13 @@
   "screenshots": [],
   "shortcuts": [],
   "share_target": null,
-  "related_applications": [],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.example.app",
+      "id": "com.example.app"
+    }
+  ],
   "protocol_handlers": [],
   "edge_side_panel": {
     "preferred_width": 400
