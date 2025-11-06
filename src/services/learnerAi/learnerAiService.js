@@ -28,7 +28,8 @@ export const getContent = async (
     if (
       options.mechanismId &&
       ![2, 3].includes(level) &&
-      !options.mechanismId.startsWith("Fluency")
+      !options.mechanismId.startsWith("Fluency") &&
+      options.mechanismId !== "PhrasesInAction"
     )
       url += `&mechanics_id=${options.mechanismId}`;
     if (options.competency) url += `&level_competency=${options.competency}`;
