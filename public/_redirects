@@ -1,0 +1,5 @@
+# Netlify-style redirects (if using Netlify)
+# For S3/CloudFront, see S3_CLOUDFRONT_SETUP.md
+
+/*    /index.html   200
+
