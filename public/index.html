@@ -10,10 +10,12 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="Base React App structure for Devigital Systems Projects"
+      content="ALL - Interactive language learning platform with stories and practice exercises"
     />
-
-    <!-- <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="sunbird-all" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,6 +27,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet" />
     <link href="https://fonts.cdnfonts.com/css/bad-comic" rel="stylesheet" />
     <script src="./js/jquery-3.7.0.min.js" defer></script>
+    <script src="%PUBLIC_URL%/sw-register.js" defer></script>
     <title>EkStep</title>
 
     <!-- Content Security Policy -->
@@ -37,14 +40,7 @@
   connect-src 'self' *.theall.ai https://all-dev-storage.s3.ap-south-1.amazonaws.com https://all-dev-content-service.s3.ap-south-1.amazonaws.com https://all-prod-content-service.s3.ap-south-1.amazonaws.com blob: https://huggingface.co https://cas-bridge.xethub.hf.co https://cdn.jsdelivr.net;
   font-src 'self' https://fonts.googleapis.com https://fonts.cdnfonts.com https://fonts.gstatic.com;
   frame-src 'self' https://www.google.com https://www.gstatic.com https://www.youtube.com https://www.youtube-nocookie.com;
-  img-src 'self' data: blob: 
-  https://images.squarespace-cdn.com 
-  https://all-prod-content-service.s3.ap-south-1.amazonaws.com 
-  https://all-dev-content-service.s3.ap-south-1.amazonaws.com 
-  https://s3.ap-south-1.amazonaws.com 
-  https://raw.githubusercontent.com 
-  https://cdn.jsdelivr.net;
-  https://github.com
+  img-src 'self' data: blob: https://images.squarespace-cdn.com https://all-prod-content-service.s3.ap-south-1.amazonaws.com https://all-dev-content-service.s3.ap-south-1.amazonaws.com https://s3.ap-south-1.amazonaws.com https://raw.githubusercontent.com https://cdn.jsdelivr.net https://github.com;
   manifest-src 'self';
   media-src 'self' blob: https://all-prod-content-service.s3.ap-south-1.amazonaws.com https://all-dev-content-service.s3.ap-south-1.amazonaws.com https://raw.githubusercontent.com https://github.com;
   worker-src 'self' blob: https://d114esnbvw5tst.cloudfront.net;

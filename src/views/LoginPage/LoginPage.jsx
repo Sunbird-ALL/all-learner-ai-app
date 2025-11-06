@@ -93,8 +93,34 @@ const LoginPage = () => {
         alert("Enter correct username and password");
       }
     } catch (error) {
-      console.error(error);
-      alert("An error occurred. Please try again later.");
+      console.error("Login error:", error);
+      console.error("Error details:", {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+        stack: error?.stack,
+      });
+
+      // Show more specific error message
+      let errorMessage = "An error occurred. Please try again later.";
+      if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      } else if (error?.response?.status === 404) {
+        errorMessage = "Login service not found. Please check your connection.";
+      } else if (
+        error?.response?.status === 401 ||
+        error?.response?.status === 403
+      ) {
+        errorMessage = "Invalid username or password.";
+      } else if (error?.response?.status >= 500) {
+        errorMessage = "Server error. Please try again later.";
+      } else if (!navigator.onLine) {
+        errorMessage = "No internet connection. Please check your network.";
+      }
+
+      alert(errorMessage);
     }
   };
 
