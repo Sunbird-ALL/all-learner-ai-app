@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Box } from "@mui/material";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import Confetti from "react-confetti";
 import speakButton from "../../assets/speakButton.svg";
@@ -21,6 +22,9 @@ import { practiceSteps, getLocalData } from "../../utils/constants";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { Modal } from "@mui/material";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import CloseIcon from "@mui/icons-material/Close";
 
 const paragraphPages = [
   {
@@ -184,6 +188,7 @@ const ParagraphFlow = ({
   const [finalTranscript, setFinalTranscript] = useState("");
   const [isMatch, setIsMatch] = useState(false);
   const [open, setOpen] = useState(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
 
   console.log("audios", parentWords);
 
@@ -1053,7 +1058,7 @@ const ParagraphFlow = ({
               <iframe
                 width="100%"
                 height="340"
-                src={`https://www.youtube.com/embed/sK6YINwogLk?autoplay=1`}
+                src={`https://www.youtube.com/embed/kwJEIqYMKEM?autoplay=1`}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -1135,7 +1140,7 @@ const ParagraphFlow = ({
                 ></div>
               </div>
               {/* Book Image */}
-              <img
+              {/* <img
                 src={paragraphData.bookImage}
                 alt="Book Page"
                 style={{
@@ -1144,7 +1149,113 @@ const ParagraphFlow = ({
                   border: "1px solid #ddd",
                   marginTop: "8px",
                 }}
-              />
+              /> */}
+              <Box
+                sx={{
+                  position: "relative",
+                  cursor: "zoom-in",
+                  width: "fit-content",
+                }}
+              >
+                <img
+                  src={paragraphData.bookImage}
+                  style={{
+                    width: "100%",
+                    borderRadius: "10px",
+                    border: "1px solid #ddd",
+                    marginTop: "8px",
+                  }}
+                  alt="contentImage"
+                  onClick={() => setZoomOpen(true)} // Open modal on click
+                />
+
+                {/* Subtle gradient overlay across the top */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    left: 0,
+                    right: 0,
+                    height: "40px", // Height of the gradient overlay
+                    background:
+                      "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
+                    borderTopLeftRadius: "10px",
+                    borderTopRightRadius: "10px",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: "8px",
+                  }}
+                >
+                  {/* Zoom icon positioned in the top-left corner */}
+                  <ZoomInIcon
+                    onClick={() => setZoomOpen(true)}
+                    sx={{ color: "white", fontSize: "22px", cursor: "pointer" }}
+                  />
+                </Box>
+              </Box>
+              <Modal
+                open={zoomOpen}
+                onClose={() => setZoomOpen(false)}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 99999999,
+                }}
+              >
+                <Box
+                  sx={{
+                    position: "relative",
+                    outline: "none",
+                    height: "500px",
+                    width: "500px",
+                  }}
+                >
+                  {/* Subtle gradient overlay at the top of the zoomed image */}
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: "40px", // Adjust height as needed
+                      background:
+                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      paddingRight: "8px",
+                      borderTopLeftRadius: "8px",
+                      borderTopRightRadius: "8px",
+                    }}
+                  >
+                    {/* Close icon positioned within the gradient overlay */}
+                    <CloseIcon
+                      onClick={() => setZoomOpen(false)}
+                      sx={{
+                        color: "white",
+                        fontSize: "24px",
+                        cursor: "pointer",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        borderRadius: "50%",
+                        padding: "4px",
+                      }}
+                    />
+                  </Box>
+
+                  <img
+                    src={paragraphData.bookImage}
+                    alt="Zoomed content"
+                    style={{
+                      // maxWidth: "90vw",
+                      maxHeight: "90vh",
+                      width: "100%",
+                      borderRadius: "8px",
+                      zIndex: 99999,
+                    }}
+                  />
+                </Box>
+              </Modal>
             </div>
 
             {/* Listen Bear - BOTTOM LEFT OF BOOK with larger size */}
