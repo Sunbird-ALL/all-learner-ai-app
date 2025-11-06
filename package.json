@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
+  "proxy": "https://www.learnerai-dev.theall.ai",
   "dependencies": {
     "@ai4bharat/indic-transliterate": "^1.3.8",
     "@aws-sdk/client-s3": "^3.388.0",
@@ -69,6 +70,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "serve": "npx serve -s build -l 3000",
     "prettier:cli": "prettier \"src/**/*.js\" \"**/*.json\"",
     "prettier": "npm run prettier:cli -l",
     "prettier:fix": "npm run prettier:cli --write",
