@@ -121,6 +121,22 @@ export const fetchVirtualId = async (username) => {
     const errorNameLower = (error?.name || "").toLowerCase();
 
     // Detect SSL certificate errors
+    // On mobile, SSL errors often show as ERR_NETWORK because the browser blocks
+    // the request before it can report a specific SSL error code
+    const targetUrl = error?.config?.url || "";
+    const isHTTPSRequest = targetUrl.startsWith("https:");
+    const isHTTPSApp = window.location.protocol === "https:";
+    const hasNoResponse = !error?.response && !error?.request?.response;
+
+    // Mobile browsers often report ERR_NETWORK for SSL errors because they block
+    // the request before connection, so we need to infer it's SSL-related
+    const isLikelySSLErrorOnMobile =
+      isMobile &&
+      error?.code === "ERR_NETWORK" &&
+      isHTTPSRequest &&
+      isHTTPSApp &&
+      hasNoResponse;
+
     const isSSLError =
       errorCodeLower.includes("cert") ||
       errorCodeLower.includes("ssl") ||
@@ -133,7 +149,8 @@ export const fetchVirtualId = async (username) => {
       error?.code === "ERR_CERT_AUTHORITY_INVALID" ||
       error?.code === "ERR_CERT_COMMON_NAME_INVALID" ||
       error?.code === "ERR_CERT_DATE_INVALID" ||
-      error?.code === "ERR_SSL_PROTOCOL_ERROR";
+      error?.code === "ERR_SSL_PROTOCOL_ERROR" ||
+      isLikelySSLErrorOnMobile; // Mobile browsers often report ERR_NETWORK for SSL errors
 
     // Detect CORS errors
     const isCORSError =
@@ -156,6 +173,11 @@ export const fetchVirtualId = async (username) => {
       isNetworkError,
       errorCode: error?.code,
       errorMessage: error?.message,
+      isLikelySSLErrorOnMobile: isLikelySSLErrorOnMobile || false,
+      targetUrl: targetUrl,
+      isHTTPSRequest,
+      isHTTPSApp,
+      hasNoResponse,
     });
 
     if (error?.code === "ECONNABORTED") {
@@ -183,7 +205,14 @@ export const fetchVirtualId = async (username) => {
           "CORS error - the API server is blocking requests from this origin. Please check server CORS configuration.";
       }
     } else if (error?.code === "ERR_NETWORK" || isNetworkError) {
-      if (isMobile) {
+      if (isMobile && isLikelySSLErrorOnMobile) {
+        // On mobile, ERR_NETWORK with HTTPS target and no response is almost always SSL
+        error.message =
+          "SSL Certificate Error (Mobile): The API server's SSL certificate is invalid or expired. Mobile browsers block these requests for security (reported as 'Network Error'). This must be fixed on the server side. Desktop browsers may allow bypassing, but mobile cannot.";
+        console.error(
+          "[Login] SSL Certificate Error (detected from ERR_NETWORK pattern) - This is why it works on desktop but not mobile"
+        );
+      } else if (isMobile) {
         // Most likely SSL on mobile, but could be other issues
         error.message =
           "Network Error (Mobile): Unable to reach the server. Most likely cause: SSL certificate invalid (mobile browsers block this). Other possibilities: Server down, network issue, or CORS blocking. Check browser console for detailed error code.";
