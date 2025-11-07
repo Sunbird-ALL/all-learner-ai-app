@@ -39,8 +39,8 @@
   "related_applications": [
     {
       "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.app",
-      "id": "com.example.app"
+      "url": "https://play.google.com/store/apps/details?id=ai.theall.all_rig.twa",
+      "id": "ai.theall.all_rig.twa"
     }
   ],
   "protocol_handlers": [],
