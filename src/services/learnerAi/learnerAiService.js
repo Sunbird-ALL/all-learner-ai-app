@@ -88,6 +88,7 @@ export const fetchGetSetResult = async (
         collectionId: currentCollectionId,
         totalSyllableCount: totalSyllableCount,
         language: lang,
+        is_B_enable: false,
       },
       getHeaders()
     );
