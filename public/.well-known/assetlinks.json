@@ -1,0 +1,8 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ai.theall.all_rig.twa",
+      "sha256_cert_fingerprints": ["30:F1:6F:71:D1:EB:F7:1C:D9:44:D2:49:F6:30:F6:5A:2D:11:43:A5:2F:E2:38:52:EC:EF:49:01:3A:86:B6:19"]
+    }
+  }]
