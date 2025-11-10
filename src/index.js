@@ -7,6 +7,7 @@ import store from "./store/configureStore";
 import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { getCSP } from "./csp";
+import * as serviceWorkerRegistration from "./utils/serviceWorkerRegistration";
 
 const injectCSP = () => {
   try {
@@ -32,3 +33,32 @@ render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+// Register service worker for PWA functionality
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://cra.link/PWA
+
+// TEMPORARY: Set to true to disable service worker for testing
+const DISABLE_SERVICE_WORKER = false; // Re-enabled for PWA testing
+
+if (DISABLE_SERVICE_WORKER) {
+  console.log("[Service Worker] Service worker disabled for testing");
+  serviceWorkerRegistration.unregister();
+} else {
+  serviceWorkerRegistration.register({
+    onSuccess: () => {
+      console.log("Service Worker registered successfully");
+    },
+    onUpdate: (registration) => {
+      console.log(
+        "New service worker available. Update will be applied when all tabs are closed."
+      );
+      // Optional: Show update notification to user
+      if (window.confirm("New version available! Reload to update?")) {
+        registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+        window.location.reload();
+      }
+    },
+  });
+}
