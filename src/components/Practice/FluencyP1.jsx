@@ -391,7 +391,7 @@ const FluencyP1 = ({
       return {
         original_text: word,
         content_id: contentId,
-        milestone_level: "m4",
+        milestone_level: `m${level}`,
         practice_level: currentLevel,
         session_id: sessionId,
         practiced: true,

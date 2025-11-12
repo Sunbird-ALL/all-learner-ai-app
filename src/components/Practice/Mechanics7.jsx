@@ -321,7 +321,7 @@ const Mechanics7 = ({
             //console.log("Transcription resultss 1:", transcripts);
             //console.log("Transcription resultss 2:", target);
 
-            setIsWordCorrect(true);
+            setIsWordCorrect(isCorrect);
 
             setIsLoading(false);
             // setStatus("inactive");

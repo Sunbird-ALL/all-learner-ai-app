@@ -211,19 +211,22 @@ const FluencyP5 = ({
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const audioRefs = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [selected, setSelected] = useState("Slow");
+  const [selected, setSelected] = useState("Fast");
   const [speed, setSpeed] = useState(getLocalData("speed"));
   const [resetTimer, setResetTimer] = useState(false);
   const [hasSpeedBeenSelected, setHasSpeedBeenSelected] = useState(
     !!getLocalData("speed")
   );
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [paragraphPosition, setParagraphPosition] = useState(100); // Start from bottom (100%)
-  const [autoAnimationStarted, setAutoAnimationStarted] = useState(false);
-  const [isTextAnimationPaused, setIsTextAnimationPaused] = useState(false);
-  const animationRef = useRef(null);
   const [showResult, setShowResult] = useState(false);
   const [animationKey, setAnimationKey] = useState(0);
+
+  const [scrollPosition, setScrollPosition] = useState(130);
+  const scrollAnimationRef = useRef(null);
+  const lastFrameTimeRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const textBlockRef = useRef(null);
+
   const {
     transcript,
     interimTranscript,
@@ -235,6 +238,8 @@ const FluencyP5 = ({
   const [finalTranscript, setFinalTranscript] = useState("");
   const [isMatch, setIsMatch] = useState(false);
   const [open, setOpen] = useState(false);
+  const correctPracticeWords = getLocalData("correctPracticeWords");
+  const sessionId = getLocalData("sessionId");
 
   const getSimilarity = (str1, str2) => {
     const a = str1.toLowerCase().trim().split(" ");
@@ -268,52 +273,109 @@ const FluencyP5 = ({
   const currentSentence = sentencesData[currentSentenceIndex];
 
   useEffect(() => {
-    if (getLocalData("speed")) {
-      startReadingFlow();
+    if (!getLocalData("speed")) {
+      setLocalData("speed", "Fast");
+      setSelected("Fast");
     }
+
+    setShowContent(true);
+    setShowSentence(true);
+    startReadingFlow();
   }, []);
 
-  useEffect(() => {
-    if (!autoAnimationStarted && !showFinalState && !paused && !showBearDance) {
-      startAutoAnimation();
+  const getDurationInMs = () => {
+    switch (selected) {
+      case "Fast":
+        return 5000; // 5s
+      case "Medium":
+        return 9000; // 9s
+      case "Slow":
+      default:
+        return 13000; // 13s
     }
-  }, [autoAnimationStarted, showFinalState, paused, showBearDance]);
+  };
 
-  const startAutoAnimation = () => {
-    setAutoAnimationStarted(true);
-    setIsTextAnimationPaused(false);
-    setShowResult(false);
+  useEffect(() => {
+    setScrollPosition(120);
+    lastFrameTimeRef.current = null;
+  }, [animationKey]);
 
-    let startTime = Date.now();
-    const duration =
-      selected === "Fast" ? 1000 : selected === "Medium" ? 1500 : 2000;
+  useEffect(() => {
+    if (
+      showBearDance ||
+      showFinalState ||
+      !scrollContainerRef.current ||
+      !textBlockRef.current
+    ) {
+      if (scrollAnimationRef.current) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+        scrollAnimationRef.current = null;
+      }
+      lastFrameTimeRef.current = null;
+      return;
+    }
 
-    const animate = () => {
-      if (showBearDance) {
-        setIsTextAnimationPaused(true);
+    const containerHeight = scrollContainerRef.current.clientHeight;
+    const textHeight = textBlockRef.current.clientHeight;
+
+    if (containerHeight === 0 || textHeight === 0) {
+      scrollAnimationRef.current = requestAnimationFrame(animateScroll);
+      return;
+    }
+
+    const textHeightPercent = (textHeight / containerHeight) * 100;
+    const endPositionPercent = -textHeightPercent;
+
+    const startPositionPercent = 90;
+
+    const totalDistancePercent = startPositionPercent - endPositionPercent;
+
+    const durationMs = getDurationInMs();
+    const speedPercentPerMs = totalDistancePercent / durationMs;
+
+    const animateScroll = (timestamp) => {
+      if (!lastFrameTimeRef.current) {
+        lastFrameTimeRef.current = timestamp;
+        scrollAnimationRef.current = requestAnimationFrame(animateScroll);
         return;
       }
 
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const deltaTime = timestamp - lastFrameTimeRef.current;
+      lastFrameTimeRef.current = timestamp;
 
-      // Move from 0 to 50% slowly
-      const startY = 0;
-      const endY = 50;
-      const newPosition = startY + (endY - startY) * progress;
+      const positionChangePercent = speedPercentPerMs * deltaTime;
 
-      setParagraphPosition(newPosition);
+      setScrollPosition((prevPosition) => {
+        const newPosition = prevPosition - positionChangePercent;
 
-      if (progress < 1 && !showBearDance) {
-        animationRef.current = requestAnimationFrame(animate);
-      } else if (progress >= 1 && !showBearDance) {
-        setAnimationCompleted(true);
-        //handlePauseClick();
-      }
+        if (newPosition <= endPositionPercent) {
+          const overshootPercent = endPositionPercent - newPosition;
+          return startPositionPercent - overshootPercent;
+        } else {
+          return newPosition;
+        }
+      });
+
+      scrollAnimationRef.current = requestAnimationFrame(animateScroll);
     };
 
-    animationRef.current = requestAnimationFrame(animate);
-  };
+    scrollAnimationRef.current = requestAnimationFrame(animateScroll);
+
+    return () => {
+      if (scrollAnimationRef.current) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+        scrollAnimationRef.current = null;
+      }
+      lastFrameTimeRef.current = null;
+    };
+  }, [
+    showBearDance,
+    showFinalState,
+    animationKey,
+    selected,
+    scrollContainerRef.current,
+    textBlockRef.current,
+  ]);
 
   const startReadingFlow = () => {
     setShowContent(false);
@@ -326,20 +388,23 @@ const FluencyP5 = ({
     setShowResult(false);
     setHoveredWord(null);
     setIsSpeaking(false);
-    setParagraphPosition(100);
-    setAutoAnimationStarted(false);
-    setIsTextAnimationPaused(false);
-
     setResetTimer(true);
 
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
+    setScrollPosition(120);
+    lastFrameTimeRef.current = null;
   };
 
   useEffect(() => {
     setAnimationKey((prev) => prev + 1);
   }, [selected]);
+  useEffect(() => {
+    // Kick off animation after 100ms to avoid layout thrash
+    const timer = setTimeout(() => {
+      setAnimationKey((prev) => prev + 1);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (showContent) {
@@ -355,11 +420,6 @@ const FluencyP5 = ({
     setPaused(true);
     setShowBearDance(true);
     setShowConfetti(true);
-    setIsTextAnimationPaused(true);
-
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
 
     const audio = new Audio(correctSound);
     audio.play();
@@ -390,7 +450,6 @@ const FluencyP5 = ({
       continuous: true,
       interimResults: true,
     });
-    // Animation already running automatically, no need to start it here
   };
 
   const getDuration = () => {
@@ -480,13 +539,28 @@ const FluencyP5 = ({
     setShowResult(false);
     setHoveredWord(null);
     setIsSpeaking(false);
-    setParagraphPosition(100);
-    setAutoAnimationStarted(false);
-    setIsTextAnimationPaused(false);
 
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
+    const allWordsData = Object.keys(parentWords).map((word) => {
+      const contentId = parentWords[word].content_id;
+
+      return {
+        original_text: word,
+        content_id: contentId,
+        milestone_level: `m${level}`,
+        practice_level: currentLevel,
+        session_id: sessionId,
+        practiced: true,
+        learned: true,
+        subsession_id: "session_123",
+      };
+    });
+    setLocalData("correctPracticeWords", [
+      ...(correctPracticeWords || []),
+      ...allWordsData,
+    ]);
+
+    setScrollPosition(120);
+    lastFrameTimeRef.current = null;
 
     setCurrentSentenceIndex(
       (prevIndex) => (prevIndex + 1) % sentencesData.length
@@ -713,6 +787,7 @@ const FluencyP5 = ({
           padding: "20px",
           position: "relative",
           overflow: "hidden",
+          justifyContent: "center",
         }}
       >
         <audio ref={audioRefs} onEnded={handleAudioEnd} hidden />
@@ -800,7 +875,7 @@ const FluencyP5 = ({
               background: "#fff",
               padding: "8px",
               borderRadius: "12px",
-              boxShadow: "0px 2px 6px rgba(0,0,0,0.15)",
+              //boxShadow: "0px 2px 6px rgba(0,0,0,0.15)",
             }}
           >
             <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
@@ -828,9 +903,10 @@ const FluencyP5 = ({
         )}
 
         <div
+          ref={scrollContainerRef}
           style={{
             width: "60%",
-            height: showBearDance ? "" : "90%",
+            height: showBearDance ? "auto" : "90%",
             border: "2px dashed #FF6600",
             borderRadius: "18px",
             background: "rgba(255, 102, 0, 0.05)",
@@ -844,6 +920,7 @@ const FluencyP5 = ({
           }}
         >
           <div
+            ref={textBlockRef}
             key={animationKey}
             style={{
               position: showBearDance ? "relative" : "absolute",
@@ -851,11 +928,11 @@ const FluencyP5 = ({
               textAlign: "center",
               fontWeight: "700",
               fontSize: "20px",
-              lineHeight: "1.1",
+              lineHeight: "1.4",
               color: "rgba(51, 63, 97, 1)",
-              animation: showBearDance
-                ? null
-                : `floatUp ${getDuration()} linear infinite`,
+              top: showBearDance ? "0" : `${scrollPosition}%`,
+              whiteSpace: "normal",
+              wordBreak: "break-word",
             }}
           >
             {currentSentence.sentence}
@@ -863,23 +940,8 @@ const FluencyP5 = ({
 
           <style>
             {`
-      @keyframes floatUp {
-        0% {
-          top: 100%; /* start well below */
-          opacity: 0;
-        }
-        10% {
-          opacity: 1;
-        }
-        90% {
-          opacity: 1;
-        }
-        100% {
-          top: -90%; /* above and gone */
-          opacity: 0;
-        }
-      }
-    `}
+              /* @keyframes floatUp is no longer needed */
+            `}
           </style>
         </div>
 

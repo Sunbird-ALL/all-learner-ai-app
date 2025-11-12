@@ -18,7 +18,11 @@ import tortoiseImg from "../../assets/tortoiseImg.svg";
 import audioone from "../../assets/audio1.wav";
 import correctSound from "../../assets/correct.wav";
 import { callTelemetryApi } from "../../utils/apiUtil";
-import { practiceSteps, getLocalData } from "../../utils/constants";
+import {
+  practiceSteps,
+  getLocalData,
+  setLocalData,
+} from "../../utils/constants";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -189,7 +193,8 @@ const ParagraphFlow = ({
   const [isMatch, setIsMatch] = useState(false);
   const [open, setOpen] = useState(false);
   const [zoomOpen, setZoomOpen] = useState(false);
-
+  const correctPracticeWords = getLocalData("correctPracticeWords");
+  const sessionId = getLocalData("sessionId");
   console.log("audios", parentWords);
 
   const paragraphPages = [
@@ -217,7 +222,11 @@ const ParagraphFlow = ({
   useEffect(() => {
     transcriptRef.current = transcript;
     const similarity = getSimilarity(transcript, paragraphData.highlightedText);
-    setIsMatch(similarity * 10);
+    if (transcript.trim() !== "" && similarity === 0) {
+      setIsMatch(1);
+    } else {
+      setIsMatch(similarity * 10);
+    }
     console.log(
       "Live Transcript:",
       transcript,
@@ -770,6 +779,25 @@ const ParagraphFlow = ({
     setShowReadingSpeed(false);
     setSpeed("Slow");
     setReadingStartTime(null);
+
+    const allWordsData = Object.keys(parentWords).map((word) => {
+      const contentId = parentWords[word].content_id;
+
+      return {
+        original_text: word,
+        content_id: contentId,
+        milestone_level: `m${level}`,
+        practice_level: currentLevel,
+        session_id: sessionId,
+        practiced: true,
+        learned: true,
+        subsession_id: "session_123",
+      };
+    });
+    setLocalData("correctPracticeWords", [
+      ...(correctPracticeWords || []),
+      ...allWordsData,
+    ]);
 
     // Reset refs
     timeoutRef.current.forEach((t) => clearTimeout(t)); // clear any existing timeouts

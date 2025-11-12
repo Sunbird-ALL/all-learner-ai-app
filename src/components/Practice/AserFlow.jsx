@@ -179,7 +179,16 @@ const AserFlow = ({
           (q) => q?.contentSourceData?.[0]?.text
         );
 
-        const allChars = "abcdefghijklmnopqrstuvwxyz".split("");
+        const languageChars = {
+          en: "abcdefghijklmnopqrstuvwxyz".split(""),
+          hi: "अआइईउऊएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह".split(""), // Hindi
+          ta: "அஆஇஈஉஊஎஏஐஒஓஔகஙசஞடணதநபமயரலவஶஷஸஹ".split(""), // Tamil
+          te: "అఆఇఈఉఊఎఏఐఒఓఔకఖగఘఙచఛజఝఞటఠడఢణతథదధనపఫబభమయరలవశషసహ".split(""), // Telugu
+          ka: "ಅಆಇಈಉಊಋಎಏಐಒಓಔಕಖಗಘಙಚಛಜಝಞಟಠಡಢಣತಥದಧನಪಫಬಭಮಯರಲವಶಷಸಹ".split(""), // Kannada
+        };
+
+        // Default to English if language not found
+        const allChars = languageChars[lang] || languageChars["en"];
 
         const availableChars = allChars.filter(
           (ch) => !existingLetters.includes(ch)
@@ -232,7 +241,7 @@ const AserFlow = ({
       let requestBody = {
         original_text: "Char",
         audio: "",
-        user_id: virtualId,
+        //user_id: virtualId,
         session_id: sessionId,
         language: lang,
         date: new Date(),

@@ -247,7 +247,7 @@ const MainLayout = (props) => {
 
   const language = getLocalData("lang");
 
-  console.log("levelss", LEVEL);
+  console.log("levelss", LEVEL, livesData);
 
   // useEffect(() => {
   //   if (language !== "en") {

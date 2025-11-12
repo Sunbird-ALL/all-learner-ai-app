@@ -372,7 +372,7 @@ function VoiceAnalyser(props) {
       let requestBody = {
         original_text: originalText,
         audio: base64Data,
-        user_id: virtualId,
+        //user_id: virtualId,
         session_id: sessionId,
         language: lang,
         date: new Date(),
@@ -653,6 +653,8 @@ function VoiceAnalyser(props) {
 
         // Calculate lives lost based on percentage.
         let livesLost = Math.floor(percentage / (threshold / totalLives));
+
+        console.log("percent", percentage, livesLost);
 
         // Check fluency criteria and adjust lives lost accordingly.
         let meetsFluencyCriteria;
