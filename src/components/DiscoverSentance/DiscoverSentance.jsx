@@ -234,6 +234,8 @@ const SpeakSentenceComponent = () => {
         } else if (getSetData.sessionResult === "pass" && lang === "en") {
           //navigate("/discover-end");
           navigate("/towre-flow");
+        } else if (getSetData.sessionResult === "pass" && lang !== "en") {
+          navigate("/discover-end");
         } else if (
           getSetData.sessionResult === "fail" &&
           currentContentType === "Sentence"
