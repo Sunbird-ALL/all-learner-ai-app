@@ -231,7 +231,7 @@ const SpeakSentenceComponent = () => {
           setCurrentQuestion(0);
           setSentencePassedCounter(newSentencePassedCounter);
           setQuestions(quesArr);
-        } else if (getSetData.sessionResult === "pass") {
+        } else if (getSetData.sessionResult === "pass" && lang === "en") {
           //navigate("/discover-end");
           navigate("/towre-flow");
         } else if (
@@ -311,14 +311,14 @@ const SpeakSentenceComponent = () => {
           5
         );
 
-        await addLesson({
-          sessionId,
-          milestone: `showcase`,
-          lesson: "0",
-          progress: 0,
-          language: lang,
-          milestoneLevel: "m1",
-        });
+        // await addLesson({
+        //   sessionId,
+        //   milestone: `showcase`,
+        //   lesson: "0",
+        //   progress: 0,
+        //   language: lang,
+        //   milestoneLevel: "m1",
+        // });
 
         // Update state
         setCurrentContentType("Sentence");

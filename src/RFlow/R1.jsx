@@ -932,6 +932,8 @@ const R1 = ({
     setEnableNext(false);
   };
   useEffect(() => {
+    if (level !== "B") return;
+
     (async () => {
       try {
         const lang = getLocalData("lang");
@@ -969,7 +971,7 @@ const R1 = ({
       let requestBody = {
         original_text: "Char",
         audio: "",
-        user_id: virtualId,
+        //user_id: virtualId,
         session_id: sessionId,
         language: lang,
         date: new Date(),

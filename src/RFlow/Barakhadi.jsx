@@ -2646,7 +2646,7 @@ const Barakhadi = ({
       let requestBody = {
         original_text: "Char",
         audio: "",
-        user_id: virtualId,
+        //user_id: virtualId,
         session_id: sessionId,
         language: lang,
         date: new Date(),

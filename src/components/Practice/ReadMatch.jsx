@@ -23,6 +23,8 @@ import {
   getCorrectPracticeWords,
   updateCorrectPracticeWords,
 } from "../../services/orchestration/orchestrationService";
+import correctSound from "../../assets/correct.wav";
+import wrongSound from "../../assets/audio/wrong.wav";
 
 const theme = createTheme();
 
@@ -200,7 +202,7 @@ const ReadMatch = ({
     );
     const imageItem = wordImagePairs[imageIndex];
 
-    const isCorrect = imageItem.match === wordItem.word;
+    const isCorrect = imageItem?.match === wordItem?.word;
 
     if (firstAttemptCorrect[wordItem.content_id] === undefined) {
       setFirstAttemptCorrect((prev) => ({
@@ -210,6 +212,8 @@ const ReadMatch = ({
     }
 
     if (isCorrect) {
+      const audio = new Audio(correctSound);
+      audio.play();
       setCorrectMatch({ wordIndex: selectedWord.wordIndex, imageIndex });
       setTimeout(() => {
         setShowConfetti(true);
@@ -227,6 +231,8 @@ const ReadMatch = ({
         }, 2500);
       }, 500);
     } else {
+      const audio = new Audio(wrongSound);
+      audio.play();
       setTimeout(() => {
         setWrongMatch({ wordIndex: selectedWord.wordIndex, imageIndex });
         setTimeout(() => {
@@ -339,7 +345,7 @@ const ReadMatch = ({
       opacity: isDisabled ? 0.5 : 1,
       fontFamily: "Quicksand, sans-serif",
       fontWeight: 600,
-      fontSize: isMobile ? "16px" : isTablet ? "20px" : "36px",
+      fontSize: isMobile ? "16px" : isTablet ? "20px" : "32px",
       lineHeight: isMobile ? "16px" : isTablet ? "20px" : "24px",
       letterSpacing: "0px",
       color: "#333F61",

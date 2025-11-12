@@ -4525,7 +4525,7 @@ const Practice = () => {
             return;
           }
 
-          if (level === 1 || level === 2 || level === 4) {
+          if ([1, 2, 4, 5, 6, 7, 8, 9].includes(level)) {
             const addCorrectWords = await addCorrectPracticeWords();
           }
 
@@ -4601,20 +4601,8 @@ const Practice = () => {
               setLocalData("wordWall", true);
             }
 
-            try {
-              await addLesson({
-                sessionId,
-                milestone: milestoneType,
-                lesson: "0",
-                progress: 0,
-                language: lang,
-                milestoneLevel: getSetData.currentLevel,
-              });
-              gameOver({ link: "/assesment-end" }, true);
-              return;
-            } catch (e) {
-              // catch error
-            }
+            gameOver({ link: "/assesment-end" }, true);
+            return;
           } else if (currentLevel === "S2" && (level === 1 || level === 2)) {
             setLocalData("mFail", true);
             setTimeout(() => {
@@ -4972,16 +4960,16 @@ const Practice = () => {
 
       let showcaseLevel = userState === 4 || userState === 9;
       setIsShowCase(showcaseLevel);
-      if (showcaseLevel) {
-        await addLesson({
-          sessionId: sessionId,
-          milestone: "showcase",
-          lesson: userState,
-          progress: 0,
-          language: lang,
-          milestoneLevel: `m${level}`,
-        });
-      }
+      // if (showcaseLevel) {
+      //   await addLesson({
+      //     sessionId: sessionId,
+      //     milestone: "showcase",
+      //     lesson: userState,
+      //     progress: 0,
+      //     language: lang,
+      //     milestoneLevel: `m${level}`,
+      //   });
+      // }
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
       setProgressData(practiceProgress);
