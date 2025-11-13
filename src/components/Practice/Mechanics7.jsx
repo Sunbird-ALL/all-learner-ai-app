@@ -522,14 +522,14 @@ const Mechanics7 = ({
   const [shake, setShake] = useState(false);
 
   useEffect(() => {
-    setWordsAfterSplit(currentImg.syllable);
-    setWords(currentImg.syllable);
-    setSyllAudios(currentImg.syllablesAudio);
-    wordsRef.current = currentImg.syllable;
+    setWordsAfterSplit(currentImg?.syllable);
+    setWords(currentImg?.syllable);
+    setSyllAudios(currentImg?.syllablesAudio);
+    wordsRef.current = currentImg?.syllable;
   }, [currentImg]);
 
   const handleWordsLogic = (word, transcribedText, isSelected) => {
-    console.log("wordsZ", word, transcribedText);
+    //console.log("wordsZ", word, transcribedText);
 
     const matchPercentage = phoneticMatch(word, transcribedText);
 
