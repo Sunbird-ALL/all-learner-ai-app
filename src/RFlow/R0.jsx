@@ -4880,6 +4880,36 @@ const R0 = ({
     const UI1 = () => {
       //console.log("ui1", item, current);
 
+      const renderHighlightedWord = (word, targetLetter) => {
+        if (!word || !targetLetter) return word;
+
+        const lowerWord = word.toLowerCase();
+        const lowerTarget = targetLetter.toLowerCase();
+
+        const letterIndex = lowerWord.indexOf(lowerTarget);
+
+        if (letterIndex === -1) {
+          return word;
+        }
+
+        const before = word.substring(0, letterIndex);
+        const letter = word.substring(
+          letterIndex,
+          letterIndex + targetLetter.length
+        );
+        const after = word.substring(letterIndex + targetLetter.length);
+
+        return (
+          <>
+            {before}
+            <span style={{ color: "#FF0000", fontWeight: "bold" }}>
+              {letter}
+            </span>
+            {after}
+          </>
+        );
+      };
+
       let TOTAL_ITEMS = 0;
 
       if (lang === "en") {
@@ -5155,37 +5185,29 @@ const R0 = ({
               </Box>
             </Box>
 
-            <Typography
+            <Box
               sx={{
-                fontWeight: 800,
-                fontSize: { xs: 24, md: 34 },
-                letterSpacing: 1,
                 display: "flex",
-                alignItems: "center",
-                fontFamily: "Quicksand",
-                gap: 0.4,
-                textAlign: "center",
-                flexWrap: "wrap",
                 justifyContent: "center",
-                mb: 0.3,
-                mt: 0.3,
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+                mt: 3,
               }}
             >
-              {item?.word?.split("").map((ch, idx) => (
-                <Box
-                  key={idx}
-                  component="span"
-                  sx={{
-                    color:
-                      ch.toLowerCase() === item?.letter?.toLowerCase()
-                        ? red
-                        : navy,
-                  }}
-                >
-                  {ch}
-                </Box>
-              ))}
-            </Typography>
+              <span
+                style={{
+                  color: "#333F61",
+                  fontWeight: 700,
+                  fontSize: "50px",
+                  lineHeight: "1",
+                  letterSpacing: "2%",
+                  fontFamily: "Quicksand",
+                }}
+              >
+                {renderHighlightedWord(item.word, item.letter)}
+              </span>
+            </Box>
 
             <Box
               sx={{
