@@ -43,7 +43,14 @@ import {
 import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
-
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 const sentencesData = [
   {
     id: 1,
@@ -83,6 +90,7 @@ function CircularTimer({ duration = 3, onComplete }) {
     </div>
   );
 }
+const theme = createTheme();
 
 const FluencyP2 = ({
   setVoiceText,
@@ -145,7 +153,8 @@ const FluencyP2 = ({
   const [animationKey, setAnimationKey] = useState(0);
   const lang = getLocalData("lang");
   const [open, setOpen] = useState(false);
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const sentencesData = [
     {
       id: 1,
@@ -625,9 +634,23 @@ const FluencyP2 = ({
         )}
       </div>
 
-      {!showFinalState && (
-        <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
-      )}
+      {!showFinalState &&
+        (isMobile ? (
+          <div
+            style={{
+              marginTop: "70px",
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end", // RIGHT CORNER
+              paddingRight: "190px", // thoda right side ka gap
+              transform: "scale(0.70)", // optional smaller size
+            }}
+          >
+            <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
+          </div>
+        ) : (
+          <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
+        ))}
 
       {showFinalState && hoveredWord && currentSentence?.hints[hoveredWord] && (
         <div
@@ -670,19 +693,33 @@ const FluencyP2 = ({
         }}
       >
         {showContent && !animationCompleted && !paused && (
-          <>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: isMobile ? "10px" : "20px",
+            }}
+          >
             <img
               src={graphImg}
               alt="graph"
-              style={{ width: "350px", maxWidth: "350px" }}
+              style={{
+                width: isMobile ? "220px" : "350px",
+                maxWidth: "100%",
+              }}
             />
+
             <img
               src={pauseImg}
               alt="pause"
-              style={{ width: "50px", cursor: "pointer" }}
+              style={{
+                width: isMobile ? "35px" : "50px",
+                cursor: "pointer",
+              }}
               onClick={handlePauseClick}
             />
-          </>
+          </div>
         )}
 
         {showBearDance && !showFinalState && (

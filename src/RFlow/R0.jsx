@@ -43,7 +43,7 @@ const dataEn = [
     items: [
       {
         id: 1,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Ee",
         letter: "e",
         word: "Egg",
@@ -53,7 +53,7 @@ const dataEn = [
       },
       {
         id: 2,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Ee",
         letter: "e",
         word: "Pen",
@@ -63,7 +63,7 @@ const dataEn = [
       },
       {
         id: 3,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Ee",
         letter: "e",
         word: "Kite",
@@ -78,7 +78,7 @@ const dataEn = [
     items: [
       {
         id: 4,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Aa",
         letter: "a",
         word: "Apple",
@@ -88,7 +88,7 @@ const dataEn = [
       },
       {
         id: 5,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Aa",
         letter: "a",
         word: "Cat",
@@ -98,7 +98,7 @@ const dataEn = [
       },
       {
         id: 6,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Aa",
         letter: "a",
         word: "Pea",
@@ -113,7 +113,7 @@ const dataEn = [
     items: [
       {
         id: 7,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Oo",
         letter: "o",
         word: "Orange",
@@ -123,7 +123,7 @@ const dataEn = [
       },
       {
         id: 8,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Oo",
         letter: "o",
         word: "Dog",
@@ -133,7 +133,7 @@ const dataEn = [
       },
       {
         id: 9,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Oo",
         letter: "o",
         word: "Mango",
@@ -148,7 +148,7 @@ const dataEn = [
     items: [
       {
         id: 10,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Ii",
         letter: "i",
         word: "Ice",
@@ -158,7 +158,7 @@ const dataEn = [
       },
       {
         id: 11,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Ii",
         letter: "i",
         word: "Pig",
@@ -168,7 +168,7 @@ const dataEn = [
       },
       {
         id: 12,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Ii",
         letter: "i",
         word: "Chilly",
@@ -183,7 +183,7 @@ const dataEn = [
     items: [
       {
         id: 13,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Uu",
         letter: "u",
         word: "Umbrella",
@@ -193,7 +193,7 @@ const dataEn = [
       },
       {
         id: 14,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Uu",
         letter: "u",
         word: "Dustbin",
@@ -203,7 +203,7 @@ const dataEn = [
       },
       {
         id: 15,
-        title: "Consonant",
+        title: "Vowel",
         letters: "Uu",
         letter: "u",
         word: "Laddu",
@@ -926,7 +926,7 @@ const dataKn = [
     items: [
       {
         id: 1,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಅ",
         letter: "ಅ",
         word: "ಅರಸ",
@@ -941,7 +941,7 @@ const dataKn = [
     items: [
       {
         id: 2,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಆ",
         letter: "ಆ",
         word: "ಆನೆ",
@@ -956,7 +956,7 @@ const dataKn = [
     items: [
       {
         id: 3,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಇ",
         letter: "ಇ",
         word: "ಇಲಿ",
@@ -971,7 +971,7 @@ const dataKn = [
     items: [
       {
         id: 4,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಈ",
         letter: "ಈ",
         word: "ಈಜು",
@@ -986,7 +986,7 @@ const dataKn = [
     items: [
       {
         id: 5,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಉ",
         letter: "ಉ",
         word: "ಉದರ",
@@ -1001,7 +1001,7 @@ const dataKn = [
     items: [
       {
         id: 6,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಊ",
         letter: "ಊ",
         word: "ಊಟ",
@@ -1016,7 +1016,7 @@ const dataKn = [
     items: [
       {
         id: 7,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಋ",
         letter: "ಋ",
         word: "ಋಷಿ",
@@ -1031,7 +1031,7 @@ const dataKn = [
     items: [
       {
         id: 8,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಎ",
         letter: "ಎ",
         word: "ಎಲೆ",
@@ -1046,7 +1046,7 @@ const dataKn = [
     items: [
       {
         id: 9,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಏ",
         letter: "ಏ",
         word: "ಏಣಿ",
@@ -1061,7 +1061,7 @@ const dataKn = [
     items: [
       {
         id: 10,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಐ",
         letter: "ಐ",
         word: "ಐದು",
@@ -1076,7 +1076,7 @@ const dataKn = [
     items: [
       {
         id: 11,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಒ",
         letter: "ಒ",
         word: "ಒಂಟೆ",
@@ -1091,7 +1091,7 @@ const dataKn = [
     items: [
       {
         id: 12,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಓ",
         letter: "ಓ",
         word: "ಓಡು",
@@ -1106,7 +1106,7 @@ const dataKn = [
     items: [
       {
         id: 13,
-        title: "Consonant",
+        title: "ಸ್ವರಗಳು",
         letters: "ಔ",
         letter: "ಔ",
         word: "ಔಷಧ",
@@ -1121,7 +1121,7 @@ const dataKn = [
     items: [
       {
         id: 14,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಕ",
         letter: "ಕ",
         word: "ಕಮಲ",
@@ -1131,7 +1131,7 @@ const dataKn = [
       },
       {
         id: 15,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಕ",
         letter: "ಕ",
         word: "ಏಕದಳ",
@@ -1141,7 +1141,7 @@ const dataKn = [
       },
       {
         id: 16,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಕ",
         letter: "ಕ",
         word: "ಪದಕ",
@@ -1156,7 +1156,7 @@ const dataKn = [
     items: [
       {
         id: 17,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಖ",
         letter: "ಖ",
         word: "ಖಡ್ಗ",
@@ -1166,7 +1166,7 @@ const dataKn = [
       },
       {
         id: 18,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಖ",
         letter: "ಖ",
         word: "ಲೇಖನಿ",
@@ -1176,7 +1176,7 @@ const dataKn = [
       },
       {
         id: 19,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಖ",
         letter: "ಖ",
         word: "ಪಂಖ",
@@ -1191,7 +1191,7 @@ const dataKn = [
     items: [
       {
         id: 20,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಗ",
         letter: "ಗ",
         word: "ಗರಿ",
@@ -1201,7 +1201,7 @@ const dataKn = [
       },
       {
         id: 21,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಗ",
         letter: "ಗ",
         word: "ಆಗಸ",
@@ -1211,7 +1211,7 @@ const dataKn = [
       },
       {
         id: 22,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಗ",
         letter: "ಗ",
         word: "ಉರಗ",
@@ -1226,7 +1226,7 @@ const dataKn = [
     items: [
       {
         id: 23,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಘ",
         letter: "ಘ",
         word: "ಘಂಟೆ",
@@ -1236,7 +1236,7 @@ const dataKn = [
       },
       {
         id: 24,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಘ",
         letter: "ಘ",
         word: "ಘಮಘಮ",
@@ -1246,7 +1246,7 @@ const dataKn = [
       },
       {
         id: 25,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಘ",
         letter: "ಘ",
         word: "ಸಂಘ",
@@ -1261,7 +1261,7 @@ const dataKn = [
     items: [
       {
         id: 26,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಚ",
         letter: "ಚ",
         word: "ಚಮಚ",
@@ -1271,7 +1271,7 @@ const dataKn = [
       },
       {
         id: 27,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಚ",
         letter: "ಚ",
         word: "ಈಚಲ",
@@ -1281,7 +1281,7 @@ const dataKn = [
       },
       {
         id: 28,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಚ",
         letter: "ಚ",
         word: "ಮಂಚ",
@@ -1296,7 +1296,7 @@ const dataKn = [
     items: [
       {
         id: 29,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಜ",
         letter: "ಜ",
         word: "ಜನ",
@@ -1306,7 +1306,7 @@ const dataKn = [
       },
       {
         id: 30,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಜ",
         letter: "ಜ",
         word: "ಗೀಜಗ",
@@ -1316,7 +1316,7 @@ const dataKn = [
       },
       {
         id: 31,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಜ",
         letter: "ಜ",
         word: "ಭುಜ",
@@ -1331,7 +1331,7 @@ const dataKn = [
     items: [
       {
         id: 32,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಟ",
         letter: "ಟ",
         word: "ಟಗರು",
@@ -1341,7 +1341,7 @@ const dataKn = [
       },
       {
         id: 33,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಟ",
         letter: "ಟ",
         word: "ಕಿಟಕಿ",
@@ -1351,7 +1351,7 @@ const dataKn = [
       },
       {
         id: 34,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಟ",
         letter: "ಟ",
         word: "ಆಟ",
@@ -1366,7 +1366,7 @@ const dataKn = [
     items: [
       {
         id: 35,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಠ",
         letter: "ಠ",
         word: "ಕೊಠಡಿ",
@@ -1376,7 +1376,7 @@ const dataKn = [
       },
       {
         id: 36,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಠ",
         letter: "ಠ",
         word: "ಕಂಠ",
@@ -1391,7 +1391,7 @@ const dataKn = [
     items: [
       {
         id: 37,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಡ",
         letter: "ಡ",
         word: "ಡಬ್ಬಿ",
@@ -1401,7 +1401,7 @@ const dataKn = [
       },
       {
         id: 38,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಡ",
         letter: "ಡ",
         word: "ಕಡಲು",
@@ -1411,7 +1411,7 @@ const dataKn = [
       },
       {
         id: 39,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಡ",
         letter: "ಡ",
         word: "ಗಿಡ",
@@ -1426,7 +1426,7 @@ const dataKn = [
     items: [
       {
         id: 40,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಢ",
         letter: "ಢ",
         word: "ಢಣಢಣ",
@@ -1436,7 +1436,7 @@ const dataKn = [
       },
       {
         id: 41,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಢ",
         letter: "ಢ",
         word: "ಪ್ರೌಢಶಾಲೆ",
@@ -1446,7 +1446,7 @@ const dataKn = [
       },
       {
         id: 42,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಢ",
         letter: "ಢ",
         word: "ಗಾಢ",
@@ -1461,7 +1461,7 @@ const dataKn = [
     items: [
       {
         id: 43,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಣ",
         letter: "ಣ",
         word: "ಹಣತೆ",
@@ -1471,7 +1471,7 @@ const dataKn = [
       },
       {
         id: 44,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಣ",
         letter: "ಣ",
         word: "ಹಣ",
@@ -1486,7 +1486,7 @@ const dataKn = [
     items: [
       {
         id: 45,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ತ",
         letter: "ತ",
         word: "ತಬಲ",
@@ -1496,7 +1496,7 @@ const dataKn = [
       },
       {
         id: 46,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ತ",
         letter: "ತ",
         word: "ಸಂತಸ",
@@ -1506,7 +1506,7 @@ const dataKn = [
       },
       {
         id: 47,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ತ",
         letter: "ತ",
         word: "ಗಣಿತ",
@@ -1521,7 +1521,7 @@ const dataKn = [
     items: [
       {
         id: 48,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಥ",
         letter: "ಥ",
         word: "ಥಳಥಳ",
@@ -1531,7 +1531,7 @@ const dataKn = [
       },
       {
         id: 49,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಥ",
         letter: "ಥ",
         word: "ಥರಥರ",
@@ -1541,7 +1541,7 @@ const dataKn = [
       },
       {
         id: 50,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಥ",
         letter: "ಥ",
         word: "ರಥ",
@@ -1556,7 +1556,7 @@ const dataKn = [
     items: [
       {
         id: 51,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ದ",
         letter: "ದ",
         word: "ದನ",
@@ -1566,7 +1566,7 @@ const dataKn = [
       },
       {
         id: 52,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ದ",
         letter: "ದ",
         word: "ಕೂದಲು",
@@ -1576,7 +1576,7 @@ const dataKn = [
       },
       {
         id: 53,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ದ",
         letter: "ದ",
         word: "ಕಾಗದ",
@@ -1591,7 +1591,7 @@ const dataKn = [
     items: [
       {
         id: 54,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಧ",
         letter: "ಧ",
         word: "ಧನ",
@@ -1601,7 +1601,7 @@ const dataKn = [
       },
       {
         id: 55,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಧ",
         letter: "ಧ",
         word: "ಬುಧವಾರ",
@@ -1611,7 +1611,7 @@ const dataKn = [
       },
       {
         id: 56,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಧ",
         letter: "ಧ",
         word: "ಔಷಧ",
@@ -1626,7 +1626,7 @@ const dataKn = [
     items: [
       {
         id: 57,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ನ",
         letter: "ನ",
         word: "ನರಿ",
@@ -1636,7 +1636,7 @@ const dataKn = [
       },
       {
         id: 58,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ನ",
         letter: "ನ",
         word: "ಕನಸು",
@@ -1646,7 +1646,7 @@ const dataKn = [
       },
       {
         id: 59,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ನ",
         letter: "ನ",
         word: "ನಮನ",
@@ -1661,7 +1661,7 @@ const dataKn = [
     items: [
       {
         id: 60,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಪ",
         letter: "ಪ",
         word: "ಪದಕ",
@@ -1671,7 +1671,7 @@ const dataKn = [
       },
       {
         id: 61,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಪ",
         letter: "ಪ",
         word: "ಗಾಳಿಪಟ",
@@ -1681,7 +1681,7 @@ const dataKn = [
       },
       {
         id: 62,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಪ",
         letter: "ಪ",
         word: "ಕೋಪ",
@@ -1696,7 +1696,7 @@ const dataKn = [
     items: [
       {
         id: 63,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಫ",
         letter: "ಫ",
         word: "ಫಲ",
@@ -1706,7 +1706,7 @@ const dataKn = [
       },
       {
         id: 64,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಫ",
         letter: "ಫ",
         word: "ಸೌರಫಲಕ",
@@ -1716,7 +1716,7 @@ const dataKn = [
       },
       {
         id: 65,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಫ",
         letter: "ಫ",
         word: "ಕಫ",
@@ -1731,7 +1731,7 @@ const dataKn = [
     items: [
       {
         id: 66,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಬ",
         letter: "ಬ",
         word: "ಬಟಾಣಿ",
@@ -1741,7 +1741,7 @@ const dataKn = [
       },
       {
         id: 67,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಬ",
         letter: "ಬ",
         word: "ತಬಲ",
@@ -1751,7 +1751,7 @@ const dataKn = [
       },
       {
         id: 68,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಬ",
         letter: "ಬ",
         word: "ಕುಟುಂಬ",
@@ -1766,7 +1766,7 @@ const dataKn = [
     items: [
       {
         id: 69,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಭ",
         letter: "ಭ",
         word: "ಭರಣಿ",
@@ -1776,7 +1776,7 @@ const dataKn = [
       },
       {
         id: 70,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಭ",
         letter: "ಭ",
         word: "ಆಭರಣ",
@@ -1786,7 +1786,7 @@ const dataKn = [
       },
       {
         id: 71,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಭ",
         letter: "ಭ",
         word: "ವೃಷಭ",
@@ -1801,7 +1801,7 @@ const dataKn = [
     items: [
       {
         id: 72,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಮ",
         letter: "ಮ",
         word: "ಮರ",
@@ -1811,7 +1811,7 @@ const dataKn = [
       },
       {
         id: 73,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಮ",
         letter: "ಮ",
         word: "ಕಮಲ",
@@ -1821,7 +1821,7 @@ const dataKn = [
       },
       {
         id: 74,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಮ",
         letter: "ಮ",
         word: "ಹಿಮ",
@@ -1836,7 +1836,7 @@ const dataKn = [
     items: [
       {
         id: 75,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಯ",
         letter: "ಯ",
         word: "ಯಮ",
@@ -1846,7 +1846,7 @@ const dataKn = [
       },
       {
         id: 76,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಯ",
         letter: "ಯ",
         word: "ಪಾಯಸ",
@@ -1856,7 +1856,7 @@ const dataKn = [
       },
       {
         id: 77,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಯ",
         letter: "ಯ",
         word: "ಭಯ",
@@ -1871,7 +1871,7 @@ const dataKn = [
     items: [
       {
         id: 78,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ರ",
         letter: "ರ",
         word: "ರಥ",
@@ -1881,7 +1881,7 @@ const dataKn = [
       },
       {
         id: 79,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ರ",
         letter: "ರ",
         word: "ಬೆರಳು",
@@ -1891,7 +1891,7 @@ const dataKn = [
       },
       {
         id: 80,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ರ",
         letter: "ರ",
         word: "ಉದರ",
@@ -1906,7 +1906,7 @@ const dataKn = [
     items: [
       {
         id: 81,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಲ",
         letter: "ಲ",
         word: "ಲತೆ",
@@ -1916,7 +1916,7 @@ const dataKn = [
       },
       {
         id: 82,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಲ",
         letter: "ಲ",
         word: "ಚಿಲಕ",
@@ -1926,7 +1926,7 @@ const dataKn = [
       },
       {
         id: 83,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಲ",
         letter: "ಲ",
         word: "ಮೊಲ",
@@ -1941,7 +1941,7 @@ const dataKn = [
     items: [
       {
         id: 84,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ವ",
         letter: "ವ",
         word: "ವನ",
@@ -1951,7 +1951,7 @@ const dataKn = [
       },
       {
         id: 85,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ವ",
         letter: "ವ",
         word: "ಲವಣ",
@@ -1961,7 +1961,7 @@ const dataKn = [
       },
       {
         id: 86,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ವ",
         letter: "ವ",
         word: "ಶಿವ",
@@ -1976,7 +1976,7 @@ const dataKn = [
     items: [
       {
         id: 87,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಶ",
         letter: "ಶ",
         word: "ಶಶಿ",
@@ -1986,7 +1986,7 @@ const dataKn = [
       },
       {
         id: 88,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಶ",
         letter: "ಶ",
         word: "ದಶಕ",
@@ -1996,7 +1996,7 @@ const dataKn = [
       },
       {
         id: 89,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಶ",
         letter: "ಶ",
         word: "ದೇಶ",
@@ -2011,7 +2011,7 @@ const dataKn = [
     items: [
       {
         id: 90,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಷ",
         letter: "ಷ",
         word: "ಷಡ್ಭುಜ",
@@ -2021,7 +2021,7 @@ const dataKn = [
       },
       {
         id: 91,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಷ",
         letter: "ಷ",
         word: "ಔಷಧ",
@@ -2031,7 +2031,7 @@ const dataKn = [
       },
       {
         id: 92,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಷ",
         letter: "ಷ",
         word: "ಪುರುಷ",
@@ -2046,7 +2046,7 @@ const dataKn = [
     items: [
       {
         id: 93,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಸ",
         letter: "ಸ",
         word: "ಸರ",
@@ -2056,7 +2056,7 @@ const dataKn = [
       },
       {
         id: 94,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಸ",
         letter: "ಸ",
         word: "ಮೊಸಳೆ",
@@ -2066,7 +2066,7 @@ const dataKn = [
       },
       {
         id: 95,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಸ",
         letter: "ಸ",
         word: "ಹಂಸ",
@@ -2081,7 +2081,7 @@ const dataKn = [
     items: [
       {
         id: 96,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಹ",
         letter: "ಹ",
         word: "ಹಸು",
@@ -2091,7 +2091,7 @@ const dataKn = [
       },
       {
         id: 97,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಹ",
         letter: "ಹ",
         word: "ವಾಹನ",
@@ -2101,7 +2101,7 @@ const dataKn = [
       },
       {
         id: 98,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಹ",
         letter: "ಹ",
         word: "ಸಿಂಹ",
@@ -2116,7 +2116,7 @@ const dataKn = [
     items: [
       {
         id: 99,
-        title: "Consonant",
+        title: "ವ್ಯಂಜನಗಳು",
         letters: "ಳ",
         letter: "ಳ",
         word: "ಹಳದಿ",
@@ -2127,14 +2127,13 @@ const dataKn = [
     ],
   },
 ];
-
 const dataHi = [
   {
     letter: "अ",
     items: [
       {
         id: 1,
-        title: "Consonant",
+        title: "स्वर",
         letters: "अ",
         letter: "अ",
         word: "अनार",
@@ -2149,7 +2148,7 @@ const dataHi = [
     items: [
       {
         id: 2,
-        title: "Consonant",
+        title: "स्वर",
         letters: "आ",
         letter: "आ",
         word: "आम",
@@ -2159,7 +2158,7 @@ const dataHi = [
       },
       {
         id: 3,
-        title: "Consonant",
+        title: "स्वर",
         letters: "आ",
         letter: "आ",
         word: "कछुआ",
@@ -2174,7 +2173,7 @@ const dataHi = [
     items: [
       {
         id: 4,
-        title: "Consonant",
+        title: "स्वर",
         letters: "इ",
         letter: "इ",
         word: "इमली",
@@ -2184,7 +2183,7 @@ const dataHi = [
       },
       {
         id: 5,
-        title: "Consonant",
+        title: "स्वर",
         letters: "इ",
         letter: "इ",
         word: "साइकिल",
@@ -2199,7 +2198,7 @@ const dataHi = [
     items: [
       {
         id: 6,
-        title: "Consonant",
+        title: "स्वर",
         letters: "ई",
         letter: "ई",
         word: "ईख",
@@ -2209,7 +2208,7 @@ const dataHi = [
       },
       {
         id: 7,
-        title: "Consonant",
+        title: "स्वर",
         letters: "ई",
         letter: "ई",
         word: "नई",
@@ -2224,7 +2223,7 @@ const dataHi = [
     items: [
       {
         id: 8,
-        title: "Consonant",
+        title: "स्वर",
         letters: "उ",
         letter: "उ",
         word: "उड़",
@@ -2239,7 +2238,7 @@ const dataHi = [
     items: [
       {
         id: 9,
-        title: "Consonant",
+        title: "स्वर",
         letters: "ऊ",
         letter: "ऊ",
         word: "ऊपर",
@@ -2254,7 +2253,7 @@ const dataHi = [
     items: [
       {
         id: 10,
-        title: "Consonant",
+        title: "स्वर",
         letters: "ऋ",
         letter: "ऋ",
         word: "ऋषि",
@@ -2269,7 +2268,7 @@ const dataHi = [
     items: [
       {
         id: 11,
-        title: "Consonant",
+        title: "स्वर",
         letters: "ए",
         letter: "ए",
         word: "एड़ी",
@@ -2279,7 +2278,7 @@ const dataHi = [
       },
       {
         id: 12,
-        title: "Consonant",
+        title: "स्वर",
         letters: "ए",
         letter: "ए",
         word: "पढ़िए",
@@ -2294,7 +2293,7 @@ const dataHi = [
     items: [
       {
         id: 13,
-        title: "Consonant",
+        title: "स्वर",
         letters: "ऐ",
         letter: "ऐ",
         word: "ऐनक",
@@ -2309,7 +2308,7 @@ const dataHi = [
     items: [
       {
         id: 14,
-        title: "Consonant",
+        title: "स्वर",
         letters: "ओ",
         letter: "ओ",
         word: "ओखली",
@@ -2324,7 +2323,7 @@ const dataHi = [
     items: [
       {
         id: 15,
-        title: "Consonant",
+        title: "स्वर",
         letters: "औ",
         letter: "औ",
         word: "औरत",
@@ -2339,7 +2338,7 @@ const dataHi = [
     items: [
       {
         id: 16,
-        title: "Consonant",
+        title: "स्वर",
         letters: "अं",
         letter: "अं",
         word: "अंगूर",
@@ -2354,7 +2353,7 @@ const dataHi = [
     items: [
       {
         id: 17,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "क",
         letter: "क",
         word: "कबूतर",
@@ -2364,7 +2363,7 @@ const dataHi = [
       },
       {
         id: 18,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "क",
         letter: "क",
         word: "बकरी",
@@ -2374,7 +2373,7 @@ const dataHi = [
       },
       {
         id: 19,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "क",
         letter: "क",
         word: "नमक",
@@ -2389,7 +2388,7 @@ const dataHi = [
     items: [
       {
         id: 20,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ख",
         letter: "ख",
         word: "खरगोश",
@@ -2399,7 +2398,7 @@ const dataHi = [
       },
       {
         id: 21,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ख",
         letter: "ख",
         word: "लेखन",
@@ -2409,7 +2408,7 @@ const dataHi = [
       },
       {
         id: 22,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ख",
         letter: "ख",
         word: "भूख",
@@ -2424,7 +2423,7 @@ const dataHi = [
     items: [
       {
         id: 23,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ग",
         letter: "ग",
         word: "गधा",
@@ -2434,7 +2433,7 @@ const dataHi = [
       },
       {
         id: 24,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ग",
         letter: "ग",
         word: "नगर",
@@ -2444,7 +2443,7 @@ const dataHi = [
       },
       {
         id: 25,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ग",
         letter: "ग",
         word: "लोग",
@@ -2459,7 +2458,7 @@ const dataHi = [
     items: [
       {
         id: 26,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "घ",
         letter: "घ",
         word: "घर",
@@ -2469,7 +2468,7 @@ const dataHi = [
       },
       {
         id: 27,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "घ",
         letter: "घ",
         word: "घुँघरू",
@@ -2479,7 +2478,7 @@ const dataHi = [
       },
       {
         id: 28,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "घ",
         letter: "घ",
         word: "बाघ",
@@ -2494,7 +2493,7 @@ const dataHi = [
     items: [
       {
         id: 29,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "च",
         letter: "च",
         word: "चढ़",
@@ -2504,7 +2503,7 @@ const dataHi = [
       },
       {
         id: 30,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "च",
         letter: "च",
         word: "खिचड़ी",
@@ -2514,7 +2513,7 @@ const dataHi = [
       },
       {
         id: 31,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "च",
         letter: "च",
         word: "पाँच",
@@ -2529,7 +2528,7 @@ const dataHi = [
     items: [
       {
         id: 32,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "छ",
         letter: "छ",
         word: "छत",
@@ -2539,7 +2538,7 @@ const dataHi = [
       },
       {
         id: 33,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "छ",
         letter: "छ",
         word: "मछली",
@@ -2549,7 +2548,7 @@ const dataHi = [
       },
       {
         id: 34,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "छ",
         letter: "छ",
         word: "पूछ",
@@ -2564,7 +2563,7 @@ const dataHi = [
     items: [
       {
         id: 35,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ज",
         letter: "ज",
         word: "जग",
@@ -2574,7 +2573,7 @@ const dataHi = [
       },
       {
         id: 36,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ज",
         letter: "ज",
         word: "गाजर",
@@ -2584,7 +2583,7 @@ const dataHi = [
       },
       {
         id: 37,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ज",
         letter: "ज",
         word: "सूरज",
@@ -2599,7 +2598,7 @@ const dataHi = [
     items: [
       {
         id: 38,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "झ",
         letter: "झ",
         word: "झण्डा",
@@ -2614,7 +2613,7 @@ const dataHi = [
     items: [
       {
         id: 39,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ट",
         letter: "ट",
         word: "टमाटर",
@@ -2624,7 +2623,7 @@ const dataHi = [
       },
       {
         id: 40,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ट",
         letter: "ट",
         word: "मटर",
@@ -2634,7 +2633,7 @@ const dataHi = [
       },
       {
         id: 41,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ट",
         letter: "ट",
         word: "ऊँट",
@@ -2649,7 +2648,7 @@ const dataHi = [
     items: [
       {
         id: 42,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ठ",
         letter: "ठ",
         word: "ठठेरा",
@@ -2659,7 +2658,7 @@ const dataHi = [
       },
       {
         id: 43,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ठ",
         letter: "ठ",
         word: "गुठली",
@@ -2669,7 +2668,7 @@ const dataHi = [
       },
       {
         id: 44,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ठ",
         letter: "ठ",
         word: "आठ",
@@ -2684,7 +2683,7 @@ const dataHi = [
     items: [
       {
         id: 45,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ड",
         letter: "ड",
         word: "डमरू",
@@ -2694,7 +2693,7 @@ const dataHi = [
       },
       {
         id: 46,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ड",
         letter: "ड",
         word: "पेड़",
@@ -2709,7 +2708,7 @@ const dataHi = [
     items: [
       {
         id: 47,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ढ",
         letter: "ढ",
         word: "ढक्कन",
@@ -2719,7 +2718,7 @@ const dataHi = [
       },
       {
         id: 48,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ढ",
         letter: "ढ",
         word: "मेंढक",
@@ -2734,7 +2733,7 @@ const dataHi = [
     items: [
       {
         id: 49,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ण",
         letter: "ण",
         word: "लवण",
@@ -2749,7 +2748,7 @@ const dataHi = [
     items: [
       {
         id: 50,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "त",
         letter: "त",
         word: "तट",
@@ -2759,7 +2758,7 @@ const dataHi = [
       },
       {
         id: 51,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "त",
         letter: "त",
         word: "सुतली",
@@ -2769,7 +2768,7 @@ const dataHi = [
       },
       {
         id: 52,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "त",
         letter: "त",
         word: "रात",
@@ -2784,7 +2783,7 @@ const dataHi = [
     items: [
       {
         id: 53,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "थ",
         letter: "थ",
         word: "थक",
@@ -2794,7 +2793,7 @@ const dataHi = [
       },
       {
         id: 54,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "थ",
         letter: "थ",
         word: "हाथ",
@@ -2809,7 +2808,7 @@ const dataHi = [
     items: [
       {
         id: 55,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "द",
         letter: "द",
         word: "दरवाजा",
@@ -2819,7 +2818,7 @@ const dataHi = [
       },
       {
         id: 56,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "द",
         letter: "द",
         word: "बादल",
@@ -2829,7 +2828,7 @@ const dataHi = [
       },
       {
         id: 57,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "द",
         letter: "द",
         word: "आनंद",
@@ -2844,7 +2843,7 @@ const dataHi = [
     items: [
       {
         id: 58,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ध",
         letter: "ध",
         word: "धनुष",
@@ -2854,7 +2853,7 @@ const dataHi = [
       },
       {
         id: 59,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ध",
         letter: "ध",
         word: "इधर",
@@ -2864,7 +2863,7 @@ const dataHi = [
       },
       {
         id: 60,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ध",
         letter: "ध",
         word: "दूध",
@@ -2879,7 +2878,7 @@ const dataHi = [
     items: [
       {
         id: 61,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "न",
         letter: "न",
         word: "नल",
@@ -2889,7 +2888,7 @@ const dataHi = [
       },
       {
         id: 62,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "न",
         letter: "न",
         word: "जानवर",
@@ -2899,7 +2898,7 @@ const dataHi = [
       },
       {
         id: 63,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "न",
         letter: "न",
         word: "बहन",
@@ -2914,7 +2913,7 @@ const dataHi = [
     items: [
       {
         id: 64,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "प",
         letter: "प",
         word: "पतंग",
@@ -2924,7 +2923,7 @@ const dataHi = [
       },
       {
         id: 65,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "प",
         letter: "प",
         word: "कपड़े",
@@ -2934,7 +2933,7 @@ const dataHi = [
       },
       {
         id: 66,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "प",
         letter: "प",
         word: "साँप",
@@ -2949,7 +2948,7 @@ const dataHi = [
     items: [
       {
         id: 67,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "फ",
         letter: "फ",
         word: "फल",
@@ -2959,7 +2958,7 @@ const dataHi = [
       },
       {
         id: 68,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "फ",
         letter: "फ",
         word: "बर्फ",
@@ -2974,7 +2973,7 @@ const dataHi = [
     items: [
       {
         id: 69,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ब",
         letter: "ब",
         word: "बतख",
@@ -2984,7 +2983,7 @@ const dataHi = [
       },
       {
         id: 70,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ब",
         letter: "ब",
         word: "सुबह",
@@ -2994,7 +2993,7 @@ const dataHi = [
       },
       {
         id: 71,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ब",
         letter: "ब",
         word: "सेब",
@@ -3009,7 +3008,7 @@ const dataHi = [
     items: [
       {
         id: 72,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "भ",
         letter: "भ",
         word: "भय",
@@ -3019,7 +3018,7 @@ const dataHi = [
       },
       {
         id: 73,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "भ",
         letter: "भ",
         word: "अनुभव",
@@ -3029,7 +3028,7 @@ const dataHi = [
       },
       {
         id: 74,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "भ",
         letter: "भ",
         word: "नभ",
@@ -3044,7 +3043,7 @@ const dataHi = [
     items: [
       {
         id: 75,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "म",
         letter: "म",
         word: "मछली",
@@ -3054,7 +3053,7 @@ const dataHi = [
       },
       {
         id: 76,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "म",
         letter: "म",
         word: "गमला",
@@ -3064,7 +3063,7 @@ const dataHi = [
       },
       {
         id: 77,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "म",
         letter: "म",
         word: "कदम",
@@ -3079,7 +3078,7 @@ const dataHi = [
     items: [
       {
         id: 78,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "य",
         letter: "य",
         word: "यह",
@@ -3089,7 +3088,7 @@ const dataHi = [
       },
       {
         id: 79,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "य",
         letter: "य",
         word: "पायल",
@@ -3099,7 +3098,7 @@ const dataHi = [
       },
       {
         id: 80,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "य",
         letter: "य",
         word: "गाय",
@@ -3114,7 +3113,7 @@ const dataHi = [
     items: [
       {
         id: 81,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "र",
         letter: "र",
         word: "रथ",
@@ -3124,7 +3123,7 @@ const dataHi = [
       },
       {
         id: 82,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "र",
         letter: "र",
         word: "भारत",
@@ -3134,7 +3133,7 @@ const dataHi = [
       },
       {
         id: 83,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "र",
         letter: "र",
         word: "चार",
@@ -3149,7 +3148,7 @@ const dataHi = [
     items: [
       {
         id: 84,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ल",
         letter: "ल",
         word: "लड़का",
@@ -3159,7 +3158,7 @@ const dataHi = [
       },
       {
         id: 85,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ल",
         letter: "ल",
         word: "चलना",
@@ -3169,7 +3168,7 @@ const dataHi = [
       },
       {
         id: 86,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ल",
         letter: "ल",
         word: "बाल",
@@ -3184,7 +3183,7 @@ const dataHi = [
     items: [
       {
         id: 87,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "व",
         letter: "व",
         word: "वन",
@@ -3194,7 +3193,7 @@ const dataHi = [
       },
       {
         id: 88,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "व",
         letter: "व",
         word: "चावल",
@@ -3204,7 +3203,7 @@ const dataHi = [
       },
       {
         id: 89,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "व",
         letter: "व",
         word: "नाव",
@@ -3219,7 +3218,7 @@ const dataHi = [
     items: [
       {
         id: 90,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "श",
         letter: "श",
         word: "शहर",
@@ -3229,7 +3228,7 @@ const dataHi = [
       },
       {
         id: 91,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "श",
         letter: "श",
         word: "बारिश",
@@ -3244,7 +3243,7 @@ const dataHi = [
     items: [
       {
         id: 92,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ष",
         letter: "ष",
         word: "षट्कोण",
@@ -3254,7 +3253,7 @@ const dataHi = [
       },
       {
         id: 93,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ष",
         letter: "ष",
         word: "विषय",
@@ -3264,7 +3263,7 @@ const dataHi = [
       },
       {
         id: 94,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ष",
         letter: "ष",
         word: "धनुष",
@@ -3279,7 +3278,7 @@ const dataHi = [
     items: [
       {
         id: 95,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "स",
         letter: "स",
         word: "समय",
@@ -3289,7 +3288,7 @@ const dataHi = [
       },
       {
         id: 96,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "स",
         letter: "स",
         word: "आसमान",
@@ -3299,7 +3298,7 @@ const dataHi = [
       },
       {
         id: 97,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "स",
         letter: "स",
         word: "घास",
@@ -3314,7 +3313,7 @@ const dataHi = [
     items: [
       {
         id: 98,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ह",
         letter: "ह",
         word: "हाथी",
@@ -3324,7 +3323,7 @@ const dataHi = [
       },
       {
         id: 99,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ह",
         letter: "ह",
         word: "बाहर",
@@ -3334,7 +3333,7 @@ const dataHi = [
       },
       {
         id: 100,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ह",
         letter: "ह",
         word: "मुँह",
@@ -3349,7 +3348,7 @@ const dataHi = [
     items: [
       {
         id: 101,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "क्ष",
         letter: "क्ष",
         word: "क्षत्रिय",
@@ -3359,7 +3358,7 @@ const dataHi = [
       },
       {
         id: 102,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "क्ष",
         letter: "क्ष",
         word: "अक्षर",
@@ -3374,7 +3373,7 @@ const dataHi = [
     items: [
       {
         id: 103,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "त्र",
         letter: "त्र",
         word: "त्रिशूल",
@@ -3384,7 +3383,7 @@ const dataHi = [
       },
       {
         id: 104,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "त्र",
         letter: "त्र",
         word: "चित्र",
@@ -3399,7 +3398,7 @@ const dataHi = [
     items: [
       {
         id: 105,
-        title: "Consonant",
+        title: "व्यंजन",
         letters: "ज्ञ",
         letter: "ज्ञ",
         word: "ज्ञानी",
@@ -3417,7 +3416,7 @@ const dataTe = [
     items: [
       {
         id: 1,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "అ",
         letter: "అ",
         word: "అల",
@@ -3432,7 +3431,7 @@ const dataTe = [
     items: [
       {
         id: 2,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఆ",
         letter: "ఆ",
         word: "ఆట",
@@ -3447,7 +3446,7 @@ const dataTe = [
     items: [
       {
         id: 3,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఇ",
         letter: "ఇ",
         word: "ఇల",
@@ -3462,7 +3461,7 @@ const dataTe = [
     items: [
       {
         id: 4,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఈ",
         letter: "ఈ",
         word: "ఈగ",
@@ -3477,7 +3476,7 @@ const dataTe = [
     items: [
       {
         id: 5,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఉ",
         letter: "ఉ",
         word: "ఉడుత",
@@ -3492,7 +3491,7 @@ const dataTe = [
     items: [
       {
         id: 6,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఊ",
         letter: "ఊ",
         word: "ఊయల",
@@ -3507,7 +3506,7 @@ const dataTe = [
     items: [
       {
         id: 7,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఋ",
         letter: "ఋ",
         word: "ఋషి",
@@ -3522,7 +3521,7 @@ const dataTe = [
     items: [
       {
         id: 8,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ౠ",
         letter: "ౠ",
         word: "ౠక",
@@ -3537,7 +3536,7 @@ const dataTe = [
     items: [
       {
         id: 9,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఎ",
         letter: "ఎ",
         word: "ఎలుక",
@@ -3552,7 +3551,7 @@ const dataTe = [
     items: [
       {
         id: 10,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఏ",
         letter: "ఏ",
         word: "ఏనుగు",
@@ -3567,7 +3566,7 @@ const dataTe = [
     items: [
       {
         id: 11,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఐ",
         letter: "ఐ",
         word: "ఐదు",
@@ -3582,7 +3581,7 @@ const dataTe = [
     items: [
       {
         id: 12,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఒ",
         letter: "ఒ",
         word: "ఒక",
@@ -3597,7 +3596,7 @@ const dataTe = [
     items: [
       {
         id: 13,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఓ",
         letter: "ఓ",
         word: "ఓడ",
@@ -3612,7 +3611,7 @@ const dataTe = [
     items: [
       {
         id: 14,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "ఔ",
         letter: "ఔ",
         word: "ఔషధం",
@@ -3627,7 +3626,7 @@ const dataTe = [
     items: [
       {
         id: 15,
-        title: "Consonant",
+        title: "అచ్చులు",
         letters: "అం",
         letter: "అం",
         word: "అంగడి",
@@ -3642,7 +3641,7 @@ const dataTe = [
     items: [
       {
         id: 16,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "క",
         letter: "క",
         word: "కల",
@@ -3652,7 +3651,7 @@ const dataTe = [
       },
       {
         id: 17,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "క",
         letter: "క",
         word: "ఆకలి",
@@ -3662,7 +3661,7 @@ const dataTe = [
       },
       {
         id: 18,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "క",
         letter: "క",
         word: "చిలుక",
@@ -3677,7 +3676,7 @@ const dataTe = [
     items: [
       {
         id: 19,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఖ",
         letter: "ఖ",
         word: "ఖరం",
@@ -3692,7 +3691,7 @@ const dataTe = [
     items: [
       {
         id: 20,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "గ",
         letter: "గ",
         word: "గద",
@@ -3702,7 +3701,7 @@ const dataTe = [
       },
       {
         id: 21,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "గ",
         letter: "గ",
         word: "ఉంగరం",
@@ -3712,7 +3711,7 @@ const dataTe = [
       },
       {
         id: 22,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "గ",
         letter: "గ",
         word: "పండుగ",
@@ -3727,7 +3726,7 @@ const dataTe = [
     items: [
       {
         id: 23,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఘ",
         letter: "ఘ",
         word: "ఘటం",
@@ -3737,7 +3736,7 @@ const dataTe = [
       },
       {
         id: 24,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఘ",
         letter: "ఘ",
         word: "మేఘం",
@@ -3752,7 +3751,7 @@ const dataTe = [
     items: [
       {
         id: 25,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "చ",
         letter: "చ",
         word: "చరకా",
@@ -3762,7 +3761,7 @@ const dataTe = [
       },
       {
         id: 26,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "చ",
         letter: "చ",
         word: "రచన",
@@ -3772,7 +3771,7 @@ const dataTe = [
       },
       {
         id: 27,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "చ",
         letter: "చ",
         word: "కిచకిచ",
@@ -3787,7 +3786,7 @@ const dataTe = [
     items: [
       {
         id: 28,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఛ",
         letter: "ఛ",
         word: "ఛత్రము",
@@ -3802,7 +3801,7 @@ const dataTe = [
     items: [
       {
         id: 29,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "జ",
         letter: "జ",
         word: "జడ",
@@ -3812,7 +3811,7 @@ const dataTe = [
       },
       {
         id: 30,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "జ",
         letter: "జ",
         word: "కంజర",
@@ -3822,7 +3821,7 @@ const dataTe = [
       },
       {
         id: 31,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "జ",
         letter: "జ",
         word: "జలజ",
@@ -3837,7 +3836,7 @@ const dataTe = [
     items: [
       {
         id: 32,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఝ",
         letter: "ఝ",
         word: "ఝషం",
@@ -3852,7 +3851,7 @@ const dataTe = [
     items: [
       {
         id: 33,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ట",
         letter: "ట",
         word: "టమాట",
@@ -3862,7 +3861,7 @@ const dataTe = [
       },
       {
         id: 34,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ట",
         letter: "ట",
         word: "నాటకం",
@@ -3872,7 +3871,7 @@ const dataTe = [
       },
       {
         id: 35,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ట",
         letter: "ట",
         word: "తోట",
@@ -3887,7 +3886,7 @@ const dataTe = [
     items: [
       {
         id: 36,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఠ",
         letter: "ఠ",
         word: "పాఠశాల",
@@ -3897,7 +3896,7 @@ const dataTe = [
       },
       {
         id: 37,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఠ",
         letter: "ఠ",
         word: "పాఠం",
@@ -3912,7 +3911,7 @@ const dataTe = [
     items: [
       {
         id: 38,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "డ",
         letter: "డ",
         word: "డబ్బా",
@@ -3922,7 +3921,7 @@ const dataTe = [
       },
       {
         id: 39,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "డ",
         letter: "డ",
         word: "అడవి",
@@ -3932,7 +3931,7 @@ const dataTe = [
       },
       {
         id: 40,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "డ",
         letter: "డ",
         word: "బండ",
@@ -3947,7 +3946,7 @@ const dataTe = [
     items: [
       {
         id: 41,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఢ",
         letter: "ఢ",
         word: "ఢమఢమ",
@@ -3962,7 +3961,7 @@ const dataTe = [
     items: [
       {
         id: 42,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ణ",
         letter: "ణ",
         word: "గణపతి",
@@ -3972,7 +3971,7 @@ const dataTe = [
       },
       {
         id: 43,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ణ",
         letter: "ణ",
         word: "వీణ",
@@ -3987,7 +3986,7 @@ const dataTe = [
     items: [
       {
         id: 44,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "త",
         letter: "త",
         word: "తల",
@@ -3997,7 +3996,7 @@ const dataTe = [
       },
       {
         id: 45,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "త",
         letter: "త",
         word: "జాతర",
@@ -4007,7 +4006,7 @@ const dataTe = [
       },
       {
         id: 46,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "త",
         letter: "త",
         word: "ఈత",
@@ -4022,7 +4021,7 @@ const dataTe = [
     items: [
       {
         id: 47,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "థ",
         letter: "థ",
         word: "థర్మోస్",
@@ -4032,7 +4031,7 @@ const dataTe = [
       },
       {
         id: 48,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "థ",
         letter: "థ",
         word: "రథము",
@@ -4042,7 +4041,7 @@ const dataTe = [
       },
       {
         id: 49,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "థ",
         letter: "థ",
         word: "కథ",
@@ -4057,7 +4056,7 @@ const dataTe = [
     items: [
       {
         id: 50,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ద",
         letter: "ద",
         word: "దవడ",
@@ -4067,7 +4066,7 @@ const dataTe = [
       },
       {
         id: 51,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ద",
         letter: "ద",
         word: "ఉదయం",
@@ -4077,7 +4076,7 @@ const dataTe = [
       },
       {
         id: 52,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ద",
         letter: "ద",
         word: "కింద",
@@ -4092,7 +4091,7 @@ const dataTe = [
     items: [
       {
         id: 53,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ధ",
         letter: "ధ",
         word: "ధనం",
@@ -4102,7 +4101,7 @@ const dataTe = [
       },
       {
         id: 54,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ధ",
         letter: "ధ",
         word: "బాధ",
@@ -4117,7 +4116,7 @@ const dataTe = [
     items: [
       {
         id: 55,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "న",
         letter: "న",
         word: "నగ",
@@ -4127,7 +4126,7 @@ const dataTe = [
       },
       {
         id: 56,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "న",
         letter: "న",
         word: "అనప",
@@ -4137,7 +4136,7 @@ const dataTe = [
       },
       {
         id: 57,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "న",
         letter: "న",
         word: "వాన",
@@ -4152,7 +4151,7 @@ const dataTe = [
     items: [
       {
         id: 58,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ప",
         letter: "ప",
         word: "పలక",
@@ -4162,7 +4161,7 @@ const dataTe = [
       },
       {
         id: 59,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ప",
         letter: "ప",
         word: "చేపలు",
@@ -4172,7 +4171,7 @@ const dataTe = [
       },
       {
         id: 60,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ప",
         letter: "ప",
         word: "పాప",
@@ -4187,7 +4186,7 @@ const dataTe = [
     items: [
       {
         id: 61,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఫ",
         letter: "ఫ",
         word: "ఫలము",
@@ -4202,7 +4201,7 @@ const dataTe = [
     items: [
       {
         id: 62,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "బ",
         letter: "బ",
         word: "బంతి",
@@ -4212,7 +4211,7 @@ const dataTe = [
       },
       {
         id: 63,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "బ",
         letter: "బ",
         word: "తబల",
@@ -4227,7 +4226,7 @@ const dataTe = [
     items: [
       {
         id: 64,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "భ",
         letter: "భ",
         word: "భవనం",
@@ -4237,7 +4236,7 @@ const dataTe = [
       },
       {
         id: 65,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "భ",
         letter: "భ",
         word: "సభ",
@@ -4252,7 +4251,7 @@ const dataTe = [
     items: [
       {
         id: 66,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "మ",
         letter: "మ",
         word: "మర",
@@ -4262,7 +4261,7 @@ const dataTe = [
       },
       {
         id: 67,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "మ",
         letter: "మ",
         word: "నెమలి",
@@ -4272,7 +4271,7 @@ const dataTe = [
       },
       {
         id: 68,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "మ",
         letter: "మ",
         word: "చీమ",
@@ -4287,7 +4286,7 @@ const dataTe = [
     items: [
       {
         id: 69,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "య",
         letter: "య",
         word: "యద",
@@ -4297,7 +4296,7 @@ const dataTe = [
       },
       {
         id: 70,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "య",
         letter: "య",
         word: "కాయలు",
@@ -4307,7 +4306,7 @@ const dataTe = [
       },
       {
         id: 71,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "య",
         letter: "య",
         word: "వంకాయ",
@@ -4322,7 +4321,7 @@ const dataTe = [
     items: [
       {
         id: 72,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ర",
         letter: "ర",
         word: "రవి",
@@ -4332,7 +4331,7 @@ const dataTe = [
       },
       {
         id: 73,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ర",
         letter: "ర",
         word: "గిరక",
@@ -4342,7 +4341,7 @@ const dataTe = [
       },
       {
         id: 74,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ర",
         letter: "ర",
         word: "చీర",
@@ -4357,7 +4356,7 @@ const dataTe = [
     items: [
       {
         id: 75,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ల",
         letter: "ల",
         word: "లత",
@@ -4367,7 +4366,7 @@ const dataTe = [
       },
       {
         id: 76,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ల",
         letter: "ల",
         word: "బలపం",
@@ -4377,7 +4376,7 @@ const dataTe = [
       },
       {
         id: 77,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ల",
         letter: "ల",
         word: "వెల",
@@ -4392,7 +4391,7 @@ const dataTe = [
     items: [
       {
         id: 78,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "వ",
         letter: "వ",
         word: "వల",
@@ -4402,7 +4401,7 @@ const dataTe = [
       },
       {
         id: 79,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "వ",
         letter: "వ",
         word: "లవణం",
@@ -4412,7 +4411,7 @@ const dataTe = [
       },
       {
         id: 80,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "వ",
         letter: "వ",
         word: "పడవ",
@@ -4427,7 +4426,7 @@ const dataTe = [
     items: [
       {
         id: 81,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "శ",
         letter: "శ",
         word: "శకటం",
@@ -4437,7 +4436,7 @@ const dataTe = [
       },
       {
         id: 82,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "శ",
         letter: "శ",
         word: "దశమి",
@@ -4447,7 +4446,7 @@ const dataTe = [
       },
       {
         id: 83,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "శ",
         letter: "శ",
         word: "దిశ",
@@ -4462,7 +4461,7 @@ const dataTe = [
     items: [
       {
         id: 84,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ష",
         letter: "ష",
         word: "షరాయి",
@@ -4472,7 +4471,7 @@ const dataTe = [
       },
       {
         id: 85,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ష",
         letter: "ష",
         word: "ఉష",
@@ -4487,7 +4486,7 @@ const dataTe = [
     items: [
       {
         id: 86,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "స",
         letter: "స",
         word: "సంత",
@@ -4497,7 +4496,7 @@ const dataTe = [
       },
       {
         id: 87,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "స",
         letter: "స",
         word: "దసరా",
@@ -4507,7 +4506,7 @@ const dataTe = [
       },
       {
         id: 88,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "స",
         letter: "స",
         word: "పనస",
@@ -4522,7 +4521,7 @@ const dataTe = [
     items: [
       {
         id: 89,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "హ",
         letter: "హ",
         word: "హంస",
@@ -4532,7 +4531,7 @@ const dataTe = [
       },
       {
         id: 90,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "హ",
         letter: "హ",
         word: "వాహనం",
@@ -4542,7 +4541,7 @@ const dataTe = [
       },
       {
         id: 91,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "హ",
         letter: "హ",
         word: "గుహ",
@@ -4557,7 +4556,7 @@ const dataTe = [
     items: [
       {
         id: 92,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ళ",
         letter: "ళ",
         word: "తాళం",
@@ -4567,7 +4566,7 @@ const dataTe = [
       },
       {
         id: 93,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ళ",
         letter: "ళ",
         word: "కళ",
@@ -4582,7 +4581,7 @@ const dataTe = [
     items: [
       {
         id: 94,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "క్ష",
         letter: "క్ష",
         word: "క్షత్రియుడు",
@@ -4592,7 +4591,7 @@ const dataTe = [
       },
       {
         id: 95,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "క్ష",
         letter: "క్ష",
         word: "అక్షరం",
@@ -4602,7 +4601,7 @@ const dataTe = [
       },
       {
         id: 96,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "క్ష",
         letter: "క్ష",
         word: "పరీక్ష",
@@ -4617,7 +4616,7 @@ const dataTe = [
     items: [
       {
         id: 97,
-        title: "Consonant",
+        title: "హల్లులు",
         letters: "ఱ",
         letter: "ఱ",
         word: "ఱంపం",
@@ -5191,14 +5190,30 @@ const R0 = ({
             <Box
               sx={{
                 display: "flex",
-                gap: 1.5,
+                gap: 2,
                 zIndex: 10,
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "flex-end",
                 mb: 1,
                 mt: 1,
               }}
             >
+              <IconButton
+                onClick={handleBackNavigation}
+                sx={{
+                  width: 48,
+                  height: 48,
+                  bgcolor: "#1CB0F6",
+                  color: "#fff",
+                  borderRadius: "50%",
+                  boxShadow: "0 6px 14px rgba(28,176,246,0.35)",
+                  "&:hover": { bgcolor: "#1AA3E3" },
+                  transform: "translateY(-4px)",
+                }}
+              >
+                <ArrowLeft size={22} />
+              </IconButton>
+
               <IconButton
                 onClick={handleRetry}
                 sx={{
@@ -5209,11 +5224,13 @@ const R0 = ({
                   borderRadius: "50%",
                   boxShadow: "0 6px 14px rgba(234,76,137,0.35)",
                   "&:hover": { bgcolor: pink },
+                  transform: "translateY(-1px)",
                 }}
               >
                 <RotateCcw size={22} />
               </IconButton>
 
+              {/* ➡️ Next button */}
               <IconButton
                 onClick={handleNextWord}
                 sx={{

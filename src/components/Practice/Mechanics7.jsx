@@ -1157,22 +1157,35 @@ const Mechanics7 = ({
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
                   justifyContent: "center",
-                  alignItems: "center",
+                  alignItems: "flex-end",
+                  gap: "40px",
                   marginTop: "30px",
-                  gap: "10px",
-                  height: "250px",
-                  //maskBorderWidth: 6,
                 }}
               >
                 <Box
+                  sx={{
+                    cursor: "pointer",
+                    transform: "translateY(-15px)",
+                  }}
+                  onClick={() => {
+                    setShowMultiLingual(false);
+                    setIsRecorded(false);
+                    setIsRecording(true);
+                    startRecording(currentText);
+                  }}
+                >
+                  <RetryIcon height={50} width={50} />
+                </Box>
+
+                <Box
                   className="walkthrough-step-5"
                   mb={2}
+                  sx={{ cursor: "pointer" }}
                   onClick={() => {
                     setIsRecorded(false);
                     setShowMultiLingual(false);
-                    setIsRecorded(false);
 
                     const newWordData = {
                       original_text: currentText,
@@ -1193,18 +1206,12 @@ const Mechanics7 = ({
                     handleNext();
                     setStepIndex(0);
                   }}
-                  sx={{
-                    marginTop: "30px",
-                    cursor: "pointer",
-                    //marginLeft: "30px",
-                  }}
                 >
                   <NextButtonRound height={50} width={50} />
                 </Box>
               </Box>
             )}
 
-            {/* Action Buttons */}
             {!isRecording && !isRecorded && !showMultiLingual && (
               <Box
                 sx={{

@@ -26,7 +26,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telementryService";
 import { Typography, Stack, IconButton } from "@mui/material";
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import trainImg from "../assets/trainImg.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import VoiceAnalyser from "../utils/VoiceAnalyser";
@@ -52,7 +52,7 @@ const theme = createTheme();
 const dataEn = [
   {
     id: 1,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "b",
     word: "ball",
     image: getAssetUrl(s3Assets.ballGif),
@@ -61,7 +61,7 @@ const dataEn = [
   },
   {
     id: 2,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "d",
     word: "drum",
     image: getAssetUrl(s3Assets.drums),
@@ -70,7 +70,7 @@ const dataEn = [
   },
   {
     id: 3,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "f",
     word: "fish",
     image: getAssetUrl(s3Assets.fishSixImg),
@@ -79,7 +79,7 @@ const dataEn = [
   },
   {
     id: 4,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "g",
     word: "grapes",
     image: getAssetUrl(s3Assets.grapes),
@@ -88,7 +88,7 @@ const dataEn = [
   },
   {
     id: 5,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "h",
     word: "hand",
     image: getAssetUrl(s3Assets.handEightImg),
@@ -97,7 +97,7 @@ const dataEn = [
   },
   {
     id: 6,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "j",
     word: "jam",
     image: getAssetUrl(s3Assets.jam),
@@ -106,7 +106,7 @@ const dataEn = [
   },
   {
     id: 7,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "k",
     word: "car",
     image: getAssetUrl(s3Assets.carEighteenImg),
@@ -115,7 +115,7 @@ const dataEn = [
   },
   {
     id: 8,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "l",
     word: "lollipop",
     image: getAssetUrl(s3Assets.lolipop),
@@ -124,7 +124,7 @@ const dataEn = [
   },
   {
     id: 9,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "m",
     word: "monkey",
     image: getAssetUrl(s3Assets.monkey),
@@ -133,7 +133,7 @@ const dataEn = [
   },
   {
     id: 10,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "n",
     word: "nest",
     image: getAssetUrl(s3Assets.nest),
@@ -142,7 +142,7 @@ const dataEn = [
   },
   {
     id: 11,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "p",
     word: "pumpkin",
     image: getAssetUrl(s3Assets.pumpkin),
@@ -151,7 +151,7 @@ const dataEn = [
   },
   {
     id: 12,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "r",
     word: "rainbow",
     image: getAssetUrl(s3Assets.rainbow),
@@ -160,7 +160,7 @@ const dataEn = [
   },
   {
     id: 13,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "s",
     word: "sun",
     image: getAssetUrl(s3Assets.sun),
@@ -169,7 +169,7 @@ const dataEn = [
   },
   {
     id: 14,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "zh",
     word: "treasure",
     image: getAssetUrl(s3Assets.treasure),
@@ -178,7 +178,7 @@ const dataEn = [
   },
   {
     id: 15,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "t",
     word: "tree",
     image: getAssetUrl(s3Assets.tree),
@@ -187,7 +187,7 @@ const dataEn = [
   },
   {
     id: 16,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "v",
     word: "van",
     image: getAssetUrl(s3Assets.van),
@@ -196,7 +196,7 @@ const dataEn = [
   },
   {
     id: 17,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "w",
     word: "window",
     image: getAssetUrl(s3Assets.window),
@@ -205,7 +205,7 @@ const dataEn = [
   },
   {
     id: 18,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "y",
     word: "yak",
     image: getAssetUrl(s3Assets.yak),
@@ -214,7 +214,7 @@ const dataEn = [
   },
   {
     id: 19,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "z",
     word: "zip",
     image: getAssetUrl(s3Assets.zip),
@@ -223,7 +223,7 @@ const dataEn = [
   },
   {
     id: 20,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "x",
     word: "fox",
     image: getAssetUrl(s3Assets.fox),
@@ -232,7 +232,7 @@ const dataEn = [
   },
   {
     id: 21,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "qu",
     word: "queen",
     image: getAssetUrl(s3Assets.queenSixteenImg),
@@ -241,7 +241,7 @@ const dataEn = [
   },
   {
     id: 22,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "ch",
     word: "chain",
     image: getAssetUrl(s3Assets.chain),
@@ -250,7 +250,7 @@ const dataEn = [
   },
   {
     id: 23,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "sh",
     word: "sheep",
     image: getAssetUrl(s3Assets.sheep),
@@ -259,7 +259,7 @@ const dataEn = [
   },
   {
     id: 24,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "th",
     word: "mother",
     image: getAssetUrl(s3Assets.motherGif),
@@ -268,7 +268,7 @@ const dataEn = [
   },
   {
     id: 25,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "ng",
     word: "sing",
     image: getAssetUrl(s3Assets.sing),
@@ -277,7 +277,7 @@ const dataEn = [
   },
   {
     id: 26,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "a",
     word: "apple",
     image: getAssetUrl(s3Assets.apple),
@@ -286,7 +286,7 @@ const dataEn = [
   },
   {
     id: 27,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "e",
     word: "egg",
     image: getAssetUrl(s3Assets.egg),
@@ -295,7 +295,7 @@ const dataEn = [
   },
   {
     id: 28,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "i",
     word: "igloo",
     image: getAssetUrl(s3Assets.igloo),
@@ -304,7 +304,7 @@ const dataEn = [
   },
   {
     id: 29,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "o",
     word: "orange",
     image: getAssetUrl(s3Assets.orange),
@@ -313,7 +313,7 @@ const dataEn = [
   },
   {
     id: 30,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "u",
     word: "umbrella",
     image: getAssetUrl(s3Assets.umbrella),
@@ -322,7 +322,7 @@ const dataEn = [
   },
   {
     id: 31,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "ai",
     word: "rain",
     image: getAssetUrl(s3Assets.rain),
@@ -331,7 +331,7 @@ const dataEn = [
   },
   {
     id: 32,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "ee",
     word: "bee",
     image: getAssetUrl(s3Assets.bee),
@@ -340,7 +340,7 @@ const dataEn = [
   },
   {
     id: 33,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "ie",
     word: "pie",
     image: getAssetUrl(s3Assets.pie),
@@ -349,7 +349,7 @@ const dataEn = [
   },
   {
     id: 34,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "oa",
     word: "boat",
     image: getAssetUrl(s3Assets.boat),
@@ -358,7 +358,7 @@ const dataEn = [
   },
   {
     id: 35,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "oo",
     word: "moon",
     image: getAssetUrl(s3Assets.moon),
@@ -367,7 +367,7 @@ const dataEn = [
   },
   {
     id: 36,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "oo",
     word: "book",
     image: getAssetUrl(s3Assets.book),
@@ -376,7 +376,7 @@ const dataEn = [
   },
   {
     id: 37,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "ou",
     word: "cloud",
     image: getAssetUrl(s3Assets.cloud),
@@ -385,7 +385,7 @@ const dataEn = [
   },
   {
     id: 38,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "oi",
     word: "coin",
     image: getAssetUrl(s3Assets.coin),
@@ -394,7 +394,7 @@ const dataEn = [
   },
   {
     id: 39,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "aw",
     word: "saw",
     image: getAssetUrl(s3Assets.saw),
@@ -403,7 +403,7 @@ const dataEn = [
   },
   {
     id: 40,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "ar",
     word: "star",
     image: getAssetUrl(s3Assets.star),
@@ -412,7 +412,7 @@ const dataEn = [
   },
   {
     id: 41,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "er",
     word: "sister",
     image: getAssetUrl(s3Assets.sister),
@@ -421,7 +421,7 @@ const dataEn = [
   },
   {
     id: 42,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "or",
     word: "corn",
     image: getAssetUrl(s3Assets.corn),
@@ -430,7 +430,7 @@ const dataEn = [
   },
   {
     id: 43,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "air",
     word: "chair",
     image: getAssetUrl(s3Assets.chair),
@@ -439,7 +439,7 @@ const dataEn = [
   },
   {
     id: 45,
-    title: "Consonant",
+    title: "Phoneme",
     letter: "ear",
     word: "hear",
     image: getAssetUrl(s3Assets.hear),
@@ -447,7 +447,6 @@ const dataEn = [
     phonemeAudio: getAssetAudioUrl(s3Assets.hearfullAudio),
   },
 ];
-
 const dataKn = [
   {
     id: 1,
@@ -1380,47 +1379,67 @@ const R1 = ({
             </Box>
           </Box>
 
-          <Stack
-            direction="row"
-            spacing={2}
+          <Box
             sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "20px",
               position: "absolute",
-              bottom: 15,
+              bottom: 20,
               left: "50%",
               transform: "translateX(-50%)",
               zIndex: 10,
             }}
           >
             <IconButton
-              onClick={handleRetry}
+              onClick={handleBackNavigation}
               sx={{
-                width: 48,
-                height: 48,
-                bgcolor: pink,
+                width: 55,
+                height: 55,
+                bgcolor: "#1CB0F6",
                 color: "#fff",
                 borderRadius: "50%",
-                boxShadow: "0 4px 10px rgba(234,76,137,0.35)",
-                "&:hover": { bgcolor: pink },
+                boxShadow: "0 6px 14px rgba(28,176,246,0.35)",
+                "&:hover": { bgcolor: "#1AA3E3" },
               }}
             >
-              <RotateCcw size={22} />
+              <ArrowLeft size={26} />
             </IconButton>
 
             <IconButton
-              onClick={handleNextWord} // ✅ Using your handleNextWord
+              onClick={handleRetry}
               sx={{
-                width: 48,
-                height: 48,
+                width: 55,
+                height: 55,
+                bgcolor: pink,
+                color: "#fff",
+                borderRadius: "50%",
+                boxShadow: "0 6px 14px rgba(234,76,137,0.35)",
+                "&:hover": { bgcolor: "#E63E7A" },
+                transform: "translateY(-0px)",
+              }}
+            >
+              <RotateCcw size={26} />
+            </IconButton>
+
+            {/* ➡️ Next Button */}
+            <IconButton
+              onClick={handleNextWord}
+              sx={{
+                width: 55,
+                height: 55,
                 bgcolor: orange,
                 color: "#fff",
                 borderRadius: "50%",
-                boxShadow: "0 4px 10px rgba(242,139,29,0.35)",
-                "&:hover": { bgcolor: orange },
+                boxShadow: "0 6px 14px rgba(242,139,29,0.35)",
+                "&:hover": { bgcolor: "#E27D10" },
               }}
             >
-              <ArrowRight size={22} />
+              <ArrowRight size={26} />
             </IconButton>
-          </Stack>
+          </Box>
         </Box>
       </Box>
     );

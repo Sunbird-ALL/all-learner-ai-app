@@ -46,6 +46,14 @@ import tortoiseImg from "../../assets/TurtleCircle.gif";
 import rabbitImg from "../../assets/RabbitCircle.gif";
 import rocketImg from "../../assets/RocketCircle.gif";
 import hintimg from "../../assets/hintsicon.svg";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
 const UnderlinedSentence = ({
   sentence,
@@ -258,6 +266,7 @@ function CircularTimer({ duration = 10, isActive = true }) {
     </div>
   );
 }
+const theme = createTheme();
 
 const FluencyP1 = ({
   setVoiceText,
@@ -312,11 +321,41 @@ const FluencyP1 = ({
   const sessionId = getLocalData("sessionId");
   const lang = getLocalData("lang");
   const [open, setOpen] = useState(false);
-
+  const [parentModalOpen, setParentModalOpen] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const handleStart = () => {
     setStartTime(Date.now());
     setSpeed(null);
   };
+  useEffect(() => {
+    let isMounted = true;
+
+    const observer = new MutationObserver(() => {
+      if (!isMounted) return;
+
+      const modal =
+        document.querySelector(".successHeader") ||
+        document.querySelector('img[alt="gameWon"]') ||
+        document.querySelector('img[alt="gameLost"]');
+
+      if (modal) {
+        setParentModalOpen(true); // ❌ parent modal OPEN → Stop timer
+      } else {
+        setParentModalOpen(false); // ▶ parent modal CLOSED → Resume timer
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      isMounted = false;
+      observer.disconnect();
+    };
+  }, []);
 
   let progressDatas = getLocalData("practiceProgress");
   //const virtualId = String(getLocalData("virtualId"));
@@ -661,7 +700,7 @@ const FluencyP1 = ({
                   marginBottom: "20px",
                 }}
               >
-                <CircularTimer duration={9} isActive={true} />
+                <CircularTimer duration={9} isActive={!parentModalOpen} />
               </div>
             )}
 
@@ -778,7 +817,7 @@ const FluencyP1 = ({
                   position: "absolute",
                   bottom: "0px",
                   left: "10px",
-                  width: "250px",
+                  width: isMobile ? "120px" : "250px",
                 }}
               />
             )}

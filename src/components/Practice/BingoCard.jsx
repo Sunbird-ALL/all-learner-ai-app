@@ -208,14 +208,6 @@ const BingoPage = React.memo(
       >
         {localShowConfetti && <Confetti />}
 
-        <div>
-          <img
-            src={wordheadingimg}
-            alt="Bingo Puzzle"
-            style={{ height: "38px", objectFit: "contain", marginTop: "40px" }}
-          />
-        </div>
-
         <div
           style={{
             display: "flex",

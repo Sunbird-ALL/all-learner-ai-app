@@ -133,6 +133,13 @@ const AserFlow = ({
   const [clickedIndex, setClickedIndex] = useState(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [open, setOpen] = useState(false);
+  const [currentItemNumber, setCurrentItemNumber] = useState(0);
+  const TOTAL_ITEMS = 12;
+
+  const completionPercentage = Math.min(
+    (currentItemNumber / TOTAL_ITEMS) * 100,
+    100
+  );
 
   background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
   showTimer = false;
@@ -184,7 +191,7 @@ const AserFlow = ({
           hi: "अआइईउऊएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह".split(""), // Hindi
           ta: "அஆஇஈஉஊஎஏஐஒஓஔகஙசஞடணதநபமயரலவஶஷஸஹ".split(""), // Tamil
           te: "అఆఇఈఉఊఎఏఐఒఓఔకఖగఘఙచఛజఝఞటఠడఢణతథదధనపఫబభమయరలవశషసహ".split(""), // Telugu
-          ka: "ಅಆಇಈಉಊಋಎಏಐಒಓಔಕಖಗಘಙಚಛಜಝಞಟಠಡಢಣತಥದಧನಪಫಬಭಮಯರಲವಶಷಸಹ".split(""), // Kannada
+          kn: "ಅಆಇಈಉಊಋಎಏಐಒಓಔಕಖಗಘಙಚಛಜಝಞಟಠಡಢಣತಥದಧನಪಫಬಭಮಯರಲವಶಷಸಹ".split(""), // Kannada
         };
 
         // Default to English if language not found
@@ -325,6 +332,9 @@ const AserFlow = ({
     if (correct) correctAudio.play();
     else wrongAudio.play();
 
+    // ✅ Increase progress on every bubble click
+    setCurrentItemNumber((prev) => Math.min(prev + 1, TOTAL_ITEMS));
+
     setTimeout(() => {
       handleNextClick();
     }, 1000);
@@ -400,6 +410,61 @@ const AserFlow = ({
           alignItems: "center",
         }}
       >
+        {/* === Top Right Progress Bar === */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: 10,
+            right: 20,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "120px",
+            zIndex: 2000, // keeps above everything
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "#fff",
+              border: "2px solid #1CB0F6",
+              borderRadius: "50%",
+              padding: "6px 12px",
+              fontFamily: "Quicksand",
+              fontWeight: 700,
+              fontSize: "14px",
+              color: "#000",
+              position: "relative",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+              marginBottom: "-8px",
+            }}
+          >
+            {currentItemNumber}/{TOTAL_ITEMS}
+          </Box>
+
+          <Box
+            sx={{
+              width: "100%",
+              height: "18px",
+              backgroundColor: "#E3F2FD",
+              borderRadius: "20px",
+              overflow: "hidden",
+              position: "relative",
+              zIndex: 1,
+              border: "2px solid #BBDEFB",
+            }}
+          >
+            <Box
+              sx={{
+                width: `${completionPercentage}%`,
+                height: "100%",
+                backgroundColor: "#1CB0F6",
+                borderRadius: "20px",
+                transition: "width 0.4s ease",
+              }}
+            />
+          </Box>
+        </Box>
+
         <img
           src={hintimg}
           alt="hint"
