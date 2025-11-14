@@ -1085,6 +1085,7 @@ const BingoCard = ({
   }, [currentWordIndex, transformed, score, startAudio]);
 
   const handleSuccessNextClick = useCallback(() => {
+    setCorrect([]);
     setShowBingoPage(true);
     setShowSuccessPage(false);
   }, []);
