@@ -40,20 +40,32 @@ import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import { Log } from "../../services/telementryService";
 import hintimg from "../../assets/hintsicon.svg";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
-function CircularTimer({ duration = 3, onComplete }) {
+function CircularTimer({ duration = 3, onComplete, paused }) {
   const [timeLeft, setTimeLeft] = useState(duration);
 
   useEffect(() => {
+    if (paused) return;
+
     if (timeLeft <= 0) {
       onComplete();
       return;
     }
+
     const interval = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [timeLeft, onComplete]);
+  }, [timeLeft, paused]);
 
   return (
     <div
@@ -68,6 +80,7 @@ function CircularTimer({ duration = 3, onComplete }) {
     </div>
   );
 }
+const theme = createTheme();
 
 const FluencyP3 = ({
   setVoiceText,
@@ -117,7 +130,9 @@ const FluencyP3 = ({
   const [questionStage, setQuestionStage] = useState(0); // 0 = first question, 1 = second question
   const [currentQuestionWord, setCurrentQuestionWord] = useState("");
   const [open, setOpen] = useState(false);
-
+  const [parentModalOpen, setParentModalOpen] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const wordList = [
     "Ebullient",
     "Obfuscate",
@@ -216,6 +231,31 @@ const FluencyP3 = ({
     setQuestionStage(0); // Reset to first question
     setResetTimer(true);
   };
+  useEffect(() => {
+    let isMounted = true;
+
+    const observer = new MutationObserver(() => {
+      if (!isMounted) return;
+
+      const modal =
+        document.querySelector(".successHeader") ||
+        document.querySelector('img[alt="gameWon"]') ||
+        document.querySelector('img[alt="gameLost"]');
+
+      if (modal) {
+        setParentModalOpen(true); // Modal OPEN → Timer Must NOT Run
+      } else {
+        setParentModalOpen(false); // Modal CLOSED → Timer can run
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      isMounted = false;
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (showContent) {
@@ -575,31 +615,35 @@ const FluencyP3 = ({
           {showResultScreen ? (
             <div
               style={{
-                marginTop: "20px",
-                marginBottom: "20px",
+                marginTop: isMobile ? "10px" : "20px",
+                marginBottom: isMobile ? "10px" : "20px",
                 textAlign: "center",
                 flex: 1,
                 position: "relative",
                 width: "100%",
               }}
             >
+              {/* Top Title Row */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "12px",
-                  marginBottom: "20px",
+                  gap: isMobile ? "6px" : "12px",
+                  marginBottom: isMobile ? "10px" : "20px",
                 }}
               >
                 <img
                   src={meterImg}
                   alt="speed meter"
-                  style={{ width: "50px" }}
+                  style={{
+                    width: isMobile ? "30px" : isTablet ? "40px" : "50px",
+                  }}
                 />
+
                 <h2
                   style={{
-                    fontSize: "26px",
+                    fontSize: isMobile ? "16px" : isTablet ? "20px" : "26px",
                     fontWeight: "600",
                     color: "#333F61",
                     margin: 0,
@@ -609,17 +653,20 @@ const FluencyP3 = ({
                 </h2>
               </div>
 
+              {/* Meter Items */}
               <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: "40px",
+                  gap: isMobile ? "10px" : "40px",
+                  flexWrap: isMobile ? "wrap" : "nowrap",
                 }}
               >
+                {/* Slow */}
                 <div
                   style={{
-                    padding: "20px",
+                    padding: isMobile ? "10px" : "20px",
                     borderRadius: "12px",
                     background: readingSpeed === "Slow" ? "#fff7e6" : "#f9f9f9",
                     border:
@@ -627,17 +674,30 @@ const FluencyP3 = ({
                         ? "1px solid #ff9900"
                         : "1px solid #ddd",
                     opacity: readingSpeed === "Slow" ? 1 : 0.5,
+                    width: isMobile ? "80px" : "auto",
+                    textAlign: "center",
                   }}
                 >
-                  <img src={tortoiseImg} alt="tortoise" height={50} />
-                  <div style={{ marginTop: "10px", fontWeight: "600" }}>
+                  <img
+                    src={tortoiseImg}
+                    alt="tortoise"
+                    height={isMobile ? 30 : 50}
+                  />
+                  <div
+                    style={{
+                      marginTop: "6px",
+                      fontWeight: "600",
+                      fontSize: isMobile ? "14px" : "16px",
+                    }}
+                  >
                     Slow
                   </div>
                 </div>
 
+                {/* Medium */}
                 <div
                   style={{
-                    padding: "20px",
+                    padding: isMobile ? "10px" : "20px",
                     borderRadius: "12px",
                     background:
                       readingSpeed === "Medium" ? "#fff7e6" : "#f9f9f9",
@@ -646,17 +706,30 @@ const FluencyP3 = ({
                         ? "1px solid #ff9900"
                         : "1px solid #ddd",
                     opacity: readingSpeed === "Medium" ? 1 : 0.5,
+                    width: isMobile ? "80px" : "auto",
+                    textAlign: "center",
                   }}
                 >
-                  <img src={rabbitImg} alt="rabbit" height={50} />
-                  <div style={{ marginTop: "10px", fontWeight: "600" }}>
+                  <img
+                    src={rabbitImg}
+                    alt="rabbit"
+                    height={isMobile ? 30 : 50}
+                  />
+                  <div
+                    style={{
+                      marginTop: "6px",
+                      fontWeight: "600",
+                      fontSize: isMobile ? "14px" : "16px",
+                    }}
+                  >
                     Medium
                   </div>
                 </div>
 
+                {/* Fast */}
                 <div
                   style={{
-                    padding: "20px",
+                    padding: isMobile ? "10px" : "20px",
                     borderRadius: "12px",
                     background: readingSpeed === "Fast" ? "#fff7e6" : "#f9f9f9",
                     border:
@@ -664,15 +737,28 @@ const FluencyP3 = ({
                         ? "1px solid #ff9900"
                         : "1px solid #ddd",
                     opacity: readingSpeed === "Fast" ? 1 : 0.5,
+                    width: isMobile ? "80px" : "auto",
+                    textAlign: "center",
                   }}
                 >
-                  <img src={cheetahImg} alt="cheetah" height={50} />
-                  <div style={{ marginTop: "10px", fontWeight: "600" }}>
+                  <img
+                    src={cheetahImg}
+                    alt="cheetah"
+                    height={isMobile ? 30 : 50}
+                  />
+                  <div
+                    style={{
+                      marginTop: "6px",
+                      fontWeight: "600",
+                      fontSize: isMobile ? "14px" : "16px",
+                    }}
+                  >
                     Fast
                   </div>
                 </div>
               </div>
 
+              {/* Next Button */}
               <img
                 src={nextImg}
                 alt="next"
@@ -684,9 +770,9 @@ const FluencyP3 = ({
                   setShowResultScreen(false);
                 }}
                 style={{
-                  marginTop: "16px",
-                  marginBottom: "15px",
-                  width: "50px",
+                  marginTop: isMobile ? "10px" : "16px",
+                  marginBottom: isMobile ? "10px" : "15px",
+                  width: isMobile ? "40px" : "50px",
                   cursor: "pointer",
                 }}
               />
@@ -694,7 +780,7 @@ const FluencyP3 = ({
           ) : showWordAfterYes ? (
             <div
               style={{
-                marginTop: "40px",
+                marginTop: "10px",
                 textAlign: "center",
                 flex: 1,
                 position: "relative",
@@ -803,7 +889,9 @@ const FluencyP3 = ({
               <CircularTimer
                 key={resetTimer ? `timer-${Date.now()}` : "timer"}
                 duration={3}
+                paused={parentModalOpen}
                 onComplete={() => {
+                  if (parentModalOpen) return;
                   setReadingSpeed("Slow");
                   setStartTime(Date.now());
                   setShowContent(true);
@@ -886,7 +974,7 @@ const FluencyP3 = ({
                   justifyContent: "center",
                   alignItems: "center",
                   gap: "40px",
-                  marginTop: "50px",
+                  marginTop: isMobile ? "15px" : isTablet ? "30px" : "50px",
                   position: "relative",
                   zIndex: 10,
                 }}
@@ -894,8 +982,13 @@ const FluencyP3 = ({
                 <button
                   onClick={handleNoClick}
                   style={{
-                    padding: "14px 54px",
-                    fontSize: "26px",
+                    padding: isMobile
+                      ? "10px 30px"
+                      : isTablet
+                      ? "12px 40px"
+                      : "14px 54px",
+                    fontSize: isMobile ? "18px" : isTablet ? "22px" : "26px",
+
                     borderRadius: "12px",
                     border:
                       noClicked && questionStage === 1
@@ -938,8 +1031,13 @@ const FluencyP3 = ({
                 <button
                   onClick={handleYesClick}
                   style={{
-                    padding: "14px 54px",
-                    fontSize: "26px",
+                    padding: isMobile
+                      ? "10px 30px"
+                      : isTablet
+                      ? "12px 40px"
+                      : "14px 54px",
+                    fontSize: isMobile ? "18px" : isTablet ? "22px" : "26px",
+
                     borderRadius: "12px",
                     border:
                       yesClicked && questionStage === 0

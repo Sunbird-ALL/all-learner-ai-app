@@ -48,6 +48,14 @@ import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
 import hintimg from "../../assets/hintsicon.svg";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
 const sentencesData = [
   {
@@ -109,13 +117,13 @@ const UnderlinedSentence = ({
   return (
     <p
       style={{
-        fontSize: "32px",
+        fontSize: "20px",
         fontWeight: "600",
         color: "rgba(51, 63, 97, 1)",
         fontFamily: "Quicksand",
         fontStyle: "bold",
         textAlign: "center",
-        lineHeight: "1.5",
+        lineHeight: "1.2",
         position: "relative",
       }}
     >
@@ -310,6 +318,7 @@ function CircularTimer({ duration = 30, isActive = true }) {
     </div>
   );
 }
+const theme = createTheme();
 
 const FluencyP4 = ({
   setVoiceText,
@@ -364,7 +373,9 @@ const FluencyP4 = ({
   const [startTime, setStartTime] = useState(null);
   const lang = getLocalData("lang");
   const [open, setOpen] = useState(false);
-
+  const [parentModalOpen, setParentModalOpen] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // < 600px
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const buildSentencesData = (apiData) => {
     return apiData?.map((item, index) => {
       const sentence = item?.contentSourceData[0].text;
@@ -403,6 +414,31 @@ const FluencyP4 = ({
 
   useEffect(() => {
     handleStart();
+  }, []);
+  useEffect(() => {
+    let isMounted = true;
+
+    const observer = new MutationObserver(() => {
+      if (!isMounted) return;
+
+      const modal =
+        document.querySelector(".successHeader") ||
+        document.querySelector('img[alt="gameWon"]') ||
+        document.querySelector('img[alt="gameLost"]');
+
+      if (modal) {
+        setParentModalOpen(true);
+      } else {
+        setParentModalOpen(false);
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      isMounted = false;
+      observer.disconnect();
+    };
   }, []);
 
   const handleStop = () => {
@@ -707,74 +743,50 @@ const FluencyP4 = ({
                   marginBottom: "10px",
                 }}
               >
-                <CircularTimer duration={30} isActive={true} />
+                <CircularTimer duration={30} isActive={!parentModalOpen} />
               </div>
             )}
 
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "10px",
-                marginBottom: showResult ? "99px" : "30px",
                 position: "relative",
-                marginTop: showExtras ? "50px" : "0px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "95%",
+                borderRadius: "10px",
               }}
             >
-              {showExtras && (
-                <img
-                  src={listenImg}
-                  onClick={() => {
-                    playWordAudio(
-                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentSentence.contentId}.wav`
-                    );
-                  }}
-                  alt="listen"
-                  style={{ width: "40px", height: "40px", cursor: "pointer" }}
-                />
-              )}
-              <div
-                style={{
-                  position: "relative",
-                  display: "inline-block",
-                }}
-              >
-                <UnderlinedSentence
-                  sentence={currentSentence.sentence}
-                  underlinedWords={currentSentence.underlinedWords}
-                  hints={currentSentence.hints}
-                  showUnderlines={showExtras}
-                  onWordHover={handleWordHover}
-                />
+              <UnderlinedSentence
+                sentence={currentSentence.sentence}
+                underlinedWords={currentSentence.underlinedWords}
+                hints={currentSentence.hints}
+                showUnderlines={showExtras}
+                onWordHover={handleWordHover}
+              />
 
-                {/* <LanguageHint
-                  hint={hoveredWord ? currentSentence.hints[hoveredWord] : null}
-                  position={hoverPosition}
-                /> */}
-                {hoveredWord && currentSentence?.hints[hoveredWord] && (
-                  <div
+              {hoveredWord && currentSentence?.hints[hoveredWord] && (
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "-80px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    zIndex: 1000,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <img
+                    src={langhint}
+                    alt="language hint"
                     style={{
-                      position: "absolute",
-                      bottom: "-80px",
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      zIndex: 1000,
-                      pointerEvents: "none",
+                      width: "190px",
+                      height: "140px",
+                      userSelect: "none",
                     }}
-                  >
-                    <img
-                      src={langhint}
-                      alt="language hint"
-                      style={{
-                        width: "190px",
-                        height: "140px",
-                        userSelect: "none",
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
+                  />
+                </div>
+              )}
             </div>
 
             <div style={{ textAlign: "center" }}>
@@ -894,9 +906,11 @@ const FluencyP4 = ({
                 alt="listen-bear"
                 style={{
                   position: "absolute",
-                  bottom: "0px",
-                  left: "-20px",
-                  width: "210px",
+                  bottom: isMobile ? "-10px" : "0px",
+                  left: isMobile ? "-20px" : "-50px",
+                  width: isMobile ? "110px" : "190px",
+                  height: "auto",
+                  zIndex: 5,
                 }}
               />
             )}

@@ -2988,7 +2988,7 @@ const Barakhadi = ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
   };
 
   const btnRowStyle = {
@@ -3012,6 +3012,7 @@ const Barakhadi = ({
     gap: "8px",
     fontSize: "13px",
     height: "35px",
+    flexDirection: "column",
   };
 
   const disabledButtonStyle = {
@@ -3041,7 +3042,7 @@ const Barakhadi = ({
   const tdStyle = {
     padding: "4px",
     border: "1px solid #ccc",
-    fontSize: "15px",
+    fontSize: "23px",
     textAlign: "center",
     width: "58px",
     cursor: "pointer",
@@ -3067,8 +3068,8 @@ const Barakhadi = ({
 
   const leftCircleStyle = {
     position: "absolute",
-    width: "22px",
-    height: "22px",
+    width: "28px",
+    height: "28px",
     borderRadius: "50%",
     background: "#ffeb3b",
     color: "#000",
@@ -3400,15 +3401,36 @@ const Barakhadi = ({
 
         <div style={cardStyle}>
           <div style={titleStyle}>
-            <img
-              src={wordbanaoImg}
-              alt={getInstructionAltText()}
-              height={"25px"}
-              style={{ display: "block", margin: "0 auto" }}
-            />
+            <span
+              style={{
+                fontSize: "22px",
+                fontWeight: "700",
+                color: "#333F61",
+                fontFamily: "Quicksand",
+              }}
+            >
+              {lang === "hi"
+                ? "शब्द बनाओ"
+                : lang === "ta"
+                ? "சொல்லை உருவாக்கு"
+                : lang === "te"
+                ? "పదం తయారు చేయండి"
+                : lang === "kn"
+                ? "ಪದವನ್ನು ರಚಿಸಿ"
+                : "Make a Word"}
+            </span>
           </div>
 
-          <div style={wordBoxStyle}>
+          <div
+            style={{
+              ...wordBoxStyle,
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-between",
+              height: "105px",
+              padding: "15px 20px",
+            }}
+          >
             <div
               style={{
                 fontWeight: "bold",
@@ -3465,7 +3487,7 @@ const Barakhadi = ({
                         src={listenImg}
                         alt="listen"
                         style={{
-                          width: "25px",
+                          width: "39px",
                           cursor: "pointer",
                           position: "relative",
                           zIndex: 1,
@@ -3475,13 +3497,13 @@ const Barakhadi = ({
                       <div
                         style={{
                           position: "absolute",
-                          width: "40px",
-                          height: "40px",
+                          width: "45px",
+                          height: "45px",
                           backgroundColor: "#A856FF",
                           borderRadius: "50%",
                           animation: "pulse 1.2s linear infinite",
-                          top: "-23%",
-                          left: "8%",
+                          top: "-9%",
+                          left: "9%",
                           transform: "translate(-50%, -50%)",
                           zIndex: -1,
                         }}
@@ -3494,72 +3516,109 @@ const Barakhadi = ({
 
             <div
               style={{
-                border: "1px solid orange",
-                borderRadius: "10px",
-                height: "34px",
-                marginBottom: "10px",
-                width: "90%",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                fontSize: "22px",
-                fontWeight: "bold",
-                color: word === targetWord ? "#27ae60" : "#2c3e50",
-                background: word === targetWord ? "#e8f5e8" : "#ffffff",
-                transition: "background 0.3s ease, color 0.3s ease",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                lineHeight: "1",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
-              {word ? word : <span style={{ opacity: 0 }}>A</span>}
-            </div>
-
-            <div style={btnRowStyle}>
-              <button
-                style={
-                  word.length === 0
-                    ? {
-                        ...disabledButtonStyle,
-                        boxShadow: "3px 4px 6px rgba(0, 128, 0, 0.3)",
-                      }
-                    : {
-                        ...buttonStyle,
-                        boxShadow: "3px 4px 6px rgba(0, 128, 0, 1.6)",
-                      }
-                }
-                onClick={handleListen}
-                disabled={word.length === 0}
-              >
-                <img
-                  src={listenImgBox}
-                  alt="listen"
-                  style={{ height: "17px" }}
-                />
-                {/* <span>{buttonTexts.listen}</span> */}
-              </button>
-
-              <button
+              <div
                 style={{
-                  ...buttonStyle,
-                  boxShadow: "3px 4px 6px rgba(255, 165, 0, 1.6)",
+                  border: "1px solid orange",
+                  borderRadius: "10px",
+                  height: "50px",
+                  width: "65%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  fontSize: "22px",
+                  fontWeight: "bold",
+                  color: word === targetWord ? "#27ae60" : "#2c3e50",
+                  background: word === targetWord ? "#E8F5E8" : "#FFFFFF",
+                  paddingLeft: "20px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  transition: "background 0.3s ease, color 0.3s ease",
+                  marginBottom: "60px",
                 }}
-                onClick={handleDelete}
               >
-                <img src={eraseImg} alt="delete" style={{ height: "17px" }} />
-                {/* <span>{buttonTexts.delete}</span> */}
-              </button>
+                {word ? word : <span style={{ opacity: 0.4 }}></span>}
+              </div>
 
-              <button
+              <div
                 style={{
-                  ...buttonStyle,
-                  boxShadow: "3px 4px 6px rgba(255, 0, 0, 1.6)",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: "22px",
+                  width: "40%",
+                  marginBottom: "80px",
                 }}
-                onClick={handleErase}
               >
-                <img src={deleteImg} alt="erase" style={{ height: "17px" }} />
-                {/* <span>{buttonTexts.erase}</span> */}
-              </button>
+                <button
+                  style={
+                    word.length === 0
+                      ? {
+                          ...disabledButtonStyle,
+                          boxShadow: "3px 4px 6px rgba(0, 128, 0, 0.3)",
+                          backgroundColor: "#E4F5FF",
+                          border: "2px solid #1CB0F6",
+                          color: "#333F61",
+                          width: "85px",
+                          height: "40px",
+                          flexDirection: "row",
+                        }
+                      : {
+                          ...buttonStyle,
+                          boxShadow: "3px 4px 6px rgba(0, 128, 0, 1.6)",
+                          backgroundColor: "#E4F5FF",
+                          color: "#333F61",
+                          width: "85px",
+                          height: "40px",
+                          flexDirection: "row",
+                        }
+                  }
+                  onClick={handleListen}
+                  disabled={word.length === 0}
+                >
+                  <img
+                    src={listenImgBox}
+                    alt="listen"
+                    style={{ height: "30px" }}
+                  />
+                </button>
+
+                <button
+                  style={{
+                    ...buttonStyle,
+                    backgroundColor: "white",
+                    color: "#333F61",
+                    width: "85px",
+                    height: "40px",
+                    flexDirection: "row",
+                    boxShadow: "3px 4px 6px rgba(255, 165, 0, 1.6)",
+                  }}
+                  onClick={handleDelete}
+                >
+                  <img src={eraseImg} alt="delete" style={{ height: "30px" }} />
+                </button>
+
+                <button
+                  style={{
+                    ...buttonStyle,
+                    backgroundColor: "white",
+                    color: "#333F61",
+                    width: "85px",
+                    height: "40px",
+                    flexDirection: "row",
+                    boxShadow: "3px 4px 6px rgba(255, 0, 0, 1.6)",
+                  }}
+                  onClick={handleErase}
+                >
+                  <img src={deleteImg} alt="erase" style={{ height: "30px" }} />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -3576,7 +3635,7 @@ const Barakhadi = ({
                 style={{
                   ...leftCircleStyle,
                   left: "19px",
-                  top: `${i * 32 + 25}px`,
+                  top: `${i * 45 + 25}px`,
                 }}
               >
                 {v}

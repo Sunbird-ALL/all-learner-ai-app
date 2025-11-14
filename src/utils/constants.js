@@ -10909,7 +10909,7 @@ export const levelGetContent = {
       },
       {
         title: "P3",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
@@ -10917,7 +10917,7 @@ export const levelGetContent = {
       },
       {
         title: "P4",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
@@ -10947,7 +10947,7 @@ export const levelGetContent = {
       },
       {
         title: "P7",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
@@ -10955,7 +10955,7 @@ export const levelGetContent = {
       },
       {
         title: "P8",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
@@ -10988,7 +10988,7 @@ export const levelGetContent = {
       },
       {
         title: "P3",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
@@ -10996,7 +10996,7 @@ export const levelGetContent = {
       },
       {
         title: "P4",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
@@ -11004,12 +11004,12 @@ export const levelGetContent = {
       },
       {
         title: "S1",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         competency: "L1.8",
         tags: "CEFR_GENERAL_ENG",
         CEFR_level: "A2",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
+        //  mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P5",
@@ -11029,7 +11029,7 @@ export const levelGetContent = {
       },
       {
         title: "P7",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
@@ -11037,7 +11037,7 @@ export const levelGetContent = {
       },
       {
         title: "P8",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
@@ -11045,7 +11045,7 @@ export const levelGetContent = {
       },
       {
         title: "S2",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         competency: "L1.8",
         mechanism: { id: "mechanic_2", name: "readTheImage" },
@@ -11072,7 +11072,7 @@ export const levelGetContent = {
       },
       {
         title: "P3",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
@@ -11080,7 +11080,7 @@ export const levelGetContent = {
       },
       {
         title: "P4",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
@@ -11110,7 +11110,7 @@ export const levelGetContent = {
       },
       {
         title: "P7",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
@@ -11118,7 +11118,7 @@ export const levelGetContent = {
       },
       {
         title: "P8",
-        criteria: "sentence",
+        criteria: "paragraph",
         template: "simple",
         tags: "CEFR_GENERAL_ENG",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },

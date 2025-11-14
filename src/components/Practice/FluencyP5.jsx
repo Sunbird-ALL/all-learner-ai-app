@@ -47,6 +47,14 @@ import AudioTooltipModal from "./AudioTooltipModal";
 import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
+import {
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
 function CircularTimer({ duration = 30, isActive = true }) {
   const [timeLeft, setTimeLeft] = React.useState(duration);
@@ -159,6 +167,7 @@ function CircularTimer({ duration = 30, isActive = true }) {
     </div>
   );
 }
+const theme = createTheme();
 
 const FluencyP5 = ({
   setVoiceText,
@@ -240,7 +249,8 @@ const FluencyP5 = ({
   const [open, setOpen] = useState(false);
   const correctPracticeWords = getLocalData("correctPracticeWords");
   const sessionId = getLocalData("sessionId");
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const getSimilarity = (str1, str2) => {
     const a = str1.toLowerCase().trim().split(" ");
     const b = str2.toLowerCase().trim().split(" ");
@@ -398,7 +408,6 @@ const FluencyP5 = ({
     setAnimationKey((prev) => prev + 1);
   }, [selected]);
   useEffect(() => {
-    // Kick off animation after 100ms to avoid layout thrash
     const timer = setTimeout(() => {
       setAnimationKey((prev) => prev + 1);
     }, 100);
@@ -869,32 +878,18 @@ const FluencyP5 = ({
           <div
             style={{
               position: "absolute",
-              top: "180px",
-              right: "20px",
+              top: isMobile ? "140px" : "180px",
+              right: isMobile ? "-12px" : "20px",
               zIndex: 1000,
               background: "#fff",
-              padding: "8px",
+              padding: isMobile ? "6px" : "8px",
               borderRadius: "12px",
-              //boxShadow: "0px 2px 6px rgba(0,0,0,0.15)",
+              transform: isMobile ? "scale(0.9)" : "scale(1)",
             }}
           >
             <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
           </div>
         )}
-
-        <h2
-          style={{
-            fontSize: "28px",
-            fontWeight: "700",
-            color: "rgba(51, 63, 97, 1)",
-            textAlign: "center",
-            marginTop: "10px",
-            marginBottom: "15px",
-            width: "100%",
-          }}
-        >
-          Read the Paragraph
-        </h2>
 
         {!showBearDance && (
           <div style={{ marginBottom: "15px" }}>
@@ -1008,7 +1003,6 @@ const FluencyP5 = ({
           )}
         </div>
 
-        {/* Confetti */}
         {showConfetti && showBearDance && <Confetti recycle={false} />}
       </div>
     );
