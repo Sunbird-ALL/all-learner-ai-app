@@ -581,18 +581,20 @@ const MainLayout = (props) => {
                           <HeartBlack />
                         ))}
                       </Box>
-                      <span
-                        style={{
-                          marginLeft: "5px",
-                          color: "#000000",
-                          fontWeight: 700,
-                          fontSize: "24px",
-                          lineHeight: "30px",
-                          fontFamily: "Quicksand",
-                        }}
-                      >
-                        {`You have ${redLivesToShow} lives`}
-                      </span>
+                      {redLivesToShow != null && (
+                        <span
+                          style={{
+                            marginLeft: "5px",
+                            color: "#000000",
+                            fontWeight: 700,
+                            fontSize: "24px",
+                            lineHeight: "30px",
+                            fontFamily: "Quicksand",
+                          }}
+                        >
+                          {`You have ${redLivesToShow} lives`}
+                        </span>
+                      )}
                     </Box>
                   )}
                 <Box sx={{ height: "110px", position: "relative" }}>
