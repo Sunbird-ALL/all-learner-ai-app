@@ -12361,19 +12361,16 @@ export const levelGetContent = {
         title: "P3",
         criteria: "paragraph",
         template: "simple",
-        tags: "KN_M4-M6_SENT",
       },
       {
         title: "P4",
         criteria: "paragraph",
         template: "simple",
-        tags: "KN_M4-M6_SENT",
       },
       {
         title: "S1",
         criteria: "paragraph",
         template: "simple",
-        tags: "KN_M4-M6_SENT",
       },
       {
         title: "P5",
@@ -12385,25 +12382,21 @@ export const levelGetContent = {
         title: "P6",
         criteria: "paragraph",
         template: "simple",
-        tags: "KN_M4-M6_SENT",
       },
       {
         title: "P7",
         criteria: "paragraph",
         template: "simple",
-        tags: "KN_M4-M6_SENT",
       },
       {
         title: "P8",
         criteria: "paragraph",
         template: "simple",
-        tags: "KN_M4-M6_SENT",
       },
       {
         title: "S2",
         criteria: "paragraph",
         template: "simple",
-        tags: "KN_M4-M6_SENT",
       },
     ],
     7: [
