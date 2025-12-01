@@ -110,14 +110,35 @@ const ReadMatch = ({
       try {
         const response = await getCorrectPracticeWords("false");
         const correctWords = response?.data || [];
+        const selectedLang = getLocalData("lang") || "en";
         console.log("level api", level);
 
-        const formattedCorrectWords = correctWords?.map((item) => ({
-          word: item?.contentSourceData?.[0]?.text,
-          img: item?.imagePath || item?.mechanics_data?.[0]?.image_url,
-          match: item?.contentSourceData?.[0]?.text,
-          content_id: item?.contentId,
-        }));
+        // First, filter items by top-level language field to only include items matching selected language
+        const filteredWords = correctWords.filter((item) => {
+          // Check if item's top-level language matches
+          if (item?.language === selectedLang) {
+            return true;
+          }
+          // Also check if contentSourceData has an entry for the selected language
+          return item?.contentSourceData?.some(
+            (data) => data?.language === selectedLang
+          );
+        });
+
+        const formattedCorrectWords = filteredWords?.map((item) => {
+          // Filter contentSourceData to find the entry matching the selected language
+          const contentData =
+            item?.contentSourceData?.find(
+              (data) => data?.language === selectedLang
+            ) || item?.contentSourceData?.[0]; // Fallback to first entry if language not found
+
+          return {
+            word: contentData?.text,
+            img: item?.imagePath || item?.mechanics_data?.[0]?.image_url,
+            match: contentData?.text,
+            content_id: item?.contentId,
+          };
+        });
 
         if (formattedCorrectWords <= 3) {
           setLocalData("readMatch", false);

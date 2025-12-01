@@ -126,17 +126,17 @@ export const updateCorrectPracticeWords = async (updates) => {
 
 export const getCorrectPracticeWords = async (understood) => {
   const token = localStorage.getItem("apiToken");
+  const lang = getLocalData("lang");
+
+  const apiUrl = `${API_LEARNER_AI_APP_HOST}/api/towre/getCorrectWords?practiced=true&learned=true&understood=${understood}&language=${lang}`;
 
   try {
-    const response = await axios.get(
-      `${API_LEARNER_AI_APP_HOST}/api/towre/getCorrectWords?practiced=true&learned=true&understood=${understood}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.get(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     return response.data;
   } catch (error) {
