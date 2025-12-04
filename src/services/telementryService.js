@@ -42,6 +42,8 @@ export const initialize = async ({ context, config, metadata }) => {
   playSessionId = uniqueId();
   if (!CsTelemetryModule.instance.isInitialised) {
     await CsTelemetryModule.instance.init({});
+    const deviceInfo = getDeviceInfo();
+
     const telemetryConfig = {
       config: {
         pdata: context.pdata,
@@ -63,12 +65,10 @@ export const initialize = async ({ context, config, metadata }) => {
         cdata: [
           { id: contentSessionId, type: "ContentSession" },
           { id: playSessionId, type: "PlaySession" },
-          {
-            id: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
-              ? "Mobile"
-              : "Desktop",
-            type: "Device",
-          },
+          { id: deviceInfo.deviceType, type: "Device" },
+          { id: deviceInfo.platform, type: "Platform" },
+          { id: deviceInfo.browser, type: "Browser" },
+          { id: deviceInfo.screenResolution, type: "ScreenResolution" },
         ],
       },
       userOrgDetails: {},
@@ -87,6 +87,28 @@ export const initialize = async ({ context, config, metadata }) => {
 export const start = (duration) => {
   try {
     startTime = Date.now(); // Record the start time
+    const deviceInfo = getDeviceInfo();
+
+    // Create a comprehensive device specification string
+    const dspec = JSON.stringify({
+      userAgent: deviceInfo.userAgent,
+      deviceType: deviceInfo.deviceType,
+      platform: deviceInfo.platform,
+      browser: deviceInfo.browser,
+      screenResolution: deviceInfo.screenResolution,
+      pixelRatio: deviceInfo.pixelRatio,
+      colorDepth: deviceInfo.colorDepth,
+      touchSupport: deviceInfo.touchSupport,
+      orientation: deviceInfo.orientation,
+      connectionType: deviceInfo.connectionType,
+      connectionDownlink: deviceInfo.connectionDownlink,
+      hardwareConcurrency: deviceInfo.hardwareConcurrency,
+      deviceMemory: deviceInfo.deviceMemory,
+      language: deviceInfo.language,
+      timezone: deviceInfo.timezone,
+      timezoneOffset: deviceInfo.timezoneOffset,
+    });
+
     CsTelemetryModule.instance.telemetryService.raiseStartTelemetry({
       options: getEventOptions(),
       edata: {
@@ -94,7 +116,7 @@ export const start = (duration) => {
         mode: "play",
         stageid: url,
         duration: Number((duration / 1e3).toFixed(2)),
-        dspec: window.navigator.userAgent,
+        dspec: dspec,
       },
     });
   } catch (error) {
@@ -240,6 +262,107 @@ const getVirtualId = () => {
   return TOKEN;
 };
 
+/**
+ * Gathers comprehensive device information for telemetry logging
+ * @returns {Object} Device information object
+ */
+const getDeviceInfo = () => {
+  const nav = window.navigator;
+  const screen = window.screen;
+
+  // Detect device type
+  const userAgent = nav.userAgent || "";
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent);
+  const isTablet =
+    /iPad|Android/i.test(userAgent) && !/Mobile/i.test(userAgent);
+  let deviceType = "Desktop";
+  if (isTablet) {
+    deviceType = "Tablet";
+  } else if (isMobile) {
+    deviceType = "Mobile";
+  }
+
+  // Detect platform/OS
+  let platform = nav.platform || "Unknown";
+  if (userAgent.includes("Windows")) platform = "Windows";
+  else if (userAgent.includes("Mac")) platform = "Mac";
+  else if (userAgent.includes("Linux")) platform = "Linux";
+  else if (userAgent.includes("Android")) platform = "Android";
+  else if (
+    userAgent.includes("iOS") ||
+    userAgent.includes("iPhone") ||
+    userAgent.includes("iPad")
+  )
+    platform = "iOS";
+
+  // Detect browser
+  let browser = "Unknown";
+  if (userAgent.includes("Chrome") && !userAgent.includes("Edg"))
+    browser = "Chrome";
+  else if (userAgent.includes("Firefox")) browser = "Firefox";
+  else if (userAgent.includes("Safari") && !userAgent.includes("Chrome"))
+    browser = "Safari";
+  else if (userAgent.includes("Edg")) browser = "Edge";
+  else if (userAgent.includes("Opera") || userAgent.includes("OPR"))
+    browser = "Opera";
+
+  // Screen information
+  const screenWidth = screen.width || 0;
+  const screenHeight = screen.height || 0;
+  const screenResolution = `${screenWidth}x${screenHeight}`;
+  const colorDepth = screen.colorDepth || 0;
+  const pixelRatio = window.devicePixelRatio || 1;
+
+  // Device capabilities
+  const touchSupport = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+  const orientation = screen.orientation
+    ? screen.orientation.type
+    : screenWidth > screenHeight
+    ? "landscape"
+    : "portrait";
+
+  // Connection information (if available)
+  const connection =
+    nav.connection || nav.mozConnection || nav.webkitConnection;
+  const connectionType = connection
+    ? connection.effectiveType || connection.type || "unknown"
+    : "unknown";
+  const connectionDownlink = connection
+    ? connection.downlink || "unknown"
+    : "unknown";
+
+  // Hardware information (if available)
+  const hardwareConcurrency = nav.hardwareConcurrency || "unknown";
+  const deviceMemory = nav.deviceMemory || "unknown";
+
+  // Language and timezone
+  const language = nav.language || nav.userLanguage || "unknown";
+  const timezone =
+    Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown";
+  const timezoneOffset = new Date().getTimezoneOffset();
+
+  return {
+    userAgent: userAgent,
+    deviceType: deviceType,
+    platform: platform,
+    browser: browser,
+    screenResolution: screenResolution,
+    screenWidth: screenWidth,
+    screenHeight: screenHeight,
+    colorDepth: colorDepth,
+    pixelRatio: pixelRatio,
+    touchSupport: touchSupport,
+    orientation: orientation,
+    connectionType: connectionType,
+    connectionDownlink: connectionDownlink,
+    hardwareConcurrency: hardwareConcurrency,
+    deviceMemory: deviceMemory,
+    language: language,
+    timezone: timezone,
+    timezoneOffset: timezoneOffset,
+  };
+};
+
 export const getEventOptions = () => {
   var emis_username =
     localStorage.getItem("virtualId") ||
@@ -266,6 +389,9 @@ export const getEventOptions = () => {
       localStorage.getItem("virtualId") ||
       localStorage.getItem("apiToken") ||
       "anonymous";
+
+  // Get device information
+  const deviceInfo = getDeviceInfo();
 
   return {
     object: {},
@@ -300,11 +426,22 @@ export const getEventOptions = () => {
         },
         { id: userDetails?.udise_code, type: "udise_code" },
         { id: getVirtualId() || null, type: "virtualId" },
+        { id: deviceInfo.deviceType, type: "Device" },
+        { id: deviceInfo.platform, type: "Platform" },
+        { id: deviceInfo.browser, type: "Browser" },
+        { id: deviceInfo.screenResolution, type: "ScreenResolution" },
+        { id: deviceInfo.orientation, type: "Orientation" },
+        { id: deviceInfo.touchSupport ? "Yes" : "No", type: "TouchSupport" },
+        { id: deviceInfo.connectionType, type: "ConnectionType" },
+        { id: deviceInfo.language, type: "DeviceLanguage" },
+        { id: deviceInfo.timezone, type: "Timezone" },
+        { id: String(deviceInfo.hardwareConcurrency), type: "CPU Cores" },
         {
-          id: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
-            ? "Mobile"
-            : "Desktop",
-          type: "Device",
+          id:
+            deviceInfo.deviceMemory !== "unknown"
+              ? String(deviceInfo.deviceMemory) + "GB"
+              : "unknown",
+          type: "DeviceMemory",
         },
       ],
       rollup: {},
