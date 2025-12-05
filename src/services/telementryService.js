@@ -42,6 +42,35 @@ export const initialize = async ({ context, config, metadata }) => {
   playSessionId = uniqueId();
   if (!CsTelemetryModule.instance.isInitialised) {
     await CsTelemetryModule.instance.init({});
+
+    // Get device info once during initialization
+    const deviceInfo = getDeviceInfo();
+
+    // Build device cdata array - set once in config
+    const deviceCdata = [
+      { id: deviceInfo.deviceType, type: "Device" },
+      { id: deviceInfo.platform, type: "Platform" },
+      { id: deviceInfo.browser, type: "Browser" },
+      { id: deviceInfo.screenResolution, type: "ScreenResolution" },
+      { id: deviceInfo.connectionType, type: "ConnectionType" },
+      { id: String(deviceInfo.hardwareConcurrency), type: "CPU Cores" },
+      {
+        id:
+          deviceInfo.deviceMemory !== "unknown"
+            ? String(deviceInfo.deviceMemory) + "GB"
+            : "unknown",
+        type: "DeviceMemory",
+      },
+      {
+        id:
+          deviceInfo.connectionDownlink !== "unknown"
+            ? String(deviceInfo.connectionDownlink)
+            : "unknown",
+        type: "ConnectionDownlink",
+      },
+      { id: deviceInfo.userAgent, type: "UserAgent" },
+    ];
+
     const telemetryConfig = {
       config: {
         pdata: context.pdata,
@@ -60,15 +89,11 @@ export const initialize = async ({ context, config, metadata }) => {
         apislug: context.apislug,
         endpoint: context.endpoint,
         tags: context.tags,
+        // Device info set once in config - will be included in all events
         cdata: [
           { id: contentSessionId, type: "ContentSession" },
           { id: playSessionId, type: "PlaySession" },
-          {
-            id: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
-              ? "Mobile"
-              : "Desktop",
-            type: "Device",
-          },
+          ...deviceCdata, // Spread all device info into config cdata
         ],
       },
       userOrgDetails: {},
@@ -87,6 +112,7 @@ export const initialize = async ({ context, config, metadata }) => {
 export const start = (duration) => {
   try {
     startTime = Date.now(); // Record the start time
+
     CsTelemetryModule.instance.telemetryService.raiseStartTelemetry({
       options: getEventOptions(),
       edata: {
@@ -240,16 +266,100 @@ const getVirtualId = () => {
   return TOKEN;
 };
 
+/**
+ * Gathers comprehensive device information for telemetry logging
+ * @returns {Object} Device information object
+ */
+const getDeviceInfo = () => {
+  const nav = window.navigator;
+  const screen = window.screen;
+
+  // Detect device type
+  const userAgent = nav.userAgent || "";
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent);
+  const isTablet =
+    /iPad|Android/i.test(userAgent) && !/Mobile/i.test(userAgent);
+  let deviceType = "Desktop";
+  if (isTablet) {
+    deviceType = "Tablet";
+  } else if (isMobile) {
+    deviceType = "Mobile";
+  }
+
+  // Detect platform/OS
+  let platform = nav.platform || "Unknown";
+  if (userAgent.includes("Windows")) platform = "Windows";
+  else if (userAgent.includes("Mac")) platform = "Mac";
+  else if (userAgent.includes("Linux")) platform = "Linux";
+  else if (userAgent.includes("Android")) platform = "Android";
+  else if (
+    userAgent.includes("iOS") ||
+    userAgent.includes("iPhone") ||
+    userAgent.includes("iPad")
+  )
+    platform = "iOS";
+
+  // Detect browser
+  let browser = "Unknown";
+  if (userAgent.includes("Chrome") && !userAgent.includes("Edg"))
+    browser = "Chrome";
+  else if (userAgent.includes("Firefox")) browser = "Firefox";
+  else if (userAgent.includes("Safari") && !userAgent.includes("Chrome"))
+    browser = "Safari";
+  else if (userAgent.includes("Edg")) browser = "Edge";
+  else if (userAgent.includes("Opera") || userAgent.includes("OPR"))
+    browser = "Opera";
+
+  // Screen information
+  const screenWidth = screen.width || 0;
+  const screenHeight = screen.height || 0;
+  const screenResolution = `${screenWidth}x${screenHeight}`;
+
+  // Connection information (if available)
+  const connection =
+    nav.connection || nav.mozConnection || nav.webkitConnection;
+  const connectionType = connection
+    ? connection.effectiveType || connection.type || "unknown"
+    : "unknown";
+  const connectionDownlink = connection
+    ? connection.downlink || "unknown"
+    : "unknown";
+
+  // Hardware information (if available)
+  const hardwareConcurrency = nav.hardwareConcurrency || "unknown";
+  const deviceMemory = nav.deviceMemory || "unknown";
+
+  return {
+    userAgent: userAgent,
+    deviceType: deviceType,
+    platform: platform,
+    browser: browser,
+    screenResolution: screenResolution,
+    screenWidth: screenWidth,
+    screenHeight: screenHeight,
+    connectionType: connectionType,
+    connectionDownlink: connectionDownlink,
+    hardwareConcurrency: hardwareConcurrency,
+    deviceMemory: deviceMemory,
+  };
+};
+
+/**
+ * Get event options with dynamic fields only
+ * Device info is set once in telemetryConfig during initialization
+ * This function only handles dynamic fields that change per event (user, session)
+ */
 export const getEventOptions = () => {
   var emis_username =
     localStorage.getItem("virtualId") ||
     localStorage.getItem("apiToken") ||
     "anonymous";
   var buddyUserId = "";
+  var userDetails = null;
 
   if (localStorage.getItem("token") !== null) {
     let jwtToken = localStorage.getItem("token");
-    var userDetails = jwtDecode(jwtToken);
+    userDetails = jwtDecode(jwtToken);
     emis_username = userDetails.emis_username;
   }
 
@@ -267,6 +377,9 @@ export const getEventOptions = () => {
       localStorage.getItem("apiToken") ||
       "anonymous";
 
+  // Only return dynamic fields that change per event
+  // Device info is already set in telemetryConfig.cdata during initialization
+  // Sunbird telemetry SDK will merge config cdata with event cdata
   return {
     object: {},
     context: {
@@ -286,6 +399,7 @@ export const getEventOptions = () => {
             "anonymous"
       }`,
       cdata: [
+        // Dynamic session/user fields that may change per event
         {
           id: getLocalData("sessionId") || contentSessionId,
           type: "ContentSession",
@@ -300,12 +414,8 @@ export const getEventOptions = () => {
         },
         { id: userDetails?.udise_code, type: "udise_code" },
         { id: getVirtualId() || null, type: "virtualId" },
-        {
-          id: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
-            ? "Mobile"
-            : "Desktop",
-          type: "Device",
-        },
+        // Device info is NOT included here - it's set in telemetryConfig.cdata
+        // The telemetry SDK will merge config cdata with event cdata
       ],
       rollup: {},
     },
