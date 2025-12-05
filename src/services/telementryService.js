@@ -46,7 +46,7 @@ export const initialize = async ({ context, config, metadata }) => {
     // Get device info once during initialization
     const deviceInfo = getDeviceInfo();
 
-    // Build device cdata array - set once in config
+    // Build device cdata array - set once and reused in all events
     const deviceCdata = [
       { id: deviceInfo.deviceType, type: "Device" },
       { id: deviceInfo.platform, type: "Platform" },
@@ -70,6 +70,9 @@ export const initialize = async ({ context, config, metadata }) => {
       },
       { id: deviceInfo.userAgent, type: "UserAgent" },
     ];
+
+    // Store device cdata globally so it can be reused in getEventOptions
+    globalDeviceCdata = deviceCdata;
 
     const telemetryConfig = {
       config: {
@@ -344,10 +347,12 @@ const getDeviceInfo = () => {
   };
 };
 
+// Store device cdata globally so it can be reused in getEventOptions
+let globalDeviceCdata = [];
+
 /**
- * Get event options with dynamic fields only
- * Device info is set once in telemetryConfig during initialization
- * This function only handles dynamic fields that change per event (user, session)
+ * Get event options with all required fields including device info
+ * Device info is calculated once during initialization and reused here
  */
 export const getEventOptions = () => {
   var emis_username =
@@ -377,9 +382,8 @@ export const getEventOptions = () => {
       localStorage.getItem("apiToken") ||
       "anonymous";
 
-  // Only return dynamic fields that change per event
-  // Device info is already set in telemetryConfig.cdata during initialization
-  // Sunbird telemetry SDK will merge config cdata with event cdata
+  // Include device info in every event to ensure it's logged
+  // Device info is set once during initialization and stored in globalDeviceCdata
   return {
     object: {},
     context: {
@@ -414,8 +418,8 @@ export const getEventOptions = () => {
         },
         { id: userDetails?.udise_code, type: "udise_code" },
         { id: getVirtualId() || null, type: "virtualId" },
-        // Device info is NOT included here - it's set in telemetryConfig.cdata
-        // The telemetry SDK will merge config cdata with event cdata
+        // Include device info in every event to ensure it's logged
+        ...globalDeviceCdata,
       ],
       rollup: {},
     },
