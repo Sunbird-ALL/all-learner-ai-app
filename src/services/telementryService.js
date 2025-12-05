@@ -46,18 +46,13 @@ export const initialize = async ({ context, config, metadata }) => {
     // Get device info once during initialization
     const deviceInfo = getDeviceInfo();
 
-    // Build complete device cdata array - set once in config
+    // Build device cdata array - set once in config
     const deviceCdata = [
       { id: deviceInfo.deviceType, type: "Device" },
       { id: deviceInfo.platform, type: "Platform" },
       { id: deviceInfo.browser, type: "Browser" },
       { id: deviceInfo.screenResolution, type: "ScreenResolution" },
-      { id: deviceInfo.orientation, type: "Orientation" },
-      { id: deviceInfo.touchSupport ? "Yes" : "No", type: "TouchSupport" },
       { id: deviceInfo.connectionType, type: "ConnectionType" },
-      { id: deviceInfo.language, type: "DeviceLanguage" },
-      { id: deviceInfo.timezone, type: "Timezone" },
-      { id: String(deviceInfo.timezoneOffset), type: "TimezoneOffset" },
       { id: String(deviceInfo.hardwareConcurrency), type: "CPU Cores" },
       {
         id:
@@ -66,8 +61,6 @@ export const initialize = async ({ context, config, metadata }) => {
             : "unknown",
         type: "DeviceMemory",
       },
-      { id: String(deviceInfo.pixelRatio), type: "PixelRatio" },
-      { id: String(deviceInfo.colorDepth), type: "ColorDepth" },
       {
         id:
           deviceInfo.connectionDownlink !== "unknown"
@@ -321,16 +314,6 @@ const getDeviceInfo = () => {
   const screenWidth = screen.width || 0;
   const screenHeight = screen.height || 0;
   const screenResolution = `${screenWidth}x${screenHeight}`;
-  const colorDepth = screen.colorDepth || 0;
-  const pixelRatio = window.devicePixelRatio || 1;
-
-  // Device capabilities
-  const touchSupport = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-  const orientation = screen.orientation
-    ? screen.orientation.type
-    : screenWidth > screenHeight
-    ? "landscape"
-    : "portrait";
 
   // Connection information (if available)
   const connection =
@@ -346,12 +329,6 @@ const getDeviceInfo = () => {
   const hardwareConcurrency = nav.hardwareConcurrency || "unknown";
   const deviceMemory = nav.deviceMemory || "unknown";
 
-  // Language and timezone
-  const language = nav.language || nav.userLanguage || "unknown";
-  const timezone =
-    Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown";
-  const timezoneOffset = new Date().getTimezoneOffset();
-
   return {
     userAgent: userAgent,
     deviceType: deviceType,
@@ -360,17 +337,10 @@ const getDeviceInfo = () => {
     screenResolution: screenResolution,
     screenWidth: screenWidth,
     screenHeight: screenHeight,
-    colorDepth: colorDepth,
-    pixelRatio: pixelRatio,
-    touchSupport: touchSupport,
-    orientation: orientation,
     connectionType: connectionType,
     connectionDownlink: connectionDownlink,
     hardwareConcurrency: hardwareConcurrency,
     deviceMemory: deviceMemory,
-    language: language,
-    timezone: timezone,
-    timezoneOffset: timezoneOffset,
   };
 };
 
