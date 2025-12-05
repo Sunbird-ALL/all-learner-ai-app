@@ -8,8 +8,6 @@ let contentSessionId;
 let playSessionId;
 let url;
 let isBuddyLogin = checkTokenInLocalStorage();
-let deviceInfoCache = {}; // Cache device info per device ID to avoid recalculating for every event
-let currentDeviceId = null; // Store the current device ID from initialization
 
 if (localStorage.getItem("token") !== null) {
   let jwtToken = localStorage.getItem("token");
@@ -45,11 +43,8 @@ export const initialize = async ({ context, config, metadata }) => {
   if (!CsTelemetryModule.instance.isInitialised) {
     await CsTelemetryModule.instance.init({});
 
-    // Store device ID for caching device info per device
-    currentDeviceId = context.did;
-
-    // Get and cache device info for this device ID
-    const deviceInfo = getCachedDeviceInfo(context.did);
+    // Get device info once during initialization
+    const deviceInfo = getDeviceInfo();
 
     // Build complete device cdata array - set once in config
     const deviceCdata = [
@@ -124,8 +119,8 @@ export const initialize = async ({ context, config, metadata }) => {
 export const start = (duration) => {
   try {
     startTime = Date.now(); // Record the start time
-    // Use cached device info for current device
-    const deviceInfo = getCachedDeviceInfo(currentDeviceId);
+    // Get device info for dspec (logged once per session)
+    const deviceInfo = getDeviceInfo();
 
     // Create a comprehensive device specification string
     const dspec = JSON.stringify({
@@ -399,50 +394,6 @@ const getDeviceInfo = () => {
     timezone: timezone,
     timezoneOffset: timezoneOffset,
   };
-};
-
-/**
- * Get cached device info per device ID (did)
- * Device info is unique per device, so we cache it per device ID
- * This ensures each device has its own cached device information
- * @param {string} deviceId - The device ID (did). If not provided, uses currentDeviceId
- */
-const getCachedDeviceInfo = (deviceId = null) => {
-  // Use provided device ID, or fall back to current device ID, or generate one
-  const did = deviceId || currentDeviceId || getDeviceId();
-
-  // If device info not cached for this device ID, calculate and cache it
-  if (!deviceInfoCache[did]) {
-    deviceInfoCache[did] = getDeviceInfo();
-  }
-
-  return deviceInfoCache[did];
-};
-
-/**
- * Get device ID from localStorage or generate one
- * Device ID should be consistent for the same device
- */
-const getDeviceId = () => {
-  // Try to get device ID from localStorage or generate one
-  let deviceId = localStorage.getItem("deviceId");
-  if (!deviceId) {
-    deviceId = uniqueId();
-    localStorage.setItem("deviceId", deviceId);
-  }
-  return deviceId;
-};
-
-/**
- * Clear cached device info for a specific device ID
- * @param {string} deviceId - Optional device ID. If not provided, clears all cache
- */
-export const clearDeviceInfoCache = (deviceId = null) => {
-  if (deviceId) {
-    delete deviceInfoCache[deviceId];
-  } else {
-    deviceInfoCache = {};
-  }
 };
 
 /**
