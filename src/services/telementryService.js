@@ -119,28 +119,6 @@ export const initialize = async ({ context, config, metadata }) => {
 export const start = (duration) => {
   try {
     startTime = Date.now(); // Record the start time
-    // Get device info for dspec (logged once per session)
-    const deviceInfo = getDeviceInfo();
-
-    // Create a comprehensive device specification string
-    const dspec = JSON.stringify({
-      userAgent: deviceInfo.userAgent,
-      deviceType: deviceInfo.deviceType,
-      platform: deviceInfo.platform,
-      browser: deviceInfo.browser,
-      screenResolution: deviceInfo.screenResolution,
-      pixelRatio: deviceInfo.pixelRatio,
-      colorDepth: deviceInfo.colorDepth,
-      touchSupport: deviceInfo.touchSupport,
-      orientation: deviceInfo.orientation,
-      connectionType: deviceInfo.connectionType,
-      connectionDownlink: deviceInfo.connectionDownlink,
-      hardwareConcurrency: deviceInfo.hardwareConcurrency,
-      deviceMemory: deviceInfo.deviceMemory,
-      language: deviceInfo.language,
-      timezone: deviceInfo.timezone,
-      timezoneOffset: deviceInfo.timezoneOffset,
-    });
 
     CsTelemetryModule.instance.telemetryService.raiseStartTelemetry({
       options: getEventOptions(),
@@ -149,7 +127,7 @@ export const start = (duration) => {
         mode: "play",
         stageid: url,
         duration: Number((duration / 1e3).toFixed(2)),
-        dspec: dspec,
+        dspec: window.navigator.userAgent,
       },
     });
   } catch (error) {
