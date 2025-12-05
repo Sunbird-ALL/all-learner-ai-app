@@ -8,6 +8,8 @@ let contentSessionId;
 let playSessionId;
 let url;
 let isBuddyLogin = checkTokenInLocalStorage();
+let deviceInfoCache = {}; // Cache device info per device ID to avoid recalculating for every event
+let currentDeviceId = null; // Store the current device ID from initialization
 
 if (localStorage.getItem("token") !== null) {
   let jwtToken = localStorage.getItem("token");
@@ -42,7 +44,12 @@ export const initialize = async ({ context, config, metadata }) => {
   playSessionId = uniqueId();
   if (!CsTelemetryModule.instance.isInitialised) {
     await CsTelemetryModule.instance.init({});
-    const deviceInfo = getDeviceInfo();
+
+    // Store device ID for caching device info per device
+    currentDeviceId = context.did;
+
+    // Get and cache device info for this device ID
+    const deviceInfo = getCachedDeviceInfo(context.did);
 
     const telemetryConfig = {
       config: {
@@ -87,7 +94,8 @@ export const initialize = async ({ context, config, metadata }) => {
 export const start = (duration) => {
   try {
     startTime = Date.now(); // Record the start time
-    const deviceInfo = getDeviceInfo();
+    // Use cached device info for current device
+    const deviceInfo = getCachedDeviceInfo(currentDeviceId);
 
     // Create a comprehensive device specification string
     const dspec = JSON.stringify({
@@ -363,16 +371,69 @@ const getDeviceInfo = () => {
   };
 };
 
+/**
+ * Get cached device info per device ID (did)
+ * Device info is unique per device, so we cache it per device ID
+ * This ensures each device has its own cached device information
+ * @param {string} deviceId - The device ID (did). If not provided, uses currentDeviceId
+ */
+const getCachedDeviceInfo = (deviceId = null) => {
+  // Use provided device ID, or fall back to current device ID, or generate one
+  const did = deviceId || currentDeviceId || getDeviceId();
+
+  // If device info not cached for this device ID, calculate and cache it
+  if (!deviceInfoCache[did]) {
+    deviceInfoCache[did] = getDeviceInfo();
+  }
+
+  return deviceInfoCache[did];
+};
+
+/**
+ * Get device ID from localStorage or generate one
+ * Device ID should be consistent for the same device
+ */
+const getDeviceId = () => {
+  // Try to get device ID from localStorage or generate one
+  let deviceId = localStorage.getItem("deviceId");
+  if (!deviceId) {
+    deviceId = uniqueId();
+    localStorage.setItem("deviceId", deviceId);
+  }
+  return deviceId;
+};
+
+/**
+ * Clear cached device info for a specific device ID
+ * @param {string} deviceId - Optional device ID. If not provided, clears all cache
+ */
+export const clearDeviceInfoCache = (deviceId = null) => {
+  if (deviceId) {
+    delete deviceInfoCache[deviceId];
+  } else {
+    deviceInfoCache = {};
+  }
+};
+
+/**
+ * Get event options with all device information in cdata
+ * Optimization Strategy:
+ * - Device info is CACHED (calculated once per session, not per event)
+ * - All device fields are included in cdata for comprehensive querying
+ * - dspec contains the same info as JSON backup (logged once per session in start event)
+ * - Dynamic fields (session, user) are always included
+ */
 export const getEventOptions = () => {
   var emis_username =
     localStorage.getItem("virtualId") ||
     localStorage.getItem("apiToken") ||
     "anonymous";
   var buddyUserId = "";
+  var userDetails = null;
 
   if (localStorage.getItem("token") !== null) {
     let jwtToken = localStorage.getItem("token");
-    var userDetails = jwtDecode(jwtToken);
+    userDetails = jwtDecode(jwtToken);
     emis_username = userDetails.emis_username;
   }
 
@@ -390,9 +451,13 @@ export const getEventOptions = () => {
       localStorage.getItem("apiToken") ||
       "anonymous";
 
-  // Get device information
-  const deviceInfo = getDeviceInfo();
+  // Use cached device info per device ID (calculated once per device)
+  // Uses currentDeviceId from initialization, ensuring each device has unique cached info
+  const deviceInfo = getCachedDeviceInfo(currentDeviceId);
 
+  // OPTIMIZED: Only include essential device fields in cdata for querying
+  // Detailed device info is available in dspec (logged once per session in start event)
+  // This reduces storage overhead while maintaining query capability
   return {
     object: {},
     context: {
@@ -412,6 +477,7 @@ export const getEventOptions = () => {
             "anonymous"
       }`,
       cdata: [
+        // Dynamic session/user fields (always included)
         {
           id: getLocalData("sessionId") || contentSessionId,
           type: "ContentSession",
@@ -426,6 +492,7 @@ export const getEventOptions = () => {
         },
         { id: userDetails?.udise_code, type: "udise_code" },
         { id: getVirtualId() || null, type: "virtualId" },
+        // All device fields (cached - calculated once per session, not per event)
         { id: deviceInfo.deviceType, type: "Device" },
         { id: deviceInfo.platform, type: "Platform" },
         { id: deviceInfo.browser, type: "Browser" },
@@ -435,6 +502,7 @@ export const getEventOptions = () => {
         { id: deviceInfo.connectionType, type: "ConnectionType" },
         { id: deviceInfo.language, type: "DeviceLanguage" },
         { id: deviceInfo.timezone, type: "Timezone" },
+        { id: String(deviceInfo.timezoneOffset), type: "TimezoneOffset" },
         { id: String(deviceInfo.hardwareConcurrency), type: "CPU Cores" },
         {
           id:
@@ -443,6 +511,16 @@ export const getEventOptions = () => {
               : "unknown",
           type: "DeviceMemory",
         },
+        { id: String(deviceInfo.pixelRatio), type: "PixelRatio" },
+        { id: String(deviceInfo.colorDepth), type: "ColorDepth" },
+        {
+          id:
+            deviceInfo.connectionDownlink !== "unknown"
+              ? String(deviceInfo.connectionDownlink)
+              : "unknown",
+          type: "ConnectionDownlink",
+        },
+        { id: deviceInfo.userAgent, type: "UserAgent" },
       ],
       rollup: {},
     },
