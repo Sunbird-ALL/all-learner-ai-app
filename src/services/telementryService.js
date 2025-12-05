@@ -51,6 +51,38 @@ export const initialize = async ({ context, config, metadata }) => {
     // Get and cache device info for this device ID
     const deviceInfo = getCachedDeviceInfo(context.did);
 
+    // Build complete device cdata array - set once in config
+    const deviceCdata = [
+      { id: deviceInfo.deviceType, type: "Device" },
+      { id: deviceInfo.platform, type: "Platform" },
+      { id: deviceInfo.browser, type: "Browser" },
+      { id: deviceInfo.screenResolution, type: "ScreenResolution" },
+      { id: deviceInfo.orientation, type: "Orientation" },
+      { id: deviceInfo.touchSupport ? "Yes" : "No", type: "TouchSupport" },
+      { id: deviceInfo.connectionType, type: "ConnectionType" },
+      { id: deviceInfo.language, type: "DeviceLanguage" },
+      { id: deviceInfo.timezone, type: "Timezone" },
+      { id: String(deviceInfo.timezoneOffset), type: "TimezoneOffset" },
+      { id: String(deviceInfo.hardwareConcurrency), type: "CPU Cores" },
+      {
+        id:
+          deviceInfo.deviceMemory !== "unknown"
+            ? String(deviceInfo.deviceMemory) + "GB"
+            : "unknown",
+        type: "DeviceMemory",
+      },
+      { id: String(deviceInfo.pixelRatio), type: "PixelRatio" },
+      { id: String(deviceInfo.colorDepth), type: "ColorDepth" },
+      {
+        id:
+          deviceInfo.connectionDownlink !== "unknown"
+            ? String(deviceInfo.connectionDownlink)
+            : "unknown",
+        type: "ConnectionDownlink",
+      },
+      { id: deviceInfo.userAgent, type: "UserAgent" },
+    ];
+
     const telemetryConfig = {
       config: {
         pdata: context.pdata,
@@ -69,13 +101,11 @@ export const initialize = async ({ context, config, metadata }) => {
         apislug: context.apislug,
         endpoint: context.endpoint,
         tags: context.tags,
+        // Device info set once in config - will be included in all events
         cdata: [
           { id: contentSessionId, type: "ContentSession" },
           { id: playSessionId, type: "PlaySession" },
-          { id: deviceInfo.deviceType, type: "Device" },
-          { id: deviceInfo.platform, type: "Platform" },
-          { id: deviceInfo.browser, type: "Browser" },
-          { id: deviceInfo.screenResolution, type: "ScreenResolution" },
+          ...deviceCdata, // Spread all device info into config cdata
         ],
       },
       userOrgDetails: {},
@@ -416,12 +446,9 @@ export const clearDeviceInfoCache = (deviceId = null) => {
 };
 
 /**
- * Get event options with all device information in cdata
- * Optimization Strategy:
- * - Device info is CACHED (calculated once per session, not per event)
- * - All device fields are included in cdata for comprehensive querying
- * - dspec contains the same info as JSON backup (logged once per session in start event)
- * - Dynamic fields (session, user) are always included
+ * Get event options with dynamic fields only
+ * Device info is set once in telemetryConfig during initialization
+ * This function only handles dynamic fields that change per event (user, session)
  */
 export const getEventOptions = () => {
   var emis_username =
@@ -451,13 +478,9 @@ export const getEventOptions = () => {
       localStorage.getItem("apiToken") ||
       "anonymous";
 
-  // Use cached device info per device ID (calculated once per device)
-  // Uses currentDeviceId from initialization, ensuring each device has unique cached info
-  const deviceInfo = getCachedDeviceInfo(currentDeviceId);
-
-  // OPTIMIZED: Only include essential device fields in cdata for querying
-  // Detailed device info is available in dspec (logged once per session in start event)
-  // This reduces storage overhead while maintaining query capability
+  // Only return dynamic fields that change per event
+  // Device info is already set in telemetryConfig.cdata during initialization
+  // Sunbird telemetry SDK will merge config cdata with event cdata
   return {
     object: {},
     context: {
@@ -477,7 +500,7 @@ export const getEventOptions = () => {
             "anonymous"
       }`,
       cdata: [
-        // Dynamic session/user fields (always included)
+        // Dynamic session/user fields that may change per event
         {
           id: getLocalData("sessionId") || contentSessionId,
           type: "ContentSession",
@@ -492,35 +515,8 @@ export const getEventOptions = () => {
         },
         { id: userDetails?.udise_code, type: "udise_code" },
         { id: getVirtualId() || null, type: "virtualId" },
-        // All device fields (cached - calculated once per session, not per event)
-        { id: deviceInfo.deviceType, type: "Device" },
-        { id: deviceInfo.platform, type: "Platform" },
-        { id: deviceInfo.browser, type: "Browser" },
-        { id: deviceInfo.screenResolution, type: "ScreenResolution" },
-        { id: deviceInfo.orientation, type: "Orientation" },
-        { id: deviceInfo.touchSupport ? "Yes" : "No", type: "TouchSupport" },
-        { id: deviceInfo.connectionType, type: "ConnectionType" },
-        { id: deviceInfo.language, type: "DeviceLanguage" },
-        { id: deviceInfo.timezone, type: "Timezone" },
-        { id: String(deviceInfo.timezoneOffset), type: "TimezoneOffset" },
-        { id: String(deviceInfo.hardwareConcurrency), type: "CPU Cores" },
-        {
-          id:
-            deviceInfo.deviceMemory !== "unknown"
-              ? String(deviceInfo.deviceMemory) + "GB"
-              : "unknown",
-          type: "DeviceMemory",
-        },
-        { id: String(deviceInfo.pixelRatio), type: "PixelRatio" },
-        { id: String(deviceInfo.colorDepth), type: "ColorDepth" },
-        {
-          id:
-            deviceInfo.connectionDownlink !== "unknown"
-              ? String(deviceInfo.connectionDownlink)
-              : "unknown",
-          type: "ConnectionDownlink",
-        },
-        { id: deviceInfo.userAgent, type: "UserAgent" },
+        // Device info is NOT included here - it's set in telemetryConfig.cdata
+        // The telemetry SDK will merge config cdata with event cdata
       ],
       rollup: {},
     },
