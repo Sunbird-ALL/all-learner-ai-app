@@ -1,4 +1,4 @@
-name: ALL rig dev Deployment
+name: ALL rig (UAT) dev Deployment
 
 on:
   push:
