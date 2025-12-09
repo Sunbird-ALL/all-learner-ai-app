@@ -38,6 +38,7 @@ jobs:
 
       - name: Build and Package Application
         env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
           SKIP_PREFLIGHT_CHECK: ${{ vars.SKIP_PREFLIGHT_CHECK }}
           REACT_APP_MODE: ${{ vars.REACT_APP_MODE }}
           REACT_APP_authToken: ${{ vars.REACT_APP_authToken }}
