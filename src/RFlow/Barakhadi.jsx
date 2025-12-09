@@ -2060,6 +2060,23 @@ const barakhadiCharts = {
       "ಹಂ",
       "ಹಃ",
     ],
+    ಳ: [
+      "ಳ",
+      "ಳಾ",
+      "ಳಿ",
+      "ಳೀ",
+      "ಳು",
+      "ಳೂ",
+      "ಳೃ",
+      "ಳೆ",
+      "ಳೇ",
+      "ಳೈ",
+      "ಳೊ",
+      "ಳೋ",
+      "ಳೌ",
+      "ಳಂ",
+      "ಳಃ",
+    ],
   },
 };
 
@@ -2269,9 +2286,9 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.ಪೈರುAudio),
     },
     {
-      text: "ಅಂಜೂರ",
+      text: "ಯಾವುದು",
       audio: "6b2422e4-949e-4526-9bdc-1a5403c4434e.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.ಅಂಜೂರAudio),
+      segmentedAudio: getAssetAudioUrl(s3Assets.ಯಾವುದುAudio),
     },
     {
       text: "ಗಾಳಿ",
