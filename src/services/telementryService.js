@@ -183,11 +183,11 @@ export const end = (data) => {
   }
 };
 
-export const interact = (telemetryMode) => {
+export const interact = (telemetryMode, subtype = "", pageid = "") => {
   if (checkTelemetryMode(telemetryMode)) {
     CsTelemetryModule.instance.telemetryService.raiseInteractTelemetry({
       options: getEventOptions(),
-      edata: { type: "TOUCH", subtype: "", pageid: url },
+      edata: { type: "TOUCH", subtype: subtype, pageid: pageid },
     });
   }
 };

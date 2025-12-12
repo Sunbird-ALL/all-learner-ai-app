@@ -87,8 +87,8 @@ const LoginPage = () => {
         setLocalData("readMatch", true);
         //setLocalData("rFlow", true);
         //setLocalData("wordWall", true);
-        handleWordClick();
-        navigate("/discover-start");
+        // Navigate to diagnostic page first
+        navigate("/audio-diagnostic");
       } else {
         alert("Enter correct username and password");
       }
