@@ -18,6 +18,7 @@ import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { initialize } from "../../services/telementryService";
 import { startEvent } from "../../services/callTelemetryIntract";
 import LanguageModalNew from "../../utils/LanguageModal";
+import { AudioDiagnosticModal } from "../../components/AudioDiagnostic";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const LoginPage = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const ranonce = useRef(false);
   const [showModal, setShowModal] = useState(false);
+  const [showAudioDiagnostic, setShowAudioDiagnostic] = useState(false);
 
   const handleWordClick = () => {
     setShowModal(true);
@@ -87,8 +89,8 @@ const LoginPage = () => {
         setLocalData("readMatch", true);
         //setLocalData("rFlow", true);
         //setLocalData("wordWall", true);
-        // Navigate to diagnostic page first
-        navigate("/audio-diagnostic");
+        // Show audio diagnostic modal first
+        setShowAudioDiagnostic(true);
       } else {
         alert("Enter correct username and password");
       }
@@ -141,6 +143,15 @@ const LoginPage = () => {
         </form>
       </div>
       <LanguageModalNew show={showModal} onClose={() => setShowModal(false)} />
+      <AudioDiagnosticModal
+        show={showAudioDiagnostic}
+        onClose={() => {
+          setShowAudioDiagnostic(false);
+          // Show language modal after audio diagnostic is closed
+          handleWordClick();
+          navigate("/discover-start");
+        }}
+      />
     </div>
   );
 };

@@ -67,12 +67,6 @@ const routData = [
     requiresAuth: false,
   },
   {
-    id: "route-013",
-    path: "/audio-diagnostic",
-    component: reviews.AudioDiagnostic,
-    requiresAuth: true,
-  },
-  {
     id: "route-011",
     path: "/letter-hunt",
     component: reviews.LetterHunt,
