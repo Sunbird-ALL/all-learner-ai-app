@@ -1235,8 +1235,10 @@ const ParagraphFlow = ({
                   sx={{
                     position: "relative",
                     outline: "none",
-                    height: "500px",
-                    width: "500px",
+                    height: "70vh",
+                    width: "70vw",
+                    maxWidth: "1200px",
+                    maxHeight: "90vh",
                   }}
                 >
                   {/* Subtle gradient overlay at the top of the zoomed image */}
@@ -1275,9 +1277,11 @@ const ParagraphFlow = ({
                     src={paragraphData.bookImage}
                     alt="Zoomed content"
                     style={{
-                      // maxWidth: "90vw",
+                      maxWidth: "100%",
                       maxHeight: "90vh",
                       width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
                       borderRadius: "8px",
                       zIndex: 99999,
                     }}
