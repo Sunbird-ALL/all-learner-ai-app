@@ -325,7 +325,7 @@ const BingoPage = React.memo(
             style={{
               position: "absolute",
               bottom: "-42px",
-              left: "40%",
+              left: "15%",
               transform: "translateX(-50%)",
               height: "200px",
               animation: "jump 1.3s ease-in-out infinite",
@@ -1553,7 +1553,7 @@ const BingoCard = ({
               style={{
                 position: "absolute",
                 bottom: "-42px",
-                left: "40%",
+                left: "20%",
                 transform: "translateX(-50%)",
                 height: "200px",
                 animation: "jump 1.3s ease-in-out infinite",
