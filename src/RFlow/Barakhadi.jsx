@@ -943,7 +943,6 @@ const barakhadiCharts = {
       "కు",
       "కూ",
       "కృ",
-      "కౄ",
       "కె",
       "కే",
       "కై",
@@ -2215,9 +2214,9 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.కృషిAudio),
     },
     {
-      text: "కౄరం",
+      text: "ఖాళీ",
       audio: "b37bdaf3-fe27-4de5-9b31-b3c67837d0f4.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.కౄరంAudio),
+      segmentedAudio: getAssetAudioUrl(s3Assets.ఖాళీAudio),
     },
     {
       text: "చెలి",
