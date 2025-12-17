@@ -1232,56 +1232,62 @@ const ParagraphFlow = ({
                 }}
               >
                 <Box
-                  sx={{
-                    position: "relative",
-                    outline: "none",
-                    height: "500px",
-                    width: "500px",
-                  }}
+                  sx={{ outline: "none", maxWidth: "80vw", maxHeight: "80vh" }}
                 >
-                  {/* Subtle gradient overlay at the top of the zoomed image */}
+                  {/* Wrapper fits to the actual rendered image, so the close button aligns with the image */}
                   <Box
                     sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: "40px", // Adjust height as needed
-                      background:
-                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      paddingRight: "8px",
-                      borderTopLeftRadius: "8px",
-                      borderTopRightRadius: "8px",
+                      position: "relative",
+                      display: "inline-block",
+                      maxWidth: "80vw",
+                      maxHeight: "80vh",
                     }}
                   >
-                    {/* Close icon positioned within the gradient overlay */}
-                    <CloseIcon
-                      onClick={() => setZoomOpen(false)}
-                      sx={{
-                        color: "white",
-                        fontSize: "24px",
-                        cursor: "pointer",
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                        borderRadius: "50%",
-                        padding: "4px",
+                    <img
+                      src={paragraphData.bookImage}
+                      alt="Zoomed content"
+                      style={{
+                        display: "block",
+                        maxWidth: "80vw",
+                        maxHeight: "80vh",
+                        width: "auto",
+                        height: "auto",
+                        objectFit: "contain",
+                        borderRadius: "8px",
                       }}
                     />
-                  </Box>
 
-                  <img
-                    src={paragraphData.bookImage}
-                    alt="Zoomed content"
-                    style={{
-                      // maxWidth: "90vw",
-                      maxHeight: "90vh",
-                      width: "100%",
-                      borderRadius: "8px",
-                      zIndex: 99999,
-                    }}
-                  />
+                    {/* Subtle gradient overlay at the top of the zoomed image */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "40px",
+                        background:
+                          "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        paddingRight: "8px",
+                        borderTopLeftRadius: "8px",
+                        borderTopRightRadius: "8px",
+                      }}
+                    >
+                      <CloseIcon
+                        onClick={() => setZoomOpen(false)}
+                        sx={{
+                          color: "white",
+                          fontSize: "24px",
+                          cursor: "pointer",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                          borderRadius: "50%",
+                          padding: "4px",
+                        }}
+                      />
+                    </Box>
+                  </Box>
                 </Box>
               </Modal>
             </div>
