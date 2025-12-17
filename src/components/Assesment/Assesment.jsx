@@ -19,6 +19,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import TranslateIcon from "@mui/icons-material/Translate";
+import MicIcon from "@mui/icons-material/Mic";
 import { useMediaQuery, useTheme } from "@mui/material";
 import LogoutImg from "../../assets/images/logout.svg";
 import { styled } from "@mui/material/styles";
@@ -82,7 +83,7 @@ import config from "../../utils/urlConstants.json";
 import panda from "../../assets/images/panda.svg";
 import cryPanda from "../../assets/images/cryPanda.svg";
 import { uniqueId } from "../../services/utilService";
-import { end } from "../../services/telementryService";
+import { end, interact } from "../../services/telementryService";
 import { levelMapping } from "../../utils/levelData";
 import scoreView from "../../assets/images/scoreView.svg";
 import {
@@ -94,6 +95,7 @@ import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiServ
 import * as Assets from "../../utils/imageAudioLinks";
 import NumberFlow from "@number-flow/react";
 import LanguageModalNew from "../../utils/LanguageModal";
+import { AudioDiagnosticModal } from "../AudioDiagnostic";
 
 const theme = createTheme();
 
@@ -416,6 +418,7 @@ export const ProfileHeader = ({
   const [animatedVocabCount, setAnimatedVocabCount] = useState(0);
   const [animatedWordCount, setAnimatedWordCount] = useState(0);
   const [milestone, setMilestone] = useState(0);
+  const [showAudioDiagnostic, setShowAudioDiagnostic] = useState(false);
 
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
@@ -514,6 +517,10 @@ export const ProfileHeader = ({
           dontShowHeader={openMessageDialog.dontShowHeader}
         />
       )}
+      <AudioDiagnosticModal
+        show={showAudioDiagnostic}
+        onClose={() => setShowAudioDiagnostic(false)}
+      />
       <Box
         sx={{
           position: "absolute",
@@ -817,6 +824,30 @@ export const ProfileHeader = ({
                     />
                   </ListItemButton>
                   <Divider />
+                  <ListItemButton
+                    onClick={() => {
+                      // Telemetry event for mobile menu click
+                      interact(
+                        "ET",
+                        "Open Audio Diagnostic",
+                        "header-mobile-menu"
+                      );
+                      setShowAudioDiagnostic(true);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    <MicIcon sx={{ mr: 1, color: "#6DAF19" }} />
+                    <ListItemText
+                      primary="Audio Test"
+                      primaryTypographyProps={{
+                        fontFamily: "Quicksand",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        color: "#333F61",
+                      }}
+                    />
+                  </ListItemButton>
+                  <Divider />
                   <ListItemButton onClick={handleLogout}>
                     <LogoutIcon sx={{ mr: 1 }} />
                     <ListItemText
@@ -876,7 +907,7 @@ export const ProfileHeader = ({
             )}
 
             <Box
-              mr={{ xs: "10px", sm: "90px" }}
+              mr={{ xs: "10px", sm: "20px" }}
               onClick={() =>
                 setOpenLangModal
                   ? setOpenLangModal(true)
@@ -912,6 +943,31 @@ export const ProfileHeader = ({
                 </Box>
               </Box>
             </Box>
+            {/* Audio Diagnostic Button - Subtle */}
+            <CustomTooltip title="Audio Test">
+              <IconButton
+                onClick={() => {
+                  // Telemetry event for header button click
+                  interact("ET", "Open Audio Diagnostic", "header");
+                  setShowAudioDiagnostic(true);
+                }}
+                sx={{
+                  mr: { xs: "5px", sm: "10px" },
+                  padding: isMobile ? "6px" : "8px",
+                  backgroundColor: "rgba(255, 255, 255, 0.7)",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                  },
+                }}
+              >
+                <MicIcon
+                  sx={{
+                    color: "#6DAF19",
+                    fontSize: isMobile ? "18px" : "20px",
+                  }}
+                />
+              </IconButton>
+            </CustomTooltip>
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
               <CustomTooltip title="Logout">
                 <Box>

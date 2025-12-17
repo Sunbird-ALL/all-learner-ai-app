@@ -23,6 +23,8 @@ import { getLocalData } from "../../utils/constants";
 import textureImage from "../../assets/images/textureImage.png";
 import panda from "../../assets/images/panda.svg";
 import { impression, interact, Log } from "../../services/telementryService";
+import { getRandomAudioPrompt } from "../../constants/audioDiagnosticPrompts";
+import { getTranslations } from "../../constants/audioDiagnosticTranslations";
 import "./AudioDiagnosticModal.css";
 
 const AudioDiagnosticModal = ({ show, onClose }) => {
@@ -40,6 +42,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   const [recordedAudioUrl, setRecordedAudioUrl] = useState(null);
   const [testMessage, setTestMessage] = useState("");
   const [lang, setLang] = useState(getLocalData("lang") || "en");
+  const [audioPrompt, setAudioPrompt] = useState("");
+  const [currentStep, setCurrentStep] = useState("mic"); // "mic" or "speaker"
+  const [isPlayingPrompt, setIsPlayingPrompt] = useState(false);
+  const [hasListenedToPrompt, setHasListenedToPrompt] = useState(false);
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -56,16 +62,52 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   const micTestStartTimeRef = useRef(null);
   const speakerTestStartTimeRef = useRef(null);
 
+  // Get translations based on current language
+  const translations = getTranslations(lang);
+
   useEffect(() => {
     if (show) {
       // Impression event when diagnostic modal is displayed
-      impression("audio-diagnostic", "ET");
+      impression("audio-diagnostics", "ET");
+      // Refresh language from localStorage when modal opens
+      const currentLang = getLocalData("lang") || "en";
+      setLang(currentLang);
+      // Reset to mic step when modal opens
+      setCurrentStep("mic");
+      // Generate audio prompt with current language
+      const prompt = getRandomAudioPrompt(currentLang);
+      setAudioPrompt(prompt);
+      setHasListenedToPrompt(false);
+      // Auto-play the audio prompt when modal opens
+      setTimeout(() => {
+        playPromptAudio();
+      }, 500);
     }
 
     return () => {
       cleanup();
+      // Cancel any ongoing speech synthesis
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
     };
   }, [show]);
+
+  // Load speech synthesis voices
+  useEffect(() => {
+    if ("speechSynthesis" in window) {
+      // Load voices (some browsers need this)
+      const loadVoices = () => {
+        const voices = window.speechSynthesis.getVoices();
+        // Voices are now loaded
+      };
+
+      loadVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (isRecording && analyserRef.current) {
@@ -93,10 +135,25 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             audioLevelsRef.current.shift();
           }
 
-          // Check if audio is detected (threshold: 0.01 for actual sound, not just noise)
-          const SILENCE_THRESHOLD = 0.01;
+          // Check if audio is detected - lower threshold to catch quiet speech
+          // Require actual sound, not just background noise
+          const SILENCE_THRESHOLD = 0.003; // Lowered from 0.008 to catch quieter speech
           if (rms > SILENCE_THRESHOLD) {
             audioDetectedRef.current = true;
+          }
+
+          // Also mark as detected if we see significant variation (indicates speech activity)
+          // Lower variation threshold to catch speech patterns
+          if (audioLevelsRef.current.length > 5) {
+            const recentLevels = audioLevelsRef.current.slice(-5);
+            const maxLevel = Math.max(...recentLevels);
+            const minLevel = Math.min(...recentLevels);
+            const variation = maxLevel - minLevel;
+            // Lower variation threshold - speech has more variation than silence
+            if (variation > 0.005) {
+              // Lowered from 0.01 to catch quieter speech
+              audioDetectedRef.current = true;
+            }
           }
 
           // For visualization, use a normalized value
@@ -155,6 +212,63 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     }
   };
 
+  const playPromptAudio = () => {
+    if (!audioPrompt) return;
+
+    if ("speechSynthesis" in window) {
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+
+      setIsPlayingPrompt(true);
+
+      const utterance = new SpeechSynthesisUtterance(audioPrompt);
+      // Use the lang state variable
+      const currentLang = lang || getLocalData("lang") || "en";
+
+      // Map language codes to speech synthesis language codes
+      const langMap = {
+        hi: "hi-IN",
+        ta: "ta-IN",
+        tn: "ta-IN", // Tamil alternative code
+        te: "te-IN",
+        ka: "kn-IN",
+        kn: "kn-IN",
+        en: "en-US",
+      };
+
+      // Set language for speech synthesis
+      utterance.lang = langMap[currentLang] || "en-US";
+      utterance.rate = 0.8; // Slightly slower for children
+      utterance.pitch = 1;
+      utterance.volume = 1;
+
+      // Try to find appropriate voice
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(
+        (v) =>
+          v.lang === utterance.lang ||
+          v.lang.startsWith(utterance.lang.split("-")[0])
+      );
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+
+      utterance.onend = () => {
+        setIsPlayingPrompt(false);
+        setHasListenedToPrompt(true);
+      };
+
+      utterance.onerror = (error) => {
+        console.error("Speech synthesis error:", error);
+        setIsPlayingPrompt(false);
+        // Still allow them to proceed even if audio fails
+        setHasListenedToPrompt(true);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   const testMicrophone = async () => {
     setMicStatus("testing");
     setMicError("");
@@ -163,9 +277,15 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     audioDetectedRef.current = false;
     audioLevelsRef.current = [];
     micTestStartTimeRef.current = Date.now();
+    // Don't regenerate prompt - use the one already set
+    if (!audioPrompt) {
+      const currentLang = getLocalData("lang") || "en";
+      const prompt = getRandomAudioPrompt(currentLang);
+      setAudioPrompt(prompt);
+    }
 
     // Interact event for button click
-    interact("ET", "Test Microphone", "audio-diagnostic");
+    interact("ET", "Test Microphone", "audio-diagnostics");
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -205,16 +325,32 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         // Check multiple conditions:
         // 1. Audio data was recorded
         // 2. Audio was actually detected (not just silence)
-        // 3. Average audio level was above threshold
+        // 3. Average audio level was above threshold OR we have significant blob size
         const averageLevel =
           audioLevelsRef.current.length > 0
             ? audioLevelsRef.current.reduce((a, b) => a + b, 0) /
               audioLevelsRef.current.length
             : 0;
 
-        const SILENCE_THRESHOLD = 0.01;
+        // Lowered thresholds to better detect speech, especially for children
+        const SILENCE_THRESHOLD = 0.003; // Lowered from 0.008 to catch quieter speech
+        const MIN_PEAK_LEVEL = 0.005; // Lowered from 0.01 to catch quieter speech
+
+        // Get max level to check for any significant audio activity
+        const maxLevel =
+          audioLevelsRef.current.length > 0
+            ? Math.max(...audioLevelsRef.current)
+            : 0;
+
+        // Check if we have actual audio - more lenient detection:
+        // 1. Audio was detected (audioDetectedRef.current is true) OR
+        // 2. Either average level OR max level is above threshold
+        // This ensures we catch speech even if detection flags weren't set properly
         const hasActualAudio =
-          audioDetectedRef.current && averageLevel > SILENCE_THRESHOLD;
+          audioDetectedRef.current ||
+          averageLevel > SILENCE_THRESHOLD ||
+          maxLevel > MIN_PEAK_LEVEL ||
+          (blob && blob.size > 1000); // If we have a reasonable blob size, assume audio was recorded
 
         setIsRecording(false);
         setRecordingProgress(0);
@@ -223,62 +359,86 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           ? ((Date.now() - micTestStartTimeRef.current) / 1000).toFixed(2)
           : 0;
 
-        if (hasAudioData && blob && blob.size > 0 && hasActualAudio) {
+        // Debug logging to help diagnose issues
+        console.log("Audio Detection Debug:", {
+          hasAudioData,
+          blobSize: blob?.size || 0,
+          hasActualAudio,
+          audioDetectedFlag: audioDetectedRef.current,
+          averageLevel: averageLevel.toFixed(4),
+          maxLevel: maxLevel.toFixed(4),
+          audioLevelsCount: audioLevelsRef.current.length,
+        });
+
+        // Only pass if we have audio data AND actual audio was detected
+        // Made more lenient: if we have a reasonable blob size, assume audio was recorded
+        if (
+          hasAudioData &&
+          blob &&
+          blob.size > 0 &&
+          (hasActualAudio || blob.size > 1000)
+        ) {
           // Create audio URL for playback
           const audioUrl = URL.createObjectURL(blob);
           setRecordedAudioUrl(audioUrl);
 
-          // Set fun message
-          setTestMessage("Great! Now listen to your recording...");
+          // Set fun message with clear explanation
+          setTestMessage("");
 
-          // Log test result - recording successful, waiting for playback
+          // Log test result - recording successful
           Log(
             `Microphone test - Recording successful. Duration: ${testDuration}s, Audio detected: true, Average level: ${averageLevel.toFixed(
               4
-            )}, Blob size: ${blob.size} bytes`,
-            "audio-diagnostic",
+            )}, Max level: ${maxLevel.toFixed(4)}, Blob size: ${
+              blob.size
+            } bytes`,
+            "audio-diagnostics",
             "ET"
           );
 
-          // Automatically play back the recorded audio
+          // Mark microphone test as passed immediately (no playback - will play in speaker test)
           setTimeout(() => {
-            playRecordedAudio(audioUrl);
-          }, 500);
+            setMicStatus("passed");
+            setTestMessage("");
+
+            // Log test result - passed
+            Log(
+              `Microphone test - PASSED. Duration: ${testDuration}s`,
+              "audio-diagnostics",
+              "ET"
+            );
+
+            // Give children time before moving to next step
+            setTimeout(() => {
+              // Move to speaker test after mic test passes
+              if (speakerStatus === "pending") {
+                setCurrentStep("speaker");
+                setTestMessage("");
+              }
+            }, 1500);
+          }, 1500);
         } else if (!hasAudioData || !blob || blob.size === 0) {
           setMicStatus("failed");
-          setMicError(
-            "No audio data was recorded. Please check your microphone connection."
-          );
+          setMicError(getTranslations(lang).micErrorNoAudio);
           // Log test result - failed
           Log(
             `Microphone test - FAILED. Duration: ${testDuration}s, Reason: No audio data recorded`,
-            "audio-diagnostic",
-            "ET"
-          );
-          audioContext.close();
-        } else if (!hasActualAudio) {
-          setMicStatus("failed");
-          setMicError(
-            "Microphone is muted or not detecting sound. Please unmute your microphone and speak into it."
-          );
-          // Log test result - failed (muted)
-          Log(
-            `Microphone test - FAILED. Duration: ${testDuration}s, Reason: Microphone muted or no sound detected, Average level: ${averageLevel.toFixed(
-              4
-            )}`,
-            "audio-diagnostic",
+            "audio-diagnostics",
             "ET"
           );
           audioContext.close();
         } else {
+          // We have blob data but no actual audio was detected (muted or silent)
           setMicStatus("failed");
-          setMicError(
-            "Microphone test failed. Please check your microphone settings."
-          );
-          // Log test result - failed (unknown)
+          setMicError(getTranslations(lang).micErrorMuted);
+          // Log test result - failed (muted)
           Log(
-            `Microphone test - FAILED. Duration: ${testDuration}s, Reason: Unknown error`,
-            "audio-diagnostic",
+            `Microphone test - FAILED. Duration: ${testDuration}s, Reason: Microphone muted or no sound detected, Average level: ${averageLevel.toFixed(
+              4
+            )}, Max level: ${maxLevel.toFixed(4)}, Blob size: ${
+              blob ? blob.size : 0
+            } bytes, Audio detected flag: ${audioDetectedRef.current}`,
+            "audio-diagnostics",
             "ET"
           );
           audioContext.close();
@@ -287,14 +447,18 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
       mediaRecorder.onerror = (event) => {
         setMicStatus("failed");
-        setMicError("Recording error occurred");
+        setMicError(getTranslations(lang).micErrorGeneric);
         setIsRecording(false);
         setRecordingProgress(0);
         audioContext.close();
       };
 
-      setIsRecording(true);
+      // Start recording
       mediaRecorder.start(100);
+
+      // Set recording state immediately so audio monitoring can start
+      // The analyser is already connected to the stream
+      setIsRecording(true);
 
       let progress = 0;
       recordingTimerRef.current = setInterval(() => {
@@ -312,16 +476,88 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       }, 3000);
     } catch (error) {
       setMicStatus("failed");
-      setMicError(
-        error.message ||
-          "Failed to access microphone. Please check permissions."
-      );
+      setMicError(getTranslations(lang).micErrorPermission);
       setIsRecording(false);
       setRecordingProgress(0);
     }
   };
 
   const testSpeaker = async () => {
+    // If we have recorded audio, use that instead of beep
+    if (recordedAudioUrl) {
+      setSpeakerStatus("testing");
+      setSpeakerError("");
+      setTestMessage("");
+
+      // Give a moment before starting to play
+      setTimeout(() => {
+        setIsPlaying(true);
+        speakerTestPassedRef.current = false;
+        speakerTestStartTimeRef.current = Date.now();
+
+        // Interact event for button click
+        interact("ET", "Test Speaker", "audio-diagnostics");
+
+        // Play the recorded audio (their own voice)
+        const audio = new Audio(recordedAudioUrl);
+        testAudioRef.current = audio;
+        audio.volume = 0.8;
+
+        audio.onended = () => {
+          if (!speakerTestPassedRef.current) {
+            setIsPlaying(false);
+            setTestMessage("");
+
+            // Give time before marking as passed
+            setTimeout(() => {
+              speakerTestPassedRef.current = true;
+              setSpeakerStatus("passed");
+              setTestMessage("");
+
+              const testDuration = speakerTestStartTimeRef.current
+                ? (
+                    (Date.now() - speakerTestStartTimeRef.current) /
+                    1000
+                  ).toFixed(2)
+                : 0;
+
+              Log(
+                `Speaker test - PASSED. Duration: ${testDuration}s, Method: Recorded Audio Playback`,
+                "audio-diagnostics",
+                "ET"
+              );
+            }, 1000);
+          }
+          if (testAudioRef.current) {
+            testAudioRef.current = null;
+          }
+        };
+
+        audio.onerror = () => {
+          if (!speakerTestPassedRef.current) {
+            setSpeakerStatus("failed");
+            setSpeakerError(
+              "Couldn't play the sound. Please check your speakers."
+            );
+            setIsPlaying(false);
+          }
+        };
+
+        audio.play().catch((err) => {
+          console.error("Audio play error:", err);
+          if (!speakerTestPassedRef.current) {
+            setIsPlaying(false);
+            setSpeakerStatus("failed");
+            setSpeakerError(
+              "Couldn't play the sound. Please check your speakers."
+            );
+          }
+        });
+      }, 1000);
+      return;
+    }
+
+    // Fallback to original beep test if no recorded audio
     setSpeakerStatus("testing");
     setSpeakerError("");
     setIsPlaying(true);
@@ -329,7 +565,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     speakerTestStartTimeRef.current = Date.now();
 
     // Interact event for button click
-    interact("ET", "Test Speaker", "audio-diagnostic");
+    interact("ET", "Test Speaker", "audio-diagnostics");
 
     try {
       audioContextRef.current = new (window.AudioContext ||
@@ -360,7 +596,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           // Log test result - passed
           Log(
             `Speaker test - PASSED. Duration: ${testDuration}s, Method: Web Audio API`,
-            "audio-diagnostic",
+            "audio-diagnostics",
             "ET"
           );
         }
@@ -401,7 +637,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           console.error("Audio play error:", err);
           if (!speakerTestPassedRef.current) {
             setSpeakerStatus("failed");
-            setSpeakerError("Failed to play test audio");
+            setSpeakerError(getTranslations(lang).speakerError);
             setIsPlaying(false);
           }
         });
@@ -419,7 +655,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           // Log test result - passed (HTML5 fallback)
           Log(
             `Speaker test - PASSED. Duration: ${testDuration}s, Method: HTML5 Audio`,
-            "audio-diagnostic",
+            "audio-diagnostics",
             "ET"
           );
         }
@@ -429,7 +665,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       testAudio.onerror = () => {
         if (!speakerTestPassedRef.current) {
           setSpeakerStatus("failed");
-          setSpeakerError("Audio playback failed");
+          setSpeakerError(getTranslations(lang).speakerErrorGeneric);
 
           const testDuration = speakerTestStartTimeRef.current
             ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(2)
@@ -438,7 +674,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           // Log test result - failed
           Log(
             `Speaker test - FAILED. Duration: ${testDuration}s, Reason: Audio playback error`,
-            "audio-diagnostic",
+            "audio-diagnostics",
             "ET"
           );
 
@@ -448,7 +684,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     } catch (error) {
       if (!speakerTestPassedRef.current) {
         setSpeakerStatus("failed");
-        setSpeakerError(error.message || "Failed to test speaker");
+        setSpeakerError(getTranslations(lang).speakerErrorNoTest);
 
         const testDuration = speakerTestStartTimeRef.current
           ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(2)
@@ -459,7 +695,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           `Speaker test - FAILED. Duration: ${testDuration}s, Reason: ${
             error.message || "Unknown error"
           }`,
-          "audio-diagnostic",
+          "audio-diagnostics",
           "ET"
         );
 
@@ -472,7 +708,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     if (!audioUrl) return;
 
     setIsPlayingBack(true);
-    setTestMessage("🎵 Playing your recording... Listen carefully!");
+    setTestMessage("");
 
     // Clean up any existing playback
     if (playbackAudioRef.current) {
@@ -485,7 +721,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
     audio.onended = () => {
       setIsPlayingBack(false);
-      setTestMessage("🎉 Perfect! Your microphone is working great!");
+      setTestMessage("");
 
       const totalTestDuration = micTestStartTimeRef.current
         ? ((Date.now() - micTestStartTimeRef.current) / 1000).toFixed(2)
@@ -494,7 +730,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       // Log test result - passed (after playback)
       Log(
         `Microphone test - PASSED. Total duration: ${totalTestDuration}s, Playback: successful`,
-        "audio-diagnostic",
+        "audio-diagnostics",
         "ET"
       );
 
@@ -502,13 +738,23 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       setTimeout(() => {
         setMicStatus("passed");
         setTestMessage("");
-      }, 1000);
+
+        // Give children time before moving to next step
+        setTimeout(() => {
+          // Move to speaker test after mic test passes
+          // Don't auto-play - let them click the button to avoid playing twice
+          if (speakerStatus === "pending") {
+            setCurrentStep("speaker");
+            setTestMessage("");
+          }
+        }, 1500);
+      }, 1500);
     };
 
     audio.onerror = () => {
       setIsPlayingBack(false);
       setMicStatus("failed");
-      setMicError("Failed to play back recording. Please try again.");
+      setMicError(getTranslations(lang).speakerError);
       setTestMessage("");
 
       const totalTestDuration = micTestStartTimeRef.current
@@ -518,7 +764,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       // Log test result - failed (playback error)
       Log(
         `Microphone test - FAILED. Total duration: ${totalTestDuration}s, Reason: Playback failed`,
-        "audio-diagnostic",
+        "audio-diagnostics",
         "ET"
       );
     };
@@ -527,7 +773,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       console.error("Playback error:", err);
       setIsPlayingBack(false);
       setMicStatus("failed");
-      setMicError("Failed to play back recording. Please check your speaker.");
+      setMicError(getTranslations(lang).speakerError);
       setTestMessage("");
 
       const totalTestDuration = micTestStartTimeRef.current
@@ -539,7 +785,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         `Microphone test - FAILED. Total duration: ${totalTestDuration}s, Reason: Playback error - ${
           err.message || "Unknown"
         }`,
-        "audio-diagnostic",
+        "audio-diagnostics",
         "ET"
       );
     });
@@ -584,17 +830,15 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
   const handleStartTests = () => {
     // Interact event for button click
-    interact("ET", "Start All Tests", "audio-diagnostic");
+    interact("ET", "Start All Tests", "audio-diagnostics");
 
+    setCurrentStep("mic");
     testMicrophone();
-    setTimeout(() => {
-      testSpeaker();
-    }, 500);
   };
 
   const handleContinue = () => {
     // Interact event for button click
-    interact("ET", "Continue to Application", "audio-diagnostic");
+    interact("ET", "Continue to Application", "audio-diagnostics");
 
     cleanup();
     onClose();
@@ -602,7 +846,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
   const handleRetry = () => {
     // Interact event for button click
-    interact("ET", "Retry Tests", "audio-diagnostic");
+    interact("ET", "Retry Tests", "audio-diagnostics");
 
     setMicStatus("pending");
     setSpeakerStatus("pending");
@@ -612,6 +856,13 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     setAudioLevel(0);
     setIsPlayingBack(false);
     setTestMessage("");
+    // Generate a new prompt for retry with current language
+    const currentLang = getLocalData("lang") || "en";
+    setLang(currentLang);
+    const prompt = getRandomAudioPrompt(currentLang);
+    setAudioPrompt(prompt);
+    setHasListenedToPrompt(false);
+    setCurrentStep("mic");
     audioDetectedRef.current = false;
     audioLevelsRef.current = [];
     micTestStartTimeRef.current = null;
@@ -734,686 +985,737 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
         width: "100vw",
         height: "100vh",
         position: "fixed",
         top: 0,
         left: 0,
-        background: "rgba(0, 0, 0, 0.5)",
+        background: "#ffffff",
         zIndex: 9999,
-        overflowY: "auto",
-        padding: { xs: "20px", sm: "40px" },
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <Card
+      <Box
         sx={{
-          width: { xs: "100%", sm: "90%", md: "800px" },
-          maxWidth: "900px",
-          maxHeight: "90vh",
-          borderRadius: "20px",
+          width: "100%",
+          height: "100%",
           backgroundImage: `url(${textureImage})`,
           backgroundRepeat: "round",
           backgroundSize: "contain",
-          boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.2)",
-          backdropFilter: "blur(25px)",
           position: "relative",
           overflow: "hidden",
-          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Box
           sx={{
-            position: "absolute",
-            left: 10,
-            bottom: 0,
-            pointerEvents: "none",
-            opacity: 0.3,
+            p: { xs: 1, sm: 2, md: 3 },
+            px: { xs: 1.5, sm: 3, md: 4 },
+            pt: { xs: 3, sm: 3, md: 4 },
+            pb: { xs: 1, sm: 2, md: 3 },
+            position: "relative",
+            zIndex: 1,
+            overflow: "hidden",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: { xs: "flex-start", sm: "center" },
+            width: "100%",
+            minHeight: 0,
+            textAlign: "center",
+            boxSizing: "border-box",
           }}
         >
-          <img
-            src={panda}
-            alt="panda"
-            style={{ width: isMobile ? "80px" : "120px" }}
-          />
-        </Box>
-
-        <CardContent
-          sx={{ p: { xs: 3, sm: 4, md: 5 }, position: "relative", zIndex: 1 }}
-        >
-          {/* Header */}
-          <Box sx={{ textAlign: "center", mb: 4 }}>
-            <Typography
-              variant="h3"
-              sx={{
-                fontFamily: "Quicksand",
-                fontWeight: 700,
-                fontSize: { xs: "28px", sm: "36px", md: "42px" },
-                color: "#000000",
-                mb: 1,
-              }}
-            >
-              Audio Device Diagnostic
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                fontFamily: "Lato",
-                fontSize: { xs: "14px", sm: "16px" },
-                color: "#666666",
-              }}
-            >
-              Test your microphone and speaker to ensure optimal learning
-              experience
-            </Typography>
-          </Box>
-
-          {/* Test Cards */}
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {/* Microphone Test */}
-            <Grid item xs={12} md={6}>
-              <Card
-                variant="outlined"
+          {/* Speech Bubble - Hide on error */}
+          {!(currentStep === "mic" && micStatus === "failed") &&
+            !(currentStep === "speaker" && speakerStatus === "failed") && (
+              <Box
                 sx={{
-                  borderRadius: "16px",
-                  border: `2px solid ${
-                    micStatus === "passed"
-                      ? "#4caf50"
-                      : micStatus === "failed"
-                      ? "#f44336"
-                      : micStatus === "testing"
-                      ? "#6DAF19"
-                      : "#e0e0e0"
-                  }`,
-                  background: micStatus === "passed" ? "#f1f8f4" : "#ffffff",
-                  transition: "all 0.3s",
-                  "&:hover": {
-                    transform: "translateY(-4px)",
-                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
-                  },
+                  position: "relative",
+                  mb: { xs: 0.75, sm: 2, md: 3 },
+                  mt: { xs: 1, sm: 0.5, md: 0 },
+                  maxWidth: { xs: "calc(100% - 32px)", sm: "400px" },
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  px: { xs: 1, sm: 0 },
+                  boxSizing: "border-box",
                 }}
               >
-                <CardContent sx={{ p: 3 }}>
-                  <Box
+                <Box
+                  sx={{
+                    background: "#ffffff",
+                    border: {
+                      xs: "2px solid #6DAF19",
+                      sm: "3px solid #6DAF19",
+                    },
+                    borderRadius: { xs: "14px", sm: "20px" },
+                    p: { xs: 1, sm: 2, md: 2.5 },
+                    position: "relative",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                    "&::after": {
+                      content: '""',
+                      position: "absolute",
+                      bottom: "-10px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: 0,
+                      height: 0,
+                      borderLeft: {
+                        xs: "10px solid transparent",
+                        sm: "12px solid transparent",
+                      },
+                      borderRight: {
+                        xs: "10px solid transparent",
+                        sm: "12px solid transparent",
+                      },
+                      borderTop: {
+                        xs: "10px solid #ffffff",
+                        sm: "12px solid #ffffff",
+                      },
+                    },
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      bottom: "-13px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: 0,
+                      height: 0,
+                      borderLeft: {
+                        xs: "11px solid transparent",
+                        sm: "13px solid transparent",
+                      },
+                      borderRight: {
+                        xs: "11px solid transparent",
+                        sm: "13px solid transparent",
+                      },
+                      borderTop: {
+                        xs: "11px solid #6DAF19",
+                        sm: "13px solid #6DAF19",
+                      },
+                    },
+                  }}
+                >
+                  <Typography
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      mb: 2,
-                      gap: 2,
+                      fontFamily: "Quicksand",
+                      fontSize: { xs: "14px", sm: "20px", md: "24px" },
+                      fontWeight: 600,
+                      color: "#333333",
+                      textAlign: "center",
+                      lineHeight: 1.3,
                     }}
                   >
+                    {currentStep === "mic"
+                      ? micStatus === "pending" && !hasListenedToPrompt
+                        ? translations.listenAndRepeat
+                        : micStatus === "pending" && hasListenedToPrompt
+                        ? translations.nowRepeat
+                        : micStatus === "testing" || isRecording
+                        ? translations.keepSpeaking
+                        : micStatus === "passed"
+                        ? translations.micTestPassed
+                        : translations.testMicrophone
+                      : speakerStatus === "pending"
+                      ? translations.listenToVoice
+                      : speakerStatus === "testing" || isPlaying
+                      ? translations.canYouHear
+                      : speakerStatus === "passed"
+                      ? translations.speakerTestPassed
+                      : translations.testSpeakers}
+                  </Typography>
+                </Box>
+              </Box>
+            )}
+
+          {/* Centered Panda Mascot - Hide on error */}
+          {!(currentStep === "mic" && micStatus === "failed") &&
+            !(currentStep === "speaker" && speakerStatus === "failed") && (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mb: { xs: 0.75, sm: 2, md: 3 },
+                  position: "relative",
+                }}
+              >
+                <img
+                  src={panda}
+                  alt="panda"
+                  style={{
+                    width: isMobile ? "80px" : "180px",
+                    height: "auto",
+                    filter: "drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15))",
+                  }}
+                />
+              </Box>
+            )}
+
+          {/* Test Content - Simplified */}
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
+              mb: { xs: 0.75, sm: 2 },
+              px: { xs: 1, sm: 0 },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              boxSizing: "border-box",
+            }}
+          >
+            {currentStep === "mic" && (
+              <>
+                {/* Reading Prompt - Show before and during recording, hide on error */}
+                {audioPrompt && (micStatus === "pending" || isRecording) && (
+                  <Fade in={true}>
                     <Box
                       sx={{
-                        width: { xs: "50px", sm: "60px" },
-                        height: { xs: "50px", sm: "60px" },
-                        borderRadius: "12px",
-                        background:
-                          "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+                        background: "#f8f9fa",
+                        borderRadius: { xs: "12px", sm: "16px" },
+                        p: { xs: 1.25, sm: 2.5, md: 3 },
+                        mb: { xs: 0.75, sm: 3 },
+                        border: "2px solid #6DAF19",
+                        textAlign: "center",
+                        width: "100%",
+                        maxWidth: "100%",
                         display: "flex",
+                        flexDirection: "column",
                         alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 4px 12px rgba(109, 175, 25, 0.3)",
+                        boxSizing: "border-box",
                       }}
                     >
-                      <MicIcon
-                        sx={{
-                          fontSize: { xs: "28px", sm: "32px" },
-                          color: "white",
-                        }}
-                      />
+                      {!isRecording && (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: { xs: 1.5, sm: 2 },
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontFamily: "Quicksand",
+                              fontSize: { xs: "16px", sm: "20px", md: "22px" },
+                              fontWeight: 600,
+                              color: "#333333",
+                              mb: { xs: 1, sm: 1.5 },
+                            }}
+                          >
+                            {isPlayingPrompt
+                              ? translations.playingAudio
+                              : hasListenedToPrompt
+                              ? translations.clickToListenAgain
+                              : translations.clickToListen}
+                          </Typography>
+                          <Button
+                            onClick={() => {
+                              playPromptAudio();
+                              // Enable the continue button when user clicks play
+                              setTimeout(() => {
+                                setHasListenedToPrompt(true);
+                              }, 1500); // 1.5 seconds should be enough for the phrases
+                            }}
+                            disabled={isPlayingPrompt}
+                            sx={{
+                              minWidth: "auto",
+                              width: { xs: "64px", sm: "80px", md: "96px" },
+                              height: { xs: "64px", sm: "80px", md: "96px" },
+                              borderRadius: "50%",
+                              background: isPlayingPrompt
+                                ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
+                                : "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+                              color: "white",
+                              "&:hover": {
+                                background: isPlayingPrompt
+                                  ? "linear-gradient(135deg, #f57c00 0%, #e65100 100%)"
+                                  : "linear-gradient(135deg, #5a9a15 0%, #4a8a10 100%)",
+                              },
+                              boxShadow: "0 4px 12px rgba(109, 175, 25, 0.3)",
+                            }}
+                          >
+                            <VolumeUpIcon
+                              sx={{
+                                fontSize: {
+                                  xs: "32px",
+                                  sm: "40px",
+                                  md: "48px",
+                                },
+                              }}
+                            />
+                          </Button>
+                        </Box>
+                      )}
+                      {isRecording && (
+                        <>
+                          <LinearProgress
+                            variant="determinate"
+                            value={recordingProgress}
+                            sx={{
+                              height: 10,
+                              borderRadius: 5,
+                              backgroundColor: "rgba(109, 175, 25, 0.1)",
+                              mt: 2,
+                              "& .MuiLinearProgress-bar": {
+                                background:
+                                  "linear-gradient(90deg, #6DAF19, #4caf50)",
+                                borderRadius: 5,
+                              },
+                            }}
+                          />
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-end",
+                              justifyContent: "center",
+                              gap: "3px",
+                              height: "60px",
+                              mt: 2,
+                            }}
+                          >
+                            {[...Array(20)].map((_, i) => (
+                              <Box
+                                key={i}
+                                sx={{
+                                  width: "4px",
+                                  height: `${Math.max(
+                                    10,
+                                    audioLevel *
+                                      100 *
+                                      (0.5 + Math.random() * 0.5)
+                                  )}%`,
+                                  background:
+                                    "linear-gradient(180deg, #6DAF19, #4caf50)",
+                                  borderRadius: "2px",
+                                  transition: "height 0.1s",
+                                }}
+                              />
+                            ))}
+                          </Box>
+                        </>
+                      )}
                     </Box>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontFamily: "Quicksand",
-                        fontWeight: 600,
-                        fontSize: { xs: "18px", sm: "20px" },
-                      }}
-                    >
-                      Microphone
-                    </Typography>
-                  </Box>
+                  </Fade>
+                )}
 
+                {/* Status Icon - Only show when not recording and not in error state */}
+                {!isRecording && !isPlayingBack && micStatus !== "failed" && (
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      minHeight: "120px",
-                      mb: 2,
+                      mb: { xs: 0.5, sm: 2 },
+                      minHeight: { xs: "40px", sm: "80px", md: "100px" },
+                      width: "100%",
                     }}
                   >
                     {getStatusIcon(micStatus, "mic")}
                   </Box>
+                )}
+              </>
+            )}
 
-                  <Box sx={{ textAlign: "center", mb: 2 }}>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: "Lato",
-                        fontWeight: 600,
-                        color:
-                          micStatus === "passed"
-                            ? "#4caf50"
-                            : micStatus === "failed"
-                            ? "#f44336"
-                            : micStatus === "testing" || isPlayingBack
-                            ? "#6DAF19"
-                            : "#9e9e9e",
-                      }}
-                    >
-                      {isPlayingBack
-                        ? "Playing Back..."
-                        : micStatus === "passed"
-                        ? "Working"
-                        : micStatus === "failed"
-                        ? "Not Working"
-                        : micStatus === "testing"
-                        ? "Recording..."
-                        : "Not Tested"}
-                    </Typography>
-                  </Box>
-
-                  {isRecording && (
-                    <Fade in={isRecording}>
-                      <Box
-                        sx={{
-                          mt: 2,
-                          p: 2,
-                          background:
-                            "linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%)",
-                          borderRadius: "12px",
-                        }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontFamily: "Lato",
-                            color: "#6DAF19",
-                            fontWeight: 500,
-                            textAlign: "center",
-                            mb: 1,
-                          }}
-                        >
-                          🎤 Recording... Say something fun!
-                        </Typography>
-                        <LinearProgress
-                          variant="determinate"
-                          value={recordingProgress}
-                          sx={{
-                            height: 8,
-                            borderRadius: 4,
-                            backgroundColor: "rgba(109, 175, 25, 0.1)",
-                            "& .MuiLinearProgress-bar": {
-                              background:
-                                "linear-gradient(90deg, #6DAF19, #4caf50)",
-                              borderRadius: 4,
-                            },
-                          }}
-                        />
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "flex-end",
-                            justifyContent: "center",
-                            gap: "4px",
-                            height: "50px",
-                            mt: 2,
-                          }}
-                        >
-                          {[...Array(20)].map((_, i) => (
-                            <Box
-                              key={i}
-                              sx={{
-                                width: "4px",
-                                height: `${Math.max(
-                                  10,
-                                  audioLevel * 100 * (0.5 + Math.random() * 0.5)
-                                )}%`,
-                                background:
-                                  "linear-gradient(180deg, #6DAF19, #4caf50)",
-                                borderRadius: "2px",
-                                transition: "height 0.1s",
-                              }}
-                            />
-                          ))}
-                        </Box>
-                      </Box>
-                    </Fade>
-                  )}
-
-                  {isPlayingBack && (
-                    <Fade in={isPlayingBack}>
-                      <Box
-                        sx={{
-                          mt: 2,
-                          p: 2,
-                          background:
-                            "linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)",
-                          borderRadius: "12px",
-                        }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontFamily: "Lato",
-                            color: "#f57c00",
-                            fontWeight: 500,
-                            textAlign: "center",
-                            mb: 2,
-                            fontSize: "16px",
-                          }}
-                        >
-                          {testMessage ||
-                            "🎵 Playing your recording... Listen carefully!"}
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "8px",
-                            height: "50px",
-                          }}
-                        >
-                          {[...Array(5)].map((_, i) => (
-                            <Box
-                              key={i}
-                              sx={{
-                                width: "6px",
-                                height: "100%",
-                                background:
-                                  "linear-gradient(180deg, #ff9800, #ff5722)",
-                                borderRadius: "3px",
-                                animation:
-                                  "soundWave 1.2s ease-in-out infinite",
-                                animationDelay: `${i * 0.2}s`,
-                              }}
-                            />
-                          ))}
-                        </Box>
-                      </Box>
-                    </Fade>
-                  )}
-
-                  {testMessage && !isRecording && !isPlayingBack && (
-                    <Fade in={!!testMessage}>
-                      <Box
-                        sx={{
-                          mt: 2,
-                          p: 2,
-                          background:
-                            "linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)",
-                          borderRadius: "12px",
-                          textAlign: "center",
-                        }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontFamily: "Lato",
-                            color: "#4caf50",
-                            fontWeight: 600,
-                            fontSize: "16px",
-                          }}
-                        >
-                          {testMessage}
-                        </Typography>
-                      </Box>
-                    </Fade>
-                  )}
-
-                  {micError && (
-                    <Alert
-                      severity="error"
-                      sx={{ mt: 2, borderRadius: "12px" }}
-                    >
-                      {micError}
-                    </Alert>
-                  )}
-
-                  {micStatus === "pending" &&
-                    !isRecording &&
-                    !isPlayingBack && (
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        onClick={testMicrophone}
-                        startIcon={<PlayArrowIcon />}
-                        sx={{
-                          mt: 2,
-                          background: "#6DAF19",
-                          color: "white",
-                          fontFamily: "Lato",
-                          fontWeight: 600,
-                          borderRadius: "10px",
-                          padding: "12px 24px",
-                          textTransform: "none",
-                          "&:hover": {
-                            background: "#5a9a15",
-                          },
-                        }}
-                      >
-                        Test Microphone
-                      </Button>
-                    )}
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* Speaker Test */}
-            <Grid item xs={12} md={6}>
-              <Card
-                variant="outlined"
-                sx={{
-                  borderRadius: "16px",
-                  border: `2px solid ${
-                    speakerStatus === "passed"
-                      ? "#4caf50"
-                      : speakerStatus === "failed"
-                      ? "#f44336"
-                      : speakerStatus === "testing"
-                      ? "#6DAF19"
-                      : "#e0e0e0"
-                  }`,
-                  background:
-                    speakerStatus === "passed" ? "#f1f8f4" : "#ffffff",
-                  transition: "all 0.3s",
-                  "&:hover": {
-                    transform: "translateY(-4px)",
-                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
-                  },
-                }}
-              >
-                <CardContent sx={{ p: 3 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      mb: 2,
-                      gap: 2,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        width: { xs: "50px", sm: "60px" },
-                        height: { xs: "50px", sm: "60px" },
-                        borderRadius: "12px",
-                        background:
-                          "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 4px 12px rgba(109, 175, 25, 0.3)",
-                      }}
-                    >
-                      <VolumeUpIcon
-                        sx={{
-                          fontSize: { xs: "28px", sm: "32px" },
-                          color: "white",
-                        }}
-                      />
-                    </Box>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontFamily: "Quicksand",
-                        fontWeight: 600,
-                        fontSize: { xs: "18px", sm: "20px" },
-                      }}
-                    >
-                      Speaker
-                    </Typography>
-                  </Box>
-
+            {currentStep === "speaker" && (
+              <>
+                {/* Status Icon */}
+                {!isPlaying && (
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      minHeight: "120px",
-                      mb: 2,
+                      mb: { xs: 1, sm: 2 },
+                      minHeight: { xs: "50px", sm: "80px", md: "100px" },
+                      width: "100%",
                     }}
                   >
                     {getStatusIcon(speakerStatus, "speaker")}
                   </Box>
+                )}
 
-                  <Box sx={{ textAlign: "center", mb: 2 }}>
-                    <Typography
-                      variant="body2"
+                {/* Playing Section */}
+                {isPlaying && (
+                  <Fade in={isPlaying}>
+                    <Box
                       sx={{
-                        fontFamily: "Lato",
-                        fontWeight: 600,
-                        color:
-                          speakerStatus === "passed"
-                            ? "#4caf50"
-                            : speakerStatus === "failed"
-                            ? "#f44336"
-                            : speakerStatus === "testing"
-                            ? "#6DAF19"
-                            : "#9e9e9e",
+                        background: "#fff3e0",
+                        borderRadius: { xs: "12px", sm: "16px" },
+                        p: { xs: 1.5, sm: 3 },
+                        mb: { xs: 1, sm: 3 },
+                        border: "2px solid #ff9800",
+                        textAlign: "center",
+                        width: "100%",
+                        maxWidth: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        boxSizing: "border-box",
                       }}
                     >
-                      {speakerStatus === "passed"
-                        ? "Working"
-                        : speakerStatus === "failed"
-                        ? "Not Working"
-                        : speakerStatus === "testing"
-                        ? "Testing..."
-                        : "Not Tested"}
-                    </Typography>
-                  </Box>
-
-                  {isPlaying && (
-                    <Fade in={isPlaying}>
-                      <Box
+                      <Typography
                         sx={{
-                          mt: 2,
-                          p: 2,
-                          background:
-                            "linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)",
-                          borderRadius: "12px",
+                          fontFamily: "Quicksand",
+                          fontSize: { xs: "22px", sm: "24px", md: "26px" },
+                          fontWeight: 700,
+                          color: "#f57c00",
+                          mb: 2,
                         }}
                       >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontFamily: "Lato",
-                            color: "#f57c00",
-                            fontWeight: 500,
-                            textAlign: "center",
-                            mb: 2,
-                          }}
-                        >
-                          Playing test sound...
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "8px",
-                            height: "40px",
-                          }}
-                        >
-                          {[...Array(5)].map((_, i) => (
-                            <Box
-                              key={i}
-                              sx={{
-                                width: "4px",
-                                height: "100%",
-                                background:
-                                  "linear-gradient(180deg, #ff9800, #ff5722)",
-                                borderRadius: "2px",
-                                animation:
-                                  "soundWave 1.2s ease-in-out infinite",
-                                animationDelay: `${i * 0.2}s`,
-                              }}
-                            />
-                          ))}
-                        </Box>
+                        Can you hear it?
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "6px",
+                          height: "50px",
+                        }}
+                      >
+                        {[...Array(5)].map((_, i) => (
+                          <Box
+                            key={i}
+                            sx={{
+                              width: "5px",
+                              height: "100%",
+                              background:
+                                "linear-gradient(180deg, #ff9800, #ff5722)",
+                              borderRadius: "3px",
+                              animation: "soundWave 1.2s ease-in-out infinite",
+                              animationDelay: `${i * 0.2}s`,
+                            }}
+                          />
+                        ))}
                       </Box>
-                    </Fade>
-                  )}
-
-                  {speakerError && (
-                    <Alert
-                      severity="error"
-                      sx={{ mt: 2, borderRadius: "12px" }}
-                    >
-                      {speakerError}
-                    </Alert>
-                  )}
-
-                  {speakerStatus === "pending" && (
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      onClick={testSpeaker}
-                      startIcon={<PlayArrowIcon />}
-                      sx={{
-                        mt: 2,
-                        background: "#6DAF19",
-                        color: "white",
-                        fontFamily: "Lato",
-                        fontWeight: 600,
-                        borderRadius: "10px",
-                        padding: "12px 24px",
-                        textTransform: "none",
-                        "&:hover": {
-                          background: "#5a9a15",
-                        },
-                      }}
-                    >
-                      Test Speaker
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-
-          {/* Action Buttons */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 2,
-              flexWrap: "wrap",
-            }}
-          >
-            {!allTestsCompleted && (
-              <Button
-                variant="contained"
-                size="large"
-                onClick={handleStartTests}
-                disabled={
-                  micStatus === "testing" || speakerStatus === "testing"
-                }
-                startIcon={<PlayArrowIcon />}
-                sx={{
-                  background: "#6DAF19",
-                  color: "white",
-                  fontFamily: "Lato",
-                  fontWeight: 600,
-                  borderRadius: "10px",
-                  padding: "14px 32px",
-                  minWidth: "200px",
-                  textTransform: "none",
-                  fontSize: "18px",
-                  "&:hover": {
-                    background: "#5a9a15",
-                  },
-                  "&:disabled": {
-                    background: "#cccccc",
-                  },
-                }}
-              >
-                Start All Tests
-              </Button>
-            )}
-
-            {allTestsCompleted && (
-              <>
-                <Button
-                  variant="outlined"
-                  size="large"
-                  onClick={handleRetry}
-                  startIcon={<RefreshIcon />}
-                  sx={{
-                    borderColor: "#6DAF19",
-                    color: "#6DAF19",
-                    fontFamily: "Lato",
-                    fontWeight: 600,
-                    borderRadius: "10px",
-                    padding: "14px 32px",
-                    minWidth: "200px",
-                    textTransform: "none",
-                    fontSize: "18px",
-                    borderWidth: "2px",
-                    "&:hover": {
-                      borderWidth: "2px",
-                      background: "rgba(109, 175, 25, 0.1)",
-                    },
-                  }}
-                >
-                  Retry Tests
-                </Button>
-                <Button
-                  variant="contained"
-                  size="large"
-                  onClick={handleContinue}
-                  endIcon={<ArrowForwardIcon />}
-                  sx={{
-                    background: allTestsPassed ? "#6DAF19" : "#ff9800",
-                    color: "white",
-                    fontFamily: "Lato",
-                    fontWeight: 600,
-                    borderRadius: "10px",
-                    padding: "14px 32px",
-                    minWidth: "200px",
-                    textTransform: "none",
-                    fontSize: "18px",
-                    "&:hover": {
-                      background: allTestsPassed ? "#5a9a15" : "#f57c00",
-                    },
-                  }}
-                >
-                  {allTestsPassed
-                    ? "Continue to Application"
-                    : "Continue Anyway"}
-                </Button>
+                    </Box>
+                  </Fade>
+                )}
               </>
             )}
           </Box>
 
-          {allTestsCompleted && !allTestsPassed && (
-            <Alert
-              severity="warning"
+          {/* Error Messages - Prominent on error screen */}
+          {micError && currentStep === "mic" && (
+            <Box
               sx={{
-                mt: 3,
-                borderRadius: "12px",
-                borderLeft: "4px solid #ff9800",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                mb: { xs: 1.5, sm: 2 },
+                mt: { xs: 2, sm: 3 },
+                width: "100%",
+                maxWidth: { xs: "calc(100% - 32px)", sm: "500px" },
               }}
             >
-              <Typography
-                variant="body2"
+              {/* Error Icon */}
+              <Box
                 sx={{
-                  fontFamily: "Lato",
-                  fontWeight: 500,
+                  mb: { xs: 1.5, sm: 2 },
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <strong>Warning:</strong> Some audio devices are not working
-                properly. You may experience issues during learning activities.
-                Please check your device settings or contact your teacher for
-                assistance.
-              </Typography>
-            </Alert>
+                <ErrorIcon
+                  sx={{
+                    fontSize: { xs: "64px", sm: "80px", md: "96px" },
+                    color: "#ff9800",
+                  }}
+                />
+              </Box>
+              {/* Error Message */}
+              <Alert
+                severity="warning"
+                sx={{
+                  mb: 0,
+                  borderRadius: "12px",
+                  backgroundColor: "#fff8e1",
+                  border: "2px solid #ff9800",
+                  fontSize: { xs: "16px", sm: "18px" },
+                  fontWeight: 600,
+                  py: { xs: 1.5, sm: 2 },
+                  px: { xs: 2, sm: 3 },
+                  width: "100%",
+                  boxSizing: "border-box",
+                  fontFamily: "Quicksand",
+                }}
+              >
+                {micError}
+              </Alert>
+            </Box>
           )}
-        </CardContent>
-      </Card>
+
+          {speakerError && currentStep === "speaker" && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                mb: { xs: 1.5, sm: 2 },
+                mt: { xs: 2, sm: 3 },
+                width: "100%",
+                maxWidth: { xs: "calc(100% - 32px)", sm: "500px" },
+              }}
+            >
+              {/* Error Icon */}
+              <Box
+                sx={{
+                  mb: { xs: 1.5, sm: 2 },
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ErrorIcon
+                  sx={{
+                    fontSize: { xs: "64px", sm: "80px", md: "96px" },
+                    color: "#ff9800",
+                  }}
+                />
+              </Box>
+              {/* Error Message */}
+              <Alert
+                severity="warning"
+                sx={{
+                  mb: 0,
+                  borderRadius: "12px",
+                  backgroundColor: "#fff8e1",
+                  border: "2px solid #ff9800",
+                  fontSize: { xs: "16px", sm: "18px" },
+                  fontWeight: 600,
+                  py: { xs: 1.5, sm: 2 },
+                  px: { xs: 2, sm: 3 },
+                  width: "100%",
+                  boxSizing: "border-box",
+                  fontFamily: "Quicksand",
+                }}
+              >
+                {speakerError}
+              </Alert>
+            </Box>
+          )}
+
+          {/* Action Buttons - Duolingo Style */}
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: { xs: "calc(100% - 32px)", sm: "400px" },
+              mt: { xs: 0.25, sm: 1.5 },
+              mb: { xs: 0, sm: 0 },
+              px: { xs: 1, sm: 0 },
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              boxSizing: "border-box",
+            }}
+          >
+            {currentStep === "mic" &&
+              (micStatus === "pending" || micStatus === "failed") &&
+              !isRecording && (
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={testMicrophone}
+                  disabled={false}
+                  sx={{
+                    background:
+                      micStatus === "failed"
+                        ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
+                        : "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+                    color: "white",
+                    fontFamily: "Quicksand",
+                    fontWeight: 700,
+                    borderRadius: "25px",
+                    padding: {
+                      xs: "14px 24px",
+                      sm: "18px 36px",
+                      md: "20px 40px",
+                    },
+                    textTransform: "none",
+                    fontSize: { xs: "16px", sm: "20px", md: "22px" },
+                    boxShadow: "0 8px 20px rgba(109, 175, 25, 0.4)",
+                    "&:hover": {
+                      background:
+                        micStatus === "failed"
+                          ? "linear-gradient(135deg, #f57c00 0%, #e65100 100%)"
+                          : "linear-gradient(135deg, #5a9a15 0%, #4a8a10 100%)",
+                      transform: "scale(1.02)",
+                      boxShadow: "0 12px 24px rgba(109, 175, 25, 0.5)",
+                    },
+                    "&:disabled": {
+                      background:
+                        "linear-gradient(135deg, #cccccc 0%, #999999 100%)",
+                      color: "white",
+                    },
+                    transition: "all 0.3s",
+                  }}
+                >
+                  {micStatus === "failed"
+                    ? translations.tryAgain
+                    : translations.repeatNow}
+                </Button>
+              )}
+
+            {currentStep === "speaker" &&
+              (speakerStatus === "pending" || speakerStatus === "failed") &&
+              !isPlaying && (
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={testSpeaker}
+                  sx={{
+                    background:
+                      speakerStatus === "failed"
+                        ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
+                        : "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+                    color: "white",
+                    fontFamily: "Quicksand",
+                    fontWeight: 700,
+                    borderRadius: "25px",
+                    padding: {
+                      xs: "14px 24px",
+                      sm: "18px 36px",
+                      md: "20px 40px",
+                    },
+                    textTransform: "none",
+                    fontSize: { xs: "16px", sm: "20px", md: "22px" },
+                    boxShadow: "0 8px 20px rgba(109, 175, 25, 0.4)",
+                    "&:hover": {
+                      background:
+                        speakerStatus === "failed"
+                          ? "linear-gradient(135deg, #f57c00 0%, #e65100 100%)"
+                          : "linear-gradient(135deg, #5a9a15 0%, #4a8a10 100%)",
+                      transform: "scale(1.02)",
+                      boxShadow: "0 12px 24px rgba(109, 175, 25, 0.5)",
+                    },
+                    transition: "all 0.3s",
+                  }}
+                >
+                  {speakerStatus === "failed"
+                    ? translations.tryAgain
+                    : translations.continue}
+                </Button>
+              )}
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Skip Button - Always visible */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: { xs: 8, sm: 20, md: 30 },
+          right: { xs: 10, sm: 20, md: 40 },
+          zIndex: 10000,
+        }}
+      >
+        <Button
+          variant="text"
+          onClick={() => {
+            // Telemetry event for skip button
+            interact("ET", "Skip Audio Diagnostic", "audio-diagnostics");
+            onClose();
+          }}
+          sx={{
+            color: "#666666",
+            fontFamily: "Quicksand",
+            fontWeight: 600,
+            textTransform: "none",
+            fontSize: { xs: "12px", sm: "14px", md: "16px" },
+            padding: { xs: "8px 12px", sm: "10px 16px" },
+            "&:hover": {
+              color: "#6DAF19",
+              background: "rgba(109, 175, 25, 0.1)",
+            },
+          }}
+        >
+          {translations.skip}
+        </Button>
+      </Box>
+
+      {/* Bottom Action Buttons - Only show when all tests completed */}
+      {allTestsCompleted && (
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: { xs: 10, sm: 20, md: 30 },
+            right: { xs: 10, sm: 20, md: 40 },
+            zIndex: 10000,
+            display: "flex",
+            gap: { xs: 1, sm: 2 },
+            flexDirection: { xs: "column", sm: "row" },
+          }}
+        >
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleRetry}
+            startIcon={<RefreshIcon />}
+            sx={{
+              borderColor: "#6DAF19",
+              color: "#6DAF19",
+              fontFamily: "Quicksand",
+              fontWeight: 700,
+              borderRadius: "25px",
+              padding: { xs: "12px 24px", sm: "14px 28px", md: "16px 32px" },
+              textTransform: "none",
+              fontSize: { xs: "14px", sm: "16px", md: "18px" },
+              background: "white",
+              border: "2px solid #6DAF19",
+              "&:hover": {
+                background: "#f5f5f5",
+                border: "2px solid #5a9a15",
+              },
+            }}
+          >
+            Retry
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => {
+              // Telemetry event for continue button
+              interact(
+                "ET",
+                "Continue After Audio Diagnostic",
+                "audio-diagnostics"
+              );
+              onClose();
+            }}
+            endIcon={<ArrowForwardIcon />}
+            sx={{
+              background: "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+              color: "white",
+              fontFamily: "Quicksand",
+              fontWeight: 700,
+              borderRadius: "25px",
+              padding: { xs: "12px 24px", sm: "14px 28px", md: "16px 32px" },
+              textTransform: "none",
+              fontSize: { xs: "14px", sm: "16px", md: "18px" },
+              boxShadow: "0 8px 20px rgba(109, 175, 25, 0.4)",
+              "&:hover": {
+                background: "linear-gradient(135deg, #5a9a15 0%, #4a8a10 100%)",
+                transform: "scale(1.02)",
+                boxShadow: "0 12px 24px rgba(109, 175, 25, 0.5)",
+              },
+              transition: "all 0.3s",
+            }}
+          >
+            {translations.continue}
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
