@@ -1223,10 +1223,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       >
         <Box
           sx={{
-            p: { xs: 1, sm: 2, md: 3 },
-            px: { xs: 1.5, sm: 3, md: 4 },
-            pt: { xs: 2, sm: 3, md: 4 },
-            pb: { xs: 1, sm: 2, md: 3 },
+            p: { xs: 2, sm: 2, md: 3 },
+            px: { xs: 2, sm: 3, md: 4 },
+            pt: { xs: 4.5, sm: 3, md: 4 }, // Increased top padding on mobile to account for skip button
+            pb: { xs: 2, sm: 2, md: 3 },
             position: "relative",
             zIndex: 1,
             overflow: "hidden",
@@ -1239,6 +1239,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             minHeight: 0,
             textAlign: "center",
             boxSizing: "border-box",
+            gap: { xs: 1.5, sm: 2, md: 2.5 },
           }}
         >
           {/* Speech Bubble - Hide on error */}
@@ -1247,9 +1248,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
               <Box
                 sx={{
                   position: "relative",
-                  mb: { xs: 0.75, sm: 2, md: 3 },
-                  mt: { xs: 1, sm: 0.5, md: 0 },
-                  maxWidth: { xs: "calc(100% - 32px)", sm: "400px" },
+                  mb: { xs: 1.5, sm: 2, md: 3 },
+                  mt: { xs: 0.5, sm: 0.5, md: 0 }, // Small top margin to ensure spacing from skip button
+                  maxWidth: { xs: "calc(100% - 80px)", sm: "400px" }, // Reduced width to account for skip button
                   width: "100%",
                   display: "flex",
                   justifyContent: "center",
@@ -1316,11 +1317,12 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   <Typography
                     sx={{
                       fontFamily: "Quicksand",
-                      fontSize: { xs: "14px", sm: "20px", md: "24px" },
+                      fontSize: { xs: "16px", sm: "20px", md: "24px" },
                       fontWeight: 600,
                       color: "#333333",
                       textAlign: "center",
-                      lineHeight: 1.3,
+                      lineHeight: { xs: 1.4, sm: 1.3 },
+                      px: { xs: 0.5, sm: 0 },
                     }}
                   >
                     {currentStep === "mic"
@@ -1353,7 +1355,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  mb: { xs: 0.75, sm: 2, md: 3 },
+                  mb: { xs: 2, sm: 2, md: 3 },
                   mt: { xs: 0, sm: 0 },
                   position: "relative",
                   width: "100%",
@@ -1364,7 +1366,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   src={panda}
                   alt="panda"
                   style={{
-                    width: isMobile ? "80px" : "180px",
+                    width: isMobile ? "120px" : "180px",
                     height: "auto",
                     filter: "drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15))",
                   }}
@@ -1377,11 +1379,15 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             sx={{
               width: "100%",
               maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
-              mb: { xs: 0.75, sm: 2 },
+              mb: { xs: 2, sm: 2 },
+              mt: { xs: 1, sm: 0 },
               px: { xs: 1, sm: 0 },
+              mx: "auto",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              justifyContent: "center",
+              flex: { xs: 1, sm: 0 },
               boxSizing: "border-box",
             }}
           >
@@ -1393,9 +1399,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                     <Box
                       sx={{
                         background: "#f8f9fa",
-                        borderRadius: { xs: "12px", sm: "16px" },
-                        p: { xs: 1.25, sm: 2.5, md: 3 },
-                        mb: { xs: 0.75, sm: 3 },
+                        borderRadius: { xs: "16px", sm: "16px" },
+                        p: { xs: 2, sm: 2.5, md: 3 },
+                        mb: { xs: 2, sm: 3 },
                         border: "2px solid #6DAF19",
                         textAlign: "center",
                         width: "100%",
@@ -1420,10 +1426,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                           <Typography
                             sx={{
                               fontFamily: "Quicksand",
-                              fontSize: { xs: "16px", sm: "20px", md: "22px" },
+                              fontSize: { xs: "18px", sm: "20px", md: "22px" },
                               fontWeight: 600,
                               color: "#333333",
-                              mb: { xs: 1, sm: 1.5 },
+                              mb: { xs: 1.5, sm: 1.5 },
                             }}
                           >
                             {isPlayingPrompt
@@ -1443,8 +1449,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                             disabled={isPlayingPrompt}
                             sx={{
                               minWidth: "auto",
-                              width: { xs: "64px", sm: "80px", md: "96px" },
-                              height: { xs: "64px", sm: "80px", md: "96px" },
+                              width: { xs: "80px", sm: "80px", md: "96px" },
+                              height: { xs: "80px", sm: "80px", md: "96px" },
                               borderRadius: "50%",
                               background: isPlayingPrompt
                                 ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
@@ -1747,6 +1753,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   sx={{
                     mx: "auto",
                     maxWidth: { xs: "100%", sm: "400px" },
+                    mt: { xs: 2, sm: 1.5 },
+                    mb: { xs: 1, sm: 0 },
                     background:
                       micStatus === "failed"
                         ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
@@ -1795,6 +1803,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   sx={{
                     mx: "auto",
                     maxWidth: { xs: "100%", sm: "400px" },
+                    mt: { xs: 2, sm: 1.5 },
+                    mb: { xs: 1, sm: 0 },
                     background:
                       speakerStatus === "failed"
                         ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
@@ -1835,8 +1845,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       <Box
         sx={{
           position: "absolute",
-          top: { xs: 8, sm: 20, md: 30 },
-          right: { xs: 10, sm: 20, md: 40 },
+          top: { xs: 12, sm: 20, md: 30 },
+          right: { xs: 12, sm: 20, md: 40 },
           zIndex: 10000,
         }}
       >
