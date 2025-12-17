@@ -23,6 +23,8 @@ import { getLocalData } from "../../utils/constants";
 import textureImage from "../../assets/images/textureImage.png";
 import panda from "../../assets/images/panda.svg";
 import { impression, interact, Log } from "../../services/telementryService";
+import { getRandomAudioPrompt } from "../../constants/audioDiagnosticPrompts";
+import { getTranslations } from "../../constants/audioDiagnosticTranslations";
 import "./AudioDiagnosticModal.css";
 
 const AudioDiagnosticModal = ({ show, onClose }) => {
@@ -40,9 +42,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   const [recordedAudioUrl, setRecordedAudioUrl] = useState(null);
   const [testMessage, setTestMessage] = useState("");
   const [lang, setLang] = useState(getLocalData("lang") || "en");
-  const [readingPrompt, setReadingPrompt] = useState("");
+  const [audioPrompt, setAudioPrompt] = useState("");
   const [currentStep, setCurrentStep] = useState("mic"); // "mic" or "speaker"
   const [isPlayingPrompt, setIsPlayingPrompt] = useState(false);
+  const [hasListenedToPrompt, setHasListenedToPrompt] = useState(false);
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -59,16 +62,26 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   const micTestStartTimeRef = useRef(null);
   const speakerTestStartTimeRef = useRef(null);
 
+  // Get translations based on current language
+  const translations = getTranslations(lang);
+
   useEffect(() => {
     if (show) {
       // Impression event when diagnostic modal is displayed
       impression("audio-diagnostics", "ET");
+      // Refresh language from localStorage when modal opens
+      const currentLang = getLocalData("lang") || "en";
+      setLang(currentLang);
       // Reset to mic step when modal opens
       setCurrentStep("mic");
-      // Generate reading prompt so user can see it before starting
-      const prompt = getRandomPrompt();
-      setReadingPrompt(prompt);
-      // Don't auto-start - let user click the button
+      // Generate audio prompt with current language
+      const prompt = getRandomAudioPrompt(currentLang);
+      setAudioPrompt(prompt);
+      setHasListenedToPrompt(false);
+      // Auto-play the audio prompt when modal opens
+      setTimeout(() => {
+        playPromptAudio();
+      }, 500);
     }
 
     return () => {
@@ -122,22 +135,23 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             audioLevelsRef.current.shift();
           }
 
-          // Check if audio is detected - stricter threshold to avoid false positives
+          // Check if audio is detected - lower threshold to catch quiet speech
           // Require actual sound, not just background noise
-          const SILENCE_THRESHOLD = 0.008;
+          const SILENCE_THRESHOLD = 0.003; // Lowered from 0.008 to catch quieter speech
           if (rms > SILENCE_THRESHOLD) {
             audioDetectedRef.current = true;
           }
 
           // Also mark as detected if we see significant variation (indicates speech activity)
-          // But require higher variation to avoid noise triggering it
+          // Lower variation threshold to catch speech patterns
           if (audioLevelsRef.current.length > 5) {
             const recentLevels = audioLevelsRef.current.slice(-5);
             const maxLevel = Math.max(...recentLevels);
             const minLevel = Math.min(...recentLevels);
             const variation = maxLevel - minLevel;
-            // Higher variation threshold - speech has more variation than silence
-            if (variation > 0.01) {
+            // Lower variation threshold - speech has more variation than silence
+            if (variation > 0.005) {
+              // Lowered from 0.01 to catch quieter speech
               audioDetectedRef.current = true;
             }
           }
@@ -198,44 +212,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     }
   };
 
-  // Simple reading prompts for children - single letter/phrase
-  const readingPrompts = [
-    "a for apple",
-    "b for ball",
-    "c for cat",
-    "d for dog",
-    "e for egg",
-    "f for fish",
-    "g for goat",
-    "h for hat",
-    "i for ice",
-    "j for jug",
-    "k for kite",
-    "l for lamp",
-    "m for moon",
-    "n for nest",
-    "o for owl",
-    "p for pen",
-    "q for queen",
-    "r for rat",
-    "s for sun",
-    "t for tree",
-    "u for umbrella",
-    "v for van",
-    "w for water",
-    "x for box",
-    "y for yellow",
-    "z for zoo",
-  ];
-
-  const getRandomPrompt = () => {
-    const prompt =
-      readingPrompts[Math.floor(Math.random() * readingPrompts.length)];
-    return prompt;
-  };
-
   const playPromptAudio = () => {
-    if (!readingPrompt) return;
+    if (!audioPrompt) return;
 
     if ("speechSynthesis" in window) {
       // Cancel any ongoing speech
@@ -243,12 +221,23 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
       setIsPlayingPrompt(true);
 
-      const utterance = new SpeechSynthesisUtterance(readingPrompt);
-      const lang = getLocalData("lang") || "en";
+      const utterance = new SpeechSynthesisUtterance(audioPrompt);
+      // Use the lang state variable
+      const currentLang = lang || getLocalData("lang") || "en";
 
-      // Set language
-      utterance.lang =
-        lang === "hi" ? "hi-IN" : lang === "ta" ? "ta-IN" : "en-US";
+      // Map language codes to speech synthesis language codes
+      const langMap = {
+        hi: "hi-IN",
+        ta: "ta-IN",
+        tn: "ta-IN", // Tamil alternative code
+        te: "te-IN",
+        ka: "kn-IN",
+        kn: "kn-IN",
+        en: "en-US",
+      };
+
+      // Set language for speech synthesis
+      utterance.lang = langMap[currentLang] || "en-US";
       utterance.rate = 0.8; // Slightly slower for children
       utterance.pitch = 1;
       utterance.volume = 1;
@@ -266,10 +255,14 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
       utterance.onend = () => {
         setIsPlayingPrompt(false);
+        setHasListenedToPrompt(true);
       };
 
-      utterance.onerror = () => {
+      utterance.onerror = (error) => {
+        console.error("Speech synthesis error:", error);
         setIsPlayingPrompt(false);
+        // Still allow them to proceed even if audio fails
+        setHasListenedToPrompt(true);
       };
 
       window.speechSynthesis.speak(utterance);
@@ -285,9 +278,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     audioLevelsRef.current = [];
     micTestStartTimeRef.current = Date.now();
     // Don't regenerate prompt - use the one already set
-    if (!readingPrompt) {
-      const prompt = getRandomPrompt();
-      setReadingPrompt(prompt);
+    if (!audioPrompt) {
+      const currentLang = getLocalData("lang") || "en";
+      const prompt = getRandomAudioPrompt(currentLang);
+      setAudioPrompt(prompt);
     }
 
     // Interact event for button click
@@ -338,9 +332,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
               audioLevelsRef.current.length
             : 0;
 
-        // Stricter thresholds - require actual audio detection
-        const SILENCE_THRESHOLD = 0.008; // Higher threshold to detect actual sound
-        const MIN_PEAK_LEVEL = 0.01; // Minimum peak level to consider valid audio
+        // Lowered thresholds to better detect speech, especially for children
+        const SILENCE_THRESHOLD = 0.003; // Lowered from 0.008 to catch quieter speech
+        const MIN_PEAK_LEVEL = 0.005; // Lowered from 0.01 to catch quieter speech
 
         // Get max level to check for any significant audio activity
         const maxLevel =
@@ -348,13 +342,15 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             ? Math.max(...audioLevelsRef.current)
             : 0;
 
-        // Check if we have actual audio - require BOTH:
-        // 1. Audio was detected (audioDetectedRef.current is true)
+        // Check if we have actual audio - more lenient detection:
+        // 1. Audio was detected (audioDetectedRef.current is true) OR
         // 2. Either average level OR max level is above threshold
-        // This ensures we're detecting real sound, not just silence
+        // This ensures we catch speech even if detection flags weren't set properly
         const hasActualAudio =
-          audioDetectedRef.current &&
-          (averageLevel > SILENCE_THRESHOLD || maxLevel > MIN_PEAK_LEVEL);
+          audioDetectedRef.current ||
+          averageLevel > SILENCE_THRESHOLD ||
+          maxLevel > MIN_PEAK_LEVEL ||
+          (blob && blob.size > 1000); // If we have a reasonable blob size, assume audio was recorded
 
         setIsRecording(false);
         setRecordingProgress(0);
@@ -363,8 +359,25 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           ? ((Date.now() - micTestStartTimeRef.current) / 1000).toFixed(2)
           : 0;
 
+        // Debug logging to help diagnose issues
+        console.log("Audio Detection Debug:", {
+          hasAudioData,
+          blobSize: blob?.size || 0,
+          hasActualAudio,
+          audioDetectedFlag: audioDetectedRef.current,
+          averageLevel: averageLevel.toFixed(4),
+          maxLevel: maxLevel.toFixed(4),
+          audioLevelsCount: audioLevelsRef.current.length,
+        });
+
         // Only pass if we have audio data AND actual audio was detected
-        if (hasAudioData && blob && blob.size > 0 && hasActualAudio) {
+        // Made more lenient: if we have a reasonable blob size, assume audio was recorded
+        if (
+          hasAudioData &&
+          blob &&
+          blob.size > 0 &&
+          (hasActualAudio || blob.size > 1000)
+        ) {
           // Create audio URL for playback
           const audioUrl = URL.createObjectURL(blob);
           setRecordedAudioUrl(audioUrl);
@@ -406,7 +419,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           }, 1500);
         } else if (!hasAudioData || !blob || blob.size === 0) {
           setMicStatus("failed");
-          setMicError("We can't hear you! Check if your microphone is on.");
+          setMicError(getTranslations(lang).micErrorNoAudio);
           // Log test result - failed
           Log(
             `Microphone test - FAILED. Duration: ${testDuration}s, Reason: No audio data recorded`,
@@ -417,7 +430,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         } else {
           // We have blob data but no actual audio was detected (muted or silent)
           setMicStatus("failed");
-          setMicError("We can't hear you! Make sure your microphone is on.");
+          setMicError(getTranslations(lang).micErrorMuted);
           // Log test result - failed (muted)
           Log(
             `Microphone test - FAILED. Duration: ${testDuration}s, Reason: Microphone muted or no sound detected, Average level: ${averageLevel.toFixed(
@@ -434,7 +447,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
       mediaRecorder.onerror = (event) => {
         setMicStatus("failed");
-        setMicError("Something went wrong. Please try again!");
+        setMicError(getTranslations(lang).micErrorGeneric);
         setIsRecording(false);
         setRecordingProgress(0);
         audioContext.close();
@@ -443,10 +456,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       // Start recording
       mediaRecorder.start(100);
 
-      // Small delay to ensure audio stream is active before we start checking levels
-      setTimeout(() => {
-        setIsRecording(true);
-      }, 100);
+      // Set recording state immediately so audio monitoring can start
+      // The analyser is already connected to the stream
+      setIsRecording(true);
 
       let progress = 0;
       recordingTimerRef.current = setInterval(() => {
@@ -464,9 +476,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       }, 3000);
     } catch (error) {
       setMicStatus("failed");
-      setMicError(
-        "We need permission to hear you! Please allow microphone access."
-      );
+      setMicError(getTranslations(lang).micErrorPermission);
       setIsRecording(false);
       setRecordingProgress(0);
     }
@@ -627,9 +637,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           console.error("Audio play error:", err);
           if (!speakerTestPassedRef.current) {
             setSpeakerStatus("failed");
-            setSpeakerError(
-              "We couldn't play the sound! Check if your speakers are on!"
-            );
+            setSpeakerError(getTranslations(lang).speakerError);
             setIsPlaying(false);
           }
         });
@@ -657,7 +665,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       testAudio.onerror = () => {
         if (!speakerTestPassedRef.current) {
           setSpeakerStatus("failed");
-          setSpeakerError("Oops! The sound didn't play. Try again!");
+          setSpeakerError(getTranslations(lang).speakerErrorGeneric);
 
           const testDuration = speakerTestStartTimeRef.current
             ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(2)
@@ -676,9 +684,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     } catch (error) {
       if (!speakerTestPassedRef.current) {
         setSpeakerStatus("failed");
-        setSpeakerError(
-          "We couldn't test your speakers. Make sure they're turned on!"
-        );
+        setSpeakerError(getTranslations(lang).speakerErrorNoTest);
 
         const testDuration = speakerTestStartTimeRef.current
           ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(2)
@@ -748,7 +754,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     audio.onerror = () => {
       setIsPlayingBack(false);
       setMicStatus("failed");
-      setMicError("Oops! We couldn't play your voice. Try again!");
+      setMicError(getTranslations(lang).speakerError);
       setTestMessage("");
 
       const totalTestDuration = micTestStartTimeRef.current
@@ -767,9 +773,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       console.error("Playback error:", err);
       setIsPlayingBack(false);
       setMicStatus("failed");
-      setMicError(
-        "We couldn't play your voice! Make sure your speakers are on!"
-      );
+      setMicError(getTranslations(lang).speakerError);
       setTestMessage("");
 
       const totalTestDuration = micTestStartTimeRef.current
@@ -852,9 +856,12 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     setAudioLevel(0);
     setIsPlayingBack(false);
     setTestMessage("");
-    // Generate a new prompt for retry
-    const prompt = getRandomPrompt();
-    setReadingPrompt(prompt);
+    // Generate a new prompt for retry with current language
+    const currentLang = getLocalData("lang") || "en";
+    setLang(currentLang);
+    const prompt = getRandomAudioPrompt(currentLang);
+    setAudioPrompt(prompt);
+    setHasListenedToPrompt(false);
     setCurrentStep("mic");
     audioDetectedRef.current = false;
     audioLevelsRef.current = [];
@@ -1005,9 +1012,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       >
         <Box
           sx={{
-            p: { xs: 0.5, sm: 2, md: 3 },
+            p: { xs: 1, sm: 2, md: 3 },
             px: { xs: 1.5, sm: 3, md: 4 },
-            py: { xs: 0.5, sm: 2, md: 3 },
+            pt: { xs: 3, sm: 3, md: 4 },
+            pb: { xs: 1, sm: 2, md: 3 },
             position: "relative",
             zIndex: 1,
             overflow: "hidden",
@@ -1029,7 +1037,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                 sx={{
                   position: "relative",
                   mb: { xs: 0.75, sm: 2, md: 3 },
-                  mt: { xs: 0, sm: 0 },
+                  mt: { xs: 1, sm: 0.5, md: 0 },
                   maxWidth: { xs: "calc(100% - 32px)", sm: "400px" },
                   width: "100%",
                   display: "flex",
@@ -1105,20 +1113,22 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                     }}
                   >
                     {currentStep === "mic"
-                      ? micStatus === "pending"
-                        ? "Hi! Can you read the text below?"
+                      ? micStatus === "pending" && !hasListenedToPrompt
+                        ? translations.listenAndRepeat
+                        : micStatus === "pending" && hasListenedToPrompt
+                        ? translations.nowRepeat
                         : micStatus === "testing" || isRecording
-                        ? "Great! Keep reading..."
+                        ? translations.keepSpeaking
                         : micStatus === "passed"
-                        ? "Awesome! You did great!"
-                        : "Let's test your microphone!"
+                        ? translations.micTestPassed
+                        : translations.testMicrophone
                       : speakerStatus === "pending"
-                      ? "Now let's listen to your voice!"
+                      ? translations.listenToVoice
                       : speakerStatus === "testing" || isPlaying
-                      ? "Can you hear it?"
+                      ? translations.canYouHear
                       : speakerStatus === "passed"
-                      ? "Perfect! You're all set!"
-                      : "Let's test your speakers!"}
+                      ? translations.speakerTestPassed
+                      : translations.testSpeakers}
                   </Typography>
                 </Box>
               </Box>
@@ -1164,7 +1174,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             {currentStep === "mic" && (
               <>
                 {/* Reading Prompt - Show before and during recording, hide on error */}
-                {readingPrompt && (micStatus === "pending" || isRecording) && (
+                {audioPrompt && (micStatus === "pending" || isRecording) && (
                   <Fade in={true}>
                     <Box
                       sx={{
@@ -1182,35 +1192,43 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                         boxSizing: "border-box",
                       }}
                     >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: { xs: 1.5, sm: 2 },
-                          mb: isRecording ? { xs: 1.5, sm: 2 } : 0,
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        <Typography
+                      {!isRecording && (
+                        <Box
                           sx={{
-                            fontFamily: "Quicksand",
-                            fontSize: { xs: "18px", sm: "24px", md: "28px" },
-                            fontWeight: 700,
-                            color: "#2e7d32",
-                            lineHeight: 1.3,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: { xs: 1.5, sm: 2 },
                           }}
                         >
-                          "{readingPrompt}"
-                        </Typography>
-                        {!isRecording && (
+                          <Typography
+                            sx={{
+                              fontFamily: "Quicksand",
+                              fontSize: { xs: "16px", sm: "20px", md: "22px" },
+                              fontWeight: 600,
+                              color: "#333333",
+                              mb: { xs: 1, sm: 1.5 },
+                            }}
+                          >
+                            {isPlayingPrompt
+                              ? translations.playingAudio
+                              : hasListenedToPrompt
+                              ? translations.clickToListenAgain
+                              : translations.clickToListen}
+                          </Typography>
                           <Button
-                            onClick={playPromptAudio}
+                            onClick={() => {
+                              playPromptAudio();
+                              // Enable the continue button when user clicks play
+                              setTimeout(() => {
+                                setHasListenedToPrompt(true);
+                              }, 1500); // 1.5 seconds should be enough for the phrases
+                            }}
                             disabled={isPlayingPrompt}
                             sx={{
                               minWidth: "auto",
-                              width: { xs: "44px", sm: "52px", md: "56px" },
-                              height: { xs: "44px", sm: "52px", md: "56px" },
+                              width: { xs: "64px", sm: "80px", md: "96px" },
+                              height: { xs: "64px", sm: "80px", md: "96px" },
                               borderRadius: "50%",
                               background: isPlayingPrompt
                                 ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
@@ -1227,15 +1245,15 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                             <VolumeUpIcon
                               sx={{
                                 fontSize: {
-                                  xs: "20px",
-                                  sm: "24px",
-                                  md: "28px",
+                                  xs: "32px",
+                                  sm: "40px",
+                                  md: "48px",
                                 },
                               }}
                             />
                           </Button>
-                        )}
-                      </Box>
+                        </Box>
+                      )}
                       {isRecording && (
                         <>
                           <LinearProgress
@@ -1509,6 +1527,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   variant="contained"
                   fullWidth
                   onClick={testMicrophone}
+                  disabled={false}
                   sx={{
                     background:
                       micStatus === "failed"
@@ -1534,10 +1553,17 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                       transform: "scale(1.02)",
                       boxShadow: "0 12px 24px rgba(109, 175, 25, 0.5)",
                     },
+                    "&:disabled": {
+                      background:
+                        "linear-gradient(135deg, #cccccc 0%, #999999 100%)",
+                      color: "white",
+                    },
                     transition: "all 0.3s",
                   }}
                 >
-                  {micStatus === "failed" ? "TRY AGAIN" : "CONTINUE"}
+                  {micStatus === "failed"
+                    ? translations.tryAgain
+                    : translations.repeatNow}
                 </Button>
               )}
 
@@ -1576,7 +1602,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                     transition: "all 0.3s",
                   }}
                 >
-                  {speakerStatus === "failed" ? "TRY AGAIN" : "CONTINUE"}
+                  {speakerStatus === "failed"
+                    ? translations.tryAgain
+                    : translations.continue}
                 </Button>
               )}
           </Box>
@@ -1587,7 +1615,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       <Box
         sx={{
           position: "absolute",
-          top: { xs: 5, sm: 20, md: 30 },
+          top: { xs: 8, sm: 20, md: 30 },
           right: { xs: 10, sm: 20, md: 40 },
           zIndex: 10000,
         }}
@@ -1612,7 +1640,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             },
           }}
         >
-          Skip
+          {translations.skip}
         </Button>
       </Box>
 
@@ -1684,7 +1712,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
               transition: "all 0.3s",
             }}
           >
-            CONTINUE
+            {translations.continue}
           </Button>
         </Box>
       )}

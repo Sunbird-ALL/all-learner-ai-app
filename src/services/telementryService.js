@@ -145,15 +145,23 @@ export const response = (context, telemetryMode) => {
 export const Log = (context, pageid, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
-      CsTelemetryModule.instance.telemetryService.raiseLogTelemetry({
-        options: getEventOptions(),
-        edata: {
-          type: "api_call",
-          level: "TRACE",
-          message: context,
-          pageid: pageid,
-        },
-      });
+      // Check if telemetry service is initialized
+      if (
+        CsTelemetryModule.instance &&
+        CsTelemetryModule.instance.telemetryService
+      ) {
+        CsTelemetryModule.instance.telemetryService.raiseLogTelemetry({
+          options: getEventOptions(),
+          edata: {
+            type: "api_call",
+            level: "TRACE",
+            message: context,
+            pageid: pageid,
+          },
+        });
+      } else {
+        console.warn("Telemetry service not initialized, skipping log event");
+      }
     } catch (error) {
       console.error("Failed to log telemetry:", error, {
         context,
@@ -185,10 +193,24 @@ export const end = (data) => {
 
 export const interact = (telemetryMode, subtype = "", pageid = "") => {
   if (checkTelemetryMode(telemetryMode)) {
-    CsTelemetryModule.instance.telemetryService.raiseInteractTelemetry({
-      options: getEventOptions(),
-      edata: { type: "TOUCH", subtype: subtype, pageid: pageid },
-    });
+    try {
+      // Check if telemetry service is initialized
+      if (
+        CsTelemetryModule.instance &&
+        CsTelemetryModule.instance.telemetryService
+      ) {
+        CsTelemetryModule.instance.telemetryService.raiseInteractTelemetry({
+          options: getEventOptions(),
+          edata: { type: "TOUCH", subtype: subtype, pageid: pageid },
+        });
+      } else {
+        console.warn(
+          "Telemetry service not initialized, skipping interact event"
+        );
+      }
+    } catch (error) {
+      console.error("Error raising interact telemetry:", error);
+    }
   }
 };
 
@@ -210,15 +232,29 @@ export const search = (id) => {
 
 export const impression = (currentPage, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
-    CsTelemetryModule.instance.telemetryService.raiseImpressionTelemetry({
-      options: getEventOptions(),
-      edata: {
-        type: "workflow",
-        subtype: "",
-        pageid: currentPage + "",
-        uri: "",
-      },
-    });
+    try {
+      // Check if telemetry service is initialized
+      if (
+        CsTelemetryModule.instance &&
+        CsTelemetryModule.instance.telemetryService
+      ) {
+        CsTelemetryModule.instance.telemetryService.raiseImpressionTelemetry({
+          options: getEventOptions(),
+          edata: {
+            type: "workflow",
+            subtype: "",
+            pageid: currentPage + "",
+            uri: "",
+          },
+        });
+      } else {
+        console.warn(
+          "Telemetry service not initialized, skipping impression event"
+        );
+      }
+    } catch (error) {
+      console.error("Error raising impression telemetry:", error);
+    }
   }
 };
 
