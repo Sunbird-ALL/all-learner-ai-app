@@ -135,23 +135,23 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             audioLevelsRef.current.shift();
           }
 
-          // Check if audio is detected - lower threshold to catch quiet speech
-          // Require actual sound, not just background noise
-          const SILENCE_THRESHOLD = 0.003; // Lowered from 0.008 to catch quieter speech
+          // Check if audio is detected - very lenient to allow all speech
+          // Require actual sound, not just background noise or muted mic
+          const SILENCE_THRESHOLD = 0.003; // Very low threshold - allows very quiet speech
           if (rms > SILENCE_THRESHOLD) {
             audioDetectedRef.current = true;
           }
 
-          // Also mark as detected if we see significant variation (indicates speech activity)
-          // Lower variation threshold to catch speech patterns
+          // Also mark as detected if we see any variation (indicates speech activity)
+          // Speech has more variation than silence or muted mic
           if (audioLevelsRef.current.length > 5) {
             const recentLevels = audioLevelsRef.current.slice(-5);
             const maxLevel = Math.max(...recentLevels);
             const minLevel = Math.min(...recentLevels);
             const variation = maxLevel - minLevel;
-            // Lower variation threshold - speech has more variation than silence
-            if (variation > 0.005) {
-              // Lowered from 0.01 to catch quieter speech
+            // Very lenient - any variation with some peak indicates speech
+            if (variation > 0.005 && maxLevel > 0.005) {
+              // Any variation with peak indicates speech, not muted mic
               audioDetectedRef.current = true;
             }
           }
@@ -332,9 +332,11 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
               audioLevelsRef.current.length
             : 0;
 
-        // Lowered thresholds to better detect speech, especially for children
-        const SILENCE_THRESHOLD = 0.003; // Lowered from 0.008 to catch quieter speech
-        const MIN_PEAK_LEVEL = 0.005; // Lowered from 0.01 to catch quieter speech
+        // Lenient thresholds to allow all speech while trying to catch muted microphones
+        // Muted mic typically shows very low levels (< 0.002) with minimal variation
+        const SILENCE_THRESHOLD = 0.003; // Very low - allows very quiet speech
+        const MIN_PEAK_LEVEL = 0.005; // Very low peak requirement (allows quiet speech)
+        const MIN_AVERAGE_LEVEL = 0.002; // Very low average requirement (allows quiet speech)
 
         // Get max level to check for any significant audio activity
         const maxLevel =
@@ -342,15 +344,54 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             ? Math.max(...audioLevelsRef.current)
             : 0;
 
-        // Check if we have actual audio - more lenient detection:
+        // Get min level - muted mic will have very low minimum
+        const minLevel =
+          audioLevelsRef.current.length > 0
+            ? Math.min(...audioLevelsRef.current)
+            : 0;
+
+        // Calculate how many samples are above threshold (sustained audio, not just noise)
+        const samplesAboveThreshold =
+          audioLevelsRef.current.length > 0
+            ? audioLevelsRef.current.filter(
+                (level) => level > SILENCE_THRESHOLD
+              ).length
+            : 0;
+        const sustainedAudioRatio =
+          audioLevelsRef.current.length > 0
+            ? samplesAboveThreshold / audioLevelsRef.current.length
+            : 0;
+
+        // Calculate variation - speech has high variation, muted mic has low variation
+        const audioVariation = maxLevel - minLevel;
+
+        // Check if we have actual audio - very lenient detection:
+        // Require at least ONE of the following to allow all speech:
         // 1. Audio was detected (audioDetectedRef.current is true) OR
-        // 2. Either average level OR max level is above threshold
-        // This ensures we catch speech even if detection flags weren't set properly
+        // 2. Either average level OR peak level is above minimum OR
+        // 3. At least 15% of samples show sustained audio OR
+        // 4. Variation is present (speech pattern, not flat line of muted mic)
+        // This is very lenient to allow quiet speech, but we'll add a muted mic check separately
+        const hasDetectedAudio = audioDetectedRef.current;
+        const hasAudioLevels =
+          averageLevel > MIN_AVERAGE_LEVEL || maxLevel > MIN_PEAK_LEVEL;
+        const hasSustainedAudio = sustainedAudioRatio > 0.15; // At least 15% of samples
+        const hasVariation = audioVariation > 0.003; // Some variation
+
+        // Check for muted mic specifically - very low levels with no variation
+        const isLikelyMutedMic =
+          maxLevel < 0.002 &&
+          averageLevel < 0.001 &&
+          audioVariation < 0.001 &&
+          sustainedAudioRatio < 0.1;
+
+        // Pass if we have any indication of audio AND it's not a muted mic
         const hasActualAudio =
-          audioDetectedRef.current ||
-          averageLevel > SILENCE_THRESHOLD ||
-          maxLevel > MIN_PEAK_LEVEL ||
-          (blob && blob.size > 1000); // If we have a reasonable blob size, assume audio was recorded
+          !isLikelyMutedMic &&
+          (hasDetectedAudio ||
+            hasAudioLevels ||
+            hasSustainedAudio ||
+            hasVariation);
 
         setIsRecording(false);
         setRecordingProgress(0);
@@ -358,6 +399,16 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         const testDuration = micTestStartTimeRef.current
           ? ((Date.now() - micTestStartTimeRef.current) / 1000).toFixed(2)
           : 0;
+
+        // Additional check: muted mic often produces very small blobs
+        // But we'll be lenient here - only use blob size as a secondary check
+        // Normal speech recording should produce blobs > 1000 bytes for 3 seconds
+        const MIN_BLOB_SIZE = 800; // Very low minimum - allows quiet speech
+        const hasReasonableBlobSize = blob && blob.size > MIN_BLOB_SIZE;
+
+        // If blob size is very small AND we have muted mic indicators, fail
+        // Otherwise, be lenient with blob size
+        const blobSizeCheck = hasReasonableBlobSize || !isLikelyMutedMic;
 
         // Debug logging to help diagnose issues
         console.log("Audio Detection Debug:", {
@@ -367,16 +418,22 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           audioDetectedFlag: audioDetectedRef.current,
           averageLevel: averageLevel.toFixed(4),
           maxLevel: maxLevel.toFixed(4),
+          minLevel: minLevel.toFixed(4),
+          audioVariation: audioVariation.toFixed(4),
+          sustainedAudioRatio: sustainedAudioRatio.toFixed(2),
+          samplesAboveThreshold,
+          hasReasonableBlobSize,
           audioLevelsCount: audioLevelsRef.current.length,
         });
 
         // Only pass if we have audio data AND actual audio was detected
-        // Made more lenient: if we have a reasonable blob size, assume audio was recorded
+        // Very lenient to allow all speech, but catch muted mics
         if (
           hasAudioData &&
           blob &&
           blob.size > 0 &&
-          (hasActualAudio || blob.size > 1000)
+          hasActualAudio &&
+          blobSizeCheck
         ) {
           // Create audio URL for playback
           const audioUrl = URL.createObjectURL(blob);
