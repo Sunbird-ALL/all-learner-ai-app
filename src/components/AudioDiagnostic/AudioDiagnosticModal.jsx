@@ -94,18 +94,32 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   }, [show]);
 
   // Load speech synthesis voices
+  const [voicesLoaded, setVoicesLoaded] = useState(false);
+
   useEffect(() => {
     if ("speechSynthesis" in window) {
-      // Load voices (some browsers need this)
+      // Load voices (some browsers need this, especially Brave)
       const loadVoices = () => {
         const voices = window.speechSynthesis.getVoices();
-        // Voices are now loaded
+        if (voices.length > 0) {
+          setVoicesLoaded(true);
+        }
       };
 
+      // Try to load voices immediately
       loadVoices();
+
+      // Some browsers (like Brave) need the voiceschanged event
       if (window.speechSynthesis.onvoiceschanged !== undefined) {
         window.speechSynthesis.onvoiceschanged = loadVoices;
       }
+
+      // Fallback: try loading voices after a short delay (for browsers that load them asynchronously)
+      const timeout = setTimeout(() => {
+        loadVoices();
+      }, 100);
+
+      return () => clearTimeout(timeout);
     }
   }, []);
 
@@ -135,23 +149,23 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             audioLevelsRef.current.shift();
           }
 
-          // Check if audio is detected - lower threshold to catch quiet speech
-          // Require actual sound, not just background noise
-          const SILENCE_THRESHOLD = 0.003; // Lowered from 0.008 to catch quieter speech
+          // Check if audio is detected - very lenient to allow all speech
+          // Require actual sound, not just background noise or muted mic
+          const SILENCE_THRESHOLD = 0.003; // Very low threshold - allows very quiet speech
           if (rms > SILENCE_THRESHOLD) {
             audioDetectedRef.current = true;
           }
 
-          // Also mark as detected if we see significant variation (indicates speech activity)
-          // Lower variation threshold to catch speech patterns
+          // Also mark as detected if we see any variation (indicates speech activity)
+          // Speech has more variation than silence or muted mic
           if (audioLevelsRef.current.length > 5) {
             const recentLevels = audioLevelsRef.current.slice(-5);
             const maxLevel = Math.max(...recentLevels);
             const minLevel = Math.min(...recentLevels);
             const variation = maxLevel - minLevel;
-            // Lower variation threshold - speech has more variation than silence
-            if (variation > 0.005) {
-              // Lowered from 0.01 to catch quieter speech
+            // Very lenient - any variation with some peak indicates speech
+            if (variation > 0.005 && maxLevel > 0.005) {
+              // Any variation with peak indicates speech, not muted mic
               audioDetectedRef.current = true;
             }
           }
@@ -215,58 +229,137 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   const playPromptAudio = () => {
     if (!audioPrompt) return;
 
-    if ("speechSynthesis" in window) {
-      // Cancel any ongoing speech
-      window.speechSynthesis.cancel();
+    // Check for speech synthesis support across all browsers
+    if (!("speechSynthesis" in window)) {
+      console.warn("Speech synthesis not supported in this browser");
+      // Still allow them to proceed
+      setIsPlayingPrompt(false);
+      setHasListenedToPrompt(true);
+      return;
+    }
 
-      setIsPlayingPrompt(true);
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
 
-      const utterance = new SpeechSynthesisUtterance(audioPrompt);
-      // Use the lang state variable
-      const currentLang = lang || getLocalData("lang") || "en";
+    setIsPlayingPrompt(true);
 
-      // Map language codes to speech synthesis language codes
-      const langMap = {
-        hi: "hi-IN",
-        ta: "ta-IN",
-        tn: "ta-IN", // Tamil alternative code
-        te: "te-IN",
-        ka: "kn-IN",
-        kn: "kn-IN",
-        en: "en-US",
-      };
+    const utterance = new SpeechSynthesisUtterance(audioPrompt);
+    // Use the lang state variable
+    const currentLang = lang || getLocalData("lang") || "en";
 
-      // Set language for speech synthesis
-      utterance.lang = langMap[currentLang] || "en-US";
-      utterance.rate = 0.8; // Slightly slower for children
-      utterance.pitch = 1;
-      utterance.volume = 1;
+    // Map language codes to speech synthesis language codes
+    const langMap = {
+      hi: "hi-IN",
+      ta: "ta-IN",
+      tn: "ta-IN", // Tamil alternative code
+      te: "te-IN",
+      ka: "kn-IN",
+      kn: "kn-IN",
+      en: "en-US",
+    };
 
+    // Set language for speech synthesis
+    const targetLang = langMap[currentLang] || "en-US";
+    utterance.lang = targetLang;
+    utterance.rate = 0.8; // Slightly slower for children
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    // Helper function to set voice and speak
+    const setVoiceAndSpeak = (voices) => {
       // Try to find appropriate voice
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(
+      let preferredVoice = voices.find(
         (v) =>
-          v.lang === utterance.lang ||
-          v.lang.startsWith(utterance.lang.split("-")[0])
+          v.lang === targetLang || v.lang.startsWith(targetLang.split("-")[0])
       );
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
+
+      // If no preferred voice found, try to find any English voice as fallback
+      if (!preferredVoice) {
+        preferredVoice = voices.find((v) => v.lang.startsWith("en"));
       }
 
+      // If still no voice, use first available voice
+      if (!preferredVoice && voices.length > 0) {
+        preferredVoice = voices[0];
+      }
+
+      // Only set voice if available (some browsers like Safari on iOS need this)
+      if (preferredVoice) {
+        try {
+          utterance.voice = preferredVoice;
+        } catch (error) {
+          // Some browsers don't allow setting voice, use default
+          console.warn("Could not set voice, using default:", error);
+        }
+      }
+
+      // Set up event handlers with timeout fallback
+      let timeoutId = null;
+
+      utterance.onstart = () => {
+        // Clear timeout if speech starts
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+      };
+
       utterance.onend = () => {
+        if (timeoutId) clearTimeout(timeoutId);
         setIsPlayingPrompt(false);
         setHasListenedToPrompt(true);
       };
 
       utterance.onerror = (error) => {
+        if (timeoutId) clearTimeout(timeoutId);
         console.error("Speech synthesis error:", error);
         setIsPlayingPrompt(false);
         // Still allow them to proceed even if audio fails
         setHasListenedToPrompt(true);
       };
 
-      window.speechSynthesis.speak(utterance);
-    }
+      // Fallback timeout for browsers that don't fire events properly
+      timeoutId = setTimeout(() => {
+        setIsPlayingPrompt(false);
+        setHasListenedToPrompt(true);
+      }, 5000); // 5 second timeout
+
+      // Try to speak with error handling
+      try {
+        window.speechSynthesis.speak(utterance);
+      } catch (error) {
+        if (timeoutId) clearTimeout(timeoutId);
+        console.error("Error speaking:", error);
+        setIsPlayingPrompt(false);
+        setHasListenedToPrompt(true);
+      }
+    };
+
+    // Get voices - handle different browser behaviors
+    const attemptSpeak = (retryCount = 0) => {
+      let voices = window.speechSynthesis.getVoices();
+
+      // If no voices and we haven't retried too many times
+      if (voices.length === 0 && retryCount < 3) {
+        // Wait and try again (for browsers like Brave, Safari that load voices asynchronously)
+        setTimeout(() => {
+          attemptSpeak(retryCount + 1);
+        }, 200 * (retryCount + 1)); // Exponential backoff
+      } else {
+        // Either we have voices or we've retried enough
+        if (voices.length > 0) {
+          setVoiceAndSpeak(voices);
+        } else {
+          // No voices available, try with default
+          console.warn(
+            "No voices loaded, attempting to speak with default voice"
+          );
+          setVoiceAndSpeak([]);
+        }
+      }
+    };
+
+    // Start attempting to speak
+    attemptSpeak();
   };
 
   const testMicrophone = async () => {
@@ -288,24 +381,78 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     interact("ET", "Test Microphone", "audio-diagnostics");
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Check for getUserMedia support with fallbacks for all browsers
+      let stream;
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        // Fallback for older browsers
+        const getUserMedia =
+          navigator.getUserMedia ||
+          navigator.webkitGetUserMedia ||
+          navigator.mozGetUserMedia ||
+          navigator.msGetUserMedia;
+
+        if (!getUserMedia) {
+          throw new Error("Microphone access is not supported in this browser");
+        }
+
+        // Use legacy API with Promise wrapper
+        stream = await new Promise((resolve, reject) => {
+          getUserMedia.call(navigator, { audio: true }, resolve, reject);
+        });
+      } else {
+        // Use modern API with audio constraints for better quality
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          },
+        });
+      }
       mediaStreamRef.current = stream;
 
+      // AudioContext with fallback for Safari/WebKit
       const audioContext = new (window.AudioContext ||
-        window.webkitAudioContext)();
+        window.webkitAudioContext ||
+        window.mozAudioContext)();
       analyserRef.current = audioContext.createAnalyser();
       analyserRef.current.fftSize = 2048;
       analyserRef.current.smoothingTimeConstant = 0.8;
       const source = audioContext.createMediaStreamSource(stream);
       source.connect(analyserRef.current);
 
-      if (!MediaRecorder.isTypeSupported("audio/webm")) {
-        throw new Error("Audio recording is not supported in this browser");
+      // Check for MediaRecorder support with fallback mime types for all browsers
+      let mimeType = "audio/webm";
+      const supportedTypes = [
+        "audio/webm",
+        "audio/webm;codecs=opus",
+        "audio/ogg;codecs=opus",
+        "audio/mp4",
+        "audio/mpeg",
+      ];
+
+      // Find first supported mime type
+      for (const type of supportedTypes) {
+        if (MediaRecorder.isTypeSupported(type)) {
+          mimeType = type;
+          break;
+        }
       }
 
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: "audio/webm",
-      });
+      // If no supported type found, use default (browser will choose)
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        console.warn("No preferred mime type supported, using browser default");
+        mimeType = ""; // Let browser choose
+      }
+
+      const mediaRecorder = new MediaRecorder(
+        stream,
+        mimeType
+          ? {
+              mimeType: mimeType,
+            }
+          : {}
+      );
 
       mediaRecorderRef.current = mediaRecorder;
 
@@ -318,8 +465,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       mediaRecorder.onstop = () => {
         // Analyze the recorded audio to check if actual sound was detected
         const hasAudioData = recordedChunksRef.current.length > 0;
+        // Determine blob type based on what was recorded
+        const blobType = mediaRecorderRef.current?.mimeType || "audio/webm";
         const blob = hasAudioData
-          ? new Blob(recordedChunksRef.current, { type: "audio/webm" })
+          ? new Blob(recordedChunksRef.current, { type: blobType })
           : null;
 
         // Check multiple conditions:
@@ -332,9 +481,11 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
               audioLevelsRef.current.length
             : 0;
 
-        // Lowered thresholds to better detect speech, especially for children
-        const SILENCE_THRESHOLD = 0.003; // Lowered from 0.008 to catch quieter speech
-        const MIN_PEAK_LEVEL = 0.005; // Lowered from 0.01 to catch quieter speech
+        // Lenient thresholds to allow all speech while trying to catch muted microphones
+        // Muted mic typically shows very low levels (< 0.002) with minimal variation
+        const SILENCE_THRESHOLD = 0.003; // Very low - allows very quiet speech
+        const MIN_PEAK_LEVEL = 0.005; // Very low peak requirement (allows quiet speech)
+        const MIN_AVERAGE_LEVEL = 0.002; // Very low average requirement (allows quiet speech)
 
         // Get max level to check for any significant audio activity
         const maxLevel =
@@ -342,15 +493,54 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             ? Math.max(...audioLevelsRef.current)
             : 0;
 
-        // Check if we have actual audio - more lenient detection:
+        // Get min level - muted mic will have very low minimum
+        const minLevel =
+          audioLevelsRef.current.length > 0
+            ? Math.min(...audioLevelsRef.current)
+            : 0;
+
+        // Calculate how many samples are above threshold (sustained audio, not just noise)
+        const samplesAboveThreshold =
+          audioLevelsRef.current.length > 0
+            ? audioLevelsRef.current.filter(
+                (level) => level > SILENCE_THRESHOLD
+              ).length
+            : 0;
+        const sustainedAudioRatio =
+          audioLevelsRef.current.length > 0
+            ? samplesAboveThreshold / audioLevelsRef.current.length
+            : 0;
+
+        // Calculate variation - speech has high variation, muted mic has low variation
+        const audioVariation = maxLevel - minLevel;
+
+        // Check if we have actual audio - very lenient detection:
+        // Require at least ONE of the following to allow all speech:
         // 1. Audio was detected (audioDetectedRef.current is true) OR
-        // 2. Either average level OR max level is above threshold
-        // This ensures we catch speech even if detection flags weren't set properly
+        // 2. Either average level OR peak level is above minimum OR
+        // 3. At least 15% of samples show sustained audio OR
+        // 4. Variation is present (speech pattern, not flat line of muted mic)
+        // This is very lenient to allow quiet speech, but we'll add a muted mic check separately
+        const hasDetectedAudio = audioDetectedRef.current;
+        const hasAudioLevels =
+          averageLevel > MIN_AVERAGE_LEVEL || maxLevel > MIN_PEAK_LEVEL;
+        const hasSustainedAudio = sustainedAudioRatio > 0.15; // At least 15% of samples
+        const hasVariation = audioVariation > 0.003; // Some variation
+
+        // Check for muted mic specifically - very low levels with no variation
+        const isLikelyMutedMic =
+          maxLevel < 0.002 &&
+          averageLevel < 0.001 &&
+          audioVariation < 0.001 &&
+          sustainedAudioRatio < 0.1;
+
+        // Pass if we have any indication of audio AND it's not a muted mic
         const hasActualAudio =
-          audioDetectedRef.current ||
-          averageLevel > SILENCE_THRESHOLD ||
-          maxLevel > MIN_PEAK_LEVEL ||
-          (blob && blob.size > 1000); // If we have a reasonable blob size, assume audio was recorded
+          !isLikelyMutedMic &&
+          (hasDetectedAudio ||
+            hasAudioLevels ||
+            hasSustainedAudio ||
+            hasVariation);
 
         setIsRecording(false);
         setRecordingProgress(0);
@@ -358,6 +548,16 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         const testDuration = micTestStartTimeRef.current
           ? ((Date.now() - micTestStartTimeRef.current) / 1000).toFixed(2)
           : 0;
+
+        // Additional check: muted mic often produces very small blobs
+        // But we'll be lenient here - only use blob size as a secondary check
+        // Normal speech recording should produce blobs > 1000 bytes for 3 seconds
+        const MIN_BLOB_SIZE = 800; // Very low minimum - allows quiet speech
+        const hasReasonableBlobSize = blob && blob.size > MIN_BLOB_SIZE;
+
+        // If blob size is very small AND we have muted mic indicators, fail
+        // Otherwise, be lenient with blob size
+        const blobSizeCheck = hasReasonableBlobSize || !isLikelyMutedMic;
 
         // Debug logging to help diagnose issues
         console.log("Audio Detection Debug:", {
@@ -367,16 +567,22 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           audioDetectedFlag: audioDetectedRef.current,
           averageLevel: averageLevel.toFixed(4),
           maxLevel: maxLevel.toFixed(4),
+          minLevel: minLevel.toFixed(4),
+          audioVariation: audioVariation.toFixed(4),
+          sustainedAudioRatio: sustainedAudioRatio.toFixed(2),
+          samplesAboveThreshold,
+          hasReasonableBlobSize,
           audioLevelsCount: audioLevelsRef.current.length,
         });
 
         // Only pass if we have audio data AND actual audio was detected
-        // Made more lenient: if we have a reasonable blob size, assume audio was recorded
+        // Very lenient to allow all speech, but catch muted mics
         if (
           hasAudioData &&
           blob &&
           blob.size > 0 &&
-          (hasActualAudio || blob.size > 1000)
+          hasActualAudio &&
+          blobSizeCheck
         ) {
           // Create audio URL for playback
           const audioUrl = URL.createObjectURL(blob);
@@ -987,6 +1193,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       sx={{
         width: "100vw",
         height: "100vh",
+        maxWidth: "100%",
+        maxHeight: "100%",
         position: "fixed",
         top: 0,
         left: 0,
@@ -995,6 +1203,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
+        WebkitOverflowScrolling: "touch", // Smooth scrolling on iOS
+        touchAction: "pan-y", // Allow vertical scrolling on mobile
+        WebkitTapHighlightColor: "transparent", // Remove tap highlight on mobile
       }}
     >
       <Box
@@ -1014,7 +1225,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           sx={{
             p: { xs: 1, sm: 2, md: 3 },
             px: { xs: 1.5, sm: 3, md: 4 },
-            pt: { xs: 3, sm: 3, md: 4 },
+            pt: { xs: 2, sm: 3, md: 4 },
             pb: { xs: 1, sm: 2, md: 3 },
             position: "relative",
             zIndex: 1,
@@ -1023,7 +1234,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: { xs: "flex-start", sm: "center" },
+            justifyContent: "center",
             width: "100%",
             minHeight: 0,
             textAlign: "center",
@@ -1143,7 +1354,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   alignItems: "center",
                   justifyContent: "center",
                   mb: { xs: 0.75, sm: 2, md: 3 },
+                  mt: { xs: 0, sm: 0 },
                   position: "relative",
+                  width: "100%",
+                  mx: "auto",
                 }}
               >
                 <img
@@ -1186,9 +1400,11 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                         textAlign: "center",
                         width: "100%",
                         maxWidth: "100%",
+                        mx: "auto",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
+                        justifyContent: "center",
                         boxSizing: "border-box",
                       }}
                     >
@@ -1529,6 +1745,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   onClick={testMicrophone}
                   disabled={false}
                   sx={{
+                    mx: "auto",
+                    maxWidth: { xs: "100%", sm: "400px" },
                     background:
                       micStatus === "failed"
                         ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
@@ -1575,6 +1793,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   fullWidth
                   onClick={testSpeaker}
                   sx={{
+                    mx: "auto",
+                    maxWidth: { xs: "100%", sm: "400px" },
                     background:
                       speakerStatus === "failed"
                         ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
