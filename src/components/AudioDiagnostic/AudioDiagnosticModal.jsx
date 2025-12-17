@@ -65,19 +65,57 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   // Get translations based on current language
   const translations = getTranslations(lang);
 
+  // Reset all state to initial values
+  const resetDiagnostic = () => {
+    // First, clean up any ongoing operations (before resetting state)
+    cleanup();
+
+    // Cancel any ongoing speech synthesis
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    // Reset all state variables
+    setMicStatus("pending");
+    setSpeakerStatus("pending");
+    setMicError("");
+    setSpeakerError("");
+    setIsRecording(false);
+    setIsPlaying(false);
+    setIsPlayingBack(false);
+    setRecordingProgress(0);
+    setAudioLevel(0);
+    setRecordedAudioUrl(null);
+    setTestMessage("");
+    setCurrentStep("mic");
+    setIsPlayingPrompt(false);
+    setHasListenedToPrompt(false);
+
+    // Reset all refs
+    speakerTestPassedRef.current = false;
+    audioDetectedRef.current = false;
+    audioLevelsRef.current = [];
+    micTestStartTimeRef.current = null;
+    speakerTestStartTimeRef.current = null;
+    recordedChunksRef.current = [];
+  };
+
   useEffect(() => {
     if (show) {
+      // Reset everything to start fresh
+      resetDiagnostic();
+
       // Impression event when diagnostic modal is displayed
       impression("audio-diagnostics", "ET");
+
       // Refresh language from localStorage when modal opens
       const currentLang = getLocalData("lang") || "en";
       setLang(currentLang);
-      // Reset to mic step when modal opens
-      setCurrentStep("mic");
+
       // Generate audio prompt with current language
       const prompt = getRandomAudioPrompt(currentLang);
       setAudioPrompt(prompt);
-      setHasListenedToPrompt(false);
+
       // Auto-play the audio prompt when modal opens
       setTimeout(() => {
         playPromptAudio();
@@ -196,7 +234,11 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state !== "inactive"
     ) {
-      mediaRecorderRef.current.stop();
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (e) {
+        // Ignore errors when stopping
+      }
     }
     if (mediaStreamRef.current) {
       mediaStreamRef.current.getTracks().forEach((track) => track.stop());
@@ -210,19 +252,28 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       playbackAudioRef.current.pause();
       playbackAudioRef.current = null;
     }
-    if (recordedAudioUrl) {
-      URL.revokeObjectURL(recordedAudioUrl);
-      setRecordedAudioUrl(null);
-    }
+    // Clean up recorded audio URL if it exists
+    setRecordedAudioUrl((prevUrl) => {
+      if (prevUrl) {
+        URL.revokeObjectURL(prevUrl);
+      }
+      return null;
+    });
     if (audioContextRef.current) {
-      audioContextRef.current.close();
+      try {
+        audioContextRef.current.close();
+      } catch (e) {
+        // Ignore errors when closing
+      }
       audioContextRef.current = null;
     }
     if (recordingTimerRef.current) {
       clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
     }
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
   };
 
@@ -689,77 +740,130 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   };
 
   const testSpeaker = async () => {
+    // Interact event for button click (must be called before async operations for mobile)
+    interact("ET", "Test Speaker", "audio-diagnostics");
+
     // If we have recorded audio, use that instead of beep
     if (recordedAudioUrl) {
       setSpeakerStatus("testing");
       setSpeakerError("");
       setTestMessage("");
+      setIsPlaying(true);
+      speakerTestPassedRef.current = false;
+      speakerTestStartTimeRef.current = Date.now();
 
-      // Give a moment before starting to play
-      setTimeout(() => {
-        setIsPlaying(true);
-        speakerTestPassedRef.current = false;
-        speakerTestStartTimeRef.current = Date.now();
+      // Play the recorded audio (their own voice)
+      // Must play immediately in response to user click for mobile browsers
+      const audio = new Audio(recordedAudioUrl);
+      testAudioRef.current = audio;
+      audio.volume = 0.8;
 
-        // Interact event for button click
-        interact("ET", "Test Speaker", "audio-diagnostics");
+      // Preload audio for better mobile compatibility
+      audio.preload = "auto";
 
-        // Play the recorded audio (their own voice)
-        const audio = new Audio(recordedAudioUrl);
-        testAudioRef.current = audio;
-        audio.volume = 0.8;
-
-        audio.onended = () => {
-          if (!speakerTestPassedRef.current) {
-            setIsPlaying(false);
-            setTestMessage("");
-
-            // Give time before marking as passed
-            setTimeout(() => {
-              speakerTestPassedRef.current = true;
-              setSpeakerStatus("passed");
-              setTestMessage("");
-
-              const testDuration = speakerTestStartTimeRef.current
-                ? (
-                    (Date.now() - speakerTestStartTimeRef.current) /
-                    1000
-                  ).toFixed(2)
-                : 0;
-
-              Log(
-                `Speaker test - PASSED. Duration: ${testDuration}s, Method: Recorded Audio Playback`,
-                "audio-diagnostics",
-                "ET"
-              );
-            }, 1000);
-          }
-          if (testAudioRef.current) {
-            testAudioRef.current = null;
-          }
-        };
-
-        audio.onerror = () => {
-          if (!speakerTestPassedRef.current) {
-            setSpeakerStatus("failed");
-            setSpeakerError(
-              "Couldn't play the sound. Please check your speakers."
-            );
-            setIsPlaying(false);
-          }
-        };
-
-        audio.play().catch((err) => {
+      // Try to play immediately (mobile browsers require user gesture - no setTimeout!)
+      // This must be called synchronously in response to the button click
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
           console.error("Audio play error:", err);
+          // If immediate play fails, try again when audio is loaded
+          audio.onloadeddata = () => {
+            audio.play().catch((playErr) => {
+              console.error("Audio play error (after load):", playErr);
+              if (!speakerTestPassedRef.current) {
+                setIsPlaying(false);
+                setSpeakerStatus("failed");
+                setSpeakerError(getTranslations(lang).speakerError);
+
+                const testDuration = speakerTestStartTimeRef.current
+                  ? (
+                      (Date.now() - speakerTestStartTimeRef.current) /
+                      1000
+                    ).toFixed(2)
+                  : 0;
+
+                Log(
+                  `Speaker test - FAILED. Duration: ${testDuration}s, Error: ${
+                    playErr.message || playErr
+                  }`,
+                  "audio-diagnostics",
+                  "ET"
+                );
+              }
+            });
+          };
+
           if (!speakerTestPassedRef.current) {
             setIsPlaying(false);
             setSpeakerStatus("failed");
-            setSpeakerError(
-              "Couldn't play the sound. Please check your speakers."
+            setSpeakerError(getTranslations(lang).speakerError);
+
+            const testDuration = speakerTestStartTimeRef.current
+              ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(
+                  2
+                )
+              : 0;
+
+            Log(
+              `Speaker test - FAILED. Duration: ${testDuration}s, Error: ${
+                err.message || err
+              }`,
+              "audio-diagnostics",
+              "ET"
             );
           }
         });
-      }, 1000);
+      }
+
+      audio.onended = () => {
+        if (!speakerTestPassedRef.current) {
+          setIsPlaying(false);
+          setTestMessage("");
+
+          // Give time before marking as passed
+          setTimeout(() => {
+            speakerTestPassedRef.current = true;
+            setSpeakerStatus("passed");
+            setTestMessage("");
+
+            const testDuration = speakerTestStartTimeRef.current
+              ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(
+                  2
+                )
+              : 0;
+
+            Log(
+              `Speaker test - PASSED. Duration: ${testDuration}s, Method: Recorded Audio Playback`,
+              "audio-diagnostics",
+              "ET"
+            );
+          }, 1000);
+        }
+        if (testAudioRef.current) {
+          testAudioRef.current = null;
+        }
+      };
+
+      audio.onerror = (error) => {
+        console.error("Audio error event:", error);
+        if (!speakerTestPassedRef.current) {
+          setSpeakerStatus("failed");
+          setSpeakerError(getTranslations(lang).speakerError);
+          setIsPlaying(false);
+
+          const testDuration = speakerTestStartTimeRef.current
+            ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(2)
+            : 0;
+
+          Log(
+            `Speaker test - FAILED. Duration: ${testDuration}s, Reason: Audio error event`,
+            "audio-diagnostics",
+            "ET"
+          );
+        }
+      };
+
       return;
     }
 
@@ -837,17 +941,39 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       const audioData = generateBeepSound();
       testAudio.src = audioData;
       testAudio.volume = 0.5;
+      testAudio.preload = "auto";
 
-      testAudio.oncanplaythrough = () => {
-        testAudio.play().catch((err) => {
-          console.error("Audio play error:", err);
-          if (!speakerTestPassedRef.current) {
-            setSpeakerStatus("failed");
-            setSpeakerError(getTranslations(lang).speakerError);
-            setIsPlaying(false);
-          }
+      // Try to play immediately (mobile browsers require user gesture)
+      // This is called from testSpeaker which is triggered by user click
+      const playPromise = testAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.error("Audio play error (immediate):", err);
+          // If immediate play fails, wait for canplaythrough as fallback
+          testAudio.oncanplaythrough = () => {
+            testAudio.play().catch((playErr) => {
+              console.error("Audio play error (after load):", playErr);
+              if (!speakerTestPassedRef.current) {
+                setSpeakerStatus("failed");
+                setSpeakerError(getTranslations(lang).speakerError);
+                setIsPlaying(false);
+              }
+            });
+          };
         });
-      };
+      } else {
+        // Fallback: wait for audio to be ready
+        testAudio.oncanplaythrough = () => {
+          testAudio.play().catch((err) => {
+            console.error("Audio play error:", err);
+            if (!speakerTestPassedRef.current) {
+              setSpeakerStatus("failed");
+              setSpeakerError(getTranslations(lang).speakerError);
+              setIsPlaying(false);
+            }
+          });
+        };
+      }
 
       testAudio.onended = () => {
         if (!speakerTestPassedRef.current) {
