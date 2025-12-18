@@ -12140,7 +12140,7 @@ export const levelGetContent = {
     3: [
       {
         title: "P1",
-        criteria: "word",
+        criteria: "sentence",
         template: "simple",
         tags: "CEFR_M3_P1",
         //storyMode: true,
@@ -12149,7 +12149,7 @@ export const levelGetContent = {
       },
       {
         title: "P2",
-        criteria: "word",
+        criteria: "sentence",
         template: "simple",
         tags: "CEFR_M3_L1",
         mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
@@ -12679,7 +12679,7 @@ export const levelGetContent = {
     3: [
       {
         title: "P1",
-        criteria: "word",
+        criteria: "sentence",
         template: "simple",
         tags: "CEFR_M3_P1",
         //storyMode: true,
@@ -12688,7 +12688,7 @@ export const levelGetContent = {
       },
       {
         title: "P2",
-        criteria: "word",
+        criteria: "sentence",
         template: "simple",
         tags: "CEFR_M3_L1",
         mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },

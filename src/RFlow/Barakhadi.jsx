@@ -2541,6 +2541,7 @@ const Barakhadi = ({
   const [currentBarakhadi, setCurrentBarakhadi] = useState({});
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [incorrectCell, setIncorrectCell] = useState(null);
+  const [isWordWrong, setIsWordWrong] = useState(false);
   const [voicesReady, setVoicesReady] = useState(false);
   const [voiceStatus, setVoiceStatus] = useState("");
   const navigate = useNavigate();
@@ -2902,6 +2903,7 @@ const Barakhadi = ({
     setWord("");
     setShowConfetti(false);
     setIncorrectCell(null);
+    setIsWordWrong(false);
   };
 
   const handleLetterClick = (letter, rowIndex, colIndex) => {
@@ -2913,6 +2915,7 @@ const Barakhadi = ({
     setWord(newWord);
 
     if (isCorrect) {
+      setIsWordWrong(false);
       if (newWord === targetWord) {
         correctAudio.play();
         setShowConfetti(true);
@@ -2920,17 +2923,33 @@ const Barakhadi = ({
           setShowConfetti(false);
         }, 3000);
       }
+    } else {
+      // when user seclect wrong option then colour is red.
+      wrongAudio.play();
+      setIsWordWrong(true);
+      setIncorrectCell({ rowIndex, colIndex });
+      setTimeout(() => {
+        setIncorrectCell(null);
+      }, 500);
     }
   };
 
   const handleErase = () => {
     setWord("");
     setIncorrectCell(null);
+    setIsWordWrong(false);
   };
 
   const handleDelete = () => {
-    setWord((prevWord) => prevWord.slice(0, -1));
+    const newWord = word.slice(0, -1);
+    setWord(newWord);
     setIncorrectCell(null);
+    // Check if the remaining word is still wrong
+    if (newWord.length > 0) {
+      setIsWordWrong(!targetWord.startsWith(newWord));
+    } else {
+      setIsWordWrong(false);
+    }
   };
   const handleListen = () => {
     if (word.length > 0) {
@@ -3700,8 +3719,18 @@ const Barakhadi = ({
                   justifyContent: "flex-start",
                   fontSize: "22px",
                   fontWeight: "bold",
-                  color: word === targetWord ? "#27ae60" : "#2c3e50",
-                  background: word === targetWord ? "#E8F5E8" : "#FFFFFF",
+                  color:
+                    word === targetWord
+                      ? "#27ae60"
+                      : isWordWrong
+                      ? "#d32f2f"
+                      : "#2c3e50",
+                  background:
+                    word === targetWord
+                      ? "#E8F5E8"
+                      : isWordWrong
+                      ? "#FFE8E8"
+                      : "#FFFFFF",
                   paddingLeft: "20px",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
@@ -3822,17 +3851,28 @@ const Barakhadi = ({
               <tbody>
                 {vyajan.map((consonant, rowIndex) => (
                   <tr key={rowIndex}>
-                    {currentBarakhadi[consonant]?.map((cell, colIndex) => (
-                      <td
-                        key={colIndex}
-                        style={tdStyle}
-                        onClick={() =>
-                          handleLetterClick(cell, rowIndex, colIndex)
-                        }
-                      >
-                        {cell}
-                      </td>
-                    ))}
+                    {currentBarakhadi[consonant]?.map((cell, colIndex) => {
+                      const isIncorrectCell =
+                        incorrectCell?.rowIndex === rowIndex &&
+                        incorrectCell?.colIndex === colIndex;
+                      return (
+                        <td
+                          key={colIndex}
+                          style={{
+                            ...tdStyle,
+                            backgroundColor: isIncorrectCell
+                              ? "#FFE8E8"
+                              : tdStyle.backgroundColor || "transparent",
+                            transition: "background-color 0.3s ease",
+                          }}
+                          onClick={() =>
+                            handleLetterClick(cell, rowIndex, colIndex)
+                          }
+                        >
+                          {cell}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
               </tbody>
