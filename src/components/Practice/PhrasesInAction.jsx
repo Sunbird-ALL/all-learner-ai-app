@@ -4994,6 +4994,46 @@ const PhrasesInAction = ({
     }
   };
 
+  const playRecordedAudio = () => {
+    if (!recordedBlob) {
+      return;
+    }
+
+    // Stop any currently playing recorded audio
+    if (recordedAudioInstance) {
+      recordedAudioInstance.pause();
+      recordedAudioInstance.currentTime = 0;
+    }
+
+    const audioUrl = URL.createObjectURL(recordedBlob);
+    const audio = new Audio(audioUrl);
+    setRecordedAudioInstance(audio);
+    setIsPlayingRecordedAudio(true);
+
+    audio.play().catch((error) => {
+      console.error("Error playing recorded audio:", error);
+      setIsPlayingRecordedAudio(false);
+    });
+
+    audio.onended = () => {
+      setIsPlayingRecordedAudio(false);
+      URL.revokeObjectURL(audioUrl);
+    };
+
+    audio.onerror = () => {
+      setIsPlayingRecordedAudio(false);
+      URL.revokeObjectURL(audioUrl);
+    };
+  };
+
+  const stopRecordedAudio = () => {
+    if (recordedAudioInstance) {
+      recordedAudioInstance.pause();
+      recordedAudioInstance.currentTime = 0;
+      setIsPlayingRecordedAudio(false);
+    }
+  };
+
   const goToNextStep = () => {
     if (currentWordIndex < content[currentLevel]?.length - 1) {
       callTelemetry();
@@ -5037,6 +5077,8 @@ const PhrasesInAction = ({
   const [isAnswerIncorrect, setIsAnswerIncorrect] = useState(false);
   const [audioInstance, setAudioInstance] = useState(null);
   const [open, setOpen] = useState(false);
+  const [isPlayingRecordedAudio, setIsPlayingRecordedAudio] = useState(false);
+  const [recordedAudioInstance, setRecordedAudioInstance] = useState(null);
 
   const handleMicClick2 = () => {
     if (!isRecording2) {
@@ -5392,60 +5434,90 @@ const PhrasesInAction = ({
                         >
                           {levelData?.allwords[0]?.text}
                         </p>
-                        <AudioTooltipModal
-                          audioSrc={multilingual?.kn?.audio_url}
-                          description={levelData?.allwords[0]?.text}
-                        >
-                          <Box
-                            sx={{
-                              marginLeft: "10px",
-                              display: "flex",
-                              marginTop: "5px",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              border: "2px solid #FF7F36",
-                              borderRadius: "16px",
-                              gap: "10px",
-                              padding: "15px",
-                              //width: "300px",
-                              backgroundColor: "#fff",
-                              cursor: "pointer",
-                            }}
+                        {/* Show multilingual box only for English on step1 */}
+                        {language === "en" && (
+                          <AudioTooltipModal
+                            audioSrc={multilingual?.kn?.audio_url}
+                            description={levelData?.allwords[0]?.text}
                           >
-                            {/* Kannada Letter Box */}
                             <Box
                               sx={{
-                                backgroundColor: "#FEBC2F66",
-                                borderRadius: "4px",
-                                //width: "100px",
-                                //height: "100px",
-                                padding: "5px",
+                                marginLeft: "10px",
                                 display: "flex",
+                                marginTop: "5px",
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                border: "2px solid #FF7F36",
+                                borderRadius: "16px",
+                                gap: "10px",
+                                padding: "15px",
+                                //width: "300px",
+                                backgroundColor: "#fff",
+                                cursor: "pointer",
                               }}
                             >
-                              <span
-                                style={{
-                                  fontSize: "40px",
-                                  fontWeight: "400",
-                                  color: "#333F61",
-                                  fontStyle: "Quicksand",
+                              {/* Kannada Letter Box */}
+                              <Box
+                                sx={{
+                                  backgroundColor: "#FEBC2F66",
+                                  borderRadius: "4px",
+                                  //width: "100px",
+                                  //height: "100px",
+                                  padding: "5px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
                                 }}
                               >
-                                ಕ
-                              </span>
-                            </Box>
+                                <span
+                                  style={{
+                                    fontSize: "40px",
+                                    fontWeight: "400",
+                                    color: "#333F61",
+                                    fontStyle: "Quicksand",
+                                  }}
+                                >
+                                  ಕ
+                                </span>
+                              </Box>
 
-                            <ListenButton height={50} width={50} />
-                          </Box>
-                        </AudioTooltipModal>
+                              <ListenButton height={50} width={50} />
+                            </Box>
+                          </AudioTooltipModal>
+                        )}
                       </div>
+                      {/* Listen to recorded audio button - step1, 2nd page, for all languages except English */}
                       <div
-                        onClick={goToNextStep}
-                        style={{ cursor: "pointer", marginTop: "30px" }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "20px",
+                          marginTop: "30px",
+                        }}
                       >
-                        <NextButtonRound height={50} width={50} />
+                        {language !== "en" && recordedBlob && (
+                          <div
+                            onClick={
+                              isPlayingRecordedAudio
+                                ? stopRecordedAudio
+                                : playRecordedAudio
+                            }
+                            style={{ cursor: "pointer" }}
+                          >
+                            {isPlayingRecordedAudio ? (
+                              <StopButton height={50} width={50} />
+                            ) : (
+                              <ListenButton height={50} width={50} />
+                            )}
+                          </div>
+                        )}
+                        <div
+                          onClick={goToNextStep}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <NextButtonRound height={50} width={50} />
+                        </div>
                       </div>
                     </div>
                   )}
@@ -5876,60 +5948,90 @@ const PhrasesInAction = ({
                         >
                           {levelData?.correctWordTwo}
                         </p>
-                        <AudioTooltipModal
-                          audioSrc={multilingual?.kn?.audio_url}
-                          description={levelData?.correctWordTwo}
-                        >
-                          <Box
-                            sx={{
-                              marginLeft: "10px",
-                              display: "flex",
-                              marginTop: "5px",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              border: "2px solid #FF7F36",
-                              borderRadius: "16px",
-                              gap: "10px",
-                              padding: "15px",
-                              //width: "300px",
-                              backgroundColor: "#fff",
-                              cursor: "pointer",
-                            }}
+                        {/* Show multilingual box only for English on step2 */}
+                        {language === "en" && (
+                          <AudioTooltipModal
+                            audioSrc={multilingual?.kn?.audio_url}
+                            description={levelData?.correctWordTwo}
                           >
-                            {/* Kannada Letter Box */}
                             <Box
                               sx={{
-                                backgroundColor: "#FEBC2F66",
-                                borderRadius: "4px",
-                                //width: "100px",
-                                //height: "100px",
-                                padding: "5px",
+                                marginLeft: "10px",
                                 display: "flex",
+                                marginTop: "5px",
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                border: "2px solid #FF7F36",
+                                borderRadius: "16px",
+                                gap: "10px",
+                                padding: "15px",
+                                //width: "300px",
+                                backgroundColor: "#fff",
+                                cursor: "pointer",
                               }}
                             >
-                              <span
-                                style={{
-                                  fontSize: "40px",
-                                  fontWeight: "400",
-                                  color: "#333F61",
-                                  fontStyle: "Quicksand",
+                              {/* Kannada Letter Box */}
+                              <Box
+                                sx={{
+                                  backgroundColor: "#FEBC2F66",
+                                  borderRadius: "4px",
+                                  //width: "100px",
+                                  //height: "100px",
+                                  padding: "5px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
                                 }}
                               >
-                                ಕ
-                              </span>
-                            </Box>
+                                <span
+                                  style={{
+                                    fontSize: "40px",
+                                    fontWeight: "400",
+                                    color: "#333F61",
+                                    fontStyle: "Quicksand",
+                                  }}
+                                >
+                                  ಕ
+                                </span>
+                              </Box>
 
-                            <ListenButton height={50} width={50} />
-                          </Box>
-                        </AudioTooltipModal>
+                              <ListenButton height={50} width={50} />
+                            </Box>
+                          </AudioTooltipModal>
+                        )}
                       </div>
+                      {/* Listen to recorded audio button - step2, 2nd page, for all languages except English */}
                       <div
-                        onClick={goToNextStep}
-                        style={{ cursor: "pointer", marginTop: "30px" }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "20px",
+                          marginTop: "30px",
+                        }}
                       >
-                        <NextButtonRound height={50} width={50} />
+                        {language !== "en" && recordedBlob && (
+                          <div
+                            onClick={
+                              isPlayingRecordedAudio
+                                ? stopRecordedAudio
+                                : playRecordedAudio
+                            }
+                            style={{ cursor: "pointer" }}
+                          >
+                            {isPlayingRecordedAudio ? (
+                              <StopButton height={50} width={50} />
+                            ) : (
+                              <ListenButton height={50} width={50} />
+                            )}
+                          </div>
+                        )}
+                        <div
+                          onClick={goToNextStep}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <NextButtonRound height={50} width={50} />
+                        </div>
                       </div>
                     </div>
                   )}

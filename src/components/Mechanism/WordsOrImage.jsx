@@ -1110,7 +1110,8 @@ const WordsOrImage = ({
                       }}
                     >
                       {words}
-                      {isTranscriptCorrect !== null && (
+                      {/* Show multilingual box only for English */}
+                      {isTranscriptCorrect !== null && language === "en" && (
                         <AudioTooltipModal
                           audioSrc={multilingual?.kn?.audio_url}
                           description={words}
