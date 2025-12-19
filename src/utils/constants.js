@@ -11048,7 +11048,7 @@ export const levelGetContent = {
         criteria: "paragraph",
         template: "simple",
         competency: "L1.8",
-        mechanism: { id: "mechanic_2", name: "readTheImage" },
+        // mechanism: { id: "mechanic_2", name: "readTheImage" },
         tags: "CEFR_GENERAL_ENG",
         CEFR_level: "A2",
       },
