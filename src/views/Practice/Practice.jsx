@@ -4490,12 +4490,14 @@ const Practice = () => {
 
       const currentGetContent = getCurrentContent(newPracticeStep);
 
-      const getContentFn = currentGetContent?.mechanism
-        ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-          lang === "en"
-        ? getContentNew
-        : getContent;
+      const getContentFn =
+        currentGetContent?.mechanism ||
+        ((level === 1 || level === 2) && lang === "en")
+          ? getContent
+          : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+            lang === "en"
+          ? getContentNew
+          : getContent;
 
       //console.log("cqer", currentQuestion, questions, level);
 
@@ -4906,12 +4908,14 @@ const Practice = () => {
 
       console.log("curContent", currentGetContent, userState);
 
-      const getContentFn = currentGetContent?.mechanism
-        ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-          lang === "en"
-        ? getContentNew
-        : getContent;
+      const getContentFn =
+        currentGetContent?.mechanism ||
+        ((level === 1 || level === 2) && lang === "en")
+          ? getContent
+          : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+            lang === "en"
+          ? getContentNew
+          : getContent;
 
       //console.log("curGetCont", userState, currentGetContent);
 
@@ -5039,12 +5043,14 @@ const Practice = () => {
 
       const currentGetContent = getCurrentContent(newCurrentPracticeStep);
 
-      const getContentFn = currentGetContent?.mechanism
-        ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-          lang === "en"
-        ? getContentNew
-        : getContent;
+      const getContentFn =
+        currentGetContent?.mechanism ||
+        ((level === 1 || level === 2) && lang === "en")
+          ? getContent
+          : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+            lang === "en"
+          ? getContentNew
+          : getContent;
 
       let quesArr = [];
 
