@@ -78,6 +78,17 @@ const routData = [
     component: reviews.TowreFlowPage,
     requiresAuth: true,
   },
+  // ============================================
+  // DEMO ROUTE - Letter Hunt Game Standalone Demo
+  // TODO: Remove this route after demo is complete
+  // Accessible at: /letter-hunt-demo
+  // ============================================
+  {
+    id: "route-013-demo",
+    path: "/letter-hunt-demo",
+    component: reviews.LetterHuntDemo,
+    requiresAuth: false, // Set to false for easy demo access
+  },
 ];
 // add login route for test rig
 const TOKEN = localStorage.getItem("apiToken");

@@ -44,6 +44,7 @@ import { Log } from "../../services/telementryService";
 import Mechanics6 from "../../components/Practice/Mechanics6";
 import Mechanics7 from "../../components/Practice/Mechanics7";
 import FluencyP1 from "../../components/Practice/FluencyP1";
+import LetterHuntMechanics from "../../components/Practice/LetterHuntMechanics";
 import FluencyP2 from "../../components/Practice/FluencyP2";
 import FluencyP3 from "../../components/Practice/FluencyP3";
 import FluencyP4 from "../../components/Practice/FluencyP4";
@@ -6745,6 +6746,41 @@ const Practice = () => {
             setOpenMessageDialog,
             vocabCount,
             wordCount,
+          }}
+        />
+      );
+    } else if (
+      mechanism.name === "letterHunt" ||
+      mechanism.name === "letter-hunt" ||
+      mechanism.name === "letterHuntGame"
+    ) {
+      return (
+        <LetterHuntMechanics
+          page={page}
+          setPage={setPage}
+          {...{
+            level: !isShowCase && level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Letter Recognition`,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            handleNext,
+            handleBack: !isShowCase && handleBack,
+            enableNext,
+            setEnableNext,
+            isShowCase,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+            showTimer: false,
           }}
         />
       );
