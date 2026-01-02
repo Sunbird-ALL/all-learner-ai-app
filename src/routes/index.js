@@ -82,16 +82,17 @@ const routData = [
   // DEMO ROUTE - Letter Hunt Game Standalone Demo
   // TODO: Remove this route after demo is complete
   // Accessible at: /letter-hunt-demo or /letter-hunt-demo/:level
+  // Note: More specific route (with :level) must come first
   // ============================================
   {
-    id: "route-013-demo",
-    path: "/letter-hunt-demo",
+    id: "route-013-demo-level",
+    path: "/letter-hunt-demo/:level",
     component: reviews.LetterHuntDemo,
     requiresAuth: false, // Set to false for easy demo access
   },
   {
-    id: "route-013-demo-level",
-    path: "/letter-hunt-demo/:level",
+    id: "route-013-demo",
+    path: "/letter-hunt-demo",
     component: reviews.LetterHuntDemo,
     requiresAuth: false, // Set to false for easy demo access
   },
