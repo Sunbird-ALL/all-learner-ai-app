@@ -11,3 +11,5 @@ export { PracticeRedirectPage } from "./PracticeRedirectPage";
 export { LoginPage } from "./LoginPage";
 export { LetterHunt } from "./LetterHunt";
 export { TowreFlowPage } from "./TowreFlow";
+// DEMO ROUTE - Remove after demo
+export { LetterHuntDemo } from "./LetterHuntDemo";
