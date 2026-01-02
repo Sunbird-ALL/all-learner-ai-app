@@ -392,6 +392,9 @@ const MainLayout = (props) => {
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
     minHeight: "100vh",
+    height: "100vh",
+    maxHeight: "100vh",
+    overflow: "hidden",
     display: "flex",
     paddingTop: { md: "0px", xs: "20px" },
     justifyContent: "center",
@@ -512,6 +515,8 @@ const MainLayout = (props) => {
                   left: { xs: "auto", md: "auto" },
                   width: { xs: "100%", md: "85vw" },
                   minHeight: "80vh",
+                  maxHeight: "calc(100vh - 150px)",
+                  height: "calc(100vh - 150px)",
                   borderRadius: "20px",
                   display: "flex",
                   flexDirection: "column",
@@ -522,6 +527,7 @@ const MainLayout = (props) => {
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
                   backdropFilter: "blur(25px)",
                   mt: "75px",
+                  overflow: "hidden",
                 }}
               >
                 <Box>
@@ -532,8 +538,15 @@ const MainLayout = (props) => {
                 <CardContent
                   sx={{
                     minHeight: "100%",
+                    height: "100%",
+                    maxHeight: "100%",
+                    overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
+                    padding: "16px !important",
+                    boxSizing: "border-box",
                   }}
                 >
                   {showTimer && (

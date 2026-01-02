@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fix for Letter Hunt game overflow when embedded in Practice */
+.letter-hunt-wrapper > div.h-screen,
+.letter-hunt-wrapper > div[class*="h-screen"],
+.letter-hunt-wrapper div[class*="h-screen"] {
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.letter-hunt-wrapper > div.h-screen > div,
+.letter-hunt-wrapper div[class*="h-screen"] > div {
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
 @layer base {
   :root {
     --background: 220 30% 98%;
@@ -68,6 +85,13 @@ html, body {
   padding: 0;
   overflow-x: hidden;
   width: 100%;
+}
+
+/* Prevent body scroll when Letter Hunt is active */
+body.letter-hunt-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
 }
 
 .loader {

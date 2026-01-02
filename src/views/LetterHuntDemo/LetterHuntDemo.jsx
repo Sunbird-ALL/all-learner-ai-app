@@ -1,18 +1,24 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LetterHuntMechanics from "../../components/Practice/LetterHuntMechanics";
 
 /**
  * DEMO ROUTE - Letter Hunt Game Demo (Practice View)
  *
  * This is a demo route for showcasing the Letter Hunt game as it appears in Practice.
- * Accessible at: /letter-hunt-demo
+ * Accessible at: /letter-hunt-demo or /letter-hunt-demo/:level (e.g., /letter-hunt-demo/1, /letter-hunt-demo/2)
  *
  * TODO: Remove this component and route after demo is complete
  */
 const LetterHuntDemo = () => {
   const navigate = useNavigate();
+  const params = useParams();
   const [page, setPage] = useState(1);
+
+  // Get level from URL params, default to 1 if not provided
+  const levelFromUrl = params?.level ? parseInt(params.level, 10) : 1;
+  const initialLevel =
+    isNaN(levelFromUrl) || levelFromUrl < 1 ? 1 : levelFromUrl;
 
   const handleBack = () => {
     navigate("/");
@@ -28,7 +34,7 @@ const LetterHuntDemo = () => {
     <LetterHuntMechanics
       page={page}
       setPage={setPage}
-      level={1}
+      level={initialLevel}
       header="Letter Recognition"
       points={0}
       steps={10}

@@ -70,7 +70,15 @@ const LetterHuntMechanicsContent = ({
       }
     };
 
+    // Add class to body to prevent scrolling
+    document.body.classList.add("letter-hunt-active");
+
     initializeSession();
+
+    // Cleanup: remove class when component unmounts
+    return () => {
+      document.body.classList.remove("letter-hunt-active");
+    };
   }, []);
 
   const handleGameBack = () => {
@@ -128,19 +136,37 @@ const LetterHuntMechanicsContent = ({
     >
       <div
         style={{
-          padding: "20px",
-          maxWidth: "1200px",
-          margin: "0 auto",
-          minHeight: "600px",
+          padding: "0",
+          height: "100%",
+          maxHeight: "100%",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          boxSizing: "border-box",
+          position: "relative",
         }}
       >
         <LanguageProvider initialLanguage={initialLanguage}>
           <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
-            <LetterGame
-              onBack={handleGameBack}
-              initialLevel={1}
-              disableNavigation={true}
-            />
+            <div
+              style={{
+                height: "100%",
+                maxHeight: "100%",
+                width: "100%",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                boxSizing: "border-box",
+                position: "relative",
+              }}
+              className="letter-hunt-wrapper"
+            >
+              <LetterGame
+                onBack={handleGameBack}
+                initialLevel={level || 1}
+                disableNavigation={true}
+              />
+            </div>
           </AudioLanguageProvider>
         </LanguageProvider>
       </div>
