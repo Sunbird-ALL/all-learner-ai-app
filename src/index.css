@@ -205,3 +205,97 @@ html, body {
 .assesmentCompleteLevelText {
   transform: rotate(-12deg);
 }
+
+* {
+  box-sizing: border-box;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka+One&display=swap");
+
+:root {
+  /* Kid Friendly Palette */
+  --bg-color: #f0f8ff;
+  --text-color: #2c3e50;
+
+  --card-red: #ff6b6b;
+  --card-blue: #4ecdc4;
+  --card-yellow: #ffe66d;
+  --card-green: #95e1d3;
+  --card-orange: #ffcc5c;
+  --card-purple: #a1c4fd;
+  --card-pink: #f7a8b8;
+  --card-cyan: #96ceb4;
+  --card-teal: #a8e6cf;
+  --card-lime: #dcedc1;
+  --card-indigo: #c4b7d7;
+  --card-amber: #f9d56e;
+
+  --primary-color: #3498db;
+  --secondary-color: #9b59b6;
+  --success-color: #2ecc71;
+  --card-bg: #ffffff;
+  --text-main: #2c3e50;
+  --text-muted: #7f8c8d;
+  --header-height: 120px;
+  --footer-height: 90px;
+  --card-height: 220px;
+
+  --font-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  /* Changed from 'Comic Neue' */
+  --font-secondary: "Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive;
+  /* Changed from 'Fredoka One' */
+}
+
+body {
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes flash {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.5);
+    color: var(--text-color);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.card-hover:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-secondary);
+}
+
+@keyframes pulse-button {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  50% {
+    transform: scale(1.15);
+    /* Increased from 1.05 */
+    box-shadow: 0 8px 15px rgba(241, 196, 15, 0.8),
+      0 0 25px rgba(241, 196, 15, 0.6);
+    /* Brighter yellow glow */
+    background-color: #f39c12;
+    /* Slightly shift color to orange/yellow */
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+  }
+}

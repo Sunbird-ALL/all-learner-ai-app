@@ -75,6 +75,7 @@ import {
   getFetchMilestoneDetails,
   getSetResultPractice,
 } from "../../services/learnerAi/learnerAiService";
+import PhonicsVocabulary from "../../components/Practice/Phonics_Vocabulary";
 
 const Practice = () => {
   const [page, setPage] = useState("");
@@ -5793,48 +5794,56 @@ const Practice = () => {
       );
     } else if (mechanism.name === "formAWord2") {
       return (
-        <Mechanics7
-          page={page}
-          setPage={setPage}
+        // <Mechanics7
+        //   page={page}
+        //   setPage={setPage}
+        //   {...{
+        //     level: level,
+        //     header:
+        //       questions[currentQuestion]?.contentType === "image"
+        //         ? `Guess the below image`
+        //         : `Speak the below word`,
+        //     //
+        //     currentImg: questions[currentQuestion]?.contentSourceData?.[0],
+        //     parentWords: questions[currentQuestion]?.mechanics_data?.[0],
+        //     multilingual: questions[currentQuestion]?.multilingual,
+        //     contentType: currentContentType,
+        //     contentId: questions[currentQuestion]?.contentId,
+        //     setVoiceText,
+        //     setRecordedAudio,
+        //     setVoiceAnimate,
+        //     storyLine,
+        //     handleNext,
+        //     type: "word",
+        //     // image: elephant,
+        //     enableNext,
+        //     showTimer: false,
+        //     points,
+        //     steps: questions?.length,
+        //     currentStep: currentQuestion + 1,
+        //     progressData,
+        //     showProgress: true,
+        //     background:
+        //       isShowCase &&
+        //       "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+        //     playTeacherAudio,
+        //     callUpdateLearner: isShowCase,
+        //     disableScreen,
+        //     isShowCase,
+        //     handleBack: !isShowCase && handleBack,
+        //     setEnableNext,
+        //     loading,
+        //     setOpenMessageDialog,
+        //     vocabCount,
+        //     wordCount,
+        //   }}
+        // />
+        <PhonicsVocabulary
           {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: questions[currentQuestion]?.contentSourceData?.[0],
-            parentWords: questions[currentQuestion]?.mechanics_data?.[0],
-            multilingual: questions[currentQuestion]?.multilingual,
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            loading,
-            setOpenMessageDialog,
+            level: !isShowCase && level,
             vocabCount,
             wordCount,
+            points,
           }}
         />
       );
