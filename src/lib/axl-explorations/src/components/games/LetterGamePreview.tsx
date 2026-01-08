@@ -517,17 +517,10 @@ export function LetterGamePreview({
       <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 overflow-hidden">
         {/* Header */}
         {!hideHeader && (
-          <div className="flex items-center justify-between mb-3 flex-shrink-0">
-            <Button
-              onClick={handleBack}
-              className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/20 text-sm px-3 py-2"
-            >
-              <ArrowLeft className="h-3 w-3 mr-1" />
-              {contentLanguage === 'en' ? 'Back' : contentLanguage === 'te' ? 'వెనుకకు' : contentLanguage === 'kn' ? 'ಹಿಂದಕ್ಕೆ' : 'मागे'}
-            </Button>
-            
+          <div className="flex items-center justify-center mb-2 sm:mb-3 flex-shrink-0">
+            {/* Back button removed */}
             <div className="text-center flex-1">
-              <h1 className="text-xl sm:text-2xl font-bold text-white mb-1">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1">
                 {instructions.title}
               </h1>
               <div className="flex items-center justify-center gap-2 text-white/80 text-xs">
@@ -537,24 +530,22 @@ export function LetterGamePreview({
                 </span>
               </div>
             </div>
-            
-              <div className="w-16"></div>
           </div>
         )}
 
         {/* Main Content Card */}
         <Card className="flex-1 p-3 sm:p-4 md:p-5 bg-white/95 backdrop-blur-sm shadow-floating overflow-hidden flex flex-col rounded-2xl min-h-0">
           {/* How to Play Section - Centered */}
-          <div className="flex flex-col items-center mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white" />
+          <div className="flex flex-col items-center mb-1.5 sm:mb-2 px-2">
+            <div className="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1.5">
+              <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <Sparkles className="h-1.5 w-1.5 sm:h-2 sm:w-2 md:h-2.5 md:w-2.5 text-white" />
               </div>
-              <h2 className="text-base font-bold text-gray-800">
+              <h2 className="text-[9px] sm:text-[10px] md:text-xs font-bold text-gray-800 whitespace-nowrap">
                 {instructions.howToPlay}
               </h2>
             </div>
-            <Progress value={((currentStep + 1) / instructions.steps.length) * 100} className="h-1.5 w-64" />
+            <Progress value={((currentStep + 1) / instructions.steps.length) * 100} className="h-0.5 sm:h-1 w-full max-w-[120px] sm:max-w-[160px] md:max-w-[200px] mt-0.5" />
           </div>
 
           {/* Demo Panel - Full width */}

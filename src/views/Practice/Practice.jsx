@@ -9,7 +9,9 @@ import ReadAloud from "../../components/Practice/ReadAloud";
 import R3 from "../../components/Practice/R3";
 import R0 from "../../RFlow/R0";
 import R1 from "../../RFlow/R1";
+import LetterTrain from "../../RFlow/LetterTrain";
 import R2 from "../../RFlow/R2";
+import F1, { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import Barakhadi from "../../RFlow/Barakhadi";
 import R3Flow from "../../RFlow/R3";
 import R4 from "../../RFlow/R4";
@@ -122,12 +124,12 @@ const Practice = () => {
     return Number(getLocalData("rStepZero"));
   });
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRStepZero(Number(getLocalData("rStepZero")));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setRStepZero(Number(getLocalData("rStepZero")));
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   //console.log("practice rStepZero", rStepZero);
 
@@ -4230,7 +4232,6 @@ const Practice = () => {
   };
 
   let progressDatas = getLocalData("practiceProgress");
-  const virtualId = String(getLocalData("virtualId"));
 
   if (typeof progressDatas === "string") {
     progressDatas = JSON.parse(progressDatas);
@@ -4248,7 +4249,40 @@ const Practice = () => {
 
   //console.log("prog", progressDatas);
 
-  if (level === "B" && rStepZero !== 1) {
+  // Get milestone_level to determine flow initialization
+  const getMilestoneDataForInit = () => {
+    try {
+      const milestoneStr = getLocalData("getMilestone");
+      if (milestoneStr) {
+        return JSON.parse(milestoneStr);
+      }
+    } catch (e) {
+      console.error("Error parsing getMilestone:", e);
+    }
+    return null;
+  };
+  const milestoneDataForInit = getMilestoneDataForInit();
+  const milestoneLevelForInit =
+    milestoneDataForInit?.data?.milestone_level || null;
+
+  // Initialize F1 flow if milestone_level is B
+  if (milestoneLevelForInit === "B" && rStepZero !== 1) {
+    setLocalData("mFail", true);
+    // Initialize F1 flow - only if no existing progress (preserve progress on relogin)
+    const f1Step = getF1FlowStep();
+    const existingF1Index = getLocalData("f1FlowIndex");
+    // Only initialize to 0 if there's no existing F1 flow index (first time)
+    if (!f1Step.step && existingF1Index === null) {
+      setLocalData("f1FlowIndex", 0);
+    }
+    // Also set rFlow for backward compatibility
+    setLocalData("rFlow", true);
+  } else if (
+    (level === "B" || level === 1) &&
+    rStepZero !== 1 &&
+    milestoneLevelForInit !== "B"
+  ) {
+    // Legacy R0/R1 flow (only if milestone_level is not F1)
     setLocalData("mFail", true);
     setLocalData("rFlow", true);
     setLocalData("rStepZero", 0);
@@ -4259,6 +4293,92 @@ const Practice = () => {
   const readMatch = String(getLocalData("readMatch"));
   //const setWordWall = setLocalData("wordWall", true);
   const wordWallFlow = String(getLocalData("wordWall"));
+
+  // Get milestone_level from API response to determine which flow to show
+  const getMilestoneData = () => {
+    try {
+      const milestoneStr = getLocalData("getMilestone");
+      if (milestoneStr) {
+        return JSON.parse(milestoneStr);
+      }
+    } catch (e) {
+      console.error("Error parsing getMilestone:", e);
+    }
+    return null;
+  };
+  const milestoneData = getMilestoneData();
+  const milestoneLevel = milestoneData?.data?.milestone_level || null;
+
+  // Check if F1 flow should be active based on milestone_level
+  // F1 flow is triggered when milestone_level is "B" (Beginner)
+  const shouldShowF1 = milestoneLevel === "B";
+  const shouldShowF2 = milestoneLevel === "F2";
+  const shouldShowF3 = milestoneLevel === "F3";
+
+  // Track F1 flow index in state to trigger re-renders
+  const [f1FlowIndexState, setF1FlowIndexState] = useState(() => {
+    const savedIndex = getLocalData("f1FlowIndex");
+    return savedIndex !== null ? Number(savedIndex) : 0;
+  });
+
+  // Sync state with localStorage when it changes externally
+  useEffect(() => {
+    const checkF1FlowIndex = () => {
+      const savedIndex = getLocalData("f1FlowIndex");
+      if (savedIndex !== null) {
+        const index = Number(savedIndex);
+        if (index !== f1FlowIndexState) {
+          setF1FlowIndexState(index);
+        }
+      }
+    };
+
+    // Check immediately
+    checkF1FlowIndex();
+
+    // Also listen for storage events to sync when localStorage changes
+    const handleStorageChange = () => {
+      checkF1FlowIndex();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also poll periodically to catch changes from same window
+    const interval = setInterval(checkF1FlowIndex, 100);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [f1FlowIndexState]);
+
+  // Check if F1 flow is active (replaces R0/R1)
+  // Use state to ensure re-renders when flow advances
+  const f1FlowStep = {
+    index: f1FlowIndexState,
+    step: F1_FLOW[f1FlowIndexState] || null,
+    isLast: f1FlowIndexState === F1_FLOW.length - 1,
+  };
+  const isF1FlowActive = shouldShowF1 && f1FlowStep.step !== null;
+  const isF1LearnStep = isF1FlowActive && f1FlowStep.step?.type === "L";
+  const isF1PracticeStep = isF1FlowActive && f1FlowStep.step?.type === "P";
+  const isF1ApplyStep = isF1FlowActive && f1FlowStep.step?.type === "A";
+
+  // Map F1 flow index to practiceSteps index
+  // F1_FLOW index directly maps to practiceSteps index (0->0, 1->1, 2->2, etc.)
+  const getF1PracticeStepIndex = () => {
+    if (!isF1FlowActive) return progressData?.currentPracticeStep || 0;
+    return f1FlowStep.index; // F1 flow index directly maps to practiceSteps index
+  };
+
+  const f1PracticeStepIndex = getF1PracticeStepIndex();
+
+  // Check if F1 flow is complete and should show letter hunt
+  const f1FlowComplete = String(getLocalData("f1FlowComplete")) === "true";
+
+  // Use state to track f1FlowComplete so component re-renders when it changes
+  const [f1FlowCompleteState, setF1FlowCompleteState] =
+    useState(f1FlowComplete);
 
   // useEffect(() => {
   //   if (lang !== "en") {
@@ -4413,9 +4533,337 @@ const Practice = () => {
     }
   };
 
+  // Handle LetterTrain completion for F1 flow Learn steps
+  const handleLetterTrainComplete = async () => {
+    if (!isF1FlowActive || !isF1LearnStep) {
+      // Not F1 flow or not a Learn step, use regular handleNext
+      return handleNext(false);
+    }
+
+    try {
+      const lang = getLocalData("lang");
+      const sessionId = getLocalData("sessionId");
+
+      // Get current F1 flow step BEFORE advancement
+      const currentF1FlowStep = getF1FlowStep();
+      console.log(
+        "Before advanceF1Flow - currentF1FlowStep:",
+        currentF1FlowStep
+      );
+      console.log(
+        "Before advanceF1Flow - localStorage f1FlowIndex:",
+        getLocalData("f1FlowIndex")
+      );
+
+      // Advance F1 flow - this updates localStorage
+      const nextStep = advanceF1Flow();
+      console.log("advanceF1Flow returned:", nextStep);
+      console.log(
+        "After advanceF1Flow - localStorage f1FlowIndex:",
+        getLocalData("f1FlowIndex")
+      );
+
+      // Get the updated F1 flow step AFTER advancement
+      let updatedF1FlowStep = getF1FlowStep();
+      console.log(
+        "After advanceF1Flow - updatedF1FlowStep:",
+        updatedF1FlowStep
+      );
+
+      // Verify the index was actually incremented
+      if (updatedF1FlowStep.index === currentF1FlowStep.index) {
+        console.error(
+          "F1 flow index did not advance! Current:",
+          currentF1FlowStep.index,
+          "Updated:",
+          updatedF1FlowStep.index
+        );
+        // Force advance if it didn't work
+        const forcedIndex = currentF1FlowStep.index + 1;
+        setLocalData("f1FlowIndex", forcedIndex);
+        updatedF1FlowStep = getF1FlowStep();
+        console.log("Forced F1 flow step:", updatedF1FlowStep);
+      }
+
+      // Update state to trigger re-render
+      setF1FlowIndexState(updatedF1FlowStep.index);
+
+      // Store F1 flow progress in backend
+      if (updatedF1FlowStep.step) {
+        try {
+          await addLesson({
+            sessionId,
+            milestone: "practice",
+            lesson: updatedF1FlowStep.index.toString(),
+            progress: ((updatedF1FlowStep.index + 1) / F1_FLOW.length) * 100,
+            language: lang,
+            milestoneLevel: "B",
+          });
+        } catch (e) {
+          console.error("Error storing F1 flow progress:", e);
+        }
+      }
+
+      // Update practice progress to reflect new F1 flow step
+      const newPracticeStep = updatedF1FlowStep.index;
+      let practiceProgress = getLocalData("practiceProgress");
+      practiceProgress = practiceProgress ? JSON.parse(practiceProgress) : {};
+      practiceProgress = {
+        ...practiceProgress,
+        currentQuestion: 0,
+        currentPracticeProgress: ((newPracticeStep + 1) / F1_FLOW.length) * 100,
+        currentPracticeStep: newPracticeStep,
+      };
+      setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+      setProgressData(practiceProgress);
+      setCurrentQuestion(0);
+
+      // Get content for the next step using the updated F1 flow index
+      // For F1 flow, directly access the config array using the updated F1 flow index
+      // This avoids using getCurrentContent which relies on stale state values
+      let nextStepContent = null;
+      if (isF1FlowActive) {
+        // For F1 flow, directly access the F1 config array using the updated index
+        // The F1 config array index directly corresponds to F1_FLOW index
+        // Ensure we use the correct language (default to "en" if lang is not available)
+        const effectiveLang = lang || "en";
+        const f1Config = levelGetContent[effectiveLang]?.["F1"];
+        console.log("F1 config lookup:", {
+          lang: effectiveLang,
+          hasF1Config: !!f1Config,
+          f1ConfigLength: f1Config?.length,
+          targetIndex: updatedF1FlowStep.index,
+          f1FlowStep: updatedF1FlowStep.step,
+          availableLanguages: Object.keys(levelGetContent || {}),
+        });
+
+        if (
+          f1Config &&
+          Array.isArray(f1Config) &&
+          f1Config[updatedF1FlowStep.index]
+        ) {
+          nextStepContent = f1Config[updatedF1FlowStep.index];
+          console.log("F1 next step content from config:", {
+            index: updatedF1FlowStep.index,
+            title: nextStepContent?.title,
+            mechanism: nextStepContent?.mechanism,
+            customLetters: nextStepContent?.customLetters,
+          });
+
+          // Validate that the mechanism matches the F1_FLOW step type
+          const f1StepType = updatedF1FlowStep.step?.type;
+          const expectedMechanism =
+            f1StepType === "L" ? "letterTrain" : "letterHunt";
+          if (nextStepContent?.mechanism?.name !== expectedMechanism) {
+            console.warn(
+              "F1 config mechanism mismatch! Expected:",
+              expectedMechanism,
+              "Got:",
+              nextStepContent?.mechanism?.name
+            );
+            // Override with correct mechanism based on F1_FLOW step type
+            if (nextStepContent) {
+              nextStepContent.mechanism = {
+                id: expectedMechanism,
+                name: expectedMechanism,
+              };
+              console.log("Corrected mechanism to:", nextStepContent.mechanism);
+            }
+          }
+        } else {
+          console.error("F1 config not found!", {
+            index: updatedF1FlowStep.index,
+            f1ConfigExists: !!f1Config,
+            f1ConfigIsArray: Array.isArray(f1Config),
+            f1ConfigLength: f1Config?.length,
+            levelGetContentKeys: levelGetContent
+              ? Object.keys(levelGetContent)
+              : null,
+            f1ConfigForLang: levelGetContent[effectiveLang]
+              ? Object.keys(levelGetContent[effectiveLang])
+              : null,
+          });
+          // Don't use getCurrentContent fallback - it uses wrong logic for F1
+          // Instead, return null and let the component handle it
+          nextStepContent = null;
+        }
+      } else {
+        // For non-F1 flows, use getCurrentContent
+        nextStepContent = getCurrentContent(newPracticeStep);
+      }
+
+      // If F1 config is not found, determine mechanism from F1_FLOW step type
+      if (!nextStepContent && isF1FlowActive) {
+        console.warn(
+          "F1 config not found, determining mechanism from F1_FLOW step type"
+        );
+        const f1StepType = updatedF1FlowStep.step?.type;
+        if (f1StepType === "L") {
+          // Learn step - LetterTrain
+          nextStepContent = {
+            mechanism: { id: "letterTrain", name: "letterTrain" },
+          };
+        } else if (f1StepType === "P" || f1StepType === "A") {
+          // Practice or Apply step - LetterHunt
+          nextStepContent = {
+            mechanism: { id: "letterHunt", name: "letterHunt" },
+          };
+        } else {
+          console.error("Unknown F1 step type:", f1StepType);
+          return; // Don't proceed if we can't determine the mechanism
+        }
+      }
+
+      if (!nextStepContent) {
+        console.error(
+          "No next step content found! Cannot proceed to next step."
+        );
+        return; // Don't proceed if we don't have content
+      }
+
+      // Validate and set mechanism - ensure it matches F1_FLOW step type
+      const f1StepType = updatedF1FlowStep.step?.type;
+
+      // For F1 flow, ALWAYS determine mechanism from F1_FLOW step type (ignore config mechanism)
+      // Use updatedF1FlowStep directly since we just advanced the flow
+      let finalMechanism;
+      const f1StepTypeForMechanism = updatedF1FlowStep.step?.type;
+      console.log(
+        "Determining mechanism - level:",
+        level,
+        "isF1FlowActive:",
+        isF1FlowActive,
+        "f1StepType:",
+        f1StepTypeForMechanism,
+        "updatedF1FlowStep:",
+        updatedF1FlowStep
+      );
+
+      // Always determine mechanism from F1_FLOW step type if we have a valid step
+      if (f1StepTypeForMechanism) {
+        // Always use F1_FLOW step type to determine mechanism, not the config
+        if (f1StepTypeForMechanism === "L") {
+          finalMechanism = { id: "letterTrain", name: "letterTrain" };
+        } else if (
+          f1StepTypeForMechanism === "P" ||
+          f1StepTypeForMechanism === "A"
+        ) {
+          finalMechanism = { id: "letterHunt", name: "letterHunt" };
+        } else {
+          console.error("Unknown F1 step type:", f1StepTypeForMechanism);
+          return; // Don't proceed if we can't determine the mechanism
+        }
+        console.log(
+          "F1 flow mechanism determined from step type:",
+          f1StepTypeForMechanism,
+          "->",
+          finalMechanism.name
+        );
+      } else if (nextStepContent?.mechanism) {
+        // Fallback: use mechanism from config if F1 step type is not available
+        finalMechanism = nextStepContent.mechanism;
+        console.log(
+          "Using mechanism from config (no F1 step type):",
+          finalMechanism
+        );
+      } else {
+        console.error(
+          "Cannot determine mechanism - no F1 step type and no config mechanism"
+        );
+        return; // Don't proceed if we can't determine the mechanism
+      }
+
+      // Update mechanism first - this is critical for re-rendering the correct component
+      console.log(
+        "Setting mechanism to:",
+        finalMechanism,
+        "for F1 step type:",
+        f1StepTypeForMechanism
+      );
+      setMechanism(finalMechanism);
+
+      // LetterHunt generates its own content, so we don't need to fetch questions
+      if (finalMechanism.name === "letterHunt") {
+        // LetterHunt will generate its own content based on config
+        // Just ensure questions array is set (can be empty, LetterHunt will handle it)
+        setQuestions([]);
+      } else if (nextStepContent?.mechanism?.name !== "letterTrain") {
+        // For other mechanisms (not LetterTrain or LetterHunt), fetch questions
+        // Add null check for nextStepContent
+        if (!nextStepContent) {
+          console.error(
+            "handleNext - nextStepContent is undefined for F1 flow"
+          );
+          return;
+        }
+
+        const getContentFn =
+          nextStepContent?.mechanism ||
+          ((level === 1 || level === 2) && lang === "en")
+            ? getContent
+            : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+              lang === "en"
+            ? getContentNew
+            : getContent;
+
+        try {
+          // Only fetch if criteria exists (LetterHunt doesn't have criteria)
+          if (nextStepContent?.criteria) {
+            const resWord = await getContentFn(
+              nextStepContent.criteria,
+              lang,
+              limit,
+              {
+                mechanismId: nextStepContent?.mechanism?.id,
+                competency: nextStepContent?.competency,
+                tags: nextStepContent?.tags,
+                storyMode: nextStepContent?.storyMode,
+                CEFR_level: nextStepContent?.CEFR_level,
+                multilingual: nextStepContent?.multilingual,
+              },
+              level
+            );
+
+            if (resWord && resWord.length > 0) {
+              setQuestions(resWord);
+            }
+          }
+        } catch (e) {
+          console.error("Error fetching content for next step:", e);
+        }
+      }
+      // If next step is LetterTrain, mechanism is already set above
+
+      // Force re-render by updating state
+      // Update progressData to trigger re-render
+      setProgressData(practiceProgress);
+
+      // Log for debugging
+      console.log("LetterTrain completed, next step:", {
+        newPracticeStep,
+        nextStepContent,
+        mechanism: nextStepContent?.mechanism,
+        f1FlowStep: updatedF1FlowStep,
+        f1FlowIndexState: updatedF1FlowStep.index,
+        f1ConfigLength:
+          levels === "B" ? levelGetContent[lang]?.["F1"]?.length : null,
+        currentMechanismState: mechanism, // Log current mechanism state for comparison
+      });
+
+      // The component will automatically re-render when:
+      // - f1FlowIndexState changes (via setF1FlowIndexState) - this updates f1FlowStep
+      // - mechanism changes (via setMechanism) - this determines which component to render
+      // - progressData changes (via setProgressData) - this updates progress
+      // React will batch these state updates and re-render once with all new values
+    } catch (error) {
+      console.error("Error in handleLetterTrainComplete:", error);
+    }
+  };
+
   const handleNext = async (isGameOver) => {
     setIsNextButtonCalled(true);
     setEnableNext(false);
+
     try {
       const lang = getLocalData("lang");
 
@@ -4489,7 +4937,228 @@ const Practice = () => {
       let newQuestionIndex =
         currentQuestion === questions.length - 1 ? 0 : currentQuestion + 1;
 
-      const currentGetContent = getCurrentContent(newPracticeStep);
+      // Handle F1 flow advancement when any F1 step completes (Learn, Practice, or Apply)
+      // Check if F1 flow is active by checking milestone level
+      const currentF1FlowStepBeforeAdvance = getF1FlowStep();
+      const isF1FlowActiveCheck =
+        milestoneLevel === "B" && currentF1FlowStepBeforeAdvance.step !== null;
+      let updatedF1FlowStep = null;
+
+      // For F1 flow, check if we should advance (either questions completed or game over)
+      // NOTE: LetterHuntMechanics already advances F1 flow before calling handleNext,
+      // so we should NOT advance again here. We just need to read the current state.
+      // Check if LetterHuntMechanics already advanced the flow
+      const f1FlowAdvancedByLetterHunt =
+        getLocalData("f1FlowAdvancedByLetterHunt") === "true";
+
+      // Only advance if this is NOT from LetterHunt (questions.length > 0 means it's not LetterHunt)
+      // AND LetterHuntMechanics hasn't already advanced it
+      const shouldAdvanceF1 =
+        isF1FlowActiveCheck &&
+        !f1FlowAdvancedByLetterHunt && // Don't advance if LetterHuntMechanics already did
+        questions.length > 0 && // Not LetterHunt (LetterHunt has empty questions array)
+        (currentQuestion === questions.length - 1 || isGameOver);
+
+      if (shouldAdvanceF1) {
+        console.log(
+          "handleNext - F1 flow step before advance:",
+          currentF1FlowStepBeforeAdvance
+        );
+
+        // Advance F1 flow first
+        advanceF1Flow();
+
+        // Get updated F1 flow step after advancement
+        updatedF1FlowStep = getF1FlowStep();
+        console.log(
+          "handleNext - F1 flow step after advance:",
+          updatedF1FlowStep,
+          "step type:",
+          updatedF1FlowStep.step?.type
+        );
+
+        // Update state to trigger re-render
+        setF1FlowIndexState(updatedF1FlowStep.index);
+
+        // Store F1 flow progress in backend when step completes
+        // Store the NEW index (after advancement) so user resumes from next step on relogin
+        if (updatedF1FlowStep.step) {
+          try {
+            await addLesson({
+              sessionId,
+              milestone: "practice",
+              lesson: updatedF1FlowStep.index.toString(), // Store F1 flow index as lesson number
+              progress: ((updatedF1FlowStep.index + 1) / F1_FLOW.length) * 100,
+              language: lang,
+              milestoneLevel: "B", // F1 flow is for milestone level B
+            });
+          } catch (e) {
+            console.error("Error storing F1 flow progress:", e);
+          }
+        }
+
+        // Update practiceProgress for F1 flow
+        const newF1FlowIndex = updatedF1FlowStep.index;
+        let practiceProgress = getLocalData("practiceProgress");
+        practiceProgress = practiceProgress ? JSON.parse(practiceProgress) : {};
+        practiceProgress = {
+          ...practiceProgress,
+          currentQuestion: 0,
+          currentPracticeProgress:
+            ((newF1FlowIndex + 1) / F1_FLOW.length) * 100,
+          currentPracticeStep: newF1FlowIndex,
+        };
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        setProgressData(practiceProgress);
+        setCurrentQuestion(0);
+      }
+
+      // For F1 flow, always check current F1 flow step from localStorage (may have been advanced by LetterHuntMechanics)
+      // Check if F1 flow is active by checking milestone level
+      const isF1FlowByMilestone = milestoneLevel === "B";
+      let currentGetContent;
+
+      if (isF1FlowByMilestone) {
+        // Always get current F1 flow step from localStorage (it may have been advanced by LetterHuntMechanics)
+        // Read directly from localStorage to get the most up-to-date value
+        const savedF1Index = getLocalData("f1FlowIndex");
+        const f1IndexFromStorage =
+          savedF1Index !== null ? Number(savedF1Index) : 0;
+        const currentF1FlowStep = {
+          index: f1IndexFromStorage,
+          step: F1_FLOW[f1IndexFromStorage] || null,
+          isLast: f1IndexFromStorage === F1_FLOW.length - 1,
+        };
+
+        console.log("handleNext - F1 flow active, current step from storage:", {
+          f1IndexFromStorage,
+          step: currentF1FlowStep.step,
+          stepType: currentF1FlowStep.step?.type,
+          f1FlowIndexState,
+          f1FlowAdvancedByLetterHunt,
+        });
+
+        // Update state to ensure UI reflects current F1 flow index
+        if (currentF1FlowStep.index !== f1FlowIndexState) {
+          console.log(
+            "handleNext - Updating f1FlowIndexState from",
+            f1FlowIndexState,
+            "to",
+            currentF1FlowStep.index
+          );
+          setF1FlowIndexState(currentF1FlowStep.index);
+        }
+
+        // Use F1 flow index to get content from F1 config
+        const effectiveLang = lang || "en";
+        const f1Config = levelGetContent[effectiveLang]?.["F1"];
+        console.log(
+          "handleNext - Fetching F1 content for index:",
+          currentF1FlowStep.index,
+          "step type:",
+          currentF1FlowStep.step?.type,
+          "title should be:",
+          currentF1FlowStep.step?.type === "L"
+            ? `L${currentF1FlowStep.step?.step}`
+            : currentF1FlowStep.step?.type === "P"
+            ? `P${currentF1FlowStep.step?.step}`
+            : `A${currentF1FlowStep.step?.step}`
+        );
+
+        if (
+          f1Config &&
+          Array.isArray(f1Config) &&
+          f1Config[currentF1FlowStep.index]
+        ) {
+          currentGetContent = f1Config[currentF1FlowStep.index];
+          // Add null check for currentGetContent
+          if (!currentGetContent) {
+            console.error(
+              "handleNext - F1 config entry is null/undefined at index:",
+              currentF1FlowStep.index
+            );
+            // Fallback to step type
+            const f1StepType = currentF1FlowStep.step?.type;
+            if (f1StepType === "L") {
+              currentGetContent = {
+                mechanism: { id: "letterTrain", name: "letterTrain" },
+              };
+            } else if (f1StepType === "P" || f1StepType === "A") {
+              currentGetContent = {
+                mechanism: { id: "letterHunt", name: "letterHunt" },
+              };
+            }
+          } else {
+            console.log("handleNext - F1 content from config:", {
+              index: currentF1FlowStep.index,
+              title: currentGetContent?.title,
+              mechanism: currentGetContent?.mechanism,
+              customLetters: currentGetContent?.customLetters,
+            });
+          }
+        } else {
+          // Fallback: determine mechanism from F1_FLOW step type
+          const f1StepType = currentF1FlowStep.step?.type;
+          console.log(
+            "handleNext - F1 config not found, using step type:",
+            f1StepType
+          );
+          if (f1StepType === "L") {
+            currentGetContent = {
+              mechanism: { id: "letterTrain", name: "letterTrain" },
+            };
+          } else if (f1StepType === "P" || f1StepType === "A") {
+            currentGetContent = {
+              mechanism: { id: "letterHunt", name: "letterHunt" },
+            };
+          }
+          console.log("handleNext - F1 content fallback:", currentGetContent);
+        }
+
+        // ALWAYS set mechanism based on F1_FLOW step type (ignore config mechanism)
+        const f1StepTypeForMechanism = currentF1FlowStep.step?.type;
+        console.log(
+          "handleNext - Setting mechanism for F1 step type:",
+          f1StepTypeForMechanism,
+          "at index:",
+          currentF1FlowStep.index
+        );
+        if (f1StepTypeForMechanism === "L") {
+          setMechanism({ id: "letterTrain", name: "letterTrain" });
+          console.log(
+            "handleNext - Mechanism set to letterTrain for index",
+            currentF1FlowStep.index
+          );
+        } else if (
+          f1StepTypeForMechanism === "P" ||
+          f1StepTypeForMechanism === "A"
+        ) {
+          setMechanism({ id: "letterHunt", name: "letterHunt" });
+          setQuestions([]); // LetterHunt generates its own content
+          console.log(
+            "handleNext - Mechanism set to letterHunt for index",
+            currentF1FlowStep.index
+          );
+        } else {
+          console.error(
+            "handleNext - Unknown F1 step type:",
+            f1StepTypeForMechanism,
+            "at index:",
+            currentF1FlowStep.index
+          );
+        }
+      } else {
+        currentGetContent = getCurrentContent(newPracticeStep);
+      }
+
+      // Add null check for currentGetContent
+      if (!currentGetContent) {
+        console.error(
+          "handleNext - currentGetContent is undefined for newPracticeStep:",
+          newPracticeStep
+        );
+        return;
+      }
 
       const getContentFn =
         currentGetContent?.mechanism ||
@@ -4506,7 +5175,16 @@ const Practice = () => {
       //   setCurrentQuestion(currentQuestion + 1);
       // }else{
 
-      if (currentQuestion === questions.length - 1 || isGameOver) {
+      // For F1 flow, if we've already set the mechanism correctly above, skip the content fetching logic
+      // This prevents overriding the mechanism and content that were set above
+      // Check if this is F1 flow and if we've already processed it (f1FlowAdvancedByLetterHunt flag)
+      const shouldSkipContentFetch =
+        isF1FlowByMilestone && f1FlowAdvancedByLetterHunt;
+
+      if (
+        (currentQuestion === questions.length - 1 || isGameOver) &&
+        !shouldSkipContentFetch
+      ) {
         let currentPracticeStep = practiceProgress.currentPracticeStep;
         let isShowCase = currentPracticeStep === 4 || currentPracticeStep === 9; // P4 or P8
 
@@ -4647,7 +5325,7 @@ const Practice = () => {
           return;
         }
 
-        if (!["B", 10, 11, 12, 13, 14, 15].includes(level)) {
+        if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
           const resGetContent = await getContentFn(
             currentGetContent.criteria,
             lang,
@@ -4716,7 +5394,7 @@ const Practice = () => {
           setQuestions(quesArr);
         }
 
-        if ([10, 11, 12, 13, 14, 15].includes(level)) {
+        if (["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
           let showcaseLevel =
             currentPracticeStep === 3 || currentPracticeStep === 8;
           setIsShowCase(showcaseLevel);
@@ -4738,8 +5416,36 @@ const Practice = () => {
         }
 
         // TODO: needs to revisit this logic
+        // For F1 flow, mechanism is already set correctly above based on F1_FLOW step type, so don't override it
+        // For non-F1 flow, set mechanism from currentGetContent
+        // IMPORTANT: Always check F1 flow status inside setTimeout because the flag might have been cleared
         setTimeout(() => {
-          setMechanism(currentGetContent.mechanism);
+          // Double-check F1 flow status before setting mechanism (flag might have been cleared)
+          const currentF1Check = getF1FlowStep();
+          const isF1FlowActiveNow =
+            milestoneLevel === "B" && currentF1Check.step !== null;
+
+          if (isF1FlowActiveNow) {
+            // For F1 flow, NEVER override mechanism - it's already set correctly based on F1_FLOW step type
+            console.log(
+              "handleNext - setTimeout: Skipping mechanism override for F1 flow (already set correctly)",
+              {
+                currentF1Index: currentF1Check.index,
+                currentF1StepType: currentF1Check.step?.type,
+                milestoneLevel,
+              }
+            );
+            return; // Don't set mechanism for F1 flow
+          }
+
+          // Only set mechanism for non-F1 flow
+          if (currentGetContent?.mechanism) {
+            console.log(
+              "handleNext - setTimeout: Setting mechanism from currentGetContent:",
+              currentGetContent.mechanism
+            );
+            setMechanism(currentGetContent.mechanism);
+          }
         }, 1000);
 
         // if(virtualId === "6760800019"){
@@ -4793,6 +5499,38 @@ const Practice = () => {
         practiceProgress = {
           currentQuestion: newQuestionIndex,
           currentPracticeProgress,
+          currentPracticeStep: newPracticeStep,
+        };
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        setProgressData(practiceProgress);
+      } else {
+        newPracticeStep =
+          practiceSteps.length - 1 === practiceProgress.currentPracticeStep
+            ? 0
+            : practiceProgress.currentPracticeStep + 1;
+        const currentGetContent = getCurrentContent(newPracticeStep);
+        setTimeout(() => {
+          if (currentGetContent?.mechanism) {
+            setMechanism(currentGetContent.mechanism);
+          }
+        }, 1000);
+
+        await addLesson({
+          sessionId: sessionId,
+          milestone: milestoneType,
+          lesson: newPracticeStep,
+          progress: Math.round(
+            (newPracticeStep / (practiceSteps.length * limit)) * 100
+          ),
+          language: lang,
+          milestoneLevel: `m${level}`,
+        });
+
+        practiceProgress = {
+          currentQuestion: 0,
+          currentPracticeProgress: Math.round(
+            (newPracticeStep / (practiceSteps.length * limit)) * 100
+          ),
           currentPracticeStep: newPracticeStep,
         };
         setLocalData("practiceProgress", JSON.stringify(practiceProgress));
@@ -4891,6 +5629,21 @@ const Practice = () => {
       let practiceProgress = getLocalData("practiceProgress");
       practiceProgress = practiceProgress ? JSON.parse(practiceProgress) : {};
 
+      // For F1 flow (milestone_level === "B"), restore F1 flow index from backend
+      // This ensures progress is restored on relogin (localStorage is cleared on logout)
+      if (levels === "B") {
+        // For F1 flow, lesson number from backend stores the F1 flow index
+        // Check if this is a valid F1 flow index (0 to F1_FLOW.length - 1)
+        if (userState >= 0 && userState < F1_FLOW.length) {
+          // Restore F1 flow index from backend
+          setLocalData("f1FlowIndex", userState);
+        } else {
+          // If backend doesn't have valid F1 flow index, start from beginning
+          setLocalData("f1FlowIndex", 0);
+          userState = 0;
+        }
+      }
+
       practiceProgress = {
         currentQuestion: 0,
         currentPracticeProgress: (userState / practiceSteps.length) * 100,
@@ -4900,14 +5653,43 @@ const Practice = () => {
       const getCurrentContent = (stepKey) => {
         const lang = getLocalData("lang") || "en";
         console.log("curGetCont2", lang, levels);
-        return levelGetContent[lang]?.[newLevel]?.find(
-          (elem) => elem.title === practiceSteps?.[stepKey]?.name
-        );
+        // For F1 flow (levels === "B"), use "F1" as the level key
+        const levelKey = levels === "B" ? "F1" : newLevel;
+
+        if (levels === "B") {
+          // For F1 flow, stepKey is the F1 flow index (0-20)
+          // The F1 config array has titles "P1", "P2", "P3", etc. in order
+          // So we can directly use stepKey as the array index
+          const f1Config = levelGetContent[lang]?.[levelKey];
+          if (f1Config && f1Config[stepKey]) {
+            return f1Config[stepKey];
+          }
+          return null;
+        } else {
+          // For non-F1 flows, use practiceSteps mapping
+          return levelGetContent[lang]?.[levelKey]?.find(
+            (elem) => elem.title === practiceSteps?.[stepKey]?.name
+          );
+        }
       };
 
       const currentGetContent = getCurrentContent(userState);
 
       console.log("curContent", currentGetContent, userState);
+
+      // Add null check to prevent error if currentGetContent is undefined
+      if (!currentGetContent) {
+        console.error(
+          "currentGetContent is undefined for userState:",
+          userState,
+          "level:",
+          newLevel,
+          "levels:",
+          levels
+        );
+        setLoading(false);
+        return;
+      }
 
       const getContentFn =
         currentGetContent?.mechanism ||
@@ -4920,7 +5702,7 @@ const Practice = () => {
 
       //console.log("curGetCont", userState, currentGetContent);
 
-      if (!["B", 10, 11, 12, 13, 14, 15].includes(level)) {
+      if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
         const resWord = await getContentFn(
           currentGetContent.criteria,
           lang,
@@ -4958,14 +5740,15 @@ const Practice = () => {
         setQuestions(quesArr);
       }
 
-      if (["B", 10, 11, 12, 13, 14, 15].includes(level)) {
+      if ([10, 11, 12, 13, 14, 15].includes(level)) {
         const dummyQuestions = Array.from({ length: 5 }, (_, i) => ({
           id: `dummy-${i + 1}`,
         }));
 
         setQuestions(dummyQuestions);
       }
-      setMechanism(currentGetContent.mechanism);
+      // Add null check before accessing mechanism
+      setMechanism(currentGetContent?.mechanism || {});
 
       // if (virtualId === "6760800019" || level == 12) {
       //   //setMechanism({ id: "read_aloud", name: "readAloud" });
@@ -5008,18 +5791,97 @@ const Practice = () => {
 
   const getCurrentContent = (stepKey) => {
     const lang = getLocalData("lang") || "en";
-    //console.log("curGetCont2", lang, level);
-    return levelGetContent[lang]?.[level]?.find(
-      (elem) => elem.title === practiceSteps?.[stepKey]?.name
+
+    // For F1, use "F1" as the level key
+    const levelKey = shouldShowF1 ? "F1" : level;
+
+    // If F1 flow is active, use the F1 flow index to get the correct step
+    const actualStepKey = isF1FlowActive ? f1PracticeStepIndex : stepKey;
+
+    return levelGetContent[lang]?.[levelKey]?.find(
+      (elem) => elem.title === practiceSteps?.[actualStepKey]?.name
     );
   };
 
   const handleBack = async () => {
+    const virtualId = getLocalData("virtualId");
+    const sessionId = getLocalData("sessionId");
+    const lang = getLocalData("lang");
+
+    // Check if F1 flow is active by checking milestone level and F1 flow step
+    const currentF1FlowStep = getF1FlowStep();
+    const isF1FlowActiveCheck =
+      milestoneLevel === "B" && currentF1FlowStep.step !== null;
+
+    // Handle F1 flow back navigation
+    if (isF1FlowActiveCheck) {
+      const currentF1Index = currentF1FlowStep.index;
+      if (currentF1Index > 0) {
+        const newF1Index = currentF1Index - 1;
+        setLocalData("f1FlowIndex", newF1Index);
+        setF1FlowIndexState(newF1Index);
+
+        // Get the F1 config for the previous step
+        const f1Config = levelGetContent[lang]?.["F1"];
+        const previousF1Step = f1Config?.[newF1Index];
+        const previousF1FlowStep = F1_FLOW[newF1Index];
+
+        // Determine mechanism from F1 flow step type
+        let mechanismToSet;
+        if (previousF1FlowStep?.type === "L") {
+          mechanismToSet = { id: "letterTrain", name: "letterTrain" };
+        } else if (
+          previousF1FlowStep?.type === "P" ||
+          previousF1FlowStep?.type === "A"
+        ) {
+          mechanismToSet = { id: "letterHunt", name: "letterHunt" };
+        } else {
+          mechanismToSet = previousF1Step?.mechanism || {
+            id: "letterTrain",
+            name: "letterTrain",
+          };
+        }
+
+        // Update progress
+        const practiceProgress = {
+          currentQuestion: 0,
+          currentPracticeProgress: ((newF1Index + 1) / F1_FLOW.length) * 100,
+          currentPracticeStep: newF1Index,
+          fromBack: true,
+        };
+
+        await addLesson({
+          sessionId: sessionId,
+          milestone: "practice",
+          lesson: newF1Index.toString(),
+          progress: ((newF1Index + 1) / F1_FLOW.length) * 100,
+          language: lang,
+          milestoneLevel: "B",
+        });
+
+        setProgressData(practiceProgress);
+        setMechanism(mechanismToSet);
+        setCurrentQuestion(0);
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+
+        // For F1 flow, we don't need to fetch questions - they're handled by the components
+        return;
+      } else {
+        // Can't go back further in F1 flow
+        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          navigate("/");
+        } else {
+          navigate("/discover-start");
+        }
+        return;
+      }
+    }
+
+    // Non-F1 flow back navigation
     if (progressData.currentPracticeStep > 0) {
-      const virtualId = getLocalData("virtualId");
-      const sessionId = getLocalData("sessionId");
-      const lang = getLocalData("lang");
       let practiceProgress = {};
+
+      // Non-F1 flow back navigation
       let newCurrentPracticeStep =
         progressData.currentPracticeStep === 5
           ? 3
@@ -5044,6 +5906,17 @@ const Practice = () => {
 
       const currentGetContent = getCurrentContent(newCurrentPracticeStep);
 
+      // Add safety check for undefined currentGetContent
+      if (!currentGetContent) {
+        console.error(
+          "handleBack: currentGetContent is undefined for step:",
+          newCurrentPracticeStep
+        );
+        setCurrentQuestion(practiceProgress?.currentQuestion || 0);
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        return;
+      }
+
       const getContentFn =
         currentGetContent?.mechanism ||
         ((level === 1 || level === 2) && lang === "en")
@@ -5055,39 +5928,43 @@ const Practice = () => {
 
       let quesArr = [];
 
-      if (!["B", 10, 11, 12, 13, 14, 15].includes(level)) {
-        const resWord = await getContentFn(
-          currentGetContent.criteria,
-          lang,
-          limit,
-          {
-            mechanismId: currentGetContent?.mechanism?.id,
-            competency: currentGetContent?.competency,
-            tags: currentGetContent?.tags,
-            storyMode: currentGetContent?.storyMode,
-            CEFR_level: currentGetContent?.CEFR_level,
-            multilingual: currentGetContent?.multilingual,
-          },
-          level
-        );
-        setTotalSyllableCount(resWord?.totalSyllableCount);
-        setLivesData({
-          ...livesData,
-          totalTargets: resWord?.totalSyllableCount,
-          targetsForLives: resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE,
-          targetPerLive:
-            (resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
-        });
-        quesArr = [...quesArr, ...(resWord?.content || [])];
-        setCurrentContentType(currentGetContent.criteria);
-        setCurrentCollectionId(resWord?.content?.[0]?.collectionId);
-        setAssessmentResponse(resWord);
+      if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
+        // Add safety check for criteria
+        if (currentGetContent?.criteria) {
+          const resWord = await getContentFn(
+            currentGetContent.criteria,
+            lang,
+            limit,
+            {
+              mechanismId: currentGetContent?.mechanism?.id,
+              competency: currentGetContent?.competency,
+              tags: currentGetContent?.tags,
+              storyMode: currentGetContent?.storyMode,
+              CEFR_level: currentGetContent?.CEFR_level,
+              multilingual: currentGetContent?.multilingual,
+            },
+            level
+          );
+          setTotalSyllableCount(resWord?.totalSyllableCount);
+          setLivesData({
+            ...livesData,
+            totalTargets: resWord?.totalSyllableCount,
+            targetsForLives:
+              resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE,
+            targetPerLive:
+              (resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
+          });
+          quesArr = [...quesArr, ...(resWord?.content || [])];
+          setCurrentContentType(currentGetContent.criteria);
+          setCurrentCollectionId(resWord?.content?.[0]?.collectionId);
+          setAssessmentResponse(resWord);
 
-        setLocalData("storyTitle", resWord?.name);
-        setQuestions(quesArr);
+          setLocalData("storyTitle", resWord?.name);
+          setQuestions(quesArr);
+        }
       }
 
-      if (["B", 10, 11, 12, 13, 14, 15].includes(level)) {
+      if (["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
         const dummyQuestions = Array.from({ length: 5 }, (_, i) => ({
           id: `dummy-${i + 1}`,
         }));
@@ -5096,7 +5973,10 @@ const Practice = () => {
       }
 
       setTimeout(() => {
-        setMechanism(currentGetContent.mechanism);
+        // Add safety check for mechanism
+        if (currentGetContent?.mechanism) {
+          setMechanism(currentGetContent.mechanism);
+        }
       }, 1000);
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
@@ -5255,6 +6135,53 @@ const Practice = () => {
   //console.log("mecc", wordWallFlow);
 
   const renderMechanics = () => {
+    // For F1 flow, ensure mechanism matches F1_FLOW step type
+    // This prevents rendering the wrong component due to stale mechanism state
+    if (isF1FlowActive && f1FlowStep?.step) {
+      const currentF1Step = getF1FlowStep();
+      const f1StepType = currentF1Step.step?.type;
+      const expectedMechanism =
+        f1StepType === "L"
+          ? "letterTrain"
+          : f1StepType === "P" || f1StepType === "A"
+          ? "letterHunt"
+          : null;
+
+      // If mechanism doesn't match expected, fix it immediately
+      if (expectedMechanism && mechanism?.name !== expectedMechanism) {
+        console.warn(
+          "renderMechanics - Mechanism mismatch detected, correcting:",
+          {
+            currentMechanism: mechanism?.name,
+            expectedMechanism,
+            f1StepType,
+            f1FlowIndexState,
+            currentF1StepIndex: currentF1Step.index,
+          }
+        );
+        // Set the correct mechanism immediately
+        if (expectedMechanism === "letterTrain") {
+          setMechanism({ id: "letterTrain", name: "letterTrain" });
+        } else if (expectedMechanism === "letterHunt") {
+          setMechanism({ id: "letterHunt", name: "letterHunt" });
+        }
+        // Don't return null - let it continue to render with the corrected mechanism
+        // The state update will trigger a re-render, but we should still try to render something
+        // Use a small delay check to ensure mechanism is set
+        if (!mechanism || mechanism.name !== expectedMechanism) {
+          // If mechanism is still not set correctly, show loading or wait for next render
+          // But don't return null to avoid blank screen
+          console.log(
+            "renderMechanics - Mechanism correction in progress, rendering will happen on next render"
+          );
+          // For A3 (index 20), ensure we don't return null - let it fall through to render
+          // The mechanism will be set and component will re-render
+        }
+      }
+    }
+
+    // Check F1 completion FIRST - highest priority
+    // Use state value which is kept in sync with localStorage
     if (
       (!mechanism &&
         rFlow !== "true" &&
@@ -5474,208 +6401,290 @@ const Practice = () => {
           }}
         />
       );
-    } else if (
-      rFlow === "true" &&
-      (level === 1 || level === "B") &&
-      rStepZero === 0
+    }
+    // else if (
+    //   isF1LearnStep &&
+    //   shouldShowF1
+    // ) {
+    //   // F1 Flow - Learn Step (replaces R0)
+    //   // Get customLetters from F1 config using practiceSteps pattern
+    //   const learnStepNumber = f1FlowStep.step?.step || 1;
+    //   // L step 1 -> P1 (practiceSteps index 0), L step 2 -> P3 (index 2), etc.
+    //   const practiceStepIndex = (learnStepNumber - 1) * 2; // 0, 2, 4, 6, 8
+    //   const stepConfig = getCurrentContent(practiceStepIndex);
+    //   const customLetters = stepConfig?.customLetters;
+
+    //   return (
+    //     <F1
+    //       page={page}
+    //       setPage={setPage}
+    //       {...{
+    //         level: level,
+    //         header:
+    //           questions[currentQuestion]?.contentType === "image"
+    //             ? `Guess the below image`
+    //             : `Speak the below word`,
+    //         //
+    //         currentImg: currentImage,
+    //         parentWords: parentWords,
+    //         contentType: currentContentType,
+    //         contentId: questions[currentQuestion]?.contentId,
+    //         setVoiceText,
+    //         setRecordedAudio,
+    //         setVoiceAnimate,
+    //         storyLine,
+    //         handleNext,
+    //         type: "word",
+    //         // image: elephant,
+    //         enableNext,
+    //         showTimer: false,
+    //         points,
+    //         steps: questions?.length,
+    //         currentStep: currentQuestion + 1,
+    //         progressData,
+    //         showProgress: true,
+    //         background:
+    //           isShowCase &&
+    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+    //         playTeacherAudio,
+    //         callUpdateLearner: isShowCase,
+    //         disableScreen,
+    //         isShowCase,
+    //         handleBack: !isShowCase && handleBack,
+    //         setEnableNext,
+    //         setIsNextButtonCalled,
+    //         loading,
+    //         setOpenMessageDialog,
+    //         vocabCount,
+    //         wordCount,
+    //         customLetters: customLetters,
+    //       }}
+    //     />
+    //   );
+    // }else if (
+    //   isF1AssessmentStep &&
+    //   shouldShowF1
+    // ) {
+    //   // F1 Flow - Assessment Step - navigate to assessment
+    //   navigate("/assesment");
+    //   return null;
+    // } else if (
+    //   rFlow === "true" &&
+    //   shouldShowF1 &&
+    //   rStepZero === 0 &&
+    //   !isF1FlowActive
+    // ) {
+    //   // Legacy R0 flow (deprecated - use F1 instead)
+    //   // Get currentGetContent to access customLetters
+    //   const currentGetContentForR0 = getCurrentContent(progressData?.currentPracticeStep || 0);
+    //   const customLetters = currentGetContentForR0?.customLetters;
+
+    //   return (
+    //     <R0
+    //       page={page}
+    //       setPage={setPage}
+    //       {...{
+    //         level: level,
+    //         header:
+    //           questions[currentQuestion]?.contentType === "image"
+    //             ? `Guess the below image`
+    //             : `Speak the below word`,
+    //         //
+    //         currentImg: currentImage,
+    //         parentWords: parentWords,
+    //         contentType: currentContentType,
+    //         contentId: questions[currentQuestion]?.contentId,
+    //         setVoiceText,
+    //         setRecordedAudio,
+    //         setVoiceAnimate,
+    //         storyLine,
+    //         handleNext,
+    //         type: "word",
+    //         // image: elephant,
+    //         enableNext,
+    //         showTimer: false,
+    //         points,
+    //         steps: questions?.length,
+    //         currentStep: currentQuestion + 1,
+    //         progressData,
+    //         showProgress: true,
+    //         background:
+    //           isShowCase &&
+    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+    //         playTeacherAudio,
+    //         callUpdateLearner: isShowCase,
+    //         disableScreen,
+    //         isShowCase,
+    //         handleBack: !isShowCase && handleBack,
+    //         setEnableNext,
+    //         setIsNextButtonCalled,
+    //         loading,
+    //         setOpenMessageDialog,
+    //         vocabCount,
+    //         wordCount,
+    //         customLetters: customLetters,
+    //       }}
+    //     />
+    //   );
+    // } else if (
+    //   rFlow === "true" &&
+    //   shouldShowF1 &&
+    //   rStepZero === 1 &&
+    //   lang === "en" &&
+    //   !isF1FlowActive &&
+    //   !f1FlowComplete
+    // ) {
+    //   // Legacy R1 flow (deprecated - use F1 instead)
+    //   return (
+    //     <R1
+    //       page={page}
+    //       setPage={setPage}
+    //       {...{
+    //         level: level,
+    //         header:
+    //           questions[currentQuestion]?.contentType === "image"
+    //             ? `Guess the below image`
+    //             : `Speak the below word`,
+    //         //
+    //         currentImg: currentImage,
+    //         parentWords: parentWords,
+    //         contentType: currentContentType,
+    //         contentId: questions[currentQuestion]?.contentId,
+    //         setVoiceText,
+    //         setRecordedAudio,
+    //         setVoiceAnimate,
+    //         storyLine,
+    //         handleNext,
+    //         type: "word",
+    //         // image: elephant,
+    //         enableNext,
+    //         showTimer: false,
+    //         points,
+    //         steps: questions?.length,
+    //         currentStep: currentQuestion + 1,
+    //         progressData,
+    //         showProgress: true,
+    //         background:
+    //           isShowCase &&
+    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+    //         playTeacherAudio,
+    //         callUpdateLearner: isShowCase,
+    //         disableScreen,
+    //         isShowCase,
+    //         handleBack: !isShowCase && handleBack,
+    //         setEnableNext,
+    //         loading,
+    //         setOpenMessageDialog,
+    //         vocabCount,
+    //         wordCount,
+    //       }}
+    //     />
+    //   );
+    // } else if (
+    //   rFlow === "true" &&
+    //   shouldShowF1 &&
+    //   rStepZero === 1 &&
+    //   lang !== "en"
+    // ) {
+    //   return (
+    //     <Barakhadi
+    //       page={page}
+    //       setPage={setPage}
+    //       {...{
+    //         level: level,
+    //         header:
+    //           questions[currentQuestion]?.contentType === "image"
+    //             ? `Guess the below image`
+    //             : `Speak the below word`,
+    //         //
+    //         currentImg: currentImage,
+    //         parentWords: parentWords,
+    //         contentType: currentContentType,
+    //         contentId: questions[currentQuestion]?.contentId,
+    //         setVoiceText,
+    //         setRecordedAudio,
+    //         setVoiceAnimate,
+    //         storyLine,
+    //         handleNext,
+    //         type: "word",
+    //         // image: elephant,
+    //         enableNext,
+    //         showTimer: false,
+    //         points,
+    //         steps: questions?.length,
+    //         currentStep: currentQuestion + 1,
+    //         progressData,
+    //         showProgress: true,
+    //         background:
+    //           isShowCase &&
+    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+    //         playTeacherAudio,
+    //         callUpdateLearner: isShowCase,
+    //         disableScreen,
+    //         isShowCase,
+    //         handleBack: !isShowCase && handleBack,
+    //         setEnableNext,
+    //         loading,
+    //         setOpenMessageDialog,
+    //         vocabCount,
+    //         wordCount,
+    //       }}
+    //     />
+    //   );
+    // } else if (rFlow === "true" && level === 2 && [2, 3, 4].includes(rStep)) {
+    //   return (
+    //     <R2
+    //       page={page}
+    //       setPage={setPage}
+    //       rStep={rStep}
+    //       //onComplete={() => handleComplete(3)}
+    //       {...{
+    //         level: level,
+    //         header:
+    //           questions[currentQuestion]?.contentType === "image"
+    //             ? `Guess the below image`
+    //             : `Speak the below word`,
+    //         //
+    //         currentImg: currentImage,
+    //         parentWords: parentWords,
+    //         contentType: currentContentType,
+    //         contentId: questions[currentQuestion]?.contentId,
+    //         setVoiceText,
+    //         setRecordedAudio,
+    //         setVoiceAnimate,
+    //         storyLine,
+    //         handleNext,
+    //         type: "word",
+    //         // image: elephant,
+    //         enableNext,
+    //         showTimer: false,
+    //         points,
+    //         steps: questions?.length,
+    //         currentStep: currentQuestion + 1,
+    //         progressData,
+    //         showProgress: true,
+    //         background:
+    //           isShowCase &&
+    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+    //         playTeacherAudio,
+    //         callUpdateLearner: isShowCase,
+    //         disableScreen,
+    //         isShowCase,
+    //         handleBack: !isShowCase && handleBack,
+    //         setEnableNext,
+    //         loading,
+    //         setOpenMessageDialog,
+    //         vocabCount,
+    //         wordCount,
+    //       }}
+    //     />
+    //   );
+    // }
+    else if (
+      mechanism &&
+      mechanism.name === "fillInTheBlank" &&
+      mechanism.id !== ""
     ) {
-      return (
-        <R0
-          page={page}
-          setPage={setPage}
-          {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: currentImage,
-            parentWords: parentWords,
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            setIsNextButtonCalled,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-          }}
-        />
-      );
-    } else if (
-      rFlow === "true" &&
-      (level === 1 || level === "B") &&
-      rStepZero === 1 &&
-      lang === "en"
-    ) {
-      return (
-        <R1
-          page={page}
-          setPage={setPage}
-          {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: currentImage,
-            parentWords: parentWords,
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-          }}
-        />
-      );
-    } else if (
-      rFlow === "true" &&
-      (level === 1 || level === "B") &&
-      rStepZero === 1 &&
-      lang !== "en"
-    ) {
-      return (
-        <Barakhadi
-          page={page}
-          setPage={setPage}
-          {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: currentImage,
-            parentWords: parentWords,
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-          }}
-        />
-      );
-    } else if (rFlow === "true" && level === 2 && [2, 3, 4].includes(rStep)) {
-      return (
-        <R2
-          page={page}
-          setPage={setPage}
-          rStep={rStep}
-          //onComplete={() => handleComplete(3)}
-          {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: currentImage,
-            parentWords: parentWords,
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-          }}
-        />
-      );
-    } else if (mechanism.name === "fillInTheBlank" && mechanism.id !== "") {
       return (
         <Mechanics3
           page={page}
@@ -5745,7 +6754,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "formAWord") {
+    } else if (mechanism && mechanism.name === "formAWord") {
       return (
         <Mechanics4
           page={page}
@@ -5792,7 +6801,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "formAWord2") {
+    } else if (mechanism && mechanism.name === "formAWord2") {
       return (
         <Mechanics7
           page={page}
@@ -5839,7 +6848,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "bingoCard") {
+    } else if (mechanism && mechanism.name === "bingoCard") {
       return (
         <BingoCard
           page={page}
@@ -5885,7 +6894,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "fluencyP1") {
+    } else if (mechanism && mechanism.name === "fluencyP1") {
       return (
         <FluencyP1
           page={page}
@@ -5933,7 +6942,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "fluencyP2") {
+    } else if (mechanism && mechanism.name === "fluencyP2") {
       return (
         <FluencyP2
           page={page}
@@ -5981,7 +6990,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "fluencyP3") {
+    } else if (mechanism && mechanism.name === "fluencyP3") {
       return (
         <FluencyP3
           page={page}
@@ -6028,7 +7037,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "fluencyP4") {
+    } else if (mechanism && mechanism.name === "fluencyP4") {
       return (
         <FluencyP4
           page={page}
@@ -6075,7 +7084,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "fluencyP5") {
+    } else if (mechanism && mechanism.name === "fluencyP5") {
       return (
         <FluencyP5
           page={page}
@@ -6123,7 +7132,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "fluencyP6") {
+    } else if (mechanism && mechanism.name === "fluencyP6") {
       return (
         <ParagraphFlow
           page={page}
@@ -6170,7 +7179,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "syllablePuzzle") {
+    } else if (mechanism && mechanism.name === "syllablePuzzle") {
       return (
         <SyllablePuzzle
           page={page}
@@ -6216,7 +7225,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "readTheImage") {
+    } else if (mechanism && mechanism.name === "readTheImage") {
       const options = questions[currentQuestion]?.mechanics_data
         ? questions[currentQuestion]?.mechanics_data[0]?.options
         : [];
@@ -6297,7 +7306,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "formASentence") {
+    } else if (mechanism && mechanism.name === "formASentence") {
       return (
         <Mechanics4
           page={page}
@@ -6350,7 +7359,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "readAloud") {
+    } else if (mechanism && mechanism.name === "readAloud") {
       return (
         <ReadAloud
           page={page}
@@ -6396,7 +7405,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "jumbledWord") {
+    } else if (mechanism && mechanism.name === "jumbledWord") {
       return (
         <JumbledWord
           page={page}
@@ -6442,7 +7451,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "r3") {
+    } else if (mechanism && mechanism.name === "r3") {
       return (
         <R3
           page={page}
@@ -6488,7 +7497,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "askMore") {
+    } else if (mechanism && mechanism.name === "askMore") {
       return (
         <AskMoreM14
           page={page}
@@ -6545,7 +7554,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "actOut") {
+    } else if (mechanism && mechanism.name === "actOut") {
       return (
         <ActOutM13
           page={page}
@@ -6600,7 +7609,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "ReadAloudMcqM10") {
+    } else if (mechanism && mechanism.name === "ReadAloudMcqM10") {
       return (
         <PhoneConversation
           page={page}
@@ -6657,7 +7666,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "WhatsMissing") {
+    } else if (mechanism && mechanism.name === "WhatsMissing") {
       return (
         <WhatsMissing
           page={page}
@@ -6703,7 +7712,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "arrangePicture") {
+    } else if (mechanism && mechanism.name === "arrangePicture") {
       return (
         <ArrangePicture
           page={page}
@@ -6749,42 +7758,365 @@ const Practice = () => {
           }}
         />
       );
-    } else if (
-      mechanism.name === "letterHunt" ||
-      mechanism.name === "letter-hunt" ||
-      mechanism.name === "letterHuntGame"
-    ) {
-      return (
-        <LetterHuntMechanics
-          page={page}
-          setPage={setPage}
-          {...{
-            level: !isShowCase && level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Letter Recognition`,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            handleNext,
-            handleBack: !isShowCase && handleBack,
-            enableNext,
-            setEnableNext,
-            isShowCase,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-            showTimer: false,
-          }}
-        />
-      );
-    } else if (mechanism.name === "AnouncementFlow") {
+    } else if (mechanism && mechanism.name === "letterTrain") {
+      // Get currentGetContent to access customLetters
+      // For F1 flow, directly access F1 config array using f1FlowIndexState
+      let currentGetContentForLetterTrain;
+      let customLetters;
+
+      if (isF1FlowActive) {
+        // For F1 flow, directly access F1 config array
+        const lang = getLocalData("lang") || "en";
+        const f1Config = levelGetContent[lang]?.["F1"];
+        if (f1Config && Array.isArray(f1Config) && f1Config[f1FlowIndexState]) {
+          currentGetContentForLetterTrain = f1Config[f1FlowIndexState];
+          customLetters = currentGetContentForLetterTrain?.customLetters;
+          console.log(
+            "LetterTrain render - F1 config for index:",
+            f1FlowIndexState,
+            "customLetters:",
+            customLetters
+          );
+        } else {
+          console.error(
+            "LetterTrain render - F1 config not found for index:",
+            f1FlowIndexState
+          );
+          currentGetContentForLetterTrain = null;
+          customLetters = null;
+        }
+      } else {
+        // For non-F1 flow, use getCurrentContent
+        const stepIndexForContent = progressData?.currentPracticeStep || 0;
+        currentGetContentForLetterTrain =
+          getCurrentContent(stepIndexForContent);
+        customLetters = currentGetContentForLetterTrain?.customLetters;
+      }
+
+      // Only render LetterTrain if we have customLetters (for F1 Learn steps)
+      // If customLetters is undefined, it means we're not in a Learn step, so don't render
+      if (!customLetters && isF1FlowActive) {
+        console.warn(
+          "LetterTrain render blocked: customLetters is undefined for F1 flow step",
+          {
+            stepIndex: isF1FlowActive
+              ? f1FlowIndexState
+              : progressData?.currentPracticeStep || 0,
+            f1FlowIndexState,
+            f1FlowStep: f1FlowStep.step,
+            currentGetContent: currentGetContentForLetterTrain,
+          }
+        );
+        // Don't render LetterTrain if we don't have customLetters in F1 flow
+        // Instead of returning null, let it fall through to check other mechanisms
+        // This prevents blank screens
+      } else if (customLetters) {
+        return (
+          <LetterTrain
+            page={page}
+            setPage={setPage}
+            {...{
+              level: level,
+              header:
+                questions[currentQuestion]?.contentType === "image"
+                  ? `Guess the below image`
+                  : `Speak the below word`,
+              currentImg: currentImage,
+              parentWords: parentWords,
+              contentType: currentContentType,
+              contentId: questions[currentQuestion]?.contentId,
+              setVoiceText,
+              setRecordedAudio,
+              setVoiceAnimate,
+              storyLine,
+              handleNext: isF1LearnStep
+                ? handleLetterTrainComplete
+                : handleNext,
+              type: "word",
+              enableNext,
+              showTimer: false,
+              points,
+              steps: questions?.length,
+              currentStep: currentQuestion + 1,
+              progressData,
+              showProgress: true,
+              background:
+                isShowCase &&
+                "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+              playTeacherAudio,
+              callUpdateLearner: isShowCase,
+              disableScreen,
+              isShowCase,
+              handleBack: !isShowCase && handleBack,
+              setEnableNext,
+              loading,
+              setOpenMessageDialog,
+              vocabCount,
+              wordCount,
+              customLetters: customLetters,
+            }}
+          />
+        );
+      }
+    } else if (mechanism && mechanism.name === "letterHunt") {
+      // For F1 flow, verify that this is actually a Practice or Apply step, not a Learn step
+      // If mechanism is letterHunt but F1 flow step type is "L", something is wrong - don't render
+      if (isF1FlowActive) {
+        // Also check if we should render LetterHunt based on F1 step type, even if mechanism isn't set yet
+        const currentF1StepCheck = getF1FlowStep();
+        const f1StepTypeCheck = currentF1StepCheck.step?.type;
+        if (
+          (f1StepTypeCheck === "P" || f1StepTypeCheck === "A") &&
+          mechanism?.name !== "letterHunt"
+        ) {
+          console.log(
+            "LetterHunt render - F1 step type is",
+            f1StepTypeCheck,
+            "but mechanism is",
+            mechanism?.name,
+            "- setting mechanism"
+          );
+          setMechanism({ id: "letterHunt", name: "letterHunt" });
+        }
+        const currentF1Step = getF1FlowStep();
+        const f1StepType = currentF1Step.step?.type;
+        console.log("LetterHunt render - F1 flow check:", {
+          f1FlowIndexState,
+          currentF1StepIndex: currentF1Step.index,
+          f1StepType,
+          mechanism: mechanism?.name,
+          step: currentF1Step.step,
+          hasStep: !!currentF1Step.step,
+        });
+
+        // If we don't have a valid step, wait for next render
+        if (!currentF1Step.step) {
+          console.warn(
+            "LetterHunt render - No F1 step found at index:",
+            currentF1Step.index,
+            "waiting for next render"
+          );
+          return null;
+        }
+
+        if (f1StepType === "L") {
+          console.warn(
+            "LetterHunt render blocked: F1 flow step type is 'L' (Learn) but mechanism is letterHunt. This is incorrect.",
+            {
+              f1FlowIndexState,
+              currentF1Step: currentF1Step.step,
+              mechanism,
+            }
+          );
+          // Don't render LetterHunt if it's actually a Learn step
+          // Return null to prevent rendering, but the mechanism should be corrected on next render
+          return null;
+        } else if (f1StepType === "P" || f1StepType === "A") {
+          // Ensure mechanism is set correctly for F1 flow
+          if (mechanism?.name !== "letterHunt") {
+            console.log(
+              "LetterHunt render - Setting mechanism to letterHunt for F1 step type:",
+              f1StepType
+            );
+            setMechanism({ id: "letterHunt", name: "letterHunt" });
+          }
+          // Only proceed with LetterHunt rendering if step type is P or A
+          // For F1 flow, use F1 config directly
+          let currentGetContentForF1;
+          // For F1 flow, use currentF1Step.index (from localStorage) instead of f1FlowIndexState
+          // This ensures we always use the most up-to-date index
+          const f1IndexToUse = currentF1Step.index;
+          const lang = getLocalData("lang") || "en";
+          const f1Config = levelGetContent[lang]?.["F1"];
+          if (f1Config && Array.isArray(f1Config) && f1Config[f1IndexToUse]) {
+            currentGetContentForF1 = f1Config[f1IndexToUse];
+            console.log(
+              "LetterHunt render - F1 config for index:",
+              f1IndexToUse,
+              "content:",
+              currentGetContentForF1
+            );
+          } else {
+            console.error(
+              "LetterHunt render - F1 config not found for index:",
+              f1IndexToUse,
+              "f1FlowIndexState:",
+              f1FlowIndexState,
+              "f1Config length:",
+              f1Config?.length
+            );
+            // Fallback to getCurrentContent if F1 config not found
+            currentGetContentForF1 = getCurrentContent(
+              progressData?.currentPracticeStep || 0
+            );
+          }
+
+          // Add null check for currentGetContentForF1
+          if (!currentGetContentForF1) {
+            console.error(
+              "LetterHunt render - currentGetContentForF1 is null/undefined for index:",
+              f1IndexToUse
+            );
+            // Create a minimal config object for Apply steps
+            if (f1StepType === "A") {
+              const applyStepNum = currentF1Step.step?.step || 1;
+              currentGetContentForF1 = {
+                title: `A${applyStepNum}`,
+                letterHuntLevel: 1,
+                letterHuntEndLevel: 3,
+                isShowcase: true,
+                applyStep: applyStepNum,
+                failRedirect:
+                  applyStepNum === 1 ? "L1" : applyStepNum === 2 ? "L4" : "L7",
+                passRedirect:
+                  applyStepNum === 1 ? "L4" : applyStepNum === 2 ? "L7" : "F2",
+              };
+              console.log(
+                "LetterHunt render - Created fallback config for Apply step:",
+                currentGetContentForF1
+              );
+            } else {
+              // For Practice steps, create minimal config
+              const practiceStepNum = currentF1Step.step?.step || 1;
+              currentGetContentForF1 = {
+                title: `P${practiceStepNum}`,
+                letterHuntLevel: 1,
+                isShowcase: false,
+              };
+              console.log(
+                "LetterHunt render - Created fallback config for Practice step:",
+                currentGetContentForF1
+              );
+            }
+          }
+
+          const letterHuntLevel = currentGetContentForF1?.letterHuntLevel || 1;
+          const letterHuntIsShowcase =
+            currentGetContentForF1?.isShowcase || false; // Get isShowcase from config
+          const letterHuntEndLevel = currentGetContentForF1?.letterHuntEndLevel; // Optional end level
+          const applyStep = currentGetContentForF1?.applyStep; // Apply step number (1, 2, or 3)
+          const failRedirect = currentGetContentForF1?.failRedirect; // e.g., "L1", "L4", "L7"
+          const passRedirect = currentGetContentForF1?.passRedirect; // e.g., "L4", "L7", "F2"
+          // Get milestone level for progress update
+          const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+          // For showcase mode (Apply steps), we still need to pass startLevel and endLevel
+          // For non-showcase mode, pass level to use default behavior
+          // Use isShowcase from config (constants.js) - this is the source of truth
+          return (
+            <LetterHuntMechanics
+              page={page}
+              setPage={setPage}
+              {...{
+                level: letterHuntIsShowcase
+                  ? letterHuntLevel || 1
+                  : letterHuntLevel, // For showcase, pass startLevel (1) for Apply steps; for non-showcase, pass the level
+                header:
+                  questions[currentQuestion]?.contentType === "image"
+                    ? `Guess the below image`
+                    : `Letter Recognition`,
+                points,
+                steps: questions?.length,
+                currentStep: currentQuestion + 1,
+                progressData,
+                showProgress: true,
+                background: "#FFB31F",
+                handleNext,
+                handleBack: !letterHuntIsShowcase && handleBack,
+                enableNext,
+                setEnableNext,
+                isShowCase: letterHuntIsShowcase, // Use isShowcase from config (constants.js)
+                loading,
+                setOpenMessageDialog,
+                vocabCount,
+                wordCount,
+                showTimer: false,
+                milestoneLevel: milestoneLevelValue,
+                endLevel: letterHuntEndLevel, // Pass end level if specified in config
+                startShowCase,
+                setStartShowCase,
+                setProgressData, // Pass setProgressData to update state when resetting to P1
+                setCurrentQuestion, // Pass setCurrentQuestion to reset currentQuestion state when resetting to P1
+                applyStep, // Pass Apply step number
+                failRedirect, // Pass fail redirect (e.g., "L1", "L4", "L7")
+                passRedirect, // Pass pass redirect (e.g., "L4", "L7", "F2")
+                isF1FlowActive, // Pass F1 flow active flag
+                f1FlowStep, // Pass F1 flow step info
+                customLetters: undefined, // Don't pass customLetters for Letter Hunt - it should use level-based letters
+              }}
+            />
+          );
+        } else {
+          // F1 flow step type is neither L, P, nor A - this shouldn't happen
+          console.error(
+            "LetterHunt render - Unknown F1 step type:",
+            f1StepType,
+            "at index:",
+            currentF1Step.index
+          );
+          return null;
+        }
+      } else {
+        // For non-F1 flow, use getCurrentContent
+        let currentGetContentForF1 = getCurrentContent(
+          progressData?.currentPracticeStep || 0
+        );
+
+        const letterHuntLevel = currentGetContentForF1?.letterHuntLevel || 1;
+        const letterHuntIsShowcase =
+          currentGetContentForF1?.isShowcase || false;
+        const letterHuntEndLevel = currentGetContentForF1?.letterHuntEndLevel;
+        const applyStep = currentGetContentForF1?.applyStep;
+        const failRedirect = currentGetContentForF1?.failRedirect;
+        const passRedirect = currentGetContentForF1?.passRedirect;
+        const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+
+        return (
+          <LetterHuntMechanics
+            page={page}
+            setPage={setPage}
+            {...{
+              level: letterHuntIsShowcase
+                ? letterHuntLevel || 1
+                : letterHuntLevel,
+              header:
+                questions[currentQuestion]?.contentType === "image"
+                  ? `Guess the below image`
+                  : `Letter Recognition`,
+              points,
+              steps: questions?.length,
+              currentStep: currentQuestion + 1,
+              progressData,
+              showProgress: true,
+              background:
+                isShowCase &&
+                "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+              handleNext,
+              handleBack: !letterHuntIsShowcase && handleBack,
+              enableNext,
+              setEnableNext,
+              isShowCase: letterHuntIsShowcase,
+              loading,
+              setOpenMessageDialog,
+              vocabCount,
+              wordCount,
+              showTimer: false,
+              milestoneLevel: milestoneLevelValue,
+              endLevel: letterHuntEndLevel,
+              startShowCase,
+              setStartShowCase,
+              setProgressData,
+              setCurrentQuestion,
+              applyStep,
+              failRedirect,
+              passRedirect,
+              isF1FlowActive,
+              f1FlowStep,
+              customLetters: undefined,
+            }}
+          />
+        );
+      }
+    } else if (mechanism && mechanism.name === "AnouncementFlow") {
       return (
         <AnouncementFlow
           page={page}
@@ -6841,7 +8173,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "PhrasesInAction") {
+    } else if (mechanism && mechanism.name === "PhrasesInAction") {
       return (
         <PhrasesInAction
           page={page}
@@ -6888,7 +8220,7 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism.name === "McqFlow") {
+    } else if (mechanism && mechanism.name === "McqFlow") {
       return (
         <McqFlow
           page={page}
@@ -6935,8 +8267,8 @@ const Practice = () => {
         />
       );
     } else if (
-      mechanism.name === "audio" ||
-      (mechanism.name === "fillInTheBlank" && mechanism.id === "")
+      (mechanism && mechanism.name === "audio") ||
+      (mechanism && mechanism.name === "fillInTheBlank" && mechanism.id === "")
     ) {
       return (
         <Mechanics6

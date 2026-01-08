@@ -169,7 +169,7 @@ class SunbirdTelemetryWrapper {
         sid: this.sessionId, // Use the new session ID
         batchsize: 10,
         mode: 'play',
-        host: (process.env.REACT_APP_TELEMETRY_HOST || '') || 'https://api.ekstep.in',
+        host: (process.env.REACT_APP_TELEMETRY_HOST || 'https://www.learnerai-dev.theall.ai'),
         endpoint: (process.env.REACT_APP_TELEMETRY_ENDPOINT || '') || '/v3/telemetry',
         apislug: '', // Remove /action prefix - set to empty string to use endpoint as-is
         tags: [],

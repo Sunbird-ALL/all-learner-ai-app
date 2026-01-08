@@ -40,6 +40,7 @@ import {
   callConfettiSnow,
   levelConfig,
   practiceSteps,
+  levelGetContent,
   getLocalData,
   LevelTen,
   LevelEleven,
@@ -49,7 +50,6 @@ import {
   LevelFifteen,
   ROneImg,
   setLocalData,
-  LevelBeginner,
 } from "../../utils/constants";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
@@ -67,8 +67,10 @@ import rOneImg from "../../assets/R1.png";
 import rTwoMileImage from "../../assets/r2mile.png";
 import rThreeMileImage from "../../assets/r3mile.png";
 import rFourMileImage from "../../assets/r4mile.png";
+import F1Image from "../../assets/F1.png";
 import zIndex from "@mui/material/styles/zIndex";
 import { Log } from "../../services/telementryService";
+import { getF1FlowStep, F1_FLOW } from "../../RFlow/F1";
 
 const theme = createTheme();
 
@@ -78,7 +80,7 @@ const MainLayout = (props) => {
 
   const levelsImages = {
     B: {
-      milestone: <LevelBeginner height={isMobile ? 120 : 168} />,
+      milestone: <img src={F1Image} alt="F1" height={isMobile ? 120 : 168} />,
       backgroundAddOn: practicebgstone,
       background: practicebg,
       backgroundColor: `#FFB31F`,
@@ -178,12 +180,65 @@ const MainLayout = (props) => {
   const mFlow = getLocalData("mFail");
   const allCompleted = getLocalData("allCompleted");
 
+  // Get milestone_level from API to determine if F1 flow should be active
+  const getMilestoneData = () => {
+    try {
+      const milestoneStr = getLocalData("getMilestone");
+      if (milestoneStr) {
+        return JSON.parse(milestoneStr);
+      }
+    } catch (e) {
+      console.error("Error parsing getMilestone:", e);
+    }
+    return null;
+  };
+  const milestoneData = getMilestoneData();
+  const milestoneLevel = milestoneData?.data?.milestone_level || null;
+  const shouldShowF1 = milestoneLevel === "B";
+
+  // Check if F1 flow is active
+  const f1FlowStep = getF1FlowStep();
+  const isF1FlowActive = shouldShowF1 && f1FlowStep.step !== null;
+
   console.log("rStep", rStep);
 
   let LEVEL = props?.level;
 
-  let flowNames = props?.flowNames;
+  // Use F1 step names if F1 flow is active, otherwise use props flowNames
+  // flowNames should be ["L1", "P1", "L2", "P2", "L3", "P3", "A1", ...] for F1 flow
+  const getF1FlowNames = () => {
+    if (!isF1FlowActive) return null;
+    return F1_FLOW.map((flowStep) => {
+      if (flowStep.type === "L") {
+        return `L${flowStep.step}`;
+      } else if (flowStep.type === "P") {
+        return `P${flowStep.step}`;
+      } else if (flowStep.type === "A") {
+        return `A${flowStep.step}`;
+      }
+      return "";
+    });
+  };
+
+  let flowNames = isF1FlowActive
+    ? getF1FlowNames() || props?.flowNames
+    : props?.flowNames;
+
+  // For F1 flow, set activeFlow based on current F1 step
+  // activeFlow should be L1, P1, L2, P2, A1, etc. based on F1_FLOW
   let activeFlow = props?.activeFlow;
+  if (isF1FlowActive && f1FlowStep.step) {
+    const currentFlowStep = F1_FLOW[f1FlowStep.index];
+    if (currentFlowStep) {
+      if (currentFlowStep.type === "L") {
+        activeFlow = `L${currentFlowStep.step}`; // L1, L2, L3, etc.
+      } else if (currentFlowStep.type === "P") {
+        activeFlow = `P${currentFlowStep.step}`; // P1, P2, P3, etc.
+      } else if (currentFlowStep.type === "A") {
+        activeFlow = `A${currentFlowStep.step}`; // A1, A2, A3
+      }
+    }
+  }
 
   const virtualId = String(getLocalData("virtualId"));
 
@@ -247,7 +302,7 @@ const MainLayout = (props) => {
 
   const language = getLocalData("lang");
 
-  console.log("levelss", LEVEL, livesData);
+  //console.log("levelss", LEVEL, livesData);
 
   // useEffect(() => {
   //   if (language !== "en") {
@@ -354,8 +409,40 @@ const MainLayout = (props) => {
   }, [startShowCase, isShowCase, gameOverData, audioCache]);
 
   let currentPracticeStep = progressData?.currentPracticeStep;
+  // For F1 flow, use the F1 flow index instead of currentPracticeStep
+  if (isF1FlowActive && f1FlowStep.index !== undefined) {
+    currentPracticeStep = f1FlowStep.index;
+  }
   const [currentPageStart, setCurrentPageStart] = useState(0);
   const prevActiveFlow = useRef(null);
+
+  // Get F1 steps for progress bar when F1 flow is active
+  // Labels should be: L1, P1, L2, P2, L3, P3, A1, L4, P4, etc.
+  const getF1PracticeSteps = () => {
+    if (!isF1FlowActive) return null;
+    // Use F1_FLOW to generate labels based on type and step number
+    return F1_FLOW.map((flowStep, index) => {
+      let label = "";
+      if (flowStep.type === "L") {
+        label = `L${flowStep.step}`; // Learn: L1, L2, L3, etc.
+      } else if (flowStep.type === "P") {
+        label = `P${flowStep.step}`; // Practice: P1, P2, P3, etc.
+      } else if (flowStep.type === "A") {
+        label = `A${flowStep.step}`; // Apply: A1, A2, A3
+      }
+      return {
+        name: label,
+        title: label,
+        titleNew: label,
+        titleThree: label,
+      };
+    });
+  };
+
+  // Use F1 steps if F1 flow is active, otherwise use regular practiceSteps
+  const displayPracticeSteps = isF1FlowActive
+    ? getF1PracticeSteps() || practiceSteps
+    : practiceSteps;
 
   useEffect(() => {
     if (!flowNames || !activeFlow) return;
@@ -392,9 +479,9 @@ const MainLayout = (props) => {
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
     minHeight: "100vh",
-    height: "100vh",
-    maxHeight: "100vh",
-    overflow: "hidden",
+    // height: "100vh",
+    // maxHeight: "100vh",
+    // overflow: "hidden",
     display: "flex",
     paddingTop: { md: "0px", xs: "20px" },
     justifyContent: "center",
@@ -515,8 +602,8 @@ const MainLayout = (props) => {
                   left: { xs: "auto", md: "auto" },
                   width: { xs: "100%", md: "85vw" },
                   minHeight: "80vh",
-                  maxHeight: "calc(100vh - 150px)",
-                  height: "calc(100vh - 150px)",
+                  // maxHeight: "calc(100vh - 150px)",
+                  // height: "calc(100vh - 150px)",
                   borderRadius: "20px",
                   display: "flex",
                   flexDirection: "column",
@@ -527,7 +614,7 @@ const MainLayout = (props) => {
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
                   backdropFilter: "blur(25px)",
                   mt: "75px",
-                  overflow: "hidden",
+                  // overflow: "hidden",
                 }}
               >
                 <Box>
@@ -538,15 +625,15 @@ const MainLayout = (props) => {
                 <CardContent
                   sx={{
                     minHeight: "100%",
-                    height: "100%",
-                    maxHeight: "100%",
-                    overflow: "hidden",
-                    display: "flex",
-                    flexDirection: "column",
+                    // height: "100%",
+                    // maxHeight: "100%",
+                    // overflow: "hidden",
+                    // display: "flex",
+                    // flexDirection: "column",
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
-                    padding: "16px !important",
-                    boxSizing: "border-box",
+                    // padding: "16px !important",
+                    // boxSizing: "border-box",
                   }}
                 >
                   {showTimer && (
@@ -634,17 +721,31 @@ const MainLayout = (props) => {
                     }}
                   >
                     <footer>
-                      {rFlow === "true" ? (
-                        [1, "B"]?.includes(LEVEL) ? (
+                      {isF1FlowActive ? (
+                        // F1 Flow - Show F1 milestone image
+                        <div style={{ height: "150px", width: "150px" }}>
                           <img
-                            src={
-                              rStep == null || rStep === 0 || rStep === "0"
-                                ? r0
-                                : Assets.rOneMileImage
-                            }
-                            alt="R One"
+                            src={F1Image}
+                            alt="F1"
                             height={isMobile ? "130px" : "200px"}
                           />
+                        </div>
+                      ) : rFlow === "true" ? (
+                        [1, "B"]?.includes(LEVEL) ? (
+                          // R0 - Show F1 milestone image instead of R0 image
+                          rStep == null || rStep === 0 || rStep === "0" ? (
+                            <img
+                              src={F1Image}
+                              alt="F1"
+                              height={isMobile ? "130px" : "200px"}
+                            />
+                          ) : (
+                            <img
+                              src={Assets.rOneMileImage}
+                              alt="R One"
+                              height={isMobile ? "130px" : "200px"}
+                            />
+                          )
                         ) : LEVEL === 2 ? (
                           <img
                             src={
@@ -671,157 +772,41 @@ const MainLayout = (props) => {
                       width: "100%",
                     }}
                   ></Box>
-                  {showNext && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: currentPracticeStep
-                          ? "center"
-                          : "right",
-                        alignItems: "center",
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    >
-                      {showProgress && rFlow !== "true" && (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            width: "100%",
-                          }}
-                        >
+                  {/* Show displayPracticeSteps progress bar - hide when flowNames progress bar is showing */}
+                  {(showNext || showProgress) &&
+                    !(
+                      rFlow === "true" &&
+                      ![1, "B"]?.includes(LEVEL) &&
+                      !isF1FlowActive
+                    ) && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: currentPracticeStep
+                            ? "center"
+                            : "right",
+                          alignItems: "center",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        {/* Show progress bar - use F1 flow steps when F1 is active, otherwise use regular steps */}
+                        {showProgress && (
                           <Box
                             sx={{
                               display: "flex",
                               justifyContent: "center",
-                              flexDirection: "column",
+                              width: "100%",
                             }}
                           >
-                            {" "}
                             <Box
                               sx={{
                                 display: "flex",
                                 justifyContent: "center",
-                                alignItems: "center",
-                                height: "48px",
-                                border: "1.5px solid rgba(51, 63, 97, 0.15)",
-                                ml: {
-                                  xs: 10,
-                                  sm: 15,
-                                  lg: 25,
-                                  md: 18,
-                                },
-                                borderRadius: "30px",
-                                background: "white",
+                                flexDirection: "column",
                               }}
                             >
-                              {practiceSteps.map((elem, i) => {
-                                return (
-                                  <Box
-                                    key={i}
-                                    sx={{
-                                      width: {
-                                        xs: "16px",
-                                        sm: "26px",
-                                        md: "28px",
-                                        lg: "36px",
-                                      },
-                                      height: {
-                                        xs: "16px",
-                                        sm: "26px",
-                                        md: "28px",
-                                        lg: "36px",
-                                      },
-                                      background:
-                                        currentPracticeStep > i
-                                          ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
-                                          : currentPracticeStep === i
-                                          ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                          : "rgba(0, 0, 0, 0.04)",
-                                      ml: {
-                                        xs: 0.5,
-                                        sm: 0.5,
-                                        md: 1.5,
-                                        lg: 2,
-                                      },
-                                      mr:
-                                        i === practiceSteps?.length - 1 ? 2 : 0,
-                                      borderRadius: "30px",
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    {currentPracticeStep > i ? (
-                                      <GreenTick />
-                                    ) : (
-                                      <span
-                                        style={{
-                                          color:
-                                            currentPracticeStep === i
-                                              ? "white"
-                                              : "#1E2937",
-                                          fontWeight: 600,
-                                          lineHeight: "20px",
-                                          fontSize: isMobile ? "13px" : "16px",
-                                          fontFamily: "Quicksand",
-                                        }}
-                                      >
-                                        {LEVEL === 1
-                                          ? elem.title
-                                          : LEVEL === 2
-                                          ? elem.titleNew
-                                          : LEVEL === 3
-                                          ? elem.titleThree
-                                          : elem.name}
-                                      </span>
-                                    )}
-                                  </Box>
-                                );
-                              })}
-                            </Box>
-                          </Box>
-                        </Box>
-                      )}
-                      {rFlow === "true" && ![1, "B"]?.includes(LEVEL) && (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            width: "100%",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center",
-                              maxWidth: "100%",
-                              overflow: "hidden",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                height: "48px",
-                              }}
-                            >
-                              <IconButton
-                                onClick={handlePrev}
-                                disabled={currentPageStart === 0}
-                                sx={{
-                                  mr: 1,
-                                  visibility:
-                                    currentPageStart === 0
-                                      ? "hidden"
-                                      : "visible",
-                                }}
-                              >
-                                <ChevronLeft />
-                              </IconButton>
-
+                              {" "}
                               <Box
                                 sx={{
                                   display: "flex",
@@ -829,38 +814,38 @@ const MainLayout = (props) => {
                                   alignItems: "center",
                                   height: "48px",
                                   border: "1.5px solid rgba(51, 63, 97, 0.15)",
+                                  ml: {
+                                    xs: 10,
+                                    sm: 15,
+                                    lg: 25,
+                                    md: 18,
+                                  },
                                   borderRadius: "30px",
                                   background: "white",
-                                  overflow: "hidden",
                                 }}
                               >
-                                {flowNames
-                                  ?.slice(
-                                    currentPageStart,
-                                    currentPageStart + 10
-                                  )
-                                  .map((flow, i) => (
+                                {displayPracticeSteps.map((elem, i) => {
+                                  return (
                                     <Box
                                       key={i}
                                       sx={{
                                         width: {
-                                          xs: "24px",
+                                          xs: "16px",
                                           sm: "26px",
                                           md: "28px",
                                           lg: "36px",
                                         },
                                         height: {
-                                          xs: "24px",
+                                          xs: "16px",
                                           sm: "26px",
                                           md: "28px",
                                           lg: "36px",
                                         },
                                         background:
-                                          flow === activeFlow
-                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                            : flowNames?.indexOf(flow) <
-                                              flowNames?.indexOf(activeFlow)
+                                          currentPracticeStep > i
                                             ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
+                                            : currentPracticeStep === i
+                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
                                             : "rgba(0, 0, 0, 0.04)",
                                         ml: {
                                           xs: 0.5,
@@ -868,57 +853,189 @@ const MainLayout = (props) => {
                                           md: 1.5,
                                           lg: 2,
                                         },
-                                        mr: i === 9 ? 2 : 0,
+                                        mr:
+                                          i === displayPracticeSteps?.length - 1
+                                            ? 2
+                                            : 0,
                                         borderRadius: "30px",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        flexShrink: 0,
                                       }}
                                     >
-                                      {flowNames?.indexOf(flow) <
-                                      flowNames?.indexOf(activeFlow) ? (
+                                      {currentPracticeStep > i ? (
                                         <GreenTick />
                                       ) : (
                                         <span
                                           style={{
                                             color:
-                                              flow === activeFlow
+                                              currentPracticeStep === i
                                                 ? "white"
                                                 : "#1E2937",
                                             fontWeight: 600,
-                                            fontSize: "16px",
+                                            lineHeight: "20px",
+                                            fontSize: isMobile
+                                              ? "13px"
+                                              : "16px",
                                             fontFamily: "Quicksand",
                                           }}
                                         >
-                                          {flow}
+                                          {LEVEL === 1
+                                            ? elem.title
+                                            : LEVEL === 2
+                                            ? elem.titleNew
+                                            : LEVEL === 3
+                                            ? elem.titleThree
+                                            : elem.name}
                                         </span>
                                       )}
                                     </Box>
-                                  ))}
+                                  );
+                                })}
                               </Box>
-
-                              <IconButton
-                                onClick={handleNext1}
-                                disabled={
-                                  currentPageStart + 10 >= flowNames?.length
-                                }
-                                sx={{
-                                  ml: 1,
-                                  visibility:
-                                    currentPageStart + 10 >= flowNames?.length
-                                      ? "hidden"
-                                      : "visible",
-                                }}
-                              >
-                                <ChevronRight />
-                              </IconButton>
                             </Box>
                           </Box>
-                        </Box>
-                      )}
-                    </Box>
-                  )}
+                        )}
+                        {/* Hide flowNames progress bar when F1 flow is active - use displayPracticeSteps instead */}
+                        {rFlow === "true" &&
+                          ![1, "B"]?.includes(LEVEL) &&
+                          !isF1FlowActive && (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  justifyContent: "center",
+                                  maxWidth: "100%",
+                                  overflow: "hidden",
+                                }}
+                              >
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    height: "48px",
+                                  }}
+                                >
+                                  <IconButton
+                                    onClick={handlePrev}
+                                    disabled={currentPageStart === 0}
+                                    sx={{
+                                      mr: 1,
+                                      visibility:
+                                        currentPageStart === 0
+                                          ? "hidden"
+                                          : "visible",
+                                    }}
+                                  >
+                                    <ChevronLeft />
+                                  </IconButton>
+
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      height: "48px",
+                                      border:
+                                        "1.5px solid rgba(51, 63, 97, 0.15)",
+                                      borderRadius: "30px",
+                                      background: "white",
+                                      overflow: "hidden",
+                                    }}
+                                  >
+                                    {flowNames
+                                      ?.slice(
+                                        currentPageStart,
+                                        currentPageStart + 10
+                                      )
+                                      .map((flow, i) => (
+                                        <Box
+                                          key={i}
+                                          sx={{
+                                            width: {
+                                              xs: "24px",
+                                              sm: "26px",
+                                              md: "28px",
+                                              lg: "36px",
+                                            },
+                                            height: {
+                                              xs: "24px",
+                                              sm: "26px",
+                                              md: "28px",
+                                              lg: "36px",
+                                            },
+                                            background:
+                                              flow === activeFlow
+                                                ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
+                                                : flowNames?.indexOf(flow) <
+                                                  flowNames?.indexOf(activeFlow)
+                                                ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
+                                                : "rgba(0, 0, 0, 0.04)",
+                                            ml: {
+                                              xs: 0.5,
+                                              sm: 0.5,
+                                              md: 1.5,
+                                              lg: 2,
+                                            },
+                                            mr: i === 9 ? 2 : 0,
+                                            borderRadius: "30px",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            flexShrink: 0,
+                                          }}
+                                        >
+                                          {flowNames?.indexOf(flow) <
+                                          flowNames?.indexOf(activeFlow) ? (
+                                            <GreenTick />
+                                          ) : (
+                                            <span
+                                              style={{
+                                                color:
+                                                  flow === activeFlow
+                                                    ? "white"
+                                                    : "#1E2937",
+                                                fontWeight: 600,
+                                                fontSize: "16px",
+                                                fontFamily: "Quicksand",
+                                              }}
+                                            >
+                                              {flow}
+                                            </span>
+                                          )}
+                                        </Box>
+                                      ))}
+                                  </Box>
+
+                                  <IconButton
+                                    onClick={handleNext1}
+                                    disabled={
+                                      currentPageStart + 10 >= flowNames?.length
+                                    }
+                                    sx={{
+                                      ml: 1,
+                                      visibility:
+                                        currentPageStart + 10 >=
+                                        flowNames?.length
+                                          ? "hidden"
+                                          : "visible",
+                                    }}
+                                  >
+                                    <ChevronRight />
+                                  </IconButton>
+                                </Box>
+                              </Box>
+                            </Box>
+                          )}
+                      </Box>
+                    )}
                   {nextLessonAndHome && (
                     <Box
                       sx={{
@@ -1379,195 +1496,75 @@ const MainLayout = (props) => {
                       width: "100%",
                     }}
                   ></Box>
+                  {/* Progress bar removed from second Card - using the one in first Card instead */}
                   <Box
                     sx={{
                       display: "flex",
-                      justifyContent: currentPracticeStep ? "center" : "right",
-                      alignItems: "center",
-                      width: "100%",
-                      height: "100%",
+                      justifyContent: "right",
+                      mr: 4,
                     }}
                   >
-                    {
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: currentPracticeStep
-                            ? "center"
-                            : "right",
-                          alignItems: "center",
-                          width: "100%",
-                          height: "100%",
+                    <Box
+                      sx={{
+                        cursor: "pointer",
+                        background:
+                          "linear-gradient(90deg, rgba(255,144,80,1) 0%, rgba(225,84,4,1) 85%)",
+                        minWidth: "160px",
+                        height: "55px",
+                        borderRadius: "10px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "0px 24px 0px 20px",
+                      }}
+                      onClick={() => {
+                        if (
+                          (LEVEL === 1 || LEVEL === 2) &&
+                          (mFlow === true || mFlow === "true")
+                        ) {
+                          //console.log("mFlow value:", mFlow);
+                          setLocalData("rFlow", true);
+                          setLocalData("rStepZero", 0);
+                        }
+                        // if (
+                        //               LEVEL === 1 ||
+                        //               LEVEL === 2 ||
+                        //               LEVEL === 3 ||
+                        //               LEVEL === 4 ||
+                        //               LEVEL === 6 ||
+                        //               LEVEL === 9
+                        //             ) {
+                        //               setLocalData("tFlow", true);
+                        //               navigate("/_practice");
+                        //             }
+                        if (
+                          props.pageName === "wordsorimage" ||
+                          props.pageName === "m5"
+                        ) {
+                          resetStoredData();
+                        }
+                        if (isShowCase && !startShowCase && !gameOverData) {
+                          setStartShowCase(true);
+                        }
+                        if (gameOverData) {
+                          gameOverData.link
+                            ? navigate(gameOverData.link)
+                            : navigate("/_practice");
+                        }
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          color: "#FFFFFF",
+                          fontWeight: 600,
+                          fontSize: "20px",
+                          fontFamily: "Quicksand",
                         }}
+                        fontSize={{ md: "14px", xs: "10px" }}
                       >
-                        {showProgress && (
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              width: "100%",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                                flexDirection: "column",
-                              }}
-                            >
-                              {" "}
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  height: "48px",
-                                  border: "1.5px solid rgba(51, 63, 97, 0.15)",
-                                  ml: {
-                                    lg: 25,
-                                    md: 18,
-                                  },
-                                  borderRadius: "30px",
-                                  background: "white",
-                                }}
-                              >
-                                {practiceSteps.map((elem, i) => {
-                                  return (
-                                    <Box
-                                      key={i}
-                                      sx={{
-                                        width: {
-                                          md: "28px",
-                                          lg: "36px",
-                                        },
-                                        height: {
-                                          md: "28px",
-                                          lg: "36px",
-                                        },
-                                        background:
-                                          currentPracticeStep > i
-                                            ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
-                                            : currentPracticeStep === i
-                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                            : "rgba(0, 0, 0, 0.04)",
-                                        ml: {
-                                          md: 1.5,
-                                          lg: 2,
-                                        },
-                                        mr:
-                                          i === practiceSteps?.length - 1
-                                            ? 2
-                                            : 0,
-                                        borderRadius: "30px",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      {currentPracticeStep > i ? (
-                                        <GreenTick />
-                                      ) : (
-                                        <span
-                                          style={{
-                                            color:
-                                              currentPracticeStep === i
-                                                ? "white"
-                                                : "#1E2937",
-                                            fontWeight: 600,
-                                            lineHeight: "20px",
-                                            fontSize: "16px",
-                                            fontFamily: "Quicksand",
-                                          }}
-                                        >
-                                          {language !== "en"
-                                            ? elem.name
-                                            : LEVEL === 1
-                                            ? elem.title
-                                            : elem.name}
-                                        </span>
-                                      )}
-                                    </Box>
-                                  );
-                                })}
-                              </Box>
-                            </Box>
-                          </Box>
-                        )}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "right",
-                            mr: 4,
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              cursor: "pointer",
-                              background:
-                                "linear-gradient(90deg, rgba(255,144,80,1) 0%, rgba(225,84,4,1) 85%)",
-                              minWidth: "160px",
-                              height: "55px",
-                              borderRadius: "10px",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              padding: "0px 24px 0px 20px",
-                            }}
-                            onClick={() => {
-                              if (
-                                (LEVEL === 1 || LEVEL === 2) &&
-                                (mFlow === true || mFlow === "true")
-                              ) {
-                                //console.log("mFlow value:", mFlow);
-                                setLocalData("rFlow", true);
-                                setLocalData("rStepZero", 0);
-                              }
-                              // if (
-                              //               LEVEL === 1 ||
-                              //               LEVEL === 2 ||
-                              //               LEVEL === 3 ||
-                              //               LEVEL === 4 ||
-                              //               LEVEL === 6 ||
-                              //               LEVEL === 9
-                              //             ) {
-                              //               setLocalData("tFlow", true);
-                              //               navigate("/_practice");
-                              //             }
-                              if (
-                                props.pageName === "wordsorimage" ||
-                                props.pageName === "m5"
-                              ) {
-                                resetStoredData();
-                              }
-                              if (
-                                isShowCase &&
-                                !startShowCase &&
-                                !gameOverData
-                              ) {
-                                setStartShowCase(true);
-                              }
-                              if (gameOverData) {
-                                gameOverData.link
-                                  ? navigate(gameOverData.link)
-                                  : navigate("/_practice");
-                              }
-                            }}
-                          >
-                            <Typography
-                              style={{
-                                color: "#FFFFFF",
-                                fontWeight: 600,
-                                fontSize: "20px",
-                                fontFamily: "Quicksand",
-                              }}
-                              fontSize={{ md: "14px", xs: "10px" }}
-                            >
-                              {!gameOverData ? "Start Game ➜" : "Practice ➜"}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </Box>
-                    }
+                        {!gameOverData ? "Start Game ➜" : "Practice ➜"}
+                      </Typography>
+                    </Box>
                   </Box>
                 </Box>
               </Card>
@@ -1594,121 +1591,7 @@ const MainLayout = (props) => {
                 width={"100%"}
                 height={"100%"}
               />
-              <Box sx={{ height: "120px", position: "relative" }}>
-                <Box
-                  sx={{
-                    borderBottom: "1.5px solid rgba(51, 63, 97, 0.15)",
-                    width: "100%",
-                  }}
-                ></Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  {
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    >
-                      {showProgress && (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "100%",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              flexDirection: "column",
-                              width: "100%",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                height: "48px",
-                                border: "1.5px solid rgba(51, 63, 97, 0.15)",
-                                // ml: {
-                                //   lg: 25,
-                                //   md: 18,
-                                // },
-                                borderRadius: "30px",
-                                background: "white",
-                              }}
-                            >
-                              {practiceSteps.map((elem, i) => {
-                                return (
-                                  <Box
-                                    key={i}
-                                    sx={{
-                                      width: {
-                                        md: "28px",
-                                        lg: "36px",
-                                      },
-                                      height: {
-                                        md: "28px",
-                                        lg: "36px",
-                                      },
-                                      background:
-                                        "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)",
-                                      ml: {
-                                        md: 1.5,
-                                        lg: 2,
-                                      },
-                                      mr:
-                                        i === practiceSteps?.length - 1 ? 2 : 0,
-                                      borderRadius: "30px",
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    {/* {currentPracticeStep > i ? ( */}
-                                    <GreenTick />
-                                    {/* ) : (
-                                        <span
-                                          style={{
-                                            color:
-                                              currentPracticeStep === i
-                                                ? "white"
-                                                : "#1E2937",
-                                            fontWeight: 600,
-                                            lineHeight: "20px",
-                                            fontSize: "16px",
-                                            fontFamily: "Quicksand",
-                                          }}
-                                        >
-                                          {LEVEL === 1 ? elem.title : elem.name}
-                                        </span>
-                                      )} */}
-                                  </Box>
-                                );
-                              })}
-                            </Box>
-                          </Box>
-                        </Box>
-                      )}
-                    </Box>
-                  }
-                </Box>
-              </Box>
+              {/* Removed duplicate progress bar section - using the one above instead */}
             </Card>
           )}
         </>

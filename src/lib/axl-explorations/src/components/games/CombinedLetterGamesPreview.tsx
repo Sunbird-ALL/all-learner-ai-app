@@ -1168,21 +1168,21 @@ export function CombinedLetterGamesPreview({
         {/* Main Content Card */}
         <Card className="flex-1 p-3 sm:p-4 md:p-5 bg-white/95 backdrop-blur-sm shadow-floating overflow-hidden flex flex-col rounded-2xl min-h-0">
           {/* How to Play Section - Centered */}
-          <div className="flex flex-col items-center mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white" />
+          <div className="flex flex-col items-center mb-1.5 sm:mb-2 px-2">
+            <div className="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1.5">
+              <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <Sparkles className="h-1.5 w-1.5 sm:h-2 sm:w-2 md:h-2.5 md:w-2.5 text-white" />
               </div>
               <div className="text-center">
-                <h2 className="text-base font-bold text-gray-800">
+                <h2 className="text-[9px] sm:text-[10px] md:text-xs font-bold text-gray-800 whitespace-nowrap">
                   {contentLanguage === 'en' ? 'How to Play' : contentLanguage === 'te' ? 'ఎలా ఆడాలి' : contentLanguage === 'kn' ? 'ಹೇಗೆ ಆಡುವುದು' : 'कसे खेळायचे'}
                 </h2>
-                <div className="text-xs text-gray-600 mt-1">
+                <div className="text-[8px] sm:text-[9px] md:text-[10px] text-gray-600 mt-0.5">
                   {currentGameInstructions.title}
                 </div>
               </div>
             </div>
-            <Progress value={((currentStep + 1) / currentGameInstructions.steps.length) * 100} className="h-1.5 w-64" />
+            <Progress value={((currentStep + 1) / currentGameInstructions.steps.length) * 100} className="h-0.5 sm:h-1 w-full max-w-[120px] sm:max-w-[160px] md:max-w-[200px] mt-0.5" />
           </div>
 
           {/* Demo Panel - Full width */}

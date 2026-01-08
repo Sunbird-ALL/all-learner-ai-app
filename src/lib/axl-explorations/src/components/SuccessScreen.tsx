@@ -9,8 +9,7 @@ import {
   Medal, 
   Gift,
   ArrowRight,
-  RotateCcw,
-  Home
+  RotateCcw
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -67,14 +66,14 @@ export function SuccessScreen({
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-sky relative overflow-hidden flex items-center justify-center p-4">
+    <div className="h-screen bg-gradient-sky relative overflow-hidden flex items-center justify-center p-2 sm:p-4 md:p-6">
       {/* Confetti Animation */}
       {showConfetti && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {confettiElements.map((confetti) => (
             <div
               key={confetti.id}
-              className="absolute text-2xl animate-bounce-in opacity-90"
+              className="absolute text-lg sm:text-xl md:text-2xl animate-bounce-in opacity-90"
               style={{
                 left: `${confetti.left}%`,
                 animationDelay: `${confetti.delay}s`,
@@ -91,47 +90,37 @@ export function SuccessScreen({
 
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 text-6xl animate-float opacity-60">☁️</div>
-        <div className="absolute top-32 right-20 text-5xl animate-bounce-soft opacity-70">🌈</div>
-        <div className="absolute bottom-20 left-20 text-4xl animate-sparkle opacity-80">⭐</div>
-        <div className="absolute bottom-40 right-10 text-5xl animate-float opacity-60">✨</div>
+        <div className="absolute top-10 sm:top-20 left-4 sm:left-10 text-3xl sm:text-5xl md:text-6xl animate-float opacity-60">☁️</div>
+        <div className="absolute top-16 sm:top-32 right-4 sm:right-20 text-2xl sm:text-4xl md:text-5xl animate-bounce-soft opacity-70">🌈</div>
+        <div className="absolute bottom-10 sm:bottom-20 left-4 sm:left-20 text-2xl sm:text-3xl md:text-4xl animate-sparkle opacity-80">⭐</div>
+        <div className="absolute bottom-20 sm:bottom-40 right-4 sm:right-10 text-2xl sm:text-4xl md:text-5xl animate-float opacity-60">✨</div>
       </div>
 
-      <div className="relative z-10 max-w-2xl mx-auto min-w-[300px] w-full">
+      <div className="relative z-10 max-w-2xl mx-auto w-full px-2 sm:px-4 flex items-center justify-center">
         {/* Main Success Card */}
-        <Card className="p-8 bg-white/95 backdrop-blur-sm shadow-magical border-2 border-success/30 text-center">
+        <Card className="p-4 sm:p-6 md:p-8 bg-white/95 backdrop-blur-sm shadow-magical border-2 border-success/30 text-center w-full max-h-[90vh] overflow-y-auto">
           {/* Trophy and Title */}
-          <Button
-            onClick={onBackToHub}
-            variant="secondary"
-            size="sm"
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 text-white border-0 text-xs sm:text-sm px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center gap-1 sm:gap-2"
-          >
-            <Home className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-            <span className="hidden sm:inline">Learning Hub</span>
-            <span className="sm:hidden">Hub</span>
-          </Button>
           <div className={cn(
             "transition-all duration-1000 transform",
             currentStep >= 0 ? "opacity-100 scale-100" : "opacity-0 scale-50"
           )}>
-            <div className="relative mb-6">
-              <div className="w-24 h-24 bg-gradient-success rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-glow shadow-success">
+            <div className="relative mb-2 sm:mb-3">
+              <div className="w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-gradient-success rounded-full flex items-center justify-center mx-auto mb-1 sm:mb-2 animate-pulse-glow shadow-success">
                 {perfectScore ? (
-                  <Crown className="h-12 w-12 text-white animate-wiggle" />
+                  <Crown className="h-7 w-7 sm:h-9 sm:w-9 md:h-10 md:w-10 text-white animate-wiggle" />
                 ) : (
-                  <Trophy className="h-12 w-12 text-white animate-celebration" />
+                  <Trophy className="h-7 w-7 sm:h-9 sm:w-9 md:h-10 md:w-10 text-white animate-celebration" />
                 )}
               </div>
               
               {/* Floating stars around trophy */}
-              <div className="absolute -top-2 -left-2 text-warning animate-sparkle">⭐</div>
-              <div className="absolute -top-2 -right-2 text-warning animate-sparkle" style={{ animationDelay: '0.5s' }}>✨</div>
-              <div className="absolute -bottom-2 -left-2 text-warning animate-sparkle" style={{ animationDelay: '1s' }}>🌟</div>
-              <div className="absolute -bottom-2 -right-2 text-warning animate-sparkle" style={{ animationDelay: '1.5s' }}>⭐</div>
+              <div className="absolute -top-1 -left-1 sm:-top-2 sm:-left-2 text-warning text-sm sm:text-base animate-sparkle">⭐</div>
+              <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 text-warning text-sm sm:text-base animate-sparkle" style={{ animationDelay: '0.5s' }}>✨</div>
+              <div className="absolute -bottom-1 -left-1 sm:-bottom-2 sm:-left-2 text-warning text-sm sm:text-base animate-sparkle" style={{ animationDelay: '1s' }}>🌟</div>
+              <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 text-warning text-sm sm:text-base animate-sparkle" style={{ animationDelay: '1.5s' }}>⭐</div>
             </div>
 
-            <div className="mt-4 mb-2 text-lg font-medium text-foreground">
+            <div className="mt-1 mb-2 text-xs sm:text-sm md:text-base font-medium text-foreground px-2">
                 {percentage === 100 && "Amazing! You got everything right!"}
                 {percentage >= 90 && percentage < 100 && "🎯 Excellent work! You're almost perfect!"}
                 {percentage >= 80 && percentage < 90 && "👏 Great job! You're learning so well!"}
@@ -146,14 +135,14 @@ export function SuccessScreen({
             "transition-all duration-1000 transform delay-1000",
             currentStep >= 1 ? "opacity-100 scale-100" : "opacity-0 scale-50"
           )}>
-            <div className="mb-6">
+            <div className="mb-2 sm:mb-3">
               {/* <h3 className="text-xl font-bold text-foreground mb-4">Stars Earned!</h3> */}
-              <div className="flex justify-center gap-2 mb-4">
+              <div className="flex justify-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
                 {[...Array(3)].map((_, i) => (
                   <Star
                     key={i}
                     className={cn(
-                      "h-8 w-8",
+                      "h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7",
                       i < starsEarned
                         ? "text-warning fill-warning"
                         : "text-muted-foreground/30"
@@ -170,15 +159,15 @@ export function SuccessScreen({
             "transition-all duration-1000 transform delay-2000",
             currentStep >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center px-2">
               {hasNextLevel && (
                 <Button
                   onClick={onNextLevel}
                   variant="success"
                   size="lg"
-                  className="flex items-center gap-2"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base"
                 >
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                   Next Level
                 </Button>
               )}
@@ -188,9 +177,9 @@ export function SuccessScreen({
                 onClick={onPlayAgain}
                 variant="game"
                 size="lg"
-                className="flex items-center gap-2"
+                className="flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base"
               >
-                <RotateCcw className="h-5 w-5" />
+                <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5" />
                 Play Again
               </Button>
               )}
@@ -202,10 +191,10 @@ export function SuccessScreen({
             "transition-all duration-1000 transform delay-2500",
             currentStep >= 3 ? "opacity-100 scale-100" : "opacity-0 scale-50"
           )}>
-            <div className="mt-6 bg-gradient-to-br from-blue-game/20 to-purple-game/20 rounded-full p-4 inline-block">
-              <div className="text-4xl animate-wiggle">🦉</div>
+            <div className="mt-2 sm:mt-3 bg-gradient-to-br from-blue-game/20 to-purple-game/20 rounded-full p-1.5 sm:p-2 inline-block">
+              <div className="text-xl sm:text-2xl md:text-3xl animate-wiggle">🦉</div>
             </div>
-            <div className="mt-2 text-sm text-muted-foreground italic">
+            <div className="mt-1 px-2 text-xs sm:text-sm text-muted-foreground italic">
               "I'm so proud of you! Keep up the amazing work!" 
             </div>
           </div>

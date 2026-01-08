@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
@@ -25,16 +25,30 @@ interface MultilingualLetterQuestion extends LetterHuntQuestion {
 interface LetterGameProps {
   onBack: () => void;
   initialLevel?: number; // Optional: set initial level when used without routing
+  startLevel?: number; // Optional: start level for level range (takes precedence over initialLevel)
+  endLevel?: number; // Optional: end level for level range
   disableNavigation?: boolean; // Optional: disable React Router navigation
+  onLevelComplete?: (level: number) => void; // Optional: callback when level completes successfully (called when endLevel is reached)
+  isShowcase?: boolean; // Optional: if true and level 1 fails, navigate to P1 instead of showing TryAgain
+  onLevel1Failure?: () => void; // Optional: callback when level 1 fails in showcase mode (deprecated, use onLevelFailure)
+  onLevelFailure?: (level: number) => void; // Optional: callback when any level fails in showcase mode
+  customLetters?: string[]; // Optional: custom letters to use instead of level-based letters
+  sub_session_id?: string; // Optional: Sub session ID for F1 flow
+  sub_milestone_level?: string; // Optional: Sub milestone level (e.g., "F1")
+  apply_level?: string; // Optional: Apply level (e.g., "A1", "A2", "A3")
+  sub_apply_level?: number; // Optional: Sub apply level (1, 2, or 3 - the level within the Apply step)
 }
 
-export function LetterGame({ onBack, initialLevel, disableNavigation = false }: LetterGameProps) {
+export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, sub_session_id, sub_milestone_level, apply_level, sub_apply_level }: LetterGameProps) {
   const navigate = useNavigate();
   const params = useParams<{ level?: string }>();
   const { level: urlLevel } = params || {};
   
+  // Use startLevel if provided, otherwise use initialLevel
+  const effectiveStartLevel = startLevel !== undefined ? startLevel : (initialLevel || null);
+  
   // Use internal state for level when disableNavigation is true or no URL level
-  const [internalLevel, setInternalLevel] = useState<number | null>(initialLevel || null);
+  const [internalLevel, setInternalLevel] = useState<number | null>(effectiveStartLevel);
   
   // Use URL level if available and navigation is enabled, otherwise use internal state
   const level = disableNavigation ? (internalLevel?.toString() || undefined) : urlLevel;
@@ -73,6 +87,7 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isGameComplete, setIsGameComplete] = useState(false);
+  const [shouldExitImmediately, setShouldExitImmediately] = useState(false); // Flag to exit without showing SuccessScreen
   const [totalCorrect, setTotalCorrect] = useState(0);
   // New state for retry flow: track current displayed question (may be retry with shuffled options)
   const [currentDisplayedQuestion, setCurrentDisplayedQuestion] = useState<MultilingualLetterQuestion | null>(null);
@@ -184,6 +199,11 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
   const generateMultilingualQuestions = (language: Language, level: number, complexity: string, count: number = 10): MultilingualLetterQuestion[] => {
     // Get level-appropriate letter set from JSON data
     const getLevelLetters = (language: Language, level: number): string[] => {
+      // If customLetters are provided, use them instead of level-based letters
+      if (customLetters && customLetters.length > 0) {
+        return customLetters;
+      }
+      
       // Ensure only supported languages are passed (memoryGameDataLoader doesn't support 'hi')
       // Since selectedLanguage can never be 'hi' (LanguageContext blocks it), this is a safety check
       const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' = 
@@ -606,6 +626,10 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
           const actualCorrect = latestSummaries.filter(q => q.isCorrect).length;
           const totalAttemptsLogged = latestSummaries.length;
 
+          // For F1 flow Apply steps, sub_apply_level should be the current level being played (1, 2, or 3)
+          // Use currentLevel (the actual level being played) instead of the prop value
+          const effectiveSubApplyLevel = apply_level ? currentLevel : undefined;
+          
           trackingAssessmentService.createAssessmentTracking({
             userId: currentUser.username,
             gameKey: gameKey,
@@ -619,6 +643,10 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
             assessmentSummary: latestSummaries,
             sessionId: sessionId,
             subsessionId: subsessionId,
+            sub_session_id: sub_session_id, // Pass F1 flow sub session ID
+            sub_milestone_level: sub_milestone_level, // Pass F1 flow sub milestone level ("F1")
+            apply_level: apply_level, // Pass apply level (A1, A2, A3) from config
+            sub_apply_level: effectiveSubApplyLevel, // Pass current level within Apply step (1, 2, or 3)
             metadata: {
               difficulty: difficultySettings.complexity,
               levelFailed: false,
@@ -644,6 +672,27 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
 
       setLevelFailed(!canAdvance);
       setIsGameComplete(true);
+      
+      // Call onLevelComplete callback only when endLevel is reached (or if no endLevel specified)
+      // For showcase mode with endLevel, show success screen after each level and only call onLevelComplete when all levels are done
+      if (onLevelComplete && canAdvance && !levelFailed) {
+        // Only call if we've reached the end level, or if no endLevel is specified
+        if (endLevel === undefined || currentLevel >= endLevel) {
+          // If no endLevel, exit immediately without showing SuccessScreen
+          // This allows the game to exit and move to next P level
+          if (endLevel === undefined) {
+            setShouldExitImmediately(true); // Set flag to prevent SuccessScreen from showing
+            onLevelComplete(currentLevel);
+            return; // Exit immediately, don't show SuccessScreen
+          } else {
+            // If endLevel is reached, call callback but still show SuccessScreen
+            onLevelComplete(currentLevel);
+          }
+        }
+        // If endLevel is specified but we haven't reached it yet, don't call onLevelComplete
+        // The success screen will show and user can click "Next Level" to continue
+      }
+      
       return;
     }
 
@@ -686,6 +735,7 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
     setSelectedLetter(null);
     setShowFeedback(false);
     setIsGameComplete(false);
+    setShouldExitImmediately(false); // Reset exit flag
     setShowLevelUp(false);
     setLevelFailed(false);
     setCurrentDisplayedQuestion(null);
@@ -818,12 +868,53 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
   }
 
 
+  // If we should exit immediately (no endLevel, onLevelComplete called), don't show SuccessScreen
+  if (shouldExitImmediately) {
+    return null; // Exit immediately, onLevelComplete will handle navigation
+  }
+
   // Show success screen when game is complete
   if (isGameComplete) {
     // If level failed or ended by lives, show try again screen
     if (levelFailed || gameEndedByLives) {
       // For lives lost scenario: totalQuestions = questions attempted
       const displayQuestions = gameEndedByLives ? Math.max(1, currentQuestionIndex + 1) : questions.length;
+        
+        // If level fails in showcase mode, clicking "Play Again" should exit to Learn step
+        // Check if it's the start level (could be startLevel or initialLevel or currentLevel === 1)
+        const effectiveStartLevel = startLevel !== undefined ? startLevel : (initialLevel !== undefined ? initialLevel : 1);
+        const isStartLevel = currentLevel === effectiveStartLevel;
+        
+        // Determine if we should exit (showcase mode + callback provided)
+        // Use onLevelFailure if provided (for Apply steps), otherwise fall back to onLevel1Failure for backward compatibility
+        const hasFailureCallback = isShowcase && (onLevelFailure || (isStartLevel && onLevel1Failure));
+        const shouldExitOnFailure = hasFailureCallback;
+        
+        // Debug logging
+        console.log("TryAgain - isShowcase:", isShowcase, "currentLevel:", currentLevel, "effectiveStartLevel:", effectiveStartLevel, "isStartLevel:", isStartLevel, "onLevelFailure:", !!onLevelFailure, "onLevel1Failure:", !!onLevel1Failure, "shouldExitOnFailure:", shouldExitOnFailure);
+        
+        // Create handleTryAgain function - ensure it's stable and calls the right handler
+        // IMPORTANT: For showcase mode, we should exit immediately without resetting
+        const handleTryAgain = () => {
+          if (shouldExitOnFailure) {
+            // Exit to Learn step instead of restarting - call immediately without resetting game
+            console.log(`Showcase level ${currentLevel} failed - redirecting to Learn step (calling failure callback)`);
+            // Set a flag to prevent any game reset logic from running
+            setLevelFailed(false); // Clear the failed flag so TryAgain screen disappears
+            setIsGameComplete(false); // Clear game complete flag
+            // Call the failure handler which will exit and redirect
+            // Prefer onLevelFailure (includes level number), fall back to onLevel1Failure for backward compatibility
+            if (onLevelFailure) {
+              onLevelFailure(currentLevel);
+            } else if (onLevel1Failure && isStartLevel) {
+              onLevel1Failure();
+            }
+          } else {
+            // Normal reset for non-showcase or no callback
+            console.log("Normal reset - not showcase or no failure callback");
+            resetGame();
+          }
+        };
       
       return (
         <TryAgain
@@ -832,7 +923,7 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
           selectedLanguage={selectedLanguage!}
           currentLevel={currentLevel}
           gameKey={gameKey}
-          onTryAgain={resetGame}
+            onTryAgain={handleTryAgain}
           onBackToHome={onBack}
           livesLost={gameEndedByLives}
         />
@@ -840,6 +931,10 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
     }
     
     // If level passed, show success screen
+    // Determine if there's a next level (respecting endLevel if specified)
+    const maxAllowedLevel = endLevel !== undefined ? endLevel : languageLevels.maxLevels;
+    const hasNextLevelInRange = currentLevel < maxAllowedLevel;
+    
     return (
       <SuccessScreen
         gameTitle={'letterHunt'}
@@ -850,12 +945,12 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
         newAchievements={getNewAchievements()}
         onPlayAgain={resetGame}
         onBackToHub={onBack}
-        hasNextLevel={currentLevel < languageLevels.maxLevels}
+        hasNextLevel={hasNextLevelInRange}
         onNextLevel={() => {
           // ✅ MANUAL LEVEL ADVANCEMENT: Force advance to next level when user clicks "Next Level"
-          const nextLevel = Math.min(currentLevel + 1, languageLevels.maxLevels);
+          const nextLevel = Math.min(currentLevel + 1, maxAllowedLevel);
           
-          console.log(`Manual advancement: ${currentLevel} -> ${nextLevel} for ${selectedLanguage} (max: ${languageLevels.maxLevels})`);
+          console.log(`Manual advancement: ${currentLevel} -> ${nextLevel} for ${selectedLanguage} (max: ${maxAllowedLevel}${endLevel !== undefined ? `, range: ${startLevel || initialLevel || 1}-${endLevel}` : ''})`);
           
           // Manually advance the level using the learning progress hook
           manuallyAdvanceLevel(gameKey, nextLevel);
@@ -881,8 +976,30 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
           setShowLevelUp(false);
           setLevelFailed(false);
           setIsGameComplete(false);
+          setCurrentDisplayedQuestion(null);
           setLives(3);
           setGameEndedByLives(false);
+          
+          // Reset tracking assessment state
+          setLevelStartTime(Date.now());
+          setQuestionSummaries([]);
+          
+          // Regenerate questions for the next level if within endLevel range
+          if (selectedLanguage && (endLevel === undefined || nextLevel <= endLevel)) {
+            const session = startSession(gameKey);
+            const newQuestions = generateMultilingualQuestions(
+              selectedLanguage,
+              nextLevel,
+              difficultySettings.complexity,
+              10
+            );
+            setQuestions(newQuestions);
+          }
+          
+          // If we've reached the end level, call onLevelComplete
+          if (endLevel !== undefined && nextLevel >= endLevel && onLevelComplete) {
+            onLevelComplete(nextLevel);
+          }
         }}
       />
     );
@@ -901,28 +1018,19 @@ export function LetterGame({ onBack, initialLevel, disableNavigation = false }: 
     <div className="h-screen bg-gradient-cool p-2 sm:p-4 overflow-hidden flex flex-col">
       <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col min-h-0">
         {/* Header */}
-        <div className="flex flex-row items-center justify-between mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
-          <Button 
-            variant="outline" 
-            onClick={handleBackWithTelemetry}
-            className="bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2"
-          >
-            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Back</span>
-            <span className="sm:hidden">Back</span>
-          </Button>
-          
+        <div className="flex flex-row items-center justify-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
+          {/* Back button removed - using justify-center instead of justify-between */}
           <div className="text-center flex-1">
             <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
               Letter Recognition
             </h1>
-            <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-[10px] sm:text-xs mt-0.5">
-              <TrendingUp className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-sm sm:text-base md:text-lg mt-0.5">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
               <span>
                 {selectedLevel !== null && selectedLevel !== gameProgress.currentLevel ? 
-                  `Practice Level ${selectedLevel}` : 
+                  `Level ${selectedLevel}` : 
                   `Level ${currentLevel} / ${languageLevels.maxLevels}`
-                } • {difficultySettings.complexity}
+                }
               </span>
             </div>
           </div>
