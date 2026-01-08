@@ -4805,6 +4805,7 @@ const R0 = ({
   currentImg,
   vocabCount,
   wordCount,
+  customLetters, // Array of letters to filter (e.g., ["a", "m", "s", "t"])
   //isNextButtonCalled,
   //setIsNextButtonCalled,
 }) => {
@@ -4822,6 +4823,22 @@ const R0 = ({
     data = dataKn;
   } else {
     data = dataEn; // fallback (English)
+  }
+
+  // Filter data based on customLetters if provided
+  if (
+    customLetters &&
+    Array.isArray(customLetters) &&
+    customLetters.length > 0
+  ) {
+    // Normalize customLetters to uppercase for comparison
+    const normalizedCustomLetters = customLetters.map((letter) =>
+      letter.toUpperCase()
+    );
+    data = data.filter((letterObj) => {
+      // Check if the letter (uppercase) matches any of the custom letters
+      return normalizedCustomLetters.includes(letterObj.letter.toUpperCase());
+    });
   }
 
   const generatePlaylist = (data) => {
@@ -4930,13 +4947,19 @@ const R0 = ({
     if (currentIndex < playlist.length - 1) {
       setCurrentIndex((i) => i + 1);
     } else {
-      setLocalData("rStepZero", 1);
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-        navigate("/");
+      // If handleNext prop is provided (e.g., from F1), use it instead of default navigation
+      if (handleNext && typeof handleNext === "function") {
+        handleNext();
       } else {
-        navigate("/discover-start");
+        // Default R0 behavior
+        setLocalData("rStepZero", 1);
+        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          navigate("/");
+        } else {
+          navigate("/discover-start");
+        }
+        console.log("finished r0");
       }
-      console.log("finished r0");
     }
     setRecAudio(null);
     setIsNextButtonCalled(true);
@@ -5057,16 +5080,25 @@ const R0 = ({
 
       let TOTAL_ITEMS = 0;
 
-      if (lang === "en") {
-        TOTAL_ITEMS = 101;
-      } else if (lang === "hi") {
-        TOTAL_ITEMS = 151;
-      } else if (lang === "te") {
-        TOTAL_ITEMS = 146;
-      } else if (lang === "kn") {
-        TOTAL_ITEMS = 142;
+      // Use actual playlist length if customLetters is provided, otherwise use hardcoded values
+      if (
+        customLetters &&
+        Array.isArray(customLetters) &&
+        customLetters.length > 0
+      ) {
+        TOTAL_ITEMS = playlist.length;
       } else {
-        TOTAL_ITEMS = 100; // fallback default
+        if (lang === "en") {
+          TOTAL_ITEMS = 101;
+        } else if (lang === "hi") {
+          TOTAL_ITEMS = 151;
+        } else if (lang === "te") {
+          TOTAL_ITEMS = 146;
+        } else if (lang === "kn") {
+          TOTAL_ITEMS = 142;
+        } else {
+          TOTAL_ITEMS = 100; // fallback default
+        }
       }
 
       // FIXED: Use currentIndex + 1 instead of item?.id
@@ -5421,11 +5453,20 @@ const R0 = ({
       //console.log("ui2");
 
       let TOTAL_ITEMS = 0;
-      if (lang === "en") TOTAL_ITEMS = 101;
-      else if (lang === "kn") TOTAL_ITEMS = 142;
-      else if (lang === "hi") TOTAL_ITEMS = 151;
-      else if (lang === "te") TOTAL_ITEMS = 146;
-      else TOTAL_ITEMS = 100; // fallback
+      // Use actual playlist length if customLetters is provided, otherwise use hardcoded values
+      if (
+        customLetters &&
+        Array.isArray(customLetters) &&
+        customLetters.length > 0
+      ) {
+        TOTAL_ITEMS = playlist.length;
+      } else {
+        if (lang === "en") TOTAL_ITEMS = 101;
+        else if (lang === "kn") TOTAL_ITEMS = 142;
+        else if (lang === "hi") TOTAL_ITEMS = 151;
+        else if (lang === "te") TOTAL_ITEMS = 146;
+        else TOTAL_ITEMS = 100; // fallback
+      }
       const currentItemNumber = currentIndex + 1;
       const completionPercentage = Math.round(
         (currentItemNumber / TOTAL_ITEMS) * 100

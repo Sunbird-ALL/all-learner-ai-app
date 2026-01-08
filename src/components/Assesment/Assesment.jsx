@@ -96,6 +96,7 @@ import * as Assets from "../../utils/imageAudioLinks";
 import NumberFlow from "@number-flow/react";
 import LanguageModalNew from "../../utils/LanguageModal";
 import { AudioDiagnosticModal } from "../AudioDiagnostic";
+import { getF1FlowStep } from "../../RFlow/F1";
 
 const theme = createTheme();
 
@@ -1279,6 +1280,27 @@ const Assesment = ({ discoverStart }) => {
   const tFlow = String(getLocalData("tFlow"));
   const rStep = Number(getLocalData("rStep")) || 0;
 
+  // Get milestone_level from API to determine if F1 flow should be active
+  const getMilestoneData = () => {
+    try {
+      const milestoneStr = getLocalData("getMilestone");
+      if (milestoneStr) {
+        return JSON.parse(milestoneStr);
+      }
+    } catch (e) {
+      console.error("Error parsing getMilestone:", e);
+    }
+    return null;
+  };
+  const milestoneData = getMilestoneData();
+  const milestoneLevel = milestoneData?.data?.milestone_level || null;
+  // F1 flow is triggered when milestone_level is "B" (Beginner)
+  const shouldShowF1 = milestoneLevel === "B";
+
+  // Check if F1 flow is active
+  const f1FlowStep = getF1FlowStep();
+  const isF1FlowActive = shouldShowF1 && f1FlowStep.step !== null;
+
   const sectionStyle = {
     width: "100vw",
     height: "100vh",
@@ -1384,15 +1406,18 @@ const Assesment = ({ discoverStart }) => {
                     textShadow: "#000 1px 0 10px",
                   }}
                 >
-                  {rFlow === "true"
-                    ? `Start Refresher ${
-                        [1, "B"]?.includes(level)
-                          ? rStepNo == null || rStepNo === 0 || rStepNo === "0"
-                            ? "0"
-                            : "1"
-                          : rStep
-                      }`
-                    : `Start Level ${level}`}
+                  {isF1FlowActive
+                    ? "Start F1"
+                    : rFlow === "true"
+                    ? `Learn Letters`
+                    : //  ${
+                      //     [1, "B"]?.includes(level)
+                      //       ? rStepNo == null || rStepNo === 0 || rStepNo === "0"
+                      //         ? "0"
+                      //         : "1"
+                      //       : rStep
+                      //   }`
+                      `Start Level ${level}`}
                 </span>
               </Box>
             </Box>

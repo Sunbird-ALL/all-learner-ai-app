@@ -813,7 +813,7 @@ function VoiceAnalyser(props) {
         })()
       )}
       {!loader && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 1.4 }}>
           {props.enableNext && props.pageName !== "m8" && (
             <Box
               sx={{ cursor: "pointer" }}

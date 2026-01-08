@@ -3128,6 +3128,19 @@ export const LevelOne = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
+    <path x="65" y="135" width="50" height="20" fill="white" opacity="0.95" />
+    <text
+      x="90"
+      y="150"
+      fontSize="13"
+      fontWeight="700"
+      fill="#333"
+      textAnchor="middle"
+      fontFamily="Arial, sans-serif"
+      style={{ userSelect: "none" }}
+    >
+      Foundation
+    </text>
     <path
       d="M19.995 56.9151C19.995 25.6327 41.8277 0.300106 68.7769 0.300106C95.7096 0.300106 117.559 25.6327 117.559 56.9151V61.2812H19.995V56.9151Z"
       fill="#3872C1"
@@ -10324,40 +10337,65 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L1",
         storyMode: true,
         multilingual: true,
+        customLetters: ["a", "m", "s", "t"],
+        mechanism: { id: "letterTrain", name: "letterTrain" },
       },
       {
         title: "P2",
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_L2",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        letterHuntLevel: 1,
         multilingual: true,
       },
       {
         title: "P3",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_GEN_M1_P1",
+        tags: "CEFR_GEN_M1_L1",
+        storyMode: true,
         multilingual: true,
+        customLetters: ["p", "l", "f", "n"],
+        mechanism: { id: "letterTrain", name: "letterTrain" },
       },
       {
         title: "P4",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_GEN_M1_P2",
-        multilingual: true,
-      },
-      {
-        title: "S1",
-        criteria: "word",
-        template: "simple",
-        tags: "CEFR_GEN_M1_S1",
+        tags: "CEFR_GEN_M1_L2",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        letterHuntLevel: 2,
         multilingual: true,
       },
       {
         title: "P5",
         criteria: "word",
         template: "simple",
+        tags: "CEFR_GEN_M1_L1",
+        storyMode: true,
+        multilingual: true,
+        customLetters: ["o", "am", "an", "h"],
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+      },
+      {
+        title: "P6",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L2",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        letterHuntLevel: 3,
+        multilingual: true,
+      },
+      {
+        title: "P7",
+        criteria: "word",
+        template: "simple",
         tags: "CEFR_GEN_M1_L3",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        letterHuntLevel: 1,
+        letterHuntEndLevel: 3,
+        isShowcase: true,
         multilingual: true,
       },
       {
@@ -10379,6 +10417,10 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_P4",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        letterHuntLevel: 1,
+        letterHuntEndLevel: 3,
+        isShowcase: true,
         multilingual: true,
       },
       {
@@ -10387,6 +10429,245 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_S2",
         multilingual: true,
+      },
+    ],
+    F1: [
+      // Learn 1 - Letter Train
+      {
+        title: "L1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L1",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["a", "m", "s", "t"],
+      },
+      // Practice 1 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L2",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 2 - Letter Train
+      {
+        title: "L2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P1",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["b", "d", "f", "g"],
+      },
+      // Practice 2 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P2",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 2,
+        letterHuntContentCount: 10,
+      },
+      // Learn 3 - Letter Train
+      {
+        title: "L3",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L3",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["h", "j", "k", "l"],
+      },
+      // Practice 3 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P3",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L4",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 3,
+        letterHuntContentCount: 10,
+      },
+      // Apply 1 - Letter Hunt (3 levels, 13 content per level, showcase mode)
+      {
+        title: "A1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P3",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntEndLevel: 3,
+        letterHuntContentCount: 13,
+        isShowcase: true,
+        applyStep: 1,
+        failRedirect: "L1", // If fail at any level, go to Learn 1
+        passRedirect: "L4", // If pass all levels, go to Learn 4
+      },
+      // Learn 4 - Letter Train
+      {
+        title: "L4",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P4",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["n", "p", "q", "r"],
+      },
+      // Practice 4 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P4",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P5",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 5 - Letter Train
+      {
+        title: "L5",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L5",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["u", "v", "w", "x"],
+      },
+      // Practice 5 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P5",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L6",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 6 - Letter Train
+      {
+        title: "L6",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P6",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["y", "z", "c", "e"],
+      },
+      // Practice 6 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P6",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P7",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
+      {
+        title: "A2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P8",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntEndLevel: 3,
+        letterHuntContentCount: 13,
+        isShowcase: true,
+        applyStep: 2,
+        failRedirect: "L4", // If fail at any level, go to Learn 4
+        passRedirect: "L7", // If pass all levels, go to Learn 7
+      },
+      // Learn 7 - Letter Train
+      {
+        title: "L7",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P9",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["i", "o", "u", "a"],
+      },
+      // Practice 7 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P7",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P10",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 8 - Letter Train
+      {
+        title: "L8",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P11",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["e", "i", "o", "u"],
+      },
+      // Practice 8 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P8",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P12",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 9 - Letter Train
+      {
+        title: "L9",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P13",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" },
+        customLetters: ["a", "e", "i", "o", "u"],
+      },
+      // Practice 9 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P9",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P14",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
+      {
+        title: "A3",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P15",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntEndLevel: 3,
+        letterHuntContentCount: 13,
+        isShowcase: true,
+        applyStep: 3,
+        failRedirect: "L7", // If fail at any level, go to Learn 7
+        passRedirect: "F2", // If pass all levels, go to F2
       },
     ],
     0: [
@@ -10416,6 +10697,7 @@ export const levelGetContent = {
         //storyMode: true,
         mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
+        customLetters: ["a", "m", "s", "t"],
       },
       {
         title: "P2",

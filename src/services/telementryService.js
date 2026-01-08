@@ -40,6 +40,17 @@ url = getUrl && getUrl.includes("#") && getUrl.split("#")[1].split("/")[1];
 
 export const initialize = async ({ context, config, metadata }) => {
   playSessionId = uniqueId();
+  localStorage.setItem(
+    "axl_game_session",
+    JSON.stringify({
+      currentUser: {
+        username: getLocalData("virtualId") || localStorage.getItem("apiToken"),
+        loginTime: new Date().toISOString(),
+        lastActive: new Date().toISOString(),
+      },
+      users: [],
+    })
+  );
   if (!CsTelemetryModule.instance.isInitialised) {
     await CsTelemetryModule.instance.init({});
 

@@ -28,7 +28,7 @@ function generateUUID(): string {
 }
 
 // Backend API configuration
-const TRACKING_API_BASE_URL = (process.env.REACT_APP_TRACKING_API_BASE_URL || '');
+const TRACKING_API_BASE_URL = (process.env.REACT_APP_TRACKING_API_BASE_URL || 'https://www.learnerai-dev.theall.ai/lais/scores');
 const TRACKING_API_ENDPOINT = `${TRACKING_API_BASE_URL}/assessment/create`;
 
 export interface QuestionSummary {
@@ -55,6 +55,10 @@ export interface CreateAssessmentData {
   metadata?: Record<string, any>;
   subsessionId?: string; // Optional: Use telemetry subsession ID as assessmentTrackingId
   sessionId?: string; // Optional: Use telemetry session ID as attemptId
+  sub_session_id?: string; // Optional: Sub session ID for F1 flow
+  sub_milestone_level?: string; // Optional: Sub milestone level (e.g., "F1")
+  apply_level?: string; // Optional: Apply level (e.g., "A1", "A2", "A3")
+  sub_apply_level?: number; // Optional: Sub apply level (1, 2, or 3 - the level within the Apply step)
 }
 
 export interface AssessmentTrackingPayload {
@@ -98,12 +102,25 @@ class TrackingAssessmentService {
       // Extract game name without language suffix (e.g., "combinedLetter_en" -> "combinedLetter")
       const gameName = data.gameKey.split('_')[0];
       
+      // Get session_id and sub_session_id - use provided values or fallback to generated IDs
+      const session_id = data.sessionId || attemptId;
+      const sub_session_id = data.sub_session_id || data.subsessionId || assessmentTrackingId;
+
+      // Ensure apply_level and sub_apply_level are always provided (required by backend)
+      // For non-Apply steps, use default values
+      const apply_level = data.apply_level && data.apply_level.trim() !== "" ? data.apply_level : "N/A";
+      const sub_apply_level = data.sub_apply_level !== undefined && data.sub_apply_level !== null ? data.sub_apply_level : 0;
+
       const payload: any = {
         assessmentTrackingId: assessmentTrackingId, // Required by database
         userId: data.userId,
         courseId: gameName, // Just game name without language (e.g., "combinedLetter")
         contentId: `level${data.level}`, // Format: level1, level2, level10
         attemptId: attemptId,
+        session_id: session_id, // Required by backend
+        sub_session_id: sub_session_id, // Required by backend
+        apply_level: apply_level, // Required by backend - "N/A" for non-Apply steps
+        sub_apply_level: sub_apply_level, // Required by backend - 0 for non-Apply steps
         assessmentSummary: [{
           sectionId: gameName, // Game name as section (e.g., "combinedLetter", "letterGame")
           data: data.assessmentSummary.map((q, index) => ({
@@ -132,13 +149,28 @@ class TrackingAssessmentService {
         submitedBy: 'Online', // Backend defaults to 'Online' if not provided
       };
 
+      // Add F1 flow specific parameters if provided
+      if (data.sub_milestone_level) {
+        payload.sub_milestone_level = data.sub_milestone_level;
+      }
+
+      // Get API token from localStorage
+      const apiToken = typeof window !== 'undefined' ? localStorage.getItem('apiToken') : null;
+      
       // Send POST request to backend
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'tenantId': 'default-tenant', // You may want to make this configurable
+      };
+      
+      // Add Authorization header if apiToken is available
+      if (apiToken) {
+        headers['Authorization'] = `Bearer ${apiToken}`;
+      }
+      
       const response = await fetch(TRACKING_API_ENDPOINT, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'tenantId': 'default-tenant', // You may want to make this configurable
-        },
+        headers,
         body: JSON.stringify(payload),
       });
 
@@ -178,12 +210,22 @@ class TrackingAssessmentService {
     try {
       const searchEndpoint = `${TRACKING_API_BASE_URL}/assessment/search`;
       
+      // Get API token from localStorage
+      const apiToken = typeof window !== 'undefined' ? localStorage.getItem('apiToken') : null;
+      
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'tenantId': 'default-tenant',
+      };
+      
+      // Add Authorization header if apiToken is available
+      if (apiToken) {
+        headers['Authorization'] = `Bearer ${apiToken}`;
+      }
+      
       const response = await fetch(searchEndpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'tenantId': 'default-tenant',
-        },
+        headers,
         body: JSON.stringify(filters),
       });
 
@@ -212,12 +254,22 @@ class TrackingAssessmentService {
     try {
       const detailsEndpoint = `${TRACKING_API_BASE_URL}/assessment/read/${assessmentTrackingId}`;
 
+      // Get API token from localStorage
+      const apiToken = typeof window !== 'undefined' ? localStorage.getItem('apiToken') : null;
+      
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'tenantId': 'default-tenant',
+      };
+      
+      // Add Authorization header if apiToken is available
+      if (apiToken) {
+        headers['Authorization'] = `Bearer ${apiToken}`;
+      }
+
       const response = await fetch(detailsEndpoint, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'tenantId': 'default-tenant',
-        },
+        headers,
       });
 
       if (!response.ok) {
