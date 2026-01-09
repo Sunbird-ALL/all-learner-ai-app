@@ -6137,7 +6137,8 @@ const Practice = () => {
   const renderMechanics = () => {
     // For F1 flow, ensure mechanism matches F1_FLOW step type
     // This prevents rendering the wrong component due to stale mechanism state
-    if (isF1FlowActive && f1FlowStep?.step) {
+    // Only run this for F1 flow (level "B") to avoid interfering with other flows
+    if (isF1FlowActive && f1FlowStep?.step && milestoneLevel === "B") {
       const currentF1Step = getF1FlowStep();
       const f1StepType = currentF1Step.step?.type;
       const expectedMechanism =
@@ -6147,52 +6148,92 @@ const Practice = () => {
           ? "letterHunt"
           : null;
 
+      console.log("renderMechanics - F1 flow check", {
+        isF1FlowActive,
+        f1StepType,
+        expectedMechanism,
+        currentMechanism:
+          typeof mechanism === "object" ? mechanism?.name : mechanism,
+        mechanismType: typeof mechanism,
+        f1FlowIndexState,
+        milestoneLevel,
+      });
+
       // If mechanism doesn't match expected, fix it immediately
-      if (expectedMechanism && mechanism?.name !== expectedMechanism) {
-        console.warn(
-          "renderMechanics - Mechanism mismatch detected, correcting:",
-          {
-            currentMechanism: mechanism?.name,
-            expectedMechanism,
-            f1StepType,
-            f1FlowIndexState,
-            currentF1StepIndex: currentF1Step.index,
-          }
-        );
-        // Set the correct mechanism immediately
+      // Only log warning if mechanism exists but is wrong (not just undefined during initialization)
+      if (
+        expectedMechanism &&
+        (!mechanism ||
+          typeof mechanism !== "object" ||
+          !mechanism.name ||
+          mechanism.name !== expectedMechanism)
+      ) {
+        // Only warn if mechanism exists but is incorrect (not just undefined/empty)
+        if (
+          mechanism &&
+          typeof mechanism === "object" &&
+          mechanism.name &&
+          mechanism.name !== expectedMechanism
+        ) {
+          console.warn(
+            "renderMechanics - Mechanism mismatch detected, correcting:",
+            {
+              currentMechanism: mechanism?.name,
+              expectedMechanism,
+              f1StepType,
+              f1FlowIndexState,
+              currentF1StepIndex: currentF1Step.index,
+              milestoneLevel,
+            }
+          );
+        }
+        // Set the correct mechanism immediately (this will happen even if mechanism is undefined/empty during initialization)
         if (expectedMechanism === "letterTrain") {
+          console.log("renderMechanics - Setting mechanism to letterTrain");
           setMechanism({ id: "letterTrain", name: "letterTrain" });
         } else if (expectedMechanism === "letterHunt") {
+          console.log("renderMechanics - Setting mechanism to letterHunt");
           setMechanism({ id: "letterHunt", name: "letterHunt" });
-        }
-        // Don't return null - let it continue to render with the corrected mechanism
-        // The state update will trigger a re-render, but we should still try to render something
-        // Use a small delay check to ensure mechanism is set
-        if (!mechanism || mechanism.name !== expectedMechanism) {
-          // If mechanism is still not set correctly, show loading or wait for next render
-          // But don't return null to avoid blank screen
-          console.log(
-            "renderMechanics - Mechanism correction in progress, rendering will happen on next render"
-          );
-          // For A3 (index 20), ensure we don't return null - let it fall through to render
-          // The mechanism will be set and component will re-render
         }
       }
     }
 
     // Check F1 completion FIRST - highest priority
     // Use state value which is kept in sync with localStorage
+    // For F1 flow with Learn steps (LetterTrain), skip this check and go to LetterTrain
+    const isF1LearnStepForRender =
+      isF1FlowActive &&
+      milestoneLevel === "B" &&
+      shouldShowF1 &&
+      getF1FlowStep()?.step?.type === "L";
+    const isMechanismEmpty =
+      !mechanism || (typeof mechanism === "string" && mechanism === "");
+
+    console.log("renderMechanics - Checking WordsOrImage condition", {
+      isF1LearnStepForRender,
+      isMechanismEmpty,
+      mechanism: typeof mechanism === "object" ? mechanism?.name : mechanism,
+      mechanismType: typeof mechanism,
+      isF1FlowActive,
+      milestoneLevel,
+      shouldShowF1,
+      f1StepType: getF1FlowStep()?.step?.type,
+    });
+
     if (
-      (!mechanism &&
+      !isF1LearnStepForRender &&
+      ((isMechanismEmpty &&
         rFlow !== "true" &&
         tFlow !== "true" &&
         readMatch !== "true" &&
         wordWallFlow !== "true") ||
-      (mechanism?.id === "mechanic_15" &&
-        rFlow !== "true" &&
-        tFlow !== "true" &&
-        readMatch !== "true" &&
-        wordWallFlow !== "true")
+        (mechanism &&
+          typeof mechanism === "object" &&
+          mechanism?.id === "mechanic_15" &&
+          rFlow !== "true" &&
+          tFlow !== "true" &&
+          readMatch !== "true" &&
+          wordWallFlow !== "true"))
     ) {
       const mechanics_data = questions[currentQuestion]?.mechanics_data;
 
@@ -6402,285 +6443,222 @@ const Practice = () => {
         />
       );
     }
-    // else if (
-    //   isF1LearnStep &&
-    //   shouldShowF1
-    // ) {
-    //   // F1 Flow - Learn Step (replaces R0)
-    //   // Get customLetters from F1 config using practiceSteps pattern
-    //   const learnStepNumber = f1FlowStep.step?.step || 1;
-    //   // L step 1 -> P1 (practiceSteps index 0), L step 2 -> P3 (index 2), etc.
-    //   const practiceStepIndex = (learnStepNumber - 1) * 2; // 0, 2, 4, 6, 8
-    //   const stepConfig = getCurrentContent(practiceStepIndex);
-    //   const customLetters = stepConfig?.customLetters;
-
-    //   return (
-    //     <F1
-    //       page={page}
-    //       setPage={setPage}
-    //       {...{
-    //         level: level,
-    //         header:
-    //           questions[currentQuestion]?.contentType === "image"
-    //             ? `Guess the below image`
-    //             : `Speak the below word`,
-    //         //
-    //         currentImg: currentImage,
-    //         parentWords: parentWords,
-    //         contentType: currentContentType,
-    //         contentId: questions[currentQuestion]?.contentId,
-    //         setVoiceText,
-    //         setRecordedAudio,
-    //         setVoiceAnimate,
-    //         storyLine,
-    //         handleNext,
-    //         type: "word",
-    //         // image: elephant,
-    //         enableNext,
-    //         showTimer: false,
-    //         points,
-    //         steps: questions?.length,
-    //         currentStep: currentQuestion + 1,
-    //         progressData,
-    //         showProgress: true,
-    //         background:
-    //           isShowCase &&
-    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-    //         playTeacherAudio,
-    //         callUpdateLearner: isShowCase,
-    //         disableScreen,
-    //         isShowCase,
-    //         handleBack: !isShowCase && handleBack,
-    //         setEnableNext,
-    //         setIsNextButtonCalled,
-    //         loading,
-    //         setOpenMessageDialog,
-    //         vocabCount,
-    //         wordCount,
-    //         customLetters: customLetters,
-    //       }}
-    //     />
-    //   );
-    // }else if (
-    //   isF1AssessmentStep &&
-    //   shouldShowF1
-    // ) {
-    //   // F1 Flow - Assessment Step - navigate to assessment
-    //   navigate("/assesment");
-    //   return null;
-    // } else if (
-    //   rFlow === "true" &&
-    //   shouldShowF1 &&
-    //   rStepZero === 0 &&
-    //   !isF1FlowActive
-    // ) {
-    //   // Legacy R0 flow (deprecated - use F1 instead)
-    //   // Get currentGetContent to access customLetters
-    //   const currentGetContentForR0 = getCurrentContent(progressData?.currentPracticeStep || 0);
-    //   const customLetters = currentGetContentForR0?.customLetters;
-
-    //   return (
-    //     <R0
-    //       page={page}
-    //       setPage={setPage}
-    //       {...{
-    //         level: level,
-    //         header:
-    //           questions[currentQuestion]?.contentType === "image"
-    //             ? `Guess the below image`
-    //             : `Speak the below word`,
-    //         //
-    //         currentImg: currentImage,
-    //         parentWords: parentWords,
-    //         contentType: currentContentType,
-    //         contentId: questions[currentQuestion]?.contentId,
-    //         setVoiceText,
-    //         setRecordedAudio,
-    //         setVoiceAnimate,
-    //         storyLine,
-    //         handleNext,
-    //         type: "word",
-    //         // image: elephant,
-    //         enableNext,
-    //         showTimer: false,
-    //         points,
-    //         steps: questions?.length,
-    //         currentStep: currentQuestion + 1,
-    //         progressData,
-    //         showProgress: true,
-    //         background:
-    //           isShowCase &&
-    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-    //         playTeacherAudio,
-    //         callUpdateLearner: isShowCase,
-    //         disableScreen,
-    //         isShowCase,
-    //         handleBack: !isShowCase && handleBack,
-    //         setEnableNext,
-    //         setIsNextButtonCalled,
-    //         loading,
-    //         setOpenMessageDialog,
-    //         vocabCount,
-    //         wordCount,
-    //         customLetters: customLetters,
-    //       }}
-    //     />
-    //   );
-    // } else if (
-    //   rFlow === "true" &&
-    //   shouldShowF1 &&
-    //   rStepZero === 1 &&
-    //   lang === "en" &&
-    //   !isF1FlowActive &&
-    //   !f1FlowComplete
-    // ) {
-    //   // Legacy R1 flow (deprecated - use F1 instead)
-    //   return (
-    //     <R1
-    //       page={page}
-    //       setPage={setPage}
-    //       {...{
-    //         level: level,
-    //         header:
-    //           questions[currentQuestion]?.contentType === "image"
-    //             ? `Guess the below image`
-    //             : `Speak the below word`,
-    //         //
-    //         currentImg: currentImage,
-    //         parentWords: parentWords,
-    //         contentType: currentContentType,
-    //         contentId: questions[currentQuestion]?.contentId,
-    //         setVoiceText,
-    //         setRecordedAudio,
-    //         setVoiceAnimate,
-    //         storyLine,
-    //         handleNext,
-    //         type: "word",
-    //         // image: elephant,
-    //         enableNext,
-    //         showTimer: false,
-    //         points,
-    //         steps: questions?.length,
-    //         currentStep: currentQuestion + 1,
-    //         progressData,
-    //         showProgress: true,
-    //         background:
-    //           isShowCase &&
-    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-    //         playTeacherAudio,
-    //         callUpdateLearner: isShowCase,
-    //         disableScreen,
-    //         isShowCase,
-    //         handleBack: !isShowCase && handleBack,
-    //         setEnableNext,
-    //         loading,
-    //         setOpenMessageDialog,
-    //         vocabCount,
-    //         wordCount,
-    //       }}
-    //     />
-    //   );
-    // } else if (
-    //   rFlow === "true" &&
-    //   shouldShowF1 &&
-    //   rStepZero === 1 &&
-    //   lang !== "en"
-    // ) {
-    //   return (
-    //     <Barakhadi
-    //       page={page}
-    //       setPage={setPage}
-    //       {...{
-    //         level: level,
-    //         header:
-    //           questions[currentQuestion]?.contentType === "image"
-    //             ? `Guess the below image`
-    //             : `Speak the below word`,
-    //         //
-    //         currentImg: currentImage,
-    //         parentWords: parentWords,
-    //         contentType: currentContentType,
-    //         contentId: questions[currentQuestion]?.contentId,
-    //         setVoiceText,
-    //         setRecordedAudio,
-    //         setVoiceAnimate,
-    //         storyLine,
-    //         handleNext,
-    //         type: "word",
-    //         // image: elephant,
-    //         enableNext,
-    //         showTimer: false,
-    //         points,
-    //         steps: questions?.length,
-    //         currentStep: currentQuestion + 1,
-    //         progressData,
-    //         showProgress: true,
-    //         background:
-    //           isShowCase &&
-    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-    //         playTeacherAudio,
-    //         callUpdateLearner: isShowCase,
-    //         disableScreen,
-    //         isShowCase,
-    //         handleBack: !isShowCase && handleBack,
-    //         setEnableNext,
-    //         loading,
-    //         setOpenMessageDialog,
-    //         vocabCount,
-    //         wordCount,
-    //       }}
-    //     />
-    //   );
-    // } else if (rFlow === "true" && level === 2 && [2, 3, 4].includes(rStep)) {
-    //   return (
-    //     <R2
-    //       page={page}
-    //       setPage={setPage}
-    //       rStep={rStep}
-    //       //onComplete={() => handleComplete(3)}
-    //       {...{
-    //         level: level,
-    //         header:
-    //           questions[currentQuestion]?.contentType === "image"
-    //             ? `Guess the below image`
-    //             : `Speak the below word`,
-    //         //
-    //         currentImg: currentImage,
-    //         parentWords: parentWords,
-    //         contentType: currentContentType,
-    //         contentId: questions[currentQuestion]?.contentId,
-    //         setVoiceText,
-    //         setRecordedAudio,
-    //         setVoiceAnimate,
-    //         storyLine,
-    //         handleNext,
-    //         type: "word",
-    //         // image: elephant,
-    //         enableNext,
-    //         showTimer: false,
-    //         points,
-    //         steps: questions?.length,
-    //         currentStep: currentQuestion + 1,
-    //         progressData,
-    //         showProgress: true,
-    //         background:
-    //           isShowCase &&
-    //           "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-    //         playTeacherAudio,
-    //         callUpdateLearner: isShowCase,
-    //         disableScreen,
-    //         isShowCase,
-    //         handleBack: !isShowCase && handleBack,
-    //         setEnableNext,
-    //         loading,
-    //         setOpenMessageDialog,
-    //         vocabCount,
-    //         wordCount,
-    //       }}
-    //     />
-    //   );
-    // }
+    // Removed F1 component check - LetterTrain should be used instead for F1 Learn steps
+    // The LetterTrain check below will handle F1 Learn steps
     else if (
+      rFlow === "true" &&
+      shouldShowF1 &&
+      rStepZero === 0 &&
+      !isF1FlowActive
+    ) {
+      // Legacy R0 flow (deprecated - use F1 instead)
+      // Get currentGetContent to access customLetters
+      const currentGetContentForR0 = getCurrentContent(
+        progressData?.currentPracticeStep || 0
+      );
+      const customLetters = currentGetContentForR0?.customLetters;
+
+      return (
+        <R0
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            setIsNextButtonCalled,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+            customLetters: customLetters,
+          }}
+        />
+      );
+    } else if (
+      rFlow === "true" &&
+      shouldShowF1 &&
+      rStepZero === 1 &&
+      lang === "en" &&
+      !isF1FlowActive &&
+      !f1FlowComplete
+    ) {
+      // Legacy R1 flow (deprecated - use F1 instead)
+      return (
+        <R1
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (
+      rFlow === "true" &&
+      shouldShowF1 &&
+      rStepZero === 1 &&
+      lang !== "en"
+    ) {
+      return (
+        <Barakhadi
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (rFlow === "true" && level === 2 && [2, 3, 4].includes(rStep)) {
+      return (
+        <R2
+          page={page}
+          setPage={setPage}
+          rStep={rStep}
+          //onComplete={() => handleComplete(3)}
+          {...{
+            level: level,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below word`,
+            //
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            // image: elephant,
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    } else if (
       mechanism &&
       mechanism.name === "fillInTheBlank" &&
       mechanism.id !== ""
@@ -6909,7 +6887,7 @@ const Practice = () => {
             currentImg: currentImage,
             parentWords: questions[currentQuestion]?.multilingual_data,
             contentSourceData:
-              questions[currentQuestion]?.contentSourceData?.[0],
+              questions[currentQuestion]?.contentSourceData?.[0] || {},
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,
@@ -7758,105 +7736,234 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism && mechanism.name === "letterTrain") {
-      // Get currentGetContent to access customLetters
-      // For F1 flow, directly access F1 config array using f1FlowIndexState
-      let currentGetContentForLetterTrain;
-      let customLetters;
+    } else if (
+      (mechanism &&
+        typeof mechanism === "object" &&
+        mechanism.name === "letterTrain") ||
+      (isF1FlowActive &&
+        milestoneLevel === "B" &&
+        shouldShowF1 &&
+        getF1FlowStep()?.step?.type === "L")
+    ) {
+      console.log("LetterTrain render - Condition matched, entering block", {
+        mechanismMatch:
+          mechanism &&
+          typeof mechanism === "object" &&
+          mechanism.name === "letterTrain",
+        f1FlowMatch:
+          isF1FlowActive &&
+          milestoneLevel === "B" &&
+          shouldShowF1 &&
+          getF1FlowStep()?.step?.type === "L",
+        mechanism: typeof mechanism === "object" ? mechanism?.name : mechanism,
+        isF1FlowActive,
+        milestoneLevel,
+        shouldShowF1,
+        f1StepType: getF1FlowStep()?.step?.type,
+      });
 
-      if (isF1FlowActive) {
-        // For F1 flow, directly access F1 config array
-        const lang = getLocalData("lang") || "en";
-        const f1Config = levelGetContent[lang]?.["F1"];
-        if (f1Config && Array.isArray(f1Config) && f1Config[f1FlowIndexState]) {
-          currentGetContentForLetterTrain = f1Config[f1FlowIndexState];
-          customLetters = currentGetContentForLetterTrain?.customLetters;
-          console.log(
-            "LetterTrain render - F1 config for index:",
-            f1FlowIndexState,
-            "customLetters:",
-            customLetters
-          );
-        } else {
-          console.error(
-            "LetterTrain render - F1 config not found for index:",
-            f1FlowIndexState
-          );
-          currentGetContentForLetterTrain = null;
-          customLetters = null;
-        }
-      } else {
-        // For non-F1 flow, use getCurrentContent
-        const stepIndexForContent = progressData?.currentPracticeStep || 0;
-        currentGetContentForLetterTrain =
-          getCurrentContent(stepIndexForContent);
-        customLetters = currentGetContentForLetterTrain?.customLetters;
-      }
-
-      // Only render LetterTrain if we have customLetters (for F1 Learn steps)
-      // If customLetters is undefined, it means we're not in a Learn step, so don't render
-      if (!customLetters && isF1FlowActive) {
+      // Only render LetterTrain for F1 flow (milestone level "B")
+      // Double-check that this is actually F1 flow, not other milestones
+      if (isF1FlowActive && milestoneLevel !== "B") {
         console.warn(
-          "LetterTrain render blocked: customLetters is undefined for F1 flow step",
-          {
-            stepIndex: isF1FlowActive
-              ? f1FlowIndexState
-              : progressData?.currentPracticeStep || 0,
-            f1FlowIndexState,
-            f1FlowStep: f1FlowStep.step,
-            currentGetContent: currentGetContentForLetterTrain,
+          "LetterTrain render - isF1FlowActive is true but milestoneLevel is not 'B':",
+          milestoneLevel
+        );
+        // Don't render LetterTrain for non-F1 milestones - skip this block
+      } else {
+        console.log("LetterTrain render - Entering LetterTrain block", {
+          mechanism:
+            typeof mechanism === "object" ? mechanism?.name : mechanism,
+          mechanismType: typeof mechanism,
+          isF1FlowActive,
+          milestoneLevel,
+          shouldShowF1,
+          f1FlowIndexState,
+          f1StepType: isF1FlowActive ? getF1FlowStep()?.step?.type : null,
+        });
+
+        // Get currentGetContent to access customLetters
+        // For F1 flow, directly access F1 config array using f1FlowIndexState
+        let currentGetContentForLetterTrain;
+        let customLetters;
+
+        // Check if this is an F1 Learn step
+        const currentF1StepForLetterTrain = isF1FlowActive
+          ? getF1FlowStep()
+          : null;
+        const isF1LearnStepForRender =
+          currentF1StepForLetterTrain?.step?.type === "L";
+
+        console.log("LetterTrain render - F1 step check", {
+          currentF1Step: currentF1StepForLetterTrain,
+          isF1LearnStepForRender,
+          stepType: currentF1StepForLetterTrain?.step?.type,
+        });
+
+        // If it's F1 flow but not a Learn step, don't render LetterTrain - let it fall through to LetterHunt
+        // Also check that milestoneLevel is actually "B" to prevent rendering for other milestones
+        if (
+          (isF1FlowActive && !isF1LearnStepForRender) ||
+          (isF1FlowActive && milestoneLevel !== "B")
+        ) {
+          if (isF1FlowActive && milestoneLevel !== "B") {
+            console.warn(
+              "LetterTrain render - Blocked: isF1FlowActive but milestoneLevel is not 'B':",
+              milestoneLevel
+            );
+          } else {
+            console.log(
+              "LetterTrain render - Not a Learn step, will fall through to LetterHunt"
+            );
           }
-        );
-        // Don't render LetterTrain if we don't have customLetters in F1 flow
-        // Instead of returning null, let it fall through to check other mechanisms
-        // This prevents blank screens
-      } else if (customLetters) {
-        return (
-          <LetterTrain
-            page={page}
-            setPage={setPage}
-            {...{
-              level: level,
-              header:
-                questions[currentQuestion]?.contentType === "image"
-                  ? `Guess the below image`
-                  : `Speak the below word`,
-              currentImg: currentImage,
-              parentWords: parentWords,
-              contentType: currentContentType,
-              contentId: questions[currentQuestion]?.contentId,
-              setVoiceText,
-              setRecordedAudio,
-              setVoiceAnimate,
-              storyLine,
-              handleNext: isF1LearnStep
-                ? handleLetterTrainComplete
-                : handleNext,
-              type: "word",
-              enableNext,
-              showTimer: false,
-              points,
-              steps: questions?.length,
-              currentStep: currentQuestion + 1,
-              progressData,
-              showProgress: true,
-              background:
-                isShowCase &&
-                "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-              playTeacherAudio,
-              callUpdateLearner: isShowCase,
-              disableScreen,
-              isShowCase,
-              handleBack: !isShowCase && handleBack,
-              setEnableNext,
-              loading,
-              setOpenMessageDialog,
-              vocabCount,
-              wordCount,
-              customLetters: customLetters,
-            }}
-          />
-        );
+          // Don't render LetterTrain for Practice/Apply steps or non-F1 milestones
+          // This will fall through to LetterHunt rendering or other mechanisms
+          // Don't return null here - let it continue to check other mechanisms
+        } else {
+          // Ensure mechanism is set correctly for F1 flow Learn steps
+          if (
+            isF1FlowActive &&
+            isF1LearnStepForRender &&
+            mechanism?.name !== "letterTrain"
+          ) {
+            console.log(
+              "LetterTrain render - Setting mechanism to letterTrain for F1 Learn step"
+            );
+            setMechanism({ id: "letterTrain", name: "letterTrain" });
+          }
+
+          if (isF1FlowActive) {
+            // For F1 flow, use currentF1Step.index (from localStorage) instead of f1FlowIndexState
+            // This ensures we always use the most up-to-date index
+            const currentF1Step = getF1FlowStep();
+            const f1IndexToUse = currentF1Step.index;
+            const lang = getLocalData("lang") || "en";
+            const f1Config = levelGetContent[lang]?.["F1"];
+            if (f1Config && Array.isArray(f1Config) && f1Config[f1IndexToUse]) {
+              currentGetContentForLetterTrain = f1Config[f1IndexToUse];
+              customLetters = currentGetContentForLetterTrain?.customLetters;
+              console.log(
+                "LetterTrain render - F1 config for index:",
+                f1IndexToUse,
+                "customLetters:",
+                customLetters
+              );
+            } else {
+              console.error(
+                "LetterTrain render - F1 config not found for index:",
+                f1IndexToUse,
+                "f1FlowIndexState:",
+                f1FlowIndexState
+              );
+              currentGetContentForLetterTrain = null;
+              customLetters = null;
+            }
+          } else {
+            // For non-F1 flow, use getCurrentContent
+            const stepIndexForContent = progressData?.currentPracticeStep || 0;
+            currentGetContentForLetterTrain =
+              getCurrentContent(stepIndexForContent);
+            customLetters = currentGetContentForLetterTrain?.customLetters;
+          }
+
+          // Only render LetterTrain if we have customLetters (for F1 Learn steps)
+          // If customLetters is undefined, it means we're not in a Learn step, so don't render
+          console.log("LetterTrain render - Checking customLetters", {
+            customLetters,
+            isF1FlowActive,
+            currentGetContent: currentGetContentForLetterTrain,
+            f1FlowIndexState,
+            f1IndexToUse: isF1FlowActive ? getF1FlowStep().index : null,
+          });
+
+          // If customLetters is still undefined, try to get it from currentGetContent (the one logged as curContent)
+          if (!customLetters && isF1FlowActive) {
+            // Try to get customLetters from the current content that was loaded
+            const lang = getLocalData("lang") || "en";
+            const f1Config = levelGetContent[lang]?.["F1"];
+            const currentF1Step = getF1FlowStep();
+            const f1IndexToUse = currentF1Step.index;
+            if (f1Config && Array.isArray(f1Config) && f1Config[f1IndexToUse]) {
+              const fallbackContent = f1Config[f1IndexToUse];
+              if (fallbackContent?.customLetters) {
+                console.log(
+                  "LetterTrain render - Found customLetters in fallback content:",
+                  fallbackContent.customLetters
+                );
+                customLetters = fallbackContent.customLetters;
+                currentGetContentForLetterTrain = fallbackContent;
+              }
+            }
+          }
+
+          if (!customLetters && isF1FlowActive) {
+            console.warn(
+              "LetterTrain render blocked: customLetters is undefined for F1 flow step",
+              {
+                stepIndex: isF1FlowActive
+                  ? f1FlowIndexState
+                  : progressData?.currentPracticeStep || 0,
+                f1FlowIndexState,
+                f1FlowStep: f1FlowStep.step,
+                currentGetContent: currentGetContentForLetterTrain,
+              }
+            );
+            // Don't render LetterTrain if we don't have customLetters in F1 flow
+            // Don't return null - let it fall through to check other mechanisms or show loading
+            // Returning null causes blank screen
+          } else if (customLetters) {
+            console.log(
+              "LetterTrain render - Rendering LetterTrain with customLetters:",
+              customLetters
+            );
+            return (
+              <LetterTrain
+                page={page}
+                setPage={setPage}
+                {...{
+                  level: level,
+                  header:
+                    questions[currentQuestion]?.contentType === "image"
+                      ? `Guess the below image`
+                      : `Speak the below word`,
+                  currentImg: currentImage,
+                  parentWords: parentWords,
+                  contentType: currentContentType,
+                  contentId: questions[currentQuestion]?.contentId,
+                  setVoiceText,
+                  setRecordedAudio,
+                  setVoiceAnimate,
+                  storyLine,
+                  handleNext: isF1LearnStep
+                    ? handleLetterTrainComplete
+                    : handleNext,
+                  type: "word",
+                  enableNext,
+                  showTimer: false,
+                  points,
+                  steps: questions?.length,
+                  currentStep: currentQuestion + 1,
+                  progressData,
+                  showProgress: true,
+                  background:
+                    isShowCase &&
+                    "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+                  playTeacherAudio,
+                  callUpdateLearner: isShowCase,
+                  disableScreen,
+                  isShowCase,
+                  handleBack: !isShowCase && handleBack,
+                  setEnableNext,
+                  loading,
+                  setOpenMessageDialog,
+                  vocabCount,
+                  wordCount,
+                  customLetters: customLetters,
+                }}
+              />
+            );
+          }
+        }
       }
     } else if (mechanism && mechanism.name === "letterHunt") {
       // For F1 flow, verify that this is actually a Practice or Apply step, not a Learn step
