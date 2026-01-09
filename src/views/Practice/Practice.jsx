@@ -8678,6 +8678,7 @@ const Practice = () => {
           const applyStep = currentGetContentForF2?.applyStep;
           const failRedirect = currentGetContentForF2?.failRedirect;
           const passRedirect = currentGetContentForF2?.passRedirect;
+          const customLettersForF2 = currentGetContentForF2?.customLetters; // Extract customLetters from F2 config
           const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
 
           return (
@@ -8721,7 +8722,7 @@ const Practice = () => {
                 f1FlowStep: null,
                 isF2FlowActive, // Pass F2 flow active flag
                 f2FlowStep, // Pass F2 flow step info
-                customLetters: undefined,
+                customLetters: customLettersForF2, // Pass customLetters from F2 config
               }}
             />
           );
@@ -8874,6 +8875,7 @@ const Practice = () => {
           const applyStep = currentGetContentForF1?.applyStep; // Apply step number (1, 2, or 3)
           const failRedirect = currentGetContentForF1?.failRedirect; // e.g., "L1", "L4", "L7"
           const passRedirect = currentGetContentForF1?.passRedirect; // e.g., "L4", "L7", "F2"
+          const customLettersForF1 = currentGetContentForF1?.customLetters; // Extract customLetters from F1 config
           // Get milestone level for progress update
           const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
           // For showcase mode (Apply steps), we still need to pass startLevel and endLevel
@@ -8920,7 +8922,7 @@ const Practice = () => {
                 f1FlowStep, // Pass F1 flow step info
                 isF2FlowActive, // Pass F2 flow active flag
                 f2FlowStep, // Pass F2 flow step info
-                customLetters: undefined, // Don't pass customLetters for Letter Hunt - it should use level-based letters
+                customLetters: customLettersForF1, // Pass customLetters from F1 config
               }}
             />
           );
@@ -8947,6 +8949,7 @@ const Practice = () => {
         const applyStep = currentGetContentForF1?.applyStep;
         const failRedirect = currentGetContentForF1?.failRedirect;
         const passRedirect = currentGetContentForF1?.passRedirect;
+        const customLettersForNonF1 = currentGetContentForF1?.customLetters; // Extract customLetters from config
         const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
 
         return (
@@ -8992,7 +8995,7 @@ const Practice = () => {
               f1FlowStep,
               isF2FlowActive,
               f2FlowStep,
-              customLetters: undefined,
+              customLetters: customLettersForNonF1, // Pass customLetters from config
             }}
           />
         );

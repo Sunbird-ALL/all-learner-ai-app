@@ -10691,6 +10691,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        customLetters: ["In", "The", "On", "An", "Am"],
       },
       // Learn 2 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -10709,6 +10710,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_P2",
         mechanism: { id: "letterHunt", name: "letterHunt" },
+        customLetters: ["At", "It", "He", "She", "His"],
         multilingual: true,
         letterHuntLevel: 2,
         letterHuntContentCount: 10,
@@ -10730,6 +10732,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_L4",
         mechanism: { id: "letterHunt", name: "letterHunt" },
+        customLetters: ["The", "Is", "Are", "Or", "Up", "On"],
         multilingual: true,
         letterHuntLevel: 3,
         letterHuntContentCount: 10,
@@ -10767,6 +10770,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_P5",
         mechanism: { id: "letterHunt", name: "letterHunt" },
+        customLetters: ["All", "In", "Ter", "Ing", "Up", "Him"],
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
