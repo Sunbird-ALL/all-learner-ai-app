@@ -110,7 +110,7 @@ class TrackingAssessmentService {
       // For non-Apply steps, use default values
       const apply_level = data.apply_level && data.apply_level.trim() !== "" ? data.apply_level : "N/A";
       const sub_apply_level = data.sub_apply_level !== undefined && data.sub_apply_level !== null ? data.sub_apply_level : 0;
-
+      
       const payload: any = {
         assessmentTrackingId: assessmentTrackingId, // Required by database
         userId: data.userId,
@@ -149,14 +149,13 @@ class TrackingAssessmentService {
         submitedBy: 'Online', // Backend defaults to 'Online' if not provided
       };
 
-      // Add F1 flow specific parameters if provided
-      if (data.sub_milestone_level) {
-        payload.sub_milestone_level = data.sub_milestone_level;
-      }
+      // Add sub_milestone_level - required by backend
+      // For F1 flow: "F1", For F2 flow: "F2", For other flows: use provided value or "N/A"
+      payload.sub_milestone_level = data.sub_milestone_level || "N/A";
 
       // Get API token from localStorage
       const apiToken = typeof window !== 'undefined' ? localStorage.getItem('apiToken') : null;
-      
+
       // Send POST request to backend
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',

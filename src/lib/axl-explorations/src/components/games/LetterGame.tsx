@@ -37,9 +37,10 @@ interface LetterGameProps {
   sub_milestone_level?: string; // Optional: Sub milestone level (e.g., "F1")
   apply_level?: string; // Optional: Apply level (e.g., "A1", "A2", "A3")
   sub_apply_level?: number; // Optional: Sub apply level (1, 2, or 3 - the level within the Apply step)
+  onA3Pass?: () => void; // Optional: callback when A3 passes and sessionResult is "Pass"
 }
 
-export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, sub_session_id, sub_milestone_level, apply_level, sub_apply_level }: LetterGameProps) {
+export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, sub_session_id, sub_milestone_level, apply_level, sub_apply_level, onA3Pass }: LetterGameProps) {
   const navigate = useNavigate();
   const params = useParams<{ level?: string }>();
   const { level: urlLevel } = params || {};
@@ -507,6 +508,10 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
 
         // Get latest question summaries
         setQuestionSummaries((latestSummaries) => {
+          // For F1/F2 flow Apply steps, sub_apply_level should be the current level being played (1, 2, or 3)
+          // Use currentLevel (the actual level being played) instead of the prop value
+          const effectiveSubApplyLevel = apply_level ? currentLevel : undefined;
+          
           trackingAssessmentService.createAssessmentTracking({
             userId: currentUser.username,
             gameKey: gameKey,
@@ -520,6 +525,10 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
             assessmentSummary: latestSummaries,
             sessionId: sessionId,
             subsessionId: subsessionId,
+            sub_session_id: sub_session_id, // Pass F1/F2 flow sub session ID
+            sub_milestone_level: sub_milestone_level, // Pass F1/F2 flow sub milestone level ("F1" or "F2")
+            apply_level: apply_level, // Pass apply level (A1, A2, A3) from config
+            sub_apply_level: effectiveSubApplyLevel, // Pass current level within Apply step (1, 2, or 3)
             metadata: {
               difficulty: difficultySettings.complexity,
               levelFailed: true,
@@ -630,6 +639,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           // Use currentLevel (the actual level being played) instead of the prop value
           const effectiveSubApplyLevel = apply_level ? currentLevel : undefined;
           
+          // Call assessment tracking and check for A3 pass asynchronously
           trackingAssessmentService.createAssessmentTracking({
             userId: currentUser.username,
             gameKey: gameKey,
@@ -654,7 +664,16 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
               totalAttempts: totalAttemptsLogged,
               gameEndedByLives: false
             }
+          }).then((assessmentResponse) => {
+            // Check if this is A3 and sessionResult is "Pass"
+            if (apply_level === "A3" && assessmentResponse?.data?.sessionResult === "Pass" && onA3Pass) {
+              console.log("A3 passed with sessionResult: Pass - calling onA3Pass callback");
+              onA3Pass();
+            }
+          }).catch((error) => {
+            console.error("Error in assessment tracking:", error);
           });
+          
           return latestSummaries;
         });
       }
@@ -685,8 +704,13 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
             onLevelComplete(currentLevel);
             return; // Exit immediately, don't show SuccessScreen
           } else {
-            // If endLevel is reached, call callback but still show SuccessScreen
-            onLevelComplete(currentLevel);
+            // If endLevel is reached, delay calling onLevelComplete to allow success screen to show first
+            // The success screen will render, and after a delay, we'll call onLevelComplete to trigger redirect
+            setTimeout(() => {
+              if (onLevelComplete) {
+                onLevelComplete(currentLevel);
+              }
+            }, 2000); // 2 second delay to ensure success screen is visible before redirect
           }
         }
         // If endLevel is specified but we haven't reached it yet, don't call onLevelComplete
@@ -996,10 +1020,9 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
             setQuestions(newQuestions);
           }
           
-          // If we've reached the end level, call onLevelComplete
-          if (endLevel !== undefined && nextLevel >= endLevel && onLevelComplete) {
-            onLevelComplete(nextLevel);
-          }
+          // Don't call onLevelComplete here - it should only be called when the level is actually completed
+          // (handled in the level completion logic around line 699)
+          // The "Next Level" button is for transitioning TO the next level, not completing it
         }}
       />
     );

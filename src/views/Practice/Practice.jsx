@@ -12,6 +12,7 @@ import R1 from "../../RFlow/R1";
 import LetterTrain from "../../RFlow/LetterTrain";
 import R2 from "../../RFlow/R2";
 import F1, { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
+import F2, { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
 import Barakhadi from "../../RFlow/Barakhadi";
 import R3Flow from "../../RFlow/R3";
 import R4 from "../../RFlow/R4";
@@ -4308,11 +4309,17 @@ const Practice = () => {
   };
   const milestoneData = getMilestoneData();
   const milestoneLevel = milestoneData?.data?.milestone_level || null;
+  const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
 
   // Check if F1 flow should be active based on milestone_level
-  // F1 flow is triggered when milestone_level is "B" (Beginner)
-  const shouldShowF1 = milestoneLevel === "B";
-  const shouldShowF2 = milestoneLevel === "F2";
+  // F1 flow is triggered when milestone_level is "B" and sub_milestone_level is empty/null
+  const shouldShowF1 =
+    milestoneLevel === "B" &&
+    (subMilestoneLevel === "" ||
+      subMilestoneLevel === null ||
+      subMilestoneLevel === undefined);
+  // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F1" (F1 is complete, show F2)
+  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F1";
   const shouldShowF3 = milestoneLevel === "F3";
 
   // Track F1 flow index in state to trigger re-renders
@@ -4321,7 +4328,13 @@ const Practice = () => {
     return savedIndex !== null ? Number(savedIndex) : 0;
   });
 
-  // Sync state with localStorage when it changes externally
+  // Track F2 flow index in state to trigger re-renders
+  const [f2FlowIndexState, setF2FlowIndexState] = useState(() => {
+    const savedIndex = getLocalData("f2FlowIndex");
+    return savedIndex !== null ? Number(savedIndex) : 0;
+  });
+
+  // Sync F1 state with localStorage when it changes externally
   useEffect(() => {
     const checkF1FlowIndex = () => {
       const savedIndex = getLocalData("f1FlowIndex");
@@ -4352,6 +4365,37 @@ const Practice = () => {
     };
   }, [f1FlowIndexState]);
 
+  // Sync F2 state with localStorage when it changes externally
+  useEffect(() => {
+    const checkF2FlowIndex = () => {
+      const savedIndex = getLocalData("f2FlowIndex");
+      if (savedIndex !== null) {
+        const index = Number(savedIndex);
+        if (index !== f2FlowIndexState) {
+          setF2FlowIndexState(index);
+        }
+      }
+    };
+
+    // Check immediately
+    checkF2FlowIndex();
+
+    // Also listen for storage events to sync when localStorage changes
+    const handleStorageChange = () => {
+      checkF2FlowIndex();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also poll periodically to catch changes from same window
+    const interval = setInterval(checkF2FlowIndex, 100);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [f2FlowIndexState]);
+
   // Check if F1 flow is active (replaces R0/R1)
   // Use state to ensure re-renders when flow advances
   const f1FlowStep = {
@@ -4363,6 +4407,18 @@ const Practice = () => {
   const isF1LearnStep = isF1FlowActive && f1FlowStep.step?.type === "L";
   const isF1PracticeStep = isF1FlowActive && f1FlowStep.step?.type === "P";
   const isF1ApplyStep = isF1FlowActive && f1FlowStep.step?.type === "A";
+
+  // Check if F2 flow is active
+  // Use state to ensure re-renders when flow advances
+  const f2FlowStep = {
+    index: f2FlowIndexState,
+    step: F2_FLOW[f2FlowIndexState] || null,
+    isLast: f2FlowIndexState === F2_FLOW.length - 1,
+  };
+  const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
+  const isF2LearnStep = isF2FlowActive && f2FlowStep.step?.type === "L";
+  const isF2PracticeStep = isF2FlowActive && f2FlowStep.step?.type === "P";
+  const isF2ApplyStep = isF2FlowActive && f2FlowStep.step?.type === "A";
 
   // Map F1 flow index to practiceSteps index
   // F1_FLOW index directly maps to practiceSteps index (0->0, 1->1, 2->2, etc.)
@@ -4533,10 +4589,14 @@ const Practice = () => {
     }
   };
 
-  // Handle LetterTrain completion for F1 flow Learn steps
+  // Handle LetterTrain completion for F1/F2 flow Learn steps
   const handleLetterTrainComplete = async () => {
-    if (!isF1FlowActive || !isF1LearnStep) {
-      // Not F1 flow or not a Learn step, use regular handleNext
+    const isF2LearnStep = isF2FlowActive && f2FlowStep.step?.type === "L";
+    if (
+      (!isF1FlowActive && !isF2FlowActive) ||
+      (!isF1LearnStep && !isF2LearnStep)
+    ) {
+      // Not F1/F2 flow or not a Learn step, use regular handleNext
       return handleNext(false);
     }
 
@@ -4544,6 +4604,117 @@ const Practice = () => {
       const lang = getLocalData("lang");
       const sessionId = getLocalData("sessionId");
 
+      // Handle F2 flow Learn step completion
+      if (isF2FlowActive && isF2LearnStep) {
+        // Get current F2 flow step BEFORE advancement
+        const currentF2FlowStep = getF2FlowStep();
+        console.log(
+          "Before advanceF2Flow - currentF2FlowStep:",
+          currentF2FlowStep
+        );
+
+        // Advance F2 flow - this updates localStorage
+        const nextStep = advanceF2Flow();
+        console.log("advanceF2Flow returned:", nextStep);
+
+        // Get the updated F2 flow step AFTER advancement
+        let updatedF2FlowStep = getF2FlowStep();
+        console.log(
+          "After advanceF2Flow - updatedF2FlowStep:",
+          updatedF2FlowStep
+        );
+
+        // Verify the index was actually incremented
+        if (updatedF2FlowStep.index === currentF2FlowStep.index) {
+          console.error(
+            "F2 flow index did not advance! Current:",
+            currentF2FlowStep.index,
+            "Updated:",
+            updatedF2FlowStep.index
+          );
+          // Force advance if it didn't work
+          const forcedIndex = currentF2FlowStep.index + 1;
+          setLocalData("f2FlowIndex", forcedIndex);
+          updatedF2FlowStep = getF2FlowStep();
+          console.log("Forced F2 flow step:", updatedF2FlowStep);
+        }
+
+        // Update state to trigger re-render
+        setF2FlowIndexState(updatedF2FlowStep.index);
+
+        // Store F2 flow progress in backend
+        if (updatedF2FlowStep.step) {
+          try {
+            await addLesson({
+              sessionId,
+              milestone: "practice",
+              lesson: updatedF2FlowStep.index.toString(),
+              progress: ((updatedF2FlowStep.index + 1) / F2_FLOW.length) * 100,
+              language: lang,
+              milestoneLevel: "B",
+            });
+          } catch (e) {
+            console.error("Error storing F2 flow progress:", e);
+          }
+        }
+
+        // Update practice progress to reflect new F2 flow step
+        const newPracticeStep = updatedF2FlowStep.index;
+        let practiceProgress = getLocalData("practiceProgress");
+        practiceProgress = practiceProgress ? JSON.parse(practiceProgress) : {};
+        practiceProgress = {
+          ...practiceProgress,
+          currentQuestion: 0,
+          currentPracticeProgress:
+            ((newPracticeStep + 1) / F2_FLOW.length) * 100,
+          currentPracticeStep: newPracticeStep,
+        };
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        setProgressData(practiceProgress);
+        setCurrentQuestion(0);
+
+        // Get content for the next step using the updated F2 flow index
+        let nextStepContent = null;
+        if (isF2FlowActive) {
+          const effectiveLang = lang || "en";
+          const f2Config = levelGetContent[effectiveLang]?.["F2"];
+          console.log("F2 config lookup:", {
+            lang: effectiveLang,
+            hasF2Config: !!f2Config,
+            f2ConfigLength: f2Config?.length,
+            targetIndex: updatedF2FlowStep.index,
+            f2FlowStep: updatedF2FlowStep.step,
+          });
+
+          if (
+            f2Config &&
+            Array.isArray(f2Config) &&
+            f2Config[updatedF2FlowStep.index]
+          ) {
+            nextStepContent = f2Config[updatedF2FlowStep.index];
+            console.log("F2 next step content from config:", {
+              index: updatedF2FlowStep.index,
+              content: nextStepContent,
+            });
+          }
+        }
+
+        // If next step is LetterTrain, mechanism is already set above
+        // Force re-render by updating state
+        setProgressData(practiceProgress);
+
+        console.log("LetterTrain completed for F2, next step:", {
+          newPracticeStep,
+          nextStepContent,
+          mechanism: nextStepContent?.mechanism,
+          f2FlowStep: updatedF2FlowStep,
+          f2FlowIndexState: updatedF2FlowStep.index,
+        });
+
+        return; // Exit early for F2 flow
+      }
+
+      // Handle F1 flow Learn step completion (existing logic)
       // Get current F1 flow step BEFORE advancement
       const currentF1FlowStep = getF1FlowStep();
       console.log(
@@ -5013,12 +5184,153 @@ const Practice = () => {
         setCurrentQuestion(0);
       }
 
+      // For F2 flow, always check current F2 flow step from localStorage (may have been advanced by LetterHuntMechanics)
+      // Check if F2 flow is active
+      const f2FlowAdvancedByLetterHunt =
+        getLocalData("f2FlowAdvancedByLetterHunt") === "true";
+      const currentF2FlowStepFromStorage = getF2FlowStep();
+      const isF2FlowByMilestone =
+        milestoneLevel === "B" &&
+        subMilestoneLevel === "F1" &&
+        currentF2FlowStepFromStorage.step !== null;
+
       // For F1 flow, always check current F1 flow step from localStorage (may have been advanced by LetterHuntMechanics)
       // Check if F1 flow is active by checking milestone level
-      const isF1FlowByMilestone = milestoneLevel === "B";
+      const isF1FlowByMilestone =
+        milestoneLevel === "B" && !isF2FlowByMilestone;
       let currentGetContent;
 
-      if (isF1FlowByMilestone) {
+      // Handle F2 flow first (takes precedence over F1)
+      if (isF2FlowByMilestone) {
+        // Always get current F2 flow step from localStorage (it may have been advanced by LetterHuntMechanics)
+        // Read directly from localStorage to get the most up-to-date value
+        const savedF2Index = getLocalData("f2FlowIndex");
+        const f2IndexFromStorage =
+          savedF2Index !== null ? Number(savedF2Index) : 0;
+        const currentF2FlowStep = {
+          index: f2IndexFromStorage,
+          step: F2_FLOW[f2IndexFromStorage] || null,
+          isLast: f2IndexFromStorage === F2_FLOW.length - 1,
+        };
+
+        console.log("handleNext - F2 flow active, current step from storage:", {
+          f2IndexFromStorage,
+          step: currentF2FlowStep.step,
+          stepType: currentF2FlowStep.step?.type,
+          f2FlowIndexState,
+          f2FlowAdvancedByLetterHunt,
+        });
+
+        // Update state to ensure UI reflects current F2 flow index
+        if (currentF2FlowStep.index !== f2FlowIndexState) {
+          console.log(
+            "handleNext - Updating f2FlowIndexState from",
+            f2FlowIndexState,
+            "to",
+            currentF2FlowStep.index
+          );
+          setF2FlowIndexState(currentF2FlowStep.index);
+        }
+
+        // Use F2 flow index to get content from F2 config
+        const effectiveLang = lang || "en";
+        const f2Config = levelGetContent[effectiveLang]?.["F2"];
+        console.log(
+          "handleNext - Fetching F2 content for index:",
+          currentF2FlowStep.index,
+          "step type:",
+          currentF2FlowStep.step?.type,
+          "title should be:",
+          currentF2FlowStep.step?.type === "L"
+            ? `L${currentF2FlowStep.step?.step}`
+            : currentF2FlowStep.step?.type === "P"
+            ? `P${currentF2FlowStep.step?.step}`
+            : `A${currentF2FlowStep.step?.step}`
+        );
+
+        if (
+          f2Config &&
+          Array.isArray(f2Config) &&
+          f2Config[currentF2FlowStep.index]
+        ) {
+          currentGetContent = f2Config[currentF2FlowStep.index];
+          // Add null check for currentGetContent
+          if (!currentGetContent) {
+            console.error(
+              "handleNext - F2 config entry is null/undefined at index:",
+              currentF2FlowStep.index
+            );
+            // Fallback to step type
+            const f2StepType = currentF2FlowStep.step?.type;
+            if (f2StepType === "L") {
+              currentGetContent = {
+                mechanism: { id: "letterTrain", name: "letterTrain" },
+              };
+            } else if (f2StepType === "P" || f2StepType === "A") {
+              currentGetContent = {
+                mechanism: { id: "letterHunt", name: "letterHunt" },
+              };
+            }
+          } else {
+            console.log("handleNext - F2 content from config:", {
+              index: currentF2FlowStep.index,
+              title: currentGetContent?.title,
+              mechanism: currentGetContent?.mechanism,
+              customLetters: currentGetContent?.customLetters,
+            });
+          }
+        } else {
+          // Fallback: determine mechanism from F2_FLOW step type
+          const f2StepType = currentF2FlowStep.step?.type;
+          console.log(
+            "handleNext - F2 config not found, using step type:",
+            f2StepType
+          );
+          if (f2StepType === "L") {
+            currentGetContent = {
+              mechanism: { id: "letterTrain", name: "letterTrain" },
+            };
+          } else if (f2StepType === "P" || f2StepType === "A") {
+            currentGetContent = {
+              mechanism: { id: "letterHunt", name: "letterHunt" },
+            };
+          }
+          console.log("handleNext - F2 content fallback:", currentGetContent);
+        }
+
+        // ALWAYS set mechanism based on F2_FLOW step type (ignore config mechanism)
+        const f2StepTypeForMechanism = currentF2FlowStep.step?.type;
+        console.log(
+          "handleNext - Setting mechanism for F2 step type:",
+          f2StepTypeForMechanism,
+          "at index:",
+          currentF2FlowStep.index
+        );
+        if (f2StepTypeForMechanism === "L") {
+          setMechanism({ id: "letterTrain", name: "letterTrain" });
+          console.log(
+            "handleNext - Mechanism set to letterTrain for F2 index",
+            currentF2FlowStep.index
+          );
+        } else if (
+          f2StepTypeForMechanism === "P" ||
+          f2StepTypeForMechanism === "A"
+        ) {
+          setMechanism({ id: "letterHunt", name: "letterHunt" });
+          setQuestions([]); // LetterHunt generates its own content
+          console.log(
+            "handleNext - Mechanism set to letterHunt for F2 index",
+            currentF2FlowStep.index
+          );
+        } else {
+          console.error(
+            "handleNext - Unknown F2 step type:",
+            f2StepTypeForMechanism,
+            "at index:",
+            currentF2FlowStep.index
+          );
+        }
+      } else if (isF1FlowByMilestone) {
         // Always get current F1 flow step from localStorage (it may have been advanced by LetterHuntMechanics)
         // Read directly from localStorage to get the most up-to-date value
         const savedF1Index = getLocalData("f1FlowIndex");
@@ -5175,11 +5487,12 @@ const Practice = () => {
       //   setCurrentQuestion(currentQuestion + 1);
       // }else{
 
-      // For F1 flow, if we've already set the mechanism correctly above, skip the content fetching logic
+      // For F1/F2 flow, if we've already set the mechanism correctly above, skip the content fetching logic
       // This prevents overriding the mechanism and content that were set above
-      // Check if this is F1 flow and if we've already processed it (f1FlowAdvancedByLetterHunt flag)
+      // Check if this is F1/F2 flow and if we've already processed it (f1FlowAdvancedByLetterHunt/f2FlowAdvancedByLetterHunt flag)
       const shouldSkipContentFetch =
-        isF1FlowByMilestone && f1FlowAdvancedByLetterHunt;
+        (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
+        (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt);
 
       if (
         (currentQuestion === questions.length - 1 || isGameOver) &&
@@ -6224,10 +6537,81 @@ const Practice = () => {
   //console.log("mecc", wordWallFlow);
 
   const renderMechanics = () => {
+    // For F2 flow, ensure mechanism matches F2_FLOW step type
+    // F2 flow takes precedence over F1 flow when both conditions might be true
+    // F2 Learn steps use LetterTrain, F2 Practice and Apply steps use LetterHunt
+    if (isF2FlowActive && f2FlowStep?.step && milestoneLevel === "B") {
+      const currentF2Step = getF2FlowStep();
+      const f2StepType = currentF2Step.step?.type;
+      const expectedMechanism =
+        f2StepType === "L"
+          ? "letterTrain" // F2 Learn steps use LetterTrain
+          : f2StepType === "P" || f2StepType === "A"
+          ? "letterHunt" // F2 Practice and Apply steps use LetterHunt
+          : null;
+
+      console.log("renderMechanics - F2 flow check", {
+        isF2FlowActive,
+        f2StepType,
+        expectedMechanism,
+        currentMechanism:
+          typeof mechanism === "object" ? mechanism?.name : mechanism,
+        mechanismType: typeof mechanism,
+        f2FlowIndexState,
+        milestoneLevel,
+      });
+
+      // If mechanism doesn't match expected, fix it immediately
+      if (
+        expectedMechanism &&
+        (!mechanism ||
+          typeof mechanism !== "object" ||
+          !mechanism.name ||
+          mechanism.name !== expectedMechanism)
+      ) {
+        // Only warn if mechanism exists but is incorrect
+        if (
+          mechanism &&
+          typeof mechanism === "object" &&
+          mechanism.name &&
+          mechanism.name !== expectedMechanism
+        ) {
+          console.warn(
+            "renderMechanics - F2 flow mechanism mismatch detected, correcting:",
+            {
+              currentMechanism: mechanism?.name,
+              expectedMechanism,
+              f2StepType,
+              f2FlowIndexState,
+              currentF2StepIndex: currentF2Step.index,
+              milestoneLevel,
+            }
+          );
+        }
+        // Set the correct mechanism immediately
+        if (expectedMechanism === "letterTrain") {
+          console.log(
+            "renderMechanics - Setting mechanism to letterTrain for F2 Learn step"
+          );
+          setMechanism({ id: "letterTrain", name: "letterTrain" });
+        } else if (expectedMechanism === "letterHunt") {
+          console.log(
+            "renderMechanics - Setting mechanism to letterHunt for F2 step"
+          );
+          setMechanism({ id: "letterHunt", name: "letterHunt" });
+        }
+      }
+    }
     // For F1 flow, ensure mechanism matches F1_FLOW step type
     // This prevents rendering the wrong component due to stale mechanism state
     // Only run this for F1 flow (level "B") to avoid interfering with other flows
-    if (isF1FlowActive && f1FlowStep?.step && milestoneLevel === "B") {
+    // F1 flow should only be active if F2 flow is not active
+    else if (
+      isF1FlowActive &&
+      f1FlowStep?.step &&
+      milestoneLevel === "B" &&
+      !isF2FlowActive
+    ) {
       const currentF1Step = getF1FlowStep();
       const f1StepType = currentF1Step.step?.type;
       const expectedMechanism =
@@ -7888,9 +8272,14 @@ const Practice = () => {
       (mechanism &&
         typeof mechanism === "object" &&
         mechanism.name === "letterTrain") ||
+      (isF2FlowActive &&
+        milestoneLevel === "B" &&
+        shouldShowF2 &&
+        getF2FlowStep()?.step?.type === "L") || // F2 Learn steps use LetterTrain
       (isF1FlowActive &&
         milestoneLevel === "B" &&
         shouldShowF1 &&
+        !isF2FlowActive && // Don't render LetterTrain for F1 if F2 flow is active
         getF1FlowStep()?.step?.type === "L")
     ) {
       console.log("LetterTrain render - Condition matched, entering block", {
@@ -7935,24 +8324,34 @@ const Practice = () => {
         let currentGetContentForLetterTrain;
         let customLetters;
 
-        // Check if this is an F1 Learn step
-        const currentF1StepForLetterTrain = isF1FlowActive
-          ? getF1FlowStep()
+        // Check if this is an F2 Learn step (takes precedence)
+        const currentF2StepForLetterTrain = isF2FlowActive
+          ? getF2FlowStep()
           : null;
+        const isF2LearnStepForRender =
+          currentF2StepForLetterTrain?.step?.type === "L";
+
+        // Check if this is an F1 Learn step
+        const currentF1StepForLetterTrain =
+          isF1FlowActive && !isF2FlowActive ? getF1FlowStep() : null;
         const isF1LearnStepForRender =
           currentF1StepForLetterTrain?.step?.type === "L";
 
-        console.log("LetterTrain render - F1 step check", {
+        console.log("LetterTrain render - F1/F2 step check", {
           currentF1Step: currentF1StepForLetterTrain,
+          currentF2Step: currentF2StepForLetterTrain,
           isF1LearnStepForRender,
-          stepType: currentF1StepForLetterTrain?.step?.type,
+          isF2LearnStepForRender,
+          f1StepType: currentF1StepForLetterTrain?.step?.type,
+          f2StepType: currentF2StepForLetterTrain?.step?.type,
         });
 
-        // If it's F1 flow but not a Learn step, don't render LetterTrain - let it fall through to LetterHunt
+        // If it's F1/F2 flow but not a Learn step, don't render LetterTrain - let it fall through to LetterHunt
         // Also check that milestoneLevel is actually "B" to prevent rendering for other milestones
         if (
+          (isF2FlowActive && !isF2LearnStepForRender) ||
           (isF1FlowActive && !isF1LearnStepForRender) ||
-          (isF1FlowActive && milestoneLevel !== "B")
+          ((isF1FlowActive || isF2FlowActive) && milestoneLevel !== "B")
         ) {
           if (isF1FlowActive && milestoneLevel !== "B") {
             console.warn(
@@ -7968,19 +8367,44 @@ const Practice = () => {
           // This will fall through to LetterHunt rendering or other mechanisms
           // Don't return null here - let it continue to check other mechanisms
         } else {
-          // Ensure mechanism is set correctly for F1 flow Learn steps
+          // Ensure mechanism is set correctly for F1/F2 flow Learn steps
           if (
-            isF1FlowActive &&
-            isF1LearnStepForRender &&
+            (isF2FlowActive || isF1FlowActive) &&
+            (isF2LearnStepForRender || isF1LearnStepForRender) &&
             mechanism?.name !== "letterTrain"
           ) {
             console.log(
-              "LetterTrain render - Setting mechanism to letterTrain for F1 Learn step"
+              "LetterTrain render - Setting mechanism to letterTrain for F1/F2 Learn step"
             );
             setMechanism({ id: "letterTrain", name: "letterTrain" });
           }
 
-          if (isF1FlowActive) {
+          if (isF2FlowActive) {
+            // For F2 flow, use currentF2Step.index (from localStorage) instead of f2FlowIndexState
+            // This ensures we always use the most up-to-date index
+            const f2IndexToUse = currentF2StepForLetterTrain.index;
+            const lang = getLocalData("lang") || "en";
+            const f2Config = levelGetContent[lang]?.["F2"];
+            if (f2Config && Array.isArray(f2Config) && f2Config[f2IndexToUse]) {
+              currentGetContentForLetterTrain = f2Config[f2IndexToUse];
+              customLetters = currentGetContentForLetterTrain?.customLetters;
+              console.log(
+                "LetterTrain render - F2 config for index:",
+                f2IndexToUse,
+                "customLetters:",
+                customLetters
+              );
+            } else {
+              console.error(
+                "LetterTrain render - F2 config not found for index:",
+                f2IndexToUse,
+                "f2FlowIndexState:",
+                f2FlowIndexState
+              );
+              currentGetContentForLetterTrain = null;
+              customLetters = null;
+            }
+          } else if (isF1FlowActive) {
             // For F1 flow, use currentF1Step.index (from localStorage) instead of f1FlowIndexState
             // This ensures we always use the most up-to-date index
             const currentF1Step = getF1FlowStep();
@@ -8014,19 +8438,39 @@ const Practice = () => {
             customLetters = currentGetContentForLetterTrain?.customLetters;
           }
 
-          // Only render LetterTrain if we have customLetters (for F1 Learn steps)
+          // Only render LetterTrain if we have customLetters (for F1/F2 Learn steps)
           // If customLetters is undefined, it means we're not in a Learn step, so don't render
           console.log("LetterTrain render - Checking customLetters", {
             customLetters,
             isF1FlowActive,
+            isF2FlowActive,
             currentGetContent: currentGetContentForLetterTrain,
             f1FlowIndexState,
+            f2FlowIndexState,
             f1IndexToUse: isF1FlowActive ? getF1FlowStep().index : null,
+            f2IndexToUse: isF2FlowActive ? getF2FlowStep().index : null,
           });
 
           // If customLetters is still undefined, try to get it from currentGetContent (the one logged as curContent)
-          if (!customLetters && isF1FlowActive) {
-            // Try to get customLetters from the current content that was loaded
+          if (!customLetters && isF2FlowActive) {
+            // Try to get customLetters from the current F2 content that was loaded
+            const lang = getLocalData("lang") || "en";
+            const f2Config = levelGetContent[lang]?.["F2"];
+            const currentF2Step = getF2FlowStep();
+            const f2IndexToUse = currentF2Step.index;
+            if (f2Config && Array.isArray(f2Config) && f2Config[f2IndexToUse]) {
+              const fallbackContent = f2Config[f2IndexToUse];
+              if (fallbackContent?.customLetters) {
+                console.log(
+                  "LetterTrain render - Found customLetters in F2 fallback content:",
+                  fallbackContent.customLetters
+                );
+                customLetters = fallbackContent.customLetters;
+                currentGetContentForLetterTrain = fallbackContent;
+              }
+            }
+          } else if (!customLetters && isF1FlowActive) {
+            // Try to get customLetters from the current F1 content that was loaded
             const lang = getLocalData("lang") || "en";
             const f1Config = levelGetContent[lang]?.["F1"];
             const currentF1Step = getF1FlowStep();
@@ -8035,7 +8479,7 @@ const Practice = () => {
               const fallbackContent = f1Config[f1IndexToUse];
               if (fallbackContent?.customLetters) {
                 console.log(
-                  "LetterTrain render - Found customLetters in fallback content:",
+                  "LetterTrain render - Found customLetters in F1 fallback content:",
                   fallbackContent.customLetters
                 );
                 customLetters = fallbackContent.customLetters;
@@ -8044,15 +8488,19 @@ const Practice = () => {
             }
           }
 
-          if (!customLetters && isF1FlowActive) {
+          if (!customLetters && (isF2FlowActive || isF1FlowActive)) {
             console.warn(
-              "LetterTrain render blocked: customLetters is undefined for F1 flow step",
+              "LetterTrain render blocked: customLetters is undefined for F1/F2 flow step",
               {
-                stepIndex: isF1FlowActive
+                stepIndex: isF2FlowActive
+                  ? f2FlowIndexState
+                  : isF1FlowActive
                   ? f1FlowIndexState
                   : progressData?.currentPracticeStep || 0,
                 f1FlowIndexState,
-                f1FlowStep: f1FlowStep.step,
+                f2FlowIndexState,
+                f1FlowStep: f1FlowStep?.step,
+                f2FlowStep: f2FlowStep?.step,
                 currentGetContent: currentGetContentForLetterTrain,
               }
             );
@@ -8082,9 +8530,10 @@ const Practice = () => {
                   setRecordedAudio,
                   setVoiceAnimate,
                   storyLine,
-                  handleNext: isF1LearnStep
-                    ? handleLetterTrainComplete
-                    : handleNext,
+                  handleNext:
+                    isF2LearnStepForRender || isF1LearnStep
+                      ? handleLetterTrainComplete
+                      : handleNext,
                   type: "word",
                   enableNext,
                   showTimer: false,
@@ -8114,9 +8563,186 @@ const Practice = () => {
         }
       }
     } else if (mechanism && mechanism.name === "letterHunt") {
+      // For F2 flow, all steps (Learn, Practice, Apply) use LetterHunt
+      // F2 flow takes precedence over F1 flow
+      if (isF2FlowActive) {
+        const currentF2Step = getF2FlowStep();
+        const f2StepType = currentF2Step.step?.type;
+        console.log("LetterHunt render - F2 flow check:", {
+          f2FlowIndexState,
+          currentF2StepIndex: currentF2Step.index,
+          f2StepType,
+          mechanism: mechanism?.name,
+          step: currentF2Step.step,
+          hasStep: !!currentF2Step.step,
+        });
+
+        // If we don't have a valid step, wait for next render
+        if (!currentF2Step.step) {
+          console.warn(
+            "LetterHunt render - No F2 step found at index:",
+            currentF2Step.index,
+            "waiting for next render"
+          );
+          return null;
+        }
+
+        if (f2StepType === "L") {
+          console.warn(
+            "LetterHunt render blocked: F2 flow step type is 'L' (Learn) but mechanism is letterHunt. This is incorrect - Learn steps use LetterTrain.",
+            {
+              f2FlowIndexState,
+              currentF2Step: currentF2Step.step,
+              mechanism,
+            }
+          );
+          // Don't render LetterHunt if it's actually a Learn step (should use LetterTrain)
+          return null;
+        } else if (f2StepType === "P" || f2StepType === "A") {
+          // F2 Practice and Apply steps use LetterHunt
+          // Ensure mechanism is set correctly for F2 flow
+          if (mechanism?.name !== "letterHunt") {
+            console.log(
+              "LetterHunt render - Setting mechanism to letterHunt for F2 step type:",
+              f2StepType
+            );
+            setMechanism({ id: "letterHunt", name: "letterHunt" });
+          }
+          // For F2 flow, use F2 config directly
+          let currentGetContentForF2;
+          const f2IndexToUse = currentF2Step.index;
+          const lang = getLocalData("lang") || "en";
+          const f2Config = levelGetContent[lang]?.["F2"];
+          if (f2Config && Array.isArray(f2Config) && f2Config[f2IndexToUse]) {
+            currentGetContentForF2 = f2Config[f2IndexToUse];
+            console.log(
+              "LetterHunt render - F2 config for index:",
+              f2IndexToUse,
+              "content:",
+              currentGetContentForF2
+            );
+          } else {
+            console.error(
+              "LetterHunt render - F2 config not found for index:",
+              f2IndexToUse,
+              "f2FlowIndexState:",
+              f2FlowIndexState,
+              "f2Config length:",
+              f2Config?.length
+            );
+            // Fallback to getCurrentContent if F2 config not found
+            currentGetContentForF2 = getCurrentContent(
+              progressData?.currentPracticeStep || 0
+            );
+          }
+
+          // Add null check for currentGetContentForF2
+          if (!currentGetContentForF2) {
+            console.error(
+              "LetterHunt render - currentGetContentForF2 is null/undefined for index:",
+              f2IndexToUse
+            );
+            // Create a minimal config object for Apply steps
+            if (f2StepType === "A") {
+              const applyStepNum = currentF2Step.step?.step || 1;
+              currentGetContentForF2 = {
+                title: `A${applyStepNum}`,
+                letterHuntLevel: 1,
+                letterHuntEndLevel: 3,
+                isShowcase: true,
+                applyStep: applyStepNum,
+                failRedirect:
+                  applyStepNum === 1 ? "L1" : applyStepNum === 2 ? "L4" : "L7",
+                passRedirect:
+                  applyStepNum === 1 ? "L4" : applyStepNum === 2 ? "L7" : "F3",
+              };
+              console.log(
+                "LetterHunt render - Created fallback config for F2 Apply step:",
+                currentGetContentForF2
+              );
+            } else {
+              // For Practice steps, create minimal config
+              const practiceStepNum = currentF2Step.step?.step || 1;
+              currentGetContentForF2 = {
+                title: `P${practiceStepNum}`,
+                letterHuntLevel: 1,
+                isShowcase: false,
+              };
+              console.log(
+                "LetterHunt render - Created fallback config for F2 Practice step:",
+                currentGetContentForF2
+              );
+            }
+          }
+
+          const letterHuntLevel = currentGetContentForF2?.letterHuntLevel || 1;
+          const letterHuntIsShowcase =
+            currentGetContentForF2?.isShowcase || false;
+          const letterHuntEndLevel = currentGetContentForF2?.letterHuntEndLevel;
+          const applyStep = currentGetContentForF2?.applyStep;
+          const failRedirect = currentGetContentForF2?.failRedirect;
+          const passRedirect = currentGetContentForF2?.passRedirect;
+          const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+
+          return (
+            <LetterHuntMechanics
+              page={page}
+              setPage={setPage}
+              {...{
+                level: letterHuntIsShowcase
+                  ? letterHuntLevel || 1
+                  : letterHuntLevel,
+                header:
+                  questions[currentQuestion]?.contentType === "image"
+                    ? `Guess the below image`
+                    : `Letter Recognition`,
+                points,
+                steps: questions?.length,
+                currentStep: currentQuestion + 1,
+                progressData,
+                showProgress: true,
+                background: "#FFB31F",
+                handleNext,
+                handleBack: !letterHuntIsShowcase && handleBack,
+                enableNext,
+                setEnableNext,
+                isShowCase: letterHuntIsShowcase,
+                loading,
+                setOpenMessageDialog,
+                vocabCount,
+                wordCount,
+                showTimer: false,
+                milestoneLevel: milestoneLevelValue,
+                endLevel: letterHuntEndLevel,
+                startShowCase,
+                setStartShowCase,
+                setProgressData,
+                setCurrentQuestion,
+                applyStep,
+                failRedirect,
+                passRedirect,
+                isF1FlowActive: false, // F2 flow is active, not F1
+                f1FlowStep: null,
+                isF2FlowActive, // Pass F2 flow active flag
+                f2FlowStep, // Pass F2 flow step info
+                customLetters: undefined,
+              }}
+            />
+          );
+        } else {
+          // F2 flow step type is neither L, P, nor A - this shouldn't happen
+          console.error(
+            "LetterHunt render - Unknown F2 step type:",
+            f2StepType,
+            "at index:",
+            currentF2Step.index
+          );
+          return null;
+        }
+      }
       // For F1 flow, verify that this is actually a Practice or Apply step, not a Learn step
       // If mechanism is letterHunt but F1 flow step type is "L", something is wrong - don't render
-      if (isF1FlowActive) {
+      else if (isF1FlowActive && !isF2FlowActive) {
         // Also check if we should render LetterHunt based on F1 step type, even if mechanism isn't set yet
         const currentF1StepCheck = getF1FlowStep();
         const f1StepTypeCheck = currentF1StepCheck.step?.type;
@@ -8296,6 +8922,8 @@ const Practice = () => {
                 passRedirect, // Pass pass redirect (e.g., "L4", "L7", "F2")
                 isF1FlowActive, // Pass F1 flow active flag
                 f1FlowStep, // Pass F1 flow step info
+                isF2FlowActive, // Pass F2 flow active flag
+                f2FlowStep, // Pass F2 flow step info
                 customLetters: undefined, // Don't pass customLetters for Letter Hunt - it should use level-based letters
               }}
             />
@@ -8366,6 +8994,8 @@ const Practice = () => {
               passRedirect,
               isF1FlowActive,
               f1FlowStep,
+              isF2FlowActive,
+              f2FlowStep,
               customLetters: undefined,
             }}
           />
