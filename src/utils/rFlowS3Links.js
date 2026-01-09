@@ -8,6 +8,19 @@ export const getAssetAudioUrl = (filename, type = "mechanics_audios") => {
   return `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/${type}/${filename}`;
 };
 
+//syllable audio files
+export const atAudio = "c2401c9c-1107-4f62-95c1-e98d671070bd.wav";
+export const anAudio = "4d90be3c-15b9-4e11-8887-0e59a8bc7855.wav";
+export const inAudio = "f54f8978-b95c-48ff-a1ac-43e25ef649c7.wav";
+export const onAudio = "03f8527f-061e-495c-a22f-e669668c7d23.wav";
+export const upAudio = "8b295576-0fc5-4e69-aac5-cd58f4b75d8c.wav";
+export const isAudio = "95bc43c0-1599-49d3-b3e5-b7e39699336d.wav";
+export const orAudio = "d7292b73-8c73-485e-b6b8-787c5ebeb22c.wav";
+export const allAudio = "d360505d-ee3c-4dc3-ac85-7b2da58a70ee.wav";
+export const ingAudio = "f153cc4e-9b44-436a-8302-68102c111b14.wav";
+
+export const cupAudio = "eb634ba3-69d6-4f64-9520-eb4e67e74568.wav";
+export const kingAudio = "a73fdd85-06ac-4ce5-9f44-dd17c2671408.wav";
 export const applePhonemeAudio = "c44ffd22-c205-4745-8aca-5f45efabbf4c.mp3";
 export const catPhonemeAudio = "1cca4dac-684b-48d2-9dfa-93a4c509dfdd.mp3";
 export const peaPhonemeAudio = "137c172a-a9f8-422b-aa7c-1d9126c0dcb1.mp3";
@@ -46,6 +59,7 @@ export const nestPhonemeAudio = "b31853ee-b1c7-4535-b619-b1930482a974.mp3";
 export const honeyPhonemeAudio = "7d4eee6d-9fe4-4a34-8a74-b30de34de97f.mp3";
 export const orangePhonemeAudio = "facf1b22-9192-4d93-9741-b41c8e76db35.mp3";
 export const capPhonemeAudio = "e94ff881-cd0b-40a0-8f65-b31d79677879.mp3";
+export const cupPhonemeAudio = "e94ff881-cd0b-40a0-8f65-b31d79677879.mp3"; // TODO: Replace with actual cup audio file
 export const queenPhonemeAudio = "202957b2-5fc6-4301-b1b6-3c44ef7c45f7.mp3";
 export const mosquitoPhonemeAudio = "cc301073-cbf4-4070-96c0-b1c92ae30167.mp3";
 export const ratPhonemeAudio = "8f122fe9-5a2f-4c73-8f0a-c4bfc661092d.mp3";
@@ -68,6 +82,7 @@ export const foxPhonemeAudio = "a8bffefd-7268-4325-876b-66f0cda2a3b3.mp3";
 export const yakPhonemeAudio = "e7357a4d-e2f2-440a-8d4f-bc29cad93a78.mp3";
 export const papayaPhonemeAudio = "467472ba-8012-43de-a98e-e15242465c9c.mp3";
 export const keyPhonemeAudio = "934e245a-b84a-43ce-a8c4-b77bd6f58e0c.mp3";
+export const kingPhonemeAudio = "057dc4c7-febd-4a0f-9605-c867e80b9f18.mp3"; // Using kingAlpAudio as placeholder
 export const puzzlePhonemeAudio = "b3f3d4b7-3523-476e-85e0-11bc19160a3a.mp3";
 export const quizPhonemeAudio = "fe5e5c29-0cae-4522-83b2-34869fe6d9d6.mp3";
 
@@ -146,6 +161,9 @@ export const handPhonemeAudioYT = "1b62af74-516a-412e-a049-28b6f4b6fc31.mp3";
 export const singPhonemeAudioYT = "b8aa7950-7985-43d1-bac3-12773bcd762c.mp3";
 export const sunPhonemeAudioYT = "97295ef6-ce46-4612-828e-7a3ca295129e.mp3";
 
+export const cupImage = "bb5e9e21-3939-4127-8b45-bf70045a5a01.png";
+export const kingImage = "88b7b90b-fd48-4c50-8bf1-47e9de941b06.png";
+
 export const CrowTwentyThreeImg = "7039f764-a61c-429f-9aba-890639d88161.png";
 export const teacherEightImg = "d2d2ff47-a608-4cb0-ac67-41f3a26ce308.png";
 export const peaOneImg = "e8711602-20dd-4dc8-9334-c14edd313865.png";
@@ -166,6 +184,7 @@ export const LionTwelveImg = "a2e2d9c9-dd26-4eb7-b404-e65f6224bc18.png";
 export const penFourteenImg = "7a25426c-4441-427e-a4f1-6f7253a98bdb.png";
 export const tigerSevenImg = "c5c075e7-9124-4007-b0cb-57130dbad84d.png";
 export const capSixteenImg = "bc3cdede-0e62-40e5-bdb4-f42c2c4eac5f.png";
+export const cupImg = "bc3cdede-0e62-40e5-bdb4-f42c2c4eac5f.png"; // TODO: Replace with actual cup image file
 export const plantTwentyImg = "0b88a768-2bc6-4a12-857b-5c5ac154dc23.png";
 export const horseNineteenImg = "beb076e4-8fee-4d4f-b565-c61ace7f6aa2.png";
 export const goatSevenImg = "6acdec07-99d6-4e22-8bf6-f15404374f72.png";
@@ -185,6 +204,7 @@ export const zebraTwoImg = "98376705-66ff-4974-b934-fa754ee01e2d.png";
 export const swordTwentyThreeImg = "88b235ac-5d90-4fe8-b670-87a4f619ff54.png";
 export const zebraTwentySixImg = "55712e35-97cc-4ac4-92e2-1174e0d36720.png";
 export const KeyTwentyFiveImg = "efa597e1-68f8-4eff-bc53-2a7729bdf2c6.png";
+export const kingImg = "4f379beb-f279-4da7-b88a-56ae3f1f8f73.png"; // Using kingAlpTelImage as placeholder
 export const LadduTwentyOneImg = "75508824-783a-41cb-998b-9dbae9833bb2.png";
 export const DustbinTwentyOneImg = "7f77d88a-ee57-4822-a38e-fb49387ee4a3.png";
 export const sunNineteenImg = "932a2d94-d50a-4b89-ad1d-dcaa22704009.png";
@@ -1376,7 +1396,8 @@ export const కళImg = "54abc22f-4e4f-4f65-87b1-0ba307712af1.png";
 export const కళSingleAudio = "fca4e7f2-dd40-4ebe-8f23-5aa3b21815bc.wav";
 export const కళAudio = "e2fec9bd-6753-456d-82ad-61c3d6a10c98.wav";
 export const క్షత్రియుడుImg = "cd42799d-4dd6-499f-8385-245cd5958b2e.png";
-export const క్షత్రియుడుSingleAudio = "476a3055-e38e-4b17-9f3d-d46bcd4dc98f.wav";
+export const క్షత్రియుడుSingleAudio =
+  "476a3055-e38e-4b17-9f3d-d46bcd4dc98f.wav";
 export const క్షత్రియుడుAudio = "8f4bd62e-75d1-4f81-9b3c-88559c5d9372.wav";
 export const అక్షరంImg = "e28dc5ea-dd79-4ab4-a0c8-2c8f303f1bb0.png";
 export const అక్షరంSingleAudio = "040c2d96-32d0-4547-9036-430412116bea.wav";

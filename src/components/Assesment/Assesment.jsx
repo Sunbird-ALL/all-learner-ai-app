@@ -97,6 +97,7 @@ import NumberFlow from "@number-flow/react";
 import LanguageModalNew from "../../utils/LanguageModal";
 import { AudioDiagnosticModal } from "../AudioDiagnostic";
 import { getF1FlowStep } from "../../RFlow/F1";
+import { getF2FlowStep } from "../../RFlow/F2";
 
 const theme = createTheme();
 
@@ -409,7 +410,37 @@ export const ProfileHeader = ({
   wordCount = 0,
 }) => {
   const language = lang || getLocalData("lang");
-  const username = profileName || getLocalData("profileName");
+  let username = profileName || getLocalData("profileName");
+
+  // Check if F2 flow is active and update username display
+  const getMilestoneData = () => {
+    try {
+      const milestoneStr = getLocalData("getMilestone");
+      if (milestoneStr) {
+        return JSON.parse(milestoneStr);
+      }
+    } catch (e) {
+      console.error("Error parsing getMilestone:", e);
+    }
+    return null;
+  };
+  const milestoneData = getMilestoneData();
+  const milestoneLevel = milestoneData?.data?.milestone_level || null;
+  const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
+  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F1";
+  const f2FlowStep = getF2FlowStep();
+  const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
+
+  // If F2 flow is active and username contains "F1", replace with "F2"
+  if (
+    isF2FlowActive &&
+    username &&
+    typeof username === "string" &&
+    username.includes("F1")
+  ) {
+    username = username.replace(/F1/g, "F2");
+  }
+
   const navigate = useNavigate();
   const [openMessageDialog, setOpenMessageDialog] = useState("");
   const theme = useTheme();
@@ -1294,12 +1325,30 @@ const Assesment = ({ discoverStart }) => {
   };
   const milestoneData = getMilestoneData();
   const milestoneLevel = milestoneData?.data?.milestone_level || null;
-  // F1 flow is triggered when milestone_level is "B" (Beginner)
-  const shouldShowF1 = milestoneLevel === "B";
+  const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
+
+  // F1 flow is triggered when milestone_level is "B" and sub_milestone_level is empty/null
+  const shouldShowF1 =
+    milestoneLevel === "B" &&
+    (subMilestoneLevel === "" ||
+      subMilestoneLevel === null ||
+      subMilestoneLevel === undefined);
+  // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F1" (F1 is complete, show F2)
+  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F1";
 
   // Check if F1 flow is active
   const f1FlowStep = getF1FlowStep();
-  const isF1FlowActive = shouldShowF1 && f1FlowStep.step !== null;
+  const isF1FlowActive =
+    shouldShowF1 && f1FlowStep.step !== null && !shouldShowF2;
+
+  console.log("Discovery Start - F1/F2 detection:", {
+    milestoneLevel,
+    subMilestoneLevel,
+    shouldShowF1,
+    shouldShowF2,
+    isF1FlowActive,
+    f1FlowStepIndex: f1FlowStep.index,
+  });
 
   const sectionStyle = {
     width: "100vw",
@@ -1406,7 +1455,9 @@ const Assesment = ({ discoverStart }) => {
                     textShadow: "#000 1px 0 10px",
                   }}
                 >
-                  {isF1FlowActive
+                  {shouldShowF2
+                    ? "Start F2"
+                    : isF1FlowActive
                     ? "Start F1"
                     : rFlow === "true"
                     ? `Learn Letters`

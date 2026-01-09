@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
   getLocalData,
@@ -8,6 +9,7 @@ import {
 } from "../../utils/constants";
 import { addLesson } from "../../services/orchestration/orchestrationService";
 import { getF1FlowStep, advanceF1Flow } from "../../RFlow/F1";
+import { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
 
 // Import from library
 import {
@@ -54,12 +56,32 @@ const LetterHuntMechanicsContent = ({
   passRedirect, // Optional: Redirect target on pass (e.g., "L4", "L7", "F2")
   isF1FlowActive, // Optional: Whether F1 flow is active
   f1FlowStep, // Optional: Current F1 flow step info
-  customLetters, // Optional: Custom letters to use for Letter Hunt (from F1 config)
+  isF2FlowActive, // Optional: Whether F2 flow is active
+  f2FlowStep, // Optional: Current F2 flow step info
+  customLetters, // Optional: Custom letters to use for Letter Hunt (from F1/F2 config)
 }) => {
   // Store the current level being played for failure handling
   const [currentGameLevel, setCurrentGameLevel] = useState(1);
   const [isGameComplete, setIsGameComplete] = useState(false);
   const [sessionInitialized, setSessionInitialized] = useState(false);
+  const navigate = useNavigate();
+
+  // Handle A3 pass - redirect to discovery start (for F1) or next flow (for F2)
+  const handleA3Pass = () => {
+    if (isF1FlowActive) {
+      console.log("F1 A3 passed - redirecting to discovery start");
+      // Clear F1 flow index to reset for F2
+      setLocalData("f1FlowIndex", null);
+      // Redirect to discovery start
+      navigate("/discover-start");
+    } else if (isF2FlowActive) {
+      console.log("F2 A3 passed - redirecting to discovery start");
+      // Clear F2 flow index
+      setLocalData("f2FlowIndex", null);
+      // Redirect to discovery start (or F3 if needed)
+      navigate("/discover-start");
+    }
+  };
 
   // Get F1 flow assessment parameters from config
   const getF1AssessmentParams = () => {
@@ -112,7 +134,71 @@ const LetterHuntMechanicsContent = ({
     };
   };
 
+  // Get F2 flow assessment parameters from config
+  const getF2AssessmentParams = () => {
+    if (!isF2FlowActive || !f2FlowStep?.step) {
+      return {
+        sub_session_id: undefined,
+        sub_milestone_level: undefined,
+        apply_level: undefined,
+        sub_apply_level: undefined,
+      };
+    }
+
+    // Get sub_session_id from telemetry
+    const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
+    const sub_session_id = currentSubSession?.subSessionId;
+
+    // For F2 flow, sub_milestone_level is always "F2"
+    const sub_milestone_level = "F2";
+
+    // Get step title from F2 config
+    const lang = getLocalData("lang") || "en";
+    const f2Config = levelGetContent[lang]?.["F2"];
+    const f2StepConfig =
+      f2Config && Array.isArray(f2Config) && f2Config[f2FlowStep.index]
+        ? f2Config[f2FlowStep.index]
+        : null;
+    const stepTitle =
+      f2StepConfig?.title ||
+      (f2FlowStep.step?.type === "A"
+        ? `A${f2FlowStep.step?.step}`
+        : f2FlowStep.step?.type === "P"
+        ? `P${f2FlowStep.step?.step}`
+        : f2FlowStep.step?.type === "L"
+        ? `L${f2FlowStep.step?.step}`
+        : null);
+
+    // Determine apply_level - use step title for all F2 flow steps
+    // For Apply steps, this will be "A1", "A2", "A3"
+    // For Practice steps, this will be "P1", "P2", etc. (though backend might only use it for Apply steps)
+    const apply_level = stepTitle || undefined;
+
+    // sub_apply_level will be passed dynamically based on currentGameLevel
+    // This represents the level within the Apply step (1, 2, or 3)
+
+    return {
+      sub_session_id,
+      sub_milestone_level,
+      apply_level,
+      // sub_apply_level will be set dynamically when calling LetterGame
+    };
+  };
+
+  // Get assessment params based on active flow
   const f1AssessmentParams = getF1AssessmentParams();
+  const f2AssessmentParams = getF2AssessmentParams();
+
+  // Use F2 params if F2 is active, otherwise use F1 params, or default empty object
+  const assessmentParams = isF2FlowActive
+    ? f2AssessmentParams
+    : isF1FlowActive
+    ? f1AssessmentParams
+    : {
+        sub_session_id: undefined,
+        sub_milestone_level: undefined,
+        apply_level: undefined,
+      };
 
   // Initialize telemetry session before game starts
   useEffect(() => {
@@ -192,7 +278,7 @@ const LetterHuntMechanicsContent = ({
   // - Level 1 or 2 fail: go to failRedirect (e.g., "L1" for Apply 1)
   // - Level 3 fail: go to failRedirect (e.g., "L1" for Apply 1)
   // - Level 3 pass: go to passRedirect (e.g., "L4" for Apply 1)
-  const handleLevelFailure = async (failedLevel: number) => {
+  const handleLevelFailure = async (failedLevel) => {
     console.log(
       "handleLevelFailure called - failedLevel:",
       failedLevel,
@@ -320,68 +406,88 @@ const LetterHuntMechanicsContent = ({
       if (isShowCase && applyStep && endLevel && completedLevel >= endLevel) {
         // All levels passed - redirect to passRedirect
         console.log(
-          `Apply step ${applyStep} completed all levels - redirecting to ${passRedirect}`
+          `Apply step ${applyStep} completed all levels (${completedLevel}/${endLevel}) - will redirect to ${passRedirect} after success screen`
         );
 
-        if (passRedirect === "F2") {
-          // Transition to F2 milestone - this would need to be handled by the parent
-          // For now, just exit and let the parent handle the milestone transition
-          if (handleNext) {
-            handleNext(false);
-          }
-          return;
-        }
-
-        // Redirect to the specified Learn step
-        const targetFlowIndex = getF1FlowIndexFromRedirect(passRedirect);
-        if (targetFlowIndex !== null && isF1FlowActive) {
-          setLocalData("f1FlowIndex", targetFlowIndex);
-          const targetStep = targetFlowIndex;
-          const lang = getLocalData("lang") || "en";
-          const sessionId = getLocalData("sessionId");
-          const currentPracticeProgress = Math.round(
-            (targetStep / (practiceSteps?.length || 21)) * 100
-          );
-
-          await addLesson({
-            sessionId: sessionId,
-            milestone: "practice",
-            lesson: targetStep,
-            progress: currentPracticeProgress,
-            language: lang,
-            milestoneLevel: milestoneLevel,
-          });
-
-          const updatedPracticeProgress = {
-            currentQuestion: 0,
-            currentPracticeProgress: currentPracticeProgress,
-            currentPracticeStep: targetStep,
-          };
-          setLocalData(
-            "practiceProgress",
-            JSON.stringify(updatedPracticeProgress)
-          );
-
-          if (setProgressData && typeof setProgressData === "function") {
-            setProgressData(updatedPracticeProgress);
-          }
-
-          if (setCurrentQuestion && typeof setCurrentQuestion === "function") {
-            setCurrentQuestion(0);
-          }
-
-          setTimeout(() => {
+        // Store redirect info to execute after success screen is shown
+        const executeRedirect = async () => {
+          if (passRedirect === "F2") {
+            // Transition to F2 milestone - this would need to be handled by the parent
+            // For now, just exit and let the parent handle the milestone transition
             if (handleNext) {
               handleNext(false);
             }
-          }, 100);
-          return;
-        }
+            return;
+          }
+
+          // Redirect to the specified Learn step
+          const targetFlowIndex = getF1FlowIndexFromRedirect(passRedirect);
+          if (targetFlowIndex !== null && isF1FlowActive) {
+            setLocalData("f1FlowIndex", targetFlowIndex);
+            const targetStep = targetFlowIndex;
+            const lang = getLocalData("lang") || "en";
+            const sessionId = getLocalData("sessionId");
+            const currentPracticeProgress = Math.round(
+              (targetStep / (practiceSteps?.length || 21)) * 100
+            );
+
+            await addLesson({
+              sessionId: sessionId,
+              milestone: "practice",
+              lesson: targetStep,
+              progress: currentPracticeProgress,
+              language: lang,
+              milestoneLevel: milestoneLevel,
+            });
+
+            const updatedPracticeProgress = {
+              currentQuestion: 0,
+              currentPracticeProgress: currentPracticeProgress,
+              currentPracticeStep: targetStep,
+            };
+            setLocalData(
+              "practiceProgress",
+              JSON.stringify(updatedPracticeProgress)
+            );
+
+            if (setProgressData && typeof setProgressData === "function") {
+              setProgressData(updatedPracticeProgress);
+            }
+
+            if (
+              setCurrentQuestion &&
+              typeof setCurrentQuestion === "function"
+            ) {
+              setCurrentQuestion(0);
+            }
+
+            // Delay redirect to allow success screen to show first (4 seconds)
+            setTimeout(() => {
+              if (handleNext) {
+                handleNext(false);
+              }
+            }, 4000); // 4 second delay to ensure success screen is visible
+          }
+        };
+
+        // Execute redirect after a delay to allow success screen to render
+        executeRedirect();
+        return;
       }
 
-      // For showcase mode (non-Apply or not all levels complete), don't auto-advance
-      if (isShowCase) {
-        // In showcase mode, just exit without updating progress
+      // For showcase mode with endLevel but not all levels complete yet, don't exit
+      // Let the user continue to the next level via the "Next Level" button
+      if (isShowCase && endLevel && completedLevel < endLevel) {
+        console.log(
+          `Apply step ${applyStep} - Level ${completedLevel} completed, but not all levels done (${completedLevel}/${endLevel}). Continuing to next level.`
+        );
+        // Don't exit - let the game continue to the next level
+        return;
+      }
+
+      // For showcase mode without endLevel or non-Apply steps, exit
+      if (isShowCase && (!endLevel || !applyStep)) {
+        // In showcase mode without endLevel, just exit without updating progress
         if (handleNext) {
           handleNext();
         } else if (handleBack) {
@@ -399,6 +505,78 @@ const LetterHuntMechanicsContent = ({
 
       const lang = getLocalData("lang") || "en";
       const sessionId = getLocalData("sessionId");
+
+      // Check if this is F2 flow - if so, advance F2 flow index instead of practice step
+      if (isF2FlowActive && f2FlowStep?.step) {
+        console.log("F2 flow Practice step completed - advancing F2 flow");
+
+        // Get current F2 flow step
+        const currentF2FlowStep = getF2FlowStep();
+        console.log("Current F2 flow step before advance:", currentF2FlowStep);
+
+        // Advance F2 flow
+        const nextStep = advanceF2Flow();
+        console.log("advanceF2Flow returned:", nextStep);
+
+        // Get updated F2 flow step
+        const updatedF2FlowStep = getF2FlowStep();
+        console.log("Updated F2 flow step after advance:", updatedF2FlowStep);
+
+        if (updatedF2FlowStep.step) {
+          // Update learner progress with new F2 flow index
+          const newF2FlowIndex = updatedF2FlowStep.index;
+          const totalF2Steps = F2_FLOW.length; // Total F2 flow steps
+          const currentPracticeProgress = Math.round(
+            ((newF2FlowIndex + 1) / totalF2Steps) * 100
+          );
+
+          await addLesson({
+            sessionId: sessionId,
+            milestone: "practice",
+            lesson: newF2FlowIndex.toString(),
+            progress: currentPracticeProgress,
+            language: lang,
+            milestoneLevel: "B",
+          });
+
+          // Update local storage
+          const updatedPracticeProgress = {
+            currentQuestion: 0,
+            currentPracticeProgress: currentPracticeProgress,
+            currentPracticeStep: newF2FlowIndex,
+          };
+          setLocalData(
+            "practiceProgress",
+            JSON.stringify(updatedPracticeProgress)
+          );
+
+          // Update parent state if setProgressData is provided
+          if (setProgressData && typeof setProgressData === "function") {
+            setProgressData(updatedPracticeProgress);
+          }
+
+          // Reset currentQuestion state to 0 so handleNext doesn't increment
+          if (setCurrentQuestion && typeof setCurrentQuestion === "function") {
+            setCurrentQuestion(0);
+          }
+
+          // Set a flag to indicate F2 flow was already advanced by LetterHuntMechanics
+          // This prevents handleNext from advancing again
+          setLocalData("f2FlowAdvancedByLetterHunt", "true");
+
+          // Exit the game by calling handleNext (will move to next F2 flow step)
+          setTimeout(() => {
+            handleNext(false);
+            // Clear the flag after a short delay
+            setTimeout(() => {
+              setLocalData("f2FlowAdvancedByLetterHunt", "false");
+            }, 500);
+          }, 100);
+          return;
+        } else {
+          console.error("F2 flow advance failed - no next step available");
+        }
+      }
 
       // Check if this is F1 flow - if so, advance F1 flow index instead of practice step
       if (isF1FlowActive && f1FlowStep?.step) {
@@ -625,9 +803,10 @@ const LetterHuntMechanicsContent = ({
                 onLevel1Failure={() => handleLevelFailure(1)} // Backward compatibility for level 1 only
                 onLevelFailure={handleLevelFailure} // New callback for any level failure (includes level number)
                 customLetters={customLetters} // Pass customLetters from F1 config
-                sub_session_id={f1AssessmentParams.sub_session_id} // Pass sub session ID from telemetry
-                sub_milestone_level={f1AssessmentParams.sub_milestone_level} // Pass "F1" for F1 flow
-                apply_level={f1AssessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
+                sub_session_id={assessmentParams.sub_session_id} // Pass sub session ID from telemetry
+                sub_milestone_level={assessmentParams.sub_milestone_level} // Pass "F1" or "F2" based on active flow
+                apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
+                onA3Pass={handleA3Pass} // Callback when A3 passes
                 // sub_apply_level is calculated dynamically in LetterGame based on currentLevel
               />
             </div>

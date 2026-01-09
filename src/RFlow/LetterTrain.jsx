@@ -39,6 +39,158 @@ const theme = createTheme();
 
 const dataEn = [
   {
+    syllable: "at",
+    items: [
+      {
+        id: 1,
+        title: "Syllable",
+        syllable: "at",
+        word: "Cat",
+        image: getAssetUrl(s3Assets.catOneImg),
+        audio: getAssetAudioUrl(s3Assets.catPhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.catPhonemeAudio),
+      },
+      {
+        id: 2,
+        title: "Syllable",
+        syllable: "at",
+        word: "Rat",
+        image: getAssetUrl(s3Assets.ratEighteenImg),
+        audio: getAssetAudioUrl(s3Assets.ratPhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ratPhonemeAudio),
+      },
+    ],
+  },
+
+  {
+    syllable: "an",
+    items: [
+      {
+        id: 3,
+        title: "Syllable",
+        syllable: "an",
+        word: "Van",
+        image: getAssetUrl(s3Assets.VanTwentyTwoImg),
+        audio: getAssetAudioUrl(s3Assets.vanPhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.vanPhonemeAudio),
+      },
+    ],
+  },
+
+  {
+    syllable: "in",
+    items: [
+      {
+        id: 4,
+        title: "Syllable",
+        syllable: "in",
+        word: "Lion",
+        image: getAssetUrl(s3Assets.LionTwelveImg),
+        audio: getAssetAudioUrl(s3Assets.lionPhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.lionPhonemeAudio),
+      },
+    ],
+  },
+
+  {
+    syllable: "on",
+    items: [
+      {
+        id: 5,
+        title: "Syllable",
+        syllable: "on",
+        word: "Lemon",
+        image: getAssetUrl(s3Assets.lemonThirteenImg),
+        audio: getAssetAudioUrl(s3Assets.lemonPhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.lemonPhonemeAudio),
+      },
+      {
+        id: 6,
+        title: "Syllable",
+        syllable: "on",
+        word: "Balloon",
+        image: getAssetUrl(s3Assets.ballTwoImg),
+        audio: getAssetAudioUrl(s3Assets.balloonPhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.balloonPhonemeAudio),
+      },
+    ],
+  },
+
+  {
+    syllable: "up",
+    items: [
+      {
+        id: 7,
+        title: "Syllable",
+        syllable: "up",
+        word: "Cup",
+        image: getAssetUrl(s3Assets.cupImage),
+        audio: getAssetAudioUrl(s3Assets.cupAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.cupAudio),
+      },
+    ],
+  },
+
+  {
+    syllable: "is",
+    items: [
+      {
+        id: 8,
+        title: "Syllable",
+        syllable: "is",
+        word: "Fish",
+        image: getAssetUrl(s3Assets.fishSixImg),
+        audio: getAssetAudioUrl(s3Assets.fishPhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.fishPhonemeAudio),
+      },
+    ],
+  },
+
+  {
+    syllable: "or",
+    items: [
+      {
+        id: 9,
+        title: "Syllable",
+        syllable: "or",
+        word: "Horse",
+        image: getAssetUrl(s3Assets.horseNineteenImg),
+        audio: getAssetAudioUrl(s3Assets.horsePhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.horsePhonemeAudio),
+      },
+    ],
+  },
+
+  {
+    syllable: "all",
+    items: [
+      {
+        id: 10,
+        title: "Syllable",
+        syllable: "all",
+        word: "Ball",
+        image: getAssetUrl(s3Assets.ballGif),
+        audio: getAssetAudioUrl(s3Assets.ballPhonemeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ballPhonemeAudio),
+      },
+    ],
+  },
+
+  {
+    syllable: "ing",
+    items: [
+      {
+        id: 11,
+        title: "Syllable",
+        syllable: "ing",
+        word: "King",
+        image: getAssetUrl(s3Assets.kingImage),
+        audio: getAssetAudioUrl(s3Assets.kingAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.kingAudio),
+      },
+    ],
+  },
+  {
     letter: "E",
     items: [
       {
@@ -4834,12 +4986,18 @@ const LetterTrain = ({
     customLetters.length > 0
   ) {
     // Normalize customLetters to uppercase for comparison
-    const normalizedCustomLetters = customLetters.map((letter) =>
-      letter.toUpperCase()
-    );
+    const normalizedCustomLetters = customLetters
+      .map((letter) =>
+        letter && typeof letter === "string" ? letter.toUpperCase() : ""
+      )
+      .filter(Boolean);
     data = data.filter((letterObj) => {
-      // Check if the letter (uppercase) matches any of the custom letters
-      return normalizedCustomLetters.includes(letterObj.letter.toUpperCase());
+      // Check if the letter or syllable (uppercase) matches any of the custom letters
+      const letterToCheck = letterObj.letter || letterObj.syllable;
+      if (!letterToCheck || typeof letterToCheck !== "string") {
+        return false;
+      }
+      return normalizedCustomLetters.includes(letterToCheck.toUpperCase());
     });
   }
 
@@ -4850,22 +5008,30 @@ const LetterTrain = ({
       const block = data.slice(i, i + 5);
 
       block.forEach((letterObj) => {
-        letterObj.items.forEach((item) => {
-          playlist.push({
-            type: "UI1",
-            item,
-            letter: letterObj.letter,
+        // Check if items exists and is an array
+        if (letterObj.items && Array.isArray(letterObj.items)) {
+          letterObj.items.forEach((item) => {
+            playlist.push({
+              type: "UI1",
+              item,
+              letter: letterObj.letter || letterObj.syllable || "",
+            });
           });
-        });
+        }
       });
 
       block.forEach((letterObj) => {
-        if (letterObj.items.length > 0) {
+        // Check if items exists, is an array, and has length > 0
+        if (
+          letterObj.items &&
+          Array.isArray(letterObj.items) &&
+          letterObj.items.length > 0
+        ) {
           const firstItem = letterObj.items[0];
           playlist.push({
             type: "UI2",
             item: firstItem,
-            letter: letterObj.letter,
+            letter: letterObj.letter || letterObj.syllable || "",
           });
         }
       });
@@ -5061,11 +5227,13 @@ const LetterTrain = ({
 
     //console.log('ui?', currentIndex, block, isUI1, letters);
 
-    const totalLetters = data.length;
-    const completedLetters = letters.length;
+    const totalLetters = data && Array.isArray(data) ? data.length : 0;
+    const completedLetters =
+      letters && Array.isArray(letters) ? letters.length : 0;
 
     // Calculate total items in playlist
-    const totalItemsInPlaylist = playlist.length;
+    const totalItemsInPlaylist =
+      playlist && Array.isArray(playlist) ? playlist.length : 0;
 
     const completionPercentage =
       totalLetters > 0
@@ -5110,7 +5278,9 @@ const LetterTrain = ({
       if (
         customLetters &&
         Array.isArray(customLetters) &&
-        customLetters.length > 0
+        customLetters.length > 0 &&
+        playlist &&
+        Array.isArray(playlist)
       ) {
         TOTAL_ITEMS = playlist.length;
       } else {
@@ -5352,14 +5522,18 @@ const LetterTrain = ({
                   p: 0.2,
                 }}
               >
-                {item.letters.length > 1 ? (
+                {item.letters &&
+                Array.isArray(item.letters) &&
+                item.letters.length > 1 ? (
                   <>
                     <span style={{ color: "#C93128" }}>{item.letters[0]}</span>
                     <span style={{ color: "#1c2752" }}>{item.letters[1]}</span>
                     {item.letters.slice(2)}
                   </>
                 ) : (
-                  <span style={{ color: "red" }}>{item.letters}</span>
+                  <span style={{ color: "red" }}>
+                    {item.letters || item.letter || item.syllable || ""}
+                  </span>
                 )}
               </Typography>
 
@@ -5413,7 +5587,7 @@ const LetterTrain = ({
                   fontFamily: "Quicksand",
                 }}
               >
-                {renderHighlightedWord(item.word, item.letter)}
+                {renderHighlightedWord(item.word, item.syllable || item.letter)}
               </span>
             </Box>
 
@@ -5650,7 +5824,10 @@ const LetterTrain = ({
                     fontFamily: "Quicksand",
                   }}
                 >
-                  {renderHighlightedWord(item.word, item.letter)}
+                  {renderHighlightedWord(
+                    item.word,
+                    item.syllable || item.letter
+                  )}
                 </span>
               </Box>
 

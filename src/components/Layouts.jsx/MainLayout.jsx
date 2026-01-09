@@ -68,9 +68,11 @@ import rTwoMileImage from "../../assets/r2mile.png";
 import rThreeMileImage from "../../assets/r3mile.png";
 import rFourMileImage from "../../assets/r4mile.png";
 import F1Image from "../../assets/F1.png";
+import F2Image from "../../assets/F2.png";
 import zIndex from "@mui/material/styles/zIndex";
 import { Log } from "../../services/telementryService";
 import { getF1FlowStep, F1_FLOW } from "../../RFlow/F1";
+import { getF2FlowStep, F2_FLOW } from "../../RFlow/F2";
 
 const theme = createTheme();
 
@@ -194,18 +196,32 @@ const MainLayout = (props) => {
   };
   const milestoneData = getMilestoneData();
   const milestoneLevel = milestoneData?.data?.milestone_level || null;
-  const shouldShowF1 = milestoneLevel === "B";
+  const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
+
+  // F1 flow is triggered when milestone_level is "B" and sub_milestone_level is empty/null
+  const shouldShowF1 =
+    milestoneLevel === "B" &&
+    (subMilestoneLevel === "" ||
+      subMilestoneLevel === null ||
+      subMilestoneLevel === undefined);
+  // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F1" (F1 is complete, show F2)
+  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F1";
 
   // Check if F1 flow is active
   const f1FlowStep = getF1FlowStep();
-  const isF1FlowActive = shouldShowF1 && f1FlowStep.step !== null;
+  const isF1FlowActive =
+    shouldShowF1 && f1FlowStep.step !== null && !shouldShowF2;
+
+  // Check if F2 flow is active
+  const f2FlowStep = getF2FlowStep();
+  const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
 
   console.log("rStep", rStep);
 
   let LEVEL = props?.level;
 
-  // Use F1 step names if F1 flow is active, otherwise use props flowNames
-  // flowNames should be ["L1", "P1", "L2", "P2", "L3", "P3", "A1", ...] for F1 flow
+  // Use F2 step names if F2 flow is active, otherwise F1, otherwise props flowNames
+  // flowNames should be ["L1", "P1", "L2", "P2", "L3", "P3", "A1", ...] for F1/F2 flow
   const getF1FlowNames = () => {
     if (!isF1FlowActive) return null;
     return F1_FLOW.map((flowStep) => {
@@ -220,14 +236,42 @@ const MainLayout = (props) => {
     });
   };
 
-  let flowNames = isF1FlowActive
+  const getF2FlowNames = () => {
+    if (!isF2FlowActive) return null;
+    return F2_FLOW.map((flowStep) => {
+      if (flowStep.type === "L") {
+        return `L${flowStep.step}`;
+      } else if (flowStep.type === "P") {
+        return `P${flowStep.step}`;
+      } else if (flowStep.type === "A") {
+        return `A${flowStep.step}`;
+      }
+      return "";
+    });
+  };
+
+  let flowNames = isF2FlowActive
+    ? getF2FlowNames() || props?.flowNames
+    : isF1FlowActive
     ? getF1FlowNames() || props?.flowNames
     : props?.flowNames;
 
+  // For F2 flow, set activeFlow based on current F2 step
   // For F1 flow, set activeFlow based on current F1 step
-  // activeFlow should be L1, P1, L2, P2, A1, etc. based on F1_FLOW
+  // activeFlow should be L1, P1, L2, P2, A1, etc. based on F2_FLOW or F1_FLOW
   let activeFlow = props?.activeFlow;
-  if (isF1FlowActive && f1FlowStep.step) {
+  if (isF2FlowActive && f2FlowStep.step) {
+    const currentFlowStep = F2_FLOW[f2FlowStep.index];
+    if (currentFlowStep) {
+      if (currentFlowStep.type === "L") {
+        activeFlow = `L${currentFlowStep.step}`; // L1, L2, L3, etc.
+      } else if (currentFlowStep.type === "P") {
+        activeFlow = `P${currentFlowStep.step}`; // P1, P2, P3, etc.
+      } else if (currentFlowStep.type === "A") {
+        activeFlow = `A${currentFlowStep.step}`; // A1, A2, A3
+      }
+    }
+  } else if (isF1FlowActive && f1FlowStep.step) {
     const currentFlowStep = F1_FLOW[f1FlowStep.index];
     if (currentFlowStep) {
       if (currentFlowStep.type === "L") {
@@ -410,7 +454,9 @@ const MainLayout = (props) => {
 
   let currentPracticeStep = progressData?.currentPracticeStep;
   // For F1 flow, use the F1 flow index instead of currentPracticeStep
-  if (isF1FlowActive && f1FlowStep.index !== undefined) {
+  if (isF2FlowActive && f2FlowStep.index !== undefined) {
+    currentPracticeStep = f2FlowStep.index;
+  } else if (isF1FlowActive && f1FlowStep.index !== undefined) {
     currentPracticeStep = f1FlowStep.index;
   }
   const [currentPageStart, setCurrentPageStart] = useState(0);
@@ -439,8 +485,31 @@ const MainLayout = (props) => {
     });
   };
 
-  // Use F1 steps if F1 flow is active, otherwise use regular practiceSteps
-  const displayPracticeSteps = isF1FlowActive
+  const getF2PracticeSteps = () => {
+    if (!isF2FlowActive) return null;
+    // Use F2_FLOW to generate labels based on type and step number
+    return F2_FLOW.map((flowStep, index) => {
+      let label = "";
+      if (flowStep.type === "L") {
+        label = `L${flowStep.step}`; // Learn: L1, L2, L3, etc.
+      } else if (flowStep.type === "P") {
+        label = `P${flowStep.step}`; // Practice: P1, P2, P3, etc.
+      } else if (flowStep.type === "A") {
+        label = `A${flowStep.step}`; // Apply: A1, A2, A3
+      }
+      return {
+        name: label,
+        title: label,
+        titleNew: label,
+        titleThree: label,
+      };
+    });
+  };
+
+  // Use F2 steps if F2 flow is active, otherwise F1 steps, otherwise regular practiceSteps
+  const displayPracticeSteps = isF2FlowActive
+    ? getF2PracticeSteps() || practiceSteps
+    : isF1FlowActive
     ? getF1PracticeSteps() || practiceSteps
     : practiceSteps;
 
@@ -721,7 +790,16 @@ const MainLayout = (props) => {
                     }}
                   >
                     <footer>
-                      {isF1FlowActive ? (
+                      {isF2FlowActive ? (
+                        // F2 Flow - Show F2 milestone image
+                        <div style={{ height: "150px", width: "150px" }}>
+                          <img
+                            src={F2Image}
+                            alt="F2"
+                            height={isMobile ? "130px" : "200px"}
+                          />
+                        </div>
+                      ) : isF1FlowActive ? (
                         // F1 Flow - Show F1 milestone image
                         <div style={{ height: "150px", width: "150px" }}>
                           <img
@@ -773,11 +851,13 @@ const MainLayout = (props) => {
                     }}
                   ></Box>
                   {/* Show displayPracticeSteps progress bar - hide when flowNames progress bar is showing */}
+                  {/* Show progress bar for F1, F2, or when conditions are met */}
                   {(showNext || showProgress) &&
                     !(
                       rFlow === "true" &&
                       ![1, "B"]?.includes(LEVEL) &&
-                      !isF1FlowActive
+                      !isF1FlowActive &&
+                      !isF2FlowActive
                     ) && (
                       <Box
                         sx={{
@@ -790,7 +870,7 @@ const MainLayout = (props) => {
                           height: "100%",
                         }}
                       >
-                        {/* Show progress bar - use F1 flow steps when F1 is active, otherwise use regular steps */}
+                        {/* Show progress bar - use F2 flow steps when F2 is active, F1 flow steps when F1 is active, otherwise use regular steps */}
                         {showProgress && (
                           <Box
                             sx={{
@@ -896,10 +976,11 @@ const MainLayout = (props) => {
                             </Box>
                           </Box>
                         )}
-                        {/* Hide flowNames progress bar when F1 flow is active - use displayPracticeSteps instead */}
+                        {/* Hide flowNames progress bar when F1 or F2 flow is active - use displayPracticeSteps instead */}
                         {rFlow === "true" &&
                           ![1, "B"]?.includes(LEVEL) &&
-                          !isF1FlowActive && (
+                          !isF1FlowActive &&
+                          !isF2FlowActive && (
                             <Box
                               sx={{
                                 display: "flex",

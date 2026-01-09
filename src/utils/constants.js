@@ -10670,6 +10670,245 @@ export const levelGetContent = {
         passRedirect: "F2", // If pass all levels, go to F2
       },
     ],
+    F2: [
+      // Learn 1 - Syllable Clap/Letter Train (English) or Barakadi (Indic)
+      {
+        title: "L1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L1",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["in", "the", "on", "an", "am"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 1 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L2",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 2 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
+      {
+        title: "L2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P1",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["at", "it", "he", "she", "his"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 2 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P2",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 2,
+        letterHuntContentCount: 10,
+      },
+      // Learn 3 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
+      {
+        title: "L3",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L3",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["the", "is", "are", "or", "up", "on"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 3 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P3",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_L4",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 3,
+        letterHuntContentCount: 10,
+      },
+      // Apply 1 - Letter Hunt (3 levels, 13 content per level, showcase mode)
+      {
+        title: "A1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P3",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntEndLevel: 3,
+        letterHuntContentCount: 13,
+        isShowcase: true,
+        applyStep: 1,
+        failRedirect: "L1", // If fail at any level, go to Learn 1
+        passRedirect: "L4", // If pass all levels, go to Learn 4
+      },
+      // Learn 4 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
+      {
+        title: "L4",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P4",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["all", "in", "ter", "ing", "up", "him"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 4 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P4",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P5",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 5 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
+      {
+        title: "L5",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P6",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["s", "t", "v", "w"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 5 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P5",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P7",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 6 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
+      {
+        title: "L6",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P8",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["x", "y", "z", "c"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 6 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P6",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P9",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
+      {
+        title: "A2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P10",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntEndLevel: 3,
+        letterHuntContentCount: 13,
+        isShowcase: true,
+        applyStep: 2,
+        failRedirect: "L4", // If fail at any level, go to Learn 4
+        passRedirect: "L7", // If pass all levels, go to Learn 7
+      },
+      // Learn 7 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
+      {
+        title: "L7",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P11",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["i", "o", "u", "a"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 7 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P7",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P12",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 8 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
+      {
+        title: "L8",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P13",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["e", "i", "o", "u"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 8 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P8",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P14",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Learn 9 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
+      {
+        title: "L9",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P15",
+        multilingual: true,
+        mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
+        customLetters: ["a", "e", "i", "o", "u"], // Placeholder - adjust based on F2 requirements
+      },
+      // Practice 9 - Letter Hunt (1 level, 10 content)
+      {
+        title: "P9",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P16",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntContentCount: 10,
+      },
+      // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
+      {
+        title: "A3",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_P17",
+        mechanism: { id: "letterHunt", name: "letterHunt" },
+        multilingual: true,
+        letterHuntLevel: 1,
+        letterHuntEndLevel: 3,
+        letterHuntContentCount: 13,
+        isShowcase: true,
+        applyStep: 3,
+        failRedirect: "L7", // If fail at any level, go to Learn 7
+        passRedirect: "F3", // If pass all levels, go to F3
+      },
+    ],
     0: [
       {
         title: "P1",
