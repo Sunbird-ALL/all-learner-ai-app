@@ -4312,14 +4312,10 @@ const Practice = () => {
   const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
 
   // Check if F1 flow should be active based on milestone_level
-  // F1 flow is triggered when milestone_level is "B" and sub_milestone_level is empty/null
-  const shouldShowF1 =
-    milestoneLevel === "B" &&
-    (subMilestoneLevel === "" ||
-      subMilestoneLevel === null ||
-      subMilestoneLevel === undefined);
-  // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F1" (F1 is complete, show F2)
-  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F1";
+  // F1 flow is triggered when milestone_level is "B" and sub_milestone_level is "F1"
+  const shouldShowF1 = milestoneLevel === "B" && subMilestoneLevel === "F1";
+  // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F2"
+  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F2";
   const shouldShowF3 = milestoneLevel === "F3";
 
   // Track F1 flow index in state to trigger re-renders
