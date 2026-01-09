@@ -5676,6 +5676,14 @@ const Practice = () => {
       const currentGetContent = getCurrentContent(userState);
 
       console.log("curContent", currentGetContent, userState);
+      console.log(
+        "Initial load - About to fetch questions. Level:",
+        level,
+        "Type:",
+        typeof level,
+        "newLevel:",
+        newLevel
+      );
 
       // Add null check to prevent error if currentGetContent is undefined
       if (!currentGetContent) {
@@ -5702,42 +5710,105 @@ const Practice = () => {
 
       //console.log("curGetCont", userState, currentGetContent);
 
-      if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
-        const resWord = await getContentFn(
-          currentGetContent.criteria,
-          lang,
-          limit,
-          {
-            mechanismId: currentGetContent?.mechanism?.id,
-            competency: currentGetContent?.competency,
-            tags: currentGetContent?.tags,
-            storyMode: currentGetContent?.storyMode,
-            CEFR_level: currentGetContent?.CEFR_level,
-            multilingual: currentGetContent?.multilingual,
-          },
-          level
-        );
-        // TODO: handle error if resWord is empty
+      // Use newLevel instead of level state, as level state might not be updated yet
+      const levelToCheck = newLevel || level;
+      console.log("Initial load - Level check:", {
+        level,
+        newLevel,
+        levelToCheck,
+        levelType: typeof levelToCheck,
+        isInExcludedList: ["B", 0, 10, 11, 12, 13, 14, 15].includes(
+          levelToCheck
+        ),
+        willFetch: !["B", 0, 10, 11, 12, 13, 14, 15].includes(levelToCheck),
+      });
 
-        setTotalSyllableCount(resWord?.totalSyllableCount);
-        setLivesData({
-          ...livesData,
-          totalTargets: resWord?.totalSyllableCount,
-          targetsForLives: resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE,
-          targetPerLive:
-            (resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
-        });
-        quesArr = [...quesArr, ...(resWord?.content || [])];
-        setCurrentContentType(currentGetContent.criteria);
+      if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(levelToCheck)) {
+        try {
+          console.log(
+            "Initial load - Fetching questions for level:",
+            levelToCheck,
+            "criteria:",
+            currentGetContent.criteria
+          );
+          const resWord = await getContentFn(
+            currentGetContent.criteria,
+            lang,
+            limit,
+            {
+              mechanismId: currentGetContent?.mechanism?.id,
+              competency: currentGetContent?.competency,
+              tags: currentGetContent?.tags,
+              storyMode: currentGetContent?.storyMode,
+              CEFR_level: currentGetContent?.CEFR_level,
+              multilingual: currentGetContent?.multilingual,
+            },
+            level
+          );
 
-        setCurrentCollectionId(resWord?.content?.[0]?.collectionId);
-        setAssessmentResponse(resWord);
+          console.log("Initial load - resWord:", resWord);
+          console.log("Initial load - resWord?.content:", resWord?.content);
+          console.log(
+            "Initial load - Array.isArray(resWord):",
+            Array.isArray(resWord)
+          );
 
-        setLocalData("storyTitle", resWord?.name);
+          if (!resWord) {
+            console.error("Initial load - resWord is null/undefined");
+          } else {
+            setTotalSyllableCount(resWord?.totalSyllableCount);
+            setLivesData({
+              ...livesData,
+              totalTargets: resWord?.totalSyllableCount,
+              targetsForLives:
+                resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE,
+              targetPerLive:
+                (resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
+            });
 
-        localStorage.setItem("storyTitle", resWord?.name);
+            // Handle both cases: resWord as array or resWord.content as array
+            if (Array.isArray(resWord)) {
+              quesArr = [...quesArr, ...resWord];
+            } else if (resWord?.content && Array.isArray(resWord.content)) {
+              quesArr = [...quesArr, ...resWord.content];
+            } else if (resWord && !Array.isArray(resWord)) {
+              // If resWord is an object but doesn't have content, use it as a single question
+              quesArr = [...quesArr, resWord];
+            }
 
-        setQuestions(quesArr);
+            console.log("Initial load - quesArr after processing:", quesArr);
+
+            if (quesArr.length === 0) {
+              console.warn(
+                "Initial load - quesArr is empty after processing resWord"
+              );
+            }
+
+            setCurrentContentType(currentGetContent.criteria);
+
+            setCurrentCollectionId(
+              Array.isArray(resWord)
+                ? resWord[0]?.collectionId
+                : resWord?.content?.[0]?.collectionId
+            );
+            setAssessmentResponse(resWord);
+
+            setLocalData("storyTitle", resWord?.name);
+
+            localStorage.setItem("storyTitle", resWord?.name);
+
+            setQuestions(quesArr);
+            console.log(
+              "Initial load - setQuestions called with:",
+              quesArr,
+              "length:",
+              quesArr.length
+            );
+          }
+        } catch (error) {
+          console.error("Initial load - Error fetching questions:", error);
+          setQuestions([]);
+        }
       }
 
       if ([10, 11, 12, 13, 14, 15].includes(level)) {
@@ -5748,7 +5819,25 @@ const Practice = () => {
         setQuestions(dummyQuestions);
       }
       // Add null check before accessing mechanism
-      setMechanism(currentGetContent?.mechanism || {});
+      // Only set mechanism after questions are loaded (for non-F1 flows)
+      // This prevents race condition where component renders before data is ready
+      if (
+        questions.length > 0 ||
+        ["B", 0, 10, 11, 12, 13, 14, 15].includes(level)
+      ) {
+        setMechanism(currentGetContent?.mechanism || {});
+        console.log(
+          "Initial load - Mechanism set to:",
+          currentGetContent?.mechanism
+        );
+      } else {
+        console.warn(
+          "Initial load - Mechanism not set yet, questions not loaded. Questions length:",
+          questions.length
+        );
+        // Set mechanism anyway, but log a warning
+        setMechanism(currentGetContent?.mechanism || {});
+      }
 
       // if (virtualId === "6760800019" || level == 12) {
       //   //setMechanism({ id: "read_aloud", name: "readAloud" });
@@ -6887,7 +6976,7 @@ const Practice = () => {
             currentImg: currentImage,
             parentWords: questions[currentQuestion]?.multilingual_data,
             contentSourceData:
-              questions[currentQuestion]?.contentSourceData?.[0] || {},
+              questions[currentQuestion]?.contentSourceData?.[0],
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,
@@ -6921,6 +7010,66 @@ const Practice = () => {
         />
       );
     } else if (mechanism && mechanism.name === "fluencyP2") {
+      // Check if questions array has data
+      if (
+        !questions ||
+        questions.length === 0 ||
+        currentQuestion >= questions.length
+      ) {
+        console.warn(
+          "FluencyP2 - Questions not loaded yet or invalid currentQuestion",
+          {
+            questionsLength: questions?.length,
+            currentQuestion,
+            questions: questions,
+          }
+        );
+        // Return loading state or null until questions are loaded
+        return null;
+      }
+
+      // Get contentSourceData with fallback
+      const currentQuestionData = questions[currentQuestion];
+      console.log("FluencyP2 - currentQuestionData:", currentQuestionData);
+      console.log("FluencyP2 - questions array:", questions);
+      console.log("FluencyP2 - currentQuestion index:", currentQuestion);
+
+      // Try to get contentSourceData from various possible locations
+      let contentSourceDataForP2 = currentQuestionData?.contentSourceData?.[0];
+
+      // If not found, try alternative structures
+      if (!contentSourceDataForP2) {
+        if (currentQuestionData?.text) {
+          // Text might be directly on the question object
+          contentSourceDataForP2 = {
+            text: currentQuestionData.text,
+            audioUrl:
+              currentQuestionData.audioUrl ||
+              currentQuestionData.audio_url ||
+              "",
+          };
+        } else if (
+          currentQuestionData?.contentSourceData &&
+          Array.isArray(currentQuestionData.contentSourceData) &&
+          currentQuestionData.contentSourceData.length > 0
+        ) {
+          contentSourceDataForP2 = currentQuestionData.contentSourceData[0];
+        }
+      }
+
+      console.log(
+        "FluencyP2 - contentSourceDataForP2:",
+        contentSourceDataForP2
+      );
+
+      // If still no data, don't render
+      if (!contentSourceDataForP2) {
+        console.warn(
+          "FluencyP2 - No contentSourceData found, waiting for data to load"
+        );
+        return null;
+      }
+
       return (
         <FluencyP2
           page={page}
@@ -6934,8 +7083,7 @@ const Practice = () => {
             //
             currentImg: currentImage,
             parentWords: questions[currentQuestion]?.multilingual_data,
-            contentSourceData:
-              questions[currentQuestion]?.contentSourceData?.[0],
+            contentSourceData: contentSourceDataForP2,
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,

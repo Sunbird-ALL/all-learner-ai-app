@@ -155,18 +155,24 @@ const FluencyP2 = ({
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  // Debug log to check data structure
+  console.log("FluencyP2 - contentSourceData:", contentSourceData);
+
   const sentencesData = [
     {
       id: 1,
-      sentence: contentSourceData.text,
-      audio: contentSourceData.audioUrl,
-      underlinedWords: Object.keys(parentWords),
-      hints: Object.fromEntries(
-        Object.entries(parentWords).map(([word, data]) => [
-          word,
-          data.kn.audio_url,
-        ])
-      ),
+      sentence: contentSourceData?.text || "",
+      audio: contentSourceData?.audioUrl || "",
+      underlinedWords: parentWords ? Object.keys(parentWords) : [],
+      hints: parentWords
+        ? Object.fromEntries(
+            Object.entries(parentWords).map(([word, data]) => [
+              word,
+              data?.kn?.audio_url || "",
+            ])
+          )
+        : {},
     },
   ];
 

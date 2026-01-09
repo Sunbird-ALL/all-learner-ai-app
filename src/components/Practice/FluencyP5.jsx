@@ -268,15 +268,17 @@ const FluencyP5 = ({
   const sentencesData = [
     {
       id: 1,
-      sentence: contentSourceData.text,
-      audio: contentSourceData.audioUrl,
-      underlinedWords: Object.keys(parentWords),
-      hints: Object.fromEntries(
-        Object.entries(parentWords).map(([word, data]) => [
-          word,
-          data.kn.audio_url,
-        ])
-      ),
+      sentence: contentSourceData?.text || "",
+      audio: contentSourceData?.audioUrl || "",
+      underlinedWords: parentWords ? Object.keys(parentWords) : [],
+      hints: parentWords
+        ? Object.fromEntries(
+            Object.entries(parentWords).map(([word, data]) => [
+              word,
+              data?.kn?.audio_url || "",
+            ])
+          )
+        : {},
     },
   ];
 
