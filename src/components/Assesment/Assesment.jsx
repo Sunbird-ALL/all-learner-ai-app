@@ -427,7 +427,8 @@ export const ProfileHeader = ({
   const milestoneData = getMilestoneData();
   const milestoneLevel = milestoneData?.data?.milestone_level || null;
   const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
-  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F1";
+  const shouldShowF1 = milestoneLevel === "B" && subMilestoneLevel === "F1";
+  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F2";
   const f2FlowStep = getF2FlowStep();
   const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
 
@@ -1327,19 +1328,14 @@ const Assesment = ({ discoverStart }) => {
   const milestoneLevel = milestoneData?.data?.milestone_level || null;
   const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
 
-  // F1 flow is triggered when milestone_level is "B" and sub_milestone_level is empty/null
-  const shouldShowF1 =
-    milestoneLevel === "B" &&
-    (subMilestoneLevel === "" ||
-      subMilestoneLevel === null ||
-      subMilestoneLevel === undefined);
-  // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F1" (F1 is complete, show F2)
-  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F1";
+  // F1 flow is triggered when milestone_level is "B" and sub_milestone_level is "F1"
+  const shouldShowF1 = milestoneLevel === "B" && subMilestoneLevel === "F1";
+  // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F2"
+  const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F2";
 
   // Check if F1 flow is active
   const f1FlowStep = getF1FlowStep();
-  const isF1FlowActive =
-    shouldShowF1 && f1FlowStep.step !== null && !shouldShowF2;
+  const isF1FlowActive = shouldShowF1 && f1FlowStep.step !== null;
 
   console.log("Discovery Start - F1/F2 detection:", {
     milestoneLevel,
