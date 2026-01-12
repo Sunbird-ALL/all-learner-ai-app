@@ -13,6 +13,7 @@ import LetterTrain from "../../RFlow/LetterTrain";
 import R2 from "../../RFlow/R2";
 import F1, { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import F2, { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
+import F3, { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
 import Barakhadi from "../../RFlow/Barakhadi";
 import R3Flow from "../../RFlow/R3";
 import R4 from "../../RFlow/R4";
@@ -48,6 +49,8 @@ import Mechanics6 from "../../components/Practice/Mechanics6";
 import Mechanics7 from "../../components/Practice/Mechanics7";
 import FluencyP1 from "../../components/Practice/FluencyP1";
 import LetterHuntMechanics from "../../components/Practice/LetterHuntMechanics";
+import LetterLauncherMechanics from "../../components/Practice/LetterLauncherMechanics";
+import MemoryChallengeMechanics from "../../components/Practice/MemoryChallengeMechanics";
 import FluencyP2 from "../../components/Practice/FluencyP2";
 import FluencyP3 from "../../components/Practice/FluencyP3";
 import FluencyP4 from "../../components/Practice/FluencyP4";
@@ -4316,7 +4319,8 @@ const Practice = () => {
   const shouldShowF1 = milestoneLevel === "B" && subMilestoneLevel === "F1";
   // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F2"
   const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F2";
-  const shouldShowF3 = milestoneLevel === "F3";
+  // F3 flow is triggered when milestone_level is "B" and sub_milestone_level is "F3"
+  const shouldShowF3 = milestoneLevel === "B" && subMilestoneLevel === "F3";
 
   // Track F1 flow index in state to trigger re-renders
   const [f1FlowIndexState, setF1FlowIndexState] = useState(() => {
@@ -4327,6 +4331,12 @@ const Practice = () => {
   // Track F2 flow index in state to trigger re-renders
   const [f2FlowIndexState, setF2FlowIndexState] = useState(() => {
     const savedIndex = getLocalData("f2FlowIndex");
+    return savedIndex !== null ? Number(savedIndex) : 0;
+  });
+
+  // Track F3 flow index in state to trigger re-renders
+  const [f3FlowIndexState, setF3FlowIndexState] = useState(() => {
+    const savedIndex = getLocalData("f3FlowIndex");
     return savedIndex !== null ? Number(savedIndex) : 0;
   });
 
@@ -4392,6 +4402,37 @@ const Practice = () => {
     };
   }, [f2FlowIndexState]);
 
+  // Sync F3 state with localStorage when it changes externally
+  useEffect(() => {
+    const checkF3FlowIndex = () => {
+      const savedIndex = getLocalData("f3FlowIndex");
+      if (savedIndex !== null) {
+        const index = Number(savedIndex);
+        if (index !== f3FlowIndexState) {
+          setF3FlowIndexState(index);
+        }
+      }
+    };
+
+    // Check immediately
+    checkF3FlowIndex();
+
+    // Also listen for storage events to sync when localStorage changes
+    const handleStorageChange = () => {
+      checkF3FlowIndex();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also poll periodically to catch changes from same window
+    const interval = setInterval(checkF3FlowIndex, 100);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [f3FlowIndexState]);
+
   // Check if F1 flow is active (replaces R0/R1)
   // Use state to ensure re-renders when flow advances
   const f1FlowStep = {
@@ -4412,6 +4453,15 @@ const Practice = () => {
     isLast: f2FlowIndexState === F2_FLOW.length - 1,
   };
   const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
+
+  // Check if F3 flow is active
+  // Use state to ensure re-renders when flow advances
+  const f3FlowStep = {
+    index: f3FlowIndexState,
+    step: F3_FLOW[f3FlowIndexState] || null,
+    isLast: f3FlowIndexState === F3_FLOW.length - 1,
+  };
+  const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
   const isF2LearnStep = isF2FlowActive && f2FlowStep.step?.type === "L";
   const isF2PracticeStep = isF2FlowActive && f2FlowStep.step?.type === "P";
   const isF2ApplyStep = isF2FlowActive && f2FlowStep.step?.type === "A";
@@ -5180,6 +5230,14 @@ const Practice = () => {
         setCurrentQuestion(0);
       }
 
+      // For F3 flow, always check current F3 flow step from localStorage (may have been advanced by LetterLauncherMechanics)
+      // Check if F3 flow is active
+      const currentF3FlowStepFromStorage = getF3FlowStep();
+      const isF3FlowByMilestone =
+        milestoneLevel === "B" &&
+        subMilestoneLevel === "F3" &&
+        currentF3FlowStepFromStorage.step !== null;
+
       // For F2 flow, always check current F2 flow step from localStorage (may have been advanced by LetterHuntMechanics)
       // Check if F2 flow is active
       const f2FlowAdvancedByLetterHunt =
@@ -5187,17 +5245,155 @@ const Practice = () => {
       const currentF2FlowStepFromStorage = getF2FlowStep();
       const isF2FlowByMilestone =
         milestoneLevel === "B" &&
-        subMilestoneLevel === "F1" &&
+        subMilestoneLevel === "F2" &&
         currentF2FlowStepFromStorage.step !== null;
 
       // For F1 flow, always check current F1 flow step from localStorage (may have been advanced by LetterHuntMechanics)
       // Check if F1 flow is active by checking milestone level
       const isF1FlowByMilestone =
-        milestoneLevel === "B" && !isF2FlowByMilestone;
+        milestoneLevel === "B" &&
+        subMilestoneLevel === "F1" &&
+        !isF2FlowByMilestone &&
+        !isF3FlowByMilestone;
       let currentGetContent;
 
-      // Handle F2 flow first (takes precedence over F1)
-      if (isF2FlowByMilestone) {
+      // Handle F3 flow first (takes precedence over F2 and F1)
+      // Check if F3 flow was already advanced by LetterLauncherMechanics
+      const f3FlowAdvancedByLetterLauncher =
+        getLocalData("f3FlowAdvancedByLetterLauncher") === "true";
+
+      if (isF3FlowByMilestone) {
+        // Always get current F3 flow step from localStorage (it may have been advanced by LetterLauncherMechanics)
+        // Read directly from localStorage to get the most up-to-date value
+        const savedF3Index = getLocalData("f3FlowIndex");
+        const f3IndexFromStorage =
+          savedF3Index !== null ? Number(savedF3Index) : 0;
+        const currentF3FlowStep = {
+          index: f3IndexFromStorage,
+          step: F3_FLOW[f3IndexFromStorage] || null,
+          isLast: f3IndexFromStorage === F3_FLOW.length - 1,
+        };
+
+        console.log("handleNext - F3 flow active, current step from storage:", {
+          f3IndexFromStorage,
+          step: currentF3FlowStep.step,
+          stepType: currentF3FlowStep.step?.type,
+          f3FlowIndexState,
+          f3FlowAdvancedByLetterLauncher,
+        });
+
+        // Update state to ensure UI reflects current F3 flow index
+        if (currentF3FlowStep.index !== f3FlowIndexState) {
+          console.log(
+            "handleNext - Updating f3FlowIndexState from",
+            f3FlowIndexState,
+            "to",
+            currentF3FlowStep.index
+          );
+          setF3FlowIndexState(currentF3FlowStep.index);
+        }
+
+        // Only store F3 flow progress in backend if LetterLauncherMechanics hasn't already done it
+        if (currentF3FlowStep.step && !f3FlowAdvancedByLetterLauncher) {
+          try {
+            await addLesson({
+              sessionId,
+              milestone: "practice",
+              lesson: currentF3FlowStep.index.toString(),
+              progress: ((currentF3FlowStep.index + 1) / F3_FLOW.length) * 100,
+              language: lang,
+              milestoneLevel: "B",
+            });
+            console.log("F3 flow progress saved to backend by handleNext:", {
+              index: currentF3FlowStep.index,
+              progress: ((currentF3FlowStep.index + 1) / F3_FLOW.length) * 100,
+            });
+          } catch (e) {
+            console.error("Error storing F3 flow progress:", e);
+          }
+        } else if (f3FlowAdvancedByLetterLauncher) {
+          console.log(
+            "F3 flow progress already saved by LetterLauncherMechanics, skipping addLesson in handleNext"
+          );
+          // Clear the flag after a short delay
+          setTimeout(() => {
+            setLocalData("f3FlowAdvancedByLetterLauncher", "false");
+          }, 500);
+        }
+
+        // Update practice progress to reflect new F3 flow step
+        const newF3PracticeStep = currentF3FlowStep.index;
+        let practiceProgress = getLocalData("practiceProgress");
+        practiceProgress = practiceProgress ? JSON.parse(practiceProgress) : {};
+        practiceProgress = {
+          ...practiceProgress,
+          currentQuestion: 0,
+          currentPracticeProgress:
+            ((newF3PracticeStep + 1) / F3_FLOW.length) * 100,
+          currentPracticeStep: newF3PracticeStep,
+        };
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        setProgressData(practiceProgress);
+        setCurrentQuestion(0);
+
+        // Use F3 flow index to get content from F3 config
+        const effectiveLang = lang || "en";
+        const f3Config = levelGetContent[effectiveLang]?.["F3"];
+        console.log(
+          "handleNext - Fetching F3 content for index:",
+          currentF3FlowStep.index,
+          "step type:",
+          currentF3FlowStep.step?.type,
+          "title should be:",
+          currentF3FlowStep.step?.type === "P"
+            ? `P${currentF3FlowStep.step?.step}`
+            : `A${currentF3FlowStep.step?.step}`
+        );
+
+        if (
+          f3Config &&
+          Array.isArray(f3Config) &&
+          f3Config[currentF3FlowStep.index]
+        ) {
+          currentGetContent = f3Config[currentF3FlowStep.index];
+          console.log("handleNext - F3 content from config:", {
+            index: currentF3FlowStep.index,
+            title: currentGetContent?.title,
+            mechanism: currentGetContent?.mechanism,
+          });
+        } else {
+          // Fallback: determine mechanism from F3_FLOW step type
+          const f3StepType = currentF3FlowStep.step?.type;
+          console.log(
+            "handleNext - F3 config not found, using step type:",
+            f3StepType
+          );
+          if (f3StepType === "P" || f3StepType === "A") {
+            currentGetContent = {
+              mechanism: { id: "letterLauncher", name: "letterLauncher" },
+            };
+          }
+          console.log("handleNext - F3 content fallback:", currentGetContent);
+        }
+
+        // Set mechanism based on F3_FLOW step type
+        const f3StepTypeForMechanism = currentF3FlowStep.step?.type;
+        console.log(
+          "handleNext - Setting mechanism for F3 step type:",
+          f3StepTypeForMechanism,
+          "at index:",
+          currentF3FlowStep.index
+        );
+        if (f3StepTypeForMechanism === "P" || f3StepTypeForMechanism === "A") {
+          setMechanism({ id: "letterLauncher", name: "letterLauncher" });
+          setQuestions([]); // LetterLauncher generates its own content
+          console.log(
+            "handleNext - Mechanism set to letterLauncher for F3 index",
+            currentF3FlowStep.index
+          );
+        }
+      } else if (isF2FlowByMilestone) {
+        // Handle F2 flow (takes precedence over F1)
         // Always get current F2 flow step from localStorage (it may have been advanced by LetterHuntMechanics)
         // Read directly from localStorage to get the most up-to-date value
         const savedF2Index = getLocalData("f2FlowIndex");
@@ -5938,32 +6134,77 @@ const Practice = () => {
       let practiceProgress = getLocalData("practiceProgress");
       practiceProgress = practiceProgress ? JSON.parse(practiceProgress) : {};
 
-      // For F1 flow (milestone_level === "B"), restore F1 flow index from backend
+      // For F1/F2/F3 flow (milestone_level === "B"), restore flow index from backend
       // This ensures progress is restored on relogin (localStorage is cleared on logout)
       if (levels === "B") {
-        // For F1 flow, lesson number from backend is 1-indexed (1-21)
-        // But F1_FLOW array is 0-indexed (0-20), so convert: lesson 21 = index 20 (A3)
-        // Convert 1-indexed lesson to 0-indexed flow index
-        const f1FlowIndex = userState > 0 ? userState - 1 : 0;
+        const subMilestoneLevel =
+          getMilestoneDetails?.data?.sub_milestone_level;
 
-        // Check if this is a valid F1 flow index (0 to F1_FLOW.length - 1)
-        if (f1FlowIndex >= 0 && f1FlowIndex < F1_FLOW.length) {
-          // Restore F1 flow index from backend
-          console.log(
-            `Restoring F1 flow progress: lesson ${userState} (1-indexed) -> flow index ${f1FlowIndex} (0-indexed) -> ${
-              F1_FLOW[f1FlowIndex]?.type
-            }${F1_FLOW[f1FlowIndex]?.step || ""}`
-          );
-          setLocalData("f1FlowIndex", f1FlowIndex);
-          // Update userState to match the flow index for practiceProgress calculation
-          userState = f1FlowIndex;
-        } else {
-          // If backend doesn't have valid F1 flow index, start from beginning
-          console.warn(
-            `Invalid F1 flow index ${f1FlowIndex} from lesson ${userState}, starting from beginning`
-          );
-          setLocalData("f1FlowIndex", 0);
-          userState = 0;
+        if (subMilestoneLevel === "F1") {
+          // For F1 flow, lesson number from backend is 1-indexed (1-21)
+          // But F1_FLOW array is 0-indexed (0-20), so convert: lesson 21 = index 20 (A3)
+          // Convert 1-indexed lesson to 0-indexed flow index
+          const f1FlowIndex = userState > 0 ? userState - 1 : 0;
+
+          // Check if this is a valid F1 flow index (0 to F1_FLOW.length - 1)
+          if (f1FlowIndex >= 0 && f1FlowIndex < F1_FLOW.length) {
+            // Restore F1 flow index from backend
+            console.log(
+              `Restoring F1 flow progress: lesson ${userState} (1-indexed) -> flow index ${f1FlowIndex} (0-indexed) -> ${
+                F1_FLOW[f1FlowIndex]?.type
+              }${F1_FLOW[f1FlowIndex]?.step || ""}`
+            );
+            setLocalData("f1FlowIndex", f1FlowIndex);
+            // Update userState to match the flow index for practiceProgress calculation
+            userState = f1FlowIndex;
+          } else {
+            // If backend doesn't have valid F1 flow index, start from beginning
+            console.warn(
+              `Invalid F1 flow index ${f1FlowIndex} from lesson ${userState}, starting from beginning`
+            );
+            setLocalData("f1FlowIndex", 0);
+            userState = 0;
+          }
+        } else if (subMilestoneLevel === "F2") {
+          // For F2 flow, lesson number from backend is 1-indexed (1-21)
+          // But F2_FLOW array is 0-indexed (0-20), so convert
+          const f2FlowIndex = userState > 0 ? userState - 1 : 0;
+
+          if (f2FlowIndex >= 0 && f2FlowIndex < F2_FLOW.length) {
+            console.log(
+              `Restoring F2 flow progress: lesson ${userState} (1-indexed) -> flow index ${f2FlowIndex} (0-indexed) -> ${
+                F2_FLOW[f2FlowIndex]?.type
+              }${F2_FLOW[f2FlowIndex]?.step || ""}`
+            );
+            setLocalData("f2FlowIndex", f2FlowIndex);
+            userState = f2FlowIndex;
+          } else {
+            console.warn(
+              `Invalid F2 flow index ${f2FlowIndex} from lesson ${userState}, starting from beginning`
+            );
+            setLocalData("f2FlowIndex", 0);
+            userState = 0;
+          }
+        } else if (subMilestoneLevel === "F3") {
+          // For F3 flow, lesson number from backend is 1-indexed (1-12)
+          // But F3_FLOW array is 0-indexed (0-11), so convert
+          const f3FlowIndex = userState > 0 ? userState - 1 : 0;
+
+          if (f3FlowIndex >= 0 && f3FlowIndex < F3_FLOW.length) {
+            console.log(
+              `Restoring F3 flow progress: lesson ${userState} (1-indexed) -> flow index ${f3FlowIndex} (0-indexed) -> ${
+                F3_FLOW[f3FlowIndex]?.type
+              }${F3_FLOW[f3FlowIndex]?.step || ""}`
+            );
+            setLocalData("f3FlowIndex", f3FlowIndex);
+            userState = f3FlowIndex;
+          } else {
+            console.warn(
+              `Invalid F3 flow index ${f3FlowIndex} from lesson ${userState}, starting from beginning`
+            );
+            setLocalData("f3FlowIndex", 0);
+            userState = 0;
+          }
         }
       }
 
@@ -6547,10 +6788,68 @@ const Practice = () => {
   //console.log("mecc", wordWallFlow);
 
   const renderMechanics = () => {
+    // For F3 flow, ensure mechanism matches F3_FLOW step type
+    // F3 flow takes precedence over F2 and F1 flows
+    // F3 Practice steps use Letter Launcher, F3 Apply steps use Letter Launcher + Memory Challenge + Read Aloud
+    if (isF3FlowActive && f3FlowStep?.step && milestoneLevel === "B") {
+      const currentF3Step = getF3FlowStep();
+      const f3StepType = currentF3Step.step?.type;
+      const expectedMechanism =
+        f3StepType === "P" || f3StepType === "A"
+          ? "letterLauncher" // F3 Practice and Apply steps use Letter Launcher
+          : null;
+
+      console.log("renderMechanics - F3 flow check", {
+        isF3FlowActive,
+        f3StepType,
+        expectedMechanism,
+        currentMechanism:
+          typeof mechanism === "object" ? mechanism?.name : mechanism,
+        mechanismType: typeof mechanism,
+        f3FlowIndexState,
+        milestoneLevel,
+      });
+
+      // If mechanism doesn't match expected, fix it immediately
+      if (
+        expectedMechanism &&
+        (!mechanism ||
+          typeof mechanism !== "object" ||
+          !mechanism.name ||
+          mechanism.name !== expectedMechanism)
+      ) {
+        // Only warn if mechanism exists but is incorrect
+        if (
+          mechanism &&
+          typeof mechanism === "object" &&
+          mechanism.name &&
+          mechanism.name !== expectedMechanism
+        ) {
+          console.warn(
+            "renderMechanics - F3 flow mechanism mismatch detected, correcting:",
+            {
+              currentMechanism: mechanism?.name,
+              expectedMechanism,
+              f3StepType,
+              f3FlowIndexState,
+              currentF3StepIndex: currentF3Step.index,
+              milestoneLevel,
+            }
+          );
+        }
+        // Set the correct mechanism immediately
+        if (expectedMechanism === "letterLauncher") {
+          console.log(
+            "renderMechanics - Setting mechanism to letterLauncher for F3 step"
+          );
+          setMechanism({ id: "letterLauncher", name: "letterLauncher" });
+        }
+      }
+    }
     // For F2 flow, ensure mechanism matches F2_FLOW step type
     // F2 flow takes precedence over F1 flow when both conditions might be true
     // F2 Learn steps use LetterTrain, F2 Practice and Apply steps use LetterHunt
-    if (isF2FlowActive && f2FlowStep?.step && milestoneLevel === "B") {
+    else if (isF2FlowActive && f2FlowStep?.step && milestoneLevel === "B") {
       const currentF2Step = getF2FlowStep();
       const f2StepType = currentF2Step.step?.type;
       const expectedMechanism =
@@ -8572,6 +8871,235 @@ const Practice = () => {
           }
         }
       }
+    } else if (mechanism && mechanism.name === "letterLauncher") {
+      // F3 flow uses Letter Launcher for Practice and Apply steps
+      if (isF3FlowActive && f3FlowStep?.step && milestoneLevel === "B") {
+        const currentF3Step = getF3FlowStep();
+        const f3StepType = currentF3Step.step?.type;
+        console.log("LetterLauncher render - F3 flow check:", {
+          f3FlowIndexState,
+          currentF3StepIndex: currentF3Step.index,
+          f3StepType,
+          mechanism: mechanism?.name,
+          step: currentF3Step.step,
+          hasStep: !!currentF3Step.step,
+        });
+
+        // If we don't have a valid step, wait for next render
+        if (!currentF3Step.step) {
+          console.warn(
+            "LetterLauncher render - No F3 step found at index:",
+            currentF3Step.index,
+            "waiting for next render"
+          );
+          return null;
+        }
+
+        // Get F3 config
+        const lang = getLocalData("lang") || "en";
+        const f3Config = levelGetContent[lang]?.["F3"];
+        const f3IndexToUse = currentF3Step.index;
+        let currentGetContentForF3;
+        if (f3Config && Array.isArray(f3Config) && f3Config[f3IndexToUse]) {
+          currentGetContentForF3 = f3Config[f3IndexToUse];
+          console.log(
+            "LetterLauncher render - F3 config for index:",
+            f3IndexToUse,
+            "content:",
+            currentGetContentForF3
+          );
+        } else {
+          console.error(
+            "LetterLauncher render - F3 config not found for index:",
+            f3IndexToUse
+          );
+          return (
+            <div style={{ padding: "20px", textAlign: "center" }}>
+              <h2>F3 Flow - Letter Launcher</h2>
+              <p>Letter Launcher component not yet implemented.</p>
+              <p>
+                Step: {f3StepType}
+                {currentF3Step.step?.step}
+              </p>
+            </div>
+          );
+        }
+
+        // Extract config values
+        const letterLauncherLevel =
+          currentGetContentForF3?.letterLauncherLevel || 1;
+        const letterLauncherEndLevel =
+          currentGetContentForF3?.letterLauncherEndLevel;
+        const letterLauncherContentCount =
+          currentGetContentForF3?.letterLauncherContentCount || 10;
+        const contentType =
+          currentF3Step.step?.contentType ||
+          currentGetContentForF3?.contentType ||
+          "letter";
+        const isShowcase = currentGetContentForF3?.isShowcase || false;
+        const applyStep = currentGetContentForF3?.applyStep;
+        const failRedirect = currentGetContentForF3?.failRedirect;
+        const passRedirect = currentGetContentForF3?.passRedirect;
+        const memoryChallengeLevel =
+          currentGetContentForF3?.memoryChallengeLevel;
+        const memoryChallengeEndLevel =
+          currentGetContentForF3?.memoryChallengeEndLevel;
+        const memoryChallengeContentCount =
+          currentGetContentForF3?.memoryChallengeContentCount || 5;
+        const readAloudContentCount =
+          currentGetContentForF3?.readAloudContentCount;
+        const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+
+        // Track which sub-step we're on for Apply steps (Letter Launcher -> Memory Challenge -> Read Aloud)
+        const f3ApplySubStepState =
+          getLocalData("f3ApplySubStep") || "letterLauncher";
+
+        // For Apply steps, check if we need to show Memory Challenge or Read Aloud
+        if (f3StepType === "A" && isShowcase) {
+          // Apply step - check sub-step
+          if (
+            f3ApplySubStepState === "memoryChallenge" &&
+            memoryChallengeLevel
+          ) {
+            // Show Memory Challenge
+            return (
+              <MemoryChallengeMechanics
+                page={page}
+                setPage={setPage}
+                level={memoryChallengeLevel}
+                endLevel={memoryChallengeEndLevel || 3}
+                contentCount={memoryChallengeContentCount}
+                handleNext={() => {
+                  // After Memory Challenge, check if we need Read Aloud
+                  if (readAloudContentCount && applyStep === 2) {
+                    // A2: Show Read Aloud after Memory Challenge
+                    setLocalData("f3ApplySubStep", "readAloud");
+                    // Force re-render by updating mechanism
+                    setMechanism({ id: "readAloud", name: "readAloud" });
+                  } else {
+                    // A1: Complete after Memory Challenge
+                    setLocalData("f3ApplySubStep", null);
+                    if (handleNext) {
+                      handleNext();
+                    }
+                  }
+                }}
+                handleBack={handleBack}
+                applyStep={applyStep}
+                failRedirect={failRedirect}
+                passRedirect={passRedirect}
+                isF3FlowActive={isF3FlowActive}
+                f3FlowStep={f3FlowStep}
+                header="Memory Challenge"
+                points={points}
+                steps={memoryChallengeContentCount}
+                currentStep={1}
+                progressData={progressData}
+                showProgress={true}
+                background="#FFB31F"
+                enableNext={enableNext}
+                setEnableNext={setEnableNext}
+                loading={loading}
+                setOpenMessageDialog={setOpenMessageDialog}
+                vocabCount={vocabCount}
+                wordCount={wordCount}
+                showTimer={false}
+                milestoneLevel={milestoneLevelValue}
+                setProgressData={setProgressData}
+                setCurrentQuestion={setCurrentQuestion}
+              />
+            );
+          } else if (
+            f3ApplySubStepState === "readAloud" &&
+            readAloudContentCount
+          ) {
+            // Show Read Aloud (for A2)
+            // ReadAloud component already exists, use it
+            return (
+              <ReadAloud
+                page={page}
+                setPage={setPage}
+                handleNext={() => {
+                  // Complete A2
+                  setLocalData("f3ApplySubStep", null);
+                  if (handleNext) {
+                    handleNext();
+                  }
+                }}
+                handleBack={handleBack}
+                // ... other ReadAloud props
+              />
+            );
+          }
+          // Default: Show Letter Launcher for Apply step
+        }
+
+        // Render Letter Launcher using library component
+        return (
+          <LetterLauncherMechanics
+            page={page}
+            setPage={setPage}
+            level={letterLauncherLevel}
+            endLevel={letterLauncherEndLevel}
+            contentType={contentType}
+            contentCount={letterLauncherContentCount}
+            isShowCase={isShowcase}
+            handleNext={() => {
+              // For Apply steps, after Letter Launcher completes, move to Memory Challenge
+              if (f3StepType === "A" && isShowcase && memoryChallengeLevel) {
+                setLocalData("f3ApplySubStep", "memoryChallenge");
+                // Trigger re-render by updating mechanism
+                setMechanism({
+                  id: "memoryChallenge",
+                  name: "memoryChallenge",
+                });
+              } else {
+                // Practice step or no Memory Challenge - complete normally
+                // Clear sub-step if set
+                setLocalData("f3ApplySubStep", null);
+                if (handleNext) {
+                  handleNext();
+                }
+              }
+            }}
+            handleBack={handleBack}
+            applyStep={applyStep}
+            failRedirect={failRedirect}
+            passRedirect={passRedirect}
+            isF3FlowActive={isF3FlowActive}
+            f3FlowStep={f3FlowStep}
+            header={
+              f3StepType === "A"
+                ? `Apply ${applyStep} - Letter Speed`
+                : `Practice ${currentF3Step.step?.step} - Letter Speed`
+            }
+            points={points}
+            steps={letterLauncherContentCount}
+            currentStep={1}
+            progressData={progressData}
+            showProgress={true}
+            background="#FFB31F"
+            enableNext={enableNext}
+            setEnableNext={setEnableNext}
+            loading={loading}
+            setOpenMessageDialog={setOpenMessageDialog}
+            vocabCount={vocabCount}
+            wordCount={wordCount}
+            showTimer={false}
+            milestoneLevel={milestoneLevelValue}
+            setProgressData={setProgressData}
+            setCurrentQuestion={setCurrentQuestion}
+          />
+        );
+      } else {
+        // Non-F3 flow - Letter Launcher not yet implemented for other flows
+        return (
+          <div style={{ padding: "20px", textAlign: "center" }}>
+            <h2>Letter Launcher</h2>
+            <p>Letter Launcher component not yet implemented.</p>
+          </div>
+        );
+      }
     } else if (mechanism && mechanism.name === "letterHunt") {
       // For F2 flow, all steps (Learn, Practice, Apply) use LetterHunt
       // F2 flow takes precedence over F1 flow
@@ -9042,6 +9570,79 @@ const Practice = () => {
               f2FlowStep,
               customLetters: customLettersForNonF1, // Pass customLetters from config
             }}
+          />
+        );
+      }
+    } else if (mechanism && mechanism.name === "memoryChallenge") {
+      // Memory Challenge for F3 Apply steps
+      if (isF3FlowActive && f3FlowStep?.step && milestoneLevel === "B") {
+        const currentF3Step = getF3FlowStep();
+        const lang = getLocalData("lang") || "en";
+        const f3Config = levelGetContent[lang]?.["F3"];
+        const f3IndexToUse = currentF3Step.index;
+        const currentGetContentForF3 = f3Config?.[f3IndexToUse];
+
+        if (!currentGetContentForF3) {
+          return null;
+        }
+
+        const memoryChallengeLevel =
+          currentGetContentForF3?.memoryChallengeLevel || 1;
+        const memoryChallengeEndLevel =
+          currentGetContentForF3?.memoryChallengeEndLevel || 3;
+        const memoryChallengeContentCount =
+          currentGetContentForF3?.memoryChallengeContentCount || 5;
+        const readAloudContentCount =
+          currentGetContentForF3?.readAloudContentCount;
+        const applyStep = currentGetContentForF3?.applyStep;
+        const failRedirect = currentGetContentForF3?.failRedirect;
+        const passRedirect = currentGetContentForF3?.passRedirect;
+        const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+
+        return (
+          <MemoryChallengeMechanics
+            page={page}
+            setPage={setPage}
+            level={memoryChallengeLevel}
+            endLevel={memoryChallengeEndLevel}
+            contentCount={memoryChallengeContentCount}
+            handleNext={() => {
+              // After Memory Challenge, check if we need Read Aloud
+              if (readAloudContentCount && applyStep === 2) {
+                // A2: Show Read Aloud after Memory Challenge
+                setLocalData("f3ApplySubStep", "readAloud");
+                setMechanism({ id: "readAloud", name: "readAloud" });
+              } else {
+                // A1: Complete after Memory Challenge
+                setLocalData("f3ApplySubStep", null);
+                if (handleNext) {
+                  handleNext();
+                }
+              }
+            }}
+            handleBack={handleBack}
+            applyStep={applyStep}
+            failRedirect={failRedirect}
+            passRedirect={passRedirect}
+            isF3FlowActive={isF3FlowActive}
+            f3FlowStep={f3FlowStep}
+            header="Memory Challenge"
+            points={points}
+            steps={memoryChallengeContentCount}
+            currentStep={1}
+            progressData={progressData}
+            showProgress={true}
+            background="#FFB31F"
+            enableNext={enableNext}
+            setEnableNext={setEnableNext}
+            loading={loading}
+            setOpenMessageDialog={setOpenMessageDialog}
+            vocabCount={vocabCount}
+            wordCount={wordCount}
+            showTimer={false}
+            milestoneLevel={milestoneLevelValue}
+            setProgressData={setProgressData}
+            setCurrentQuestion={setCurrentQuestion}
           />
         );
       }

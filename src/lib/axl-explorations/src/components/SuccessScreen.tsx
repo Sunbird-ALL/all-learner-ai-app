@@ -68,7 +68,7 @@ export function SuccessScreen({
   }));
 
   return (
-    <div className="h-screen bg-gradient-sky relative overflow-hidden flex items-center justify-center p-2 sm:p-4 md:p-6">
+    <div className="h-full w-full bg-gradient-sky relative overflow-hidden flex items-center justify-center p-2 sm:p-4 md:p-6" style={{ height: "100%", maxHeight: "100vh", overflow: "auto" }}>
       {/* Confetti Animation */}
       {showConfetti && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -100,7 +100,7 @@ export function SuccessScreen({
 
       <div className="relative z-10 max-w-2xl mx-auto w-full px-2 sm:px-4 flex items-center justify-center">
         {/* Main Success Card */}
-        <Card className="p-4 sm:p-6 md:p-8 bg-white/95 backdrop-blur-sm shadow-magical border-2 border-success/30 text-center w-full max-h-[90vh] overflow-y-auto">
+        <Card className="p-4 sm:p-6 md:p-8 bg-white/95 backdrop-blur-sm shadow-magical border-2 border-success/30 text-center w-full max-h-[85vh] overflow-y-auto">
           {/* Trophy and Title */}
           <div className={cn(
             "transition-all duration-1000 transform",

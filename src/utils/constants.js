@@ -10913,6 +10913,166 @@ export const levelGetContent = {
         passRedirect: "F3", // If pass all levels, go to F3
       },
     ],
+    F3: [
+      // Practice 1 - Letter Speed (Letter Launcher) - Alphabet sets
+      {
+        title: "P1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P1",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "letter", // Alphabet sets
+        letterLauncherContentCount: 10,
+      },
+      // Practice 2 - Letter Speed (Letter Launcher) - Alphabet sets
+      {
+        title: "P2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P2",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "letter",
+        letterLauncherLevel: 1,
+        letterLauncherContentCount: 10,
+      },
+      // Practice 3 - Letter Speed (Letter Launcher) - Alphabet sets
+      {
+        title: "P3",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P3",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "letter",
+        letterLauncherContentCount: 10,
+      },
+      // Practice 4 - Letter Speed (Letter Launcher) - Alphabet sets
+      {
+        title: "P4",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P4",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "letter",
+        letterLauncherLevel: 1,
+        letterLauncherContentCount: 10,
+      },
+      // Practice 5 - Letter Speed (Letter Launcher) - Alphabet sets
+      {
+        title: "P5",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P5",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "letter",
+        letterLauncherContentCount: 10,
+      },
+      // Apply 1 - Letter Speed (Letter Launcher) 3 levels + Memory Challenge 3 levels
+      {
+        title: "A1",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_A1",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "letter",
+        letterLauncherLevel: 1,
+        letterLauncherEndLevel: 3,
+        letterLauncherContentCount: 20,
+        isShowcase: true,
+        applyStep: 1,
+        failRedirect: "P1", // If fail at any level, go to Practice 1
+        passRedirect: "P6", // If pass all levels, go to Practice 6
+        // After Letter Launcher completes, show Memory Challenge
+        memoryChallengeLevel: 1,
+        memoryChallengeEndLevel: 3,
+        memoryChallengeContentCount: 5, // 5 sequences per level
+      },
+      // Practice 6 - Syllable Speed (Letter Launcher) - Syllable sets
+      {
+        title: "P6",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P6",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "syllable", // Syllable sets
+        letterLauncherContentCount: 10,
+      },
+      // Practice 7 - Syllable Speed (Letter Launcher) - Syllable sets
+      {
+        title: "P7",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P7",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "syllable",
+        letterLauncherLevel: 1,
+        letterLauncherContentCount: 10,
+      },
+      // Practice 8 - Syllable Speed (Letter Launcher) - Syllable sets
+      {
+        title: "P8",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P8",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "syllable",
+        letterLauncherContentCount: 10,
+      },
+      // Practice 9 - Syllable Speed (Letter Launcher) - Syllable sets
+      {
+        title: "P9",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P9",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "syllable",
+        letterLauncherLevel: 1,
+        letterLauncherContentCount: 10,
+      },
+      // Practice 10 - Syllable Speed (Letter Launcher) - Syllable sets
+      {
+        title: "P10",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_P10",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "syllable",
+        letterLauncherContentCount: 10,
+      },
+      // Apply 2 - Syllable Speed (Letter Launcher) 1 level + Memory Challenge 3 levels + Read Aloud
+      {
+        title: "A2",
+        criteria: "word",
+        template: "simple",
+        tags: "CEFR_GEN_M1_F3_A2",
+        mechanism: { id: "letterLauncher", name: "letterLauncher" },
+        multilingual: true,
+        contentType: "syllable",
+        letterLauncherLevel: 1,
+        letterLauncherEndLevel: 1,
+        letterLauncherContentCount: 10,
+        isShowcase: true,
+        applyStep: 2,
+        failRedirect: "P6", // If fail at any level, go to Practice 6
+        passRedirect: "complete", // If pass all levels, complete F3
+        // After Letter Launcher completes, show Memory Challenge
+        memoryChallengeLevel: 1,
+        memoryChallengeEndLevel: 3,
+        memoryChallengeContentCount: 5, // 5 sequences per level
+        // After Memory Challenge completes, show Read Aloud
+        readAloudContentCount: 10, // 10 simple root words
+      },
+    ],
     0: [
       {
         title: "P1",

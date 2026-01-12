@@ -96,6 +96,42 @@ const routData = [
     component: reviews.LetterHuntDemo,
     requiresAuth: false, // Set to false for easy demo access
   },
+  // ============================================
+  // DEMO ROUTE - Letter Launcher Game Standalone Demo
+  // TODO: Remove this route after demo is complete
+  // Accessible at: /letter-launcher-demo or /letter-launcher-demo/:level
+  // Note: More specific route (with :level) must come first
+  // ============================================
+  {
+    id: "route-014-demo-level",
+    path: "/letter-launcher-demo/:level",
+    component: reviews.LetterLauncherDemo,
+    requiresAuth: false, // Set to false for easy demo access
+  },
+  {
+    id: "route-014-demo",
+    path: "/letter-launcher-demo",
+    component: reviews.LetterLauncherDemo,
+    requiresAuth: false, // Set to false for easy demo access
+  },
+  // ============================================
+  // DEMO ROUTE - Memory Challenge Game Standalone Demo
+  // TODO: Remove this route after demo is complete
+  // Accessible at: /memory-demo or /memory-demo/:level
+  // Note: More specific route (with :level) must come first
+  // ============================================
+  {
+    id: "route-015-demo-level",
+    path: "/memory-demo/:level",
+    component: reviews.MemoryDemo,
+    requiresAuth: false, // Set to false for easy demo access
+  },
+  {
+    id: "route-015-demo",
+    path: "/memory-demo",
+    component: reviews.MemoryDemo,
+    requiresAuth: false, // Set to false for easy demo access
+  },
 ];
 // add login route for test rig
 const TOKEN = localStorage.getItem("apiToken");

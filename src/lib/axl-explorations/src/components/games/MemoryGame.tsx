@@ -15,15 +15,15 @@ import { ArrowLeft, ArrowRight, Globe, CheckCircle, Timer, RotateCcw, TrendingUp
 import { cn } from "../../lib/utils";
 import { useLearningProgress } from "../../hooks/useLearningProgress";
 import { memoryGameDataLoader, type Language as MemoryGameLanguage, type MultilingualMemoryQuestion } from "../../utils/memoryGameDataLoader";
-
-// Extend the MultilingualMemoryQuestion to include MemoryQuestion properties
-// Note: Using MemoryQuestion's language type (from constants) which includes 'hi'
-interface ExtendedMultilingualMemoryQuestion extends Omit<MultilingualMemoryQuestion, 'language'>, MemoryQuestion {}
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Language, getNativeLanguageName } from "../../constants/languages";
 import { sessionManager } from "../../utils/sessionManager";
 import { sessionTelemetryManager } from "../../utils/sessionTelemetryManager";
 import { trackingAssessmentService, QuestionSummary } from "../../utils/trackingAssessmentService";
+
+// Extend the MultilingualMemoryQuestion to include MemoryQuestion properties
+// Note: Using MemoryQuestion's language type (from constants) which includes 'hi'
+interface ExtendedMultilingualMemoryQuestion extends Omit<MultilingualMemoryQuestion, 'language'>, MemoryQuestion {}
 
 interface MemoryGameProps {
   onBack: () => void;
@@ -697,7 +697,7 @@ export function MemoryGame({ onBack }: MemoryGameProps) {
                 {selectedLevel !== null && selectedLevel !== gameProgress.currentLevel ? 
                   `Practice Level ${selectedLevel}` : 
                   `Level ${currentLevel} / ${languageLevels.maxLevels}`
-                } • {difficultySettings.complexity}
+                }
               </span>
             </div>
           </div>

@@ -69,10 +69,12 @@ import rThreeMileImage from "../../assets/r3mile.png";
 import rFourMileImage from "../../assets/r4mile.png";
 import F1Image from "../../assets/F1.png";
 import F2Image from "../../assets/F2.png";
+import F3Image from "../../assets/F3.png";
 import zIndex from "@mui/material/styles/zIndex";
 import { Log } from "../../services/telementryService";
 import { getF1FlowStep, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, F2_FLOW } from "../../RFlow/F2";
+import { getF3FlowStep, F3_FLOW } from "../../RFlow/F3";
 
 const theme = createTheme();
 
@@ -202,6 +204,8 @@ const MainLayout = (props) => {
   const shouldShowF1 = milestoneLevel === "B" && subMilestoneLevel === "F1";
   // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F2"
   const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F2";
+  // F3 flow is triggered when milestone_level is "B" and sub_milestone_level is "F3"
+  const shouldShowF3 = milestoneLevel === "B" && subMilestoneLevel === "F3";
 
   // Check if F1 flow is active
   const f1FlowStep = getF1FlowStep();
@@ -210,6 +214,10 @@ const MainLayout = (props) => {
   // Check if F2 flow is active
   const f2FlowStep = getF2FlowStep();
   const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
+
+  // Check if F3 flow is active
+  const f3FlowStep = getF3FlowStep();
+  const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
 
   console.log("rStep", rStep);
 
@@ -245,17 +253,43 @@ const MainLayout = (props) => {
     });
   };
 
-  let flowNames = isF2FlowActive
+  const getF3FlowNames = () => {
+    if (!isF3FlowActive) return null;
+    return F3_FLOW.map((flowStep) => {
+      if (flowStep.type === "L") {
+        return `L${flowStep.step}`;
+      } else if (flowStep.type === "P") {
+        return `P${flowStep.step}`;
+      } else if (flowStep.type === "A") {
+        return `A${flowStep.step}`;
+      }
+      return "";
+    });
+  };
+
+  let flowNames = isF3FlowActive
+    ? getF3FlowNames() || props?.flowNames
+    : isF2FlowActive
     ? getF2FlowNames() || props?.flowNames
     : isF1FlowActive
     ? getF1FlowNames() || props?.flowNames
     : props?.flowNames;
 
+  // For F3 flow, set activeFlow based on current F3 step
   // For F2 flow, set activeFlow based on current F2 step
   // For F1 flow, set activeFlow based on current F1 step
-  // activeFlow should be L1, P1, L2, P2, A1, etc. based on F2_FLOW or F1_FLOW
+  // activeFlow should be P1, P2, A1, etc. based on F3_FLOW, F2_FLOW, or F1_FLOW
   let activeFlow = props?.activeFlow;
-  if (isF2FlowActive && f2FlowStep.step) {
+  if (isF3FlowActive && f3FlowStep.step) {
+    const currentFlowStep = F3_FLOW[f3FlowStep.index];
+    if (currentFlowStep) {
+      if (currentFlowStep.type === "P") {
+        activeFlow = `P${currentFlowStep.step}`; // P1, P2, P3, etc.
+      } else if (currentFlowStep.type === "A") {
+        activeFlow = `A${currentFlowStep.step}`; // A1, A2
+      }
+    }
+  } else if (isF2FlowActive && f2FlowStep.step) {
     const currentFlowStep = F2_FLOW[f2FlowStep.index];
     if (currentFlowStep) {
       if (currentFlowStep.type === "L") {
@@ -448,8 +482,10 @@ const MainLayout = (props) => {
   }, [startShowCase, isShowCase, gameOverData, audioCache]);
 
   let currentPracticeStep = progressData?.currentPracticeStep;
-  // For F1 flow, use the F1 flow index instead of currentPracticeStep
-  if (isF2FlowActive && f2FlowStep.index !== undefined) {
+  // For F1/F2/F3 flow, use the flow index instead of currentPracticeStep
+  if (isF3FlowActive && f3FlowStep.index !== undefined) {
+    currentPracticeStep = f3FlowStep.index;
+  } else if (isF2FlowActive && f2FlowStep.index !== undefined) {
     currentPracticeStep = f2FlowStep.index;
   } else if (isF1FlowActive && f1FlowStep.index !== undefined) {
     currentPracticeStep = f1FlowStep.index;
@@ -501,8 +537,31 @@ const MainLayout = (props) => {
     });
   };
 
-  // Use F2 steps if F2 flow is active, otherwise F1 steps, otherwise regular practiceSteps
-  const displayPracticeSteps = isF2FlowActive
+  const getF3PracticeSteps = () => {
+    if (!isF3FlowActive) return null;
+    // Use F3_FLOW to generate labels based on type and step number
+    return F3_FLOW.map((flowStep, index) => {
+      let label = "";
+      if (flowStep.type === "L") {
+        label = `L${flowStep.step}`; // Learn: L1, L2, L3, etc.
+      } else if (flowStep.type === "P") {
+        label = `P${flowStep.step}`; // Practice: P1, P2, P3, etc.
+      } else if (flowStep.type === "A") {
+        label = `A${flowStep.step}`; // Apply: A1, A2
+      }
+      return {
+        name: label,
+        title: label,
+        titleNew: label,
+        titleThree: label,
+      };
+    });
+  };
+
+  // Use F3 steps if F3 flow is active, otherwise F2 steps, otherwise F1 steps, otherwise regular practiceSteps
+  const displayPracticeSteps = isF3FlowActive
+    ? getF3PracticeSteps() || practiceSteps
+    : isF2FlowActive
     ? getF2PracticeSteps() || practiceSteps
     : isF1FlowActive
     ? getF1PracticeSteps() || practiceSteps
@@ -785,7 +844,16 @@ const MainLayout = (props) => {
                     }}
                   >
                     <footer>
-                      {isF2FlowActive ? (
+                      {isF3FlowActive ? (
+                        // F3 Flow - Show F3 milestone image
+                        <div style={{ height: "150px", width: "150px" }}>
+                          <img
+                            src={F3Image}
+                            alt="F3"
+                            height={isMobile ? "130px" : "200px"}
+                          />
+                        </div>
+                      ) : isF2FlowActive ? (
                         // F2 Flow - Show F2 milestone image
                         <div style={{ height: "150px", width: "150px" }}>
                           <img
@@ -852,7 +920,8 @@ const MainLayout = (props) => {
                       rFlow === "true" &&
                       ![1, "B"]?.includes(LEVEL) &&
                       !isF1FlowActive &&
-                      !isF2FlowActive
+                      !isF2FlowActive &&
+                      !isF3FlowActive
                     ) && (
                       <Box
                         sx={{
@@ -975,7 +1044,8 @@ const MainLayout = (props) => {
                         {rFlow === "true" &&
                           ![1, "B"]?.includes(LEVEL) &&
                           !isF1FlowActive &&
-                          !isF2FlowActive && (
+                          !isF2FlowActive &&
+                          !isF3FlowActive && (
                             <Box
                               sx={{
                                 display: "flex",
