@@ -1030,9 +1030,19 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
 
   // Don't render if questions aren't loaded yet
   if (!currentQuestion) {
+    // Log debug info to help diagnose blank screen issues
+    console.log("LetterGame - No currentQuestion, showing loading:", {
+      questionsLength: questions.length,
+      currentQuestionIndex,
+      selectedLanguage,
+      selectedLevel,
+      currentLevel,
+      customLetters,
+      lettersToUse: customLetters && customLetters.length > 0 ? customLetters : 'using level-based',
+    });
     return (
       <div className="min-h-screen bg-gradient-cool flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+        <div className="text-white text-xl">Loading questions...</div>
       </div>
     );
   }
