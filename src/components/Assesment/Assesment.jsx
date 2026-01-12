@@ -98,6 +98,7 @@ import LanguageModalNew from "../../utils/LanguageModal";
 import { AudioDiagnosticModal } from "../AudioDiagnostic";
 import { getF1FlowStep } from "../../RFlow/F1";
 import { getF2FlowStep } from "../../RFlow/F2";
+import { getF3FlowStep } from "../../RFlow/F3";
 
 const theme = createTheme();
 
@@ -429,11 +430,23 @@ export const ProfileHeader = ({
   const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
   const shouldShowF1 = milestoneLevel === "B" && subMilestoneLevel === "F1";
   const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F2";
+  const shouldShowF3 = milestoneLevel === "B" && subMilestoneLevel === "F3";
   const f2FlowStep = getF2FlowStep();
+  const f3FlowStep = getF3FlowStep();
   const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
+  const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
 
-  // If F2 flow is active and username contains "F1", replace with "F2"
+  // If F3 flow is active and username contains "F1" or "F2", replace with "F3"
   if (
+    isF3FlowActive &&
+    username &&
+    typeof username === "string" &&
+    (username.includes("F1") || username.includes("F2"))
+  ) {
+    username = username.replace(/F[12]/g, "F3");
+  }
+  // If F2 flow is active and username contains "F1", replace with "F2"
+  else if (
     isF2FlowActive &&
     username &&
     typeof username === "string" &&
@@ -1332,18 +1345,33 @@ const Assesment = ({ discoverStart }) => {
   const shouldShowF1 = milestoneLevel === "B" && subMilestoneLevel === "F1";
   // F2 flow is triggered when milestone_level is "B" and sub_milestone_level is "F2"
   const shouldShowF2 = milestoneLevel === "B" && subMilestoneLevel === "F2";
+  // F3 flow is triggered when milestone_level is "B" and sub_milestone_level is "F3"
+  const shouldShowF3 = milestoneLevel === "B" && subMilestoneLevel === "F3";
 
   // Check if F1 flow is active
   const f1FlowStep = getF1FlowStep();
   const isF1FlowActive = shouldShowF1 && f1FlowStep.step !== null;
 
-  console.log("Discovery Start - F1/F2 detection:", {
+  // Check if F2 flow is active
+  const f2FlowStep = getF2FlowStep();
+  const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
+
+  // Check if F3 flow is active
+  const f3FlowStep = getF3FlowStep();
+  const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
+
+  console.log("Discovery Start - F1/F2/F3 detection:", {
     milestoneLevel,
     subMilestoneLevel,
     shouldShowF1,
     shouldShowF2,
+    shouldShowF3,
     isF1FlowActive,
+    isF2FlowActive,
+    isF3FlowActive,
     f1FlowStepIndex: f1FlowStep.index,
+    f2FlowStepIndex: f2FlowStep.index,
+    f3FlowStepIndex: f3FlowStep.index,
   });
 
   const sectionStyle = {
@@ -1451,7 +1479,9 @@ const Assesment = ({ discoverStart }) => {
                     textShadow: "#000 1px 0 10px",
                   }}
                 >
-                  {shouldShowF2
+                  {shouldShowF3
+                    ? "Start F3"
+                    : shouldShowF2
                     ? "Start F2"
                     : isF1FlowActive
                     ? "Start F1"

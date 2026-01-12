@@ -522,7 +522,7 @@ export function MemoryGamePreview({
               <div className="flex items-center justify-center gap-2 text-white/80 text-xs">
                 <Clock className="h-3 w-3" />
                 <span>
-                  {contentLanguage === 'en' ? 'Level' : contentLanguage === 'te' ? 'స్థాయి' : contentLanguage === 'kn' ? 'ಮಟ್ಟ' : 'पातळी'} {level} • {difficulty.toLowerCase()} • {estimatedTime}
+                  {contentLanguage === 'en' ? 'Level' : contentLanguage === 'te' ? 'స్థాయి' : contentLanguage === 'kn' ? 'ಮಟ್ಟ' : 'पातळी'} {level} • {estimatedTime}
                 </span>
               </div>
             </div>

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
-import { TrendingUp, Home, RotateCcw, ChevronRight } from "lucide-react";
+import { TrendingUp, RotateCcw, ChevronRight, Rocket, Fuel } from "lucide-react";
 import { Language } from "../constants/languages";
+import { SpaceBackground } from "./SpaceBackground";
 
 interface TryAgainProps {
   totalCorrect: number;
@@ -13,6 +14,11 @@ interface TryAgainProps {
   onTryAgain: () => void;
   onBackToHome: () => void;
   livesLost?: boolean; // Flag to indicate if game ended due to lives lost
+  fuelMode?: boolean; // Show fuel-based completion screen
+  fuelCollected?: number; // Fuel collected
+  fuelRequired?: number; // Fuel required to pass
+  destination?: string; // Mission destination name
+  useSpaceBackground?: boolean; // Use space background
 }
 
 export function TryAgain({ 
@@ -23,10 +29,30 @@ export function TryAgain({
   gameKey,
   onTryAgain, 
   onBackToHome,
-  livesLost = false
+  livesLost = false,
+  fuelMode = false,
+  fuelCollected = 0,
+  fuelRequired = 0,
+  destination = "",
+  useSpaceBackground = false
 }: TryAgainProps) {
   const [isVisible, setIsVisible] = useState(false);
   const scorePercentage = totalQuestions > 0 ? (totalCorrect / totalQuestions) * 100 : 0;
+
+  // Add CSS for twinkle animation if not already added
+  useEffect(() => {
+    if (!document.getElementById('try-again-twinkle-style')) {
+      const style = document.createElement('style');
+      style.id = 'try-again-twinkle-style';
+      style.textContent = `
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }, []);
 
   // Add delay before showing the component for smooth transition
   useEffect(() => {
@@ -37,27 +63,95 @@ export function TryAgain({
     return () => clearTimeout(timer);
   }, []);
 
-  return (
-    <div className={`h-full bg-gradient-cool flex items-center justify-center p-2 sm:p-4 transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <Card className={`max-w-md w-full bg-white/95 backdrop-blur-sm shadow-2xl transition-all duration-700 ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}>
-        <div className="p-4 sm:p-6 text-center">
-          <div className="mt-6 mb-4 sm:mb-6">
+  const content = (
+    <div className={`h-full w-full flex items-center justify-center p-4 sm:p-6 transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ height: "100%", width: "100%", overflow: "hidden" }}>
+      <Card className={`${fuelMode && useSpaceBackground ? 'w-full max-w-md sm:max-w-lg' : 'max-w-md w-full'} ${fuelMode && useSpaceBackground ? 'bg-gradient-to-b from-slate-900/95 to-slate-800/95 border border-white/20' : 'bg-white/95 backdrop-blur-sm'} shadow-2xl transition-all duration-700 ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`} style={{
+        ...(fuelMode && useSpaceBackground ? {
+          backgroundImage: `radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                            radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+                            radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 70%)`,
+          backgroundSize: '100% 100%',
+          position: 'relative',
+          maxHeight: 'calc(100vh - 200px)',
+          height: 'auto',
+          width: '100%',
+          maxWidth: '500px',
+          overflow: 'hidden'
+        } : {
+          width: '100%',
+          maxWidth: '90vw',
+          maxHeight: 'calc(100vh - 200px)',
+          overflow: 'hidden'
+        })
+      }}>
+        {/* Starry background effect for fuel mode */}
+        {fuelMode && useSpaceBackground && (
+          <div className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none">
+            {[...Array(30)].map((_, i) => (
+              <div
+                key={`star-${i}`}
+                className="absolute rounded-full"
+                style={{
+                  width: `${Math.random() * 2 + 0.5}px`,
+                  height: `${Math.random() * 2 + 0.5}px`,
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animation: `twinkle ${2 + Math.random() * 2}s ease-in-out infinite`,
+                  animationDelay: `${Math.random() * 2}s`
+                }}
+              />
+            ))}
+          </div>
+        )}
+        <div className="p-4 sm:p-6 text-center relative z-10">
+          <div className="mb-4 sm:mb-6">
+            {/* Rocket icon for fuel mode */}
+            {fuelMode && (
+              <div className="mb-4 flex justify-center">
+                <Rocket className="h-16 w-16 sm:h-20 sm:w-20 text-red-500" />
+              </div>
+            )}
+            
             <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 mx-auto mb-3 sm:mb-4 flex items-center justify-center">
               {livesLost ?
                 <><span className="text-4xl sm:text-5xl md:text-6xl animate-pulse">💔</span>
                 <span className="text-4xl sm:text-5xl md:text-6xl animate-pulse delay-100">💔</span>
                 <span className="text-4xl sm:text-5xl md:text-6xl animate-pulse delay-200">💔</span></>
                 :
-                <TrendingUp className="h-8 w-8 sm:h-10 sm:w-10 text-red-500" />
+                fuelMode ? null : <TrendingUp className="h-8 w-8 sm:h-10 sm:w-10 text-red-500" />
               }
             </div>
+            
+            {/* Fuel mode display */}
+            {fuelMode && (
+              <>
+                <h1 className={`text-2xl sm:text-3xl font-bold mb-4 ${useSpaceBackground ? 'text-white' : 'text-gray-800'}`}>
+                  Need more fuel!
+                </h1>
+                <div className="mb-4 flex items-center justify-center gap-2">
+                  <Fuel className="h-6 w-6 text-red-500" />
+                  <span className={`text-xl sm:text-2xl font-bold ${useSpaceBackground ? 'text-white' : 'text-gray-800'}`}>
+                    {fuelCollected} / {fuelRequired}
+                  </span>
+                  <Fuel className="h-6 w-6 text-blue-500" />
+                </div>
+                {destination && (
+                  <div className={`mb-4 flex items-center justify-center gap-2 ${useSpaceBackground ? 'text-white/90' : 'text-gray-600'}`}>
+                    <span className="text-2xl">🌙</span>
+                    <span className="text-lg font-semibold">{destination}</span>
+                  </div>
+                )}
+              </>
+            )}
+            
             {/* "Oh No!" text - only in English, for all languages */}
             {livesLost && (
               <h1 className="text-3xl sm:text-4xl md:text-4xl font-bold text-gray-800 mb-2 animate-fade-in">
                 Game Over!
               </h1>
             )}
-            { !livesLost && <>
+            { !livesLost && !fuelMode && <>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
               {selectedLanguage === 'te' ? 'మంచి ప్రయత్నం! 💪' :
                selectedLanguage === 'mr' ? 'चांगला प्रयत्न! 💪' :
@@ -92,10 +186,10 @@ export function TryAgain({
               onClick={onTryAgain}
               variant="game"
               size="lg"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600"
             >
-                <RotateCcw className="h-5 w-5" />
-                Try Again
+              <RotateCcw className="h-5 w-5" />
+              Play Again
             </Button>
             
           </div>
@@ -103,4 +197,14 @@ export function TryAgain({
       </Card>
     </div>
   );
+
+  if (useSpaceBackground) {
+    return (
+      <SpaceBackground className="h-full w-full" style={{ height: "100%", width: "100%", overflow: "hidden" }}>
+        {content}
+      </SpaceBackground>
+    );
+  }
+
+  return content;
 }

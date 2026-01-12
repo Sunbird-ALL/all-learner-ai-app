@@ -13,3 +13,5 @@ export { LetterHunt } from "./LetterHunt";
 export { TowreFlowPage } from "./TowreFlow";
 // DEMO ROUTE - Remove after demo
 export { LetterHuntDemo } from "./LetterHuntDemo";
+export { LetterLauncherDemo } from "./LetterLauncherDemo";
+export { MemoryDemo } from "./MemoryDemo";
