@@ -24,6 +24,7 @@ interface SuccessScreenProps {
   onBackToHub: () => void;
   onNextLevel?: () => void;
   hasNextLevel?: boolean;
+  continueButtonText?: string; // Optional: custom text for the continue/next level button
 }
 
 export function SuccessScreen({
@@ -36,7 +37,8 @@ export function SuccessScreen({
   onPlayAgain,
   onBackToHub,
   onNextLevel,
-  hasNextLevel = false
+  hasNextLevel = false,
+  continueButtonText
 }: SuccessScreenProps) {
   const [showConfetti, setShowConfetti] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
@@ -168,7 +170,7 @@ export function SuccessScreen({
                   className="flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-                  Next Level
+                  {continueButtonText || "Next Level"}
                 </Button>
               )}
               

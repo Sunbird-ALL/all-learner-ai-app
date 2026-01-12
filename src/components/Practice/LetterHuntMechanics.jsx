@@ -230,14 +230,21 @@ const LetterHuntMechanicsContent = ({
       }
     };
 
+    // Add timeout fallback to ensure session initializes even if there's an error
+    const timeoutId = setTimeout(() => {
+      console.warn("Session initialization timeout - proceeding anyway");
+      setSessionInitialized(true);
+    }, 3000); // 3 second timeout
+
     // Add class to body to prevent scrolling
     document.body.classList.add("letter-hunt-active");
 
     initializeSession();
 
-    // Cleanup: remove class when component unmounts
+    // Cleanup: remove class when component unmounts and clear timeout
     return () => {
       document.body.classList.remove("letter-hunt-active");
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -253,6 +260,27 @@ const LetterHuntMechanicsContent = ({
 
     // Map Learn step redirects to F1 flow indices
     // F1_FLOW: L1(0), P1(1), L2(2), P2(3), L3(4), P3(5), A1(6), L4(7), P4(8), L5(9), P5(10), L6(11), P6(12), A2(13), L7(14), P7(15), L8(16), P8(17), L9(18), P9(19), A3(20)
+    const redirectMap = {
+      L1: 0, // Learn 1
+      L2: 2, // Learn 2
+      L3: 4, // Learn 3
+      L4: 7, // Learn 4
+      L5: 9, // Learn 5
+      L6: 11, // Learn 6
+      L7: 14, // Learn 7
+      L8: 16, // Learn 8
+      L9: 18, // Learn 9
+    };
+
+    return redirectMap[redirect] !== undefined ? redirectMap[redirect] : null;
+  };
+
+  // Helper function to map redirect string (e.g., "L1", "L4", "L7") to F2 flow index
+  const getF2FlowIndexFromRedirect = (redirect) => {
+    if (!redirect) return null;
+
+    // Map Learn step redirects to F2 flow indices
+    // F2_FLOW: L1(0), P1(1), L2(2), P2(3), L3(4), P3(5), A1(6), L4(7), P4(8), L5(9), P5(10), L6(11), P6(12), A2(13), L7(14), P7(15), L8(16), P8(17), L9(18), P9(19), A3(20)
     const redirectMap = {
       L1: 0, // Learn 1
       L2: 2, // Learn 2
@@ -402,6 +430,16 @@ const LetterHuntMechanicsContent = ({
   // Handle level completion - update learner progress and exit
   const handleLevelComplete = async (completedLevel) => {
     try {
+      console.log("handleLevelComplete called:", {
+        completedLevel,
+        isShowCase,
+        applyStep,
+        endLevel,
+        passRedirect,
+        isF1FlowActive,
+        isF2FlowActive,
+      });
+
       // For Apply steps in showcase mode, check if all levels are complete
       if (isShowCase && applyStep && endLevel && completedLevel >= endLevel) {
         // All levels passed - redirect to passRedirect
@@ -411,63 +449,138 @@ const LetterHuntMechanicsContent = ({
 
         // Store redirect info to execute after success screen is shown
         const executeRedirect = async () => {
-          if (passRedirect === "F2") {
-            // Transition to F2 milestone - this would need to be handled by the parent
-            // For now, just exit and let the parent handle the milestone transition
-            if (handleNext) {
-              handleNext(false);
-            }
-            return;
-          }
-
-          // Redirect to the specified Learn step
-          const targetFlowIndex = getF1FlowIndexFromRedirect(passRedirect);
-          if (targetFlowIndex !== null && isF1FlowActive) {
-            setLocalData("f1FlowIndex", targetFlowIndex);
-            const targetStep = targetFlowIndex;
-            const lang = getLocalData("lang") || "en";
-            const sessionId = getLocalData("sessionId");
-            const currentPracticeProgress = Math.round(
-              (targetStep / (practiceSteps?.length || 21)) * 100
+          console.log("executeRedirect called:", {
+            passRedirect,
+            isF1FlowActive,
+            isF2FlowActive,
+          });
+          if (passRedirect === "F2" || passRedirect === "F3") {
+            // Transition to next milestone - use handleA3Pass to properly transition
+            console.log(
+              `A3 passed - redirecting to ${passRedirect} via handleA3Pass`
             );
-
-            await addLesson({
-              sessionId: sessionId,
-              milestone: "practice",
-              lesson: targetStep,
-              progress: currentPracticeProgress,
-              language: lang,
-              milestoneLevel: milestoneLevel,
-            });
-
-            const updatedPracticeProgress = {
-              currentQuestion: 0,
-              currentPracticeProgress: currentPracticeProgress,
-              currentPracticeStep: targetStep,
-            };
-            setLocalData(
-              "practiceProgress",
-              JSON.stringify(updatedPracticeProgress)
-            );
-
-            if (setProgressData && typeof setProgressData === "function") {
-              setProgressData(updatedPracticeProgress);
-            }
-
-            if (
-              setCurrentQuestion &&
-              typeof setCurrentQuestion === "function"
-            ) {
-              setCurrentQuestion(0);
-            }
-
-            // Delay redirect to allow success screen to show first (4 seconds)
+            // Delay to allow success screen to show first
             setTimeout(() => {
-              if (handleNext) {
+              if (handleA3Pass) {
+                handleA3Pass();
+              } else if (handleNext) {
+                // Fallback if handleA3Pass not available
                 handleNext(false);
               }
             }, 4000); // 4 second delay to ensure success screen is visible
+            return;
           }
+
+          // For F1 flow, redirect to the specified Learn step
+          if (isF1FlowActive) {
+            const targetFlowIndex = getF1FlowIndexFromRedirect(passRedirect);
+            if (targetFlowIndex !== null) {
+              setLocalData("f1FlowIndex", targetFlowIndex);
+              const targetStep = targetFlowIndex;
+              const lang = getLocalData("lang") || "en";
+              const sessionId = getLocalData("sessionId");
+              const currentPracticeProgress = Math.round(
+                (targetStep / (practiceSteps?.length || 21)) * 100
+              );
+
+              await addLesson({
+                sessionId: sessionId,
+                milestone: "practice",
+                lesson: targetStep,
+                progress: currentPracticeProgress,
+                language: lang,
+                milestoneLevel: milestoneLevel,
+              });
+
+              const updatedPracticeProgress = {
+                currentQuestion: 0,
+                currentPracticeProgress: currentPracticeProgress,
+                currentPracticeStep: targetStep,
+              };
+              setLocalData(
+                "practiceProgress",
+                JSON.stringify(updatedPracticeProgress)
+              );
+
+              if (setProgressData && typeof setProgressData === "function") {
+                setProgressData(updatedPracticeProgress);
+              }
+
+              if (
+                setCurrentQuestion &&
+                typeof setCurrentQuestion === "function"
+              ) {
+                setCurrentQuestion(0);
+              }
+
+              // Delay redirect to allow success screen to show first (4 seconds)
+              setTimeout(() => {
+                if (handleNext) {
+                  handleNext(false);
+                }
+              }, 4000); // 4 second delay to ensure success screen is visible
+              return;
+            }
+          }
+
+          // For F2 flow, redirect to the specified Learn step
+          if (isF2FlowActive) {
+            const targetFlowIndex = getF2FlowIndexFromRedirect(passRedirect);
+            if (targetFlowIndex !== null) {
+              console.log(
+                `F2 Apply step ${applyStep} passed - redirecting to ${passRedirect} (F2 flow index ${targetFlowIndex})`
+              );
+              setLocalData("f2FlowIndex", targetFlowIndex);
+              const targetStep = targetFlowIndex;
+              const lang = getLocalData("lang") || "en";
+              const sessionId = getLocalData("sessionId");
+              const currentPracticeProgress = Math.round(
+                (targetStep / (practiceSteps?.length || 21)) * 100
+              );
+
+              await addLesson({
+                sessionId: sessionId,
+                milestone: "practice",
+                lesson: targetStep,
+                progress: currentPracticeProgress,
+                language: lang,
+                milestoneLevel: milestoneLevel,
+              });
+
+              const updatedPracticeProgress = {
+                currentQuestion: 0,
+                currentPracticeProgress: currentPracticeProgress,
+                currentPracticeStep: targetStep,
+              };
+              setLocalData(
+                "practiceProgress",
+                JSON.stringify(updatedPracticeProgress)
+              );
+
+              if (setProgressData && typeof setProgressData === "function") {
+                setProgressData(updatedPracticeProgress);
+              }
+
+              if (
+                setCurrentQuestion &&
+                typeof setCurrentQuestion === "function"
+              ) {
+                setCurrentQuestion(0);
+              }
+
+              // Delay redirect to allow success screen to show first (4 seconds)
+              setTimeout(() => {
+                if (handleNext) {
+                  handleNext(false);
+                }
+              }, 4000); // 4 second delay to ensure success screen is visible
+              return;
+            }
+          }
+
+          console.warn(
+            `Could not redirect: passRedirect="${passRedirect}", isF1FlowActive=${isF1FlowActive}, isF2FlowActive=${isF2FlowActive}`
+          );
         };
 
         // Execute redirect after a delay to allow success screen to render
