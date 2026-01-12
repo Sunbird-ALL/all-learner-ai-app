@@ -959,6 +959,10 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     const maxAllowedLevel = endLevel !== undefined ? endLevel : languageLevels.maxLevels;
     const hasNextLevelInRange = currentLevel < maxAllowedLevel;
     
+    // For Apply steps (isShowcase with endLevel), when all levels are complete, show "Continue" to redirect
+    const isApplyStepComplete = isShowcase && endLevel !== undefined && currentLevel >= endLevel && apply_level;
+    const shouldShowContinue = isApplyStepComplete && onLevelComplete;
+    
     return (
       <SuccessScreen
         gameTitle={'letterHunt'}
@@ -969,8 +973,15 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         newAchievements={getNewAchievements()}
         onPlayAgain={resetGame}
         onBackToHub={onBack}
-        hasNextLevel={hasNextLevelInRange}
+        hasNextLevel={shouldShowContinue ? true : hasNextLevelInRange}
         onNextLevel={() => {
+          // If Apply step is complete, call onLevelComplete to trigger redirect
+          if (shouldShowContinue && onLevelComplete) {
+            console.log(`Apply step ${apply_level} completed - calling onLevelComplete to redirect`);
+            onLevelComplete(currentLevel);
+            return;
+          }
+          
           // ✅ MANUAL LEVEL ADVANCEMENT: Force advance to next level when user clicks "Next Level"
           const nextLevel = Math.min(currentLevel + 1, maxAllowedLevel);
           
@@ -1024,6 +1035,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           // (handled in the level completion logic around line 699)
           // The "Next Level" button is for transitioning TO the next level, not completing it
         }}
+        continueButtonText={shouldShowContinue ? "Continue" : undefined}
       />
     );
   }

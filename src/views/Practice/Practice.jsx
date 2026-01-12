@@ -5941,13 +5941,27 @@ const Practice = () => {
       // For F1 flow (milestone_level === "B"), restore F1 flow index from backend
       // This ensures progress is restored on relogin (localStorage is cleared on logout)
       if (levels === "B") {
-        // For F1 flow, lesson number from backend stores the F1 flow index
+        // For F1 flow, lesson number from backend is 1-indexed (1-21)
+        // But F1_FLOW array is 0-indexed (0-20), so convert: lesson 21 = index 20 (A3)
+        // Convert 1-indexed lesson to 0-indexed flow index
+        const f1FlowIndex = userState > 0 ? userState - 1 : 0;
+
         // Check if this is a valid F1 flow index (0 to F1_FLOW.length - 1)
-        if (userState >= 0 && userState < F1_FLOW.length) {
+        if (f1FlowIndex >= 0 && f1FlowIndex < F1_FLOW.length) {
           // Restore F1 flow index from backend
-          setLocalData("f1FlowIndex", userState);
+          console.log(
+            `Restoring F1 flow progress: lesson ${userState} (1-indexed) -> flow index ${f1FlowIndex} (0-indexed) -> ${
+              F1_FLOW[f1FlowIndex]?.type
+            }${F1_FLOW[f1FlowIndex]?.step || ""}`
+          );
+          setLocalData("f1FlowIndex", f1FlowIndex);
+          // Update userState to match the flow index for practiceProgress calculation
+          userState = f1FlowIndex;
         } else {
           // If backend doesn't have valid F1 flow index, start from beginning
+          console.warn(
+            `Invalid F1 flow index ${f1FlowIndex} from lesson ${userState}, starting from beginning`
+          );
           setLocalData("f1FlowIndex", 0);
           userState = 0;
         }
@@ -8703,8 +8717,8 @@ const Practice = () => {
                     ? `Guess the below image`
                     : `Letter Recognition`,
                 points,
-                steps: letterHuntSteps,
-                currentStep: currentQuestion + 1,
+                steps: letterHuntSteps || 10, // Ensure steps is never 0 or undefined
+                currentStep: (currentQuestion || 0) + 1,
                 progressData,
                 showProgress: true,
                 background: "#FFB31F",
