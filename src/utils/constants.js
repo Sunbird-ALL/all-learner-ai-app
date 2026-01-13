@@ -10982,7 +10982,7 @@ export const levelGetContent = {
         contentType: "letter",
         letterLauncherLevel: 1,
         letterLauncherEndLevel: 3,
-        letterLauncherContentCount: 20,
+        letterLauncherContentCount: 10,
         isShowcase: true,
         applyStep: 1,
         failRedirect: "P1", // If fail at any level, go to Practice 1

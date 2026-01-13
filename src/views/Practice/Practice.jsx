@@ -4462,6 +4462,27 @@ const Practice = () => {
     isLast: f3FlowIndexState === F3_FLOW.length - 1,
   };
   const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
+
+  // Helper function to map redirect strings to F3 flow indices
+  // "P1" -> 0, "P2" -> 1, "P3" -> 2, "P4" -> 3, "P5" -> 4, "P6" -> 6, etc.
+  const getF3FlowIndexFromRedirect = (redirect) => {
+    if (!redirect || typeof redirect !== "string") return null;
+
+    // Match "P" followed by a number (e.g., "P1", "P6")
+    const match = redirect.match(/^P(\d+)$/);
+    if (match) {
+      const practiceNum = parseInt(match[1], 10);
+      // F3_FLOW indices: P1=0, P2=1, P3=2, P4=3, P5=4, A1=5, P6=6, P7=7, P8=8, P9=9, P10=10, A2=11
+      // So P1-P5 map to 0-4, P6-P10 map to 6-10
+      if (practiceNum >= 1 && practiceNum <= 5) {
+        return practiceNum - 1; // P1=0, P2=1, P3=2, P4=3, P5=4
+      } else if (practiceNum >= 6 && practiceNum <= 10) {
+        return practiceNum; // P6=6, P7=7, P8=8, P9=9, P10=10
+      }
+    }
+
+    return null;
+  };
   const isF2LearnStep = isF2FlowActive && f2FlowStep.step?.type === "L";
   const isF2PracticeStep = isF2FlowActive && f2FlowStep.step?.type === "P";
   const isF2ApplyStep = isF2FlowActive && f2FlowStep.step?.type === "A";
@@ -5263,6 +5284,72 @@ const Practice = () => {
         getLocalData("f3FlowAdvancedByLetterLauncher") === "true";
 
       if (isF3FlowByMilestone) {
+        // Check if there's a redirect request (e.g., from failed level)
+        const f3FlowRedirect = getLocalData("f3FlowRedirect");
+        if (f3FlowRedirect) {
+          const targetIndex = getF3FlowIndexFromRedirect(f3FlowRedirect);
+          if (targetIndex !== null) {
+            console.log(
+              `F3 flow redirect requested: ${f3FlowRedirect} -> index ${targetIndex}`
+            );
+            // Set F3 flow index to target
+            setLocalData("f3FlowIndex", targetIndex);
+            setF3FlowIndexState(targetIndex);
+            // Clear redirect flag
+            setLocalData("f3FlowRedirect", null);
+            // Clear f3ApplySubStep to ensure A1 starts from Letter Launcher, not Memory Challenge
+            setLocalData("f3ApplySubStep", null);
+
+            // Update practice progress
+            const lang = getLocalData("lang") || "en";
+            const sessionId = getLocalData("sessionId");
+            const totalF3Steps = F3_FLOW.length;
+            const currentPracticeProgress = Math.round(
+              ((targetIndex + 1) / totalF3Steps) * 100
+            );
+
+            try {
+              await addLesson({
+                sessionId: sessionId,
+                milestone: "practice",
+                lesson: targetIndex.toString(),
+                progress: currentPracticeProgress,
+                language: lang,
+                milestoneLevel: "B",
+              });
+              console.log("F3 flow redirect progress saved:", {
+                index: targetIndex,
+                progress: currentPracticeProgress,
+              });
+            } catch (e) {
+              console.error("Error storing F3 flow redirect progress:", e);
+            }
+
+            // Update local practice progress
+            let practiceProgress = getLocalData("practiceProgress");
+            practiceProgress = practiceProgress
+              ? JSON.parse(practiceProgress)
+              : {};
+            practiceProgress = {
+              ...practiceProgress,
+              currentQuestion: 0,
+              currentPracticeProgress: currentPracticeProgress,
+              currentPracticeStep: targetIndex,
+            };
+            setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+            setProgressData(practiceProgress);
+            setCurrentQuestion(0);
+
+            // Return early - redirect handled
+            return;
+          } else {
+            console.warn(
+              `F3 flow redirect failed: could not map "${f3FlowRedirect}" to flow index`
+            );
+            setLocalData("f3FlowRedirect", null);
+          }
+        }
+
         // Always get current F3 flow step from localStorage (it may have been advanced by LetterLauncherMechanics)
         // Read directly from localStorage to get the most up-to-date value
         const savedF3Index = getLocalData("f3FlowIndex");
@@ -6109,7 +6196,11 @@ const Practice = () => {
 
       const resLessons = await getLessonProgressByID(lang);
 
-      // TODO: Handle Error for lessons - no lesson progress - starting point should be P1
+      // Check if lesson progress is available
+      const hasLessonProgress =
+        resLessons?.result?.lesson !== null &&
+        resLessons?.result?.lesson !== undefined &&
+        Number.isInteger(Number(resLessons?.result?.lesson));
 
       if (
         process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
@@ -6126,9 +6217,9 @@ const Practice = () => {
           });
       }
 
-      let userState = Number.isInteger(Number(resLessons?.result?.lesson))
+      let userState = hasLessonProgress
         ? Number(resLessons.result?.lesson)
-        : 0;
+        : null; // Set to null initially to trigger fallback check
 
       // TODO: revisit this - looks like not required
       let practiceProgress = getLocalData("practiceProgress");
@@ -6139,6 +6230,11 @@ const Practice = () => {
       if (levels === "B") {
         const subMilestoneLevel =
           getMilestoneDetails?.data?.sub_milestone_level;
+
+        // If userState is null (no lesson progress), initialize to 0 for fallback
+        if (userState === null) {
+          userState = 0;
+        }
 
         if (subMilestoneLevel === "F1") {
           // For F1 flow, lesson number from backend is 1-indexed (1-21)
@@ -6208,13 +6304,22 @@ const Practice = () => {
         }
       }
 
+      // Ensure userState is a number before calculating progress
+      // If userState is still null at this point, it will be set in the fallback logic below
+      const finalUserState = userState !== null ? userState : 0;
+
       practiceProgress = {
         currentQuestion: 0,
-        currentPracticeProgress: (userState / practiceSteps.length) * 100,
-        currentPracticeStep: userState || 0,
+        currentPracticeProgress: (finalUserState / practiceSteps.length) * 100,
+        currentPracticeStep: finalUserState,
       };
 
       const getCurrentContent = (stepKey) => {
+        // Handle null stepKey
+        if (stepKey === null || stepKey === undefined) {
+          return null;
+        }
+
         const lang = getLocalData("lang") || "en";
         console.log("curGetCont2", lang, levels);
         // For F1 flow (levels === "B"), use "F1" as the level key
@@ -6237,7 +6342,7 @@ const Practice = () => {
         }
       };
 
-      const currentGetContent = getCurrentContent(userState);
+      let currentGetContent = getCurrentContent(userState);
 
       console.log("curContent", currentGetContent, userState);
       console.log(
@@ -6249,10 +6354,138 @@ const Practice = () => {
         newLevel
       );
 
-      // Add null check to prevent error if currentGetContent is undefined
+      // Fallback: If lesson steps are not available, check milestone level and load first step
+      if (!currentGetContent) {
+        console.warn(
+          "currentGetContent is undefined for userState:",
+          userState,
+          "level:",
+          newLevel,
+          "levels:",
+          levels,
+          "- Attempting fallback to first step of milestone level"
+        );
+
+        // Determine fallback step based on milestone level
+        if (levels === "B") {
+          // For milestone level "B" (F1/F2/F3 flows), start at index 0
+          const subMilestoneLevel =
+            getMilestoneDetails?.data?.sub_milestone_level;
+
+          if (subMilestoneLevel === "F1") {
+            console.log("Fallback: Loading first step of F1 flow (index 0)");
+            setLocalData("f1FlowIndex", 0);
+            userState = 0;
+          } else if (subMilestoneLevel === "F2") {
+            console.log("Fallback: Loading first step of F2 flow (index 0)");
+            setLocalData("f2FlowIndex", 0);
+            userState = 0;
+          } else if (subMilestoneLevel === "F3") {
+            console.log("Fallback: Loading first step of F3 flow (index 0)");
+            setLocalData("f3FlowIndex", 0);
+            userState = 0;
+          } else {
+            // Default to F1 if sub_milestone_level is not specified
+            console.log(
+              "Fallback: Loading first step of F1 flow (default for milestone B)"
+            );
+            setLocalData("f1FlowIndex", 0);
+            userState = 0;
+          }
+
+          // Try to get content again with fallback userState
+          currentGetContent = getCurrentContent(userState);
+
+          // Update practiceProgress for F1/F2/F3 flows
+          // For F flows, progress is based on flow length, not practiceSteps.length
+          let flowLength = 0;
+          if (subMilestoneLevel === "F1") {
+            flowLength = F1_FLOW.length;
+          } else if (subMilestoneLevel === "F2") {
+            flowLength = F2_FLOW.length;
+          } else if (subMilestoneLevel === "F3") {
+            flowLength = F3_FLOW.length;
+          } else {
+            flowLength = F1_FLOW.length; // Default to F1
+          }
+
+          practiceProgress = {
+            currentQuestion: 0,
+            currentPracticeProgress:
+              flowLength > 0 ? ((userState + 1) / flowLength) * 100 : 0,
+            currentPracticeStep: userState,
+          };
+        } else {
+          // For other milestone levels (m1, m2, etc.), find first step in that level's config
+          const lang = getLocalData("lang") || "en";
+          const levelKey = newLevel;
+          const levelConfig = levelGetContent[lang]?.[levelKey];
+
+          if (
+            levelConfig &&
+            Array.isArray(levelConfig) &&
+            levelConfig.length > 0
+          ) {
+            // Find first step that matches a practice step
+            const firstStep = levelConfig.find((step) => {
+              // Check if step title matches any practice step name
+              return practiceSteps?.some((ps) => ps.name === step.title);
+            });
+
+            if (firstStep) {
+              // Find the practice step index that matches
+              const practiceStepIndex = practiceSteps?.findIndex(
+                (ps) => ps.name === firstStep.title
+              );
+
+              if (practiceStepIndex !== -1 && practiceStepIndex !== undefined) {
+                console.log(
+                  `Fallback: Loading first step of milestone level ${levels} (${firstStep.title}, index ${practiceStepIndex})`
+                );
+                userState = practiceStepIndex;
+                currentGetContent = firstStep;
+              } else {
+                // If no matching practice step found, use first config item
+                console.log(
+                  `Fallback: Loading first config item of milestone level ${levels} (${levelConfig[0]?.title})`
+                );
+                userState = 0;
+                currentGetContent = levelConfig[0];
+              }
+            } else {
+              // If no matching step found, use first config item
+              console.log(
+                `Fallback: Loading first config item of milestone level ${levels} (${levelConfig[0]?.title})`
+              );
+              userState = 0;
+              currentGetContent = levelConfig[0];
+            }
+
+            // Update practiceProgress for non-F flows
+            practiceProgress = {
+              currentQuestion: 0,
+              currentPracticeProgress: (userState / practiceSteps.length) * 100,
+              currentPracticeStep: userState,
+            };
+          } else {
+            console.error(
+              `Fallback failed: No config found for milestone level ${levels} (key: ${levelKey})`
+            );
+            setLoading(false);
+            return;
+          }
+        }
+
+        // Save updated progress to localStorage and state
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        setProgressData(practiceProgress);
+        console.log("Fallback: Updated practiceProgress:", practiceProgress);
+      }
+
+      // Final check: If still no content, error out
       if (!currentGetContent) {
         console.error(
-          "currentGetContent is undefined for userState:",
+          "Failed to load content even after fallback. userState:",
           userState,
           "level:",
           newLevel,
@@ -7887,14 +8120,14 @@ const Practice = () => {
             currentStep: currentQuestion + 1,
             progressData,
             showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            background: isShowCase
+              ? "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)"
+              : undefined,
             playTeacherAudio,
             callUpdateLearner: isShowCase,
             disableScreen,
             isShowCase,
-            handleBack: !isShowCase && handleBack,
+            handleBack: !isShowCase ? handleBack : undefined,
             setEnableNext,
             loading,
             setOpenMessageDialog,
@@ -8970,6 +9203,16 @@ const Practice = () => {
                 endLevel={memoryChallengeEndLevel || 3}
                 contentCount={memoryChallengeContentCount}
                 handleNext={() => {
+                  // Check for redirect request first
+                  const f3FlowRedirect = getLocalData("f3FlowRedirect");
+                  if (f3FlowRedirect) {
+                    // Redirect is handled by Practice.jsx's handleNext
+                    if (handleNext) {
+                      handleNext();
+                    }
+                    return;
+                  }
+
                   // After Memory Challenge, check if we need Read Aloud
                   if (readAloudContentCount && applyStep === 2) {
                     // A2: Show Read Aloud after Memory Challenge
@@ -8990,6 +9233,7 @@ const Practice = () => {
                 passRedirect={passRedirect}
                 isF3FlowActive={isF3FlowActive}
                 f3FlowStep={f3FlowStep}
+                isShowCase={isShowcase}
                 header="Memory Challenge"
                 points={points}
                 steps={memoryChallengeContentCount}
@@ -9066,8 +9310,26 @@ const Practice = () => {
             contentCount={letterLauncherContentCount}
             isShowCase={isShowcase}
             handleNext={() => {
-              // For Apply steps, after Letter Launcher completes, move to Memory Challenge
+              // FIRST: Check if there's a redirect request (e.g., from failed level)
+              // This takes priority over moving to Memory Challenge
+              const f3FlowRedirect = getLocalData("f3FlowRedirect");
+              if (f3FlowRedirect) {
+                console.log(
+                  `Letter Launcher handleNext - Redirect flag found: ${f3FlowRedirect}, redirecting instead of moving to Memory Challenge`
+                );
+                // Call the main handleNext which will handle the redirect
+                if (handleNext) {
+                  handleNext();
+                }
+                return;
+              }
+
+              // SECOND: For Apply steps, after Letter Launcher completes successfully, move to Memory Challenge
+              // Only move to Memory Challenge if there's no redirect flag
               if (f3StepType === "A" && isShowcase && memoryChallengeLevel) {
+                console.log(
+                  `Letter Launcher handleNext - All levels passed, moving to Memory Challenge`
+                );
                 setLocalData("f3ApplySubStep", "memoryChallenge");
                 // Trigger re-render by updating mechanism
                 setMechanism({
@@ -9618,6 +9880,7 @@ const Practice = () => {
         const applyStep = currentGetContentForF3?.applyStep;
         const failRedirect = currentGetContentForF3?.failRedirect;
         const passRedirect = currentGetContentForF3?.passRedirect;
+        const isShowcase = currentGetContentForF3?.isShowcase || false;
         const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
 
         return (
@@ -9628,6 +9891,16 @@ const Practice = () => {
             endLevel={memoryChallengeEndLevel}
             contentCount={memoryChallengeContentCount}
             handleNext={() => {
+              // Check for redirect request first
+              const f3FlowRedirect = getLocalData("f3FlowRedirect");
+              if (f3FlowRedirect) {
+                // Redirect is handled by Practice.jsx's handleNext
+                if (handleNext) {
+                  handleNext();
+                }
+                return;
+              }
+
               // After Memory Challenge, check if we need Read Aloud
               if (readAloudContentCount && applyStep === 2) {
                 // A2: Show Read Aloud after Memory Challenge
@@ -9647,6 +9920,7 @@ const Practice = () => {
             passRedirect={passRedirect}
             isF3FlowActive={isF3FlowActive}
             f3FlowStep={f3FlowStep}
+            isShowCase={isShowcase}
             header="Memory Challenge"
             points={points}
             steps={memoryChallengeContentCount}

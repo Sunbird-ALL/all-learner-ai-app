@@ -173,6 +173,12 @@ const LetterLauncherMechanicsContent = ({
         ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
         : ["at", "an", "in", "on", "am", "it", "up", "en", "ed", "ot"];
 
+    console.log("Letter Launcher - Generating questions:", {
+      contentCount,
+      contentType,
+      expectedQuestions: contentCount,
+    });
+
     for (let i = 0; i < contentCount; i++) {
       const audioLetter = letters[Math.floor(Math.random() * letters.length)];
       // Randomly decide if displayed letter matches audio (70% match, 30% mismatch)
@@ -189,6 +195,12 @@ const LetterLauncherMechanicsContent = ({
         language: initialLanguage,
       });
     }
+
+    console.log("Letter Launcher - Generated questions:", {
+      generatedCount: questions.length,
+      expectedCount: contentCount,
+      match: questions.length === contentCount,
+    });
 
     return questions;
   };
@@ -392,33 +404,20 @@ const LetterLauncherMechanicsContent = ({
 
   const handleTimeUp = () => {
     setIsTimerRunning(false);
-    // Check pass criteria based on contentCount
-    // For Apply steps, check if fuel requirement is met (fuel is primary metric)
-    // For Practice steps, check fuel OR correct count (70% accuracy)
-    const { requiredFuel } = getFuelRequirement(currentGameLevel, contentCount);
-    const hasEnoughFuel = currentFuel >= requiredFuel;
-    // Calculate correct count threshold based on contentCount (70% accuracy, minimum 7)
-    const minCorrectThreshold = Math.max(7, Math.floor(contentCount * 0.7));
-    const hasEnoughCorrect = correctCount >= minCorrectThreshold;
 
-    if (effectiveIsShowCase) {
-      // For Apply steps: pass if user has enough fuel (fuel is the primary metric)
-      // Fuel already accounts for both speed and accuracy
-      if (hasEnoughFuel) {
-        handleLevelPass();
-      } else {
-        handleLevelFail();
+    // IMPORTANT: Don't complete the game immediately when timer expires
+    // For Apply steps with timer: stop showing new questions, but allow current question to finish
+    // The game will complete in handleAnswerSelect after the current question is answered
+    // This ensures all questions that were started can be completed
+
+    console.log(
+      "Letter Launcher - Timer expired, stopping timer but allowing current question to complete:",
+      {
+        currentQuestionIndex,
+        questionsLength: questions.length,
+        totalQuestions: contentCount,
       }
-    } else {
-      // For Practice steps: pass if user has enough fuel OR enough correct answers
-      // Fuel is preferred metric, but also allow passing with good accuracy
-      // Use the threshold calculated above (70% accuracy, minimum 7)
-      if (hasEnoughFuel || hasEnoughCorrect) {
-        handleLevelPass();
-      } else {
-        handleLevelFail();
-      }
-    }
+    );
   };
 
   const handleAnswerSelect = (isMatch) => {
@@ -464,23 +463,57 @@ const LetterLauncherMechanicsContent = ({
     // Move to next question after feedback
     // DO NOT update progress here - only update when ALL questions are complete
     setTimeout(() => {
-      if (currentQuestionIndex < questions.length - 1) {
-        // Move to next question - game is still in progress
-        setCurrentQuestionIndex((prev) => prev + 1);
-        setShowFeedback(false);
-        setSelectedAnswer(null);
-        setShowLetter(false);
-        setFuelEarned(null);
-        // DO NOT call handleNext here - game is not complete yet
-      } else {
-        // Completed all questions in this level
+      // Check if timer expired and we should stop showing new questions
+      const timerExpired = !isTimerRunning && effectiveIsShowCase;
+
+      // Check if all questions have been answered
+      // When we answer question at index N, we've answered N+1 questions total
+      // IMPORTANT: Use contentCount to determine completion, not questions.length
+      // This ensures we complete after answering all contentCount questions
+      const questionsAnswered = currentQuestionIndex + 1; // +1 because we just answered this question
+      const allQuestionsAnswered = questionsAnswered >= contentCount;
+
+      // Debug: Verify question count matches contentCount
+      if (questions.length !== contentCount) {
+        console.warn("Letter Launcher - Question count mismatch:", {
+          questionsLength: questions.length,
+          contentCount,
+          expected: contentCount,
+          actual: questions.length,
+        });
+      }
+
+      console.log("Letter Launcher - After answer, checking completion:", {
+        currentQuestionIndex,
+        questionsLength: questions.length,
+        totalQuestions: contentCount,
+        questionsAnswered,
+        allQuestionsAnswered,
+        timerExpired,
+        isTimerRunning,
+        effectiveIsShowCase,
+      });
+
+      // IMPORTANT: Always complete if all questions are answered, regardless of timer
+      if (allQuestionsAnswered) {
+        // All questions answered - complete the game
+        console.log(
+          "Letter Launcher - All questions answered, completing game:",
+          {
+            currentQuestionIndex,
+            questionsLength: questions.length,
+            totalQuestions: contentCount,
+            questionsAnswered,
+            allQuestionsAnswered,
+          }
+        );
+
         // Check pass criteria before deciding what to do
         const { requiredFuel } = getFuelRequirement(
           currentGameLevel,
           contentCount
         );
         const hasEnoughFuel = currentFuel >= requiredFuel;
-        // Calculate correct count threshold based on contentCount (70% accuracy, minimum 7)
         const minCorrectThreshold = Math.max(7, Math.floor(contentCount * 0.7));
         const hasEnoughCorrect = correctCount >= minCorrectThreshold;
 
@@ -505,31 +538,24 @@ const LetterLauncherMechanicsContent = ({
           // For Apply steps: pass if user has enough fuel (fuel is the primary metric)
           // Fuel already accounts for both speed and accuracy
           if (hasEnoughFuel) {
-            // User passed - check if more levels to complete
-            // For Apply steps with endLevel, check if we need to continue to next level
-            // For Practice steps or when endLevel is undefined, complete immediately
-            if (endLevel && currentGameLevel < endLevel) {
-              // Move to next level - user passed this level
-              setCurrentGameLevel((prev) => prev + 1);
-              setCurrentQuestionIndex(0);
-              setCorrectCount(0);
-              setWrongCount(0);
-              setShowFeedback(false);
-              setSelectedAnswer(null);
-              setShowLetter(false);
-              setFuelEarned(null);
-              setCurrentFuel(0);
-              setQuestionSummaries([]);
-              setLevelStartTime(Date.now());
-              const newQuestions = generateQuestions();
-              setQuestions(newQuestions);
-              // DO NOT call handleNext - more levels to complete
-            } else {
-              // All levels completed and passed - show success screen
-              handleLevelPass();
-            }
+            // User passed - show success screen for this level
+            // The success screen will handle moving to next level or Memory Challenge
+            console.log(
+              `Letter Launcher - Level ${currentGameLevel} passed${
+                endLevel && currentGameLevel < endLevel
+                  ? `, more levels to complete`
+                  : `, all levels complete`
+              }`
+            );
+            handleLevelPass();
           } else {
-            // User failed - show failure screen, do NOT advance
+            // User failed - show failure screen, will redirect to P1 on "Try Again"
+            // Level 1/2/3 fail → P1
+            console.log(
+              `Letter Launcher - Level ${currentGameLevel} failed, will redirect to ${
+                failRedirect || "P1"
+              } on Try Again`
+            );
             handleLevelFail();
           }
         } else {
@@ -544,6 +570,74 @@ const LetterLauncherMechanicsContent = ({
             handleLevelFail();
           }
         }
+      } else if (timerExpired && currentQuestionIndex < questions.length - 1) {
+        // Timer expired but not all questions answered - complete with current progress
+        console.log(
+          "Letter Launcher - Timer expired, completing with current progress:",
+          {
+            currentQuestionIndex,
+            questionsLength: questions.length,
+            totalQuestions: contentCount,
+            answeredQuestions: currentQuestionIndex + 1,
+          }
+        );
+
+        // Check pass criteria before deciding what to do
+        const { requiredFuel } = getFuelRequirement(
+          currentGameLevel,
+          contentCount
+        );
+        const hasEnoughFuel = currentFuel >= requiredFuel;
+        const minCorrectThreshold = Math.max(7, Math.floor(contentCount * 0.7));
+        const hasEnoughCorrect = correctCount >= minCorrectThreshold;
+
+        // Debug logging
+        console.log("Letter Launcher - Pass/Fail Check (Timer Expired):", {
+          correctCount,
+          contentCount,
+          minCorrectThreshold,
+          hasEnoughCorrect,
+          currentFuel,
+          requiredFuel,
+          hasEnoughFuel,
+          effectiveIsShowCase,
+        });
+
+        // For Apply steps (effectiveIsShowCase), pass if user has enough fuel
+        // For Practice steps (!effectiveIsShowCase), pass if user has enough correct answers
+        if (effectiveIsShowCase) {
+          if (hasEnoughFuel) {
+            console.log(
+              `Letter Launcher - Level ${currentGameLevel} passed (timer expired)`
+            );
+            handleLevelPass();
+          } else {
+            console.log(
+              `Letter Launcher - Level ${currentGameLevel} failed (timer expired)`
+            );
+            handleLevelFail();
+          }
+        } else {
+          if (hasEnoughFuel || hasEnoughCorrect) {
+            handleStepComplete();
+          } else {
+            handleLevelFail();
+          }
+        }
+      } else if (currentQuestionIndex < contentCount - 1 && !timerExpired) {
+        // Move to next question - game is still in progress and timer hasn't expired
+        // IMPORTANT: Use contentCount to ensure we show all questions
+        console.log("Letter Launcher - Moving to next question:", {
+          currentIndex: currentQuestionIndex,
+          nextIndex: currentQuestionIndex + 1,
+          totalQuestions: contentCount,
+          questionsLength: questions.length,
+        });
+        setCurrentQuestionIndex((prev) => prev + 1);
+        setShowFeedback(false);
+        setSelectedAnswer(null);
+        setShowLetter(false);
+        setFuelEarned(null);
       }
     }, 2000);
   };
@@ -620,35 +714,31 @@ const LetterLauncherMechanicsContent = ({
       }
     }
 
-    // For Apply steps, check if all levels are passed
-    // Only check endLevel if it's defined (Apply steps), otherwise complete immediately
-    if (effectiveIsShowCase && endLevel && currentGameLevel >= endLevel) {
-      // All levels passed - show success screen, then user can continue to next step
-      // Don't call handleNext immediately - let user see success screen
-      // The SuccessScreen's Continue button will advance the flow
-    } else if (effectiveIsShowCase) {
-      // Move to next level within the same Apply step - DO NOT update progress yet
-      // Game continues with next level, so progress should not be updated
-      // This only happens if user PASSED the current level
-      setCurrentGameLevel((prev) => prev + 1);
-      setCurrentQuestionIndex(0);
-      setCorrectCount(0);
-      setWrongCount(0);
-      setIsGameComplete(false);
-      setIsTimerRunning(false);
-      setLevelFailed(false);
-      setQuestionSummaries([]);
-      setLevelStartTime(Date.now());
-      const newQuestions = generateQuestions();
-      setQuestions(newQuestions);
-      // DO NOT call handleNext here - more levels to complete within this Apply step
-    }
+    // Show success screen - don't advance level yet
+    // The SuccessScreen's Continue button will handle moving to next level or Memory Challenge
   };
 
   const handleLevelFail = async () => {
     setIsTimerRunning(false);
     setIsGameComplete(true);
     setLevelFailed(true);
+
+    // For Apply steps with failRedirect, store failure info for redirect
+    // Level 1/2/3 fail → P1 (failRedirect)
+    if (effectiveIsShowCase && failRedirect && isF3FlowActive) {
+      // Store failure flag in localStorage so it persists across state resets
+      setLocalData("letterLauncherLevelFailed", "true");
+      setLocalData("letterLauncherFailedLevel", currentGameLevel.toString());
+      console.log(
+        `Letter Launcher - Level ${currentGameLevel} failed in Apply step (A1), will redirect to ${failRedirect} when user clicks "Try Again"`,
+        {
+          effectiveIsShowCase,
+          failRedirect,
+          isF3FlowActive,
+          currentGameLevel,
+        }
+      );
+    }
 
     // Calculate total time spent
     const timeSpent = levelStartTime
@@ -707,6 +797,7 @@ const LetterLauncherMechanicsContent = ({
 
     // Show failure screen - don't call handleNext immediately
     // User can choose to play again or go back
+    // When user clicks "Try Again", resetGame() will redirect to P1
   };
 
   const handleStepComplete = async () => {
@@ -773,6 +864,50 @@ const LetterLauncherMechanicsContent = ({
   };
 
   const resetGame = () => {
+    // For Apply steps with failRedirect, redirect to Practice 1 when level fails
+    // Level 1/2/3 fail → P1 (failRedirect)
+    // Check both state and localStorage flag to ensure we catch the failure
+    const levelFailedFlag =
+      getLocalData("letterLauncherLevelFailed") === "true";
+    const shouldRedirect =
+      effectiveIsShowCase &&
+      failRedirect &&
+      isF3FlowActive &&
+      (levelFailed || levelFailedFlag);
+
+    if (shouldRedirect) {
+      const failedLevel =
+        getLocalData("letterLauncherFailedLevel") || currentGameLevel;
+      console.log(
+        `Letter Launcher - Level ${failedLevel} failed in A1, redirecting to ${failRedirect} (Practice 1)`,
+        {
+          effectiveIsShowCase,
+          failRedirect,
+          isF3FlowActive,
+          levelFailed,
+          levelFailedFlag,
+          currentGameLevel,
+          failedLevel,
+        }
+      );
+      // Clear failure flags
+      setLocalData("letterLauncherLevelFailed", null);
+      setLocalData("letterLauncherFailedLevel", null);
+      // Clear any sub-step state (e.g., memoryChallenge) to prevent moving to Memory Challenge
+      setLocalData("f3ApplySubStep", null);
+      // Store redirect info for Practice.jsx to handle
+      setLocalData("f3FlowRedirect", failRedirect);
+      // Reset state first
+      setIsGameComplete(false);
+      setLevelFailed(false);
+      // Then redirect by calling handleNext
+      // The handleNext in Practice.jsx will check for f3FlowRedirect first
+      if (handleNext) {
+        handleNext();
+        return;
+      }
+    }
+
     // Reset game state for "Play Again" or "Try Again"
     // IMPORTANT: This does NOT advance the flow - user retries the same step
     setIsGameComplete(false);
@@ -848,9 +983,34 @@ const LetterLauncherMechanicsContent = ({
       ? finalFuel >= requiredFuel
       : totalCorrect > 0; // Practice steps pass if at least one correct
 
-    // If level failed OR didn't pass criteria, show failure screen
-    // User must retry the same step - do NOT advance flow
-    if (levelFailed || !hasPassed) {
+    // Debug logging
+    console.log("Letter Launcher - Completion Screen Check:", {
+      isGameComplete,
+      levelFailed,
+      finalFuel,
+      requiredFuel,
+      hasPassed,
+      effectiveIsShowCase,
+      totalCorrect,
+      totalQuestions,
+    });
+
+    // IMPORTANT: Check actual fuel value first - if user has enough fuel, they should pass
+    // Override levelFailed state if fuel is actually sufficient
+    const actuallyHasEnoughFuel = finalFuel >= requiredFuel;
+    const shouldShowFailure = levelFailed && !actuallyHasEnoughFuel;
+
+    // If user has enough fuel but levelFailed is true, correct the state
+    if (actuallyHasEnoughFuel && levelFailed) {
+      console.warn(
+        `Letter Launcher - State mismatch: levelFailed is true but fuel ${finalFuel} >= required ${requiredFuel}. Correcting to pass.`
+      );
+      setLevelFailed(false);
+    }
+
+    // Show failure screen only if user actually failed (not enough fuel)
+    if (shouldShowFailure) {
+      // User actually failed - show failure screen
       // Show failure screen with fuel display
       return (
         <MainLayout
@@ -951,11 +1111,55 @@ const LetterLauncherMechanicsContent = ({
               onBackToHub={handleGameBack}
               hasNextLevel={true}
               onNextLevel={async () => {
-                // Continue to next step/level - clear completion state and advance
+                // Continue to next step/level - clear completion state
                 setIsGameComplete(false);
                 setLevelFailed(false);
 
-                // Advance F3 flow and save progress if F3 flow is active
+                // For Apply steps: check if there are more levels or if all levels are complete
+                if (effectiveIsShowCase && endLevel) {
+                  if (currentGameLevel >= endLevel) {
+                    // All levels passed - move to Memory Challenge
+                    console.log(
+                      `Letter Launcher - All ${endLevel} levels passed (Level ${currentGameLevel}), moving to Memory Challenge`
+                    );
+                    // Clear any redirect flags
+                    setLocalData("f3FlowRedirect", null);
+                    // Just call handleNext - it will handle moving to Memory Challenge
+                    if (handleNext) {
+                      handleNext();
+                    }
+                    return;
+                  } else {
+                    // More levels to complete - advance to next level
+                    console.log(
+                      `Letter Launcher - Level ${currentGameLevel} passed, moving to Level ${
+                        currentGameLevel + 1
+                      }`
+                    );
+                    // Reset game state for next level
+                    setCurrentGameLevel((prev) => prev + 1);
+                    setCurrentQuestionIndex(0);
+                    setCorrectCount(0);
+                    setWrongCount(0);
+                    setShowFeedback(false);
+                    setSelectedAnswer(null);
+                    setShowLetter(false);
+                    setFuelEarned(null);
+                    setCurrentFuel(0);
+                    setQuestionSummaries([]);
+                    setLevelStartTime(Date.now());
+                    setIsTimerRunning(false);
+                    const newQuestions = generateQuestions();
+                    setQuestions(newQuestions);
+                    // Reset start screen for next level
+                    if (effectiveIsShowCase) {
+                      effectiveSetStartShowCase(false);
+                    }
+                    return;
+                  }
+                }
+
+                // For Practice steps: advance F3 flow and save progress
                 if (isF3FlowActive && f3FlowStep?.step) {
                   // Get current F3 flow step before advancing
                   const currentF3FlowStep = getF3FlowStep();
@@ -1113,9 +1317,7 @@ const LetterLauncherMechanicsContent = ({
                 <span>
                   {effectiveIsShowCase && endLevel
                     ? `Level ${currentGameLevel} / ${endLevel}`
-                    : effectiveIsShowCase
-                    ? `Level ${currentGameLevel}`
-                    : `Practice ${f3FlowStep?.step?.step || 1}`}{" "}
+                    : `Level ${currentGameLevel}`}{" "}
                   • Mission: {missionDestination}
                 </span>
               </div>
