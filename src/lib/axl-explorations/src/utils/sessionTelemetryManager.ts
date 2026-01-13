@@ -61,13 +61,22 @@ class SessionTelemetryManager {
     if (this.currentSession && this.currentSession.userId === userId && this.currentSession.isActive) {
       console.log('✅ Reusing existing session on page reload:', this.currentSession.sessionId);
       
+      // Get auth token from localStorage
+      // Try both 'token' and 'apiToken' keys, and also check localStorage directly
+      const authToken = typeof window !== 'undefined' 
+        ? (localStorage.getItem('token') || localStorage.getItem('apiToken') || '')
+        : '';
+      
+      console.log('🔐 Telemetry initialization - Auth token:', authToken ? 'Present' : 'Missing');
+      
       // Re-initialize telemetry with existing session ID
       await sunbirdTelemetryService.initialize(userId, {
         sid: this.currentSession.sessionId, // Use existing session ID
         cdata: [
           { type: 'User', id: userId },
           { type: 'Application', id: 'axl-game-demo', ver: '1.0.0' }
-        ]
+        ],
+        authtoken: authToken
       });
       
       // CRITICAL: Send START event even when reusing session after page refresh
@@ -97,6 +106,14 @@ class SessionTelemetryManager {
     this.sessionHistory.push(sessionData);
     this.saveSessionData();
 
+    // Get auth token from localStorage
+    // Try both 'token' and 'apiToken' keys, and also check localStorage directly
+    const authToken = typeof window !== 'undefined' 
+      ? (localStorage.getItem('token') || localStorage.getItem('apiToken') || '')
+      : '';
+    
+    console.log('🔐 Telemetry initialization - Auth token:', authToken ? 'Present' : 'Missing');
+    
     // Initialize telemetry service with the session ID
     // check if there is already a session active
     await sunbirdTelemetryService.initialize(userId, {
@@ -104,7 +121,8 @@ class SessionTelemetryManager {
       cdata: [
         { type: 'User', id: userId },
         { type: 'Application', id: 'axl-game-demo', ver: '1.0.0' }
-      ]
+      ],
+      authtoken: authToken
     });
 
     // Send START event for user session

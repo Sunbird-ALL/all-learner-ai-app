@@ -59,13 +59,15 @@ class SunbirdTelemetryWrapper {
   }
 
   private generateDeviceId(): void {
-    let deviceId = localStorage.getItem('axl_device_id');
-    if (!deviceId) {
+    const storedDeviceId = localStorage.getItem('axl_device_id');
+    if (!storedDeviceId) {
       // Generate UUID v4 format device ID using uuid library
-      deviceId = uuidv4();
-      localStorage.setItem('axl_device_id', deviceId);
+      const newDeviceId = uuidv4();
+      localStorage.setItem('axl_device_id', newDeviceId);
+      this.deviceId = newDeviceId;
+    } else {
+      this.deviceId = storedDeviceId;
     }
-    this.deviceId = deviceId;
   }
 
   private generateSessionId(): void {
@@ -176,6 +178,13 @@ class SunbirdTelemetryWrapper {
         cdata: userConfig.cdata || [],
         ...userConfig
       };
+      
+      // Log auth token status (without exposing the actual token)
+      if (this.config.authtoken) {
+        console.log('✅ Telemetry config - Auth token is present (length:', this.config.authtoken.length, ')');
+      } else {
+        console.warn('⚠️ Telemetry config - Auth token is missing. API may return "Authorization header missing" error.');
+      }
 
       // Always re-initialize to ensure SDK uses the new sessionId
       // We've already ended any previous session above if needed
