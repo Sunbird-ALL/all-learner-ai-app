@@ -8,7 +8,7 @@ import {
   levelGetContent,
 } from "../../utils/constants";
 import { addLesson } from "../../services/orchestration/orchestrationService";
-import { getF1FlowStep, advanceF1Flow } from "../../RFlow/F1";
+import { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
 
 // Import from library
@@ -67,12 +67,68 @@ const LetterHuntMechanicsContent = ({
   const navigate = useNavigate();
 
   // Handle A3 pass - redirect to discovery start (for F1) or next flow (for F2)
-  const handleA3Pass = () => {
+  const handleA3Pass = async () => {
     if (isF1FlowActive) {
-      console.log("F1 A3 passed - redirecting to discovery start");
+      console.log("F1 A3 passed - saving progress and redirecting to F2");
+
+      // Save F1 A3 completion progress before transitioning to F2
+      const lang = getLocalData("lang") || "en";
+      const sessionId = getLocalData("sessionId");
+
+      if (sessionId && lang) {
+        try {
+          // F1 A3 is the last step (index 20), so save as lesson 21 (1-indexed) with 100% progress
+          await addLesson({
+            sessionId: sessionId,
+            milestone: "practice",
+            lesson: "21", // F1 A3 is index 20, so 1-indexed is 21
+            progress: 100, // F1 flow is complete
+            language: lang,
+            milestoneLevel: "B",
+          });
+          console.log("F1 A3 completion progress saved successfully");
+        } catch (error) {
+          console.error("Error saving F1 A3 completion progress:", error);
+        }
+      }
+
       // Clear F1 flow index to reset for F2
       setLocalData("f1FlowIndex", null);
-      // Redirect to discovery start
+
+      // IMPORTANT: Reset F2 flow index to 0 to start from F2-A1 (not F2-A3)
+      // This ensures F2 starts fresh after F1 completes
+      setLocalData("f2FlowIndex", 0);
+
+      // Save F2 progress as lesson 1 (index 0) to ensure backend knows to start F2 from beginning
+      try {
+        const f2TotalSteps = F2_FLOW.length;
+        const f2Progress = Math.round(((0 + 1) / f2TotalSteps) * 100); // Index 0 = lesson 1, progress = 1/21 * 100
+
+        await addLesson({
+          sessionId: sessionId,
+          milestone: "practice",
+          lesson: "1", // F2 starts at index 0, so 1-indexed is 1
+          progress: f2Progress,
+          language: lang,
+          milestoneLevel: "B",
+        });
+        console.log(
+          "F2 flow initialized at lesson 1 (index 0) after F1 completion"
+        );
+      } catch (error) {
+        console.error("Error initializing F2 flow progress:", error);
+      }
+
+      // Clear practice progress for F2 to start fresh
+      setLocalData("practiceProgress", null);
+
+      // Also clear any F2 flow completion flags
+      setLocalData("f2FlowComplete", null);
+
+      console.log(
+        "F1 A3 passed - F1 flow cleared, F2 flow reset to index 0, redirecting to discovery start"
+      );
+      // Redirect to discovery start (which will detect F2 flow and start from F2-A1)
       navigate("/discover-start");
     } else if (isF2FlowActive) {
       console.log("F2 A3 passed - redirecting to discovery start");
@@ -351,15 +407,25 @@ const LetterHuntMechanicsContent = ({
 
       // If we have a valid targetFlowIndex, proceed with redirect
       if (targetFlowIndex !== null) {
-        const currentPracticeProgress = Math.round(
-          (targetStep / (practiceSteps?.length || 21)) * 100
+        // For F1/F2 flows, use F1_FLOW.length or F2_FLOW.length instead of practiceSteps.length
+        // Ensure progress doesn't exceed 100%
+        const totalSteps = isF1FlowActive
+          ? F1_FLOW.length
+          : isF2FlowActive
+          ? F2_FLOW.length
+          : practiceSteps?.length || 21;
+        const calculatedProgress = (targetStep / totalSteps) * 100;
+        const currentPracticeProgress = Math.min(
+          100,
+          Math.round(calculatedProgress)
         );
 
         // Update learner progress via addLesson
+        // Convert to 1-indexed for backend
         await addLesson({
           sessionId: sessionId,
           milestone: "practice",
-          lesson: targetStep,
+          lesson: (targetStep + 1).toString(), // Convert to 1-indexed for backend
           progress: currentPracticeProgress,
           language: lang,
           milestoneLevel: milestoneLevel || "B",
@@ -483,10 +549,11 @@ const LetterHuntMechanicsContent = ({
                 (targetStep / (practiceSteps?.length || 21)) * 100
               );
 
+              // Convert to 1-indexed for backend
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: targetStep,
+                lesson: (targetStep + 1).toString(), // Convert to 1-indexed for backend
                 progress: currentPracticeProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
@@ -538,10 +605,11 @@ const LetterHuntMechanicsContent = ({
                 (targetStep / (practiceSteps?.length || 21)) * 100
               );
 
+              // Convert to 1-indexed for backend
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: targetStep,
+                lesson: (targetStep + 1).toString(), // Convert to 1-indexed for backend
                 progress: currentPracticeProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
@@ -619,6 +687,20 @@ const LetterHuntMechanicsContent = ({
       const lang = getLocalData("lang") || "en";
       const sessionId = getLocalData("sessionId");
 
+      // Validate required fields
+      if (!sessionId) {
+        console.error(
+          "LetterHuntMechanics - sessionId is missing, cannot save progress"
+        );
+        return;
+      }
+      if (!lang) {
+        console.error(
+          "LetterHuntMechanics - language is missing, cannot save progress"
+        );
+        return;
+      }
+
       // Check if this is F2 flow - if so, advance F2 flow index instead of practice step
       if (isF2FlowActive && f2FlowStep?.step) {
         console.log("F2 flow Practice step completed - advancing F2 flow");
@@ -639,18 +721,32 @@ const LetterHuntMechanicsContent = ({
           // Update learner progress with new F2 flow index
           const newF2FlowIndex = updatedF2FlowStep.index;
           const totalF2Steps = F2_FLOW.length; // Total F2 flow steps
-          const currentPracticeProgress = Math.round(
-            ((newF2FlowIndex + 1) / totalF2Steps) * 100
+          // Ensure progress doesn't exceed 100%
+          const calculatedProgress =
+            ((newF2FlowIndex + 1) / totalF2Steps) * 100;
+          const currentPracticeProgress = Math.min(
+            100,
+            Math.round(calculatedProgress)
           );
 
+          // Convert to 1-indexed for backend (same as Learn step completion)
           await addLesson({
             sessionId: sessionId,
             milestone: "practice",
-            lesson: newF2FlowIndex.toString(),
+            lesson: (newF2FlowIndex + 1).toString(), // Convert to 1-indexed for backend
             progress: currentPracticeProgress,
             language: lang,
             milestoneLevel: "B",
           });
+          console.log(
+            "F2 Practice step progress saved by LetterHuntMechanics:",
+            {
+              completedStepIndex: currentF2FlowStep.index,
+              nextStepIndex: newF2FlowIndex,
+              lessonSaved: (newF2FlowIndex + 1).toString(), // 1-indexed
+              progress: currentPracticeProgress,
+            }
+          );
 
           // Update local storage
           const updatedPracticeProgress = {
@@ -707,22 +803,60 @@ const LetterHuntMechanicsContent = ({
         const updatedF1FlowStep = getF1FlowStep();
         console.log("Updated F1 flow step after advance:", updatedF1FlowStep);
 
+        // Validate that the flow advanced correctly
+        if (updatedF1FlowStep.index === currentF1FlowStep.index) {
+          console.error(
+            "F1 flow did not advance! Current index:",
+            currentF1FlowStep.index,
+            "Updated index:",
+            updatedF1FlowStep.index
+          );
+          // Force advance if it didn't work
+          const forcedIndex = currentF1FlowStep.index + 1;
+          if (forcedIndex < F1_FLOW.length) {
+            setLocalData("f1FlowIndex", forcedIndex);
+            const forcedStep = getF1FlowStep();
+            console.log("Forced F1 flow step:", forcedStep);
+            if (forcedStep.step) {
+              // Use the forced step
+              updatedF1FlowStep.index = forcedStep.index;
+              updatedF1FlowStep.step = forcedStep.step;
+              updatedF1FlowStep.isLast = forcedStep.isLast;
+            }
+          }
+        }
+
         if (updatedF1FlowStep.step) {
           // Update learner progress with new F1 flow index
           const newF1FlowIndex = updatedF1FlowStep.index;
-          const totalF1Steps = 21; // Total F1 flow steps
-          const currentPracticeProgress = Math.round(
-            ((newF1FlowIndex + 1) / totalF1Steps) * 100
+          const totalF1Steps = F1_FLOW.length; // Use actual F1_FLOW length
+          // Ensure progress doesn't exceed 100%
+          const calculatedProgress =
+            ((newF1FlowIndex + 1) / totalF1Steps) * 100;
+          const currentPracticeProgress = Math.min(
+            100,
+            Math.round(calculatedProgress)
           );
 
+          // Convert to 1-indexed for backend (same as Learn step completion)
+          // Example: P1 (index 1) completes → advances to P2 (index 2) → save lesson "3" (1-indexed)
           await addLesson({
             sessionId: sessionId,
             milestone: "practice",
-            lesson: newF1FlowIndex.toString(),
+            lesson: (newF1FlowIndex + 1).toString(), // Convert to 1-indexed for backend
             progress: currentPracticeProgress,
             language: lang,
             milestoneLevel: "B",
           });
+          console.log(
+            "F1 Practice step progress saved by LetterHuntMechanics:",
+            {
+              completedStepIndex: currentF1FlowStep.index,
+              nextStepIndex: newF1FlowIndex,
+              lessonSaved: (newF1FlowIndex + 1).toString(), // 1-indexed
+              progress: currentPracticeProgress,
+            }
+          );
 
           // Update local storage
           const updatedPracticeProgress = {

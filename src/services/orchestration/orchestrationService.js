@@ -185,6 +185,28 @@ export const addLesson = async ({
   language,
   milestoneLevel,
 }) => {
+  // Validate required fields
+  if (!sessionId) {
+    console.error("addLesson: sessionId is required");
+    throw new Error("sessionId is required");
+  }
+  if (!language) {
+    console.error("addLesson: language is required");
+    throw new Error("language is required");
+  }
+  if (!milestoneLevel) {
+    console.error("addLesson: milestoneLevel is required");
+    throw new Error("milestoneLevel is required");
+  }
+
+  // Ensure progress is between 0 and 100
+  const cappedProgress = Math.max(0, Math.min(100, Math.round(progress)));
+  if (progress !== cappedProgress) {
+    console.warn(
+      `addLesson: Progress ${progress} was capped to ${cappedProgress}`
+    );
+  }
+
   try {
     const response = await axios.post(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.ADD_LESSON}`,
@@ -192,7 +214,7 @@ export const addLesson = async ({
         sessionId: sessionId,
         milestone: milestone,
         lesson: lesson,
-        progress: progress,
+        progress: cappedProgress,
         language: language,
         milestoneLevel: milestoneLevel,
       },

@@ -806,32 +806,35 @@ const MainLayout = (props) => {
                   )}
                   {props.children}
                 </CardContent>
-                {steps > 0 && (
-                  <Box
-                    sx={{
-                      width: { xs: "100%", md: "85vw" },
-                      position: "absolute",
-                      display: "flex",
-                      top: "0",
-                    }}
-                  >
-                    {stepsArr?.map((step, index) => {
-                      const showGreen = step + 1 <= currentStep;
-                      return (
-                        <Box
-                          key={index}
-                          index={index}
-                          sx={{
-                            height: "8px",
-                            width: `${100 / steps}%`,
-                            background: showGreen ? "#18DE2C" : "#C1C6CC",
-                            marginLeft: "3px",
-                          }}
-                        ></Box>
-                      );
-                    })}
-                  </Box>
-                )}
+                {steps > 0 &&
+                  !isF1FlowActive &&
+                  !isF2FlowActive &&
+                  !isF3FlowActive && (
+                    <Box
+                      sx={{
+                        width: { xs: "100%", md: "85vw" },
+                        position: "absolute",
+                        display: "flex",
+                        top: "0",
+                      }}
+                    >
+                      {stepsArr?.map((step, index) => {
+                        const showGreen = step + 1 <= currentStep;
+                        return (
+                          <Box
+                            key={index}
+                            index={index}
+                            sx={{
+                              height: "8px",
+                              width: `${100 / steps}%`,
+                              background: showGreen ? "#18DE2C" : "#C1C6CC",
+                              marginLeft: "3px",
+                            }}
+                          ></Box>
+                        );
+                      })}
+                    </Box>
+                  )}
                 {contentType &&
                   contentType.toLowerCase() !== "word" &&
                   startShowCase && (
