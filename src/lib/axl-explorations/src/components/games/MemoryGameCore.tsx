@@ -40,6 +40,7 @@ interface MemoryGameCoreProps {
   onRemoveLast: () => void;
   onCheckSequence?: () => void;
   onContinue?: () => void;
+  showContinueButton?: boolean; // Control whether to show the continue button
   
   // Styling
   className?: string;
@@ -64,6 +65,7 @@ export function MemoryGameCore({
   onRemoveLast,
   onCheckSequence,
   onContinue,
+  showContinueButton,
   className = ''
 }: MemoryGameCoreProps) {
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -298,10 +300,11 @@ export function MemoryGameCore({
               </div>
             )}
             
-            {/* Continue Button - only show in game mode */}
+            {/* Continue Button - only show in game mode, unless showContinueButton is explicitly false */}
             <ContinueButton
               onContinue={onContinue}
               mode={mode}
+              showContinueButton={showContinueButton}
             />
           </>
         )}
