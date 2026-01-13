@@ -4715,10 +4715,15 @@ const Practice = () => {
             await addLesson({
               sessionId,
               milestone: "practice",
-              lesson: updatedF2FlowStep.index.toString(),
+              lesson: (updatedF2FlowStep.index + 1).toString(), // Convert to 1-indexed for backend
               progress: ((updatedF2FlowStep.index + 1) / F2_FLOW.length) * 100,
               language: lang,
               milestoneLevel: "B",
+            });
+            console.log("F2 Learn step progress saved:", {
+              completedStepIndex: currentF2FlowStep.index,
+              nextStepIndex: updatedF2FlowStep.index,
+              lessonSaved: (updatedF2FlowStep.index + 1).toString(), // 1-indexed
             });
           } catch (e) {
             console.error("Error storing F2 flow progress:", e);
@@ -4827,15 +4832,27 @@ const Practice = () => {
       setF1FlowIndexState(updatedF1FlowStep.index);
 
       // Store F1 flow progress in backend
+      // Save the next step index (1-indexed) so user resumes from the next step on relogin
+      // Example: L1 (index 0) completes → advances to P1 (index 1) → save lesson "2" (1-indexed)
       if (updatedF1FlowStep.step) {
         try {
+          // Ensure progress doesn't exceed 100%
+          const calculatedProgress =
+            ((updatedF1FlowStep.index + 1) / F1_FLOW.length) * 100;
+          const cappedProgress = Math.min(100, Math.round(calculatedProgress));
+
           await addLesson({
             sessionId,
             milestone: "practice",
-            lesson: updatedF1FlowStep.index.toString(),
-            progress: ((updatedF1FlowStep.index + 1) / F1_FLOW.length) * 100,
+            lesson: (updatedF1FlowStep.index + 1).toString(), // Convert to 1-indexed for backend
+            progress: cappedProgress,
             language: lang,
             milestoneLevel: "B",
+          });
+          console.log("F1 Learn step progress saved:", {
+            completedStepIndex: currentF1FlowStep.index,
+            nextStepIndex: updatedF1FlowStep.index,
+            lessonSaved: (updatedF1FlowStep.index + 1).toString(), // 1-indexed
           });
         } catch (e) {
           console.error("Error storing F1 flow progress:", e);
@@ -5219,16 +5236,30 @@ const Practice = () => {
         setF1FlowIndexState(updatedF1FlowStep.index);
 
         // Store F1 flow progress in backend when step completes
-        // Store the NEW index (after advancement) so user resumes from next step on relogin
+        // Store the NEW index (after advancement) as 1-indexed so user resumes from next step on relogin
+        // Example: L1 (index 0) completes → advances to P1 (index 1) → save lesson "2" (1-indexed)
         if (updatedF1FlowStep.step) {
           try {
+            // Ensure progress doesn't exceed 100%
+            const calculatedProgress =
+              ((updatedF1FlowStep.index + 1) / F1_FLOW.length) * 100;
+            const cappedProgress = Math.min(
+              100,
+              Math.round(calculatedProgress)
+            );
+
             await addLesson({
               sessionId,
               milestone: "practice",
-              lesson: updatedF1FlowStep.index.toString(), // Store F1 flow index as lesson number
-              progress: ((updatedF1FlowStep.index + 1) / F1_FLOW.length) * 100,
+              lesson: (updatedF1FlowStep.index + 1).toString(), // Convert to 1-indexed for backend
+              progress: cappedProgress,
               language: lang,
               milestoneLevel: "B", // F1 flow is for milestone level B
+            });
+            console.log("F1 flow progress saved (handleNext):", {
+              completedStepIndex: currentF1FlowStepBeforeAdvance.index,
+              nextStepIndex: updatedF1FlowStep.index,
+              lessonSaved: (updatedF1FlowStep.index + 1).toString(), // 1-indexed
             });
           } catch (e) {
             console.error("Error storing F1 flow progress:", e);
@@ -5381,7 +5412,17 @@ const Practice = () => {
         }
 
         // Only store F3 flow progress in backend if LetterLauncherMechanics hasn't already done it
-        if (currentF3FlowStep.step && !f3FlowAdvancedByLetterLauncher) {
+        // IMPORTANT: Check flag FIRST to prevent duplicate addLesson calls
+        if (f3FlowAdvancedByLetterLauncher) {
+          console.log(
+            "F3 flow progress already saved by LetterLauncherMechanics, skipping addLesson in handleNext"
+          );
+          // Clear the flag after a short delay to allow it to be used again for next step
+          setTimeout(() => {
+            setLocalData("f3FlowAdvancedByLetterLauncher", "false");
+          }, 500);
+        } else if (currentF3FlowStep.step) {
+          // Only call addLesson if flag is NOT set (LetterLauncherMechanics hasn't already called it)
           try {
             await addLesson({
               sessionId,
@@ -5398,14 +5439,6 @@ const Practice = () => {
           } catch (e) {
             console.error("Error storing F3 flow progress:", e);
           }
-        } else if (f3FlowAdvancedByLetterLauncher) {
-          console.log(
-            "F3 flow progress already saved by LetterLauncherMechanics, skipping addLesson in handleNext"
-          );
-          // Clear the flag after a short delay
-          setTimeout(() => {
-            setLocalData("f3FlowAdvancedByLetterLauncher", "false");
-          }, 500);
         }
 
         // Update practice progress to reflect new F3 flow step
@@ -5613,8 +5646,20 @@ const Practice = () => {
         // Always get current F1 flow step from localStorage (it may have been advanced by LetterHuntMechanics)
         // Read directly from localStorage to get the most up-to-date value
         const savedF1Index = getLocalData("f1FlowIndex");
-        const f1IndexFromStorage =
+        let f1IndexFromStorage =
           savedF1Index !== null ? Number(savedF1Index) : 0;
+
+        // Validate that the index is within bounds
+        if (f1IndexFromStorage < 0 || f1IndexFromStorage >= F1_FLOW.length) {
+          console.error(
+            "handleNext - Invalid F1 flow index from localStorage:",
+            f1IndexFromStorage,
+            "resetting to 0"
+          );
+          f1IndexFromStorage = 0;
+          setLocalData("f1FlowIndex", 0);
+        }
+
         const currentF1FlowStep = {
           index: f1IndexFromStorage,
           step: F1_FLOW[f1IndexFromStorage] || null,
@@ -5666,7 +5711,11 @@ const Practice = () => {
           if (!currentGetContent) {
             console.error(
               "handleNext - F1 config entry is null/undefined at index:",
-              currentF1FlowStep.index
+              currentF1FlowStep.index,
+              "f1Config length:",
+              f1Config.length,
+              "f1Config keys:",
+              Object.keys(f1Config)
             );
             // Fallback to step type
             const f1StepType = currentF1FlowStep.step?.type;
@@ -5690,8 +5739,16 @@ const Practice = () => {
         } else {
           // Fallback: determine mechanism from F1_FLOW step type
           const f1StepType = currentF1FlowStep.step?.type;
-          console.log(
-            "handleNext - F1 config not found, using step type:",
+          console.error(
+            "handleNext - F1 config not found for index:",
+            currentF1FlowStep.index,
+            "f1Config exists:",
+            !!f1Config,
+            "f1Config is array:",
+            Array.isArray(f1Config),
+            "f1Config length:",
+            f1Config?.length,
+            "using step type:",
             f1StepType
           );
           if (f1StepType === "L") {
@@ -5856,37 +5913,59 @@ const Practice = () => {
           }
 
           if (getSetData.sessionResult === "pass") {
+            // Skip this block for F1/F2/F3 flows (milestoneLevel "B")
+            // These flows handle their own progress saving
             if (
-              level === 15 &&
-              (currentLevel === "S1" || currentLevel === "S2")
+              milestoneLevel === "B" ||
+              isF1FlowActive ||
+              isF2FlowActive ||
+              isF3FlowActive
             ) {
-              setLocalData("allCompleted", true);
-              gameOver({ link: "/assesment-end" }, true);
-              return;
-            }
-            if (lang === "en" && (level === 3 || level === 6 || level === 9)) {
-              gameOver({ link: "/assesment-end" }, true);
-              setLocalData("tFlow", true);
-              //setLocalData("wordWall", true);
-            }
-            if (lang === "en") {
-              gameOver({ link: "/assesment-end" }, true);
-              setLocalData("wordWall", true);
-            }
+              console.log(
+                "Skipping assessment completion addLesson for F1/F2/F3 flow",
+                {
+                  milestoneLevel,
+                  isF1FlowActive,
+                  isF2FlowActive,
+                  isF3FlowActive,
+                }
+              );
+            } else {
+              if (
+                level === 15 &&
+                (currentLevel === "S1" || currentLevel === "S2")
+              ) {
+                setLocalData("allCompleted", true);
+                gameOver({ link: "/assesment-end" }, true);
+                return;
+              }
+              if (
+                lang === "en" &&
+                (level === 3 || level === 6 || level === 9)
+              ) {
+                gameOver({ link: "/assesment-end" }, true);
+                setLocalData("tFlow", true);
+                //setLocalData("wordWall", true);
+              }
+              if (lang === "en") {
+                gameOver({ link: "/assesment-end" }, true);
+                setLocalData("wordWall", true);
+              }
 
-            try {
-              await addLesson({
-                sessionId,
-                milestone: milestoneType,
-                lesson: "0",
-                progress: 0,
-                language: lang,
-                milestoneLevel: getSetData.currentLevel,
-              });
-              gameOver({ link: "/assesment-end" }, true);
-              return;
-            } catch (e) {
-              // catch error
+              try {
+                await addLesson({
+                  sessionId,
+                  milestone: milestoneType,
+                  lesson: "0",
+                  progress: 0,
+                  language: lang,
+                  milestoneLevel: getSetData.currentLevel,
+                });
+                gameOver({ link: "/assesment-end" }, true);
+                return;
+              } catch (e) {
+                // catch error
+              }
             }
           } else if (currentLevel === "S2" && (level === 1 || level === 2)) {
             setLocalData("mFail", true);
@@ -5903,14 +5982,46 @@ const Practice = () => {
           newPracticeStep = 0;
           currentPracticeProgress = 0;
         }
-        await addLesson({
-          sessionId: sessionId,
-          milestone: milestoneType,
-          lesson: newPracticeStep,
-          progress: currentPracticeProgress,
-          language: lang,
-          milestoneLevel: `m${level}`,
-        });
+
+        // Skip addLesson for F1/F2/F3 flows - they handle their own progress saving
+        // Check if F1/F2/F3 flow is active and has already been advanced by LetterHuntMechanics
+        const f1FlowAdvancedByLetterHunt =
+          getLocalData("f1FlowAdvancedByLetterHunt") === "true";
+        const f2FlowAdvancedByLetterHunt =
+          getLocalData("f2FlowAdvancedByLetterHunt") === "true";
+        const isF1FlowByMilestone =
+          milestoneLevel === "B" && subMilestoneLevel === "F1";
+        const isF2FlowByMilestone =
+          milestoneLevel === "B" && subMilestoneLevel === "F2";
+        const isF3FlowByMilestone =
+          milestoneLevel === "B" && subMilestoneLevel === "F3";
+
+        const shouldSkipAddLesson =
+          (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
+          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
+          isF3FlowByMilestone; // F3 flow always handles its own progress
+
+        if (!shouldSkipAddLesson) {
+          await addLesson({
+            sessionId: sessionId,
+            milestone: milestoneType,
+            lesson: newPracticeStep,
+            progress: currentPracticeProgress,
+            language: lang,
+            milestoneLevel: `m${level}`,
+          });
+        } else {
+          console.log(
+            "Skipping addLesson in handleNext - F1/F2/F3 flow already handled progress saving",
+            {
+              isF1FlowByMilestone,
+              f1FlowAdvancedByLetterHunt,
+              isF2FlowByMilestone,
+              f2FlowAdvancedByLetterHunt,
+              isF3FlowByMilestone,
+            }
+          );
+        }
 
         if (newPracticeStep === 0 || newPracticeStep === 5 || isGameOver) {
           gameOver();
@@ -6107,16 +6218,46 @@ const Practice = () => {
           }
         }, 1000);
 
-        await addLesson({
-          sessionId: sessionId,
-          milestone: milestoneType,
-          lesson: newPracticeStep,
-          progress: Math.round(
-            (newPracticeStep / (practiceSteps.length * limit)) * 100
-          ),
-          language: lang,
-          milestoneLevel: `m${level}`,
-        });
+        // Skip addLesson for F1/F2/F3 flows - they handle their own progress saving
+        const f1FlowAdvancedByLetterHunt =
+          getLocalData("f1FlowAdvancedByLetterHunt") === "true";
+        const f2FlowAdvancedByLetterHunt =
+          getLocalData("f2FlowAdvancedByLetterHunt") === "true";
+        const isF1FlowByMilestone =
+          milestoneLevel === "B" && subMilestoneLevel === "F1";
+        const isF2FlowByMilestone =
+          milestoneLevel === "B" && subMilestoneLevel === "F2";
+        const isF3FlowByMilestone =
+          milestoneLevel === "B" && subMilestoneLevel === "F3";
+
+        const shouldSkipAddLesson =
+          (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
+          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
+          isF3FlowByMilestone; // F3 flow always handles its own progress
+
+        if (!shouldSkipAddLesson) {
+          await addLesson({
+            sessionId: sessionId,
+            milestone: milestoneType,
+            lesson: newPracticeStep,
+            progress: Math.round(
+              (newPracticeStep / (practiceSteps.length * limit)) * 100
+            ),
+            language: lang,
+            milestoneLevel: `m${level}`,
+          });
+        } else {
+          console.log(
+            "Skipping addLesson in handleNext - F1/F2/F3 flow already handled progress saving",
+            {
+              isF1FlowByMilestone,
+              f1FlowAdvancedByLetterHunt,
+              isF2FlowByMilestone,
+              f2FlowAdvancedByLetterHunt,
+              isF3FlowByMilestone,
+            }
+          );
+        }
 
         practiceProgress = {
           currentQuestion: 0,
@@ -6244,6 +6385,18 @@ const Practice = () => {
 
           // Check if this is a valid F1 flow index (0 to F1_FLOW.length - 1)
           if (f1FlowIndex >= 0 && f1FlowIndex < F1_FLOW.length) {
+            // Additional validation: Check if the restored index makes sense
+            // If the index is too high (e.g., 20 for A3 when user should be at P3 or A1),
+            // it might be an old/stale progress. Log a warning but still restore it.
+            if (f1FlowIndex > 10) {
+              console.warn(
+                `Restoring F1 flow progress from high index: lesson ${userState} (1-indexed) -> flow index ${f1FlowIndex} (0-indexed) -> ${
+                  F1_FLOW[f1FlowIndex]?.type
+                }${
+                  F1_FLOW[f1FlowIndex]?.step || ""
+                }. This might be stale progress.`
+              );
+            }
             // Restore F1 flow index from backend
             console.log(
               `Restoring F1 flow progress: lesson ${userState} (1-indexed) -> flow index ${f1FlowIndex} (0-indexed) -> ${
@@ -6266,7 +6419,18 @@ const Practice = () => {
           // But F2_FLOW array is 0-indexed (0-20), so convert
           const f2FlowIndex = userState > 0 ? userState - 1 : 0;
 
-          if (f2FlowIndex >= 0 && f2FlowIndex < F2_FLOW.length) {
+          // IMPORTANT: If F1 flow index is null (F1 completed), ensure F2 starts from index 0
+          // This prevents restoring old F2 progress (e.g., lesson 21 = index 20 = F2-A3)
+          // when transitioning from F1 to F2
+          const f1FlowIndex = getLocalData("f1FlowIndex");
+          if (f1FlowIndex === null && f2FlowIndex > 0) {
+            console.warn(
+              `F1 flow is complete but F2 progress shows lesson ${userState} (index ${f2FlowIndex}). ` +
+                `This might be stale F2 progress. Resetting F2 to index 0 to start fresh.`
+            );
+            setLocalData("f2FlowIndex", 0);
+            userState = 0;
+          } else if (f2FlowIndex >= 0 && f2FlowIndex < F2_FLOW.length) {
             console.log(
               `Restoring F2 flow progress: lesson ${userState} (1-indexed) -> flow index ${f2FlowIndex} (0-indexed) -> ${
                 F2_FLOW[f2FlowIndex]?.type
@@ -6740,7 +6904,10 @@ const Practice = () => {
           sessionId: sessionId,
           milestone: "practice",
           lesson: newF1Index.toString(),
-          progress: ((newF1Index + 1) / F1_FLOW.length) * 100,
+          progress: Math.min(
+            100,
+            Math.round(((newF1Index + 1) / F1_FLOW.length) * 100)
+          ),
           language: lang,
           milestoneLevel: "B",
         });

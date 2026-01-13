@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
@@ -103,6 +103,8 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
   const [level1HasProgress, setLevel1HasProgress] = useState(false); // Track if level 1 has any percentage > 0%
   const [lives, setLives] = useState<number>(3); // Lives system: 3 red hearts
   const [gameEndedByLives, setGameEndedByLives] = useState(false); // Track if game ended due to lives lost
+  const [assessmentTrackingCreated, setAssessmentTrackingCreated] = useState(false); // Track if assessment tracking has been created for this level completion
+  const assessmentTrackingCreatedRef = useRef(false); // Use ref for synchronous tracking to prevent race conditions
   
   // Telemetry state
   const [questionStartTime, setQuestionStartTime] = useState<number>(0);
@@ -309,6 +311,10 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         // Add a small delay to ensure state reset completes first
         await new Promise(resolve => setTimeout(resolve, 100));
         
+        // Reset assessment tracking flag when starting a new level
+        assessmentTrackingCreatedRef.current = false;
+        setAssessmentTrackingCreated(false);
+        
         const session = startSession(gameKey);
         setPreviousLevel(currentLevel);
         
@@ -491,12 +497,16 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
   // Handle game end when all lives are lost - trigger after audio completes
   useEffect(() => {
     const handleGameEndByLives = async () => {
-      if (!gameEndedByLives || isGameComplete) return; // Prevent multiple calls
+      if (!gameEndedByLives || isGameComplete || assessmentTrackingCreatedRef.current) return; // Prevent multiple calls
       
       const totalTimeSpent = Math.floor((Date.now() - levelStartTime) / 1000);
       const currentUser = sessionManager.getCurrentUser();
       
       if (currentUser) {
+        // Set flag BEFORE calling API to prevent duplicate calls (use ref for synchronous check)
+        assessmentTrackingCreatedRef.current = true;
+        setAssessmentTrackingCreated(true);
+
         const currentSession = sessionTelemetryManager.getCurrentSession();
         const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
         const sessionId = currentSession?.sessionId;
@@ -555,7 +565,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     if (gameEndedByLives && lives === 0 && !isGameComplete) {
       handleGameEndByLives();
     }
-  }, [gameEndedByLives, lives, isGameComplete, currentQuestionIndex, totalCorrect, totalAttempts, levelStartTime, selectedLanguage, currentLevel, difficultySettings.complexity, gameKey, endSession]);
+  }, [gameEndedByLives, lives, isGameComplete, assessmentTrackingCreated, currentQuestionIndex, totalCorrect, totalAttempts, levelStartTime, selectedLanguage, currentLevel, difficultySettings.complexity, gameKey, endSession]);
 
   const handleLetterSelect = async (letter: string) => {
     if (showFeedback || isGameComplete) return;
@@ -617,7 +627,13 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     const totalQuestionCount = questions.length || 1;
     const hasCompletedAllQuestions = totalCorrect >= totalQuestionCount && isCorrect;
 
-    if (hasCompletedAllQuestions) {
+      if (hasCompletedAllQuestions) {
+      // Prevent duplicate assessment tracking calls (use ref for synchronous check)
+      if (assessmentTrackingCreatedRef.current) {
+        console.log("Assessment tracking already created for this level, skipping duplicate call");
+        return;
+      }
+
       const attemptsForPercentage = Math.max(totalAttempts, 1);
       const scorePercentage = (totalCorrect / attemptsForPercentage) * 100;
       const canAdvance = true;
@@ -630,6 +646,10 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
         const sessionId = currentSession?.sessionId;
         const subsessionId = currentSubSession?.subSessionId;
+
+        // Set flag BEFORE calling API to prevent duplicate calls (use ref for synchronous check)
+        assessmentTrackingCreatedRef.current = true;
+        setAssessmentTrackingCreated(true);
 
         setQuestionSummaries((latestSummaries) => {
           const actualCorrect = latestSummaries.filter(q => q.isCorrect).length;
@@ -765,6 +785,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     setCurrentDisplayedQuestion(null);
     setLives(3); // Reset lives to 3
     setGameEndedByLives(false); // Reset lives lost flag
+    setAssessmentTrackingCreated(false); // Reset assessment tracking flag
     
     // Reset tracking assessment state
     setLevelStartTime(Date.now());

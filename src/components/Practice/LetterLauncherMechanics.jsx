@@ -1159,23 +1159,31 @@ const LetterLauncherMechanicsContent = ({
                   }
                 }
 
-                // For Practice steps: advance F3 flow and save progress
+                // For Practice steps: advance F3 flow and save progress for the next step
                 if (isF3FlowActive && f3FlowStep?.step) {
-                  // Get current F3 flow step before advancing
+                  // IMPORTANT: Set flag FIRST to prevent duplicate addLesson calls
+                  // This must be set before calling handleNext
+                  setLocalData("f3FlowAdvancedByLetterLauncher", "true");
+
+                  // Get current F3 flow step (the step that was just completed)
                   const currentF3FlowStep = getF3FlowStep();
 
-                  // Advance F3 flow
+                  // Advance F3 flow to the next step
                   const nextStep = advanceF3Flow();
 
-                  // Get updated F3 flow step after advancement
+                  // Get updated F3 flow step after advancement (this is the NEXT step where user will resume)
                   const updatedF3FlowStep = getF3FlowStep();
 
                   if (updatedF3FlowStep.step) {
-                    // Save progress to backend (like LetterHuntMechanics does)
+                    // Save progress to backend for the NEXT step (where user will resume)
+                    // This matches the pattern used in F1 and F2 flows
                     const lang = getLocalData("lang") || "en";
                     const sessionId = getLocalData("sessionId");
                     const totalF3Steps = F3_FLOW.length;
-                    const currentPracticeProgress = Math.round(
+
+                    // Calculate progress for the NEXT step (where user will resume)
+                    // Progress = (nextStepIndex + 1) / totalSteps * 100
+                    const nextStepProgress = Math.round(
                       ((updatedF3FlowStep.index + 1) / totalF3Steps) * 100
                     );
 
@@ -1183,16 +1191,17 @@ const LetterLauncherMechanicsContent = ({
                       await addLesson({
                         sessionId: sessionId,
                         milestone: "practice",
-                        lesson: updatedF3FlowStep.index.toString(),
-                        progress: currentPracticeProgress,
+                        lesson: updatedF3FlowStep.index.toString(), // Next step index (where user will resume)
+                        progress: nextStepProgress, // Progress for the next step
                         language: lang,
                         milestoneLevel: "B",
                       });
                       console.log(
-                        "F3 flow progress saved by LetterLauncherMechanics:",
+                        "F3 flow progress saved by LetterLauncherMechanics (after step completion):",
                         {
-                          index: updatedF3FlowStep.index,
-                          progress: currentPracticeProgress,
+                          completedStepIndex: currentF3FlowStep.index,
+                          nextStepIndex: updatedF3FlowStep.index,
+                          progress: nextStepProgress,
                         }
                       );
                     } catch (e) {
@@ -1202,10 +1211,10 @@ const LetterLauncherMechanicsContent = ({
                       );
                     }
 
-                    // Update local storage
+                    // Update local storage with NEXT step progress
                     const updatedPracticeProgress = {
                       currentQuestion: 0,
-                      currentPracticeProgress: currentPracticeProgress,
+                      currentPracticeProgress: nextStepProgress,
                       currentPracticeStep: updatedF3FlowStep.index,
                     };
                     setLocalData(
@@ -1228,10 +1237,6 @@ const LetterLauncherMechanicsContent = ({
                     ) {
                       setCurrentQuestion(0);
                     }
-
-                    // Set a flag to indicate F3 flow was already advanced by LetterLauncherMechanics
-                    // This prevents handleNext from calling addLesson again
-                    setLocalData("f3FlowAdvancedByLetterLauncher", "true");
                   }
                 }
 
