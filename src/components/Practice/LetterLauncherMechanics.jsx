@@ -72,6 +72,13 @@ const LetterLauncherMechanicsContent = ({
   const [sessionInitialized, setSessionInitialized] = useState(false);
   const navigate = useNavigate();
 
+  // Reset currentGameLevel when level prop changes (e.g., when step changes)
+  useEffect(() => {
+    if (level && level !== currentGameLevel) {
+      setCurrentGameLevel(level);
+    }
+  }, [level]);
+
   // Ensure isShowCase is a boolean (handle undefined case)
   const effectiveIsShowCase = isShowCase === true;
 
@@ -499,7 +506,9 @@ const LetterLauncherMechanicsContent = ({
           // Fuel already accounts for both speed and accuracy
           if (hasEnoughFuel) {
             // User passed - check if more levels to complete
-            if (currentGameLevel < (endLevel || 1)) {
+            // For Apply steps with endLevel, check if we need to continue to next level
+            // For Practice steps or when endLevel is undefined, complete immediately
+            if (endLevel && currentGameLevel < endLevel) {
               // Move to next level - user passed this level
               setCurrentGameLevel((prev) => prev + 1);
               setCurrentQuestionIndex(0);
@@ -612,7 +621,8 @@ const LetterLauncherMechanicsContent = ({
     }
 
     // For Apply steps, check if all levels are passed
-    if (effectiveIsShowCase && currentGameLevel >= (endLevel || 1)) {
+    // Only check endLevel if it's defined (Apply steps), otherwise complete immediately
+    if (effectiveIsShowCase && endLevel && currentGameLevel >= endLevel) {
       // All levels passed - show success screen, then user can continue to next step
       // Don't call handleNext immediately - let user see success screen
       // The SuccessScreen's Continue button will advance the flow
@@ -794,6 +804,7 @@ const LetterLauncherMechanicsContent = ({
     return (
       <MainLayout
         page={header}
+        showTimer={false}
         setPage={setPage}
         level={milestoneLevel || "B"}
         flowNames={[]}
@@ -847,6 +858,7 @@ const LetterLauncherMechanicsContent = ({
           setPage={setPage}
           level={milestoneLevel || "B"}
           flowNames={[]}
+          showTimer={false}
           activeFlow={isF3FlowActive ? `P${f3FlowStep?.step?.step || 1}` : ""}
           progressData={progressData}
           showProgress={showProgress}
@@ -908,6 +920,7 @@ const LetterLauncherMechanicsContent = ({
         progressData={progressData}
         showProgress={showProgress}
         points={points}
+        showTimer={false}
         vocabCount={vocabCount}
         wordCount={wordCount}
         handleBack={handleBack}
@@ -1047,6 +1060,7 @@ const LetterLauncherMechanicsContent = ({
       isShowCase={isShowCase}
       startShowCase={effectiveStartShowCase}
       setStartShowCase={effectiveSetStartShowCase}
+      showTimer={false}
     >
       <SpaceBackground
         className="h-full w-full p-2 sm:p-4 overflow-hidden flex flex-col"
@@ -1097,8 +1111,10 @@ const LetterLauncherMechanicsContent = ({
                   />
                 </svg>
                 <span>
-                  {effectiveIsShowCase
-                    ? `Level ${currentGameLevel} / ${endLevel || 1}`
+                  {effectiveIsShowCase && endLevel
+                    ? `Level ${currentGameLevel} / ${endLevel}`
+                    : effectiveIsShowCase
+                    ? `Level ${currentGameLevel}`
                     : `Practice ${f3FlowStep?.step?.step || 1}`}{" "}
                   • Mission: {missionDestination}
                 </span>

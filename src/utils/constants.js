@@ -11059,7 +11059,7 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "syllable",
         letterLauncherLevel: 1,
-        letterLauncherEndLevel: 1,
+        letterLauncherEndLevel: 3,
         letterLauncherContentCount: 10,
         isShowcase: true,
         applyStep: 2,
