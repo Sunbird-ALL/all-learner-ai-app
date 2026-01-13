@@ -223,6 +223,42 @@ const MainLayout = (props) => {
 
   let LEVEL = props?.level;
 
+  // If milestone level is "m1", "m2", etc., extract the number for image lookup
+  // This ensures we show the correct milestone level image instead of F flow images
+  // Priority: milestone level > props.level
+  if (
+    milestoneLevel &&
+    typeof milestoneLevel === "string" &&
+    milestoneLevel.startsWith("m")
+  ) {
+    const milestoneNumber = parseInt(milestoneLevel.substring(1), 10);
+    if (!isNaN(milestoneNumber)) {
+      LEVEL = milestoneNumber;
+      console.log(
+        "MainLayout - Extracted milestone level:",
+        milestoneLevel,
+        "-> LEVEL:",
+        LEVEL,
+        "(was:",
+        props?.level,
+        ")"
+      );
+    }
+  } else if (milestoneLevel && milestoneLevel !== "B") {
+    // If milestone level is not "B" and not "m1", "m2", etc., try to extract number anyway
+    // This handles cases where milestone level might be just a number string
+    const milestoneNumber = parseInt(milestoneLevel, 10);
+    if (!isNaN(milestoneNumber)) {
+      LEVEL = milestoneNumber;
+      console.log(
+        "MainLayout - Parsed milestone level as number:",
+        milestoneLevel,
+        "-> LEVEL:",
+        LEVEL
+      );
+    }
+  }
+
   // Use F2 step names if F2 flow is active, otherwise F1, otherwise props flowNames
   // flowNames should be ["L1", "P1", "L2", "P2", "L3", "P3", "A1", ...] for F1/F2 flow
   const getF1FlowNames = () => {
@@ -844,7 +880,18 @@ const MainLayout = (props) => {
                     }}
                   >
                     <footer>
-                      {isF3FlowActive ? (
+                      {/* Debug: Log milestone level and LEVEL for troubleshooting */}
+                      {console.log(
+                        "MainLayout footer - milestoneLevel:",
+                        milestoneLevel,
+                        "LEVEL:",
+                        LEVEL,
+                        "rFlow:",
+                        rFlow
+                      )}
+
+                      {/* Only show F flow images when milestone level is "B" */}
+                      {milestoneLevel === "B" && isF3FlowActive ? (
                         // F3 Flow - Show F3 milestone image
                         <div style={{ height: "150px", width: "150px" }}>
                           <img
@@ -853,7 +900,7 @@ const MainLayout = (props) => {
                             height={isMobile ? "130px" : "200px"}
                           />
                         </div>
-                      ) : isF2FlowActive ? (
+                      ) : milestoneLevel === "B" && isF2FlowActive ? (
                         // F2 Flow - Show F2 milestone image
                         <div style={{ height: "150px", width: "150px" }}>
                           <img
@@ -862,7 +909,7 @@ const MainLayout = (props) => {
                             height={isMobile ? "130px" : "200px"}
                           />
                         </div>
-                      ) : isF1FlowActive ? (
+                      ) : milestoneLevel === "B" && isF1FlowActive ? (
                         // F1 Flow - Show F1 milestone image
                         <div style={{ height: "150px", width: "150px" }}>
                           <img
@@ -871,7 +918,8 @@ const MainLayout = (props) => {
                             height={isMobile ? "130px" : "200px"}
                           />
                         </div>
-                      ) : rFlow === "true" ? (
+                      ) : rFlow === "true" && milestoneLevel === "B" ? (
+                        // Only show R flow images when milestone level is "B"
                         [1, "B"]?.includes(LEVEL) ? (
                           // R0 - Show F1 milestone image instead of R0 image
                           rStep == null || rStep === 0 || rStep === "0" ? (

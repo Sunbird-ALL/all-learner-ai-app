@@ -9020,8 +9020,29 @@ const Practice = () => {
                 page={page}
                 setPage={setPage}
                 handleNext={() => {
-                  // Complete A2
+                  // Complete A2 - check if we should redirect to discover-start
                   setLocalData("f3ApplySubStep", null);
+
+                  // Check if A2 is complete and should redirect to discover-start
+                  // A2 is the last step in F3 flow (index 13), and passRedirect is "complete"
+                  if (
+                    applyStep === 2 &&
+                    passRedirect === "complete" &&
+                    f3FlowStep?.isLast
+                  ) {
+                    console.log(
+                      "A2 completed successfully - F3 flow complete, redirecting to discover-start"
+                    );
+                    // Clear F3 flow data
+                    setLocalData("f3FlowIndex", null);
+                    setLocalData("f3FlowComplete", "true");
+                    // Clear practice progress
+                    setLocalData("practiceProgress", null);
+                    // Redirect to discover-start
+                    navigate("/discover-start");
+                    return;
+                  }
+
                   if (handleNext) {
                     handleNext();
                   }
