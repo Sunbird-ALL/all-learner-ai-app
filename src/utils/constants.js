@@ -10679,7 +10679,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L1",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["in", "the", "on", "an", "am"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["me", "be", "he", "the", "her"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -10701,7 +10701,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P1",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["at", "it", "he", "she", "his"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["at", "hat", "rat", "an", "Am"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -10723,7 +10723,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L3",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["the", "is", "are", "or", "up", "on"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["Go", "Do", "So", "No", "to"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -10761,7 +10761,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P4",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["all", "in", "ter", "ing", "up", "him"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["or", "of", "our", "on", "one"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
       {
@@ -10783,7 +10783,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P6",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["s", "t", "v", "w"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["My", "hi", "his", "is", "in"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -10804,7 +10804,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P8",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["x", "y", "z", "c"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["ate", "Age", "Ask", "Act", "Arm"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -10841,7 +10841,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P11",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["i", "o", "u", "a"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["it", "wit", "Bit", "Fit", "Fun"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
       {
@@ -10862,7 +10862,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P13",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["e", "i", "o", "u"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["as", "was", "Up", "Us", "all"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -10883,7 +10883,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P15",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["a", "e", "i", "o", "u"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["Bed", "Fly", "Ice", "Key", "Car"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
