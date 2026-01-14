@@ -7188,10 +7188,23 @@ const Practice = () => {
   //console.log("mecc", wordWallFlow);
 
   const renderMechanics = () => {
+    // IMPORTANT: For non-F flows (m1, m2, etc.), use mechanism from config as-is
+    // Don't override mechanisms for milestone levels that are not "B"
+    const isNonFFlow =
+      milestoneLevel &&
+      milestoneLevel !== "B" &&
+      typeof milestoneLevel === "string" &&
+      milestoneLevel.startsWith("m");
+
     // For F3 flow, ensure mechanism matches F3_FLOW step type
     // F3 flow takes precedence over F2 and F1 flows
     // F3 Practice steps use Letter Launcher, F3 Apply steps use Letter Launcher + Memory Challenge + Read Aloud
-    if (isF3FlowActive && f3FlowStep?.step && milestoneLevel === "B") {
+    if (
+      !isNonFFlow &&
+      isF3FlowActive &&
+      f3FlowStep?.step &&
+      milestoneLevel === "B"
+    ) {
       const currentF3Step = getF3FlowStep();
       const f3StepType = currentF3Step.step?.type;
       const expectedMechanism =
@@ -7249,7 +7262,12 @@ const Practice = () => {
     // For F2 flow, ensure mechanism matches F2_FLOW step type
     // F2 flow takes precedence over F1 flow when both conditions might be true
     // F2 Learn steps use LetterTrain, F2 Practice and Apply steps use LetterHunt
-    else if (isF2FlowActive && f2FlowStep?.step && milestoneLevel === "B") {
+    else if (
+      !isNonFFlow &&
+      isF2FlowActive &&
+      f2FlowStep?.step &&
+      milestoneLevel === "B"
+    ) {
       const currentF2Step = getF2FlowStep();
       const f2StepType = currentF2Step.step?.type;
       const expectedMechanism =
@@ -7316,6 +7334,7 @@ const Practice = () => {
     // Only run this for F1 flow (level "B") to avoid interfering with other flows
     // F1 flow should only be active if F2 flow is not active
     else if (
+      !isNonFFlow &&
       isF1FlowActive &&
       f1FlowStep?.step &&
       milestoneLevel === "B" &&
@@ -7388,34 +7407,45 @@ const Practice = () => {
       milestoneLevel === "B" &&
       shouldShowF1 &&
       getF1FlowStep()?.step?.type === "L";
+    // Check if mechanism is empty - handle both string and object types
     const isMechanismEmpty =
-      !mechanism || (typeof mechanism === "string" && mechanism === "");
+      !mechanism ||
+      (typeof mechanism === "string" && mechanism === "") ||
+      (typeof mechanism === "object" && !mechanism.id && !mechanism.name);
 
     console.log("renderMechanics - Checking WordsOrImage condition", {
       isF1LearnStepForRender,
       isMechanismEmpty,
-      mechanism: typeof mechanism === "object" ? mechanism?.name : mechanism,
+      mechanism:
+        typeof mechanism === "object"
+          ? mechanism?.name || mechanism?.id
+          : mechanism,
       mechanismType: typeof mechanism,
       isF1FlowActive,
       milestoneLevel,
       shouldShowF1,
       f1StepType: getF1FlowStep()?.step?.type,
+      isNonFFlow,
     });
 
+    // For non-F flows (m1, m2, etc.), if no mechanism from config, render WordsOrImage
+    // For F flows, use existing logic
     if (
       !isF1LearnStepForRender &&
-      ((isMechanismEmpty &&
-        rFlow !== "true" &&
-        tFlow !== "true" &&
-        readMatch !== "true" &&
-        wordWallFlow !== "true") ||
-        (mechanism &&
-          typeof mechanism === "object" &&
-          mechanism?.id === "mechanic_15" &&
-          rFlow !== "true" &&
-          tFlow !== "true" &&
-          readMatch !== "true" &&
-          wordWallFlow !== "true"))
+      ((isNonFFlow && isMechanismEmpty) ||
+        (!isNonFFlow &&
+          ((isMechanismEmpty &&
+            rFlow !== "true" &&
+            tFlow !== "true" &&
+            readMatch !== "true" &&
+            wordWallFlow !== "true") ||
+            (mechanism &&
+              typeof mechanism === "object" &&
+              mechanism?.id === "mechanic_15" &&
+              rFlow !== "true" &&
+              tFlow !== "true" &&
+              readMatch !== "true" &&
+              wordWallFlow !== "true"))))
     ) {
       const mechanics_data = questions[currentQuestion]?.mechanics_data;
 

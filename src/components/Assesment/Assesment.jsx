@@ -1321,7 +1321,6 @@ const Assesment = ({ discoverStart }) => {
       ? `desktopLevel${level || 1}Mobile`
       : `desktopLevel${level || 1}`;
 
-  const rFlow = String(getLocalData("rFlow"));
   const tFlow = String(getLocalData("tFlow"));
   const rStep = Number(getLocalData("rStep")) || 0;
 
@@ -1340,6 +1339,12 @@ const Assesment = ({ discoverStart }) => {
   const milestoneData = getMilestoneData();
   const milestoneLevel = milestoneData?.data?.milestone_level || null;
   const subMilestoneLevel = milestoneData?.data?.sub_milestone_level || null;
+
+  // Only set rFlow to "true" if milestone level is "B" (F1/F2/F3 flows)
+  // For milestone levels "m1", "m2", etc., rFlow should be "false"
+  const rFlowRaw = getLocalData("rFlow");
+  const rFlow =
+    milestoneLevel === "B" && rFlowRaw === "true" ? "true" : "false";
 
   // F1 flow is triggered when milestone_level is "B" and sub_milestone_level is "F1"
   const shouldShowF1 = milestoneLevel === "B" && subMilestoneLevel === "F1";
@@ -1485,15 +1490,10 @@ const Assesment = ({ discoverStart }) => {
                     ? "Start F2"
                     : isF1FlowActive
                     ? "Start F1"
-                    : rFlow === "true"
+                    : milestoneLevel === "B" && rFlow === "true"
                     ? `Learn Letters`
-                    : //  ${
-                      //     [1, "B"]?.includes(level)
-                      //       ? rStepNo == null || rStepNo === 0 || rStepNo === "0"
-                      //         ? "0"
-                      //         : "1"
-                      //       : rStep
-                      //   }`
+                    : // Only show "Learn Letters" for milestone level "B" (F1/F2/F3 flows)
+                      // For milestone levels "m1", "m2", etc., show "Start Level X"
                       `Start Level ${level}`}
                 </span>
               </Box>

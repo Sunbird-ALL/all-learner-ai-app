@@ -11100,7 +11100,6 @@ export const levelGetContent = {
         //storyMode: true,
         mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
-        customLetters: ["a", "m", "s", "t"],
       },
       {
         title: "P2",
