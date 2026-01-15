@@ -125,18 +125,26 @@ export const initialize = async ({ context, config, metadata }) => {
 
 export const start = (duration) => {
   try {
-    startTime = Date.now(); // Record the start time
+    // Check if telemetry service is initialized
+    if (
+      CsTelemetryModule.instance &&
+      CsTelemetryModule.instance.telemetryService
+    ) {
+      startTime = Date.now(); // Record the start time
 
-    CsTelemetryModule.instance.telemetryService.raiseStartTelemetry({
-      options: getEventOptions(),
-      edata: {
-        type: "content",
-        mode: "play",
-        stageid: url,
-        duration: Number((duration / 1e3).toFixed(2)),
-        dspec: window.navigator.userAgent,
-      },
-    });
+      CsTelemetryModule.instance.telemetryService.raiseStartTelemetry({
+        options: getEventOptions(),
+        edata: {
+          type: "content",
+          mode: "play",
+          stageid: url,
+          duration: Number((duration / 1e3).toFixed(2)),
+          dspec: window.navigator.userAgent,
+        },
+      });
+    } else {
+      console.warn("Telemetry service not initialized, skipping start event");
+    }
   } catch (error) {
     console.error("err", error);
   }
@@ -144,12 +152,26 @@ export const start = (duration) => {
 
 export const response = (context, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
-    CsTelemetryModule.instance.telemetryService.raiseResponseTelemetry(
-      {
-        ...context,
-      },
-      getEventOptions()
-    );
+    try {
+      // Check if telemetry service is initialized
+      if (
+        CsTelemetryModule.instance &&
+        CsTelemetryModule.instance.telemetryService
+      ) {
+        CsTelemetryModule.instance.telemetryService.raiseResponseTelemetry(
+          {
+            ...context,
+          },
+          getEventOptions()
+        );
+      } else {
+        console.warn(
+          "Telemetry service not initialized, skipping response event"
+        );
+      }
+    } catch (error) {
+      console.error("Error raising response telemetry:", error);
+    }
   }
 };
 
@@ -185,18 +207,26 @@ export const Log = (context, pageid, telemetryMode) => {
 
 export const end = (data) => {
   try {
-    const endTime = Date.now(); // Record the end time
-    const duration = ((endTime - startTime) / 1000).toFixed(2); // Calculate duration in seconds
+    // Check if telemetry service is initialized
+    if (
+      CsTelemetryModule.instance &&
+      CsTelemetryModule.instance.telemetryService
+    ) {
+      const endTime = Date.now(); // Record the end time
+      const duration = ((endTime - startTime) / 1000).toFixed(2); // Calculate duration in seconds
 
-    CsTelemetryModule.instance.telemetryService.raiseEndTelemetry({
-      edata: {
-        type: "content",
-        mode: "play",
-        pageid: url,
-        summary: data?.summary || {},
-        duration: duration, // Log the calculated duration
-      },
-    });
+      CsTelemetryModule.instance.telemetryService.raiseEndTelemetry({
+        edata: {
+          type: "content",
+          mode: "play",
+          pageid: url,
+          summary: data?.summary || {},
+          duration: duration, // Log the calculated duration
+        },
+      });
+    } else {
+      console.warn("Telemetry service not initialized, skipping end event");
+    }
   } catch (error) {
     console.error("Error in end telemetry event:", error);
   }
@@ -226,19 +256,31 @@ export const interact = (telemetryMode, subtype = "", pageid = "") => {
 };
 
 export const search = (id) => {
-  CsTelemetryModule.instance.telemetryService.raiseSearchTelemetry({
-    options: getEventOptions(),
-    edata: {
-      // Required
-      type: "content", // Required. content, assessment, asset
-      query: id, // Required. Search query string
-      filters: {}, // Optional. Additional filters
-      sort: {}, // Optional. Additional sort parameters
-      correlationid: "", // Optional. Server generated correlation id (for mobile app's telemetry)
-      size: 0, // Required. Number of search results
-      topn: [{}], // Required. top N (configurable) results with their score
-    },
-  });
+  try {
+    // Check if telemetry service is initialized
+    if (
+      CsTelemetryModule.instance &&
+      CsTelemetryModule.instance.telemetryService
+    ) {
+      CsTelemetryModule.instance.telemetryService.raiseSearchTelemetry({
+        options: getEventOptions(),
+        edata: {
+          // Required
+          type: "content", // Required. content, assessment, asset
+          query: id, // Required. Search query string
+          filters: {}, // Optional. Additional filters
+          sort: {}, // Optional. Additional sort parameters
+          correlationid: "", // Optional. Server generated correlation id (for mobile app's telemetry)
+          size: 0, // Required. Number of search results
+          topn: [{}], // Required. top N (configurable) results with their score
+        },
+      });
+    } else {
+      console.warn("Telemetry service not initialized, skipping search event");
+    }
+  } catch (error) {
+    console.error("Error raising search telemetry:", error);
+  }
 };
 
 export const impression = (currentPage, telemetryMode) => {
@@ -271,28 +313,54 @@ export const impression = (currentPage, telemetryMode) => {
 
 export const error = (error, data, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
-    CsTelemetryModule.instance.telemetryService.raiseErrorTelemetry({
-      options: getEventOptions(),
-      edata: {
-        pageid: url,
-        err: data.err,
-        errtype: data.errtype,
-        stacktrace: error.toString() || "",
-      },
-    });
+    try {
+      // Check if telemetry service is initialized
+      if (
+        CsTelemetryModule.instance &&
+        CsTelemetryModule.instance.telemetryService
+      ) {
+        CsTelemetryModule.instance.telemetryService.raiseErrorTelemetry({
+          options: getEventOptions(),
+          edata: {
+            pageid: url,
+            err: data.err,
+            errtype: data.errtype,
+            stacktrace: error.toString() || "",
+          },
+        });
+      } else {
+        console.warn("Telemetry service not initialized, skipping error event");
+      }
+    } catch (err) {
+      console.error("Error raising error telemetry:", err);
+    }
   }
 };
 
 export const feedback = (data, contentId, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
-    CsTelemetryModule.instance.telemetryService.raiseFeedBackTelemetry({
-      options: getEventOptions(),
-      edata: {
-        contentId: contentId,
-        rating: data,
-        comments: "",
-      },
-    });
+    try {
+      // Check if telemetry service is initialized
+      if (
+        CsTelemetryModule.instance &&
+        CsTelemetryModule.instance.telemetryService
+      ) {
+        CsTelemetryModule.instance.telemetryService.raiseFeedBackTelemetry({
+          options: getEventOptions(),
+          edata: {
+            contentId: contentId,
+            rating: data,
+            comments: "",
+          },
+        });
+      } else {
+        console.warn(
+          "Telemetry service not initialized, skipping feedback event"
+        );
+      }
+    } catch (err) {
+      console.error("Error raising feedback telemetry:", err);
+    }
   }
 };
 

@@ -42,7 +42,7 @@ const content = {
       ],
       correctWord: "Star",
       audio: getAssetAudioUrl(s3Assets.starRAudio) || Assets.starRAudio,
-      flowName: "P1",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -61,7 +61,7 @@ const content = {
       ],
       correctWord: "Spin",
       audio: getAssetAudioUrl(s3Assets.spinRAudio) || Assets.spinRAudio,
-      flowName: "P2",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -77,7 +77,7 @@ const content = {
       ],
       correctWord: "Sky",
       audio: getAssetAudioUrl(s3Assets.skyRAudio) || Assets.skyRAudio,
-      flowName: "P3",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -96,7 +96,7 @@ const content = {
       ],
       correctWord: "Tree",
       audio: getAssetAudioUrl(s3Assets.treeRAudio) || Assets.treeRAudio,
-      flowName: "P4",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -115,7 +115,7 @@ const content = {
       ],
       correctWord: "Dragon",
       audio: getAssetAudioUrl(s3Assets.dragonRAudio) || Assets.dragonRAudio,
-      flowName: "P5",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -131,7 +131,7 @@ const content = {
       ],
       correctWord: "Oil",
       audio: getAssetAudioUrl(s3Assets.oilRAudio) || Assets.oilRAudio,
-      flowName: "P6",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -150,7 +150,7 @@ const content = {
       ],
       correctWord: "Street",
       audio: getAssetAudioUrl(s3Assets.streetRAudio) || Assets.streetRAudio,
-      flowName: "P7",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -169,7 +169,7 @@ const content = {
       ],
       correctWord: "Panther",
       audio: getAssetAudioUrl(s3Assets.pantherRAudio) || Assets.pantherRAudio,
-      flowName: "P8",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -186,7 +186,7 @@ const content = {
       ],
       correctWord: "Listen",
       audio: getAssetAudioUrl(s3Assets.listenRAudio) || Assets.listenRAudio,
-      flowName: "P9",
+      flowName: "S1",
     },
     {
       allwords: [
@@ -205,107 +205,12 @@ const content = {
       ],
       correctWord: "Three",
       audio: getAssetAudioUrl(s3Assets.threeRAudio) || Assets.threeRAudio,
-      flowName: "P10",
-    },
-    {
-      allwords: [
-        {
-          img: getAssetUrl(s3Assets.drawRImg) || Assets.drawRImg,
-          text: "Draw",
-        },
-        {
-          img: getAssetUrl(s3Assets.bagR1TwoImg) || Assets.bagR1TwoImg,
-          text: "Shoes",
-        },
-        {
-          img: getAssetUrl(s3Assets.bagR1ThreeImg) || Assets.bagR1ThreeImg,
-          text: "Watch",
-        },
-      ],
-      correctWord: "Draw",
-      audio: getAssetAudioUrl(s3Assets.drawRAudio) || Assets.drawRAudio,
-      flowName: "P11",
-    },
-    {
-      allwords: [
-        {
-          img: getAssetUrl(s3Assets.capR1TwoImg) || Assets.capR1TwoImg,
-          text: "Belt",
-        },
-        {
-          img: getAssetUrl(s3Assets.scratchRImg) || Assets.scratchRImg,
-          text: "Scratch",
-        },
-        {
-          img: getAssetUrl(s3Assets.capR1ThreeImg) || Assets.capR1ThreeImg,
-          text: "Tie",
-        },
-      ],
-      correctWord: "Scratch",
-      audio: getAssetAudioUrl(s3Assets.scratchRAudio) || Assets.scratchRAudio,
-      flowName: "P12",
-    },
-    {
-      allwords: [
-        {
-          img: getAssetUrl(s3Assets.treasureRImg) || Assets.treasureRImg,
-          text: "Treasure",
-        },
-        {
-          img: getAssetUrl(s3Assets.dogR1TwoImg) || Assets.dogR1TwoImg,
-          text: "Cat",
-        },
-        {
-          img: getAssetUrl(s3Assets.dogR1ThreeImg) || Assets.dogR1ThreeImg,
-          text: "Horse",
-        },
-      ],
-      correctWord: "Treasure",
-      audio: getAssetAudioUrl(s3Assets.treasureRAudio) || Assets.treasureRAudio,
-      flowName: "P13",
-    },
-    {
-      allwords: [
-        {
-          img: getAssetUrl(s3Assets.eggR1TwoImg) || Assets.eggR1TwoImg,
-          text: "Fan",
-        },
-        {
-          img: getAssetUrl(s3Assets.deskRImg) || Assets.deskRImg,
-          text: "Desk",
-        },
-        {
-          img: getAssetUrl(s3Assets.eggR1ThreeImg) || Assets.eggR1ThreeImg,
-          text: "Goat",
-        },
-      ],
-      correctWord: "Desk",
-      audio: getAssetAudioUrl(s3Assets.deskRAudio) || Assets.deskRAudio,
-      flowName: "P14",
-    },
-    {
-      allwords: [
-        {
-          img: getAssetUrl(s3Assets.fanR1OneImg) || Assets.fanR1OneImg,
-          text: "Fan",
-        },
-        {
-          img: getAssetUrl(s3Assets.shoutRImg) || Assets.shoutRImg,
-          text: "Shout",
-        },
-        {
-          img: getAssetUrl(s3Assets.fanR1ThreeImg) || Assets.fanR1ThreeImg,
-          text: "Lamp",
-        },
-      ],
-      correctWord: "Shout",
-      audio: getAssetAudioUrl(s3Assets.shoutRAudio) || Assets.shoutRAudio,
-      flowName: "P15",
+      flowName: "S1",
     },
   ],
 };
 
-const R4 = ({
+const SoundHuntS1 = ({
   setVoiceText,
   setRecordedAudio,
   setVoiceAnimate,
@@ -373,9 +278,6 @@ const R4 = ({
       setTimeout(() => {
         setShowConfetti(false);
         setSelectedWord(null);
-        // setCurrentQuestionIndex(
-        //   (prevIndex) => (prevIndex + 1) % content.L1.length
-        // );
         setRecording("recording");
       }, 3000);
     } else {
@@ -390,10 +292,6 @@ const R4 = ({
 
   const flowNames = [...new Set(content.L1.map((item) => item.flowName))];
   const activeFlow = content.L1[currentQuestionIndex]?.flowName || flowNames[0];
-
-  const correctImage = currentQuestion?.allwords?.find(
-    (word) => word.text === currentQuestion?.correctWord
-  )?.img;
 
   let currentAudio = null;
 
@@ -420,12 +318,10 @@ const R4 = ({
       enableNext={enableNext}
       showTimer={showTimer}
       points={points}
-      pageName={"m14"}
-      //answer={answer}
-      //isRecordingComplete={isRecordingComplete}
+      pageName={"m1"}
       parentWords={parentWords}
-      flowNames={flowNames} // Pass all flows
-      activeFlow={activeFlow} // Pass current active flow
+      flowNames={flowNames}
+      activeFlow={activeFlow}
       rStep={rStep}
       {...{
         steps,
@@ -448,7 +344,7 @@ const R4 = ({
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            height: "70vh",
+            height: "90vh",
             background: "linear-gradient(180deg, #91E7EF 0%, #42C6FF 100%)",
             padding: "16px",
             position: "relative",
@@ -557,7 +453,15 @@ const R4 = ({
                 </button>
               )}
 
-              <div style={{ display: "flex", gap: "24px", marginTop: "24px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "24px",
+                  marginTop: "24px",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
                 {currentQuestion?.allwords.map((item, index) => {
                   const isCorrect =
                     selectedWord === currentQuestion?.correctWord &&
@@ -571,13 +475,14 @@ const R4 = ({
                           ? "rgba(117, 209, 0, 0.6)"
                           : isWrong
                           ? "rgba(255, 127, 54, 0.8)"
-                          : "#FFFFFF",
-                        padding: "8px",
-                        borderRadius: "24px",
+                          : "#1897DE",
+                        padding: isMobile ? "12px 16px" : "16px 24px",
+                        borderRadius: "12px",
                         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                        border: "2px solid rgba(255, 255, 255, 0.5)",
-                        width: isMobile ? "60px" : "128px",
-                        height: isMobile ? "60px" : "128px",
+                        border:
+                          isCorrect || isWrong
+                            ? "2px solid rgba(255, 255, 255, 0.5)"
+                            : "5px solid #10618E",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -586,6 +491,8 @@ const R4 = ({
                         cursor: isAudioPlayedOnce ? "pointer" : "not-allowed",
                         opacity: isAudioPlayedOnce ? 1 : 0.7,
                         transition: "background-color 0.3s ease-in-out",
+                        minWidth: isMobile ? "80px" : "120px",
+                        minHeight: isMobile ? "50px" : "60px",
                       }}
                       onClick={() => {
                         if (isAudioPlayedOnce) {
@@ -593,14 +500,17 @@ const R4 = ({
                         }
                       }}
                     >
-                      <img
-                        src={item.img}
-                        alt={item.text}
+                      <span
                         style={{
-                          width: isMobile ? "55px" : "110px",
-                          height: isMobile ? "55px" : "110px",
+                          color: isCorrect || isWrong ? "#FFFFFF" : "#FFFFFF",
+                          fontWeight: 600,
+                          fontSize: isMobile ? "20px" : "28px",
+                          fontFamily: "Quicksand",
+                          textAlign: "center",
                         }}
-                      />
+                      >
+                        {item.text}
+                      </span>
                     </div>
                   );
                 })}
@@ -619,28 +529,31 @@ const R4 = ({
             >
               <div
                 style={{
-                  backgroundColor: "#FFFFFF",
-                  padding: "8px",
-                  borderRadius: "24px",
+                  backgroundColor: "#1897DE",
+                  padding: "16px 24px",
+                  borderRadius: "12px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                  border: "2px solid rgba(255, 255, 255, 0.5)",
-                  width: "128px",
-                  height: "128px",
+                  border: "5px solid #10618E",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backdropFilter: "blur(56px)",
-                  WebkitBackdropFilter: "blur(56px)",
                   cursor: "pointer",
                   transition: "background-color 0.3s ease-in-out",
+                  minWidth: "120px",
+                  minHeight: "60px",
                 }}
-                //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
-                <img
-                  src={correctImage}
-                  alt={currentQuestion.correctWord}
-                  style={{ width: "110px", height: "110px" }}
-                />
+                <span
+                  style={{
+                    color: "#FFFFFF",
+                    fontWeight: 600,
+                    fontSize: "28px",
+                    fontFamily: "Quicksand",
+                    textAlign: "center",
+                  }}
+                >
+                  {currentQuestion.correctWord}
+                </span>
               </div>
               <img
                 onClick={() => {
@@ -664,28 +577,31 @@ const R4 = ({
             >
               <div
                 style={{
-                  backgroundColor: "#FFFFFF",
-                  padding: "8px",
-                  borderRadius: "24px",
+                  backgroundColor: "#1897DE",
+                  padding: "16px 24px",
+                  borderRadius: "12px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                  border: "2px solid rgba(255, 255, 255, 0.5)",
-                  width: "128px",
-                  height: "128px",
+                  border: "5px solid #10618E",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backdropFilter: "blur(56px)",
-                  WebkitBackdropFilter: "blur(56px)",
                   cursor: "pointer",
                   transition: "background-color 0.3s ease-in-out",
+                  minWidth: "120px",
+                  minHeight: "60px",
                 }}
-                //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
-                <img
-                  src={correctImage}
-                  alt={currentQuestion.correctWord}
-                  style={{ width: "110px", height: "110px" }}
-                />
+                <span
+                  style={{
+                    color: "#FFFFFF",
+                    fontWeight: 600,
+                    fontSize: "28px",
+                    fontFamily: "Quicksand",
+                    textAlign: "center",
+                  }}
+                >
+                  {currentQuestion.correctWord}
+                </span>
               </div>
               <Box style={{ marginTop: "10px", marginBottom: "10px" }}>
                 <RecordVoiceVisualizer />
@@ -698,21 +614,19 @@ const R4 = ({
                   setIsPlaying(false);
                   setIsAudioPlayedOnce(false);
                   if (currentQuestionIndex === content.L1.length - 1) {
-                    setLocalData("rFlow", false);
-                    setLocalData("mFail", false);
-                    setLocalData("rStep", 0);
-                    //window.location.reload();
-                    if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                      navigate("/");
+                    // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
+                    if (handleNext && typeof handleNext === "function") {
+                      // Call handleNext(true) to indicate mechanism is complete and trigger progress update
+                      await handleNext(true);
+                      return;
                     } else {
-                      // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
-                      if (handleNext && typeof handleNext === "function") {
-                        // Call handleNext(true) to indicate mechanism is complete and trigger progress update
-                        await handleNext(true);
-                        navigate("/discover-start");
-                        return;
+                      // Standalone mode - navigate to discover-start
+                      setLocalData("rFlow", false);
+                      setLocalData("mFail", false);
+                      setLocalData("rStep", 0);
+                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                        navigate("/");
                       } else {
-                        // Standalone R flow mode - navigate to discover-start
                         navigate("/discover-start");
                       }
                     }
@@ -764,20 +678,19 @@ const R4 = ({
                     setRecording("no");
                     setIsPlaying(false);
                     if (currentQuestionIndex === content.L1.length - 1) {
-                      setLocalData("rFlow", false);
-                      setLocalData("mFail", false);
-                      setLocalData("rStep", 0);
-                      //window.location.reload();
-                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                        navigate("/");
+                      // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
+                      if (handleNext && typeof handleNext === "function") {
+                        // Call handleNext(true) to indicate mechanism is complete and trigger progress update
+                        await handleNext(true);
+                        return;
                       } else {
-                        // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
-                        if (handleNext && typeof handleNext === "function") {
-                          // Call handleNext(true) to indicate mechanism is complete and trigger progress update
-                          await handleNext(true);
-                          return;
+                        // Standalone mode - navigate to discover-start
+                        setLocalData("rFlow", false);
+                        setLocalData("mFail", false);
+                        setLocalData("rStep", 0);
+                        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                          navigate("/");
                         } else {
-                          // Standalone R flow mode - navigate to discover-start
                           navigate("/discover-start");
                         }
                       }
@@ -798,4 +711,4 @@ const R4 = ({
   );
 };
 
-export default R4;
+export default SoundHuntS1;

@@ -11114,6 +11114,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_P1",
+        mechanism: { id: "soundHunt", name: "soundHunt" },
         multilingual: true,
       },
       {
@@ -11128,6 +11129,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M1_S1",
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
         multilingual: true,
       },
       {

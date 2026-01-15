@@ -305,7 +305,7 @@ const content = {
   ],
 };
 
-const R4 = ({
+const SoundHunt = ({
   setVoiceText,
   setRecordedAudio,
   setVoiceAnimate,
@@ -420,7 +420,7 @@ const R4 = ({
       enableNext={enableNext}
       showTimer={showTimer}
       points={points}
-      pageName={"m14"}
+      pageName={"m1"}
       //answer={answer}
       //isRecordingComplete={isRecordingComplete}
       parentWords={parentWords}
@@ -698,21 +698,19 @@ const R4 = ({
                   setIsPlaying(false);
                   setIsAudioPlayedOnce(false);
                   if (currentQuestionIndex === content.L1.length - 1) {
-                    setLocalData("rFlow", false);
-                    setLocalData("mFail", false);
-                    setLocalData("rStep", 0);
-                    //window.location.reload();
-                    if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                      navigate("/");
+                    // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
+                    if (handleNext && typeof handleNext === "function") {
+                      // Call handleNext(true) to indicate mechanism is complete and trigger progress update
+                      await handleNext(true);
+                      return;
                     } else {
-                      // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
-                      if (handleNext && typeof handleNext === "function") {
-                        // Call handleNext(true) to indicate mechanism is complete and trigger progress update
-                        await handleNext(true);
-                        navigate("/discover-start");
-                        return;
+                      // Standalone mode - navigate to discover-start
+                      setLocalData("rFlow", false);
+                      setLocalData("mFail", false);
+                      setLocalData("rStep", 0);
+                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                        navigate("/");
                       } else {
-                        // Standalone R flow mode - navigate to discover-start
                         navigate("/discover-start");
                       }
                     }
@@ -764,20 +762,19 @@ const R4 = ({
                     setRecording("no");
                     setIsPlaying(false);
                     if (currentQuestionIndex === content.L1.length - 1) {
-                      setLocalData("rFlow", false);
-                      setLocalData("mFail", false);
-                      setLocalData("rStep", 0);
-                      //window.location.reload();
-                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                        navigate("/");
+                      // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
+                      if (handleNext && typeof handleNext === "function") {
+                        // Call handleNext(true) to indicate mechanism is complete and trigger progress update
+                        await handleNext(true);
+                        return;
                       } else {
-                        // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
-                        if (handleNext && typeof handleNext === "function") {
-                          // Call handleNext(true) to indicate mechanism is complete and trigger progress update
-                          await handleNext(true);
-                          return;
+                        // Standalone mode - navigate to discover-start
+                        setLocalData("rFlow", false);
+                        setLocalData("mFail", false);
+                        setLocalData("rStep", 0);
+                        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                          navigate("/");
                         } else {
-                          // Standalone R flow mode - navigate to discover-start
                           navigate("/discover-start");
                         }
                       }
@@ -798,4 +795,4 @@ const R4 = ({
   );
 };
 
-export default R4;
+export default SoundHunt;

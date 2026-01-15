@@ -17,6 +17,10 @@ import F3, { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
 import Barakhadi from "../../RFlow/Barakhadi";
 import R3Flow from "../../RFlow/R3";
 import R4 from "../../RFlow/R4";
+import SoundHunt from "../../RFlow/SoundHunt";
+import SoundHuntS1 from "../../RFlow/SoundHuntS1";
+import SoundHuntS1Combined from "../../RFlow/SoundHuntS1Combined";
+import WordHuntS1 from "../../RFlow/WordHuntS1";
 import TowreFlow from "../../components/Practice/TowreFlow";
 import McqFlow from "../../components/Practice/McqFlow";
 import JumbledWord from "../../components/Practice/JumbledWord";
@@ -4394,7 +4398,8 @@ const Practice = () => {
     window.addEventListener("storage", handleStorageChange);
 
     // Also poll periodically to catch changes from same window
-    const interval = setInterval(checkF2FlowIndex, 100);
+    // Use shorter interval (50ms) for faster sync during initial load
+    const interval = setInterval(checkF2FlowIndex, 50);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -4447,12 +4452,46 @@ const Practice = () => {
 
   // Check if F2 flow is active
   // Use state to ensure re-renders when flow advances
+  // Also check localStorage as fallback in case state hasn't updated yet (e.g., during fetchDetails)
+  const f2FlowIndexFromStorage = getLocalData("f2FlowIndex");
+  const effectiveF2FlowIndex =
+    f2FlowIndexFromStorage !== null
+      ? Number(f2FlowIndexFromStorage)
+      : f2FlowIndexState;
   const f2FlowStep = {
-    index: f2FlowIndexState,
-    step: F2_FLOW[f2FlowIndexState] || null,
-    isLast: f2FlowIndexState === F2_FLOW.length - 1,
+    index: effectiveF2FlowIndex,
+    step: F2_FLOW[effectiveF2FlowIndex] || null,
+    isLast: effectiveF2FlowIndex === F2_FLOW.length - 1,
   };
   const isF2FlowActive = shouldShowF2 && f2FlowStep.step !== null;
+
+  // Log for debugging if there's a mismatch
+  if (
+    shouldShowF2 &&
+    f2FlowIndexFromStorage !== null &&
+    Number(f2FlowIndexFromStorage) !== f2FlowIndexState
+  ) {
+    console.log(
+      `F2 flow index mismatch detected: state=${f2FlowIndexState}, storage=${f2FlowIndexFromStorage}, using storage value for rendering`
+    );
+    // Force state update to match localStorage immediately
+    setF2FlowIndexState(Number(f2FlowIndexFromStorage));
+  }
+
+  // Log F2 flow step calculation for debugging
+  if (shouldShowF2) {
+    console.log(`F2 flow step calculation:`, {
+      f2FlowIndexState,
+      f2FlowIndexFromStorage,
+      effectiveF2FlowIndex,
+      step: f2FlowStep.step,
+      stepType: f2FlowStep.step?.type,
+      stepNumber: f2FlowStep.step?.step,
+      shouldShowF2,
+      milestoneLevel,
+      subMilestoneLevel,
+    });
+  }
 
   // Check if F3 flow is active
   // Use state to ensure re-renders when flow advances
@@ -5797,6 +5836,18 @@ const Practice = () => {
         }
       } else {
         currentGetContent = getCurrentContent(newPracticeStep);
+
+        // For non-F flows (m1, m2, etc.), set mechanism immediately from config
+        // This ensures the mechanism updates right away when moving between steps
+        if (currentGetContent?.mechanism) {
+          console.log(
+            "handleNext - Setting mechanism immediately for non-F flow:",
+            currentGetContent.mechanism,
+            "step:",
+            newPracticeStep
+          );
+          setMechanism(currentGetContent.mechanism);
+        }
       }
 
       // Add null check for currentGetContent
@@ -6118,38 +6169,10 @@ const Practice = () => {
           setQuestions(dummyQuestions);
         }
 
-        // TODO: needs to revisit this logic
-        // For F1 flow, mechanism is already set correctly above based on F1_FLOW step type, so don't override it
-        // For non-F1 flow, set mechanism from currentGetContent
-        // IMPORTANT: Always check F1 flow status inside setTimeout because the flag might have been cleared
-        setTimeout(() => {
-          // Double-check F1 flow status before setting mechanism (flag might have been cleared)
-          const currentF1Check = getF1FlowStep();
-          const isF1FlowActiveNow =
-            milestoneLevel === "B" && currentF1Check.step !== null;
-
-          if (isF1FlowActiveNow) {
-            // For F1 flow, NEVER override mechanism - it's already set correctly based on F1_FLOW step type
-            console.log(
-              "handleNext - setTimeout: Skipping mechanism override for F1 flow (already set correctly)",
-              {
-                currentF1Index: currentF1Check.index,
-                currentF1StepType: currentF1Check.step?.type,
-                milestoneLevel,
-              }
-            );
-            return; // Don't set mechanism for F1 flow
-          }
-
-          // Only set mechanism for non-F1 flow
-          if (currentGetContent?.mechanism) {
-            console.log(
-              "handleNext - setTimeout: Setting mechanism from currentGetContent:",
-              currentGetContent.mechanism
-            );
-            setMechanism(currentGetContent.mechanism);
-          }
-        }, 1000);
+        // Mechanism is now set immediately above for all flows:
+        // - F1/F2/F3 flows: Set based on flow step type
+        // - Non-F flows (m1, m2, etc.): Set immediately from getCurrentContent
+        // No setTimeout needed - this prevents blank screens and ensures immediate rendering
 
         // if(virtualId === "6760800019"){
         //   setLevel(12);
@@ -6404,6 +6427,8 @@ const Practice = () => {
               }${F1_FLOW[f1FlowIndex]?.step || ""}`
             );
             setLocalData("f1FlowIndex", f1FlowIndex);
+            // IMPORTANT: Update state to trigger re-render with correct flow index
+            setF1FlowIndexState(f1FlowIndex);
             // Update userState to match the flow index for practiceProgress calculation
             userState = f1FlowIndex;
           } else {
@@ -6419,16 +6444,24 @@ const Practice = () => {
           // But F2_FLOW array is 0-indexed (0-20), so convert
           const f2FlowIndex = userState > 0 ? userState - 1 : 0;
 
-          // IMPORTANT: If F1 flow index is null (F1 completed), ensure F2 starts from index 0
-          // This prevents restoring old F2 progress (e.g., lesson 21 = index 20 = F2-A3)
-          // when transitioning from F1 to F2
+          // IMPORTANT: Only reset F2 to 0 if transitioning from F1 to F2 AND backend shows stale progress
+          // If user already has F2 progress (lesson 2, 3, etc.), restore it normally
+          // Only reset if: F1 is complete AND this looks like stale F2 progress (lesson > 1 but no existing F2 localStorage)
           const f1FlowIndex = getLocalData("f1FlowIndex");
-          if (f1FlowIndex === null && f2FlowIndex > 0) {
+          const existingF2FlowIndex = getLocalData("f2FlowIndex");
+          const isTransitioningFromF1 =
+            f1FlowIndex === null && existingF2FlowIndex === null;
+          const looksLikeStaleProgress = f2FlowIndex > 0 && userState > 1; // lesson > 1 suggests stale progress
+
+          if (isTransitioningFromF1 && looksLikeStaleProgress) {
+            // This is a fresh F2 start after F1 completion, but backend has stale F2 progress
             console.warn(
-              `F1 flow is complete but F2 progress shows lesson ${userState} (index ${f2FlowIndex}). ` +
+              `F1 flow is complete and F2 is starting fresh, but backend shows lesson ${userState} (index ${f2FlowIndex}). ` +
                 `This might be stale F2 progress. Resetting F2 to index 0 to start fresh.`
             );
             setLocalData("f2FlowIndex", 0);
+            // IMPORTANT: Update state to trigger re-render
+            setF2FlowIndexState(0);
             userState = 0;
           } else if (f2FlowIndex >= 0 && f2FlowIndex < F2_FLOW.length) {
             console.log(
@@ -6437,12 +6470,22 @@ const Practice = () => {
               }${F2_FLOW[f2FlowIndex]?.step || ""}`
             );
             setLocalData("f2FlowIndex", f2FlowIndex);
+            // IMPORTANT: Update state to trigger re-render with correct flow index
+            // Update state immediately and synchronously
+            console.log(
+              `Setting F2 flow index state from ${f2FlowIndexState} to ${f2FlowIndex} (lesson ${userState} -> index ${f2FlowIndex} -> ${
+                F2_FLOW[f2FlowIndex]?.type
+              }${F2_FLOW[f2FlowIndex]?.step || ""})`
+            );
+            setF2FlowIndexState(f2FlowIndex);
             userState = f2FlowIndex;
           } else {
             console.warn(
               `Invalid F2 flow index ${f2FlowIndex} from lesson ${userState}, starting from beginning`
             );
             setLocalData("f2FlowIndex", 0);
+            // IMPORTANT: Update state to trigger re-render
+            setF2FlowIndexState(0);
             userState = 0;
           }
         } else if (subMilestoneLevel === "F3") {
@@ -6457,6 +6500,8 @@ const Practice = () => {
               }${F3_FLOW[f3FlowIndex]?.step || ""}`
             );
             setLocalData("f3FlowIndex", f3FlowIndex);
+            // IMPORTANT: Update state to trigger re-render with correct flow index
+            setF3FlowIndexState(f3FlowIndex);
             userState = f3FlowIndex;
           } else {
             console.warn(
@@ -7561,6 +7606,288 @@ const Practice = () => {
           }}
         />
       );
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      (mechanism.name === "r0" ||
+        mechanism.name === "r1" ||
+        mechanism.name === "r2" ||
+        mechanism.name === "r3" ||
+        mechanism.name === "r4")
+    ) {
+      // R0, R1, R2, R3, R4 mechanisms from config
+      const getCurrentContentForR = getCurrentContent(
+        progressData?.currentPracticeStep || 0
+      );
+      const customLetters = getCurrentContentForR?.customLetters;
+
+      // Common props for all R components
+      const commonProps = {
+        page,
+        setPage,
+        level: level,
+        header:
+          questions[currentQuestion]?.contentType === "image"
+            ? `Guess the below image`
+            : `Speak the below word`,
+        currentImg: currentImage,
+        parentWords: parentWords,
+        contentType: currentContentType,
+        contentId: questions[currentQuestion]?.contentId,
+        setVoiceText,
+        setRecordedAudio,
+        setVoiceAnimate,
+        storyLine,
+        handleNext,
+        type: "word",
+        enableNext,
+        showTimer: false,
+        points,
+        steps: questions?.length,
+        currentStep: currentQuestion + 1,
+        progressData,
+        showProgress: true,
+        background:
+          isShowCase &&
+          "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+        playTeacherAudio,
+        callUpdateLearner: isShowCase,
+        disableScreen,
+        isShowCase,
+        handleBack: !isShowCase && handleBack,
+        setEnableNext,
+        loading,
+        setOpenMessageDialog,
+        vocabCount,
+        wordCount,
+      };
+
+      // Render appropriate R component based on mechanism name
+      if (mechanism.name === "r0") {
+        return <R0 {...commonProps} customLetters={customLetters} />;
+      } else if (mechanism.name === "r1") {
+        return <R1 {...commonProps} />;
+      } else if (mechanism.name === "r2") {
+        return <R2 {...commonProps} />;
+      } else if (mechanism.name === "r3") {
+        return <R3 {...commonProps} />;
+      } else if (mechanism.name === "r4") {
+        return <R4 {...commonProps} />;
+      }
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "soundHunt"
+    ) {
+      // SoundHunt mechanism from config
+      const getCurrentContentForSoundHunt = getCurrentContent(
+        progressData?.currentPracticeStep || 0
+      );
+      const customLetters = getCurrentContentForSoundHunt?.customLetters;
+
+      // Common props for SoundHunt component
+      const commonProps = {
+        page,
+        setPage,
+        level: level,
+        header:
+          questions[currentQuestion]?.contentType === "image"
+            ? `Guess the below image`
+            : `Speak the below word`,
+        currentImg: currentImage,
+        parentWords: parentWords,
+        contentType: currentContentType,
+        contentId: questions[currentQuestion]?.contentId,
+        setVoiceText,
+        setRecordedAudio,
+        setVoiceAnimate,
+        storyLine,
+        handleNext,
+        type: "word",
+        enableNext,
+        showTimer: false,
+        points,
+        steps: questions?.length,
+        currentStep: currentQuestion + 1,
+        progressData,
+        showProgress: true,
+        background:
+          isShowCase &&
+          "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+        playTeacherAudio,
+        callUpdateLearner: isShowCase,
+        disableScreen,
+        isShowCase,
+        handleBack: !isShowCase && handleBack,
+        setEnableNext,
+        loading,
+        setOpenMessageDialog,
+        vocabCount,
+        wordCount,
+      };
+
+      return <SoundHunt {...commonProps} customLetters={customLetters} />;
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "soundHuntS1"
+    ) {
+      // SoundHuntS1 mechanism from config
+      const getCurrentContentForSoundHuntS1 = getCurrentContent(
+        progressData?.currentPracticeStep || 0
+      );
+      const customLetters = getCurrentContentForSoundHuntS1?.customLetters;
+
+      // Common props for SoundHuntS1 component
+      const commonProps = {
+        page,
+        setPage,
+        level: level,
+        header:
+          questions[currentQuestion]?.contentType === "image"
+            ? `Guess the below image`
+            : `Speak the below word`,
+        currentImg: currentImage,
+        parentWords: parentWords,
+        contentType: currentContentType,
+        contentId: questions[currentQuestion]?.contentId,
+        setVoiceText,
+        setRecordedAudio,
+        setVoiceAnimate,
+        storyLine,
+        handleNext,
+        type: "word",
+        enableNext,
+        showTimer: false,
+        points,
+        steps: questions?.length,
+        currentStep: currentQuestion + 1,
+        progressData,
+        showProgress: true,
+        background:
+          isShowCase &&
+          "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+        playTeacherAudio,
+        callUpdateLearner: isShowCase,
+        disableScreen,
+        isShowCase,
+        handleBack: !isShowCase && handleBack,
+        setEnableNext,
+        loading,
+        setOpenMessageDialog,
+        vocabCount,
+        wordCount,
+      };
+
+      return <SoundHuntS1 {...commonProps} customLetters={customLetters} />;
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "soundHuntS1Combined"
+    ) {
+      // SoundHuntS1Combined mechanism - handles both Word Hunt and Sound Hunt for m1 s1
+      const getCurrentContentForCombined = getCurrentContent(
+        progressData?.currentPracticeStep || 0
+      );
+      const customLetters = getCurrentContentForCombined?.customLetters;
+
+      // Common props for SoundHuntS1Combined component
+      const commonProps = {
+        page,
+        setPage,
+        level: level,
+        header:
+          questions[currentQuestion]?.contentType === "image"
+            ? `Guess the below image`
+            : `Speak the below word`,
+        currentImg: currentImage,
+        parentWords: parentWords,
+        contentType: currentContentType,
+        contentId: questions[currentQuestion]?.contentId,
+        setVoiceText,
+        setRecordedAudio,
+        setVoiceAnimate,
+        storyLine,
+        handleNext,
+        type: "word",
+        enableNext,
+        showTimer: false,
+        points,
+        steps: questions?.length,
+        currentStep: currentQuestion + 1,
+        progressData,
+        showProgress: true,
+        background:
+          isShowCase &&
+          "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+        playTeacherAudio,
+        callUpdateLearner: isShowCase,
+        disableScreen,
+        isShowCase,
+        handleBack: !isShowCase && handleBack,
+        setEnableNext,
+        loading,
+        setOpenMessageDialog,
+        vocabCount,
+        wordCount,
+      };
+
+      return (
+        <SoundHuntS1Combined {...commonProps} customLetters={customLetters} />
+      );
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "wordHuntS1"
+    ) {
+      // WordHuntS1 mechanism from config - Read the word and choose the right sound
+      const getCurrentContentForWordHuntS1 = getCurrentContent(
+        progressData?.currentPracticeStep || 0
+      );
+      const customLetters = getCurrentContentForWordHuntS1?.customLetters;
+
+      // Common props for WordHuntS1 component
+      const commonProps = {
+        page,
+        setPage,
+        level: level,
+        header:
+          questions[currentQuestion]?.contentType === "image"
+            ? `Guess the below image`
+            : `Speak the below word`,
+        currentImg: currentImage,
+        parentWords: parentWords,
+        contentType: currentContentType,
+        contentId: questions[currentQuestion]?.contentId,
+        setVoiceText,
+        setRecordedAudio,
+        setVoiceAnimate,
+        storyLine,
+        handleNext,
+        type: "word",
+        enableNext,
+        showTimer: false,
+        points,
+        steps: questions?.length,
+        currentStep: currentQuestion + 1,
+        progressData,
+        showProgress: true,
+        background:
+          isShowCase &&
+          "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+        playTeacherAudio,
+        callUpdateLearner: isShowCase,
+        disableScreen,
+        isShowCase,
+        handleBack: !isShowCase && handleBack,
+        setEnableNext,
+        loading,
+        setOpenMessageDialog,
+        vocabCount,
+        wordCount,
+      };
+
+      return <WordHuntS1 {...commonProps} customLetters={customLetters} />;
     } else if (readMatch === "true") {
       return (
         <ReadMatch
@@ -8700,52 +9027,6 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism && mechanism.name === "r3") {
-      return (
-        <R3
-          page={page}
-          setPage={setPage}
-          {...{
-            level: level,
-            header:
-              questions[currentQuestion]?.contentType === "image"
-                ? `Guess the below image`
-                : `Speak the below word`,
-            //
-            currentImg: currentImage,
-            parentWords: parentWords,
-            contentType: currentContentType,
-            contentId: questions[currentQuestion]?.contentId,
-            setVoiceText,
-            setRecordedAudio,
-            setVoiceAnimate,
-            storyLine,
-            handleNext,
-            type: "word",
-            // image: elephant,
-            enableNext,
-            showTimer: false,
-            points,
-            steps: questions?.length,
-            currentStep: currentQuestion + 1,
-            progressData,
-            showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-            playTeacherAudio,
-            callUpdateLearner: isShowCase,
-            disableScreen,
-            isShowCase,
-            handleBack: !isShowCase && handleBack,
-            setEnableNext,
-            loading,
-            setOpenMessageDialog,
-            vocabCount,
-            wordCount,
-          }}
-        />
-      );
     } else if (mechanism && mechanism.name === "askMore") {
       return (
         <AskMoreM14
@@ -9584,10 +9865,18 @@ const Practice = () => {
       // For F2 flow, all steps (Learn, Practice, Apply) use LetterHunt
       // F2 flow takes precedence over F1 flow
       if (isF2FlowActive) {
-        const currentF2Step = getF2FlowStep();
+        // Use effectiveF2FlowIndex from component level (which uses localStorage fallback)
+        // instead of getF2FlowStep() which might use stale state
+        const currentF2Step = {
+          index: effectiveF2FlowIndex,
+          step: F2_FLOW[effectiveF2FlowIndex] || null,
+          isLast: effectiveF2FlowIndex === F2_FLOW.length - 1,
+        };
         const f2StepType = currentF2Step.step?.type;
         console.log("LetterHunt render - F2 flow check:", {
           f2FlowIndexState,
+          effectiveF2FlowIndex,
+          f2FlowIndexFromStorage,
           currentF2StepIndex: currentF2Step.index,
           f2StepType,
           mechanism: mechanism?.name,
