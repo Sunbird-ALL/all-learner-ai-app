@@ -3002,3 +3002,24 @@ export const confettiImg =
   "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/confetti.svg";
 export const yellowLightImg =
   "https://raw.githubusercontent.com/anik200002/ekstephindi/65fac242857211c59db790a03dac98a7fa956a06/yellowLight.svg";
+
+
+  // Temp fix
+
+export const bagR1ThreeAudio = "";
+export const bagR1TwoAudio = "";
+export const capR1ThreeAudio = "";
+export const capR1TwoAudio = "";
+export const dogR1ThreeAudio = "";
+export const dogR1TwoAudio = "";
+export const eggR1ThreeAudio = "";
+export const eggR1TwoAudio = "";
+export const fanR1ThreeAudio = "";
+export const fanR1TwoAudio = "";
+export const hatR1ThreeAudio = "";
+export const hatR1TwoAudio = "";
+export const pillowR1ThreeAudio = "";
+export const ropeR1ThreeAudio = "";
+export const shopAudio = "";
+export const AppleAudio = "";
+export const sunsetAudio = "";

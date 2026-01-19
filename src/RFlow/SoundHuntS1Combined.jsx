@@ -36,190 +36,924 @@ const soundMatchContent = {
   L1: [
     {
       allwords: [
-        { img: getAssetUrl(s3Assets.Apple) || Assets.Apple, text: "Apple" },
-        { img: Assets.StarRImg, text: "Star" },
-        {
-          img: getAssetUrl(s3Assets.jugR1OneImg) || Assets.jugR1OneImg,
-          text: "Mug",
-        },
+      {
+        img: getAssetUrl(s3Assets.cookImg),
+        text: "cook",
+        audio: getAssetAudioUrl(s3Assets.cookAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.godImg2),
+        text: "god",
+        audio: getAssetAudioUrl(s3Assets.godAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.badImg),
+        text: "bad",
+        audio: getAssetAudioUrl(s3Assets.badAudio),
+      }
       ],
-      correctWord: "Star",
-      audio: getAssetAudioUrl(s3Assets.starRAudio) || Assets.starRAudio,
-      flowName: "S1",
-      type: "soundMatch", // Listen to sound, choose word
-    },
-    {
-      allwords: [
-        {
-          img: getAssetUrl(s3Assets.sunsetImg) || Assets.sunsetImg,
-          text: "Sunset",
-        },
-        {
-          img: getAssetUrl(s3Assets.basketImg) || Assets.basketImg,
-          text: "Basket",
-        },
-        {
-          img: getAssetUrl(s3Assets.spinRImg) || Assets.spinRImg,
-          text: "Spin",
-        },
-      ],
-      correctWord: "Spin",
-      audio: getAssetAudioUrl(s3Assets.spinRAudio) || Assets.spinRAudio,
+      correctWord: "bad",
+      audio: getAssetAudioUrl(s3Assets.badAudio),
       flowName: "S1",
       type: "soundMatch",
     },
     {
       allwords: [
-        { img: getAssetUrl(s3Assets.skyRImg) || Assets.skyRImg, text: "Sky" },
-        {
-          img: getAssetUrl(s3Assets.bagR1TwoImg) || Assets.bagR1TwoImg,
-          text: "Shoes",
-        },
-        {
-          img: getAssetUrl(s3Assets.bagR1ThreeImg) || Assets.bagR1ThreeImg,
-          text: "Watch",
-        },
+      {
+        img: getAssetUrl(s3Assets.godImg2),
+        text: "god",
+        audio: getAssetAudioUrl(s3Assets.godAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.momImg),
+        text: "mom",
+        audio: getAssetAudioUrl(s3Assets.momAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.goatImg),
+        text: "goat",
+        audio: getAssetAudioUrl(s3Assets.goatAudio),
+      }
       ],
-      correctWord: "Sky",
-      audio: getAssetAudioUrl(s3Assets.skyRAudio) || Assets.skyRAudio,
+      correctWord: "mom",
+      audio: getAssetAudioUrl(s3Assets.momAudio),
       flowName: "S1",
       type: "soundMatch",
     },
     {
       allwords: [
-        {
-          img: getAssetUrl(s3Assets.capR1TwoImg) || Assets.capR1TwoImg,
-          text: "Belt",
-        },
-        {
-          img: getAssetUrl(s3Assets.treeRImg) || Assets.treeRImg,
-          text: "Tree",
-        },
-        {
-          img: getAssetUrl(s3Assets.capR1ThreeImg) || Assets.capR1ThreeImg,
-          text: "Tie",
-        },
+      {
+        img: getAssetUrl(s3Assets.hopImg),
+        text: "hop",
+        audio: getAssetAudioUrl(s3Assets.hopAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.fatImg),
+        text: "fat",
+        audio: getAssetAudioUrl(s3Assets.fatAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.cookImg),
+        text: "cook",
+        audio: getAssetAudioUrl(s3Assets.cookAudio),
+      }
       ],
-      correctWord: "Tree",
-      audio: getAssetAudioUrl(s3Assets.treeRAudio) || Assets.treeRAudio,
+      correctWord: "hop",
+      audio: getAssetAudioUrl(s3Assets.hopAudio),
       flowName: "S1",
       type: "soundMatch",
     },
     {
       allwords: [
-        {
-          img: getAssetUrl(s3Assets.dragonRImg) || Assets.dragonRImg,
-          text: "Dragon",
-        },
-        {
-          img: getAssetUrl(s3Assets.dogR1TwoImg) || Assets.dogR1TwoImg,
-          text: "Cat",
-        },
-        {
-          img: getAssetUrl(s3Assets.dogR1ThreeImg) || Assets.dogR1ThreeImg,
-          text: "Horse",
-        },
+      {
+        img: getAssetUrl(s3Assets.fatImg),
+        text: "fat",
+        audio: getAssetAudioUrl(s3Assets.fatAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.momImg),
+        text: "mom",
+        audio: getAssetAudioUrl(s3Assets.momAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.sadImg),
+        text: "sad",
+        audio: getAssetAudioUrl(s3Assets.sadAudio),
+      }
       ],
-      correctWord: "Dragon",
-      audio: getAssetAudioUrl(s3Assets.dragonRAudio) || Assets.dragonRAudio,
+      correctWord: "fat",
+      audio: getAssetAudioUrl(s3Assets.fatAudio),
       flowName: "S1",
       type: "soundMatch",
     },
     {
       allwords: [
-        {
-          img: getAssetUrl(s3Assets.eggR1TwoImg) || Assets.eggR1TwoImg,
-          text: "Fan",
-        },
-        { img: getAssetUrl(s3Assets.oilRImg) || Assets.oilRImg, text: "Oil" },
-        {
-          img: getAssetUrl(s3Assets.eggR1ThreeImg) || Assets.eggR1ThreeImg,
-          text: "Goat",
-        },
+      {
+        img: getAssetUrl(s3Assets.goatImg),
+        text: "goat",
+        audio: getAssetAudioUrl(s3Assets.goatAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.nineImg),
+        text: "nine",
+        audio: getAssetAudioUrl(s3Assets.nineAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.himImg),
+        text: "him",
+        audio: getAssetAudioUrl(s3Assets.himAudio),
+      }
       ],
-      correctWord: "Oil",
-      audio: getAssetAudioUrl(s3Assets.oilRAudio) || Assets.oilRAudio,
+      correctWord: "him",
+      audio: getAssetAudioUrl(s3Assets.himAudio),
       flowName: "S1",
       type: "soundMatch",
     },
     {
       allwords: [
-        {
-          img: getAssetUrl(s3Assets.streetRImg) || Assets.streetRImg,
-          text: "Street",
-        },
-        {
-          img: getAssetUrl(s3Assets.fanR1TwoImg) || Assets.fanR1TwoImg,
-          text: "Table",
-        },
-        {
-          img: getAssetUrl(s3Assets.fanR1ThreeImg) || Assets.fanR1ThreeImg,
-          text: "Lamp",
-        },
+      {
+        img: getAssetUrl(s3Assets.godImg2),
+        text: "god",
+        audio: getAssetAudioUrl(s3Assets.godAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.fatImg),
+        text: "fat",
+        audio: getAssetAudioUrl(s3Assets.fatAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.sadImg),
+        text: "sad",
+        audio: getAssetAudioUrl(s3Assets.sadAudio),
+      }
       ],
-      correctWord: "Street",
-      audio: getAssetAudioUrl(s3Assets.streetRAudio) || Assets.streetRAudio,
+      correctWord: "sad",
+      audio: getAssetAudioUrl(s3Assets.sadAudio),
       flowName: "S1",
       type: "soundMatch",
     },
     {
       allwords: [
-        {
-          img: getAssetUrl(s3Assets.pantherRImg) || Assets.pantherRImg,
-          text: "Panther",
-        },
-        {
-          img: getAssetUrl(s3Assets.hatR1TwoImg) || Assets.hatR1TwoImg,
-          text: "Bat",
-        },
-        {
-          img: getAssetUrl(s3Assets.hatR1ThreeImg) || Assets.hatR1ThreeImg,
-          text: "Carpet",
-        },
+      {
+        img: getAssetUrl(s3Assets.godImg2),
+        text: "god",
+        audio: getAssetAudioUrl(s3Assets.godAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.cookImg),
+        text: "cook",
+        audio: getAssetAudioUrl(s3Assets.cookAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.goatImg),
+        text: "goat",
+        audio: getAssetAudioUrl(s3Assets.goatAudio),
+      }
       ],
-      correctWord: "Panther",
-      audio: getAssetAudioUrl(s3Assets.pantherRAudio) || Assets.pantherRAudio,
+      correctWord: "cook",
+      audio: getAssetAudioUrl(s3Assets.cookAudio),
       flowName: "S1",
       type: "soundMatch",
     },
     {
       allwords: [
-        { img: getAssetUrl(s3Assets.shopImg) || Assets.shopImg, text: "Shop" },
-        {
-          img: getAssetUrl(s3Assets.listenRImg) || Assets.listenRImg,
-          text: "Listen",
-        },
-        {
-          img:
-            getAssetUrl(s3Assets.pillowR1ThreeImg) || Assets.pillowR1ThreeImg,
-          text: "Mug",
-        },
+      {
+        img: getAssetUrl(s3Assets.godImg2),
+        text: "god",
+        audio: getAssetAudioUrl(s3Assets.godAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.nineImg),
+        text: "nine",
+        audio: getAssetAudioUrl(s3Assets.nineAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.fatImg),
+        text: "fat",
+        audio: getAssetAudioUrl(s3Assets.fatAudio),
+      }
       ],
-      correctWord: "Listen",
-      audio: getAssetAudioUrl(s3Assets.listenRAudio) || Assets.listenRAudio,
+      correctWord: "god",
+      audio: getAssetAudioUrl(s3Assets.godAudio2),
       flowName: "S1",
       type: "soundMatch",
     },
     {
       allwords: [
-        {
-          img: getAssetUrl(s3Assets.threeRImg) || Assets.threeRImg,
-          text: "Three",
-        },
-        {
-          img: getAssetUrl(s3Assets.ropeR1OneImg) || Assets.ropeR1OneImg,
-          text: "Rope",
-        },
-        {
-          img: getAssetUrl(s3Assets.ropeR1ThreeImg) || Assets.ropeR1ThreeImg,
-          text: "Pen",
-        },
+      {
+        img: getAssetUrl(s3Assets.cookImg),
+        text: "cook",
+        audio: getAssetAudioUrl(s3Assets.cookAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.nineImg),
+        text: "nine",
+        audio: getAssetAudioUrl(s3Assets.nineAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.fatImg),
+        text: "fat",
+        audio: getAssetAudioUrl(s3Assets.fatAudio),
+      }
       ],
-      correctWord: "Three",
-      audio: getAssetAudioUrl(s3Assets.threeRAudio) || Assets.threeRAudio,
+      correctWord: "nine",
+      audio: getAssetAudioUrl(s3Assets.nineAudio),
       flowName: "S1",
       type: "soundMatch",
     },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.goatImg),
+        text: "goat",
+        audio: getAssetAudioUrl(s3Assets.goatAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.badImg),
+        text: "bad",
+        audio: getAssetAudioUrl(s3Assets.badAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.cookImg),
+        text: "cook",
+        audio: getAssetAudioUrl(s3Assets.cookAudio),
+      }
+      ],
+      correctWord: "goat",
+      audio: getAssetAudioUrl(s3Assets.goatAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.wideImg),
+        text: "wide",
+        audio: getAssetAudioUrl(s3Assets.wideAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.noteImg),
+        text: "note",
+        audio: getAssetAudioUrl(s3Assets.noteAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.buyImg),
+        text: "buy",
+        audio: getAssetAudioUrl(s3Assets.buyAudio),
+      }
+      ],
+      correctWord: "buy",
+      audio: getAssetAudioUrl(s3Assets.buyAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.happy2Img),
+        text: "happy",
+        audio: getAssetAudioUrl(s3Assets.happy3Audio),
+      },
+      {
+        img: getAssetUrl(s3Assets.wideImg),
+        text: "wide",
+        audio: getAssetAudioUrl(s3Assets.wideAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.fineImg),
+        text: "fine",
+        audio: getAssetAudioUrl(s3Assets.fineAudio),
+      }
+      ],
+      correctWord: "fine",
+      audio: getAssetAudioUrl(s3Assets.fineAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.kindImg),
+        text: "kind",
+        audio: getAssetAudioUrl(s3Assets.kindAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.bodyImg),
+        text: "body",
+        audio: getAssetAudioUrl(s3Assets.bodyAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.buyImg),
+        text: "buy",
+        audio: getAssetAudioUrl(s3Assets.buyAudio),
+      }
+      ],
+      correctWord: "kind",
+      audio: getAssetAudioUrl(s3Assets.kindAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.fineImg),
+        text: "fine",
+        audio: getAssetAudioUrl(s3Assets.fineAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.halfImg),
+        text: "half",
+        audio: getAssetAudioUrl(s3Assets.halfAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.noteImg),
+        text: "note",
+        audio: getAssetAudioUrl(s3Assets.noteAudio),
+      }
+      ],
+      correctWord: "note",
+      audio: getAssetAudioUrl(s3Assets.noteAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.happy2Img),
+        text: "happy",
+        audio: getAssetAudioUrl(s3Assets.happy3Audio),
+      },
+      {
+        img: getAssetUrl(s3Assets.wideImg),
+        text: "wide",
+        audio: getAssetAudioUrl(s3Assets.wideAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.hideImg),
+        text: "hide",
+        audio: getAssetAudioUrl(s3Assets.hideAudio),
+      }
+      ],
+      correctWord: "wide",
+      audio: getAssetAudioUrl(s3Assets.wideAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.halfImg),
+        text: "half",
+        audio: getAssetAudioUrl(s3Assets.halfAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.knowImg),
+        text: "know",
+        audio: getAssetAudioUrl(s3Assets.knowAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.hideImg),
+        text: "hide",
+        audio: getAssetAudioUrl(s3Assets.hideAudio),
+      }
+      ],
+      correctWord: "know",
+      audio: getAssetAudioUrl(s3Assets.knowAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.fineImg),
+        text: "fine",
+        audio: getAssetAudioUrl(s3Assets.fineAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.halfImg),
+        text: "half",
+        audio: getAssetAudioUrl(s3Assets.halfAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.bodyImg),
+        text: "body",
+        audio: getAssetAudioUrl(s3Assets.bodyAudio),
+      }
+      ],
+      correctWord: "half",
+      audio: getAssetAudioUrl(s3Assets.halfAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.buyImg),
+        text: "buy",
+        audio: getAssetAudioUrl(s3Assets.buyAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.halfImg),
+        text: "half",
+        audio: getAssetAudioUrl(s3Assets.halfAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.hideImg),
+        text: "hide",
+        audio: getAssetAudioUrl(s3Assets.hideAudio),
+      }
+      ],
+      correctWord: "hide",
+      audio: getAssetAudioUrl(s3Assets.hideAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.knowImg),
+        text: "know",
+        audio: getAssetAudioUrl(s3Assets.knowAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.happy2Img),
+        text: "happy",
+        audio: getAssetAudioUrl(s3Assets.happy3Audio),
+      },
+      {
+        img: getAssetUrl(s3Assets.halfImg),
+        text: "half",
+        audio: getAssetAudioUrl(s3Assets.halfAudio),
+      }
+      ],
+      correctWord: "happy",
+      audio: getAssetAudioUrl(s3Assets.happy3Audio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.halfImg),
+        text: "half",
+        audio: getAssetAudioUrl(s3Assets.halfAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.bodyImg),
+        text: "body",
+        audio: getAssetAudioUrl(s3Assets.bodyAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.knowImg),
+        text: "know",
+        audio: getAssetAudioUrl(s3Assets.knowAudio),
+      }
+      ],
+      correctWord: "body",
+      audio: getAssetAudioUrl(s3Assets.bodyAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.sonImg),
+        text: "Son",
+        audio: getAssetAudioUrl(s3Assets.sonAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.chairImg),
+        text: "chair",
+        audio: getAssetAudioUrl(s3Assets.chairAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.fairImg),
+        text: "fair",
+        audio: getAssetAudioUrl(s3Assets.fairAudio),
+      }
+      ],
+      correctWord: "Son",
+      audio: getAssetAudioUrl(s3Assets.sonAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.zigImg),
+        text: "zig",
+        audio: getAssetAudioUrl(s3Assets.zigAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.fairImg),
+        text: "fair",
+        audio: getAssetAudioUrl(s3Assets.fairAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.chatImg),
+        text: "chat",
+        audio: getAssetAudioUrl(s3Assets.chatAudio),
+      }
+      ],
+      correctWord: "zig",
+      audio: getAssetAudioUrl(s3Assets.zigAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.logImg),
+        text: "log",
+        audio: getAssetAudioUrl(s3Assets.logAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.sonImg),
+        text: "Son",
+        audio: getAssetAudioUrl(s3Assets.sonAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.birdImg2),
+        text: "bird",
+        audio: getAssetAudioUrl(s3Assets.birdAudio2),
+      }
+      ],
+      correctWord: "log",
+      audio: getAssetAudioUrl(s3Assets.logAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.penImg),
+        text: "pen",
+        audio: getAssetAudioUrl(s3Assets.penAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.nowImg),
+        text: "now",
+        audio: getAssetAudioUrl(s3Assets.nowAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.fairImg),
+        text: "fair",
+        audio: getAssetAudioUrl(s3Assets.fairAudio),
+      }
+      ],
+      correctWord: "now",
+      audio: getAssetAudioUrl(s3Assets.nowAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.chatImg),
+        text: "chat",
+        audio: getAssetAudioUrl(s3Assets.chatAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.sonImg),
+        text: "Son",
+        audio: getAssetAudioUrl(s3Assets.sonAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.nowImg),
+        text: "now",
+        audio: getAssetAudioUrl(s3Assets.nowAudio),
+      }
+      ],
+      correctWord: "chat",
+      audio: getAssetAudioUrl(s3Assets.chatAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.logImg),
+        text: "log",
+        audio: getAssetAudioUrl(s3Assets.logAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.chatImg),
+        text: "chat",
+        audio: getAssetAudioUrl(s3Assets.chatAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.penImg),
+        text: "pen",
+        audio: getAssetAudioUrl(s3Assets.penAudio),
+      }
+      ],
+      correctWord: "pen",
+      audio: getAssetAudioUrl(s3Assets.penAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.nowImg),
+        text: "now",
+        audio: getAssetAudioUrl(s3Assets.nowAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.birdImg2),
+        text: "bird",
+        audio: getAssetAudioUrl(s3Assets.birdAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.fairImg),
+        text: "fair",
+        audio: getAssetAudioUrl(s3Assets.fairAudio),
+      }
+      ],
+      correctWord: "fair",
+      audio: getAssetAudioUrl(s3Assets.fairAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.birdImg2),
+        text: "bird",
+        audio: getAssetAudioUrl(s3Assets.birdAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.careImg),
+        text: "care",
+        audio: getAssetAudioUrl(s3Assets.careAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.zigImg),
+        text: "zig",
+        audio: getAssetAudioUrl(s3Assets.zigAudio),
+      }
+      ],
+      correctWord: "care",
+      audio: getAssetAudioUrl(s3Assets.careAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.zigImg),
+        text: "zig",
+        audio: getAssetAudioUrl(s3Assets.zigAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.chatImg),
+        text: "chat",
+        audio: getAssetAudioUrl(s3Assets.chatAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.birdImg2),
+        text: "bird",
+        audio: getAssetAudioUrl(s3Assets.birdAudio2),
+      }
+      ],
+      correctWord: "bird",
+      audio: getAssetAudioUrl(s3Assets.birdAudio2),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.careImg),
+        text: "care",
+        audio: getAssetAudioUrl(s3Assets.careAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.logImg),
+        text: "log",
+        audio: getAssetAudioUrl(s3Assets.logAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.chairImg),
+        text: "chair",
+        audio: getAssetAudioUrl(s3Assets.chairAudio),
+      }
+      ],
+      correctWord: "chair",
+      audio: getAssetAudioUrl(s3Assets.chairAudio),
+      flowName: "S1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.orangeImg),
+        text: "orange",
+        audio: getAssetAudioUrl(s3Assets.orangeAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.turnImg),
+        text: "turn",
+        audio: getAssetAudioUrl(s3Assets.turnAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.dearImg),
+        text: "dear",
+        audio: getAssetAudioUrl(s3Assets.dearAudio),
+      }
+      ],
+      correctWord: "turn",
+      audio: getAssetAudioUrl(s3Assets.turnAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.earthImg2),
+        text: "earth",
+        audio: getAssetAudioUrl(s3Assets.earthAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.sootheImg),
+        text: "soothe",
+        audio: getAssetAudioUrl(s3Assets.sootheAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.dearImg),
+        text: "dear",
+        audio: getAssetAudioUrl(s3Assets.dearAudio),
+      }
+      ],
+      correctWord: "soothe",
+      audio: getAssetAudioUrl(s3Assets.sootheAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.lazyImg),
+        text: "lazy",
+        audio: getAssetAudioUrl(s3Assets.lazyAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.perkImg),
+        text: "perk",
+        audio: getAssetAudioUrl(s3Assets.perkAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.earImg),
+        text: "ear",
+        audio: getAssetAudioUrl(s3Assets.earAudio),
+      }
+      ],
+      correctWord: "perk",
+      audio: getAssetAudioUrl(s3Assets.perkAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.earthImg2),
+        text: "earth",
+        audio: getAssetAudioUrl(s3Assets.earthAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.royalImg),
+        text: "royal",
+        audio: getAssetAudioUrl(s3Assets.royalAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.dearImg),
+        text: "dear",
+        audio: getAssetAudioUrl(s3Assets.dearAudio),
+      }
+      ],
+      correctWord: "dear",
+      audio: getAssetAudioUrl(s3Assets.dearAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.perkImg),
+        text: "perk",
+        audio: getAssetAudioUrl(s3Assets.perkAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.purpleImg2),
+        text: "purple",
+        audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.royalImg),
+        text: "royal",
+        audio: getAssetAudioUrl(s3Assets.royalAudio),
+      }
+      ],
+      correctWord: "royal",
+      audio: getAssetAudioUrl(s3Assets.royalAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.dearImg),
+        text: "dear",
+        audio: getAssetAudioUrl(s3Assets.dearAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.earImg),
+        text: "ear",
+        audio: getAssetAudioUrl(s3Assets.earAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.royalImg),
+        text: "royal",
+        audio: getAssetAudioUrl(s3Assets.royalAudio),
+      }
+      ],
+      correctWord: "ear",
+      audio: getAssetAudioUrl(s3Assets.earAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.lazyImg),
+        text: "lazy",
+        audio: getAssetAudioUrl(s3Assets.lazyAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.earthImg2),
+        text: "earth",
+        audio: getAssetAudioUrl(s3Assets.earthAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.purpleImg2),
+        text: "purple",
+        audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+      }
+      ],
+      correctWord: "lazy",
+      audio: getAssetAudioUrl(s3Assets.lazyAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.sootheImg),
+        text: "soothe",
+        audio: getAssetAudioUrl(s3Assets.sootheAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.perkImg),
+        text: "perk",
+        audio: getAssetAudioUrl(s3Assets.perkAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.orangeImg),
+        text: "orange",
+        audio: getAssetAudioUrl(s3Assets.orangeAudio),
+      }
+      ],
+      correctWord: "orange",
+      audio: getAssetAudioUrl(s3Assets.orangeAudio),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.earImg),
+        text: "ear",
+        audio: getAssetAudioUrl(s3Assets.earAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.perkImg),
+        text: "perk",
+        audio: getAssetAudioUrl(s3Assets.perkAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.purpleImg2),
+        text: "purple",
+        audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+      }
+      ],
+      correctWord: "purple",
+      audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+      flowName: "S2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.purpleImg2),
+        text: "purple",
+        audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.earthImg2),
+        text: "earth",
+        audio: getAssetAudioUrl(s3Assets.earthAudio2),
+      },
+      {
+        img: getAssetUrl(s3Assets.lazyImg),
+        text: "lazy",
+        audio: getAssetAudioUrl(s3Assets.lazyAudio),
+      }
+      ],
+      correctWord: "earth",
+      audio: getAssetAudioUrl(s3Assets.earthAudio2),
+      flowName: "S2",
+      type: "soundMatch",
+    }
   ],
 };
 
@@ -227,214 +961,765 @@ const soundMatchContent = {
 const pictureWordsContent = {
   L1: [
     {
-      word: "Star",
+      word: "bad",
       audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.starRAudio) || Assets.starRAudio,
-          isCorrect: true,
-        },
-        {
-          audio: getAssetAudioUrl(s3Assets.appleAudio) || Assets.appleAudio,
-          isCorrect: false,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.jugR1OneAudio) || Assets.jugR1OneAudio,
-          isCorrect: false,
-        },
-      ],
-      flowName: "S1",
-      type: "pictureWords", // Read word, choose sound
-    },
-    {
-      word: "Spin",
-      audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.spinRAudio) || Assets.spinRAudio,
-          isCorrect: true,
-        },
-        { audio: Assets.SunsetAudio, isCorrect: false },
-        {
-          audio: getAssetAudioUrl(s3Assets.BasketAudio) || Assets.basketAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.cookAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.badAudio),
+            isCorrect: true,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
     {
-      word: "Sky",
+      word: "mom",
       audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.skyRAudio) || Assets.skyRAudio,
-          isCorrect: true,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.bagR1TwoAudio) || Assets.bagR1TwoAudio,
-          isCorrect: false,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.bagR1ThreeAudio) ||
-            Assets.bagR1ThreeAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.momAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.goatAudio),
+            isCorrect: false,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
     {
-      word: "Tree",
+      word: "hop",
       audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.treeRAudio) || Assets.treeRAudio,
-          isCorrect: true,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.capR1TwoAudio) || Assets.capR1TwoAudio,
-          isCorrect: false,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.capR1ThreeAudio) ||
-            Assets.capR1ThreeAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.hopAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.cookAudio),
+            isCorrect: false,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
     {
-      word: "Dragon",
+      word: "fat",
       audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.dragonRAudio) || Assets.dragonRAudio,
-          isCorrect: true,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.dogR1TwoAudio) || Assets.dogR1TwoAudio,
-          isCorrect: false,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.dogR1ThreeAudio) ||
-            Assets.dogR1ThreeAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.momAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.sadAudio),
+            isCorrect: false,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
     {
-      word: "Oil",
+      word: "him",
       audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.oilRAudio) || Assets.oilRAudio,
-          isCorrect: true,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.eggR1TwoAudio) || Assets.eggR1TwoAudio,
-          isCorrect: false,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.eggR1ThreeAudio) ||
-            Assets.eggR1ThreeAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.goatAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.nineAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.himAudio),
+            isCorrect: true,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
     {
-      word: "Street",
+      word: "sad",
       audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.streetRAudio) || Assets.streetRAudio,
-          isCorrect: true,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.fanR1TwoAudio) || Assets.fanR1TwoAudio,
-          isCorrect: false,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.fanR1ThreeAudio) ||
-            Assets.fanR1ThreeAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.sadAudio),
+            isCorrect: true,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
     {
-      word: "Panther",
+      word: "cook",
       audioOptions: [
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.pantherRAudio) || Assets.pantherRAudio,
-          isCorrect: true,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.hatR1TwoAudio) || Assets.hatR1TwoAudio,
-          isCorrect: false,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.hatR1ThreeAudio) ||
-            Assets.hatR1ThreeAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.cookAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.goatAudio),
+            isCorrect: false,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
     {
-      word: "Listen",
+      word: "god",
       audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.listenRAudio) || Assets.listenRAudio,
-          isCorrect: true,
-        },
-        { audio: Assets.shopRs || Assets.shopAudio, isCorrect: false },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.pillowR1ThreeAudio) ||
-            Assets.pillowR1ThreeAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.nineAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            isCorrect: false,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
     {
-      word: "Three",
+      word: "nine",
       audioOptions: [
-        {
-          audio: getAssetAudioUrl(s3Assets.threeRAudio) || Assets.threeRAudio,
-          isCorrect: true,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.ropeR1OneAudio) || Assets.ropeR1OneAudio,
-          isCorrect: false,
-        },
-        {
-          audio:
-            getAssetAudioUrl(s3Assets.ropeR1ThreeAudio) ||
-            Assets.ropeR1ThreeAudio,
-          isCorrect: false,
-        },
+          {
+            audio: getAssetAudioUrl(s3Assets.cookAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.nineAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            isCorrect: false,
+          }
       ],
       flowName: "S1",
       type: "pictureWords",
     },
+    {
+      word: "goat",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.goatAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.badAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.cookAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "buy",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.wideAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.noteAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.buyAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "fine",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.happyAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.wideAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "kind",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.kindAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.bodyAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.buyAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "note",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.halfAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.noteAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "wide",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.happyAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.wideAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.hideAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "know",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.halfAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.hideAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "half",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.halfAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.bodyAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "hide",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.buyAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.halfAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.hideAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "happy",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.happyAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.halfAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "body",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.halfAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.bodyAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "Son",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.sonAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.chairAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fairAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "zig",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.zigAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fairAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.chatAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "log",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.logAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.sonAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.birdAudio2),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "now",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.penAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fairAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "chat",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.chatAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.sonAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "pen",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.logAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.chatAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.penAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "fair",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.birdAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.fairAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "care",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.birdAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.careAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.zigAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "bird",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.zigAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.chatAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.birdAudio2),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "chair",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.careAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.logAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.chairAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S1",
+      type: "pictureWords",
+    },
+    {
+      word: "turn",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.orangeAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.turnAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.dearAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "soothe",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.earthAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.sootheAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.dearAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "perk",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.lazyAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.perkAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.earAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "dear",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.earthAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.royalAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.dearAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "royal",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.perkAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.royalAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "ear",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.dearAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.earAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.royalAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "lazy",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.lazyAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.earthAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "orange",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.sootheAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.perkAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.orangeAudio),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "purple",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.earAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.perkAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+            isCorrect: true,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    },
+    {
+      word: "earth",
+      audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.purpleAudio2),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.earthAudio2),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.lazyAudio),
+            isCorrect: false,
+          }
+      ],
+      flowName: "S2",
+      type: "pictureWords",
+    }
   ],
 };
 
