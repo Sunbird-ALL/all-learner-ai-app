@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
 import * as s3Assets from "../utils/s3Links";
@@ -33,21 +33,21 @@ const content = {
   L1: [
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.boatImg),
-        text: "boat",
-        audio: getAssetAudioUrl(s3Assets.boatAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.hotImg),
-        text: "hot",
-        audio: getAssetAudioUrl(s3Assets.hotAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.coatImg),
-        text: "coat",
-        audio: getAssetAudioUrl(s3Assets.coatAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.boatImg),
+          text: "boat",
+          audio: getAssetAudioUrl(s3Assets.boatAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.hotImg),
+          text: "hot",
+          audio: getAssetAudioUrl(s3Assets.hotAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.coatImg),
+          text: "coat",
+          audio: getAssetAudioUrl(s3Assets.coatAudio),
+        },
       ],
       correctWord: "hot",
       audio: getAssetAudioUrl(s3Assets.hotAudio),
@@ -55,21 +55,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.boatImg),
-        text: "boat",
-        audio: getAssetAudioUrl(s3Assets.boatAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.toadImg),
-        text: "toad",
-        audio: getAssetAudioUrl(s3Assets.toadAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.bikeImg),
-        text: "bike",
-        audio: getAssetAudioUrl(s3Assets.bikeAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.boatImg),
+          text: "boat",
+          audio: getAssetAudioUrl(s3Assets.boatAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.toadImg),
+          text: "toad",
+          audio: getAssetAudioUrl(s3Assets.toadAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.bikeImg),
+          text: "bike",
+          audio: getAssetAudioUrl(s3Assets.bikeAudio),
+        },
       ],
       correctWord: "boat",
       audio: getAssetAudioUrl(s3Assets.boatAudio),
@@ -77,21 +77,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.catImg),
-        text: "cat",
-        audio: getAssetAudioUrl(s3Assets.catAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.tapImg),
-        text: "tap",
-        audio: getAssetAudioUrl(s3Assets.tapAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.coatImg),
-        text: "coat",
-        audio: getAssetAudioUrl(s3Assets.coatAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.catImg),
+          text: "cat",
+          audio: getAssetAudioUrl(s3Assets.catAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.tapImg),
+          text: "tap",
+          audio: getAssetAudioUrl(s3Assets.tapAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.coatImg),
+          text: "coat",
+          audio: getAssetAudioUrl(s3Assets.coatAudio),
+        },
       ],
       correctWord: "coat",
       audio: getAssetAudioUrl(s3Assets.coatAudio),
@@ -99,21 +99,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.matImg),
-        text: "mat",
-        audio: getAssetAudioUrl(s3Assets.matAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.toadImg),
-        text: "toad",
-        audio: getAssetAudioUrl(s3Assets.toadAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.potImg),
-        text: "pot",
-        audio: getAssetAudioUrl(s3Assets.potAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.matImg),
+          text: "mat",
+          audio: getAssetAudioUrl(s3Assets.matAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.toadImg),
+          text: "toad",
+          audio: getAssetAudioUrl(s3Assets.toadAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.potImg),
+          text: "pot",
+          audio: getAssetAudioUrl(s3Assets.potAudio),
+        },
       ],
       correctWord: "toad",
       audio: getAssetAudioUrl(s3Assets.toadAudio),
@@ -121,21 +121,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.bikeImg),
-        text: "bike",
-        audio: getAssetAudioUrl(s3Assets.bikeAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.godImg),
-        text: "god",
-        audio: getAssetAudioUrl(s3Assets.godAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.hotImg),
-        text: "hot",
-        audio: getAssetAudioUrl(s3Assets.hotAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.bikeImg),
+          text: "bike",
+          audio: getAssetAudioUrl(s3Assets.bikeAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.godImg),
+          text: "god",
+          audio: getAssetAudioUrl(s3Assets.godAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.hotImg),
+          text: "hot",
+          audio: getAssetAudioUrl(s3Assets.hotAudio),
+        },
       ],
       correctWord: "bike",
       audio: getAssetAudioUrl(s3Assets.bikeAudio),
@@ -143,21 +143,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.boatImg),
-        text: "boat",
-        audio: getAssetAudioUrl(s3Assets.boatAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.coatImg),
-        text: "coat",
-        audio: getAssetAudioUrl(s3Assets.coatAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.catImg),
-        text: "cat",
-        audio: getAssetAudioUrl(s3Assets.catAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.boatImg),
+          text: "boat",
+          audio: getAssetAudioUrl(s3Assets.boatAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.coatImg),
+          text: "coat",
+          audio: getAssetAudioUrl(s3Assets.coatAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.catImg),
+          text: "cat",
+          audio: getAssetAudioUrl(s3Assets.catAudio),
+        },
       ],
       correctWord: "cat",
       audio: getAssetAudioUrl(s3Assets.catAudio),
@@ -165,21 +165,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.toadImg),
-        text: "toad",
-        audio: getAssetAudioUrl(s3Assets.toadAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.tapImg),
-        text: "tap",
-        audio: getAssetAudioUrl(s3Assets.tapAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.bikeImg),
-        text: "bike",
-        audio: getAssetAudioUrl(s3Assets.bikeAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.toadImg),
+          text: "toad",
+          audio: getAssetAudioUrl(s3Assets.toadAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.tapImg),
+          text: "tap",
+          audio: getAssetAudioUrl(s3Assets.tapAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.bikeImg),
+          text: "bike",
+          audio: getAssetAudioUrl(s3Assets.bikeAudio),
+        },
       ],
       correctWord: "tap",
       audio: getAssetAudioUrl(s3Assets.tapAudio),
@@ -187,21 +187,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.matImg),
-        text: "mat",
-        audio: getAssetAudioUrl(s3Assets.matAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.catImg),
-        text: "cat",
-        audio: getAssetAudioUrl(s3Assets.catAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.potImg),
-        text: "pot",
-        audio: getAssetAudioUrl(s3Assets.potAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.matImg),
+          text: "mat",
+          audio: getAssetAudioUrl(s3Assets.matAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.catImg),
+          text: "cat",
+          audio: getAssetAudioUrl(s3Assets.catAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.potImg),
+          text: "pot",
+          audio: getAssetAudioUrl(s3Assets.potAudio),
+        },
       ],
       correctWord: "mat",
       audio: getAssetAudioUrl(s3Assets.matAudio),
@@ -209,21 +209,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.godImg),
-        text: "god",
-        audio: getAssetAudioUrl(s3Assets.godAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.hotImg),
-        text: "hot",
-        audio: getAssetAudioUrl(s3Assets.hotAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.potImg),
-        text: "pot",
-        audio: getAssetAudioUrl(s3Assets.potAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.godImg),
+          text: "god",
+          audio: getAssetAudioUrl(s3Assets.godAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.hotImg),
+          text: "hot",
+          audio: getAssetAudioUrl(s3Assets.hotAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.potImg),
+          text: "pot",
+          audio: getAssetAudioUrl(s3Assets.potAudio),
+        },
       ],
       correctWord: "pot",
       audio: getAssetAudioUrl(s3Assets.potAudio),
@@ -231,21 +231,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.boatImg),
-        text: "boat",
-        audio: getAssetAudioUrl(s3Assets.boatAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.godImg),
-        text: "god",
-        audio: getAssetAudioUrl(s3Assets.godAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.coatImg),
-        text: "coat",
-        audio: getAssetAudioUrl(s3Assets.coatAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.boatImg),
+          text: "boat",
+          audio: getAssetAudioUrl(s3Assets.boatAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.godImg),
+          text: "god",
+          audio: getAssetAudioUrl(s3Assets.godAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.coatImg),
+          text: "coat",
+          audio: getAssetAudioUrl(s3Assets.coatAudio),
+        },
       ],
       correctWord: "god",
       audio: getAssetAudioUrl(s3Assets.godAudio),
@@ -253,21 +253,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.toeImg),
-        text: "toe",
-        audio: getAssetAudioUrl(s3Assets.toeAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.binImg),
-        text: "bin",
-        audio: getAssetAudioUrl(s3Assets.binAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.packImg),
-        text: "pack",
-        audio: getAssetAudioUrl(s3Assets.packAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.toeImg),
+          text: "toe",
+          audio: getAssetAudioUrl(s3Assets.toeAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.binImg),
+          text: "bin",
+          audio: getAssetAudioUrl(s3Assets.binAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.packImg),
+          text: "pack",
+          audio: getAssetAudioUrl(s3Assets.packAudio),
+        },
       ],
       correctWord: "toe",
       audio: getAssetAudioUrl(s3Assets.toeAudio),
@@ -275,21 +275,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.tieImg),
-        text: "tie",
-        audio: getAssetAudioUrl(s3Assets.tieAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pineImg),
-        text: "pine",
-        audio: getAssetAudioUrl(s3Assets.pineAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.timeImg),
-        text: "time",
-        audio: getAssetAudioUrl(s3Assets.timeAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.tieImg),
+          text: "tie",
+          audio: getAssetAudioUrl(s3Assets.tieAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pineImg),
+          text: "pine",
+          audio: getAssetAudioUrl(s3Assets.pineAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.timeImg),
+          text: "time",
+          audio: getAssetAudioUrl(s3Assets.timeAudio),
+        },
       ],
       correctWord: "time",
       audio: getAssetAudioUrl(s3Assets.timeAudio),
@@ -297,21 +297,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.tieImg),
-        text: "tie",
-        audio: getAssetAudioUrl(s3Assets.tieAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.palmImg),
-        text: "palm",
-        audio: getAssetAudioUrl(s3Assets.palmAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pineImg),
-        text: "pine",
-        audio: getAssetAudioUrl(s3Assets.pineAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.tieImg),
+          text: "tie",
+          audio: getAssetAudioUrl(s3Assets.tieAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.palmImg),
+          text: "palm",
+          audio: getAssetAudioUrl(s3Assets.palmAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pineImg),
+          text: "pine",
+          audio: getAssetAudioUrl(s3Assets.pineAudio),
+        },
       ],
       correctWord: "pine",
       audio: getAssetAudioUrl(s3Assets.pineAudio),
@@ -319,21 +319,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.nightImg),
-        text: "night",
-        audio: getAssetAudioUrl(s3Assets.nightAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.binImg),
-        text: "bin",
-        audio: getAssetAudioUrl(s3Assets.binAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.tieImg),
-        text: "tie",
-        audio: getAssetAudioUrl(s3Assets.tieAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.nightImg),
+          text: "night",
+          audio: getAssetAudioUrl(s3Assets.nightAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.binImg),
+          text: "bin",
+          audio: getAssetAudioUrl(s3Assets.binAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.tieImg),
+          text: "tie",
+          audio: getAssetAudioUrl(s3Assets.tieAudio),
+        },
       ],
       correctWord: "tie",
       audio: getAssetAudioUrl(s3Assets.tieAudio),
@@ -341,21 +341,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.nightImg),
-        text: "night",
-        audio: getAssetAudioUrl(s3Assets.nightAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.binImg),
-        text: "bin",
-        audio: getAssetAudioUrl(s3Assets.binAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pineImg),
-        text: "pine",
-        audio: getAssetAudioUrl(s3Assets.pineAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.nightImg),
+          text: "night",
+          audio: getAssetAudioUrl(s3Assets.nightAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.binImg),
+          text: "bin",
+          audio: getAssetAudioUrl(s3Assets.binAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pineImg),
+          text: "pine",
+          audio: getAssetAudioUrl(s3Assets.pineAudio),
+        },
       ],
       correctWord: "bin",
       audio: getAssetAudioUrl(s3Assets.binAudio),
@@ -363,21 +363,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.toeImg),
-        text: "toe",
-        audio: getAssetAudioUrl(s3Assets.toeAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.packImg),
-        text: "pack",
-        audio: getAssetAudioUrl(s3Assets.packAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pondImg),
-        text: "pond",
-        audio: getAssetAudioUrl(s3Assets.pondAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.toeImg),
+          text: "toe",
+          audio: getAssetAudioUrl(s3Assets.toeAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.packImg),
+          text: "pack",
+          audio: getAssetAudioUrl(s3Assets.packAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pondImg),
+          text: "pond",
+          audio: getAssetAudioUrl(s3Assets.pondAudio),
+        },
       ],
       correctWord: "pack",
       audio: getAssetAudioUrl(s3Assets.packAudio),
@@ -385,21 +385,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.palmImg),
-        text: "palm",
-        audio: getAssetAudioUrl(s3Assets.palmAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.binImg),
-        text: "bin",
-        audio: getAssetAudioUrl(s3Assets.binAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pineImg),
-        text: "pine",
-        audio: getAssetAudioUrl(s3Assets.pineAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.palmImg),
+          text: "palm",
+          audio: getAssetAudioUrl(s3Assets.palmAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.binImg),
+          text: "bin",
+          audio: getAssetAudioUrl(s3Assets.binAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pineImg),
+          text: "pine",
+          audio: getAssetAudioUrl(s3Assets.pineAudio),
+        },
       ],
       correctWord: "palm",
       audio: getAssetAudioUrl(s3Assets.palmAudio),
@@ -407,21 +407,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.binImg),
-        text: "bin",
-        audio: getAssetAudioUrl(s3Assets.binAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pondImg),
-        text: "pond",
-        audio: getAssetAudioUrl(s3Assets.pondAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pitImg),
-        text: "pit",
-        audio: getAssetAudioUrl(s3Assets.pitAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.binImg),
+          text: "bin",
+          audio: getAssetAudioUrl(s3Assets.binAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pondImg),
+          text: "pond",
+          audio: getAssetAudioUrl(s3Assets.pondAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pitImg),
+          text: "pit",
+          audio: getAssetAudioUrl(s3Assets.pitAudio),
+        },
       ],
       correctWord: "pond",
       audio: getAssetAudioUrl(s3Assets.pondAudio),
@@ -429,21 +429,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.palmImg),
-        text: "palm",
-        audio: getAssetAudioUrl(s3Assets.palmAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.nightImg),
-        text: "night",
-        audio: getAssetAudioUrl(s3Assets.nightAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pitImg),
-        text: "pit",
-        audio: getAssetAudioUrl(s3Assets.pitAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.palmImg),
+          text: "palm",
+          audio: getAssetAudioUrl(s3Assets.palmAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.nightImg),
+          text: "night",
+          audio: getAssetAudioUrl(s3Assets.nightAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pitImg),
+          text: "pit",
+          audio: getAssetAudioUrl(s3Assets.pitAudio),
+        },
       ],
       correctWord: "pit",
       audio: getAssetAudioUrl(s3Assets.pitAudio),
@@ -451,21 +451,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.pitImg),
-        text: "pit",
-        audio: getAssetAudioUrl(s3Assets.pitAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.timeImg),
-        text: "time",
-        audio: getAssetAudioUrl(s3Assets.timeAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.nightImg),
-        text: "night",
-        audio: getAssetAudioUrl(s3Assets.nightAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.pitImg),
+          text: "pit",
+          audio: getAssetAudioUrl(s3Assets.pitAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.timeImg),
+          text: "time",
+          audio: getAssetAudioUrl(s3Assets.timeAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.nightImg),
+          text: "night",
+          audio: getAssetAudioUrl(s3Assets.nightAudio),
+        },
       ],
       correctWord: "night",
       audio: getAssetAudioUrl(s3Assets.nightAudio),
@@ -473,21 +473,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.mathImg),
-        text: "math",
-        audio: getAssetAudioUrl(s3Assets.mathAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.breatheImg),
-        text: "breathe",
-        audio: getAssetAudioUrl(s3Assets.breatheAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.jumpImg),
-        text: "jump",
-        audio: getAssetAudioUrl(s3Assets.jumpAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.mathImg),
+          text: "math",
+          audio: getAssetAudioUrl(s3Assets.mathAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.breatheImg),
+          text: "breathe",
+          audio: getAssetAudioUrl(s3Assets.breatheAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.jumpImg),
+          text: "jump",
+          audio: getAssetAudioUrl(s3Assets.jumpAudio),
+        },
       ],
       correctWord: "jump",
       audio: getAssetAudioUrl(s3Assets.jumpAudio),
@@ -495,21 +495,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.mathImg),
-        text: "math",
-        audio: getAssetAudioUrl(s3Assets.mathAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.singImg),
-        text: "sing",
-        audio: getAssetAudioUrl(s3Assets.singAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.breatheImg),
-        text: "breathe",
-        audio: getAssetAudioUrl(s3Assets.breatheAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.mathImg),
+          text: "math",
+          audio: getAssetAudioUrl(s3Assets.mathAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.singImg),
+          text: "sing",
+          audio: getAssetAudioUrl(s3Assets.singAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.breatheImg),
+          text: "breathe",
+          audio: getAssetAudioUrl(s3Assets.breatheAudio),
+        },
       ],
       correctWord: "sing",
       audio: getAssetAudioUrl(s3Assets.singAudio),
@@ -517,21 +517,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.ringImg),
-        text: "ring",
-        audio: getAssetAudioUrl(s3Assets.ringAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.jumpImg),
-        text: "jump",
-        audio: getAssetAudioUrl(s3Assets.jumpAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.mathImg),
-        text: "math",
-        audio: getAssetAudioUrl(s3Assets.mathAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.ringImg),
+          text: "ring",
+          audio: getAssetAudioUrl(s3Assets.ringAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.jumpImg),
+          text: "jump",
+          audio: getAssetAudioUrl(s3Assets.jumpAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.mathImg),
+          text: "math",
+          audio: getAssetAudioUrl(s3Assets.mathAudio),
+        },
       ],
       correctWord: "ring",
       audio: getAssetAudioUrl(s3Assets.ringAudio),
@@ -539,21 +539,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.pathImg),
-        text: "path",
-        audio: getAssetAudioUrl(s3Assets.pathAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.wingImg),
-        text: "wing",
-        audio: getAssetAudioUrl(s3Assets.wingAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.singImg),
-        text: "sing",
-        audio: getAssetAudioUrl(s3Assets.singAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.pathImg),
+          text: "path",
+          audio: getAssetAudioUrl(s3Assets.pathAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.wingImg),
+          text: "wing",
+          audio: getAssetAudioUrl(s3Assets.wingAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.singImg),
+          text: "sing",
+          audio: getAssetAudioUrl(s3Assets.singAudio),
+        },
       ],
       correctWord: "wing",
       audio: getAssetAudioUrl(s3Assets.wingAudio),
@@ -561,21 +561,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.pathImg),
-        text: "path",
-        audio: getAssetAudioUrl(s3Assets.pathAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.singImg),
-        text: "sing",
-        audio: getAssetAudioUrl(s3Assets.singAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.mathImg),
-        text: "math",
-        audio: getAssetAudioUrl(s3Assets.mathAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.pathImg),
+          text: "path",
+          audio: getAssetAudioUrl(s3Assets.pathAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.singImg),
+          text: "sing",
+          audio: getAssetAudioUrl(s3Assets.singAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.mathImg),
+          text: "math",
+          audio: getAssetAudioUrl(s3Assets.mathAudio),
+        },
       ],
       correctWord: "path",
       audio: getAssetAudioUrl(s3Assets.pathAudio),
@@ -583,21 +583,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.mathImg),
-        text: "math",
-        audio: getAssetAudioUrl(s3Assets.mathAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.ringImg),
-        text: "ring",
-        audio: getAssetAudioUrl(s3Assets.ringAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.breatheImg),
-        text: "breathe",
-        audio: getAssetAudioUrl(s3Assets.breatheAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.mathImg),
+          text: "math",
+          audio: getAssetAudioUrl(s3Assets.mathAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.ringImg),
+          text: "ring",
+          audio: getAssetAudioUrl(s3Assets.ringAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.breatheImg),
+          text: "breathe",
+          audio: getAssetAudioUrl(s3Assets.breatheAudio),
+        },
       ],
       correctWord: "math",
       audio: getAssetAudioUrl(s3Assets.mathAudio),
@@ -605,21 +605,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.wingImg),
-        text: "wing",
-        audio: getAssetAudioUrl(s3Assets.wingAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.furImg),
-        text: "fur",
-        audio: getAssetAudioUrl(s3Assets.furAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.breatheImg),
-        text: "breathe",
-        audio: getAssetAudioUrl(s3Assets.breatheAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.wingImg),
+          text: "wing",
+          audio: getAssetAudioUrl(s3Assets.wingAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.furImg),
+          text: "fur",
+          audio: getAssetAudioUrl(s3Assets.furAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.breatheImg),
+          text: "breathe",
+          audio: getAssetAudioUrl(s3Assets.breatheAudio),
+        },
       ],
       correctWord: "breathe",
       audio: getAssetAudioUrl(s3Assets.breatheAudio),
@@ -627,21 +627,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.ringImg),
-        text: "ring",
-        audio: getAssetAudioUrl(s3Assets.ringAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.runImg),
-        text: "run",
-        audio: getAssetAudioUrl(s3Assets.runAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.jumpImg),
-        text: "jump",
-        audio: getAssetAudioUrl(s3Assets.jumpAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.ringImg),
+          text: "ring",
+          audio: getAssetAudioUrl(s3Assets.ringAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.runImg),
+          text: "run",
+          audio: getAssetAudioUrl(s3Assets.runAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.jumpImg),
+          text: "jump",
+          audio: getAssetAudioUrl(s3Assets.jumpAudio),
+        },
       ],
       correctWord: "run",
       audio: getAssetAudioUrl(s3Assets.runAudio),
@@ -649,21 +649,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.ringImg),
-        text: "ring",
-        audio: getAssetAudioUrl(s3Assets.ringAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.singImg),
-        text: "sing",
-        audio: getAssetAudioUrl(s3Assets.singAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.birdImg),
-        text: "bird",
-        audio: getAssetAudioUrl(s3Assets.birdAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.ringImg),
+          text: "ring",
+          audio: getAssetAudioUrl(s3Assets.ringAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.singImg),
+          text: "sing",
+          audio: getAssetAudioUrl(s3Assets.singAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.birdImg),
+          text: "bird",
+          audio: getAssetAudioUrl(s3Assets.birdAudio),
+        },
       ],
       correctWord: "bird",
       audio: getAssetAudioUrl(s3Assets.birdAudio),
@@ -671,21 +671,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.furImg),
-        text: "fur",
-        audio: getAssetAudioUrl(s3Assets.furAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.pathImg),
-        text: "path",
-        audio: getAssetAudioUrl(s3Assets.pathAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.birdImg),
-        text: "bird",
-        audio: getAssetAudioUrl(s3Assets.birdAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.furImg),
+          text: "fur",
+          audio: getAssetAudioUrl(s3Assets.furAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.pathImg),
+          text: "path",
+          audio: getAssetAudioUrl(s3Assets.pathAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.birdImg),
+          text: "bird",
+          audio: getAssetAudioUrl(s3Assets.birdAudio),
+        },
       ],
       correctWord: "fur",
       audio: getAssetAudioUrl(s3Assets.furAudio),
@@ -693,21 +693,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.threeImg2),
-        text: "three",
-        audio: getAssetAudioUrl(s3Assets.threeAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.riverImg),
-        text: "river",
-        audio: getAssetAudioUrl(s3Assets.riverAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.thumbImg),
-        text: "thumb",
-        audio: getAssetAudioUrl(s3Assets.thumbAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.threeImg2),
+          text: "three",
+          audio: getAssetAudioUrl(s3Assets.threeAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.riverImg),
+          text: "river",
+          audio: getAssetAudioUrl(s3Assets.riverAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.thumbImg),
+          text: "thumb",
+          audio: getAssetAudioUrl(s3Assets.thumbAudio),
+        },
       ],
       correctWord: "thumb",
       audio: getAssetAudioUrl(s3Assets.thumbAudio),
@@ -715,21 +715,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.earthImg),
-        text: "earth",
-        audio: getAssetAudioUrl(s3Assets.earthAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.magicImg),
-        text: "magic",
-        audio: getAssetAudioUrl(s3Assets.magicAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.mother2Img),
-        text: "mother",
-        audio: getAssetAudioUrl(s3Assets.motherAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.earthImg),
+          text: "earth",
+          audio: getAssetAudioUrl(s3Assets.earthAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.magicImg),
+          text: "magic",
+          audio: getAssetAudioUrl(s3Assets.magicAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.mother2Img),
+          text: "mother",
+          audio: getAssetAudioUrl(s3Assets.motherAudio),
+        },
       ],
       correctWord: "mother",
       audio: getAssetAudioUrl(s3Assets.motherAudio),
@@ -737,21 +737,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.fatherImg),
-        text: "father",
-        audio: getAssetAudioUrl(s3Assets.fatherAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.dinnerImg),
-        text: "dinner",
-        audio: getAssetAudioUrl(s3Assets.dinner2Audio),
-      },
-      {
-        img: getAssetUrl(s3Assets.mother2Img),
-        text: "mother",
-        audio: getAssetAudioUrl(s3Assets.motherAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.fatherImg),
+          text: "father",
+          audio: getAssetAudioUrl(s3Assets.fatherAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.dinnerImg),
+          text: "dinner",
+          audio: getAssetAudioUrl(s3Assets.dinner2Audio),
+        },
+        {
+          img: getAssetUrl(s3Assets.mother2Img),
+          text: "mother",
+          audio: getAssetAudioUrl(s3Assets.motherAudio),
+        },
       ],
       correctWord: "father",
       audio: getAssetAudioUrl(s3Assets.fatherAudio),
@@ -759,21 +759,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.dinnerImg),
-        text: "dinner",
-        audio: getAssetAudioUrl(s3Assets.dinner2Audio),
-      },
-      {
-        img: getAssetUrl(s3Assets.riverImg),
-        text: "river",
-        audio: getAssetAudioUrl(s3Assets.riverAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.threeImg2),
-        text: "three",
-        audio: getAssetAudioUrl(s3Assets.threeAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.dinnerImg),
+          text: "dinner",
+          audio: getAssetAudioUrl(s3Assets.dinner2Audio),
+        },
+        {
+          img: getAssetUrl(s3Assets.riverImg),
+          text: "river",
+          audio: getAssetAudioUrl(s3Assets.riverAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.threeImg2),
+          text: "three",
+          audio: getAssetAudioUrl(s3Assets.threeAudio),
+        },
       ],
       correctWord: "three",
       audio: getAssetAudioUrl(s3Assets.threeAudio),
@@ -781,21 +781,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.earthImg),
-        text: "earth",
-        audio: getAssetAudioUrl(s3Assets.earthAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.purpleImg),
-        text: "purple",
-        audio: getAssetAudioUrl(s3Assets.purpleAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.rabbitImg),
-        text: "rabbit",
-        audio: getAssetAudioUrl(s3Assets.rabbitAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.earthImg),
+          text: "earth",
+          audio: getAssetAudioUrl(s3Assets.earthAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.purpleImg),
+          text: "purple",
+          audio: getAssetAudioUrl(s3Assets.purpleAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.rabbitImg),
+          text: "rabbit",
+          audio: getAssetAudioUrl(s3Assets.rabbitAudio),
+        },
       ],
       correctWord: "rabbit",
       audio: getAssetAudioUrl(s3Assets.rabbitAudio),
@@ -803,21 +803,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.magicImg),
-        text: "magic",
-        audio: getAssetAudioUrl(s3Assets.magicAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.purpleImg),
-        text: "purple",
-        audio: getAssetAudioUrl(s3Assets.purpleAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.riverImg),
-        text: "river",
-        audio: getAssetAudioUrl(s3Assets.riverAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.magicImg),
+          text: "magic",
+          audio: getAssetAudioUrl(s3Assets.magicAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.purpleImg),
+          text: "purple",
+          audio: getAssetAudioUrl(s3Assets.purpleAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.riverImg),
+          text: "river",
+          audio: getAssetAudioUrl(s3Assets.riverAudio),
+        },
       ],
       correctWord: "river",
       audio: getAssetAudioUrl(s3Assets.riverAudio),
@@ -825,21 +825,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.purpleImg),
-        text: "purple",
-        audio: getAssetAudioUrl(s3Assets.purpleAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.rabbitImg),
-        text: "rabbit",
-        audio: getAssetAudioUrl(s3Assets.rabbitAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.threeImg2),
-        text: "three",
-        audio: getAssetAudioUrl(s3Assets.threeAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.purpleImg),
+          text: "purple",
+          audio: getAssetAudioUrl(s3Assets.purpleAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.rabbitImg),
+          text: "rabbit",
+          audio: getAssetAudioUrl(s3Assets.rabbitAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.threeImg2),
+          text: "three",
+          audio: getAssetAudioUrl(s3Assets.threeAudio),
+        },
       ],
       correctWord: "purple",
       audio: getAssetAudioUrl(s3Assets.purpleAudio),
@@ -847,21 +847,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.dinnerImg),
-        text: "dinner",
-        audio: getAssetAudioUrl(s3Assets.dinner2Audio),
-      },
-      {
-        img: getAssetUrl(s3Assets.fatherImg),
-        text: "father",
-        audio: getAssetAudioUrl(s3Assets.fatherAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.purpleImg),
-        text: "purple",
-        audio: getAssetAudioUrl(s3Assets.purpleAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.dinnerImg),
+          text: "dinner",
+          audio: getAssetAudioUrl(s3Assets.dinner2Audio),
+        },
+        {
+          img: getAssetUrl(s3Assets.fatherImg),
+          text: "father",
+          audio: getAssetAudioUrl(s3Assets.fatherAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.purpleImg),
+          text: "purple",
+          audio: getAssetAudioUrl(s3Assets.purpleAudio),
+        },
       ],
       correctWord: "dinner",
       audio: getAssetAudioUrl(s3Assets.dinner2Audio),
@@ -869,21 +869,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.thumbImg),
-        text: "thumb",
-        audio: getAssetAudioUrl(s3Assets.thumbAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.earthImg),
-        text: "earth",
-        audio: getAssetAudioUrl(s3Assets.earthAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.purpleImg),
-        text: "purple",
-        audio: getAssetAudioUrl(s3Assets.purpleAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.thumbImg),
+          text: "thumb",
+          audio: getAssetAudioUrl(s3Assets.thumbAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.earthImg),
+          text: "earth",
+          audio: getAssetAudioUrl(s3Assets.earthAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.purpleImg),
+          text: "purple",
+          audio: getAssetAudioUrl(s3Assets.purpleAudio),
+        },
       ],
       correctWord: "earth",
       audio: getAssetAudioUrl(s3Assets.earthAudio),
@@ -891,21 +891,21 @@ const content = {
     },
     {
       allwords: [
-      {
-        img: getAssetUrl(s3Assets.magicImg),
-        text: "magic",
-        audio: getAssetAudioUrl(s3Assets.magicAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.threeImg2),
-        text: "three",
-        audio: getAssetAudioUrl(s3Assets.threeAudio),
-      },
-      {
-        img: getAssetUrl(s3Assets.earthImg),
-        text: "earth",
-        audio: getAssetAudioUrl(s3Assets.earthAudio),
-      }
+        {
+          img: getAssetUrl(s3Assets.magicImg),
+          text: "magic",
+          audio: getAssetAudioUrl(s3Assets.magicAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.threeImg2),
+          text: "three",
+          audio: getAssetAudioUrl(s3Assets.threeAudio),
+        },
+        {
+          img: getAssetUrl(s3Assets.earthImg),
+          text: "earth",
+          audio: getAssetAudioUrl(s3Assets.earthAudio),
+        },
       ],
       correctWord: "magic",
       audio: getAssetAudioUrl(s3Assets.magicAudio),
@@ -968,11 +968,20 @@ const SoundHunt = ({
     return () => clearInterval(interval);
   }, []);
 
-  steps = 1;
+  // Filter content based on steps prop (from API/config)
+  // steps comes from questions.length in Practice.jsx
+  const filteredContent = useMemo(() => {
+    if (steps && steps > 0) {
+      // Limit to the number of questions specified by steps
+      return content.L1.slice(0, steps);
+    }
+    // Default: show all questions
+    return content.L1;
+  }, [steps]);
 
   const handleWordClick = (word) => {
     setSelectedWord(word);
-    const currentQuestion = content.L1[currentQuestionIndex];
+    const currentQuestion = filteredContent[currentQuestionIndex];
 
     if (word === currentQuestion.correctWord) {
       const audio = new Audio(correctSound);
@@ -995,10 +1004,11 @@ const SoundHunt = ({
     }
   };
 
-  const currentQuestion = content.L1[currentQuestionIndex];
+  const currentQuestion = filteredContent[currentQuestionIndex];
 
-  const flowNames = [...new Set(content.L1.map((item) => item.flowName))];
-  const activeFlow = content.L1[currentQuestionIndex]?.flowName || flowNames[0];
+  const flowNames = [...new Set(filteredContent.map((item) => item.flowName))];
+  const activeFlow =
+    filteredContent[currentQuestionIndex]?.flowName || flowNames[0];
 
   const correctImage = currentQuestion?.allwords?.find(
     (word) => word.text === currentQuestion?.correctWord
@@ -1011,7 +1021,7 @@ const SoundHunt = ({
       currentAudio.pause();
     }
 
-    currentAudio = new Audio(content.L1[currentQuestionIndex].audio);
+    currentAudio = new Audio(filteredContent[currentQuestionIndex].audio);
 
     currentAudio.play();
     setIsPlaying(true);
@@ -1306,7 +1316,7 @@ const SoundHunt = ({
                   setRecording("no");
                   setIsPlaying(false);
                   setIsAudioPlayedOnce(false);
-                  if (currentQuestionIndex === content.L1.length - 1) {
+                  if (currentQuestionIndex === filteredContent.length - 1) {
                     // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
                     if (handleNext && typeof handleNext === "function") {
                       // Call handleNext(true) to indicate mechanism is complete and trigger progress update
@@ -1370,7 +1380,7 @@ const SoundHunt = ({
                     audio.play();
                     setRecording("no");
                     setIsPlaying(false);
-                    if (currentQuestionIndex === content.L1.length - 1) {
+                    if (currentQuestionIndex === filteredContent.length - 1) {
                       // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
                       if (handleNext && typeof handleNext === "function") {
                         // Call handleNext(true) to indicate mechanism is complete and trigger progress update

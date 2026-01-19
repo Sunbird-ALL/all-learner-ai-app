@@ -5847,6 +5847,15 @@ const Practice = () => {
             newPracticeStep
           );
           setMechanism(currentGetContent.mechanism);
+        } else {
+          // Explicitly reset mechanism to empty object if no mechanism in config
+          // This prevents using mechanism from previous step
+          console.log(
+            "handleNext - No mechanism in config for step:",
+            newPracticeStep,
+            "resetting mechanism to empty object"
+          );
+          setMechanism({});
         }
       }
 
@@ -6080,10 +6089,12 @@ const Practice = () => {
         }
 
         if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
+          // Use contentCount from config if available, otherwise use default limit
+          const contentLimit = currentGetContent?.contentCount || limit;
           const resGetContent = await getContentFn(
             currentGetContent.criteria,
             lang,
-            limit,
+            contentLimit,
             {
               mechanismId: currentGetContent?.mechanism?.id,
               competency: currentGetContent?.competency,
@@ -7029,10 +7040,12 @@ const Practice = () => {
       if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
         // Add safety check for criteria
         if (currentGetContent?.criteria) {
+          // Use contentCount from config if available, otherwise use default limit
+          const contentLimit = currentGetContent?.contentCount || limit;
           const resWord = await getContentFn(
             currentGetContent.criteria,
             lang,
-            limit,
+            contentLimit,
             {
               mechanismId: currentGetContent?.mechanism?.id,
               competency: currentGetContent?.competency,
@@ -8318,7 +8331,11 @@ const Practice = () => {
           }}
         />
       );
-    } else if (mechanism && mechanism.name === "formAWord2") {
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "formAWord2"
+    ) {
       return (
         <Mechanics7
           page={page}
