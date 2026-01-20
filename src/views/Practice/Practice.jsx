@@ -5411,13 +5411,14 @@ const Practice = () => {
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: targetIndex.toString(),
+                lesson: (targetIndex + 1).toString(), // Convert to 1-indexed for backend (matches F1/F2 pattern)
                 progress: currentPracticeProgress,
                 language: lang,
                 milestoneLevel: "B",
               });
               console.log("F3 flow redirect progress saved:", {
                 index: targetIndex,
+                lessonSaved: (targetIndex + 1).toString(), // 1-indexed
                 progress: currentPracticeProgress,
               });
             } catch (e) {
@@ -5495,13 +5496,14 @@ const Practice = () => {
             await addLesson({
               sessionId,
               milestone: "practice",
-              lesson: currentF3FlowStep.index.toString(),
+              lesson: (currentF3FlowStep.index + 1).toString(), // Convert to 1-indexed for backend (matches F1/F2 pattern)
               progress: ((currentF3FlowStep.index + 1) / F3_FLOW.length) * 100,
               language: lang,
               milestoneLevel: "B",
             });
             console.log("F3 flow progress saved to backend by handleNext:", {
               index: currentF3FlowStep.index,
+              lessonSaved: (currentF3FlowStep.index + 1).toString(), // 1-indexed
               progress: ((currentF3FlowStep.index + 1) / F3_FLOW.length) * 100,
             });
           } catch (e) {

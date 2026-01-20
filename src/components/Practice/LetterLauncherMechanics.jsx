@@ -25,6 +25,7 @@ import {
   calculateFuel,
   TryAgain,
   SuccessScreen,
+  memoryGameDataLoader,
 } from "../../lib/axl-explorations/src/lib/index";
 import { trackingAssessmentService } from "../../lib/axl-explorations/src/utils/trackingAssessmentService";
 
@@ -165,17 +166,89 @@ const LetterLauncherMechanicsContent = ({
     }
   };
 
-  // Generate questions based on contentType
+  // Helper function to map redirect string (e.g., "P1", "P6") to F3 flow index
+  // F3_FLOW: P1(0), P2(1), P3(2), P4(3), P5(4), A1(5), P6(6), P7(7), P8(8), P9(9), P10(10), A2(11)
+  const getF3FlowIndexFromRedirect = (redirect) => {
+    if (!redirect || typeof redirect !== "string") return null;
+
+    // Match "P" followed by a number (e.g., "P1", "P6")
+    const match = redirect.match(/^P(\d+)$/);
+    if (match) {
+      const practiceNum = parseInt(match[1], 10);
+      // F3_FLOW indices: P1=0, P2=1, P3=2, P4=3, P5=4, A1=5, P6=6, P7=7, P8=8, P9=9, P10=10, A2=11
+      // So P1-P5 map to 0-4, P6-P10 map to 6-10
+      if (practiceNum >= 1 && practiceNum <= 5) {
+        return practiceNum - 1; // P1=0, P2=1, P3=2, P4=3, P5=4
+      } else if (practiceNum >= 6 && practiceNum <= 10) {
+        return practiceNum; // P6=6, P7=7, P8=8, P9=9, P10=10
+      }
+    }
+
+    return null;
+  };
+
+  // Generate questions based on contentType and language
   const generateQuestions = () => {
     const questions = [];
-    const letters =
-      contentType === "letter"
-        ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
-        : ["at", "an", "in", "on", "am", "it", "up", "en", "ed", "ot"];
+    let letters = [];
+
+    // For English, use existing hardcoded approach (don't change English flow)
+    if (initialLanguage === "en") {
+      letters =
+        contentType === "letter"
+          ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+          : ["at", "an", "in", "on", "am", "it", "up", "en", "ed", "ot"];
+    }
+    // For non-English languages (Telugu, Kannada, Marathi, etc.), use language-specific letters
+    else {
+      // Ensure only supported languages are passed
+      const supportedLanguage =
+        initialLanguage === "te" ||
+        initialLanguage === "mr" ||
+        initialLanguage === "kn"
+          ? initialLanguage
+          : "en";
+
+      if (contentType === "letter" || contentType === "syllable") {
+        // For Telugu, Kannada, and Marathi, use exact level mapping
+        if (
+          supportedLanguage === "te" ||
+          supportedLanguage === "kn" ||
+          supportedLanguage === "mr"
+        ) {
+          const levelKey = currentGameLevel.toString();
+          letters = memoryGameDataLoader.getLettersByLevel(
+            supportedLanguage,
+            levelKey
+          );
+          console.log(
+            `Letter Launcher - Using ${supportedLanguage} letters for level ${currentGameLevel}:`,
+            {
+              lettersCount: letters.length,
+              sampleLetters: letters.slice(0, 10),
+            }
+          );
+        }
+      }
+    }
+
+    // Fallback to English if no letters found (for non-English languages only)
+    if (letters.length === 0 && initialLanguage !== "en") {
+      console.warn(
+        "Letter Launcher - No letters found for non-English language, falling back to English"
+      );
+      letters =
+        contentType === "letter"
+          ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+          : ["at", "an", "in", "on", "am", "it", "up", "en", "ed", "ot"];
+    }
 
     console.log("Letter Launcher - Generating questions:", {
       contentCount,
       contentType,
+      language: initialLanguage,
+      level: currentGameLevel,
+      availableLetters: letters.length,
       expectedQuestions: contentCount,
     });
 
@@ -200,6 +273,7 @@ const LetterLauncherMechanicsContent = ({
       generatedCount: questions.length,
       expectedCount: contentCount,
       match: questions.length === contentCount,
+      language: initialLanguage,
     });
 
     return questions;
@@ -724,16 +798,22 @@ const LetterLauncherMechanicsContent = ({
     setLevelFailed(true);
 
     // For Apply steps with failRedirect, store failure info for redirect
-    // Level 1/2/3 fail → P1 (failRedirect)
+    // A1: Letter Launcher failure → P1 (failRedirect)
+    // A2: Letter Launcher failure → P1 (different from Memory Challenge which goes to P6)
     if (effectiveIsShowCase && failRedirect && isF3FlowActive) {
       // Store failure flag in localStorage so it persists across state resets
       setLocalData("letterLauncherLevelFailed", "true");
       setLocalData("letterLauncherFailedLevel", currentGameLevel.toString());
+      const redirectTarget = applyStep === 2 ? "P1" : failRedirect;
       console.log(
-        `Letter Launcher - Level ${currentGameLevel} failed in Apply step (A1), will redirect to ${failRedirect} when user clicks "Try Again"`,
+        `Letter Launcher - Level ${currentGameLevel} failed in Apply step (A${
+          applyStep || 1
+        }), will redirect to ${redirectTarget} when user clicks "Try Again"`,
         {
           effectiveIsShowCase,
           failRedirect,
+          applyStep,
+          redirectTarget,
           isF3FlowActive,
           currentGameLevel,
         }
@@ -864,8 +944,9 @@ const LetterLauncherMechanicsContent = ({
   };
 
   const resetGame = () => {
-    // For Apply steps with failRedirect, redirect to Practice 1 when level fails
-    // Level 1/2/3 fail → P1 (failRedirect)
+    // For Apply steps with failRedirect, redirect to Practice step when level fails
+    // A1: Letter Launcher failure → P1 (failRedirect)
+    // A2: Letter Launcher failure → P1 (different from Memory Challenge which goes to P6)
     // Check both state and localStorage flag to ensure we catch the failure
     const levelFailedFlag =
       getLocalData("letterLauncherLevelFailed") === "true";
@@ -878,11 +959,20 @@ const LetterLauncherMechanicsContent = ({
     if (shouldRedirect) {
       const failedLevel =
         getLocalData("letterLauncherFailedLevel") || currentGameLevel;
+
+      // For A2, Letter Launcher failures should redirect to P1 (not P6)
+      // Memory Challenge failures in A2 will redirect to P6
+      const redirectTarget = applyStep === 2 ? "P1" : failRedirect;
+
       console.log(
-        `Letter Launcher - Level ${failedLevel} failed in A1, redirecting to ${failRedirect} (Practice 1)`,
+        `Letter Launcher - Level ${failedLevel} failed in A${
+          applyStep || 1
+        }, redirecting to ${redirectTarget}`,
         {
           effectiveIsShowCase,
           failRedirect,
+          applyStep,
+          redirectTarget,
           isF3FlowActive,
           levelFailed,
           levelFailedFlag,
@@ -896,7 +986,7 @@ const LetterLauncherMechanicsContent = ({
       // Clear any sub-step state (e.g., memoryChallenge) to prevent moving to Memory Challenge
       setLocalData("f3ApplySubStep", null);
       // Store redirect info for Practice.jsx to handle
-      setLocalData("f3FlowRedirect", failRedirect);
+      setLocalData("f3FlowRedirect", redirectTarget);
       // Reset state first
       setIsGameComplete(false);
       setLevelFailed(false);
@@ -1119,12 +1209,15 @@ const LetterLauncherMechanicsContent = ({
                 if (effectiveIsShowCase && endLevel) {
                   if (currentGameLevel >= endLevel) {
                     // All levels passed - move to Memory Challenge
+                    // The handleNext callback from Practice.jsx will handle moving to Memory Challenge
+                    // and then redirecting to passRedirect after Memory Challenge completes
                     console.log(
                       `Letter Launcher - All ${endLevel} levels passed (Level ${currentGameLevel}), moving to Memory Challenge`
                     );
                     // Clear any redirect flags
                     setLocalData("f3FlowRedirect", null);
                     // Just call handleNext - it will handle moving to Memory Challenge
+                    // Memory Challenge will then handle redirecting to passRedirect (e.g., P6)
                     if (handleNext) {
                       handleNext();
                     }
@@ -1191,7 +1284,7 @@ const LetterLauncherMechanicsContent = ({
                       await addLesson({
                         sessionId: sessionId,
                         milestone: "practice",
-                        lesson: updatedF3FlowStep.index.toString(), // Next step index (where user will resume)
+                        lesson: (updatedF3FlowStep.index + 1).toString(), // Convert to 1-indexed for backend (matches F1/F2 pattern)
                         progress: nextStepProgress, // Progress for the next step
                         language: lang,
                         milestoneLevel: "B",
@@ -1201,6 +1294,7 @@ const LetterLauncherMechanicsContent = ({
                         {
                           completedStepIndex: currentF3FlowStep.index,
                           nextStepIndex: updatedF3FlowStep.index,
+                          lessonSaved: (updatedF3FlowStep.index + 1).toString(), // 1-indexed
                           progress: nextStepProgress,
                         }
                       );

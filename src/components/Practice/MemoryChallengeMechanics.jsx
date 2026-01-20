@@ -22,6 +22,7 @@ import {
   TryAgain,
 } from "../../lib/axl-explorations/src/lib/index";
 import { ClockwiseTimer } from "../../lib/axl-explorations/src/components/ClockwiseTimer";
+import { trackingAssessmentService } from "../../lib/axl-explorations/src/utils/trackingAssessmentService";
 
 /**
  * Wrapper component that integrates axl-explorations MemoryGameCore
@@ -174,6 +175,54 @@ const MemoryChallengeMechanicsContent = ({
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [showTimeoutMessage, setShowTimeoutMessage] = useState(false);
   const [currentLetterOptions, setCurrentLetterOptions] = useState([]);
+  const [questionSummaries, setQuestionSummaries] = useState([]); // Track question summaries for assessment
+  const [levelStartTime, setLevelStartTime] = useState(null); // Track level start time
+  const [totalTimeSpent, setTotalTimeSpent] = useState(0); // Track total time spent
+
+  // Get F3 flow assessment parameters from config
+  const getF3AssessmentParams = () => {
+    if (!isF3FlowActive || !f3FlowStep?.step) {
+      return {
+        sub_session_id: undefined,
+        sub_milestone_level: undefined,
+        apply_level: undefined,
+        sub_apply_level: undefined,
+      };
+    }
+
+    // Get sub_session_id from telemetry
+    const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
+    const sub_session_id = currentSubSession?.subSessionId;
+
+    // For F3 flow, sub_milestone_level is always "F3"
+    const sub_milestone_level = "F3";
+
+    // Get step title from F3 config
+    const f3Config = levelGetContent[lang]?.["F3"];
+    const f3StepConfig =
+      f3Config && Array.isArray(f3Config) && f3Config[f3FlowStep.index]
+        ? f3Config[f3FlowStep.index]
+        : null;
+    const stepTitle =
+      f3StepConfig?.title ||
+      (f3FlowStep.step?.type === "A"
+        ? `A${f3FlowStep.step?.step}`
+        : f3FlowStep.step?.type === "P"
+        ? `P${f3FlowStep.step?.step}`
+        : null);
+
+    // Determine apply_level - use step title for all F3 flow steps
+    const apply_level = stepTitle || undefined;
+
+    return {
+      sub_session_id,
+      sub_milestone_level,
+      apply_level,
+      // sub_apply_level will be set dynamically based on currentGameLevel
+    };
+  };
+
+  const assessmentParams = getF3AssessmentParams();
 
   useEffect(() => {
     if (sessionInitialized) {
@@ -188,6 +237,11 @@ const MemoryChallengeMechanicsContent = ({
         });
         setCurrentLetterOptions(Array.from(allLetters));
       }
+
+      // Initialize level start time and reset question summaries
+      setLevelStartTime(Date.now());
+      setQuestionSummaries([]);
+      setTotalTimeSpent(0);
     }
   }, [sessionInitialized, currentGameLevel, contentCount]);
 
@@ -269,6 +323,22 @@ const MemoryChallengeMechanicsContent = ({
     const isCorrectAnswer =
       JSON.stringify(userInput) === JSON.stringify(currentSequence.sequence);
 
+    // Track question summary for assessment
+    const questionStartTime = levelStartTime || Date.now();
+    const responseTime = Date.now() - questionStartTime;
+
+    setQuestionSummaries((prev) => [
+      ...prev,
+      {
+        questionId: `sequence_${currentSequenceIndex + 1}`,
+        questionType: "memoryChallenge",
+        isCorrect: isCorrectAnswer,
+        userAnswer: userInput.join(""),
+        correctAnswer: currentSequence.sequence.join(""),
+        responseTime: responseTime,
+      },
+    ]);
+
     setIsCorrect(isCorrectAnswer);
     setShowFeedback(true);
 
@@ -318,7 +388,7 @@ const MemoryChallengeMechanicsContent = ({
     }, 1500);
   };
 
-  const handleLevelComplete = () => {
+  const handleLevelComplete = async () => {
     // Check pass criteria: >= 80% accuracy
     // Use Math.round to avoid floating point precision issues
     const accuracy = Math.round((correctCount / sequences.length) * 100);
@@ -326,6 +396,53 @@ const MemoryChallengeMechanicsContent = ({
     console.log(
       `Memory Challenge - Level ${currentGameLevel} completed. Accuracy: ${accuracy}% (${correctCount}/${sequences.length} correct)`
     );
+
+    // Calculate total time spent
+    const timeSpent = levelStartTime
+      ? Math.round((Date.now() - levelStartTime) / 1000)
+      : 0;
+    setTotalTimeSpent((prev) => prev + timeSpent);
+
+    // Call assessment API for both pass and fail
+    const currentUser = sessionManager.getCurrentUser();
+    if (currentUser && questionSummaries.length > 0) {
+      const sessionId = sessionTelemetryManager.getCurrentSession()?.sessionId;
+      const subsessionId =
+        sessionTelemetryManager.getCurrentSubSession()?.subSessionId;
+      const actualCorrect = questionSummaries.filter((q) => q.isCorrect).length;
+
+      try {
+        await trackingAssessmentService.createAssessmentTracking({
+          userId: currentUser.username,
+          gameKey: `memoryChallenge_${initialLanguage}`,
+          gameTitle: "Memory Challenge",
+          level: currentGameLevel,
+          language: initialLanguage,
+          totalQuestions: questionSummaries.length,
+          correctAnswers: actualCorrect,
+          totalScore: actualCorrect,
+          timeSpent: timeSpent,
+          assessmentSummary: questionSummaries,
+          sessionId: sessionId,
+          subsessionId: subsessionId,
+          sub_session_id: assessmentParams.sub_session_id,
+          sub_milestone_level: assessmentParams.sub_milestone_level,
+          apply_level: assessmentParams.apply_level,
+          sub_apply_level: isShowCase ? currentGameLevel : undefined,
+          metadata: {
+            difficulty: "simple",
+            levelFailed: accuracy < 80,
+            scorePercentage: accuracy,
+          },
+        });
+        console.log(
+          "Memory Challenge assessment tracking created for level:",
+          currentGameLevel
+        );
+      } catch (error) {
+        console.error("Error creating assessment tracking:", error);
+      }
+    }
 
     if (accuracy >= 80) {
       // Level passed - show success screen
@@ -336,7 +453,9 @@ const MemoryChallengeMechanicsContent = ({
       setLevelPassed(true);
       setLevelFailed(false);
     } else {
-      // Level failed - redirect to P1 (failRedirect)
+      // Level failed - redirect based on failRedirect
+      // A1: Memory Challenge failure → P1 (failRedirect)
+      // A2: Memory Challenge failure → P6 (failRedirect)
       console.log(
         `Memory Challenge - Level ${currentGameLevel} failed (accuracy: ${accuracy}%, need >= 80%), redirecting to ${
           failRedirect || "P1"
@@ -346,11 +465,12 @@ const MemoryChallengeMechanicsContent = ({
       setLevelPassed(false);
       setLevelFailed(true);
 
-      // For Apply steps with failRedirect, automatically redirect to P1
+      // For Apply steps with failRedirect, automatically redirect
+      // A1: redirects to P1, A2: redirects to P6
       if (isShowCase && failRedirect && isF3FlowActive) {
         // Store redirect info for Practice.jsx to handle
         setLocalData("f3FlowRedirect", failRedirect);
-        // Clear f3ApplySubStep to ensure A1 starts from Letter Launcher when reached again
+        // Clear f3ApplySubStep to ensure Apply step starts from Letter Launcher when reached again
         setLocalData("f3ApplySubStep", null);
         // Redirect after a short delay to show failure state
         setTimeout(() => {

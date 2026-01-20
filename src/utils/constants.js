@@ -10981,8 +10981,8 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "letter",
         letterLauncherLevel: 1,
-        letterLauncherEndLevel: 3,
-        letterLauncherContentCount: 10,
+        letterLauncherEndLevel: 1,
+        letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 1,
         failRedirect: "P1", // If fail at any level, go to Practice 1
@@ -11059,8 +11059,8 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "syllable",
         letterLauncherLevel: 1,
-        letterLauncherEndLevel: 3,
-        letterLauncherContentCount: 10,
+        letterLauncherEndLevel: 1,
+        letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 2,
         failRedirect: "P6", // If fail at any level, go to Practice 6
@@ -13692,6 +13692,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter", // Alphabet sets
+        letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
       },
       // Practice 2 - Letter Speed (Letter Launcher) - Alphabet sets
@@ -13703,7 +13704,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
-        letterLauncherLevel: 1,
+        letterLauncherLevel: 2,
         letterLauncherContentCount: 10,
       },
       // Practice 3 - Letter Speed (Letter Launcher) - Alphabet sets
@@ -13715,6 +13716,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
+        letterLauncherLevel: 3,
         letterLauncherContentCount: 10,
       },
       // Practice 4 - Letter Speed (Letter Launcher) - Alphabet sets
@@ -13726,7 +13728,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
-        letterLauncherLevel: 1,
+        letterLauncherLevel: 2,
         letterLauncherContentCount: 10,
       },
       // Practice 5 - Letter Speed (Letter Launcher) - Alphabet sets
@@ -13738,6 +13740,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
+        letterLauncherLevel: 3,
         letterLauncherContentCount: 10,
       },
       // Apply 1 - Letter Speed (Letter Launcher) 3 levels + Memory Challenge 3 levels
@@ -13750,8 +13753,8 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "letter",
         letterLauncherLevel: 1,
-        letterLauncherEndLevel: 3,
-        letterLauncherContentCount: 10,
+        letterLauncherEndLevel: 1,
+        letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 1,
         failRedirect: "P1", // If fail at any level, go to Practice 1
@@ -13770,6 +13773,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable", // Syllable sets
+        letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
       },
       // Practice 7 - Syllable Speed (Letter Launcher) - Syllable sets
@@ -13781,7 +13785,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable",
-        letterLauncherLevel: 1,
+        letterLauncherLevel: 2,
         letterLauncherContentCount: 10,
       },
       // Practice 8 - Syllable Speed (Letter Launcher) - Syllable sets
@@ -13793,6 +13797,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable",
+        letterLauncherLevel: 3,
         letterLauncherContentCount: 10,
       },
       // Practice 9 - Syllable Speed (Letter Launcher) - Syllable sets
@@ -13828,8 +13833,8 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "syllable",
         letterLauncherLevel: 1,
-        letterLauncherEndLevel: 3,
-        letterLauncherContentCount: 10,
+        letterLauncherEndLevel: 1,
+        letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 2,
         failRedirect: "P6", // If fail at any level, go to Practice 6
