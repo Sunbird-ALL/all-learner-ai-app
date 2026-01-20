@@ -7739,60 +7739,13 @@ const Practice = () => {
         wordCount,
       };
 
-      return <SoundHunt {...commonProps} customLetters={customLetters} />;
-    } else if (
-      mechanism &&
-      typeof mechanism === "object" &&
-      mechanism.name === "soundHuntS1"
-    ) {
-      // SoundHuntS1 mechanism from config
-      const getCurrentContentForSoundHuntS1 = getCurrentContent(
-        progressData?.currentPracticeStep || 0
+      return (
+        <SoundHunt
+          isShowCase={false}
+          {...commonProps}
+          customLetters={customLetters}
+        />
       );
-      const customLetters = getCurrentContentForSoundHuntS1?.customLetters;
-
-      // Common props for SoundHuntS1 component
-      const commonProps = {
-        page,
-        setPage,
-        level: level,
-        header:
-          questions[currentQuestion]?.contentType === "image"
-            ? `Guess the below image`
-            : `Speak the below word`,
-        currentImg: currentImage,
-        parentWords: parentWords,
-        contentType: currentContentType,
-        contentId: questions[currentQuestion]?.contentId,
-        setVoiceText,
-        setRecordedAudio,
-        setVoiceAnimate,
-        storyLine,
-        handleNext,
-        type: "word",
-        enableNext,
-        showTimer: false,
-        points,
-        steps: questions?.length,
-        currentStep: currentQuestion + 1,
-        progressData,
-        showProgress: true,
-        background:
-          isShowCase &&
-          "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-        playTeacherAudio,
-        callUpdateLearner: isShowCase,
-        disableScreen,
-        isShowCase,
-        handleBack: !isShowCase && handleBack,
-        setEnableNext,
-        loading,
-        setOpenMessageDialog,
-        vocabCount,
-        wordCount,
-      };
-
-      return <SoundHuntS1 {...commonProps} customLetters={customLetters} />;
     } else if (
       mechanism &&
       typeof mechanism === "object" &&
@@ -7836,7 +7789,9 @@ const Practice = () => {
         playTeacherAudio,
         callUpdateLearner: isShowCase,
         disableScreen,
-        isShowCase,
+        isShowCase: true,
+        startShowCase,
+        setStartShowCase,
         handleBack: !isShowCase && handleBack,
         setEnableNext,
         loading,

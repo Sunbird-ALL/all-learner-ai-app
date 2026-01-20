@@ -968,16 +968,68 @@ const SoundHunt = ({
     return () => clearInterval(interval);
   }, []);
 
-  // Filter content based on steps prop (from API/config)
-  // steps comes from questions.length in Practice.jsx
+  // Filter content based on milestone level, step title, and steps prop (from API/config)
+  // Content selection logic:
+  // 1. Get milestone level (M1 or M2) from level prop
+  // 2. Get current step title from progressData (e.g., "P1", "P2", "P3", "P6", "P7")
+  // 3. Map step to flowNames based on milestone:
+  //    - M1: Steps P1, P2, P6, P7 → show flowName P1, P3
+  //    - M2: Steps P1, P2, P6, P7 → show flowName P2, P4
+  //    - Other steps: use step title as flowName (e.g., P3 → flowName P3)
+  // 4. Limit by steps (contentCount from config)
   const filteredContent = useMemo(() => {
-    if (steps && steps > 0) {
-      // Limit to the number of questions specified by steps
-      return content.L1.slice(0, steps);
+    // Get milestone level (level prop is number like 1, 2, etc.)
+    const milestoneLevel = level ? `m${level}` : null;
+
+    // Get current step title from progressData
+    const currentStepTitle =
+      progressData?.currentPracticeStep !== undefined
+        ? practiceSteps?.[progressData.currentPracticeStep]?.title
+        : null;
+
+    // Determine which flowNames to show based on milestone and step
+    let validFlowNames = null;
+
+    if (
+      milestoneLevel === "m1" &&
+      currentStepTitle &&
+      ["P1", "P2", "P6", "P7"].includes(currentStepTitle)
+    ) {
+      // M1: Steps P1, P2, P6, P7 → show flowName P1, P3
+      validFlowNames = ["P1", "P3"];
+    } else if (
+      milestoneLevel === "m2" &&
+      currentStepTitle &&
+      ["P1", "P2", "P6", "P7"].includes(currentStepTitle)
+    ) {
+      // M2: Steps P1, P2, P6, P7 → show flowName P2, P4
+      validFlowNames = ["P2", "P4"];
+    } else if (currentStepTitle) {
+      // For other steps, use step title as flowName (e.g., P3 → flowName P3, P4 → flowName P4)
+      validFlowNames = [currentStepTitle];
     }
-    // Default: show all questions
-    return content.L1;
-  }, [steps]);
+
+    // Filter content by valid flowNames
+    let stepContent = content.L1;
+    if (validFlowNames && validFlowNames.length > 0) {
+      stepContent = content.L1.filter((item) =>
+        validFlowNames.includes(item.flowName)
+      );
+    }
+
+    // If no content found, fallback to all content
+    if (stepContent.length === 0) {
+      stepContent = content.L1;
+    }
+
+    // Limit by steps (contentCount from config) if provided
+    if (steps && steps > 0) {
+      return stepContent.slice(0, steps);
+    }
+
+    // Default: return all filtered content for the step
+    return stepContent;
+  }, [steps, progressData, level]);
 
   const handleWordClick = (word) => {
     setSelectedWord(word);
@@ -1316,26 +1368,27 @@ const SoundHunt = ({
                   setRecording("no");
                   setIsPlaying(false);
                   setIsAudioPlayedOnce(false);
-                  if (currentQuestionIndex === filteredContent.length - 1) {
-                    // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
-                    if (handleNext && typeof handleNext === "function") {
-                      // Call handleNext(true) to indicate mechanism is complete and trigger progress update
-                      await handleNext(true);
-                      return;
-                    } else {
-                      // Standalone mode - navigate to discover-start
-                      setLocalData("rFlow", false);
-                      setLocalData("mFail", false);
-                      setLocalData("rStep", 0);
-                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                        navigate("/");
-                      } else {
-                        navigate("/discover-start");
-                      }
-                    }
-                  } else {
-                    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-                  }
+                  await handleNext();
+                  // if (currentQuestionIndex === filteredContent.length - 1) {
+                  //   // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
+                  //   if (handleNext && typeof handleNext === "function") {
+                  //     // Call handleNext(true) to indicate mechanism is complete and trigger progress update
+                  //     await handleNext();
+                  //     return;
+                  //   } else {
+                  //     // Standalone mode - navigate to discover-start
+                  //     setLocalData("rFlow", false);
+                  //     setLocalData("mFail", false);
+                  //     setLocalData("rStep", 0);
+                  //     if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                  //       navigate("/");
+                  //     } else {
+                  //       navigate("/discover-start");
+                  //     }
+                  //   }
+                  // } else {
+                  setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+                  // }
                 }}
                 src={Assets.pause}
                 alt="Stop"
@@ -1384,7 +1437,7 @@ const SoundHunt = ({
                       // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
                       if (handleNext && typeof handleNext === "function") {
                         // Call handleNext(true) to indicate mechanism is complete and trigger progress update
-                        await handleNext(true);
+                        await handleNext();
                         return;
                       } else {
                         // Standalone mode - navigate to discover-start
