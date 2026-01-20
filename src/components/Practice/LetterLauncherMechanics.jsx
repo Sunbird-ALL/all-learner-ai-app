@@ -281,7 +281,7 @@ const LetterLauncherMechanicsContent = ({
 
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(30);
+  const [timeRemaining, setTimeRemaining] = useState(45);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -440,7 +440,7 @@ const LetterLauncherMechanicsContent = ({
     ) {
       // Start the timer for Apply steps when game begins
       setIsTimerRunning(true);
-      setTimeRemaining(30);
+      setTimeRemaining(45);
     }
   }, [
     effectiveIsShowCase,
@@ -1014,7 +1014,7 @@ const LetterLauncherMechanicsContent = ({
     setQuestionSummaries([]);
     setLevelStartTime(Date.now());
     setIsTimerRunning(false);
-    setTimeRemaining(30);
+    setTimeRemaining(45);
     const newQuestions = generateQuestions();
     setQuestions(newQuestions);
     if (effectiveIsShowCase) {

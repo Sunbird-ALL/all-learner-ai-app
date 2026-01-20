@@ -4765,13 +4765,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.తబలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.తబలAudio),
       },
+      {
+        id: 2,
+        title: "Letter",
+        letter: "త",
+        word: "జాతర",
+        image: getAssetUrl(s3Assets.జతరImg),
+        audio: getAssetAudioUrl(s3Assets.జతరAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.జతరAudio),
+      },
+      {
+        id: 3,
+        title: "Letter",
+        letter: "త",
+        word: "ఈత",
+        image: getAssetUrl(s3Assets.ఈతImg),
+        audio: getAssetAudioUrl(s3Assets.ఈతAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఈతAudio),
+      },
     ],
   },
   {
     letter: "బ",
     items: [
       {
-        id: 2,
+        id: 4,
         title: "Letter",
         letter: "బ",
         word: "బంతి",
@@ -4779,13 +4797,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.బతAudio),
         singleAudio: getAssetAudioUrl(s3Assets.బతAudio),
       },
+      {
+        id: 5,
+        title: "Letter",
+        letter: "బ",
+        word: "తబల",
+        image: getAssetUrl(s3Assets.తబల2Img),
+        audio: getAssetAudioUrl(s3Assets.తబల2Audio),
+        singleAudio: getAssetAudioUrl(s3Assets.తబల2Audio),
+      },
+      {
+        id: 6,
+        title: "Letter",
+        letter: "బ",
+        word: "లబలబ",
+        image: getAssetUrl(s3Assets.లబలబImg),
+        audio: getAssetAudioUrl(s3Assets.లబలబAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.లబలబAudio),
+      },
     ],
   },
   {
     letter: "ల",
     items: [
       {
-        id: 3,
+        id: 7,
         title: "Letter",
         letter: "ల",
         word: "లత",
@@ -4793,13 +4829,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.లతAudio),
         singleAudio: getAssetAudioUrl(s3Assets.లతAudio),
       },
+      {
+        id: 8,
+        title: "Letter",
+        letter: "ల",
+        word: "బలపం",
+        image: getAssetUrl(s3Assets.బలపImg),
+        audio: getAssetAudioUrl(s3Assets.బలపAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.బలపAudio),
+      },
+      {
+        id: 9,
+        title: "Letter",
+        letter: "ల",
+        word: "వెల",
+        image: getAssetUrl(s3Assets.వలImg),
+        audio: getAssetAudioUrl(s3Assets.వలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.వలAudio),
+      },
     ],
   },
   {
     letter: "క",
     items: [
       {
-        id: 4,
+        id: 10,
         title: "Letter",
         letter: "క",
         word: "కంజర",
@@ -4807,13 +4861,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.కజరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.కజరAudio),
       },
+      {
+        id: 11,
+        title: "Letter",
+        letter: "క",
+        word: "ఆకలి",
+        image: getAssetUrl(s3Assets.ఆకలImg),
+        audio: getAssetAudioUrl(s3Assets.ఆకలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఆకలAudio),
+      },
+      {
+        id: 12,
+        title: "Letter",
+        letter: "క",
+        word: "చిలుక",
+        image: getAssetUrl(s3Assets.చలకImg),
+        audio: getAssetAudioUrl(s3Assets.చలకAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.చలకAudio),
+      },
     ],
   },
   {
     letter: "జ",
     items: [
       {
-        id: 5,
+        id: 13,
         title: "Letter",
         letter: "జ",
         word: "జడ",
@@ -4821,13 +4893,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.జడAudio),
         singleAudio: getAssetAudioUrl(s3Assets.జడAudio),
       },
+      {
+        id: 14,
+        title: "Letter",
+        letter: "జ",
+        word: "కంజర",
+        image: getAssetUrl(s3Assets.కజర2Img),
+        audio: getAssetAudioUrl(s3Assets.కజర2Audio),
+        singleAudio: getAssetAudioUrl(s3Assets.కజర2Audio),
+      },
+      {
+        id: 15,
+        title: "Letter",
+        letter: "జ",
+        word: "జలజ",
+        image: getAssetUrl(s3Assets.జలజImg),
+        audio: getAssetAudioUrl(s3Assets.జలజAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.జలజAudio),
+      },
     ],
   },
   {
     letter: "ర",
     items: [
       {
-        id: 6,
+        id: 16,
         title: "Letter",
         letter: "ర",
         word: "రవి",
@@ -4835,13 +4925,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.రవAudio),
         singleAudio: getAssetAudioUrl(s3Assets.రవAudio),
       },
+      {
+        id: 17,
+        title: "Letter",
+        letter: "ర",
+        word: "గిరక",
+        image: getAssetUrl(s3Assets.గరకImg),
+        audio: getAssetAudioUrl(s3Assets.గరకAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.గరకAudio),
+      },
+      {
+        id: 18,
+        title: "Letter",
+        letter: "ర",
+        word: "చీర",
+        image: getAssetUrl(s3Assets.చరImg),
+        audio: getAssetAudioUrl(s3Assets.చరAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.చరAudio),
+      },
     ],
   },
   {
     letter: "ఆ",
     items: [
       {
-        id: 7,
+        id: 19,
         title: "Letter",
         letter: "ఆ",
         word: "ఆట",
@@ -4855,7 +4963,7 @@ const dataTe = [
     letter: "ట",
     items: [
       {
-        id: 8,
+        id: 20,
         title: "Letter",
         letter: "ట",
         word: "టమాట",
@@ -4863,13 +4971,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.టమటAudio),
         singleAudio: getAssetAudioUrl(s3Assets.టమటAudio),
       },
+      {
+        id: 21,
+        title: "Letter",
+        letter: "ట",
+        word: "నాటకం",
+        image: getAssetUrl(s3Assets.నటకImg),
+        audio: getAssetAudioUrl(s3Assets.నటకAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.నటకAudio),
+      },
+      {
+        id: 22,
+        title: "Letter",
+        letter: "ట",
+        word: "తోట",
+        image: getAssetUrl(s3Assets.తటImg),
+        audio: getAssetAudioUrl(s3Assets.తటAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.తటAudio),
+      },
     ],
   },
   {
     letter: "ఉ",
     items: [
       {
-        id: 9,
+        id: 23,
         title: "Letter",
         letter: "ఉ",
         word: "ఉంగరం",
@@ -4883,7 +5009,7 @@ const dataTe = [
     letter: "గ",
     items: [
       {
-        id: 10,
+        id: 24,
         title: "Letter",
         letter: "గ",
         word: "గద",
@@ -4891,13 +5017,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.గదAudio),
         singleAudio: getAssetAudioUrl(s3Assets.గదAudio),
       },
+      {
+        id: 25,
+        title: "Letter",
+        letter: "గ",
+        word: "ఉంగరం",
+        image: getAssetUrl(s3Assets.ఉగర2Img),
+        audio: getAssetAudioUrl(s3Assets.ఉగర2Audio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఉగర2Audio),
+      },
+      {
+        id: 26,
+        title: "Letter",
+        letter: "గ",
+        word: "పండుగ",
+        image: getAssetUrl(s3Assets.పడగImg),
+        audio: getAssetAudioUrl(s3Assets.పడగAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.పడగAudio),
+      },
     ],
   },
   {
     letter: "శ",
     items: [
       {
-        id: 11,
+        id: 27,
         title: "Letter",
         letter: "శ",
         word: "శనగ",
@@ -4905,19 +5049,23 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.శనగAudio),
         singleAudio: getAssetAudioUrl(s3Assets.శనగAudio),
       },
-    ],
-  },
-  {
-    letter: "న",
-    items: [
       {
-        id: 12,
+        id: 28,
         title: "Letter",
-        letter: "న",
-        word: "నగ",
-        image: getAssetUrl(s3Assets.నగImg),
-        audio: getAssetAudioUrl(s3Assets.నగAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.నగAudio),
+        letter: "శ",
+        word: "దశమి",
+        image: getAssetUrl(s3Assets.దశమImg),
+        audio: getAssetAudioUrl(s3Assets.దశమAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.దశమAudio),
+      },
+      {
+        id: 29,
+        title: "Letter",
+        letter: "శ",
+        word: "దిశ",
+        image: getAssetUrl(s3Assets.దశImg),
+        audio: getAssetAudioUrl(s3Assets.దశAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.దశAudio),
       },
     ],
   },
@@ -4925,7 +5073,7 @@ const dataTe = [
     letter: "అ",
     items: [
       {
-        id: 13,
+        id: 30,
         title: "Letter",
         letter: "అ",
         word: "అనప",
@@ -4939,7 +5087,7 @@ const dataTe = [
     letter: "ప",
     items: [
       {
-        id: 14,
+        id: 31,
         title: "Letter",
         letter: "ప",
         word: "పంట",
@@ -4947,13 +5095,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.పటAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పటAudio),
       },
+      {
+        id: 32,
+        title: "Letter",
+        letter: "ప",
+        word: "చేపలు",
+        image: getAssetUrl(s3Assets.చపలImg),
+        audio: getAssetAudioUrl(s3Assets.చపలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.చపలAudio),
+      },
+      {
+        id: 33,
+        title: "Letter",
+        letter: "ప",
+        word: "పాప",
+        image: getAssetUrl(s3Assets.పపImg),
+        audio: getAssetAudioUrl(s3Assets.పపAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.పపAudio),
+      },
     ],
   },
   {
     letter: "స",
     items: [
       {
-        id: 15,
+        id: 34,
         title: "Letter",
         letter: "స",
         word: "సవరం",
@@ -4961,19 +5127,55 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.సవరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.సవరAudio),
       },
+      {
+        id: 35,
+        title: "Letter",
+        letter: "స",
+        word: "దసరా",
+        image: getAssetUrl(s3Assets.దసరImg),
+        audio: getAssetAudioUrl(s3Assets.దసరAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.దసరAudio),
+      },
+      {
+        id: 36,
+        title: "Letter",
+        letter: "స",
+        word: "పనస",
+        image: getAssetUrl(s3Assets.పనసImg),
+        audio: getAssetAudioUrl(s3Assets.పనసAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.పనసAudio),
+      },
     ],
   },
   {
     letter: "వ",
     items: [
       {
-        id: 16,
+        id: 37,
         title: "Letter",
         letter: "వ",
         word: "వల",
-        image: getAssetUrl(s3Assets.వలImg),
-        audio: getAssetAudioUrl(s3Assets.వలAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.వలAudio),
+        image: getAssetUrl(s3Assets.వల2Img),
+        audio: getAssetAudioUrl(s3Assets.వల2Audio),
+        singleAudio: getAssetAudioUrl(s3Assets.వల2Audio),
+      },
+      {
+        id: 38,
+        title: "Letter",
+        letter: "వ",
+        word: "లవణం",
+        image: getAssetUrl(s3Assets.లవణImg),
+        audio: getAssetAudioUrl(s3Assets.లవణAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.లవణAudio),
+      },
+      {
+        id: 39,
+        title: "Letter",
+        letter: "వ",
+        word: "పడవ",
+        image: getAssetUrl(s3Assets.పడవImg),
+        audio: getAssetAudioUrl(s3Assets.పడవAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.పడవAudio),
       },
     ],
   },
@@ -4981,7 +5183,7 @@ const dataTe = [
     letter: "ఊ",
     items: [
       {
-        id: 17,
+        id: 40,
         title: "Letter",
         letter: "ఊ",
         word: "ఊయల",
@@ -4995,7 +5197,7 @@ const dataTe = [
     letter: "డ",
     items: [
       {
-        id: 18,
+        id: 41,
         title: "Letter",
         letter: "డ",
         word: "డబ్బా",
@@ -5003,13 +5205,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.డబబAudio),
         singleAudio: getAssetAudioUrl(s3Assets.డబబAudio),
       },
+      {
+        id: 42,
+        title: "Letter",
+        letter: "డ",
+        word: "అడవి",
+        image: getAssetUrl(s3Assets.అడవImg),
+        audio: getAssetAudioUrl(s3Assets.అడవAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.అడవAudio),
+      },
+      {
+        id: 43,
+        title: "Letter",
+        letter: "డ",
+        word: "బండ",
+        image: getAssetUrl(s3Assets.బడImg),
+        audio: getAssetAudioUrl(s3Assets.బడAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.బడAudio),
+      },
     ],
   },
   {
     letter: "ద",
     items: [
       {
-        id: 19,
+        id: 44,
         title: "Letter",
         letter: "ద",
         word: "దండ",
@@ -5017,19 +5237,37 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.దడAudio),
         singleAudio: getAssetAudioUrl(s3Assets.దడAudio),
       },
+      {
+        id: 45,
+        title: "Letter",
+        letter: "ద",
+        word: "ఉదయం",
+        image: getAssetUrl(s3Assets.ఉదయImg),
+        audio: getAssetAudioUrl(s3Assets.ఉదయAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఉదయAudio),
+      },
+      {
+        id: 46,
+        title: "Letter",
+        letter: "ద",
+        word: "కింద",
+        image: getAssetUrl(s3Assets.కదImg),
+        audio: getAssetAudioUrl(s3Assets.కదAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.కదAudio),
+      },
     ],
   },
   {
     letter: "ఈ",
     items: [
       {
-        id: 20,
+        id: 47,
         title: "Letter",
         letter: "ఈ",
         word: "ఈత",
-        image: getAssetUrl(s3Assets.ఈతImg),
-        audio: getAssetAudioUrl(s3Assets.ఈతAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఈతAudio),
+        image: getAssetUrl(s3Assets.ఈత2Img),
+        audio: getAssetAudioUrl(s3Assets.ఈత2Audio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఈత2Audio),
       },
     ],
   },
@@ -5037,7 +5275,7 @@ const dataTe = [
     letter: "మ",
     items: [
       {
-        id: 21,
+        id: 48,
         title: "Letter",
         letter: "మ",
         word: "మర",
@@ -5045,13 +5283,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.మరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.మరAudio),
       },
+      {
+        id: 49,
+        title: "Letter",
+        letter: "మ",
+        word: "నెమలి",
+        image: getAssetUrl(s3Assets.నమలImg),
+        audio: getAssetAudioUrl(s3Assets.నమలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.నమలAudio),
+      },
+      {
+        id: 50,
+        title: "Letter",
+        letter: "మ",
+        word: "చీమ",
+        image: getAssetUrl(s3Assets.చమImg),
+        audio: getAssetAudioUrl(s3Assets.చమAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.చమAudio),
+      },
     ],
   },
   {
     letter: "చ",
     items: [
       {
-        id: 22,
+        id: 51,
         title: "Letter",
         letter: "చ",
         word: "చరకా",
@@ -5059,13 +5315,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.చరకAudio),
         singleAudio: getAssetAudioUrl(s3Assets.చరకAudio),
       },
+      {
+        id: 52,
+        title: "Letter",
+        letter: "చ",
+        word: "రచన",
+        image: getAssetUrl(s3Assets.రచనImg),
+        audio: getAssetAudioUrl(s3Assets.రచనAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.రచనAudio),
+      },
+      {
+        id: 53,
+        title: "Letter",
+        letter: "చ",
+        word: "కిచకిచ",
+        image: getAssetUrl(s3Assets.కచకచImg),
+        audio: getAssetAudioUrl(s3Assets.కచకచAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.కచకచAudio),
+      },
     ],
   },
   {
     letter: "ఒ",
     items: [
       {
-        id: 23,
+        id: 54,
         title: "Letter",
         letter: "ఒ",
         word: "ఒక",
@@ -5079,7 +5353,7 @@ const dataTe = [
     letter: "ఓ",
     items: [
       {
-        id: 24,
+        id: 55,
         title: "Letter",
         letter: "ఓ",
         word: "ఓడ",
@@ -5093,7 +5367,7 @@ const dataTe = [
     letter: "ఔ",
     items: [
       {
-        id: 25,
+        id: 56,
         title: "Letter",
         letter: "ఔ",
         word: "ఔటు",
@@ -5107,7 +5381,7 @@ const dataTe = [
     letter: "య",
     items: [
       {
-        id: 26,
+        id: 57,
         title: "Letter",
         letter: "య",
         word: "యద",
@@ -5115,13 +5389,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.యదAudio),
         singleAudio: getAssetAudioUrl(s3Assets.యదAudio),
       },
+      {
+        id: 58,
+        title: "Letter",
+        letter: "య",
+        word: "కాయలు",
+        image: getAssetUrl(s3Assets.కయలImg),
+        audio: getAssetAudioUrl(s3Assets.కయలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.కయలAudio),
+      },
+      {
+        id: 59,
+        title: "Letter",
+        letter: "య",
+        word: "వంకాయ",
+        image: getAssetUrl(s3Assets.వకయImg),
+        audio: getAssetAudioUrl(s3Assets.వకయAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.వకయAudio),
+      },
     ],
   },
   {
     letter: "ఇ",
     items: [
       {
-        id: 27,
+        id: 60,
         title: "Letter",
         letter: "ఇ",
         word: "ఇటుక",
@@ -5135,7 +5427,7 @@ const dataTe = [
     letter: "ఎ",
     items: [
       {
-        id: 28,
+        id: 61,
         title: "Letter",
         letter: "ఎ",
         word: "ఎలుక",
@@ -5149,7 +5441,7 @@ const dataTe = [
     letter: "ఏ",
     items: [
       {
-        id: 29,
+        id: 62,
         title: "Letter",
         letter: "ఏ",
         word: "ఏనుగు",
@@ -5163,7 +5455,7 @@ const dataTe = [
     letter: "ఐ",
     items: [
       {
-        id: 30,
+        id: 63,
         title: "Letter",
         letter: "ఐ",
         word: "ఐదు",
@@ -5177,7 +5469,16 @@ const dataTe = [
     letter: "ణ",
     items: [
       {
-        id: 31,
+        id: 64,
+        title: "Letter",
+        letter: "ణ",
+        word: "గణపతి",
+        image: getAssetUrl(s3Assets.గణపతImg),
+        audio: getAssetAudioUrl(s3Assets.గణపతAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.గణపతAudio),
+      },
+      {
+        id: 65,
         title: "Letter",
         letter: "ణ",
         word: "వీణ",
@@ -5191,7 +5492,16 @@ const dataTe = [
     letter: "ళ",
     items: [
       {
-        id: 32,
+        id: 66,
+        title: "Letter",
+        letter: "ళ",
+        word: "తాళం",
+        image: getAssetUrl(s3Assets.తళImg),
+        audio: getAssetAudioUrl(s3Assets.తళAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.తళAudio),
+      },
+      {
+        id: 67,
         title: "Letter",
         letter: "ళ",
         word: "కళ",
@@ -5205,7 +5515,7 @@ const dataTe = [
     letter: "హ",
     items: [
       {
-        id: 33,
+        id: 68,
         title: "Letter",
         letter: "హ",
         word: "హంస",
@@ -5213,13 +5523,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.హసAudio),
         singleAudio: getAssetAudioUrl(s3Assets.హసAudio),
       },
+      {
+        id: 69,
+        title: "Letter",
+        letter: "హ",
+        word: "వాహనం",
+        image: getAssetUrl(s3Assets.వహనImg),
+        audio: getAssetAudioUrl(s3Assets.వహనAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.వహనAudio),
+      },
+      {
+        id: 70,
+        title: "Letter",
+        letter: "హ",
+        word: "గుహ",
+        image: getAssetUrl(s3Assets.గహImg),
+        audio: getAssetAudioUrl(s3Assets.గహAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.గహAudio),
+      },
     ],
   },
   {
     letter: "ఖ",
     items: [
       {
-        id: 34,
+        id: 71,
         title: "Letter",
         letter: "ఖ",
         word: "ఖగం",
@@ -5227,13 +5555,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.ఖగAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ఖగAudio),
       },
+      {
+        id: 72,
+        title: "Letter",
+        letter: "ఖ",
+        word: "ముఖము",
+        image: getAssetUrl(s3Assets.మఖమImg),
+        audio: getAssetAudioUrl(s3Assets.మఖమAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.మఖమAudio),
+      },
+      {
+        id: 73,
+        title: "Letter",
+        letter: "ఖ",
+        word: "శంఖం",
+        image: getAssetUrl(s3Assets.శఖImg),
+        audio: getAssetAudioUrl(s3Assets.శఖAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.శఖAudio),
+      },
     ],
   },
   {
     letter: "ఛ",
     items: [
       {
-        id: 35,
+        id: 74,
         title: "Letter",
         letter: "ఛ",
         word: "ఛత్రము",
@@ -5241,13 +5587,22 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.ఛతరమAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ఛతరమAudio),
       },
+      {
+        id: 75,
+        title: "Letter",
+        letter: "ఛ",
+        word: "పింఛం",
+        image: getAssetUrl(s3Assets.పఛImg),
+        audio: getAssetAudioUrl(s3Assets.పఛAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.పఛAudio),
+      },
     ],
   },
   {
     letter: "ఠ",
     items: [
       {
-        id: 36,
+        id: 76,
         title: "Letter",
         letter: "ఠ",
         word: "పాఠశాల",
@@ -5255,13 +5610,22 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.పఠశలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పఠశలAudio),
       },
+      {
+        id: 77,
+        title: "Letter",
+        letter: "ఠ",
+        word: "పాఠం",
+        image: getAssetUrl(s3Assets.పఠImg),
+        audio: getAssetAudioUrl(s3Assets.పఠAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.పఠAudio),
+      },
     ],
   },
   {
     letter: "ఢ",
     items: [
       {
-        id: 37,
+        id: 78,
         title: "Letter",
         letter: "ఢ",
         word: "ఢమఢమ",
@@ -5275,7 +5639,7 @@ const dataTe = [
     letter: "ఘ",
     items: [
       {
-        id: 38,
+        id: 79,
         title: "Letter",
         letter: "ఘ",
         word: "ఘటం",
@@ -5283,13 +5647,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.ఘటAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ఘటAudio),
       },
+      {
+        id: 80,
+        title: "Letter",
+        letter: "ఘ",
+        word: "సంఘటన",
+        image: getAssetUrl(s3Assets.సఘటనImg),
+        audio: getAssetAudioUrl(s3Assets.సఘటనAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.సఘటనAudio),
+      },
+      {
+        id: 81,
+        title: "Letter",
+        letter: "ఘ",
+        word: "మేఘం",
+        image: getAssetUrl(s3Assets.మఘImg),
+        audio: getAssetAudioUrl(s3Assets.మఘAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.మఘAudio),
+      },
     ],
   },
   {
     letter: "ఝ",
     items: [
       {
-        id: 39,
+        id: 82,
         title: "Letter",
         letter: "ఝ",
         word: "ఝషం",
@@ -5303,7 +5685,7 @@ const dataTe = [
     letter: "ఋ",
     items: [
       {
-        id: 40,
+        id: 83,
         title: "Letter",
         letter: "ఋ",
         word: "ఋషి",
@@ -5317,7 +5699,7 @@ const dataTe = [
     letter: "ష",
     items: [
       {
-        id: 41,
+        id: 84,
         title: "Letter",
         letter: "ష",
         word: "షరా",
@@ -5325,19 +5707,55 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.షరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.షరAudio),
       },
+      {
+        id: 85,
+        title: "Letter",
+        letter: "ష",
+        word: "విషము",
+        image: getAssetUrl(s3Assets.వషమImg),
+        audio: getAssetAudioUrl(s3Assets.వషమAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.వషమAudio),
+      },
+      {
+        id: 86,
+        title: "Letter",
+        letter: "ష",
+        word: "ఉష",
+        image: getAssetUrl(s3Assets.ఉషImg),
+        audio: getAssetAudioUrl(s3Assets.ఉషAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఉషAudio),
+      },
     ],
   },
   {
     letter: "థ",
     items: [
       {
-        id: 42,
+        id: 87,
         title: "Letter",
         letter: "థ",
-        word: "రథం",
-        image: getAssetUrl(s3Assets.రథImg),
-        audio: getAssetAudioUrl(s3Assets.రథAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.రథAudio),
+        word: "థర్మోస్",
+        image: getAssetUrl(s3Assets.థరమసImg),
+        audio: getAssetAudioUrl(s3Assets.థరమసAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.థరమసAudio),
+      },
+      {
+        id: 88,
+        title: "Letter",
+        letter: "థ",
+        word: "రథము",
+        image: getAssetUrl(s3Assets.రథమImg),
+        audio: getAssetAudioUrl(s3Assets.రథమAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.రథమAudio),
+      },
+      {
+        id: 89,
+        title: "Letter",
+        letter: "థ",
+        word: "కథ",
+        image: getAssetUrl(s3Assets.కథImg),
+        audio: getAssetAudioUrl(s3Assets.కథAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.కథAudio),
       },
     ],
   },
@@ -5345,7 +5763,7 @@ const dataTe = [
     letter: "ధ",
     items: [
       {
-        id: 43,
+        id: 90,
         title: "Letter",
         letter: "ధ",
         word: "ధనం",
@@ -5353,13 +5771,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.ధనAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ధనAudio),
       },
+      {
+        id: 91,
+        title: "Letter",
+        letter: "ధ",
+        word: "క్రోధము",
+        image: getAssetUrl(s3Assets.కరధమImg),
+        audio: getAssetAudioUrl(s3Assets.కరధమAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.కరధమAudio),
+      },
+      {
+        id: 92,
+        title: "Letter",
+        letter: "ధ",
+        word: "బాధ",
+        image: getAssetUrl(s3Assets.బధImg),
+        audio: getAssetAudioUrl(s3Assets.బధAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.బధAudio),
+      },
     ],
   },
   {
     letter: "ఫ",
     items: [
       {
-        id: 44,
+        id: 93,
         title: "Letter",
         letter: "ఫ",
         word: "ఫలము",
@@ -5367,13 +5803,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.ఫలమAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ఫలమAudio),
       },
+      {
+        id: 94,
+        title: "Letter",
+        letter: "ఫ",
+        word: "టెలిఫోను",
+        image: getAssetUrl(s3Assets.టలఫనImg),
+        audio: getAssetAudioUrl(s3Assets.టలఫనAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.టలఫనAudio),
+      },
+      {
+        id: 95,
+        title: "Letter",
+        letter: "ఫ",
+        word: "సీతాఫలం",
+        image: getAssetUrl(s3Assets.సతఫలImg),
+        audio: getAssetAudioUrl(s3Assets.సతఫలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.సతఫలAudio),
+      },
     ],
   },
   {
     letter: "భ",
     items: [
       {
-        id: 45,
+        id: 96,
         title: "Letter",
         letter: "భ",
         word: "భజన",
@@ -5381,13 +5835,31 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.భజనAudio),
         singleAudio: getAssetAudioUrl(s3Assets.భజనAudio),
       },
+      {
+        id: 97,
+        title: "Letter",
+        letter: "భ",
+        word: "సభ",
+        image: getAssetUrl(s3Assets.సభImg),
+        audio: getAssetAudioUrl(s3Assets.సభAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.సభAudio),
+      },
     ],
   },
   {
     letter: "క్ష",
     items: [
       {
-        id: 46,
+        id: 98,
+        title: "Letter",
+        letter: "క్ష",
+        word: "క్షత్రియుడు",
+        image: getAssetUrl(s3Assets.కషతరయడImg),
+        audio: getAssetAudioUrl(s3Assets.కషతరయడAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.కషతరయడAudio),
+      },
+      {
+        id: 99,
         title: "Letter",
         letter: "క్ష",
         word: "అక్షరం",
@@ -5395,13 +5867,22 @@ const dataTe = [
         audio: getAssetAudioUrl(s3Assets.అకషరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.అకషరAudio),
       },
+      {
+        id: 100,
+        title: "Letter",
+        letter: "క్ష",
+        word: "పరీక్ష",
+        image: getAssetUrl(s3Assets.పరకషImg),
+        audio: getAssetAudioUrl(s3Assets.పరకషAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.పరకషAudio),
+      },
     ],
   },
   {
     letter: "అం",
     items: [
       {
-        id: 47,
+        id: 101,
         title: "Letter",
         letter: "అం",
         word: "అంగడి",
@@ -5415,7 +5896,7 @@ const dataTe = [
     letter: "ఙ",
     items: [
       {
-        id: 48,
+        id: 102,
         title: "Letter",
         letter: "ఙ",
         word: "ఙ",
@@ -5429,7 +5910,7 @@ const dataTe = [
     letter: "ఞ",
     items: [
       {
-        id: 49,
+        id: 103,
         title: "Letter",
         letter: "ఞ",
         word: "ఞ",
@@ -5443,7 +5924,7 @@ const dataTe = [
     letter: "అః",
     items: [
       {
-        id: 50,
+        id: 104,
         title: "Letter",
         letter: "అః",
         word: "అః",
@@ -5457,7 +5938,7 @@ const dataTe = [
     letter: "ఱ",
     items: [
       {
-        id: 51,
+        id: 105,
         title: "Letter",
         letter: "ఱ",
         word: "ఱంపం",
