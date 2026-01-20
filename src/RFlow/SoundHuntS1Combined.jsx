@@ -28,6 +28,7 @@ import {
   updateLearnerProfile,
   getSetResultPractice,
 } from "../services/learnerAi/learnerAiService";
+import { addLesson } from "../services/orchestration/orchestrationService";
 
 const theme = createTheme();
 
@@ -1723,16 +1724,11 @@ const pictureWordsContent = {
   ],
 };
 
-// Combine both contents - alternate between soundMatch and pictureWords
-// First 10 questions: soundMatch (Listen to Sound and choose the right word)
-// Next 10 questions: pictureWords (Read the word and choose the right sound)
-// Filter to only S1 questions and ensure correct order
-const soundMatchS1 = soundMatchContent.L1.filter((q) => q.flowName === "S1");
-const pictureWordsS1 = pictureWordsContent.L1.filter(
-  (q) => q.flowName === "S1"
-);
-// Combine: first all soundMatch S1, then all pictureWords S1
-const combinedContent = [...soundMatchS1, ...pictureWordsS1];
+// Helper function to randomly select N items from an array
+const getRandomItems = (array, count) => {
+  const shuffled = [...array].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, Math.min(count, array.length));
+};
 
 const SoundHuntS1Combined = ({
   setVoiceText,
@@ -1758,6 +1754,8 @@ const SoundHuntS1Combined = ({
   callUpdateLearner,
   disableScreen,
   isShowCase,
+  startShowCase,
+  setStartShowCase,
   handleBack,
   setEnableNext,
   loading,
@@ -1784,17 +1782,52 @@ const SoundHuntS1Combined = ({
   const [ansSelectionStatus, setAnsSelectionStatus] = useState({});
   // Track if an option has been selected (to show Next button)
   const [hasSelectedOption, setHasSelectedOption] = useState(false);
+  // Track game over data for showcase end screen
+  const [gameOverData, setGameOverData] = useState(null);
+  // Track if S1 completion has been processed (to prevent multiple addLesson calls)
+  const [isS1Completed, setIsS1Completed] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
-  // Filter content based on steps prop (from API/config)
-  // steps comes from questions.length in Practice.jsx
-  // For S1, we always show all 20 questions (10 soundMatch + 10 pictureWords)
+  // Filter content based on milestone level and randomly select questions
+  // Content selection logic:
+  // 1. Get milestone level (M1 or M2) from level prop
+  // 2. Filter content by flowName based on milestone:
+  //    - M1: S1 step → show flowName "S1"
+  //    - M2: S1 step → show flowName "S2"
+  // 3. Randomly select 10 from each filtered list
+  // 4. Combine: first 10 soundMatch, then 10 pictureWords
   const filteredContent = useMemo(() => {
-    // Always show all S1 questions (20 total: 10 soundMatch + 10 pictureWords)
-    // The steps prop is used for progress tracking, but we show all questions
-    return combinedContent;
-  }, []);
+    // Get milestone level (level prop is number like 1, 2, etc.)
+    const milestoneLevel = level ? `m${level}` : null;
+
+    // Determine which flowName to use based on milestone
+    // M1 → flowName "S1", M2 → flowName "S2"
+    let validFlowName = "S1"; // Default to S1
+    if (milestoneLevel === "m2") {
+      validFlowName = "S2";
+    } else if (milestoneLevel === "m1") {
+      validFlowName = "S1";
+    }
+
+    // Filter soundMatch content by flowName
+    const soundMatchFiltered = soundMatchContent.L1.filter(
+      (q) => q.flowName === validFlowName
+    );
+
+    // Filter pictureWords content by flowName
+    const pictureWordsFiltered = pictureWordsContent.L1.filter(
+      (q) => q.flowName === validFlowName
+    );
+
+    // Randomly select 10 from soundMatch
+    const randomSoundMatch = getRandomItems(soundMatchFiltered, 10);
+    // Randomly select 10 from pictureWords
+    const randomPictureWords = getRandomItems(pictureWordsFiltered, 10);
+
+    // Combine: first 10 soundMatch, then 10 pictureWords
+    return [...randomSoundMatch, ...randomPictureWords];
+  }, [level]);
 
   // Audio recording state
   const mediaRecorderRef = React.useRef(null);
@@ -1813,6 +1846,19 @@ const SoundHuntS1Combined = ({
   const currentQuestion = filteredContent[currentQuestionIndex];
   const isSoundMatch = currentQuestion?.type === "soundMatch";
   const isPictureWords = currentQuestion?.type === "pictureWords";
+
+  // Handle showcase end screen - call handleNext when user clicks button
+  useEffect(() => {
+    if (gameOverData && isShowCase && handleNext) {
+      // When gameOverData is set, MainLayout will show end screen
+      // When user clicks button, MainLayout navigates to "/_practice"
+      // We'll handle this in the parent component or use a custom handler
+      // For now, we'll set a flag that the parent can check
+      console.log(
+        "Showcase end screen shown - waiting for user to click button"
+      );
+    }
+  }, [gameOverData, isShowCase, handleNext]);
 
   // Reset state when question changes
   useEffect(() => {
@@ -1859,12 +1905,18 @@ const SoundHuntS1Combined = ({
   }, []);
 
   // Handle Word Hunt (Sound Match) - Listen to Sound and choose the right word
-  const handleWordClick = (word) => {
+  const handleWordClick = async (word) => {
+    // Prevent multiple selections
+    if (hasSelectedOption) {
+      return;
+    }
+
     setSelectedWord(word);
     const currentQuestion = filteredContent[currentQuestionIndex];
-    const isCorrect = word === currentQuestion.correctWord;
     const wordLower = word?.toLowerCase();
     const correctWordLower = currentQuestion.correctWord?.toLowerCase();
+    // Use case-insensitive comparison to handle words like "Son" vs "son"
+    const isCorrect = wordLower === correctWordLower;
 
     // Track selection status for ansSelectionStatus
     if (wordLower) {
@@ -1887,21 +1939,176 @@ const SoundHuntS1Combined = ({
     // Mark that an option has been selected
     setHasSelectedOption(true);
 
-    if (isCorrect) {
-      const audio = new Audio(correctSound);
-      audio.play();
-      setShowConfetti(true);
-      setWrongWord(null);
-    } else {
-      const audio = new Audio(wrongSound);
-      audio.play();
-      setWrongWord(word);
-      setTimeout(() => setWrongWord(null), 2000);
-    }
+    // Automatically move to next question after a short delay
+    setTimeout(async () => {
+      if (currentQuestionIndex === filteredContent.length - 1) {
+        // Last question - complete S1
+        // Prevent multiple completion calls
+        if (isS1Completed) {
+          console.log("S1 already completed, skipping duplicate completion");
+          return;
+        }
+
+        setIsS1Completed(true);
+
+        try {
+          // First update learner profile (this is called inside handleS1Complete)
+          const result = await handleS1Complete();
+          // handleS1Complete already calls updateLearnerProfileOnCompletion() first
+
+          // Check sessionResult from API response
+          const getSetData = result?.data || result;
+          const sessionResult = getSetData?.sessionResult;
+          const userWon = sessionResult?.toLowerCase() === "pass";
+          const isFail = sessionResult?.toLowerCase() === "fail";
+
+          // If pass, reset lesson progress and update milestone level, then navigate to discover-start
+          if (userWon) {
+            console.log(
+              "S1 passed - resetting lesson progress and updating milestone level"
+            );
+
+            // Get milestoneLevel from getSetResult API response
+            const milestoneLevelFromAPI =
+              getSetData?.milestoneLevel ||
+              getSetData?.milestone_level ||
+              (level ? `m${level}` : "m1");
+
+            const sessionId = getLocalData("sessionId");
+            const lang = getLocalData("lang") || "en";
+
+            // Reset lesson progress to 0 and update milestone level
+            try {
+              await addLesson({
+                sessionId: sessionId,
+                milestone: "showcase", // S1 is a showcase step
+                lesson: 0, // Reset lesson progress to 0
+                progress: 0, // Reset progress to 0
+                language: lang,
+                milestoneLevel: milestoneLevelFromAPI, // Use milestoneLevel from getSetResult API
+              });
+              console.log(
+                "addLesson completed - lesson progress reset and milestone level updated:",
+                milestoneLevelFromAPI
+              );
+            } catch (addLessonError) {
+              console.error("Error calling addLesson on pass:", addLessonError);
+              // Continue to navigate even if addLesson fails
+            }
+
+            console.log("S1 passed - navigating to discover-start");
+            setLocalData("rFlow", false);
+            setLocalData("mFail", false);
+            setLocalData("rStep", 0);
+            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              navigate("/");
+            } else {
+              navigate("/discover-start");
+            }
+            return;
+          }
+
+          // If fail, call addLesson then show end screen or call handleNext
+          if (isFail) {
+            console.log("S1 failed - calling addLesson (once)");
+            const sessionId = getLocalData("sessionId");
+            const lang = getLocalData("lang") || "en";
+            const milestoneLevel = level ? `m${level}` : "m1";
+
+            // Find S1 step index in practiceSteps
+            const s1StepIndex = practiceSteps.findIndex(
+              (step) => step.title === "S1"
+            );
+            const stepIndex =
+              s1StepIndex !== -1 ? s1StepIndex : currentStep || 0;
+
+            // Calculate progress (S1 is a showcase step)
+            const totalSteps = practiceSteps.length;
+            const progress = Math.round(
+              ((stepIndex + 1) / (totalSteps * (steps || 1))) * 100
+            );
+
+            try {
+              await addLesson({
+                sessionId: sessionId,
+                milestone: "showcase", // S1 is a showcase step
+                lesson: stepIndex + 1,
+                progress: Math.min(100, progress),
+                language: lang,
+                milestoneLevel: milestoneLevel,
+              });
+              console.log("addLesson completed successfully");
+            } catch (addLessonError) {
+              console.error("Error calling addLesson:", addLessonError);
+              // Continue even if addLesson fails
+            }
+
+            // For showcase mode, show end screen
+            if (isShowCase) {
+              console.log("S1 showcase failed - showing end screen");
+              setGameOverData({
+                userWon: false,
+                link: "/_practice", // MainLayout will navigate here, parent will handle handleNext
+              });
+              return; // Don't call handleNext yet - wait for user to click button on end screen
+            }
+
+            // For non-showcase mode, call handleNext immediately
+            console.log("S1 failed - addLesson done - calling handleNext");
+            if (handleNext && typeof handleNext === "function") {
+              await handleNext(true);
+            } else {
+              // Fallback: navigate to discover-start if handleNext is not available
+              console.log(
+                "handleNext not available - navigating to discover-start"
+              );
+              setLocalData("rFlow", false);
+              setLocalData("mFail", false);
+              setLocalData("rStep", 0);
+              if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                navigate("/");
+              } else {
+                navigate("/discover-start");
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error handling S1 completion:", error);
+          // On error, try to call handleNext if available
+          if (handleNext && typeof handleNext === "function") {
+            await handleNext(true);
+          } else {
+            // Fallback: navigate to discover-start
+            setLocalData("rFlow", false);
+            setLocalData("mFail", false);
+            setLocalData("rStep", 0);
+            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              navigate("/");
+            } else {
+              navigate("/discover-start");
+            }
+          }
+        }
+      } else {
+        // Move to next question
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        setSelectedWord(null);
+        setSelectedAudioIndex(null);
+        setHasSelectedOption(false);
+        setIsAudioPlayedOnce(false);
+        setIsPlaying(false);
+        setPlayingAudioIndex(null);
+      }
+    }, 500); // Small delay to show selection
   };
 
   // Handle Sound Hunt (Picture words) - Read the word and choose the right sound
-  const handleAudioClick = (audioIndex) => {
+  const handleAudioClick = async (audioIndex) => {
+    // Prevent multiple selections
+    if (hasSelectedOption) {
+      return;
+    }
+
     setSelectedAudioIndex(audioIndex);
     const currentQuestion = filteredContent[currentQuestionIndex];
     const selectedAudio = currentQuestion.audioOptions[audioIndex];
@@ -1919,17 +2126,167 @@ const SoundHuntS1Combined = ({
     // Mark that an option has been selected
     setHasSelectedOption(true);
 
-    if (isCorrect) {
-      const audio = new Audio(correctSound);
-      audio.play();
-      setShowConfetti(true);
-      setWrongAudioIndex(null);
-    } else {
-      const audio = new Audio(wrongSound);
-      audio.play();
-      setWrongAudioIndex(audioIndex);
-      setTimeout(() => setWrongAudioIndex(null), 2000);
-    }
+    // Automatically move to next question after a short delay
+    setTimeout(async () => {
+      if (currentQuestionIndex === filteredContent.length - 1) {
+        // Last question - complete S1
+        // Prevent multiple completion calls
+        if (isS1Completed) {
+          console.log("S1 already completed, skipping duplicate completion");
+          return;
+        }
+
+        setIsS1Completed(true);
+
+        try {
+          // First update learner profile (this is called inside handleS1Complete)
+          const result = await handleS1Complete();
+          // handleS1Complete already calls updateLearnerProfileOnCompletion() first
+
+          // Check sessionResult from API response
+          const getSetData = result?.data || result;
+          const sessionResult = getSetData?.sessionResult;
+          const userWon = sessionResult?.toLowerCase() === "pass";
+          const isFail = sessionResult?.toLowerCase() === "fail";
+
+          // If pass, reset lesson progress and update milestone level, then navigate to discover-start
+          if (userWon) {
+            console.log(
+              "S1 passed - resetting lesson progress and updating milestone level"
+            );
+
+            // Get milestoneLevel from getSetResult API response
+            const milestoneLevelFromAPI =
+              getSetData?.milestoneLevel ||
+              getSetData?.milestone_level ||
+              (level ? `m${level}` : "m1");
+
+            const sessionId = getLocalData("sessionId");
+            const lang = getLocalData("lang") || "en";
+
+            // Reset lesson progress to 0 and update milestone level
+            try {
+              await addLesson({
+                sessionId: sessionId,
+                milestone: "showcase", // S1 is a showcase step
+                lesson: 0, // Reset lesson progress to 0
+                progress: 0, // Reset progress to 0
+                language: lang,
+                milestoneLevel: milestoneLevelFromAPI, // Use milestoneLevel from getSetResult API
+              });
+              console.log(
+                "addLesson completed - lesson progress reset and milestone level updated:",
+                milestoneLevelFromAPI
+              );
+            } catch (addLessonError) {
+              console.error("Error calling addLesson on pass:", addLessonError);
+              // Continue to navigate even if addLesson fails
+            }
+
+            console.log("S1 passed - navigating to discover-start");
+            setLocalData("rFlow", false);
+            setLocalData("mFail", false);
+            setLocalData("rStep", 0);
+            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              navigate("/");
+            } else {
+              navigate("/discover-start");
+            }
+            return;
+          }
+
+          // If fail, call addLesson then show end screen or call handleNext
+          if (isFail) {
+            console.log("S1 failed - calling addLesson (once)");
+            const sessionId = getLocalData("sessionId");
+            const lang = getLocalData("lang") || "en";
+            const milestoneLevel = level ? `m${level}` : "m1";
+
+            // Find S1 step index in practiceSteps
+            const s1StepIndex = practiceSteps.findIndex(
+              (step) => step.title === "S1"
+            );
+            const stepIndex =
+              s1StepIndex !== -1 ? s1StepIndex : currentStep || 0;
+
+            // Calculate progress (S1 is a showcase step)
+            const totalSteps = practiceSteps.length;
+            const progress = Math.round(
+              ((stepIndex + 1) / (totalSteps * (steps || 1))) * 100
+            );
+
+            try {
+              await addLesson({
+                sessionId: sessionId,
+                milestone: "showcase", // S1 is a showcase step
+                lesson: stepIndex + 1,
+                progress: Math.min(100, progress),
+                language: lang,
+                milestoneLevel: milestoneLevel,
+              });
+              console.log("addLesson completed successfully");
+            } catch (addLessonError) {
+              console.error("Error calling addLesson:", addLessonError);
+              // Continue even if addLesson fails
+            }
+
+            // For showcase mode, show end screen
+            if (isShowCase) {
+              console.log("S1 showcase failed - showing end screen");
+              setGameOverData({
+                userWon: false,
+                link: "/_practice", // MainLayout will navigate here, parent will handle handleNext
+              });
+              return; // Don't call handleNext yet - wait for user to click button on end screen
+            }
+
+            // For non-showcase mode, call handleNext immediately
+            console.log("S1 failed - addLesson done - calling handleNext");
+            if (handleNext && typeof handleNext === "function") {
+              await handleNext(true);
+            } else {
+              // Fallback: navigate to discover-start if handleNext is not available
+              console.log(
+                "handleNext not available - navigating to discover-start"
+              );
+              setLocalData("rFlow", false);
+              setLocalData("mFail", false);
+              setLocalData("rStep", 0);
+              if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                navigate("/");
+              } else {
+                navigate("/discover-start");
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error handling S1 completion:", error);
+          // On error, try to call handleNext if available
+          if (handleNext && typeof handleNext === "function") {
+            await handleNext(true);
+          } else {
+            // Fallback: navigate to discover-start
+            setLocalData("rFlow", false);
+            setLocalData("mFail", false);
+            setLocalData("rStep", 0);
+            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              navigate("/");
+            } else {
+              navigate("/discover-start");
+            }
+          }
+        }
+      } else {
+        // Move to next question
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        setSelectedWord(null);
+        setSelectedAudioIndex(null);
+        setHasSelectedOption(false);
+        setIsAudioPlayedOnce(false);
+        setIsPlaying(false);
+        setPlayingAudioIndex(null);
+      }
+    }, 500); // Small delay to show selection
   };
 
   const handlePlayAudio = (audioIndex) => {
@@ -2161,6 +2518,10 @@ const SoundHuntS1Combined = ({
       flowNames={flowNames}
       activeFlow={activeFlow}
       rStep={rStep}
+      isShowCase={isShowCase}
+      startShowCase={startShowCase}
+      setStartShowCase={setStartShowCase}
+      gameOverData={gameOverData}
       {...{
         steps,
         currentStep,
@@ -2190,8 +2551,6 @@ const SoundHuntS1Combined = ({
       >
         {recording === "no" && (
           <>
-            {showConfetti && <Confetti />}
-
             <div
               style={{
                 position: "absolute",
@@ -2225,73 +2584,30 @@ const SoundHuntS1Combined = ({
             {/* Word Hunt (Sound Match) - Listen to Sound and choose the right word */}
             {isSoundMatch && !isPictureWords && currentQuestion?.allwords && (
               <>
-                {selectedWord === currentQuestion?.correctWord ? (
-                  <div
+                <button
+                  onClick={handlePlayMainAudio}
+                  disabled={isPlaying}
+                  style={{
+                    position: "relative",
+                    marginBottom: "75px",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <img
+                    src={
+                      isPlaying ? Assets.pauseButtonImg : Assets.playButtonImg
+                    }
+                    alt="Audio"
                     style={{
-                      width: "45px",
-                      height: "45px",
-                      borderRadius: "50%",
-                      backgroundColor: "#fff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                      marginBottom: "75px",
+                      width: "55px",
+                      height: "55px",
+                      transform: `scale(${scale})`,
+                      transition: "transform 0.5s ease-in-out",
                     }}
-                  >
-                    <img
-                      src={Assets.tickImg}
-                      alt="Tick"
-                      style={{ width: "50px", height: "50px" }}
-                    />
-                  </div>
-                ) : wrongWord ? (
-                  <div
-                    style={{
-                      width: "45px",
-                      height: "45px",
-                      borderRadius: "60%",
-                      backgroundColor: "rgba(255, 127, 54, 0.8)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                      border: "4px solid #FFFFFF",
-                      marginBottom: "75px",
-                    }}
-                  >
-                    <img
-                      src={Assets.xImg}
-                      alt="Wrong"
-                      style={{ width: "25px", height: "25px" }}
-                    />
-                  </div>
-                ) : (
-                  <button
-                    onClick={handlePlayMainAudio}
-                    disabled={isPlaying}
-                    style={{
-                      position: "relative",
-                      marginBottom: "75px",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <img
-                      src={
-                        isPlaying ? Assets.pauseButtonImg : Assets.playButtonImg
-                      }
-                      alt="Audio"
-                      style={{
-                        width: "55px",
-                        height: "55px",
-                        transform: `scale(${scale})`,
-                        transition: "transform 0.5s ease-in-out",
-                      }}
-                    />
-                  </button>
-                )}
+                  />
+                </button>
 
                 <div
                   style={{
@@ -2303,39 +2619,35 @@ const SoundHuntS1Combined = ({
                   }}
                 >
                   {currentQuestion?.allwords.map((item, index) => {
-                    const isCorrect =
-                      selectedWord === currentQuestion?.correctWord &&
-                      item.text === selectedWord;
-                    const isWrong = wrongWord === item.text;
+                    const isSelected = selectedWord === item.text;
                     return (
                       <div
                         key={index}
                         style={{
-                          backgroundColor: isCorrect
-                            ? "rgba(117, 209, 0, 0.6)"
-                            : isWrong
-                            ? "rgba(255, 127, 54, 0.8)"
-                            : "#1897DE",
+                          backgroundColor: isSelected ? "#4CAF50" : "#1897DE",
                           padding: isMobile ? "12px 16px" : "16px 24px",
                           borderRadius: "12px",
                           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                          border:
-                            isCorrect || isWrong
-                              ? "2px solid rgba(255, 255, 255, 0.5)"
-                              : "5px solid #10618E",
+                          border: isSelected
+                            ? "5px solid #2E7D32"
+                            : "5px solid #10618E",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           backdropFilter: "blur(56px)",
                           WebkitBackdropFilter: "blur(56px)",
-                          cursor: isAudioPlayedOnce ? "pointer" : "not-allowed",
-                          opacity: isAudioPlayedOnce ? 1 : 0.7,
+                          cursor:
+                            isAudioPlayedOnce && !hasSelectedOption
+                              ? "pointer"
+                              : "not-allowed",
+                          opacity:
+                            isAudioPlayedOnce && !hasSelectedOption ? 1 : 0.7,
                           transition: "background-color 0.3s ease-in-out",
                           minWidth: isMobile ? "80px" : "120px",
                           minHeight: isMobile ? "50px" : "60px",
                         }}
                         onClick={() => {
-                          if (isAudioPlayedOnce) {
+                          if (isAudioPlayedOnce && !hasSelectedOption) {
                             handleWordClick(item.text);
                           }
                         }}
@@ -2392,51 +2704,6 @@ const SoundHuntS1Combined = ({
                     </span>
                   </div>
 
-                  {selectedAudioIndex !== null &&
-                  currentQuestion.audioOptions[selectedAudioIndex]
-                    ?.isCorrect ? (
-                    <div
-                      style={{
-                        width: "45px",
-                        height: "45px",
-                        borderRadius: "50%",
-                        backgroundColor: "#fff",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                        marginBottom: "40px",
-                      }}
-                    >
-                      <img
-                        src={Assets.tickImg}
-                        alt="Tick"
-                        style={{ width: "50px", height: "50px" }}
-                      />
-                    </div>
-                  ) : wrongAudioIndex !== null ? (
-                    <div
-                      style={{
-                        width: "45px",
-                        height: "45px",
-                        borderRadius: "60%",
-                        backgroundColor: "rgba(255, 127, 54, 0.8)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                        border: "4px solid #FFFFFF",
-                        marginBottom: "40px",
-                      }}
-                    >
-                      <img
-                        src={Assets.xImg}
-                        alt="Wrong"
-                        style={{ width: "25px", height: "25px" }}
-                      />
-                    </div>
-                  ) : null}
-
                   {/* Audio options */}
                   <div
                     style={{
@@ -2448,38 +2715,38 @@ const SoundHuntS1Combined = ({
                     }}
                   >
                     {currentQuestion?.audioOptions.map((audioOption, index) => {
-                      const isCorrect =
-                        selectedAudioIndex === index && audioOption.isCorrect;
-                      const isWrong = wrongAudioIndex === index;
                       const isPlaying = playingAudioIndex === index;
+                      const isSelected = selectedAudioIndex === index;
 
                       return (
                         <div
                           key={index}
                           style={{
-                            backgroundColor: isCorrect
-                              ? "rgba(117, 209, 0, 0.6)"
-                              : isWrong
-                              ? "rgba(255, 127, 54, 0.8)"
-                              : "#FFFFFF",
+                            backgroundColor: isSelected ? "#E3F2FD" : "#FFFFFF",
                             padding: "16px",
                             borderRadius: "24px",
                             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                            border: "2px solid rgba(255, 255, 255, 0.5)",
+                            border: isSelected
+                              ? "3px solid #2196F3"
+                              : "2px solid rgba(255, 255, 255, 0.5)",
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
                             justifyContent: "center",
                             backdropFilter: "blur(56px)",
                             WebkitBackdropFilter: "blur(56px)",
-                            cursor: "pointer",
-                            opacity: 1,
+                            cursor: hasSelectedOption
+                              ? "not-allowed"
+                              : "pointer",
+                            opacity: hasSelectedOption ? 0.7 : 1,
                             transition: "background-color 0.3s ease-in-out",
                             minWidth: isMobile ? "100px" : "140px",
                             minHeight: isMobile ? "100px" : "140px",
                           }}
                           onClick={() => {
-                            handleAudioClick(index);
+                            if (!hasSelectedOption) {
+                              handleAudioClick(index);
+                            }
                           }}
                         >
                           <button
@@ -2514,8 +2781,7 @@ const SoundHuntS1Combined = ({
                           </button>
                           <span
                             style={{
-                              color:
-                                isCorrect || isWrong ? "#FFFFFF" : "#666666",
+                              color: "#666666",
                               fontWeight: 500,
                               fontSize: isMobile ? "12px" : "14px",
                               fontFamily: "Quicksand",
@@ -2531,8 +2797,8 @@ const SoundHuntS1Combined = ({
                 </>
               )}
 
-            {/* Next Button - appears after user selects an option */}
-            {hasSelectedOption && recording === "no" && (
+            {/* Next Button - hidden since we auto-advance after selection */}
+            {false && hasSelectedOption && recording === "no" && (
               <div
                 style={{
                   display: "flex",
@@ -2544,101 +2810,18 @@ const SoundHuntS1Combined = ({
                   sx={{ cursor: "pointer" }}
                   onClick={async () => {
                     console.log("Next button clicked");
-                    // Move to next question
-                    if (currentQuestionIndex === filteredContent.length - 1) {
-                      // All questions completed - call getSetResultPractice for S1
-                      try {
-                        const result = await handleS1Complete();
-
-                        // Check sessionResult from API response
-                        // Response structure: result.data.sessionResult (based on Practice.jsx pattern)
-                        const getSetData = result?.data || result;
-                        const sessionResult = getSetData?.sessionResult;
-                        console.log("S1 completion - Full result:", result);
-                        console.log("S1 completion - getSetData:", getSetData);
-                        console.log("S1 sessionResult:", sessionResult);
-                        console.log(
-                          "S1 sessionResult type:",
-                          typeof sessionResult
-                        );
-                        console.log(
-                          "S1 sessionResult lowercased:",
-                          sessionResult?.toLowerCase()
-                        );
-
-                        // Check for fail (case-insensitive)
-                        if (sessionResult?.toLowerCase() === "fail") {
-                          // If fail, move to next step in practice flow
-                          console.log(
-                            "S1 sessionResult is 'fail' - moving to next practice step"
-                          );
-                          console.log(
-                            "handleNext available:",
-                            !!handleNext,
-                            "type:",
-                            typeof handleNext
-                          );
-                          if (handleNext && typeof handleNext === "function") {
-                            console.log(
-                              "Calling handleNext(true) to move to next step"
-                            );
-                            await handleNext(true);
-                            console.log(
-                              "handleNext(true) completed - should have moved to next step"
-                            );
-                            return;
-                          } else {
-                            console.warn(
-                              "handleNext is not available or not a function, cannot move to next step"
-                            );
-                          }
-                        } else if (sessionResult?.toLowerCase() === "pass") {
-                          // If pass, redirect to discover-start
-                          setLocalData("rFlow", false);
-                          setLocalData("mFail", false);
-                          setLocalData("rStep", 0);
-                          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                            navigate("/");
-                          } else {
-                            navigate("/discover-start");
-                          }
-                          return;
-                        } else {
-                          // Fallback: if no sessionResult or unknown value, use handleNext if available
-                          if (handleNext && typeof handleNext === "function") {
-                            await handleNext(true);
-                            return;
-                          } else {
-                            // Standalone mode - navigate to discover-start
-                            setLocalData("rFlow", false);
-                            setLocalData("mFail", false);
-                            setLocalData("rStep", 0);
-                            if (
-                              process.env.REACT_APP_IS_APP_IFRAME === "true"
-                            ) {
-                              navigate("/");
-                            } else {
-                              navigate("/discover-start");
-                            }
-                          }
-                        }
-                      } catch (error) {
-                        console.error("Error handling S1 completion:", error);
-                        // On error, fallback to handleNext if available
-                        if (handleNext && typeof handleNext === "function") {
-                          await handleNext(true);
-                          return;
-                        }
-                      }
-                    } else {
+                    // Note: This button should not be visible since we auto-advance after selection
+                    // But if somehow clicked, just move to next question
+                    if (currentQuestionIndex < filteredContent.length - 1) {
                       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
                       setSelectedWord(null);
                       setSelectedAudioIndex(null);
-                      setWrongWord(null);
-                      setWrongAudioIndex(null);
-                      setShowConfetti(false);
                       setHasSelectedOption(false);
+                      setIsAudioPlayedOnce(false);
+                      setIsPlaying(false);
+                      setPlayingAudioIndex(null);
                     }
+                    // Completion is handled automatically in handleWordClick/handleAudioClick
                   }}
                 >
                   <NextButtonRound />
@@ -2747,7 +2930,7 @@ const SoundHuntS1Combined = ({
               onClick={async () => {
                 console.log("Stop button clicked");
 
-                // Stop recording and wait for API call to complete
+                // Stop recording
                 await stopRecording();
 
                 const audio = new Audio(correctSound);
@@ -2757,94 +2940,9 @@ const SoundHuntS1Combined = ({
                 setIsAudioPlayedOnce(false);
                 setPlayingAudioIndex(null);
 
-                if (currentQuestionIndex === filteredContent.length - 1) {
-                  // All questions completed - call getSetResultPractice for S1
-                  try {
-                    const result = await handleS1Complete();
-
-                    // Check sessionResult from API response
-                    // Response structure: result.data.sessionResult (based on Practice.jsx pattern)
-                    const getSetData = result?.data || result;
-                    const sessionResult = getSetData?.sessionResult;
-                    console.log("S1 completion - Full result:", result);
-                    console.log("S1 completion - getSetData:", getSetData);
-                    console.log("S1 sessionResult:", sessionResult);
-                    console.log("S1 sessionResult type:", typeof sessionResult);
-                    console.log(
-                      "S1 sessionResult lowercased:",
-                      sessionResult?.toLowerCase()
-                    );
-
-                    // Check for fail (case-insensitive)
-                    if (sessionResult?.toLowerCase() === "fail") {
-                      // If fail, move to next step in practice flow
-                      console.log(
-                        "S1 sessionResult is 'fail' - moving to next practice step"
-                      );
-                      console.log(
-                        "handleNext available:",
-                        !!handleNext,
-                        "type:",
-                        typeof handleNext
-                      );
-                      if (handleNext && typeof handleNext === "function") {
-                        console.log(
-                          "Calling handleNext(true) to move to next step"
-                        );
-                        await handleNext(true);
-                        console.log(
-                          "handleNext(true) completed - should have moved to next step"
-                        );
-                        return;
-                      } else {
-                        console.warn(
-                          "handleNext is not available or not a function, cannot move to next step"
-                        );
-                      }
-                    } else if (sessionResult?.toLowerCase() === "pass") {
-                      // If pass, redirect to discover-start
-                      setLocalData("rFlow", false);
-                      setLocalData("mFail", false);
-                      setLocalData("rStep", 0);
-                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                        navigate("/");
-                      } else {
-                        navigate("/discover-start");
-                      }
-                      return;
-                    } else {
-                      // Fallback: if no sessionResult or unknown value, use handleNext if available
-                      if (handleNext && typeof handleNext === "function") {
-                        await handleNext(true);
-                        return;
-                      } else {
-                        // Standalone mode - navigate to discover-start
-                        setLocalData("rFlow", false);
-                        setLocalData("mFail", false);
-                        setLocalData("rStep", 0);
-                        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                          navigate("/");
-                        } else {
-                          navigate("/discover-start");
-                        }
-                      }
-                    }
-                  } catch (error) {
-                    console.error("Error handling S1 completion:", error);
-                    // On error, fallback to handleNext if available
-                    if (handleNext && typeof handleNext === "function") {
-                      await handleNext(true);
-                      return;
-                    }
-                  }
-                } else {
-                  setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-                  setSelectedWord(null);
-                  setSelectedAudioIndex(null);
-                  setWrongWord(null);
-                  setWrongAudioIndex(null);
-                  setShowConfetti(false);
-                }
+                // Note: Completion is handled automatically in handleWordClick/handleAudioClick
+                // This button should only stop recording - auto-advance handles completion
+                // If somehow on last question, completion logic in handleWordClick/handleAudioClick will handle it
               }}
               src={Assets.pause}
               alt="Stop"

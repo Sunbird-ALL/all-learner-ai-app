@@ -11115,7 +11115,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_P1",
         mechanism: { id: "soundHunt", name: "soundHunt" },
-        contentCount: 5,
+        contentCount: 10,
         multilingual: true,
       },
       {
@@ -11155,7 +11155,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_P1",
         mechanism: { id: "soundHunt", name: "soundHunt" },
-        contentCount: 5,
+        contentCount: 10,
         multilingual: true,
       },
       {
@@ -11196,6 +11196,8 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M2_P1",
+        mechanism: { id: "soundHunt", name: "soundHunt" },
+        contentCount: 10,
         //storyMode: true,
         multilingual: true,
       },
@@ -11210,7 +11212,7 @@ export const levelGetContent = {
         title: "S1",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_GEN_M2_S1",
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
         multilingual: true,
       },
       {
@@ -11234,6 +11236,8 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M2_P3",
+        mechanism: { id: "soundHunt", name: "soundHunt" },
+        contentCount: 10,
         multilingual: true,
       },
       {
@@ -11248,6 +11252,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_GEN_M2_S2",
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
         multilingual: true,
       },
     ],
