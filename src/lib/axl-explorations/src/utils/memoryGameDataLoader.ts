@@ -86,6 +86,7 @@ class MemoryGameDataLoader {
 
     // Check if levelLetters exists (for Telugu)
     if ('levelLetters' in langData && langData.levelLetters) {
+      console.log('gettinng letters from seperate============================================ for level', level)
       return langData.levelLetters[level] || [];
     }
 

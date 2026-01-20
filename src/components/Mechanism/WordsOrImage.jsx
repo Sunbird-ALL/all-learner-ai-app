@@ -100,6 +100,17 @@ const WordsOrImage = ({
   vocabCount,
   wordCount,
   multilingual,
+  // Demo mode props
+  showSpeakButton: showSpeakButtonProp,
+  showStopButton: showStopButtonProp,
+  showListenRetryButtons: showListenRetryButtonsProp,
+  isRecording: isRecordingProp,
+  onMicClick,
+  onStopClick,
+  onPlayClick,
+  onRetryClick,
+  onNextClick,
+  isInstructionPlaying,
 }) => {
   const audioRefs = createRef(null);
   const [audioInstance, setAudioInstance] = useState(null);
@@ -107,11 +118,30 @@ const WordsOrImage = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [storedData, setStoredData] = useState([]);
   const [recognition, setRecognition] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [showSpeakButton, setShowSpeakButton] = useState(true);
-  const [showStopButton, setShowStopButton] = useState(false);
-  const [showListenRetryButtons, setShowListenRetryButtons] = useState(false);
+  const [isRecordingState, setIsRecording] = useState(false);
+  const [showSpeakButtonState, setShowSpeakButton] = useState(true);
+  const [showStopButtonState, setShowStopButton] = useState(false);
+  const [showListenRetryButtonsState, setShowListenRetryButtons] =
+    useState(false);
   const [answer, setAnswer] = useState(null);
+
+  // Use prop values if in showcase mode, otherwise use internal state
+  const isRecording =
+    isShowCase && isRecordingProp !== undefined
+      ? isRecordingProp
+      : isRecordingState;
+  const showSpeakButton =
+    isShowCase && showSpeakButtonProp !== undefined
+      ? showSpeakButtonProp
+      : showSpeakButtonState;
+  const showStopButton =
+    isShowCase && showStopButtonProp !== undefined
+      ? showStopButtonProp
+      : showStopButtonState;
+  const showListenRetryButtons =
+    isShowCase && showListenRetryButtonsProp !== undefined
+      ? showListenRetryButtonsProp
+      : showListenRetryButtonsState;
   const [recordedAudioBlob, setRecordedAudioBlob] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -1192,12 +1222,24 @@ const WordsOrImage = ({
             mt: isMobile ? 2 : 0,
           }}
         >
-          {level === 15 && !isShowCase ? (
+          {(level === 15 && !isShowCase) || isShowCase ? (
             <div>
               {showSpeakButton && (
                 <Box
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => startRecording(words, true)}
+                  sx={{
+                    cursor:
+                      isShowCase && isInstructionPlaying
+                        ? "not-allowed"
+                        : "pointer",
+                    opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                    pointerEvents:
+                      isShowCase && isInstructionPlaying ? "none" : "auto",
+                  }}
+                  onClick={() =>
+                    isShowCase && onMicClick
+                      ? onMicClick()
+                      : startRecording(words, true)
+                  }
                 >
                   <SpeakButton size={isMobile ? "small" : "medium"} />
                 </Box>
@@ -1213,8 +1255,20 @@ const WordsOrImage = ({
                   }}
                 >
                   <Box
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => stopRecording(words)}
+                    sx={{
+                      cursor:
+                        isShowCase && isInstructionPlaying
+                          ? "not-allowed"
+                          : "pointer",
+                      opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                      pointerEvents:
+                        isShowCase && isInstructionPlaying ? "none" : "auto",
+                    }}
+                    onClick={() =>
+                      isShowCase && onStopClick
+                        ? onStopClick()
+                        : stopRecording(words)
+                    }
                   >
                     <StopButton size={isMobile ? "small" : "medium"} />
                   </Box>
@@ -1224,7 +1278,7 @@ const WordsOrImage = ({
                       marginBottom: isMobile ? "30px" : "50px",
                     }}
                   >
-                    <RecordVoiceVisualizer />
+                    {isRecording && <RecordVoiceVisualizer />}
                   </Box>
                 </div>
               )}
@@ -1283,9 +1337,22 @@ const WordsOrImage = ({
                           //minWidth: { xs: "50px", sm: "60px", md: "70px" },
                           //cursor: `url(${clapImage}) 32 24, auto`,
                           //marginLeft: getMarginLeft(0),
+                          opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                          cursor:
+                            isShowCase && isInstructionPlaying
+                              ? "not-allowed"
+                              : "pointer",
+                          pointerEvents:
+                            isShowCase && isInstructionPlaying
+                              ? "none"
+                              : "auto",
                         }}
                         onClick={() => {
-                          playRecordings();
+                          if (isShowCase && onPlayClick) {
+                            onPlayClick();
+                          } else {
+                            playRecordings();
+                          }
                           //setIsPlaying(true);
                         }}
                         //disabled={!recordedAudioBlob}
@@ -1296,7 +1363,10 @@ const WordsOrImage = ({
                           style={{
                             height: "70px",
                             width: "70px",
-                            cursor: "pointer",
+                            cursor:
+                              isShowCase && isInstructionPlaying
+                                ? "not-allowed"
+                                : "pointer",
                           }}
                         />
                         {/* <ListenButton height={50} width={50} /> */}
@@ -1304,14 +1374,40 @@ const WordsOrImage = ({
                     </div>
                   )}
                   <Box
-                    sx={{ cursor: "pointer", marginLeft: "16px" }}
-                    onClick={() => retryRecording(words, true)}
+                    sx={{
+                      cursor:
+                        isShowCase && isInstructionPlaying
+                          ? "not-allowed"
+                          : "pointer",
+                      marginLeft: "16px",
+                      opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                      pointerEvents:
+                        isShowCase && isInstructionPlaying ? "none" : "auto",
+                    }}
+                    onClick={() =>
+                      isShowCase && onRetryClick
+                        ? onRetryClick()
+                        : retryRecording(words, true)
+                    }
                   >
                     <RetryIcon />
                   </Box>
                   <Box
-                    sx={{ cursor: "pointer", marginLeft: "16px" }}
-                    onClick={() => nextRecording()}
+                    sx={{
+                      cursor:
+                        isShowCase && isInstructionPlaying
+                          ? "not-allowed"
+                          : "pointer",
+                      marginLeft: "16px",
+                      opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                      pointerEvents:
+                        isShowCase && isInstructionPlaying ? "none" : "auto",
+                    }}
+                    onClick={() =>
+                      isShowCase && onNextClick
+                        ? onNextClick()
+                        : nextRecording()
+                    }
                   >
                     <NextButtonRound />
                   </Box>
