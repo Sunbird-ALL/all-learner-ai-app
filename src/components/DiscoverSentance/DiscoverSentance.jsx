@@ -27,10 +27,12 @@ import {
   fetchAssessmentData,
   fetchPaginatedContent,
 } from "../../services/content/contentService";
+import DiscoverSentencePreview from "./DiscoverSentencePreview";
 
 const SpeakSentenceComponent = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const navigate = useNavigate();
+  const [showDemo, setShowDemo] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState("");
   const [voiceText, setVoiceText] = useState("");
   const [storyLine, setStoryLine] = useState(0);
@@ -349,7 +351,31 @@ const SpeakSentenceComponent = () => {
 
   useEffect(() => {
     localStorage.setItem("mechanism_id", "");
+
+    // Always show demo when entering discovery page
+    setShowDemo(true);
   }, []);
+
+  const handleDemoComplete = () => {
+    // Demo completed, now show the actual game
+    setShowDemo(false);
+  };
+
+  const handleDemoBack = () => {
+    const destination =
+      process.env.REACT_APP_IS_APP_IFRAME === "true" ? "/" : "/discover-start";
+    navigate(destination);
+  };
+
+  // Show demo if first time
+  if (showDemo) {
+    return (
+      <DiscoverSentencePreview
+        onStartGame={handleDemoComplete}
+        onBack={handleDemoBack}
+      />
+    );
+  }
 
   return (
     <>

@@ -2206,129 +2206,304 @@ const wordData = {
 
   te: [
     {
-      text: "వాన",
-      audio: "38e085fe-bde5-4cf5-b8aa-c5e64b2f8cea.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.వాన2Audio),
+      text: "నది",
+      audio: "6ed1fe0d-647d-436a-b2cf-1f676f7e3801.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నదిAudio),
     },
     {
-      text: "చీమ",
-      audio: "81b01422-5a53-471e-b752-4fa685db8713.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.చీమ2Audio),
+      text: "చేప",
+      audio: "5449b6cc-6995-454a-8607-0df7fa671ce7.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చేపAudio),
     },
     {
-      text: "గుడి",
-      audio: "91e25912-a582-4531-ac7f-22171126fd01.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.గుడిAudio),
+      text: "చీర",
+      audio: "b3fd1e21-d332-4c24-b57b-875343e509cc.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చీరAudio),
     },
     {
-      text: "నూరు",
-      audio: "5aa6529d-6c72-425b-a37d-c32ffbbc3140.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.నూరుAudio),
+      text: "గెల",
+      audio: "12fc97c2-ed14-4ed5-b3e0-5830e083977b.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గెలAudio),
     },
     {
-      text: "కృషి",
-      audio: "e49d6fcf-0d0e-487a-9f0a-426f07e42089.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.కృషిAudio),
-    },
-    {
-      text: "ఖాళీ",
-      audio: "b37bdaf3-fe27-4de5-9b31-b3c67837d0f4.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.ఖాళీAudio),
-    },
-    {
-      text: "చెలి",
-      audio: "0b470e09-0c52-42dc-84fc-267b1f1aee5d.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.చెలిAudio),
-    },
-    {
-      text: "దైవం",
-      audio: "135fe9f1-402e-49f8-8074-0200bc3a0147.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.దైవంAudio),
-    },
-    {
-      text: "చిలుక",
-      audio: "b80c4e90-e788-484d-b0db-386f7b2c780b.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.చిలుక2Audio),
-    },
-    {
-      text: "దేవుడు",
-      audio: "2a36d1e4-2d18-4027-a838-4cdca1538cbd.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.దేవుడుAudio),
-    },
-    {
-      text: "నొసలు",
-      audio: "c0211ab6-e312-4662-a321-a5062ec01690.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.నొసలుAudio),
-    },
-    {
-      text: "చోటు",
-      audio: "3fafb4a8-78c1-42e0-be5b-ab05b986a548.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.చోటుAudio),
-    },
-    {
-      text: "టౌను",
-      audio: "efd39432-f6d5-45d7-bc99-b8c7115c3648.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.టౌనుAudio),
-    },
-    {
-      text: "తేలు",
-      audio: "18e4c6b3-b0e6-436c-9d76-9e705f29633f.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.తేలుAudio),
-    },
-    {
-      text: "పావురం",
-      audio: "b765a846-4d66-4208-aea3-a7618820b771.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.పావురంAudio),
-    },
-    {
-      text: "నిజం",
-      audio: "79c91064-0c2d-439e-9226-ab46cf1910b4.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.నిజంAudio),
-    },
-    {
-      text: "కీటకం",
-      audio: "cc8bd384-62ab-4a99-96fb-cacc44dce59b.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.కీటకంAudio),
-    },
-    {
-      text: "పులి",
-      audio: "de7a589b-08ce-4ab2-a4be-155b1d4a1ab1.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.పులిAudio),
-    },
-    {
-      text: "గూడు",
-      audio: "36f91037-b4fc-4bc2-bdf5-0591ed5b69dc.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.గూడుAudio),
+      text: "సౌధం",
+      audio: "b8238760-b23f-48a7-836b-5d9a383b42d2.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.సౌధంAudio),
     },
     {
       text: "గృహం",
-      audio: "56493d92-bf7c-42e0-830e-b850cf15012e.wav",
+      audio: "152bb7b3-89e5-4d38-a57e-a389ebf62571.wav",
       segmentedAudio: getAssetAudioUrl(s3Assets.గృహంAudio),
     },
     {
-      text: "చెలిక",
-      audio: "9e5f03b0-fd30-4468-bbe4-03939bf9c3c9.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.చెలికAudio),
+      text: "జాతర",
+      audio: "09412f04-c180-4411-bab4-c1ba07eef7c4.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జాతరAudio),
     },
     {
-      text: "జేబు",
-      audio: "27ea6ded-b28b-4ddd-9b72-62384b5f9b7a.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.జేబుAudio),
+      text: "గీత",
+      audio: "41f708d4-02ea-476e-9334-61ac0bedb149.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గీతAudio),
     },
     {
-      text: "చైనా",
-      audio: "3cf664c7-2550-4df2-93d3-35badab2b21f.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.చైనాAudio),
+      text: "జైలు",
+      audio: "84ac6622-8ec6-4634-94f7-2a6fd1cc2dcf.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జైలుAudio),
     },
     {
-      text: "కోడలు",
-      audio: "48a4bf95-b3ed-4a1c-b492-474f73065c89.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.కోడలుAudio),
+      text: "కోతి",
+      audio: "c4fcbe5e-00d8-41d0-b58d-0de2a911d9f9.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.కోతిAudio),
     },
     {
-      text: "గౌరి",
-      audio: "72367358-7772-4734-8768-81ad7157cb80.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.గౌరిAudio),
+      text: "నౌక",
+      audio: "99db1186-5a62-4ae2-9987-1b10e5288107.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నౌకAudio),
+    },
+    {
+      text: "నీరు",
+      audio: "31be02e2-b3ed-4b2c-9243-8f4ed81e9316.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నీరుAudio),
+    },
+    {
+      text: "పోరు",
+      audio: "78868085-2c81-4c3b-ad59-79efa6d8d4b0.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పోరుAudio),
+    },
+    {
+      text: "మెడ",
+      audio: "87961184-a658-4be4-912f-6b6209535e00.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మెడAudio),
+    },
+    {
+      text: "టోపీ",
+      audio: "cfa1ccfd-7d25-409d-a5f9-95479d761229.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.టోపీAudio),
+    },
+    {
+      text: "డైరీ",
+      audio: "bba5dbcf-9587-4a06-9fe2-999aed9e32c5.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.డైరీAudio),
+    },
+    {
+      text: "రోకలి",
+      audio: "0ce83c53-9c18-407f-804f-223dfa032061.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.రోకలిAudio),
+    },
+    {
+      text: "సూది",
+      audio: "73e2d863-5038-41ff-95bf-98529ac03fa8.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.సూదిAudio),
+    },
+    {
+      text: "జౌళి",
+      audio: "a058121e-cf67-487c-8c87-9ce17e85ab78.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జౌళిAudio),
+    },
+    {
+      text: "సీసా",
+      audio: "e4f2e7f1-0089-4364-9073-277f18bcb06f.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.సీసాAudio),
+    },
+    {
+      text: "బంతి",
+      audio: "0fc8d70e-4c08-4404-985e-607d2ddd4d5c.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.బంతిAudio),
+    },
+    {
+      text: "టౌను",
+      audio: "e1f8bfe3-bbad-4f8b-ae88-55fe53364e2e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.టౌనుAudio),
+    },
+    {
+      text: "పులి",
+      audio: "abb65b54-772c-451d-a530-617caa98e1c7.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పులిAudio),
+    },
+    {
+      text: "తేనె",
+      audio: "3163a125-1731-4e69-9e1d-71bbf802ebab.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.తేనెAudio),
+    },
+    {
+      text: "పశువు",
+      audio: "b19ed5da-a06f-4d28-8736-b56ccf2b81ea.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పశువుAudio),
+    },
+    {
+      text: "బూడిద",
+      audio: "222cf053-ce7d-43e6-9e5d-0e573a110b31.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.బూడిదAudio),
+    },
+    {
+      text: "ప్రకృతి",
+      audio: "002bddba-7629-412e-b4c9-397f1cb0cf4e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ప్రకృతిAudio),
+    },
+    {
+      text: "మైదాకు",
+      audio: "bf89b3f3-2b29-4647-92bf-44574e968f47.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మైదాకుAudio),
+    },
+    {
+      text: "నొసలు",
+      audio: "b94dff85-d1c9-474c-a067-b458c7560347.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నొసలుAudio),
+    },
+    {
+      text: "పొదుపు",
+      audio: "f714b74a-f9ba-4bf3-a09a-0a984a7696c6.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పొదుపుAudio),
+    },
+    {
+      text: "జెండా",
+      audio: "f5129861-6aa7-4849-988d-dfa1831e3a75.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జెండాAudio),
+    },
+    {
+      text: "పెరుగు",
+      audio: "ae7f1913-1652-4979-8323-7a1c9fa83c56.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పెరుగుAudio),
+    },
+    {
+      text: "భూకంపం",
+      audio: "0bf66c03-37ba-49c8-86bf-7dad77bf4395.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.భూకంపంAudio),
+    },
+    {
+      text: "పావురం",
+      audio: "e346c5ad-7bb6-4b64-81bd-359ac7ef566f.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పావురంAudio),
+    },
+    {
+      text: "జూకాలు",
+      audio: "c6f92ef1-874e-48c6-9417-b58b3c7ac707.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జూకాలుAudio),
+    },
+    {
+      text: "పసిడి",
+      audio: "f1838fba-64c7-4768-a9e7-7750a250a4c6.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పసిడిAudio),
+    },
+    {
+      text: "గాజులు",
+      audio: "2d938405-8a58-4650-b174-d15988d930e5.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గాజులుAudio),
+    },
+    {
+      text: "నృపతి",
+      audio: "35db88d9-bd7f-4d6c-b966-fd32f9a2e791.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నృపతిAudio),
+    },
+    {
+      text: "పైసలు",
+      audio: "1f15e531-f83f-440b-b037-b7ec15ab2ba3.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పైసలుAudio),
+    },
+    {
+      text: "మొసలి",
+      audio: "1100588c-3f6e-4e2c-9ca2-873ac4855a79.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మొసలిAudio),
+    },
+    {
+      text: "సినిమా",
+      audio: "06c0f1ac-ea35-4033-94aa-7d0ca1f7e2b0.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.సినిమాAudio),
+    },
+    {
+      text: "వివాహం",
+      audio: "80f926b8-3fa2-4d18-838a-9ef3d6b04b45.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.వివాహంAudio),
+    },
+    {
+      text: "మూకుడు",
+      audio: "ea8f4894-3848-44a9-98d0-b133b76942ce.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మూకుడుAudio),
+    },
+    {
+      text: "హృదయం",
+      audio: "20d376c1-453f-4b9b-b573-08016932afde.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.హృదయంAudio),
+    },
+    {
+      text: "బేడీలు",
+      audio: "be6164c1-4529-4862-8586-a714b2b88652.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.బేడీలుAudio),
+    },
+    {
+      text: "శైశవం",
+      audio: "aec28d63-9afe-4b42-bd37-5ceef3255def.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.శైశవంAudio),
+    },
+    {
+      text: "గొడుగు",
+      audio: "dc4638d0-11b6-4270-b9a2-0056fea38ad5.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గొడుగుAudio),
+    },
+    {
+      text: "పొడవైన",
+      audio: "4a9a9fe9-643a-4a95-bd60-ffa1d5cd2981.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పొడవైనAudio),
+    },
+    {
+      text: "సొరకాయ",
+      audio: "336d1c4f-0858-4afb-811b-121576a5cc97.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.సొరకాయAudio),
+    },
+    {
+      text: "జలపాతం",
+      audio: "4ea80f33-49fc-44bb-b16a-65db31c46495.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జలపాతంAudio),
+    },
+    {
+      text: "గిజిగాడు",
+      audio: "b9bf7602-1ac2-4101-b45e-4ee2c7d0f99e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గిజిగాడుAudio),
+    },
+    {
+      text: "ఊరేగింపు",
+      audio: "2c66e48d-3b6a-4df5-842a-b95a041a3741.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.ఊరేగింపుAudio),
+    },
+    {
+      text: "లేగదూడ",
+      audio: "5939f0e0-eb6c-40a6-b118-fcc6a234f09a.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.లేగదూడAudio),
+    },
+    {
+      text: "గులాబీలు",
+      audio: "74b1483a-2701-4608-9f5c-572fa8e3bbe2.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గులాబీలుAudio),
+    },
+    {
+      text: "మీగడ",
+      audio: "c669e1a0-18c7-4531-ad23-8dca74ad2803.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మీగడAudio),
+    },
+    {
+      text: "చీపురు",
+      audio: "8277b035-401b-488d-a113-8f9cf226c118.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చీపురుAudio),
+    },
+    {
+      text: "రెండు",
+      audio: "5679c906-2d8c-4ff7-9c6a-2861f6cbe1a7.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.రెండుAudio),
+    },
+    {
+      text: "మేఘం",
+      audio: "ab6251b6-aff3-475f-af7f-841e8068b978.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మేఘంAudio),
+    },
+    {
+      text: "నేల",
+      audio: "07510b3c-1efd-4cc9-9a0d-7cf68640fd5e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నేలAudio),
+    },
+    {
+      text: "బృందం",
+      audio: "9983f09a-f95d-4711-8962-cc1f2cbfcf77.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.బృందంAudio),
     },
   ],
   kn: [
@@ -2548,6 +2723,7 @@ const Barakhadi = ({
   currentImg,
   vocabCount,
   wordCount,
+  customWords, // Array of words to filter (e.g., ["నది", "చేప", "చీర"] for Telugu F2)
 }) => {
   steps = 1;
 
@@ -2675,7 +2851,41 @@ const Barakhadi = ({
     return wordData[lang] || wordData.hi;
   };
 
-  const wordDataList = getWordData();
+  // Get all words for the language
+  let wordDataList = getWordData();
+
+  // Filter wordDataList based on customWords if provided (similar to how LetterTrain filters with customLetters)
+  if (customWords && Array.isArray(customWords) && customWords.length > 0) {
+    // Normalize customWords for comparison (trim whitespace)
+    const normalizedCustomWords = customWords
+      .map((word) => (word && typeof word === "string" ? word.trim() : ""))
+      .filter(Boolean);
+
+    console.log("Barakhadi - Filtering words based on customWords:", {
+      customWords,
+      normalizedCustomWords,
+      totalWordsBeforeFilter: wordDataList.length,
+    });
+
+    // Filter wordDataList to only include words that match customWords
+    wordDataList = wordDataList.filter((wordItem) => {
+      const wordText = wordItem?.text;
+      if (!wordText || typeof wordText !== "string") {
+        return false;
+      }
+      // Check if the word text matches any of the custom words
+      return normalizedCustomWords.includes(wordText.trim());
+    });
+
+    console.log("Barakhadi - Filtered wordDataList:", {
+      filteredWordsCount: wordDataList.length,
+      filteredWords: wordDataList.map((item) => item.text),
+    });
+  } else {
+    console.log("Barakhadi - No customWords provided, using all words:", {
+      totalWords: wordDataList.length,
+    });
+  }
 
   const getTitle = () => {
     const titles = {
@@ -2780,11 +2990,20 @@ const Barakhadi = ({
   };
 
   useEffect(() => {
-    const initialTargetWord = wordDataList[0].text;
-    setTargetWord(initialTargetWord);
-    const barakhadi = getBarakhadiForWord(initialTargetWord, lang);
-    setCurrentBarakhadi(barakhadi);
-  }, [lang]);
+    // Only set initial word if wordDataList has items
+    if (wordDataList && wordDataList.length > 0) {
+      const initialTargetWord = wordDataList[0].text;
+      setTargetWord(initialTargetWord);
+      const barakhadi = getBarakhadiForWord(initialTargetWord, lang);
+      setCurrentBarakhadi(barakhadi);
+      setCurrentWordIndex(0); // Reset word index when word list changes
+    } else {
+      console.warn(
+        "Barakhadi - wordDataList is empty, cannot set initial target word"
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang, customWords]); // wordDataList is computed from lang and customWords, so we don't need it in deps
 
   useEffect(() => {
     if (targetWord) {
@@ -2894,33 +3113,93 @@ const Barakhadi = ({
     navigate("/discover-start");
   };
 
-  const handleNextWord = async () => {
-    const nextIndex = currentWordIndex + 1;
-
-    if (nextIndex >= wordDataList.length) {
-      setLocalData("rFlow", false);
-      setLocalData("mFail", false);
-      if (level === "B") {
-        await handleCompletion();
-        navigate("/discover-end");
-        return;
-      }
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-        navigate("/");
+  const handleNextWord = () => {
+    // Safety check: ensure wordDataList has items
+    if (!wordDataList || wordDataList.length === 0) {
+      console.warn("Barakhadi - handleNextWord: wordDataList is empty");
+      // If handleNext prop is provided (e.g., from F2 flow), use it instead of default navigation
+      if (handleNext && typeof handleNext === "function") {
+        handleNext();
       } else {
-        navigate("/discover-start");
+        // Default behavior for non-flow usage
+        setLocalData("rFlow", false);
+        setLocalData("mFail", false);
+        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          navigate("/");
+        } else {
+          navigate("/discover-start");
+        }
+        callTelemetryDiscovery("R1-Barakhadi");
       }
-      callTelemetryDiscovery("R1-Barakhadi");
-
       return;
     }
 
-    setCurrentWordIndex(nextIndex);
-    setTargetWord(wordDataList[nextIndex].text);
-    setWord("");
-    setShowConfetti(false);
-    setIncorrectCell(null);
-    setIsWordWrong(false);
+    console.log("Barakhadi handleNextWord:", {
+      currentWordIndex,
+      wordDataListLength: wordDataList.length,
+      isLastItem: currentWordIndex >= wordDataList.length - 1,
+      customWords,
+      hasHandleNext: !!handleNext,
+    });
+
+    const nextIndex = currentWordIndex + 1;
+
+    // Check if we've reached the end of the word list
+    if (nextIndex < wordDataList.length) {
+      // Safety check: ensure nextIndex is valid and has text property
+      if (wordDataList[nextIndex] && wordDataList[nextIndex].text) {
+        // Move to next word
+        setCurrentWordIndex(nextIndex);
+        setTargetWord(wordDataList[nextIndex].text);
+        setWord("");
+        setShowConfetti(false);
+        setIncorrectCell(null);
+        setIsWordWrong(false);
+      } else {
+        console.warn(
+          "Barakhadi - handleNextWord: Invalid nextIndex or missing text",
+          {
+            nextIndex,
+            wordDataListLength: wordDataList.length,
+            wordDataListNextIndex: wordDataList[nextIndex],
+          }
+        );
+        // If invalid, treat as completion
+        if (handleNext && typeof handleNext === "function") {
+          handleNext();
+        } else {
+          setLocalData("rFlow", false);
+          setLocalData("mFail", false);
+          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            navigate("/");
+          } else {
+            navigate("/discover-start");
+          }
+          callTelemetryDiscovery("R1-Barakhadi");
+        }
+      }
+    } else {
+      // Reached end of word list - complete the Barakhadi step
+      console.log(
+        "Barakhadi completed - all customWords done. Calling handleNext."
+      );
+      // If handleNext prop is provided (e.g., from F2 flow), use it instead of default navigation
+      if (handleNext && typeof handleNext === "function") {
+        handleNext();
+      } else {
+        // Default behavior for non-flow usage (R0, R1, etc.)
+        setLocalData("rFlow", false);
+        setLocalData("mFail", false);
+        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          navigate("/");
+        } else {
+          navigate("/discover-start");
+        }
+        callTelemetryDiscovery("R1-Barakhadi");
+      }
+      // Don't continue - exit here
+      return;
+    }
   };
 
   const handleLetterClick = (letter, rowIndex, colIndex) => {
@@ -2973,7 +3252,11 @@ const Barakhadi = ({
       console.log("Playing audio for user-typed word:", word);
 
       if (word === targetWord) {
-        playSegmentedAudio(currentWordData);
+        if (currentWordData) {
+          playSegmentedAudio(currentWordData);
+        } else {
+          playTTS(word);
+        }
       } else {
         playTTS(word);
       }
@@ -3140,8 +3423,11 @@ const Barakhadi = ({
     );
   };
 
+  // Safety check: ensure wordDataList has items before accessing
   const currentWordData =
-    wordDataList.find((item) => item.text === targetWord) || wordDataList[0];
+    wordDataList && wordDataList.length > 0
+      ? wordDataList.find((item) => item.text === targetWord) || wordDataList[0]
+      : null;
   const vyajan = Object.keys(currentBarakhadi);
 
   const generateFullBarakhadi = () => {
@@ -3235,7 +3521,7 @@ const Barakhadi = ({
   };
 
   const tableStyle = {
-    marginTop: "10px",
+    marginTop: "50px",
     borderCollapse: "collapse",
     width: "100%",
     tableLayout: "fixed",
@@ -3662,7 +3948,7 @@ const Barakhadi = ({
                     display: "inline-block",
                   }}
                 >
-                  {currentWordData.text}
+                  {currentWordData?.text || ""}
                 </span>
 
                 <div
@@ -3695,7 +3981,9 @@ const Barakhadi = ({
                           position: "relative",
                           zIndex: 1,
                         }}
-                        onClick={() => playWordAudio(currentWordData)}
+                        onClick={() =>
+                          currentWordData && playWordAudio(currentWordData)
+                        }
                       />
                       <div
                         style={{
@@ -3839,6 +4127,7 @@ const Barakhadi = ({
             style={{
               position: "relative",
               paddingLeft: "60px",
+              marginTop: "30px",
               //height: "300px",
             }}
           >

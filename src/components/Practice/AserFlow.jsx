@@ -98,6 +98,14 @@ const AserFlow = ({
   wordCount,
   multilingual,
   contentSourceData,
+  // Demo mode props
+  onSpeakerClick,
+  onBubbleClick,
+  disableSpeaker = false,
+  disableBubbles = false,
+  hideContentDuringDemo = false,
+  blockProgression = false,
+  hideProgress = false,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedLetter, setSelectedLetter] = useState("");
@@ -232,6 +240,11 @@ const AserFlow = ({
   const questionLetters = questions.map((q) => q.contentSourceData[0].text);
 
   const handlePlayAudio = () => {
+    // If in demo mode and custom handler provided, call it (in addition to normal flow)
+    if (isShowCase && onSpeakerClick) {
+      onSpeakerClick();
+    }
+
     const audio = new Audio(
       `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentItem?.contentId}.wav`
     );
@@ -335,9 +348,18 @@ const AserFlow = ({
     // ✅ Increase progress on every bubble click
     setCurrentItemNumber((prev) => Math.min(prev + 1, TOTAL_ITEMS));
 
-    setTimeout(() => {
-      handleNextClick();
-    }, 1000);
+    // If in demo mode and custom handler provided, call it (in addition to normal flow)
+    // Pass whether the answer was correct
+    if (isShowCase && onBubbleClick) {
+      onBubbleClick(letter, index, correct);
+    }
+
+    // Only proceed to next question if NOT in blocked demo mode OR if answer is correct
+    if (!blockProgression || correct) {
+      setTimeout(() => {
+        handleNextClick();
+      }, 1000);
+    }
   };
 
   const handleNextClick = async () => {
@@ -416,11 +438,14 @@ const AserFlow = ({
             position: "absolute",
             top: 10,
             right: 20,
-            display: "flex",
+            display: hideProgress ? "none" : "flex",
             flexDirection: "column",
             alignItems: "center",
             width: "120px",
             zIndex: 2000, // keeps above everything
+            opacity: hideContentDuringDemo ? 0 : 1,
+            visibility: hideContentDuringDemo ? "hidden" : "visible",
+            transition: "opacity 0.3s ease",
           }}
         >
           <Box
@@ -436,6 +461,7 @@ const AserFlow = ({
               position: "relative",
               boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
               marginBottom: "-8px",
+              display: hideProgress ? "none" : "block",
             }}
           >
             {currentItemNumber}/{TOTAL_ITEMS}
@@ -476,6 +502,9 @@ const AserFlow = ({
             left: "10px",
             cursor: "pointer",
             zIndex: 1000,
+            opacity: hideContentDuringDemo ? 0 : 1,
+            visibility: hideContentDuringDemo ? "hidden" : "visible",
+            transition: "opacity 0.3s ease",
           }}
           onClick={() => setOpen(true)}
         />
@@ -553,6 +582,9 @@ const AserFlow = ({
             borderRadius: "20px",
             //boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
             overflow: "hidden",
+            opacity: hideContentDuringDemo ? 0 : 1,
+            visibility: hideContentDuringDemo ? "hidden" : "visible",
+            transition: "opacity 0.3s ease",
           }}
         >
           {questionLetters?.map((char, index) => {
@@ -576,15 +608,21 @@ const AserFlow = ({
             return (
               <div
                 key={index}
-                onClick={() => handleBubbleClick(char, index)}
+                onClick={() => {
+                  if (!disableBubbles) {
+                    handleBubbleClick(char, index);
+                  }
+                }}
                 style={{
                   position: "absolute",
                   top: pos.top,
                   left: pos.left,
                   transform: "translate(-50%, -50%)",
-                  cursor: "pointer",
+                  cursor: disableBubbles ? "not-allowed" : "pointer",
                   textAlign: "center",
                   zIndex: 99999,
+                  opacity: disableBubbles ? 0.5 : 1,
+                  pointerEvents: disableBubbles ? "none" : "auto",
                 }}
               >
                 {/* Bubble image */}
@@ -644,6 +682,26 @@ const AserFlow = ({
                   >
                     {char}
                   </span>
+
+                  {/* Pointer under bubble for demo - show only for correct bubble in demo mode */}
+                  {isShowCase && char === correctLetter && !disableBubbles && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "calc(100% + 20px)",
+                        left: "0%",
+                        rotate: "180deg",
+                        transform: "translateX(-50%)",
+                        zIndex: 10001,
+                        fontSize: "48px",
+                        animation: "pointDown 1.5s ease-in-out infinite",
+                        pointerEvents: "none",
+                        filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                      }}
+                    >
+                      👇
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -656,6 +714,9 @@ const AserFlow = ({
             justifyContent: "center",
             alignItems: "center",
             display: "flex",
+            opacity: hideContentDuringDemo ? 0 : 1,
+            visibility: hideContentDuringDemo ? "hidden" : "visible",
+            transition: "opacity 0.3s ease",
           }}
         >
           <Box
@@ -667,10 +728,14 @@ const AserFlow = ({
               justifyContent: "center",
               alignItems: "center",
               marginTop: "7px",
-              cursor: "pointer",
+              cursor: disableSpeaker ? "not-allowed" : "pointer",
+              opacity: disableSpeaker ? 0.5 : 1,
+              pointerEvents: disableSpeaker ? "none" : "auto",
             }}
             onClick={() => {
-              handlePlayAudio();
+              if (!disableSpeaker) {
+                handlePlayAudio();
+              }
             }}
           >
             <Box
@@ -710,7 +775,14 @@ const AserFlow = ({
           <img
             src={nextImg}
             alt="next"
-            style={{ width: "50px", cursor: "pointer", marginLeft: "10px" }}
+            style={{
+              width: "50px",
+              cursor: "pointer",
+              marginLeft: "10px",
+              opacity: hideContentDuringDemo ? 0 : 1,
+              visibility: hideContentDuringDemo ? "hidden" : "visible",
+              transition: "opacity 0.3s ease",
+            }}
             onClick={() => handleNextClick()}
           />
           <img
@@ -722,10 +794,29 @@ const AserFlow = ({
               bottom: "40px",
               left: "-20px",
               width: "230px",
+              opacity: hideContentDuringDemo ? 0 : 1,
+              visibility: hideContentDuringDemo ? "hidden" : "visible",
+              transition: "opacity 0.3s ease",
             }}
           />
         </div>
       </div>
+
+      {/* Animation styles for demo pointer */}
+      {isShowCase && (
+        <style>
+          {`
+            @keyframes pointDown {
+              0%, 100% {
+                transform: translateX(-50%) translateY(0);
+              }
+              50% {
+                transform: translateX(-50%) translateY(15px);
+              }
+            }
+          `}
+        </style>
+      )}
     </MainLayout>
   );
 };

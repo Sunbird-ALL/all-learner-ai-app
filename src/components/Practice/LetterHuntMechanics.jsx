@@ -10,6 +10,7 @@ import {
 import { addLesson } from "../../services/orchestration/orchestrationService";
 import { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
+import { F3_FLOW } from "../../RFlow/F3";
 
 // Import from library
 import {
@@ -131,10 +132,64 @@ const LetterHuntMechanicsContent = ({
       // Redirect to discovery start (which will detect F2 flow and start from F2-A1)
       navigate("/discover-start");
     } else if (isF2FlowActive) {
-      console.log("F2 A3 passed - redirecting to discovery start");
-      // Clear F2 flow index
+      console.log("F2 A3 passed - saving progress and redirecting to F3");
+
+      // Save F2 A3 completion progress before transitioning to F3
+      const lang = getLocalData("lang") || "en";
+      const sessionId = getLocalData("sessionId");
+
+      if (sessionId && lang) {
+        try {
+          // F2 A3 is the last step (index 20), so save as lesson 21 (1-indexed) with 100% progress
+          await addLesson({
+            sessionId: sessionId,
+            milestone: "practice",
+            lesson: "21", // F2 A3 is index 20, so 1-indexed is 21
+            progress: 100, // F2 flow is complete
+            language: lang,
+            milestoneLevel: "B",
+          });
+          console.log("F2 A3 completion progress saved successfully");
+        } catch (error) {
+          console.error("Error saving F2 A3 completion progress:", error);
+        }
+      }
+
+      // Clear F2 flow index to reset for F3
       setLocalData("f2FlowIndex", null);
-      // Redirect to discovery start (or F3 if needed)
+      setLocalData("f2FlowComplete", "true");
+
+      // IMPORTANT: Initialize F3 flow index to 0 to start from F3-P1
+      // This ensures F3 starts fresh after F2 completes
+      setLocalData("f3FlowIndex", 0);
+
+      // Save F3 progress as lesson 1 (index 0) to ensure backend knows to start F3 from beginning
+      try {
+        const f3TotalSteps = F3_FLOW.length;
+        const f3Progress = Math.round(((0 + 1) / f3TotalSteps) * 100); // Index 0 = lesson 1
+
+        await addLesson({
+          sessionId: sessionId,
+          milestone: "practice",
+          lesson: "1", // F3 starts at index 0, so 1-indexed is 1
+          progress: f3Progress,
+          language: lang,
+          milestoneLevel: "B",
+        });
+        console.log(
+          "F3 flow initialized at lesson 1 (index 0) after F2 completion"
+        );
+      } catch (error) {
+        console.error("Error initializing F3 flow progress:", error);
+      }
+
+      // Clear practice progress for F3 to start fresh
+      setLocalData("practiceProgress", null);
+
+      console.log(
+        "F2 A3 passed - F2 flow cleared, F3 flow initialized to index 0, redirecting to discover-start"
+      );
+      // Redirect to discover-start (which will detect F3 flow and start from F3-P1)
       navigate("/discover-start");
     }
   };
@@ -373,7 +428,9 @@ const LetterHuntMechanicsContent = ({
       "failRedirect:",
       failRedirect,
       "isF1FlowActive:",
-      isF1FlowActive
+      isF1FlowActive,
+      "isF2FlowActive:",
+      isF2FlowActive
     );
     try {
       const lang = getLocalData("lang") || "en";
@@ -383,6 +440,7 @@ const LetterHuntMechanicsContent = ({
       let targetFlowIndex = null;
 
       // If this is an Apply step with a failRedirect, use it
+      // Check for F1 flow first
       if (applyStep && failRedirect && isF1FlowActive) {
         targetFlowIndex = getF1FlowIndexFromRedirect(failRedirect);
         if (targetFlowIndex !== null) {
@@ -390,11 +448,27 @@ const LetterHuntMechanicsContent = ({
           setLocalData("f1FlowIndex", targetFlowIndex);
           targetStep = targetFlowIndex; // Use flow index as practice step index for F1
           console.log(
-            `Apply step ${applyStep} - Level ${failedLevel} failed - redirecting to ${failRedirect} (F1 flow index ${targetFlowIndex})`
+            `F1 Apply step ${applyStep} - Level ${failedLevel} failed - redirecting to ${failRedirect} (F1 flow index ${targetFlowIndex})`
           );
         } else {
           console.error(
             `Failed to map failRedirect "${failRedirect}" to F1 flow index`
+          );
+        }
+      }
+      // Check for F2 flow
+      else if (applyStep && failRedirect && isF2FlowActive) {
+        targetFlowIndex = getF2FlowIndexFromRedirect(failRedirect);
+        if (targetFlowIndex !== null) {
+          // Set F2 flow index to the target Learn step
+          setLocalData("f2FlowIndex", targetFlowIndex);
+          targetStep = targetFlowIndex; // Use flow index as practice step index for F2
+          console.log(
+            `F2 Apply step ${applyStep} - Level ${failedLevel} failed - redirecting to ${failRedirect} (F2 flow index ${targetFlowIndex})`
+          );
+        } else {
+          console.error(
+            `Failed to map failRedirect "${failRedirect}" to F2 flow index`
           );
         }
       } else {
@@ -402,6 +476,7 @@ const LetterHuntMechanicsContent = ({
           applyStep: !!applyStep,
           failRedirect: !!failRedirect,
           isF1FlowActive: !!isF1FlowActive,
+          isF2FlowActive: !!isF2FlowActive,
         });
       }
 
@@ -455,8 +530,12 @@ const LetterHuntMechanicsContent = ({
           console.log("Reset currentQuestion to 0");
         }
 
-        // Clear any F1 flow advancement flag to ensure handleNext processes the redirect
-        setLocalData("f1FlowAdvancedByLetterHunt", "false");
+        // Clear any F1/F2 flow advancement flag to ensure handleNext processes the redirect
+        if (isF1FlowActive) {
+          setLocalData("f1FlowAdvancedByLetterHunt", "false");
+        } else if (isF2FlowActive) {
+          setLocalData("f2FlowAdvancedByLetterHunt", "false");
+        }
 
         // Use a small delay to ensure localStorage and state are updated before handleNext reads them
         setTimeout(() => {
@@ -545,8 +624,14 @@ const LetterHuntMechanicsContent = ({
               const targetStep = targetFlowIndex;
               const lang = getLocalData("lang") || "en";
               const sessionId = getLocalData("sessionId");
-              const currentPracticeProgress = Math.round(
-                (targetStep / (practiceSteps?.length || 21)) * 100
+
+              // Calculate progress using F1_FLOW.length, matching F1's pattern
+              // Ensure progress doesn't exceed 100%
+              const calculatedProgress =
+                ((targetStep + 1) / F1_FLOW.length) * 100;
+              const cappedProgress = Math.min(
+                100,
+                Math.round(calculatedProgress)
               );
 
               // Convert to 1-indexed for backend
@@ -554,14 +639,14 @@ const LetterHuntMechanicsContent = ({
                 sessionId: sessionId,
                 milestone: "practice",
                 lesson: (targetStep + 1).toString(), // Convert to 1-indexed for backend
-                progress: currentPracticeProgress,
+                progress: cappedProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
               });
 
               const updatedPracticeProgress = {
                 currentQuestion: 0,
-                currentPracticeProgress: currentPracticeProgress,
+                currentPracticeProgress: cappedProgress,
                 currentPracticeStep: targetStep,
               };
               setLocalData(
@@ -580,11 +665,19 @@ const LetterHuntMechanicsContent = ({
                 setCurrentQuestion(0);
               }
 
+              // Set a flag to indicate F1 flow was already advanced by LetterHuntMechanics
+              // This prevents handleNext from making duplicate addLesson calls
+              setLocalData("f1FlowAdvancedByLetterHunt", "true");
+
               // Delay redirect to allow success screen to show first (4 seconds)
               setTimeout(() => {
                 if (handleNext) {
                   handleNext(false);
                 }
+                // Clear the flag after a short delay
+                setTimeout(() => {
+                  setLocalData("f1FlowAdvancedByLetterHunt", "false");
+                }, 500);
               }, 4000); // 4 second delay to ensure success screen is visible
               return;
             }
@@ -601,8 +694,14 @@ const LetterHuntMechanicsContent = ({
               const targetStep = targetFlowIndex;
               const lang = getLocalData("lang") || "en";
               const sessionId = getLocalData("sessionId");
-              const currentPracticeProgress = Math.round(
-                (targetStep / (practiceSteps?.length || 21)) * 100
+
+              // Calculate progress using F2_FLOW.length, matching F1's pattern
+              // Ensure progress doesn't exceed 100%
+              const calculatedProgress =
+                ((targetStep + 1) / F2_FLOW.length) * 100;
+              const cappedProgress = Math.min(
+                100,
+                Math.round(calculatedProgress)
               );
 
               // Convert to 1-indexed for backend
@@ -610,14 +709,14 @@ const LetterHuntMechanicsContent = ({
                 sessionId: sessionId,
                 milestone: "practice",
                 lesson: (targetStep + 1).toString(), // Convert to 1-indexed for backend
-                progress: currentPracticeProgress,
+                progress: cappedProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
               });
 
               const updatedPracticeProgress = {
                 currentQuestion: 0,
-                currentPracticeProgress: currentPracticeProgress,
+                currentPracticeProgress: cappedProgress,
                 currentPracticeStep: targetStep,
               };
               setLocalData(
@@ -636,11 +735,19 @@ const LetterHuntMechanicsContent = ({
                 setCurrentQuestion(0);
               }
 
+              // Set a flag to indicate F2 flow was already advanced by LetterHuntMechanics
+              // This prevents handleNext from making duplicate addLesson calls
+              setLocalData("f2FlowAdvancedByLetterHunt", "true");
+
               // Delay redirect to allow success screen to show first (4 seconds)
               setTimeout(() => {
                 if (handleNext) {
                   handleNext(false);
                 }
+                // Clear the flag after a short delay
+                setTimeout(() => {
+                  setLocalData("f2FlowAdvancedByLetterHunt", "false");
+                }, 500);
               }, 4000); // 4 second delay to ensure success screen is visible
               return;
             }
