@@ -7,7 +7,10 @@ import {
   practiceSteps,
   levelGetContent,
 } from "../../utils/constants";
-import { addLesson } from "../../services/orchestration/orchestrationService";
+import {
+  addLesson,
+  addPointer,
+} from "../../services/orchestration/orchestrationService";
 import { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
 
 // Import from library
@@ -1209,6 +1212,46 @@ const LetterLauncherMechanicsContent = ({
                         "Error storing F3 flow progress in LetterLauncherMechanics:",
                         e
                       );
+                    }
+
+                    // Update points for F3 flow based on contentCount
+                    if (!localStorage.getItem("contentSessionId")) {
+                      try {
+                        const f3Config = levelGetContent[lang]?.["F3"];
+                        const completedStepContent =
+                          f3Config?.[currentF3FlowStep.index];
+                        // For F3, contentCount might be in sub-steps
+                        const contentCount =
+                          completedStepContent?.letterLauncherContentCount ||
+                          completedStepContent?.memoryChallengeContentCount ||
+                          completedStepContent?.readAloudContentCount ||
+                          completedStepContent?.contentCount ||
+                          1;
+
+                        const pointsToAdd = contentCount;
+                        const milestone = "B";
+
+                        const result = await addPointer(pointsToAdd, milestone);
+                        const awardedPoints = result?.result?.points;
+
+                        if (awardedPoints === pointsToAdd) {
+                          console.log(
+                            "F3 flow points updated by LetterLauncherMechanics:",
+                            {
+                              completedStepIndex: currentF3FlowStep.index,
+                              pointsAdded: pointsToAdd,
+                              contentCount,
+                              totalPoints: result?.result?.totalLanguagePoints,
+                            }
+                          );
+                          // Note: setPoints is not available here, parent component will fetch points
+                        }
+                      } catch (error) {
+                        console.error(
+                          "Error updating F3 flow points in LetterLauncherMechanics:",
+                          error
+                        );
+                      }
                     }
 
                     // Update local storage with NEXT step progress
