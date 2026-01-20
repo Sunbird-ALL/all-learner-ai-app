@@ -4794,6 +4794,39 @@ const Practice = () => {
         setProgressData(practiceProgress);
         setCurrentQuestion(0);
 
+        // Update points for F2 flow based on contentCount
+        if (
+          updatedF2FlowStep.step &&
+          !localStorage.getItem("contentSessionId")
+        ) {
+          try {
+            // Get current content config to get contentCount
+            const lang = getLocalData("lang") || "en";
+            const f2Config = levelGetContent[lang]?.["F2"];
+            const currentStepContent = f2Config?.[currentF2FlowStep.index];
+            const contentCount =
+              currentStepContent?.contentCount || questions.length || 1;
+
+            // Points should be based on contentCount
+            const pointsToAdd = contentCount;
+            const milestone = "B"; // F2 flow uses milestone "B"
+
+            const result = await addPointer(pointsToAdd, milestone);
+            const awardedPoints = result?.result?.points;
+
+            if (awardedPoints === pointsToAdd) {
+              setPoints(result?.result?.totalLanguagePoints || 0);
+              console.log("F2 flow points updated:", {
+                pointsAdded: pointsToAdd,
+                contentCount,
+                totalPoints: result?.result?.totalLanguagePoints,
+              });
+            }
+          } catch (error) {
+            console.error("Error updating F2 flow points:", error);
+          }
+        }
+
         // Get content for the next step using the updated F2 flow index
         let nextStepContent = null;
         if (isF2FlowActive) {
@@ -4940,6 +4973,38 @@ const Practice = () => {
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
       setProgressData(practiceProgress);
       setCurrentQuestion(0);
+
+      // Update points for F1 flow Learn step based on contentCount
+      if (currentF1FlowStep.step && !localStorage.getItem("contentSessionId")) {
+        try {
+          // Get current content config to get contentCount (use the COMPLETED step, not the next one)
+          const lang = getLocalData("lang") || "en";
+          const f1Config = levelGetContent[lang]?.["F1"];
+          const completedStepContent = f1Config?.[currentF1FlowStep.index];
+          const contentCount =
+            completedStepContent?.contentCount || questions.length || 1;
+
+          // Points should be based on contentCount
+          const pointsToAdd = contentCount;
+          const milestone = "B"; // F1 flow uses milestone "B"
+
+          const result = await addPointer(pointsToAdd, milestone);
+          const awardedPoints = result?.result?.points;
+
+          if (awardedPoints === pointsToAdd) {
+            setPoints(result?.result?.totalLanguagePoints || 0);
+            console.log("F1 Learn step (L1) points updated:", {
+              completedStepIndex: currentF1FlowStep.index,
+              stepType: currentF1FlowStep.step?.type,
+              pointsAdded: pointsToAdd,
+              contentCount,
+              totalPoints: result?.result?.totalLanguagePoints,
+            });
+          }
+        } catch (error) {
+          console.error("Error updating F1 Learn step points:", error);
+        }
+      }
 
       // Get content for the next step using the updated F1 flow index
       // For F1 flow, directly access the config array using the updated F1 flow index
@@ -5348,6 +5413,42 @@ const Practice = () => {
         setLocalData("practiceProgress", JSON.stringify(practiceProgress));
         setProgressData(practiceProgress);
         setCurrentQuestion(0);
+
+        // Update points for F1 flow based on contentCount (use COMPLETED step, not next step)
+        if (
+          currentF1FlowStepBeforeAdvance.step &&
+          !localStorage.getItem("contentSessionId")
+        ) {
+          try {
+            // Get current content config to get contentCount for the COMPLETED step
+            const lang = getLocalData("lang") || "en";
+            const f1Config = levelGetContent[lang]?.["F1"];
+            const completedStepContent =
+              f1Config?.[currentF1FlowStepBeforeAdvance.index];
+            const contentCount =
+              completedStepContent?.contentCount || questions.length || 1;
+
+            // Points should be based on contentCount
+            const pointsToAdd = contentCount;
+            const milestone = "B"; // F1 flow uses milestone "B"
+
+            const result = await addPointer(pointsToAdd, milestone);
+            const awardedPoints = result?.result?.points;
+
+            if (awardedPoints === pointsToAdd) {
+              setPoints(result?.result?.totalLanguagePoints || 0);
+              console.log("F1 flow points updated (handleNext):", {
+                completedStepIndex: currentF1FlowStepBeforeAdvance.index,
+                stepType: currentF1FlowStepBeforeAdvance.step?.type,
+                pointsAdded: pointsToAdd,
+                contentCount,
+                totalPoints: result?.result?.totalLanguagePoints,
+              });
+            }
+          } catch (error) {
+            console.error("Error updating F1 flow points:", error);
+          }
+        }
       }
 
       // For F3 flow, always check current F3 flow step from localStorage (may have been advanced by LetterLauncherMechanics)
@@ -5525,6 +5626,45 @@ const Practice = () => {
         setLocalData("practiceProgress", JSON.stringify(practiceProgress));
         setProgressData(practiceProgress);
         setCurrentQuestion(0);
+
+        // Update points for F3 flow based on contentCount
+        if (
+          currentF3FlowStep.step &&
+          !localStorage.getItem("contentSessionId")
+        ) {
+          try {
+            // Get current content config to get contentCount
+            const lang = getLocalData("lang") || "en";
+            const f3Config = levelGetContent[lang]?.["F3"];
+            const currentStepContent = f3Config?.[currentF3FlowStep.index];
+            // For F3, contentCount might be in sub-steps (letterLauncherContentCount, etc.)
+            const contentCount =
+              currentStepContent?.letterLauncherContentCount ||
+              currentStepContent?.memoryChallengeContentCount ||
+              currentStepContent?.readAloudContentCount ||
+              currentStepContent?.contentCount ||
+              questions.length ||
+              1;
+
+            // Points should be based on contentCount
+            const pointsToAdd = contentCount;
+            const milestone = "B"; // F3 flow uses milestone "B"
+
+            const result = await addPointer(pointsToAdd, milestone);
+            const awardedPoints = result?.result?.points;
+
+            if (awardedPoints === pointsToAdd) {
+              setPoints(result?.result?.totalLanguagePoints || 0);
+              console.log("F3 flow points updated:", {
+                pointsAdded: pointsToAdd,
+                contentCount,
+                totalPoints: result?.result?.totalLanguagePoints,
+              });
+            }
+          } catch (error) {
+            console.error("Error updating F3 flow points:", error);
+          }
+        }
 
         // Use F3 flow index to get content from F3 config
         const effectiveLang = lang || "en";
@@ -5922,6 +6062,73 @@ const Practice = () => {
       const shouldSkipContentFetch =
         (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
         (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt);
+
+      // Update points for F1/F2/F3 flows when they complete (even if shouldSkipContentFetch is true)
+      if (
+        (currentQuestion === questions.length - 1 || isGameOver) &&
+        shouldSkipContentFetch &&
+        !localStorage.getItem("contentSessionId")
+      ) {
+        try {
+          const lang = getLocalData("lang") || "en";
+          let pointsToAdd = 1;
+          let currentStepContent = null;
+
+          // Get contentCount based on flow type
+          if (isF1FlowByMilestone) {
+            const f1Config = levelGetContent[lang]?.["F1"];
+            const currentF1Step = getF1FlowStep();
+            currentStepContent = f1Config?.[currentF1Step.index];
+            pointsToAdd =
+              currentStepContent?.contentCount || questions.length || 1;
+          } else if (isF2FlowByMilestone) {
+            const f2Config = levelGetContent[lang]?.["F2"];
+            const currentF2Step = getF2FlowStep();
+            currentStepContent = f2Config?.[currentF2Step.index];
+            pointsToAdd =
+              currentStepContent?.contentCount || questions.length || 1;
+          } else if (isF3FlowByMilestone) {
+            const f3Config = levelGetContent[lang]?.["F3"];
+            const currentF3Step = getF3FlowStep();
+            currentStepContent = f3Config?.[currentF3Step.index];
+            // For F3, contentCount might be in sub-steps
+            pointsToAdd =
+              currentStepContent?.letterLauncherContentCount ||
+              currentStepContent?.memoryChallengeContentCount ||
+              currentStepContent?.readAloudContentCount ||
+              currentStepContent?.contentCount ||
+              questions.length ||
+              1;
+          }
+
+          const milestone = "B"; // F1/F2/F3 flows use milestone "B"
+          const result = await addPointer(pointsToAdd, milestone);
+          const awardedPoints = result?.result?.points;
+
+          if (awardedPoints === pointsToAdd) {
+            setPoints(result?.result?.totalLanguagePoints || 0);
+            console.log(
+              "F1/F2/F3 flow points updated (shouldSkipContentFetch):",
+              {
+                flow: isF1FlowByMilestone
+                  ? "F1"
+                  : isF2FlowByMilestone
+                  ? "F2"
+                  : "F3",
+                pointsAdded: pointsToAdd,
+                contentCount:
+                  currentStepContent?.contentCount || questions.length,
+                totalPoints: result?.result?.totalLanguagePoints,
+              }
+            );
+          }
+        } catch (error) {
+          console.error(
+            "Error updating F1/F2/F3 flow points (shouldSkipContentFetch):",
+            error
+          );
+        }
+      }
 
       if (
         (currentQuestion === questions.length - 1 || isGameOver) &&

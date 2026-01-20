@@ -7,7 +7,10 @@ import {
   practiceSteps,
   levelGetContent,
 } from "../../utils/constants";
-import { addLesson } from "../../services/orchestration/orchestrationService";
+import {
+  addLesson,
+  addPointer,
+} from "../../services/orchestration/orchestrationService";
 import { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
 import { F3_FLOW } from "../../RFlow/F3";
@@ -855,6 +858,51 @@ const LetterHuntMechanicsContent = ({
             }
           );
 
+          // Update points for F2 flow based on contentCount
+          if (!localStorage.getItem("contentSessionId")) {
+            try {
+              const f2Config = levelGetContent[lang]?.["F2"];
+              const completedStepContent = f2Config?.[currentF2FlowStep.index];
+              const contentCount = completedStepContent?.contentCount || 1;
+
+              console.log("F2 flow - Attempting to update points:", {
+                completedStepIndex: currentF2FlowStep.index,
+                contentCount,
+                configExists: !!completedStepContent,
+              });
+
+              const pointsToAdd = contentCount;
+              const milestone = "B";
+
+              const result = await addPointer(pointsToAdd, milestone);
+              console.log("F2 flow - addPointer result:", result);
+
+              const awardedPoints = result?.result?.points;
+              const totalPoints = result?.result?.totalLanguagePoints;
+
+              if (result && result.result) {
+                console.log("F2 flow points updated by LetterHuntMechanics:", {
+                  completedStepIndex: currentF2FlowStep.index,
+                  pointsAdded: pointsToAdd,
+                  awardedPoints,
+                  contentCount,
+                  totalPoints,
+                });
+                // Note: setPoints is not available here, parent component will fetch points
+              } else {
+                console.warn(
+                  "F2 flow - Unexpected addPointer response format:",
+                  result
+                );
+              }
+            } catch (error) {
+              console.error(
+                "Error updating F2 flow points in LetterHuntMechanics:",
+                error
+              );
+            }
+          }
+
           // Update local storage
           const updatedPracticeProgress = {
             currentQuestion: 0,
@@ -965,6 +1013,53 @@ const LetterHuntMechanicsContent = ({
             }
           );
 
+          // Update points for F1 flow based on contentCount
+          if (!localStorage.getItem("contentSessionId")) {
+            try {
+              const f1Config = levelGetContent[lang]?.["F1"];
+              const completedStepContent = f1Config?.[currentF1FlowStep.index];
+              const contentCount = completedStepContent?.contentCount || 1;
+
+              console.log("F1 flow - Attempting to update points:", {
+                completedStepIndex: currentF1FlowStep.index,
+                stepType: currentF1FlowStep.step?.type,
+                contentCount,
+                configExists: !!completedStepContent,
+              });
+
+              const pointsToAdd = contentCount;
+              const milestone = "B";
+
+              const result = await addPointer(pointsToAdd, milestone);
+              console.log("F1 flow - addPointer result:", result);
+
+              const awardedPoints = result?.result?.points;
+              const totalPoints = result?.result?.totalLanguagePoints;
+
+              if (result && result.result) {
+                console.log("F1 flow points updated by LetterHuntMechanics:", {
+                  completedStepIndex: currentF1FlowStep.index,
+                  stepType: currentF1FlowStep.step?.type,
+                  pointsAdded: pointsToAdd,
+                  awardedPoints,
+                  contentCount,
+                  totalPoints,
+                });
+                // Note: setPoints is not available here, parent component will fetch points
+              } else {
+                console.warn(
+                  "F1 flow - Unexpected addPointer response format:",
+                  result
+                );
+              }
+            } catch (error) {
+              console.error(
+                "Error updating F1 flow points in LetterHuntMechanics:",
+                error
+              );
+            }
+          }
+
           // Update local storage
           const updatedPracticeProgress = {
             currentQuestion: 0,
@@ -1032,6 +1127,40 @@ const LetterHuntMechanicsContent = ({
         language: lang,
         milestoneLevel: milestoneLevel,
       });
+
+      // Update points for non-F flows based on contentCount
+      if (!localStorage.getItem("contentSessionId")) {
+        try {
+          // Get contentCount from current step config
+          const lang = getLocalData("lang") || "en";
+          const levelKey =
+            milestoneLevel === "B"
+              ? "F1"
+              : `m${milestoneLevel?.replace("m", "") || "1"}`;
+          const levelConfig = levelGetContent[lang]?.[levelKey];
+          const currentStepContent = levelConfig?.find(
+            (step) => step.title === currentLevelTitle
+          );
+          const contentCount = currentStepContent?.contentCount || 1;
+
+          const pointsToAdd = contentCount;
+          const milestone = milestoneLevel || "m1";
+
+          const result = await addPointer(pointsToAdd, milestone);
+          const awardedPoints = result?.result?.points;
+
+          if (awardedPoints === pointsToAdd) {
+            console.log("LetterHunt points updated (handleLevelComplete):", {
+              stepTitle: currentLevelTitle,
+              pointsAdded: pointsToAdd,
+              contentCount,
+              totalPoints: result?.result?.totalLanguagePoints,
+            });
+          }
+        } catch (error) {
+          console.error("Error updating points in handleLevelComplete:", error);
+        }
+      }
 
       // Update local storage
       const updatedPracticeProgress = {
