@@ -1203,7 +1203,7 @@ const soundMatchContent = {
           {
             img: getAssetUrl(s3Assets.పజరImg),
             text: "పంజరం",
-            audio: getAssetAudioUrl(s3Assets.పజరAudio),
+            audio: getAssetAudioUrl(s3Assets.పజర2Audio),
           },
           {
             img: getAssetUrl(s3Assets.కడImg),
@@ -1410,7 +1410,7 @@ const soundMatchContent = {
           {
             img: getAssetUrl(s3Assets.పజరImg),
             text: "పంజరం",
-            audio: getAssetAudioUrl(s3Assets.పజరAudio),
+            audio: getAssetAudioUrl(s3Assets.పజర2Audio),
           },
           {
             img: getAssetUrl(s3Assets.ఏనగImg),
@@ -1419,7 +1419,7 @@ const soundMatchContent = {
           },
         ],
         correctWord: "పంజరం",
-        audio: getAssetAudioUrl(s3Assets.పజరAudio),
+        audio: getAssetAudioUrl(s3Assets.పజర2Audio),
         flowName: "S2",
         type: "soundMatch",
       },
@@ -3030,7 +3030,7 @@ const pictureWordsContent = {
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.పజరAudio),
+            audio: getAssetAudioUrl(s3Assets.పజర2Audio),
             isCorrect: true,
           },
           {
