@@ -7996,6 +7996,7 @@ const Practice = () => {
         page,
         setPage,
         level: level,
+        currentLevel: currentLevel,
         header:
           questions[currentQuestion]?.contentType === "image"
             ? `Guess the below image`
