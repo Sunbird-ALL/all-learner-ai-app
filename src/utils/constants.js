@@ -13578,7 +13578,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P8",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["బూడిద", "ప్రకృతి", "మైదాకు", "నొసలు", "పొదుపు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["బూడిద", "చీపురు", "మైదాకు", "నొసలు", "పొదుపు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -13615,7 +13615,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P11",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["రెండు", "పెరుగు", "భూకంపం", "పావురం", "జూకాలు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["మేఘం", "పెరుగు", "భూకంపం", "పావురం", "జూకాలు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
       {
@@ -13657,7 +13657,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P15",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["పసిడి", "గాజులు", "నృపతి", "పైసలు", "మొసలి"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["సినిమా", "వివాహం", "మూకుడు", "హృదయం", "బేడీలు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -13870,7 +13870,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_M1_L1",
-        storyMode: true,
+        // storyMode: true,
         mechanism: { id: "mechanic_7", name: "formAWord2" },
         multilingual: true,
       },
@@ -13887,6 +13887,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_M1_P1",
+        mechanism: { id: "soundHunt", name: "soundHunt" },
         multilingual: true,
       },
       {
@@ -13901,6 +13902,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_M1_S1",
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
         multilingual: true,
       },
       {
@@ -13924,6 +13926,8 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_M1_P3",
+        mechanism: { id: "soundHunt", name: "soundHunt" },
+        contentCount: 10,
         multilingual: true,
       },
       {
@@ -13937,6 +13941,7 @@ export const levelGetContent = {
         title: "S2",
         criteria: "word",
         template: "simple",
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
         tags: "CEFR_M1_S2",
         multilingual: true,
       },
@@ -13946,7 +13951,8 @@ export const levelGetContent = {
         title: "P1",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_M2_P1",
+        tags: "CEFR_M2_L1",
+        mechanism: { id: "bingo_card", name: "bingoCard" },
         //storyMode: true,
         multilingual: true,
       },
@@ -13954,7 +13960,7 @@ export const levelGetContent = {
         title: "P2",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_M2_L1",
+        tags: "CEFR_M2_L2",
         mechanism: { id: "bingo_card", name: "bingoCard" },
         multilingual: true,
       },
@@ -13962,8 +13968,9 @@ export const levelGetContent = {
         title: "P3",
         criteria: "word",
         template: "simple",
-        tags: "CEFR_M2_L2",
-        mechanism: { id: "bingo_card", name: "bingoCard" },
+        tags: "CEFR_M2_P1",
+        mechanism: { id: "soundHunt", name: "soundHunt" },
+        contentCount: 10,
         multilingual: true,
       },
       {
@@ -13978,6 +13985,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_M2_S1",
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
         multilingual: true,
       },
       {
@@ -14001,6 +14009,8 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_M2_P3",
+        mechanism: { id: "soundHunt", name: "soundHunt" },
+        contentCount: 10,
         multilingual: true,
       },
       {
@@ -14015,6 +14025,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_M2_S2",
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
         multilingual: true,
       },
     ],
