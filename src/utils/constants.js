@@ -10230,47 +10230,47 @@ export const practiceSteps = [
     fullName: "Practice 1",
     fullNameMOne: "Learn 1",
     fullNameMTwo: "Practice 1",
-    fullNameMThree: "Practice 1",
+    fullNameMThree: "Phrase Reading", // M3 L1: Phrase Reading
     title: "L1",
     titleNew: "L1",
-    titleThree: "P1",
+    titleThree: "L1", // Changed from "P1" to "L1" for correct sequence
   },
   {
     name: "P2",
     fullName: "Practice 2",
     fullNameMOne: "Learn 2",
     fullNameMTwo: "Learn 1",
-    fullNameMThree: "Learn 1",
+    fullNameMThree: "Repeat Phrase", // M3 P1: Repeat Phrase
     title: "L2",
     titleNew: "L2",
-    titleThree: "L1",
+    titleThree: "P1", // Changed from "L1" to "P1" for correct sequence
   },
   {
     name: "P3",
     fullName: "Practice 3",
     fullNameMOne: "Practice 1",
     fullNameMTwo: "Learn 2",
-    fullNameMThree: "Learn 2",
+    fullNameMThree: "Correct Image Phrase", // M3 P2: Correct Image Phrase
     title: "P1",
     titleNew: "P1",
-    titleThree: "L2",
+    titleThree: "P2", // Changed from "L2" to "P2" for correct sequence
   },
   {
     name: "P4",
     fullName: "Practice 4",
     fullNameMOne: "Practice 2",
     fullNameMTwo: "Practice 2",
-    fullNameMThree: "Practice 2",
+    fullNameMThree: "Phrase Reading", // M3 L2: Phrase Reading
     title: "P2",
     titleNew: "P2",
-    titleThree: "P2",
+    titleThree: "L2", // Changed from "P2" to "L2" for correct sequence
   },
   {
     name: "S1",
     fullName: "Showcase 1",
     fullNameMOne: "Showcase 1",
     fullNameMTwo: "Showcase 1",
-    fullNameMThree: "Showcase 1",
+    fullNameMThree: "Phrase Reading", // M3 S1: Phrase Reading
     title: "S1",
     titleNew: "S1",
     titleThree: "S1",
@@ -10280,7 +10280,7 @@ export const practiceSteps = [
     fullName: "Practice 5",
     fullNameMOne: "Learn 3",
     fullNameMTwo: "Learn 3",
-    fullNameMThree: "Learn 3",
+    fullNameMThree: "Repeat Phrase", // M3 L3: Repeat Phrase
     title: "L3",
     titleNew: "L3",
     titleThree: "L3",
@@ -10290,7 +10290,7 @@ export const practiceSteps = [
     fullName: "Practice 6",
     fullNameMOne: "Learn 4",
     fullNameMTwo: "Learn 4",
-    fullNameMThree: "Practice 3",
+    fullNameMThree: "Phrase Reading", // M3 P3: Phrase Reading
     title: "L4",
     titleNew: "L4",
     titleThree: "P3",
@@ -10300,7 +10300,7 @@ export const practiceSteps = [
     fullName: "Practice 7",
     fullNameMOne: "Practice 3",
     fullNameMTwo: "Practice 3",
-    fullNameMThree: "Learn 4",
+    fullNameMThree: "Correct Image Phrase", // M3 L4: Correct Image Phrase
     title: "P3",
     titleNew: "P3",
     titleThree: "L4",
@@ -10310,7 +10310,7 @@ export const practiceSteps = [
     fullName: "Practice 8",
     fullNameMOne: "Practice 4",
     fullNameMTwo: "Practice 4",
-    fullNameMThree: "Practice 4",
+    fullNameMThree: "Phrase Reading", // M3 P4: Phrase Reading
     title: "P4",
     titleNew: "P4",
     titleThree: "P4",
@@ -10320,7 +10320,7 @@ export const practiceSteps = [
     fullName: "Showcase 2",
     fullNameMOne: "Showcase 2",
     fullNameMTwo: "Showcase 2",
-    fullNameMThree: "Showcase 2",
+    fullNameMThree: "Phrase Reading", // M3 S2: Phrase Reading
     title: "S2",
     titleNew: "S2",
     titleThree: "S2",
@@ -11258,84 +11258,111 @@ export const levelGetContent = {
     ],
     3: [
       {
+        // Index 0: practiceSteps[0].name="P1", titleThree="L1" → L1 (Phrase Reading) - step1 mode, 10 words
+        // title must match practiceSteps[0].name ("P1") for content lookup
         title: "P1",
-        criteria: "sentence",
-        template: "simple",
-        tags: "CEFR_GEN_M3_P1",
-        //storyMode: true,
-        //mechanism: { id: "syllable_puzzle", name: "syllablePuzzle" },
-        multilingual: true,
-      },
-      {
-        title: "P2",
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_GEN_M3_L1",
         mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
+        contentCount: 10,
         multilingual: true,
       },
       {
+        // Index 1: practiceSteps[1].name="P2", titleThree="P1" → P1 (Repeat Phrase) - step1 mode, 10 words
+        // title must match practiceSteps[1].name ("P2") for content lookup
+        title: "P2",
+        criteria: "sentence",
+        template: "simple",
+        tags: "CEFR_GEN_M3_P1",
+        mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
+        contentCount: 10,
+        multilingual: true,
+      },
+      {
+        // Index 2: practiceSteps[2].name="P3", titleThree="P2" → P2 (Correct Image Phrase) - step2 mode, 10 words
+        // title must match practiceSteps[2].name ("P3") for content lookup
         title: "P3",
+        criteria: "sentence",
+        template: "simple",
+        tags: "CEFR_GEN_M3_L1",
+        mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
+        contentCount: 10,
+        multilingual: true,
+      },
+      {
+        // Index 3: practiceSteps[3].name="P4", titleThree="L2" → L2 (Phrase Reading) - step1 mode, 10 words
+        // title must match practiceSteps[3].name ("P4") for content lookup
+        title: "P4",
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_GEN_M3_L2",
         mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
+        contentCount: 10,
         multilingual: true,
       },
       {
-        title: "P4",
-        criteria: "sentence",
-        template: "simple",
-        tags: "CEFR_GEN_M3_P2",
-        //competency: "L1.1",
-        //mechanism: { id: "mechanic_1", name: "fillInTheBlank" },
-        multilingual: true,
-      },
-      {
+        // Index 4: practiceSteps[4].name="S1", titleThree="S1" → S1 (Phrase Reading with ASR) - ASR task, 10 words from above 40
+        // title must match practiceSteps[4].name ("S1") for content lookup
         title: "S1",
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_GEN_M3_S1",
+        contentCount: 10, // 10 words from the above 40
         multilingual: true,
       },
       {
+        // Index 5: practiceSteps[5].name="P5", titleThree="L3" → L3 (Repeat Phrase) - step1 mode, 10 words
+        // title must match practiceSteps[5].name ("P5") for content lookup
         title: "P5",
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_GEN_M3_L3",
         mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
+        contentCount: 10,
         multilingual: true,
       },
       {
+        // Index 6: practiceSteps[6].name="P6", titleThree="P3" → P3 (Phrase Reading) - step1 mode, 10 words
+        // title must match practiceSteps[6].name ("P6") for content lookup
         title: "P6",
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_GEN_M3_P3",
-        //mechanism: { id: "syllable_puzzle", name: "syllablePuzzle" },
+        mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
+        contentCount: 10,
         multilingual: true,
       },
       {
+        // Index 7: practiceSteps[7].name="P7", titleThree="L4" → L4 (Correct Image Phrase) - step2 mode, 10 words
+        // title must match practiceSteps[7].name ("P7") for content lookup
         title: "P7",
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_GEN_M3_L4",
         mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
+        contentCount: 10,
         multilingual: true,
       },
       {
+        // Index 8: practiceSteps[8].name="P8", titleThree="P4" → P4 (Phrase Reading) - step1 mode, 10 words
+        // title must match practiceSteps[8].name ("P8") for content lookup
         title: "P8",
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_GEN_M3_P4",
-        //competency: "L1.1",
-        //mechanism: { id: "mechanic_1", name: "fillInTheBlank" },
+        mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
+        contentCount: 10,
         multilingual: true,
       },
       {
+        // Index 9: practiceSteps[9].name="S2", titleThree="S2" → S2 (Phrase Reading with ASR) - ASR task, 10 words from above 80
+        // title must match practiceSteps[9].name ("S2") for content lookup
         title: "S2",
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_GEN_M3_S2",
+        contentCount: 10, // 10 words from the above 80
         multilingual: true,
       },
     ],

@@ -39,7 +39,29 @@ export const getContent = async (
     if (options.CEFR_level) url += `&CEFR_level=${options.CEFR_level}`;
     if (options.multilingual) url += `&multilingual=${options.multilingual}`;
 
+    // Log for M3 S1 debugging
+    if (level === 3 && options.tags && options.tags.includes("M3_S1")) {
+      console.log("getContent API call for M3 S1:", {
+        url,
+        limit,
+        criteria,
+        lang,
+        tags: options.tags,
+      });
+    }
+
     const response = await axios.get(url, getHeaders());
+
+    // Log response for M3 S1 debugging
+    if (level === 3 && options.tags && options.tags.includes("M3_S1")) {
+      console.log("getContent API response for M3 S1:", {
+        requestedLimit: limit,
+        receivedCount: response.data?.content?.length || 0,
+        content: response.data?.content,
+        fullResponse: response.data,
+      });
+    }
+
     return response.data;
   } catch (error) {
     console.error("Error fetching content:", error);

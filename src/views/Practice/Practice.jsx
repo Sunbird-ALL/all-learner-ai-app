@@ -5158,7 +5158,8 @@ const Practice = () => {
 
         const getContentFn =
           nextStepContent?.mechanism ||
-          ((level === 1 || level === 2) && lang === "en")
+          ((level === 1 || level === 2) && lang === "en") ||
+          level === 3 // M3 should always use getContent, not recommendation API
             ? getContent
             : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
               lang === "en"
@@ -5609,6 +5610,9 @@ const Practice = () => {
             // For F3, contentCount might be in sub-steps (letterLauncherContentCount, etc.)
             const contentCount =
               currentStepContent?.letterLauncherContentCount ||
+              currentStepContent?.soundHuntS1CombinedContentCount ||
+              currentStepContent?.soundHuntContentCount ||
+              currentStepContent?.letterHuntContentCount ||
               currentStepContent?.memoryChallengeContentCount ||
               currentStepContent?.readAloudContentCount ||
               currentStepContent?.contentCount ||
@@ -6010,7 +6014,8 @@ const Practice = () => {
 
       const getContentFn =
         currentGetContent?.mechanism ||
-        ((level === 1 || level === 2) && lang === "en")
+        ((level === 1 || level === 2) && lang === "en") ||
+        level === 3 // M3 should always use getContent, not recommendation API
           ? getContent
           : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
             lang === "en"
@@ -6061,6 +6066,9 @@ const Practice = () => {
             // For F3, contentCount might be in sub-steps
             pointsToAdd =
               currentStepContent?.letterLauncherContentCount ||
+              currentStepContent?.soundHuntS1CombinedContentCount ||
+              currentStepContent?.soundHuntContentCount ||
+              currentStepContent?.letterHuntContentCount ||
               currentStepContent?.memoryChallengeContentCount ||
               currentStepContent?.readAloudContentCount ||
               currentStepContent?.contentCount ||
@@ -6140,7 +6148,36 @@ const Practice = () => {
           setPoints(result?.result?.totalLanguagePoints || 0);
         }
 
-        if (isShowCase || isGameOver) {
+        // Check if this is a showcase step (S1 or S2) or game over
+        // For M3, S1 is at index 4, S2 is at index 9
+        // Calculate currentLevel from the step we're completing (currentPracticeStep, not newPracticeStep)
+        const completingStepLevel =
+          practiceSteps?.[currentPracticeStep]?.title || currentLevel;
+        const isShowcaseStep =
+          completingStepLevel === "S1" || completingStepLevel === "S2";
+        const shouldShowFeedback = isShowCase || isGameOver || isShowcaseStep;
+
+        console.log("handleNext - Showcase check:", {
+          isShowCase,
+          isGameOver,
+          isShowcaseStep,
+          currentLevel,
+          completingStepLevel,
+          currentPracticeStep,
+          shouldShowFeedback,
+          level,
+          practiceStepTitle: practiceSteps?.[currentPracticeStep]?.title,
+          practiceStepName: practiceSteps?.[currentPracticeStep]?.name,
+        });
+
+        if (shouldShowFeedback) {
+          console.log("handleNext - Entering feedback logic for:", {
+            currentLevel,
+            completingStepLevel,
+            level,
+            isM3S1: level === 3 && completingStepLevel === "S1",
+            isM3S2: level === 3 && completingStepLevel === "S2",
+          });
           const sub_session_id = getLocalData("sub_session_id");
           const getSetResultRes = await getSetResultPractice({
             subSessionId: sub_session_id,
@@ -6177,6 +6214,131 @@ const Practice = () => {
             );
           } catch (e) {
             // catch error
+          }
+
+          // M3 S1 completion - show feedback screen for both pass and fail
+          // This check must be OUTSIDE the pass-only block to handle both pass and fail
+          if (level === 3 && completingStepLevel === "S1") {
+            const isPass = getSetData.sessionResult === "pass";
+            console.log("M3 S1 completed - showing feedback screen", {
+              level,
+              currentLevel,
+              completingStepLevel,
+              currentPracticeStep,
+              sessionResult: getSetData.sessionResult,
+              isPass: isPass,
+              willShowFeedback: true,
+            });
+
+            // Update lesson progress for M3 S1 (both pass and fail)
+            try {
+              const lang = getLocalData("lang") || "en";
+              await addLesson({
+                sessionId,
+                milestone: milestoneType,
+                lesson: "0",
+                progress: 0,
+                language: lang,
+                milestoneLevel: getSetData.currentLevel,
+              });
+              console.log("M3 S1 - Lesson progress updated (pass or fail)");
+            } catch (e) {
+              console.error("M3 S1 - Error updating lesson progress:", e);
+            }
+
+            // Advance to next step (L3, which is index 5) BEFORE showing feedback screen
+            // This ensures when user clicks practice button, they get the next step
+            const nextPracticeStep = currentPracticeStep + 1;
+            const nextPracticeProgress = Math.round(
+              ((nextPracticeStep + 1) / practiceSteps.length) * 100
+            );
+
+            const updatedPracticeProgress = {
+              currentQuestion: 0,
+              currentPracticeProgress: nextPracticeProgress,
+              currentPracticeStep: nextPracticeStep,
+            };
+
+            setLocalData(
+              "practiceProgress",
+              JSON.stringify(updatedPracticeProgress)
+            );
+            setProgressData(updatedPracticeProgress);
+            console.log("M3 S1 - Practice progress advanced:", {
+              from: currentPracticeStep,
+              to: nextPracticeStep,
+              nextStepName: practiceSteps?.[nextPracticeStep]?.name,
+              nextStepTitle: practiceSteps?.[nextPracticeStep]?.title,
+              nextStepTitleThree: practiceSteps?.[nextPracticeStep]?.titleThree,
+            });
+
+            // Show cat feedback screen for both pass and fail
+            // The Practice button will navigate to /_practice which loads the next step
+            console.log("M3 S1 - Showing cat feedback screen (pass or fail)");
+            gameOver({ link: "/_practice" }, isPass);
+            return;
+          }
+
+          // M3 S2 completion - show feedback screen for both pass and fail
+          if (level === 3 && completingStepLevel === "S2") {
+            console.log("M3 S2 completed - showing feedback screen", {
+              level,
+              currentLevel,
+              completingStepLevel,
+              currentPracticeStep,
+              sessionResult: getSetData.sessionResult,
+              isPass: getSetData.sessionResult === "pass",
+            });
+
+            // Update lesson progress for M3 S2 (both pass and fail)
+            try {
+              const lang = getLocalData("lang") || "en";
+              await addLesson({
+                sessionId,
+                milestone: milestoneType,
+                lesson: "0",
+                progress: 0,
+                language: lang,
+                milestoneLevel: getSetData.currentLevel,
+              });
+              console.log("M3 S2 - Lesson progress updated");
+            } catch (e) {
+              console.error("M3 S2 - Error updating lesson progress:", e);
+            }
+
+            // Advance to next step (which would be step 0 for next milestone, or wrap around)
+            // For M3 S2, this is the last step, so we can either wrap to 0 or stay at 9
+            // Since S2 is the last step, we'll wrap to 0 (which will trigger gameOver in handleNext)
+            const nextPracticeStep =
+              (currentPracticeStep + 1) % practiceSteps.length;
+            const nextPracticeProgress = Math.round(
+              ((nextPracticeStep + 1) / practiceSteps.length) * 100
+            );
+
+            const updatedPracticeProgress = {
+              currentQuestion: 0,
+              currentPracticeProgress: nextPracticeProgress,
+              currentPracticeStep: nextPracticeStep,
+            };
+
+            setLocalData(
+              "practiceProgress",
+              JSON.stringify(updatedPracticeProgress)
+            );
+            setProgressData(updatedPracticeProgress);
+            console.log("M3 S2 - Practice progress advanced:", {
+              from: currentPracticeStep,
+              to: nextPracticeStep,
+              nextStepName: practiceSteps?.[nextPracticeStep]?.name,
+              nextStepTitle: practiceSteps?.[nextPracticeStep]?.title,
+            });
+
+            // Show cat feedback screen for both pass and fail
+            // The Practice button will navigate to /_practice which loads the next step
+            const isPass = getSetData.sessionResult === "pass";
+            console.log("M3 S2 - Showing cat feedback screen (pass or fail)");
+            gameOver({ link: "/_practice" }, isPass);
+            return;
           }
 
           if (getSetData.sessionResult === "pass") {
@@ -6298,6 +6460,16 @@ const Practice = () => {
         if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
           // Use contentCount from config if available, otherwise use default limit
           const contentLimit = currentGetContent?.contentCount || limit;
+          console.log("handleNext - M3 S1 content fetch:", {
+            step: currentGetContent?.title,
+            contentCount: currentGetContent?.contentCount,
+            contentLimit,
+            defaultLimit: limit,
+            hasMechanism: !!currentGetContent?.mechanism,
+            mechanismName: currentGetContent?.mechanism?.name,
+            criteria: currentGetContent.criteria,
+            tags: currentGetContent?.tags,
+          });
           const resGetContent = await getContentFn(
             currentGetContent.criteria,
             lang,
@@ -6312,6 +6484,11 @@ const Practice = () => {
             },
             level
           );
+          console.log("handleNext - M3 S1 API response:", {
+            contentCount: resGetContent?.content?.length,
+            requestedLimit: contentLimit,
+            content: resGetContent?.content,
+          });
 
           setTotalSyllableCount(resGetContent?.totalSyllableCount);
           setLivesData({
@@ -6925,7 +7102,8 @@ const Practice = () => {
 
       const getContentFn =
         currentGetContent?.mechanism ||
-        ((level === 1 || level === 2) && lang === "en")
+        ((level === 1 || level === 2) && lang === "en") ||
+        level === 3 // M3 should always use getContent, not recommendation API
           ? getContent
           : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
             lang === "en"
@@ -6949,16 +7127,20 @@ const Practice = () => {
 
       if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(levelToCheck)) {
         try {
+          // Use contentCount from config if available, otherwise use default limit
+          const contentLimit = currentGetContent?.contentCount || limit;
           console.log(
             "Initial load - Fetching questions for level:",
             levelToCheck,
             "criteria:",
-            currentGetContent.criteria
+            currentGetContent.criteria,
+            "contentLimit:",
+            contentLimit
           );
           const resWord = await getContentFn(
             currentGetContent.criteria,
             lang,
-            limit,
+            contentLimit,
             {
               mechanismId: currentGetContent?.mechanism?.id,
               competency: currentGetContent?.competency,
@@ -7235,7 +7417,8 @@ const Practice = () => {
 
       const getContentFn =
         currentGetContent?.mechanism ||
-        ((level === 1 || level === 2) && lang === "en")
+        ((level === 1 || level === 2) && lang === "en") ||
+        level === 3 // M3 should always use getContent, not recommendation API
           ? getContent
           : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
             lang === "en"
@@ -7249,6 +7432,33 @@ const Practice = () => {
         if (currentGetContent?.criteria) {
           // Use contentCount from config if available, otherwise use default limit
           const contentLimit = currentGetContent?.contentCount || limit;
+          console.log("fetchDetails - M3 S1 content fetch:", {
+            step: currentGetContent?.title,
+            contentCount: currentGetContent?.contentCount,
+            contentLimit,
+            defaultLimit: limit,
+            hasMechanism: !!currentGetContent?.mechanism,
+            mechanismName: currentGetContent?.mechanism?.name,
+            criteria: currentGetContent.criteria,
+            tags: currentGetContent?.tags,
+            currentGetContent: currentGetContent, // Full config object for debugging
+            level: level,
+            practiceStep: currentPracticeStep,
+          });
+
+          // Force contentLimit to 10 for M3 S1 if config has it
+          if (
+            level === 3 &&
+            currentGetContent?.title === "S1" &&
+            currentGetContent?.contentCount
+          ) {
+            const forcedLimit = currentGetContent.contentCount;
+            console.log(
+              "fetchDetails - Forcing contentLimit to config value for M3 S1:",
+              forcedLimit
+            );
+            // contentLimit is already set above, but let's ensure it's used
+          }
           const resWord = await getContentFn(
             currentGetContent.criteria,
             lang,
@@ -7263,6 +7473,11 @@ const Practice = () => {
             },
             level
           );
+          console.log("fetchDetails - M3 S1 API response:", {
+            contentCount: resWord?.content?.length,
+            requestedLimit: contentLimit,
+            content: resWord?.content,
+          });
           setTotalSyllableCount(resWord?.totalSyllableCount);
           setLivesData({
             ...livesData,
@@ -7273,6 +7488,32 @@ const Practice = () => {
               (resWord?.subsessionTargetsCount * TARGETS_PERCENTAGE) / LIVES,
           });
           quesArr = [...quesArr, ...(resWord?.content || [])];
+
+          // Log the actual content received
+          console.log("fetchDetails - M3 S1 final quesArr:", {
+            quesArrLength: quesArr.length,
+            resWordContentLength: resWord?.content?.length,
+            requestedLimit: contentLimit,
+            actualReceived: quesArr.length,
+            expected: contentLimit,
+          });
+
+          // If we got fewer items than requested, log a warning
+          if (
+            quesArr.length < contentLimit &&
+            level === 3 &&
+            currentGetContent?.title === "S1"
+          ) {
+            console.warn(
+              "fetchDetails - M3 S1: Received fewer items than requested!",
+              {
+                requested: contentLimit,
+                received: quesArr.length,
+                resWordContent: resWord?.content,
+              }
+            );
+          }
+
           setCurrentContentType(currentGetContent.criteria);
           setCurrentCollectionId(resWord?.content?.[0]?.collectionId);
           setAssessmentResponse(resWord);

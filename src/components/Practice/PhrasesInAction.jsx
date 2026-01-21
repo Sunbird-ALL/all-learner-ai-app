@@ -104,34 +104,91 @@ const PhrasesInAction = ({
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
-  function convertToStepFormat(rawData, audioFile) {
-    if (!rawData || !rawData.options) return {};
+  function convertToStepFormat(rawData, audioFile, contentSourceData) {
+    // If rawData has options (mechanics_data format), use it
+    if (rawData && rawData.options && rawData.options.length > 0) {
+      const correctOption = rawData.options.find((opt) => opt.isAns);
 
-    const correctOption = rawData.options.find((opt) => opt.isAns);
+      const step1 = {
+        allwords: [
+          {
+            img: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${correctOption.image_url}`,
+            text: correctOption.text,
+          },
+        ],
+        audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioFile}`,
+      };
 
-    const step1 = {
-      allwords: [
-        {
-          img: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${correctOption.image_url}`,
-          text: correctOption.text,
-        },
-      ],
-      audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioFile}`,
-    };
+      const step2 = {
+        allwordsTwo: rawData.options.map((opt) => ({
+          img: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${opt.image_url}`,
+          text: opt.text,
+        })),
+        correctWordTwo: correctOption.text,
+        audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioFile}`,
+      };
 
-    const step2 = {
-      allwordsTwo: rawData.options.map((opt) => ({
-        img: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${opt.image_url}`,
-        text: opt.text,
-      })),
-      correctWordTwo: correctOption.text,
-      audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioFile}`,
-    };
+      return { step1, step2 };
+    }
 
-    return { step1, step2 };
+    // Fallback: If contentSourceData is available (simple template format)
+    if (contentSourceData && contentSourceData.text) {
+      const imageUrl =
+        contentSourceData.image_url || contentSourceData.imageUrl;
+      const audioUrl =
+        audioFile || contentSourceData.audio_url || contentSourceData.audioUrl;
+      const text = contentSourceData.text;
+
+      const step1 = {
+        allwords: [
+          {
+            img: imageUrl
+              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${imageUrl}`
+              : contentSourceData.image || "",
+            text: text,
+          },
+        ],
+        audio: audioUrl
+          ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioUrl}`
+          : contentSourceData.audio || "",
+      };
+
+      // For step2, we'll use the same content (can be enhanced later if needed)
+      const step2 = {
+        allwordsTwo: [
+          {
+            img: imageUrl
+              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${imageUrl}`
+              : contentSourceData.image || "",
+            text: text,
+          },
+        ],
+        correctWordTwo: text,
+        audio: audioUrl
+          ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioUrl}`
+          : contentSourceData.audio || "",
+      };
+
+      return { step1, step2 };
+    }
+
+    return {};
   }
 
-  let levelDataRaw = convertToStepFormat(parentWords, currentImg?.audioUrl);
+  let levelDataRaw = convertToStepFormat(
+    parentWords,
+    currentImg?.audioUrl,
+    currentImg
+  );
+
+  // Note: currentSteps is declared later, so we can't use it here yet
+  console.log("PhrasesInAction - Data check (before currentSteps init):", {
+    parentWords,
+    currentImg,
+    levelDataRaw,
+    hasOptions: parentWords?.options?.length > 0,
+    optionsCount: parentWords?.options?.length,
+  });
 
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
@@ -264,13 +321,37 @@ const PhrasesInAction = ({
     currentLevel = practiceSteps?.[currentPracticeStep]?.name;
   }
 
-  const getInitialStep = (level) => {
-    return level === "L1" || level === "L3" ? "step1" : "step2";
+  const getInitialStep = (stepLevel, milestoneLevel) => {
+    // For M3 (milestoneLevel 3), determine step based on the new structure:
+    // Phrase Reading/Repeat Phrase (step1): L1, L2, L3, P1, P3, P4, S1, S2
+    // Correct Image Phrase (step2): P2, L4
+    if (String(milestoneLevel) === "3") {
+      // For M3, use step1 for most steps, step2 only for P2 and L4
+      const isStep2 = stepLevel === "P2" || stepLevel === "L4";
+      console.log("M3 getInitialStep:", {
+        stepLevel,
+        milestoneLevel,
+        isStep2,
+        result: isStep2 ? "step2" : "step1",
+      });
+      return isStep2 ? "step2" : "step1";
+    }
+    // For other levels, use original logic
+    return stepLevel === "L1" || stepLevel === "L3" ? "step1" : "step2";
   };
 
   const [currentSteps, setCurrentSteps] = useState(
-    getInitialStep(currentLevel)
+    getInitialStep(currentLevel, level)
   );
+
+  // Note: levelData is computed later, so we can't log it here
+  console.log("PhrasesInAction - Initial:", {
+    currentSteps,
+    currentLevel,
+    level,
+    currentPracticeStep,
+    currentWordIndex,
+  });
 
   //console.log("m3", currentLevel, level);
 
@@ -595,6 +676,640 @@ const PhrasesInAction = ({
             correctWordTwo: "It Rains",
             audio:
               getAssetAudioUrl(s3Assets.itRainsAudio) || Assets.itRainsAudio,
+          },
+        },
+      ],
+
+      P1: [
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
+                text: "The Sun Shines",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.sunShinesAudio) ||
+              Assets.sunShinesAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.wePlayImg) || Assets.wePlayImg,
+                text: "We Play",
+              },
+              {
+                img: getAssetUrl(s3Assets.heDancesImg) || Assets.heDancesImg,
+                text: "He Dances",
+              },
+              {
+                img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
+                text: "The Sun Shines",
+              },
+            ],
+            correctWordTwo: "The Sun Shines",
+            audio:
+              getAssetAudioUrl(s3Assets.sunShinesAudio) ||
+              Assets.sunShinesAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.fishSwimImg) || Assets.fishSwimImg,
+                text: "Fish Swims",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.fishSwimAudio) || Assets.fishSwimAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+                text: "Dogs Bark",
+              },
+              {
+                img: getAssetUrl(s3Assets.fishSwimImg) || Assets.fishSwimImg,
+                text: "Fish Swims",
+              },
+              {
+                img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
+                text: "It Rains",
+              },
+            ],
+            correctWordTwo: "Fish Swims",
+            audio:
+              getAssetAudioUrl(s3Assets.fishSwimAudio) || Assets.fishSwimAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
+                text: "Birds Fly",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.birdsFlyAudio) || Assets.birdsFlyAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
+                text: "She Reads",
+              },
+              {
+                img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
+                text: "Birds Fly",
+              },
+              {
+                img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+                text: "We Win",
+              },
+            ],
+            correctWordTwo: "Birds Fly",
+            audio:
+              getAssetAudioUrl(s3Assets.birdsFlyAudio) || Assets.birdsFlyAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.sheSmilesImg) || Assets.sheSmilesImg,
+                text: "She Smiles",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.sheSmilesAudio) ||
+              Assets.sheSmilesAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.sheSmilesImg) || Assets.sheSmilesImg,
+                text: "She Smiles",
+              },
+              {
+                img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
+                text: "Baby Cries",
+              },
+              {
+                img: getAssetUrl(s3Assets.heEatsImg) || Assets.heEatsImg,
+                text: "He Eats",
+              },
+            ],
+            correctWordTwo: "She Smiles",
+            audio:
+              getAssetAudioUrl(s3Assets.sheSmilesAudio) ||
+              Assets.sheSmilesAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.theyLaughImg) || Assets.theyLaughImg,
+                text: "They Laugh",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.theyLaughAudio) ||
+              Assets.theyLaughAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.youCookImg) || Assets.youCookImg,
+                text: "You Cook",
+              },
+              {
+                img: getAssetUrl(s3Assets.wePlayImg) || Assets.wePlayImg,
+                text: "We Play",
+              },
+              {
+                img: getAssetUrl(s3Assets.theyLaughImg) || Assets.theyLaughImg,
+                text: "They Laugh",
+              },
+            ],
+            correctWordTwo: "They Laugh",
+            audio:
+              getAssetAudioUrl(s3Assets.theyLaughAudio) ||
+              Assets.theyLaughAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+                text: "Dogs Bark",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.dogsBarkAudio) || Assets.dogsBarkAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+                text: "We Win",
+              },
+              {
+                img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+                text: "Dogs Bark",
+              },
+              {
+                img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
+                text: "Baby Cries",
+              },
+            ],
+            correctWordTwo: "Dogs Bark",
+            audio:
+              getAssetAudioUrl(s3Assets.dogsBarkAudio) || Assets.dogsBarkAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
+                text: "It Rains",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.itRainsAudio) || Assets.itRainsAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
+                text: "It Rains",
+              },
+              {
+                img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
+                text: "Birds Fly",
+              },
+              {
+                img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
+                text: "I Sleep",
+              },
+            ],
+            correctWordTwo: "It Rains",
+            audio:
+              getAssetAudioUrl(s3Assets.itRainsAudio) || Assets.itRainsAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.youSwimImg) || Assets.youSwimImg,
+                text: "You Swim",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.youSwimAudio) || Assets.youSwimAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.heEatsImg) || Assets.heEatsImg,
+                text: "He Eats",
+              },
+              {
+                img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
+                text: "She Reads",
+              },
+              {
+                img: getAssetUrl(s3Assets.youSwimImg) || Assets.youSwimImg,
+                text: "You Swim",
+              },
+            ],
+            correctWordTwo: "You Swim",
+            audio:
+              getAssetAudioUrl(s3Assets.youSwimAudio) || Assets.youSwimAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
+                text: "I Sleep",
+              },
+            ],
+            audio: getAssetAudioUrl(s3Assets.iSleepAudio) || Assets.iSleepAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img:
+                  getAssetUrl(s3Assets.flowersBloomImg) ||
+                  Assets.flowersBloomImg,
+                text: "Flowers Bloom",
+              },
+              {
+                img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
+                text: "I Sleep",
+              },
+              {
+                img: getAssetUrl(s3Assets.fireBurnsImg) || Assets.fireBurnsImg,
+                text: "Fire Burns",
+              },
+            ],
+            correctWordTwo: "I Sleep",
+            audio: getAssetAudioUrl(s3Assets.iSleepAudio) || Assets.iSleepAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+                text: "We Win",
+              },
+            ],
+            audio: getAssetAudioUrl(s3Assets.weWinAudio) || Assets.weWinAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+                text: "We Win",
+              },
+              {
+                img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+                text: "Dogs Bark",
+              },
+              {
+                img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
+                text: "She Reads",
+              },
+            ],
+            correctWordTwo: "We Win",
+            audio: getAssetAudioUrl(s3Assets.weWinAudio) || Assets.weWinAudio,
+          },
+        },
+      ],
+
+      P2: [
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
+                text: "The Sun Shines",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.sunShinesAudio) ||
+              Assets.sunShinesAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.wePlayImg) || Assets.wePlayImg,
+                text: "We Play",
+              },
+              {
+                img: getAssetUrl(s3Assets.heDancesImg) || Assets.heDancesImg,
+                text: "He Dances",
+              },
+              {
+                img: getAssetUrl(s3Assets.sunShinesImg) || Assets.sunShinesImg,
+                text: "The Sun Shines",
+              },
+            ],
+            correctWordTwo: "The Sun Shines",
+            audio:
+              getAssetAudioUrl(s3Assets.sunShinesAudio) ||
+              Assets.sunShinesAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.fishSwimImg) || Assets.fishSwimImg,
+                text: "Fish Swims",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.fishSwimAudio) || Assets.fishSwimAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+                text: "Dogs Bark",
+              },
+              {
+                img: getAssetUrl(s3Assets.fishSwimImg) || Assets.fishSwimImg,
+                text: "Fish Swims",
+              },
+              {
+                img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
+                text: "It Rains",
+              },
+            ],
+            correctWordTwo: "Fish Swims",
+            audio:
+              getAssetAudioUrl(s3Assets.fishSwimAudio) || Assets.fishSwimAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
+                text: "Birds Fly",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.birdsFlyAudio) || Assets.birdsFlyAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
+                text: "She Reads",
+              },
+              {
+                img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
+                text: "Birds Fly",
+              },
+              {
+                img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+                text: "We Win",
+              },
+            ],
+            correctWordTwo: "Birds Fly",
+            audio:
+              getAssetAudioUrl(s3Assets.birdsFlyAudio) || Assets.birdsFlyAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.sheSmilesImg) || Assets.sheSmilesImg,
+                text: "She Smiles",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.sheSmilesAudio) ||
+              Assets.sheSmilesAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.sheSmilesImg) || Assets.sheSmilesImg,
+                text: "She Smiles",
+              },
+              {
+                img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
+                text: "Baby Cries",
+              },
+              {
+                img: getAssetUrl(s3Assets.heEatsImg) || Assets.heEatsImg,
+                text: "He Eats",
+              },
+            ],
+            correctWordTwo: "She Smiles",
+            audio:
+              getAssetAudioUrl(s3Assets.sheSmilesAudio) ||
+              Assets.sheSmilesAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.theyLaughImg) || Assets.theyLaughImg,
+                text: "They Laugh",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.theyLaughAudio) ||
+              Assets.theyLaughAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.youCookImg) || Assets.youCookImg,
+                text: "You Cook",
+              },
+              {
+                img: getAssetUrl(s3Assets.wePlayImg) || Assets.wePlayImg,
+                text: "We Play",
+              },
+              {
+                img: getAssetUrl(s3Assets.theyLaughImg) || Assets.theyLaughImg,
+                text: "They Laugh",
+              },
+            ],
+            correctWordTwo: "They Laugh",
+            audio:
+              getAssetAudioUrl(s3Assets.theyLaughAudio) ||
+              Assets.theyLaughAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+                text: "Dogs Bark",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.dogsBarkAudio) || Assets.dogsBarkAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+                text: "We Win",
+              },
+              {
+                img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+                text: "Dogs Bark",
+              },
+              {
+                img: getAssetUrl(s3Assets.babyCriesImg) || Assets.babyCriesImg,
+                text: "Baby Cries",
+              },
+            ],
+            correctWordTwo: "Dogs Bark",
+            audio:
+              getAssetAudioUrl(s3Assets.dogsBarkAudio) || Assets.dogsBarkAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
+                text: "It Rains",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.itRainsAudio) || Assets.itRainsAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.itRainsImg) || Assets.itRainsImg,
+                text: "It Rains",
+              },
+              {
+                img: getAssetUrl(s3Assets.birdsFlyImg) || Assets.birdsFlyImg,
+                text: "Birds Fly",
+              },
+              {
+                img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
+                text: "I Sleep",
+              },
+            ],
+            correctWordTwo: "It Rains",
+            audio:
+              getAssetAudioUrl(s3Assets.itRainsAudio) || Assets.itRainsAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.youSwimImg) || Assets.youSwimImg,
+                text: "You Swim",
+              },
+            ],
+            audio:
+              getAssetAudioUrl(s3Assets.youSwimAudio) || Assets.youSwimAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.heEatsImg) || Assets.heEatsImg,
+                text: "He Eats",
+              },
+              {
+                img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
+                text: "She Reads",
+              },
+              {
+                img: getAssetUrl(s3Assets.youSwimImg) || Assets.youSwimImg,
+                text: "You Swim",
+              },
+            ],
+            correctWordTwo: "You Swim",
+            audio:
+              getAssetAudioUrl(s3Assets.youSwimAudio) || Assets.youSwimAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
+                text: "I Sleep",
+              },
+            ],
+            audio: getAssetAudioUrl(s3Assets.iSleepAudio) || Assets.iSleepAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img:
+                  getAssetUrl(s3Assets.flowersBloomImg) ||
+                  Assets.flowersBloomImg,
+                text: "Flowers Bloom",
+              },
+              {
+                img: getAssetUrl(s3Assets.iSleepImg) || Assets.iSleepImg,
+                text: "I Sleep",
+              },
+              {
+                img: getAssetUrl(s3Assets.fireBurnsImg) || Assets.fireBurnsImg,
+                text: "Fire Burns",
+              },
+            ],
+            correctWordTwo: "I Sleep",
+            audio: getAssetAudioUrl(s3Assets.iSleepAudio) || Assets.iSleepAudio,
+          },
+        },
+        {
+          step1: {
+            allwords: [
+              {
+                img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+                text: "We Win",
+              },
+            ],
+            audio: getAssetAudioUrl(s3Assets.weWinAudio) || Assets.weWinAudio,
+          },
+          step2: {
+            allwordsTwo: [
+              {
+                img: getAssetUrl(s3Assets.weWinImg) || Assets.weWinImg,
+                text: "We Win",
+              },
+              {
+                img: getAssetUrl(s3Assets.dogsBarkImg) || Assets.dogsBarkImg,
+                text: "Dogs Bark",
+              },
+              {
+                img: getAssetUrl(s3Assets.sheReadsImg) || Assets.sheReadsImg,
+                text: "She Reads",
+              },
+            ],
+            correctWordTwo: "We Win",
+            audio: getAssetAudioUrl(s3Assets.weWinAudio) || Assets.weWinAudio,
           },
         },
       ],
@@ -4911,19 +5626,72 @@ const PhrasesInAction = ({
   //const levelData = content?.[currentLevel][currentWordIndex][currentSteps];
   let levelData;
 
+  // First try to use API data (levelDataRaw)
   if (currentSteps === "step1") {
     levelData = levelDataRaw?.step1;
   } else {
     levelData = levelDataRaw?.step2;
   }
 
-  //console.log("dataP410", levelData, currentLevel);
+  // Fallback to hardcoded content if API data is not available
+  if (
+    !levelData ||
+    (currentSteps === "step1" && !levelData?.allwords) ||
+    (currentSteps === "step2" && !levelData?.allwordsTwo)
+  ) {
+    console.log("PhrasesInAction - Using fallback hardcoded content for:", {
+      currentLevel,
+      currentSteps,
+      currentWordIndex,
+      API_data: levelDataRaw,
+      content_exists: !!content?.[currentLevel],
+      content_length: content?.[currentLevel]?.length,
+      available_keys: Object.keys(content || {}),
+      language,
+    });
+    const hardcodedContent = content?.[currentLevel]?.[currentWordIndex];
+    console.log("PhrasesInAction - hardcodedContent:", hardcodedContent);
+    if (hardcodedContent) {
+      if (currentSteps === "step1") {
+        levelData = hardcodedContent.step1;
+      } else {
+        levelData = hardcodedContent.step2;
+      }
+      console.log("PhrasesInAction - Fallback levelData set:", {
+        hasLevelData: !!levelData,
+        hasAllwords: !!levelData?.allwords,
+        hasAllwordsTwo: !!levelData?.allwordsTwo,
+        allwordsLength: levelData?.allwords?.length,
+        allwordsTwoLength: levelData?.allwordsTwo?.length,
+      });
+    } else {
+      console.error("PhrasesInAction - No hardcoded content found for:", {
+        currentLevel,
+        currentWordIndex,
+        availableKeys: Object.keys(content || {}),
+        contentForLevel: content?.[currentLevel]
+          ? `exists with ${content[currentLevel].length} items`
+          : "does not exist",
+      });
+    }
+  }
+
+  console.log("PhrasesInAction - Final levelData:", {
+    hasLevelData: !!levelData,
+    hasAllwords: !!levelData?.allwords,
+    hasAllwordsTwo: !!levelData?.allwordsTwo,
+    allwordsLength: levelData?.allwords?.length,
+    allwordsTwoLength: levelData?.allwordsTwo?.length,
+    currentSteps,
+    currentLevel,
+    currentWordIndex,
+  });
 
   let audioElement = new Audio(levelData?.audio);
 
   useEffect(() => {
     //setStartGame(true);
-    setCurrentSteps(getInitialStep(currentLevel));
+    setCurrentSteps(getInitialStep(currentLevel, level));
     setCurrentWordIndex(0);
     setSelectedDiv(null); // Reset selection
     setIncorrectWords([]); // Clear incorrect words
@@ -5531,40 +6299,63 @@ const PhrasesInAction = ({
                         margin: "20px 0",
                       }}
                     >
-                      {levelData?.allwords?.map((item) => (
-                        <div
-                          key={item.text}
-                          style={{
-                            width: "180px",
-                            height: "190px",
-                            border: "1px solid #000",
-                            margin: "10px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            cursor: "pointer",
-                            flexDirection: "column",
-                            marginBottom: "30px",
-                          }}
-                          onClick={() => setSelectedDiv(item.text)}
-                        >
-                          <img
-                            src={
-                              level === 3
-                                ? item.img
-                                : getAssetUrl(s3Assets[item.img]) ||
-                                  Assets[item.img]
-                            }
-                            alt={item.text}
+                      {levelData?.allwords && levelData.allwords.length > 0 ? (
+                        levelData.allwords.map((item) => (
+                          <div
+                            key={item.text}
                             style={{
                               width: "180px",
-                              height: "200px",
-                              objectFit: "contain",
-                              border: "1px solid #00000033",
+                              height: "190px",
+                              border: "1px solid #000",
+                              margin: "10px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              cursor: "pointer",
+                              flexDirection: "column",
+                              marginBottom: "30px",
                             }}
-                          />
+                            onClick={() => setSelectedDiv(item.text)}
+                          >
+                            <img
+                              src={
+                                level === 3
+                                  ? item.img
+                                  : getAssetUrl(s3Assets[item.img]) ||
+                                    Assets[item.img]
+                              }
+                              alt={item.text}
+                              style={{
+                                width: "180px",
+                                height: "200px",
+                                objectFit: "contain",
+                                border: "1px solid #00000033",
+                              }}
+                            />
+                          </div>
+                        ))
+                      ) : (
+                        <div
+                          style={{
+                            padding: "40px",
+                            textAlign: "center",
+                            color: "#666",
+                          }}
+                        >
+                          <p style={{ fontSize: "20px", marginBottom: "10px" }}>
+                            ⚠️ No content available
+                          </p>
+                          <p style={{ fontSize: "14px" }}>
+                            Debug: currentLevel={currentLevel}, currentSteps=
+                            {currentSteps}, currentWordIndex={currentWordIndex}
+                          </p>
+                          <p style={{ fontSize: "14px" }}>
+                            hasLevelData={String(!!levelData)}, hasAllwords=
+                            {String(!!levelData?.allwords)}, allwordsLength=
+                            {levelData?.allwords?.length || 0}
+                          </p>
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
 
