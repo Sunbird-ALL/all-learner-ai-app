@@ -5820,8 +5820,18 @@ const PhrasesInAction = ({
       setIsRecordingStopped2(false); // Reset second recording stop state
       setSelectedDiv2(null);
     } else {
+      // Last item - pass isGameOver: true to trigger completion logic
       callTelemetry();
-      handleNext();
+      console.log(
+        "PhrasesInAction - Last item completed, calling handleNext with isGameOver: true",
+        {
+          currentWordIndex,
+          contentLength: content[currentLevel]?.length,
+          level,
+          currentLevel,
+        }
+      );
+      handleNext(true); // Pass true to indicate all content is completed
       setSelectedDiv(null); // Reset selection
       setIncorrectWords([]); // Clear incorrect words
       setIsCorrectImageSelected(false); // Reset selection status

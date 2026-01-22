@@ -5156,15 +5156,31 @@ const Practice = () => {
           return;
         }
 
-        const getContentFn =
-          nextStepContent?.mechanism ||
-          ((level === 1 || level === 2) && lang === "en") ||
-          level === 3 // M3 should always use getContent, not recommendation API
-            ? getContent
-            : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-              lang === "en"
-            ? getContentNew
-            : getContent;
+        // M3 should always use getContent, not recommendation API
+        // Check both level (number) and level as string "3" to be safe
+        const isM3 = level === 3 || level === "3" || String(level) === "3";
+        const getContentFn = isM3
+          ? getContent
+          : nextStepContent?.mechanism ||
+            ((level === 1 || level === 2) && lang === "en")
+          ? getContent
+          : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+            lang === "en"
+          ? getContentNew
+          : getContent;
+
+        console.log("handleNext (F1 flow) - API selection for M3:", {
+          level,
+          levelType: typeof level,
+          isM3,
+          step: nextStepContent?.title,
+          usingRecommendationAPI: getContentFn === getContentNew,
+          usingGetContent: getContentFn === getContent,
+          hasMechanism: !!nextStepContent?.mechanism,
+          recommendationAPIEnabled:
+            process.env.REACT_APP_USE_RECOMMENDATION_API === "true",
+          lang,
+        });
 
         try {
           // Only fetch if criteria exists (LetterHunt doesn't have criteria)
@@ -5978,49 +5994,42 @@ const Practice = () => {
             currentF1FlowStep.index
           );
         }
-      } else {
-        currentGetContent = getCurrentContent(newPracticeStep);
-
-        // For non-F flows (m1, m2, etc.), set mechanism immediately from config
-        // This ensures the mechanism updates right away when moving between steps
-        if (currentGetContent?.mechanism) {
-          console.log(
-            "handleNext - Setting mechanism immediately for non-F flow:",
-            currentGetContent.mechanism,
-            "step:",
-            newPracticeStep
-          );
-          setMechanism(currentGetContent.mechanism);
-        } else {
-          // Explicitly reset mechanism to empty object if no mechanism in config
-          // This prevents using mechanism from previous step
-          console.log(
-            "handleNext - No mechanism in config for step:",
-            newPracticeStep,
-            "resetting mechanism to empty object"
-          );
-          setMechanism({});
-        }
       }
 
-      // Add null check for currentGetContent
-      if (!currentGetContent) {
-        console.error(
-          "handleNext - currentGetContent is undefined for newPracticeStep:",
-          newPracticeStep
-        );
-        return;
-      }
+      // // Add null check for currentGetContent
+      // if (!currentGetContent) {
+      //   console.error(
+      //     "handleNext - currentGetContent is undefined for newPracticeStep:",
+      //     newPracticeStep
+      //   );
+      //   return;
+      // }
 
-      const getContentFn =
-        currentGetContent?.mechanism ||
-        ((level === 1 || level === 2) && lang === "en") ||
-        level === 3 // M3 should always use getContent, not recommendation API
-          ? getContent
-          : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-            lang === "en"
-          ? getContentNew
-          : getContent;
+      // M3 should always use getContent, not recommendation API
+      // Check both level (number) and level as string "3" to be safe
+      const isM3 = level === 3 || level === "3" || String(level) === "3";
+      const getContentFn = isM3
+        ? getContent
+        : currentGetContent?.mechanism ||
+          ((level === 1 || level === 2) && lang === "en")
+        ? getContent
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+          lang === "en"
+        ? getContentNew
+        : getContent;
+
+      console.log("handleNext - API selection for M3:", {
+        level,
+        levelType: typeof level,
+        isM3,
+        step: currentGetContent?.title,
+        usingRecommendationAPI: getContentFn === getContentNew,
+        usingGetContent: getContentFn === getContent,
+        hasMechanism: !!currentGetContent?.mechanism,
+        recommendationAPIEnabled:
+          process.env.REACT_APP_USE_RECOMMENDATION_API === "true",
+        lang,
+      });
 
       //console.log("cqer", currentQuestion, questions, level);
 
@@ -6105,10 +6114,29 @@ const Practice = () => {
         }
       }
 
-      if (
-        (currentQuestion === questions.length - 1 || isGameOver) &&
-        !shouldSkipContentFetch
-      ) {
+      // Check if all questions are completed
+      // For M3 S2, ensure we check completion correctly
+      const isAllQuestionsCompleted =
+        currentQuestion === questions.length - 1 ||
+        isGameOver ||
+        (level === 3 &&
+          questions.length > 0 &&
+          currentQuestion >= questions.length - 1);
+
+      console.log("handleNext - Completion check:", {
+        level,
+        currentQuestion,
+        questionsLength: questions.length,
+        isGameOver,
+        isAllQuestionsCompleted,
+        shouldSkipContentFetch,
+        step:
+          practiceSteps?.[practiceProgress?.currentPracticeStep]?.title ||
+          practiceSteps?.[practiceProgress?.currentPracticeStep]?.titleThree,
+        currentPracticeStep: practiceProgress?.currentPracticeStep,
+      });
+
+      if (isAllQuestionsCompleted && !shouldSkipContentFetch) {
         let currentPracticeStep = practiceProgress.currentPracticeStep;
         let isShowCase = currentPracticeStep === 4 || currentPracticeStep === 9; // P4 or P8
 
@@ -6214,131 +6242,6 @@ const Practice = () => {
             );
           } catch (e) {
             // catch error
-          }
-
-          // M3 S1 completion - show feedback screen for both pass and fail
-          // This check must be OUTSIDE the pass-only block to handle both pass and fail
-          if (level === 3 && completingStepLevel === "S1") {
-            const isPass = getSetData.sessionResult === "pass";
-            console.log("M3 S1 completed - showing feedback screen", {
-              level,
-              currentLevel,
-              completingStepLevel,
-              currentPracticeStep,
-              sessionResult: getSetData.sessionResult,
-              isPass: isPass,
-              willShowFeedback: true,
-            });
-
-            // Update lesson progress for M3 S1 (both pass and fail)
-            try {
-              const lang = getLocalData("lang") || "en";
-              await addLesson({
-                sessionId,
-                milestone: milestoneType,
-                lesson: "0",
-                progress: 0,
-                language: lang,
-                milestoneLevel: getSetData.currentLevel,
-              });
-              console.log("M3 S1 - Lesson progress updated (pass or fail)");
-            } catch (e) {
-              console.error("M3 S1 - Error updating lesson progress:", e);
-            }
-
-            // Advance to next step (L3, which is index 5) BEFORE showing feedback screen
-            // This ensures when user clicks practice button, they get the next step
-            const nextPracticeStep = currentPracticeStep + 1;
-            const nextPracticeProgress = Math.round(
-              ((nextPracticeStep + 1) / practiceSteps.length) * 100
-            );
-
-            const updatedPracticeProgress = {
-              currentQuestion: 0,
-              currentPracticeProgress: nextPracticeProgress,
-              currentPracticeStep: nextPracticeStep,
-            };
-
-            setLocalData(
-              "practiceProgress",
-              JSON.stringify(updatedPracticeProgress)
-            );
-            setProgressData(updatedPracticeProgress);
-            console.log("M3 S1 - Practice progress advanced:", {
-              from: currentPracticeStep,
-              to: nextPracticeStep,
-              nextStepName: practiceSteps?.[nextPracticeStep]?.name,
-              nextStepTitle: practiceSteps?.[nextPracticeStep]?.title,
-              nextStepTitleThree: practiceSteps?.[nextPracticeStep]?.titleThree,
-            });
-
-            // Show cat feedback screen for both pass and fail
-            // The Practice button will navigate to /_practice which loads the next step
-            console.log("M3 S1 - Showing cat feedback screen (pass or fail)");
-            gameOver({ link: "/_practice" }, isPass);
-            return;
-          }
-
-          // M3 S2 completion - show feedback screen for both pass and fail
-          if (level === 3 && completingStepLevel === "S2") {
-            console.log("M3 S2 completed - showing feedback screen", {
-              level,
-              currentLevel,
-              completingStepLevel,
-              currentPracticeStep,
-              sessionResult: getSetData.sessionResult,
-              isPass: getSetData.sessionResult === "pass",
-            });
-
-            // Update lesson progress for M3 S2 (both pass and fail)
-            try {
-              const lang = getLocalData("lang") || "en";
-              await addLesson({
-                sessionId,
-                milestone: milestoneType,
-                lesson: "0",
-                progress: 0,
-                language: lang,
-                milestoneLevel: getSetData.currentLevel,
-              });
-              console.log("M3 S2 - Lesson progress updated");
-            } catch (e) {
-              console.error("M3 S2 - Error updating lesson progress:", e);
-            }
-
-            // Advance to next step (which would be step 0 for next milestone, or wrap around)
-            // For M3 S2, this is the last step, so we can either wrap to 0 or stay at 9
-            // Since S2 is the last step, we'll wrap to 0 (which will trigger gameOver in handleNext)
-            const nextPracticeStep =
-              (currentPracticeStep + 1) % practiceSteps.length;
-            const nextPracticeProgress = Math.round(
-              ((nextPracticeStep + 1) / practiceSteps.length) * 100
-            );
-
-            const updatedPracticeProgress = {
-              currentQuestion: 0,
-              currentPracticeProgress: nextPracticeProgress,
-              currentPracticeStep: nextPracticeStep,
-            };
-
-            setLocalData(
-              "practiceProgress",
-              JSON.stringify(updatedPracticeProgress)
-            );
-            setProgressData(updatedPracticeProgress);
-            console.log("M3 S2 - Practice progress advanced:", {
-              from: currentPracticeStep,
-              to: nextPracticeStep,
-              nextStepName: practiceSteps?.[nextPracticeStep]?.name,
-              nextStepTitle: practiceSteps?.[nextPracticeStep]?.title,
-            });
-
-            // Show cat feedback screen for both pass and fail
-            // The Practice button will navigate to /_practice which loads the next step
-            const isPass = getSetData.sessionResult === "pass";
-            console.log("M3 S2 - Showing cat feedback screen (pass or fail)");
-            gameOver({ link: "/_practice" }, isPass);
-            return;
           }
 
           if (getSetData.sessionResult === "pass") {
@@ -7100,20 +7003,40 @@ const Practice = () => {
         return;
       }
 
-      const getContentFn =
-        currentGetContent?.mechanism ||
-        ((level === 1 || level === 2) && lang === "en") ||
-        level === 3 // M3 should always use getContent, not recommendation API
-          ? getContent
-          : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-            lang === "en"
-          ? getContentNew
-          : getContent;
-
-      //console.log("curGetCont", userState, currentGetContent);
-
+      // M3 should always use getContent, not recommendation API
       // Use newLevel instead of level state, as level state might not be updated yet
       const levelToCheck = newLevel || level;
+      // Check both levelToCheck (number) and as string "3" to be safe
+      const isM3 =
+        levelToCheck === 3 ||
+        levelToCheck === "3" ||
+        String(levelToCheck) === "3";
+      const getContentFn = isM3
+        ? getContent
+        : currentGetContent?.mechanism ||
+          ((levelToCheck === 1 || levelToCheck === 2) && lang === "en")
+        ? getContent
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+          lang === "en"
+        ? getContentNew
+        : getContent;
+
+      console.log("Initial load - API selection for M3:", {
+        level,
+        newLevel,
+        levelToCheck,
+        levelToCheckType: typeof levelToCheck,
+        isM3,
+        step: currentGetContent?.title,
+        usingRecommendationAPI: getContentFn === getContentNew,
+        usingGetContent: getContentFn === getContent,
+        hasMechanism: !!currentGetContent?.mechanism,
+        recommendationAPIEnabled:
+          process.env.REACT_APP_USE_RECOMMENDATION_API === "true",
+        lang,
+      });
+
+      //console.log("curGetCont", userState, currentGetContent);
       console.log("Initial load - Level check:", {
         level,
         newLevel,
@@ -7415,15 +7338,31 @@ const Practice = () => {
         return;
       }
 
-      const getContentFn =
-        currentGetContent?.mechanism ||
-        ((level === 1 || level === 2) && lang === "en") ||
-        level === 3 // M3 should always use getContent, not recommendation API
-          ? getContent
-          : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-            lang === "en"
-          ? getContentNew
-          : getContent;
+      // M3 should always use getContent, not recommendation API
+      // Check both level (number) and level as string "3" to be safe
+      const isM3 = level === 3 || level === "3" || String(level) === "3";
+      const getContentFn = isM3
+        ? getContent
+        : currentGetContent?.mechanism ||
+          ((level === 1 || level === 2) && lang === "en")
+        ? getContent
+        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
+          lang === "en"
+        ? getContentNew
+        : getContent;
+
+      console.log("handleBack - API selection for M3:", {
+        level,
+        levelType: typeof level,
+        isM3,
+        step: currentGetContent?.title,
+        usingRecommendationAPI: getContentFn === getContentNew,
+        usingGetContent: getContentFn === getContent,
+        hasMechanism: !!currentGetContent?.mechanism,
+        recommendationAPIEnabled:
+          process.env.REACT_APP_USE_RECOMMENDATION_API === "true",
+        lang,
+      });
 
       let quesArr = [];
 

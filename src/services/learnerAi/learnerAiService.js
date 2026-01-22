@@ -77,6 +77,21 @@ export const getContentNew = async (
   level
 ) => {
   try {
+    // Log warning if M3 is trying to use recommendation API
+    const isM3 = level === 3 || level === "3" || String(level) === "3";
+    if (isM3) {
+      console.warn(
+        "⚠️ getContentNew (recommendation API) called for M3! This should not happen.",
+        {
+          level,
+          levelType: typeof level,
+          criteria,
+          lang,
+          step: options?.tags || "unknown",
+        }
+      );
+    }
+
     let url = `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_CONTENT_NEW}`;
     const data = {
       language: lang,
