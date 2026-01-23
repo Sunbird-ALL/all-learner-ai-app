@@ -645,7 +645,7 @@ const FluencyP3 = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "0px 20px 20px 20px",
+            padding: "0px 20px 10px 20px",
             position: "relative",
             overflow: "hidden",
           }}
@@ -661,12 +661,17 @@ const FluencyP3 = ({
           {showResultScreen ? (
             <div
               style={{
-                marginTop: isMobile ? "10px" : "20px",
-                marginBottom: isMobile ? "10px" : "20px",
+                marginTop: isMobile ? "5px" : "8px",
+                marginBottom: isMobile ? "5px" : "8px",
                 textAlign: "center",
                 flex: 1,
                 position: "relative",
                 width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                minHeight: 0,
+                maxHeight: "100%",
               }}
             >
               {/* Top Title Row */}
@@ -675,21 +680,21 @@ const FluencyP3 = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: isMobile ? "6px" : "12px",
-                  marginBottom: isMobile ? "10px" : "20px",
+                  gap: isMobile ? "6px" : "8px",
+                  marginBottom: isMobile ? "5px" : "8px",
                 }}
               >
                 <img
                   src={meterImg}
                   alt="speed meter"
                   style={{
-                    width: isMobile ? "30px" : isTablet ? "40px" : "50px",
+                    width: isMobile ? "30px" : isTablet ? "35px" : "40px",
                   }}
                 />
 
                 <h2
                   style={{
-                    fontSize: isMobile ? "16px" : isTablet ? "20px" : "26px",
+                    fontSize: isMobile ? "16px" : isTablet ? "18px" : "20px",
                     fontWeight: "600",
                     color: "#333F61",
                     margin: 0,
@@ -705,15 +710,16 @@ const FluencyP3 = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: isMobile ? "10px" : "40px",
+                  gap: isMobile ? "8px" : "15px",
                   flexWrap: isMobile ? "wrap" : "nowrap",
+                  marginBottom: isMobile ? "5px" : "8px",
                 }}
               >
                 {/* Slow */}
                 <div
                   style={{
-                    padding: isMobile ? "10px" : "20px",
-                    borderRadius: "12px",
+                    padding: isMobile ? "6px" : "10px",
+                    borderRadius: "10px",
                     background: readingSpeed === "Slow" ? "#fff7e6" : "#f9f9f9",
                     border:
                       readingSpeed === "Slow"
@@ -727,13 +733,13 @@ const FluencyP3 = ({
                   <img
                     src={tortoiseImg}
                     alt="tortoise"
-                    height={isMobile ? 30 : 50}
+                    height={isMobile ? 28 : 35}
                   />
                   <div
                     style={{
-                      marginTop: "6px",
+                      marginTop: "3px",
                       fontWeight: "600",
-                      fontSize: isMobile ? "14px" : "16px",
+                      fontSize: isMobile ? "13px" : "14px",
                     }}
                   >
                     Slow
@@ -743,8 +749,8 @@ const FluencyP3 = ({
                 {/* Medium */}
                 <div
                   style={{
-                    padding: isMobile ? "10px" : "20px",
-                    borderRadius: "12px",
+                    padding: isMobile ? "6px" : "10px",
+                    borderRadius: "10px",
                     background:
                       readingSpeed === "Medium" ? "#fff7e6" : "#f9f9f9",
                     border:
@@ -759,13 +765,13 @@ const FluencyP3 = ({
                   <img
                     src={rabbitImg}
                     alt="rabbit"
-                    height={isMobile ? 30 : 50}
+                    height={isMobile ? 28 : 35}
                   />
                   <div
                     style={{
-                      marginTop: "6px",
+                      marginTop: "3px",
                       fontWeight: "600",
-                      fontSize: isMobile ? "14px" : "16px",
+                      fontSize: isMobile ? "13px" : "14px",
                     }}
                   >
                     Medium
@@ -775,8 +781,8 @@ const FluencyP3 = ({
                 {/* Fast */}
                 <div
                   style={{
-                    padding: isMobile ? "10px" : "20px",
-                    borderRadius: "12px",
+                    padding: isMobile ? "6px" : "10px",
+                    borderRadius: "10px",
                     background: readingSpeed === "Fast" ? "#fff7e6" : "#f9f9f9",
                     border:
                       readingSpeed === "Fast"
@@ -790,13 +796,13 @@ const FluencyP3 = ({
                   <img
                     src={cheetahImg}
                     alt="cheetah"
-                    height={isMobile ? 30 : 50}
+                    height={isMobile ? 28 : 35}
                   />
                   <div
                     style={{
-                      marginTop: "6px",
+                      marginTop: "3px",
                       fontWeight: "600",
-                      fontSize: isMobile ? "14px" : "16px",
+                      fontSize: isMobile ? "13px" : "14px",
                     }}
                   >
                     Fast
@@ -816,10 +822,11 @@ const FluencyP3 = ({
                   setShowResultScreen(false);
                 }}
                 style={{
-                  marginTop: isMobile ? "10px" : "16px",
-                  marginBottom: isMobile ? "10px" : "15px",
-                  width: isMobile ? "40px" : "50px",
+                  marginTop: isMobile ? "5px" : "8px",
+                  marginBottom: isMobile ? "5px" : "8px",
+                  width: isMobile ? "38px" : "42px",
                   cursor: "pointer",
+                  alignSelf: "center",
                 }}
               />
             </div>
