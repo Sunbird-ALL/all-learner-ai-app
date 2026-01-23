@@ -1080,7 +1080,7 @@ const MainLayout = (props) => {
                                             : LEVEL === 2
                                             ? elem.titleNew
                                             : LEVEL === 3
-                                            ? elem.titleThree
+                                            ? elem.titleNew
                                             : elem.name}
                                         </span>
                                       )}
