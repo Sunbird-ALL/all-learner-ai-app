@@ -4751,12 +4751,15 @@ const Practice = () => {
 
         // Store F2 flow progress in backend
         if (updatedF2FlowStep.step) {
+          const calculatedProgress =
+            ((updatedF2FlowStep.index + 1) / F2_FLOW.length) * 100;
+          const cappedProgress = Math.min(100, Math.round(calculatedProgress));
           try {
             await addLesson({
               sessionId,
               milestone: "practice",
               lesson: (updatedF2FlowStep.index + 1).toString(), // Convert to 1-indexed for backend
-              progress: ((updatedF2FlowStep.index + 1) / F2_FLOW.length) * 100,
+              progress: cappedProgress,
               language: lang,
               milestoneLevel: "B",
             });
@@ -4846,6 +4849,18 @@ const Practice = () => {
 
         // If next step is LetterTrain, mechanism is already set above
         // Force re-render by updating state
+        const nextStepType = updatedF2FlowStep.step?.type;
+        const isIndicLanguage = lang !== "en"; // Any language other than English uses barakhadi
+
+        if (nextStepType === "P" || nextStepType === "A") {
+          // Next step is Practice or Apply - use LetterHunt
+          setMechanism({ id: "letterHunt", name: "letterHunt" });
+          setQuestions([]); // LetterHunt generates its own content
+        } else if (nextStepType === "L") {
+          // Next step is Learn - use barakhadi for Indic, letterTrain for English
+          const mechanismName = isIndicLanguage ? "barakhadi" : "letterTrain";
+          setMechanism({ id: mechanismName, name: mechanismName });
+        }
         setProgressData(practiceProgress);
 
         console.log("LetterTrain completed for F2, next step:", {
@@ -5812,6 +5827,7 @@ const Practice = () => {
 
         // ALWAYS set mechanism based on F2_FLOW step type (ignore config mechanism)
         const f2StepTypeForMechanism = currentF2FlowStep.step?.type;
+        const isIndicLanguage = lang !== "en";
         console.log(
           "handleNext - Setting mechanism for F2 step type:",
           f2StepTypeForMechanism,
@@ -5819,7 +5835,8 @@ const Practice = () => {
           currentF2FlowStep.index
         );
         if (f2StepTypeForMechanism === "L") {
-          setMechanism({ id: "letterTrain", name: "letterTrain" });
+          const mechanismName = isIndicLanguage ? "barakhadi" : "letterTrain";
+          setMechanism({ id: mechanismName, name: mechanismName });
           console.log(
             "handleNext - Mechanism set to letterTrain for F2 index",
             currentF2FlowStep.index
@@ -7815,9 +7832,12 @@ const Practice = () => {
     ) {
       const currentF2Step = getF2FlowStep();
       const f2StepType = currentF2Step.step?.type;
+      const isIndicLanguage = lang !== "en";
       const expectedMechanism =
         f2StepType === "L"
-          ? "letterTrain" // F2 Learn steps use LetterTrain
+          ? isIndicLanguage
+            ? "barakhadi"
+            : "letterTrain" // F2 Learn steps use LetterTrain
           : f2StepType === "P" || f2StepType === "A"
           ? "letterHunt" // F2 Practice and Apply steps use LetterHunt
           : null;
@@ -7861,9 +7881,14 @@ const Practice = () => {
           );
         }
         // Set the correct mechanism immediately
-        if (expectedMechanism === "letterTrain") {
+        if (expectedMechanism === "barakhadi") {
           console.log(
-            "renderMechanics - Setting mechanism to letterTrain for F2 Learn step"
+            "renderMechanics - Setting mechanism to barakhadi for F2 Learn step (Indic language)"
+          );
+          setMechanism({ id: "barakhadi", name: "barakhadi" });
+        } else if (expectedMechanism === "letterTrain") {
+          console.log(
+            "renderMechanics - Setting mechanism to letterTrain for F2 Learn step (English)"
           );
           setMechanism({ id: "letterTrain", name: "letterTrain" });
         } else if (expectedMechanism === "letterHunt") {
@@ -9744,6 +9769,206 @@ const Practice = () => {
             setOpenMessageDialog,
             vocabCount,
             wordCount,
+          }}
+        />
+      );
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "barakhadi" &&
+      isF2FlowActive &&
+      milestoneLevel === "B" &&
+      getF2FlowStep()?.step?.type === "L"
+    ) {
+      // Render Barakhadi for F2 Learn steps in Indic languages
+      const lang = getLocalData("lang") || "en";
+
+      // Check if this is a F2 Learn step for render
+      const currentF2StepForBarakhadi = getF2FlowStep();
+      const isF2LearnStepForBarakhadi =
+        currentF2StepForBarakhadi?.step?.type === "L";
+
+      // Get current F2 flow step to extract customWords (customLetters from config)
+      const currentF2Step = getF2FlowStep();
+      const f2IndexToUse = currentF2Step?.index ?? f2FlowIndexState;
+
+      // Get F2 config from constants
+      const f2Config = levelGetContent[lang]?.["F2"];
+      let currentGetContentForF2;
+
+      if (
+        f2Config &&
+        Array.isArray(f2Config) &&
+        f2IndexToUse >= 0 &&
+        f2IndexToUse < f2Config.length
+      ) {
+        currentGetContentForF2 = f2Config[f2IndexToUse];
+      } else {
+        // Fallback: try to get content using getCurrentContent
+        const currentF2FlowStep = getF2FlowStep();
+        if (currentF2FlowStep?.step?.title) {
+          currentGetContentForF2 = getCurrentContent(
+            level,
+            currentF2FlowStep.step.title,
+            lang
+          );
+        }
+      }
+
+      // Extract customWords from F2 config (customLetters contains words for F2 Learn steps)
+      const customWordsForF2 = currentGetContentForF2?.customLetters;
+
+      console.log("Barakhadi render - F2 Learn step for Indic language:", {
+        mechanism: mechanism?.name,
+        isF2FlowActive,
+        milestoneLevel,
+        f2StepType: getF2FlowStep()?.step?.type,
+        lang,
+        f2IndexToUse,
+        customWordsForF2,
+        currentGetContentForF2,
+      });
+
+      return (
+        <Barakhadi
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header: `Speak the below word`,
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext: isF2LearnStepForBarakhadi
+              ? handleLetterTrainComplete
+              : handleNext, // Use same conditional pattern as LetterTrain
+            type: "word",
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+            customWords: customWordsForF2, // Pass customWords from F2 config (customLetters contains words)
+          }}
+        />
+      );
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "barakhadi" &&
+      isF2FlowActive &&
+      milestoneLevel === "B" &&
+      getF2FlowStep()?.step?.type === "L"
+    ) {
+      // Render Barakhadi for F2 Learn steps in Indic languages
+      const lang = getLocalData("lang") || "en";
+
+      // Check if this is a F2 Learn step for render
+      const currentF2StepForBarakhadi = getF2FlowStep();
+      const isF2LearnStepForBarakhadi =
+        currentF2StepForBarakhadi?.step?.type === "L";
+
+      // Get current F2 flow step to extract customWords (customLetters from config)
+      const currentF2Step = getF2FlowStep();
+      const f2IndexToUse = currentF2Step?.index ?? f2FlowIndexState;
+
+      // Get F2 config from constants
+      const f2Config = levelGetContent[lang]?.["F2"];
+      let currentGetContentForF2;
+
+      if (
+        f2Config &&
+        Array.isArray(f2Config) &&
+        f2IndexToUse >= 0 &&
+        f2IndexToUse < f2Config.length
+      ) {
+        currentGetContentForF2 = f2Config[f2IndexToUse];
+      } else {
+        // Fallback: try to get content using getCurrentContent
+        const currentF2FlowStep = getF2FlowStep();
+        if (currentF2FlowStep?.step?.title) {
+          currentGetContentForF2 = getCurrentContent(
+            level,
+            currentF2FlowStep.step.title,
+            lang
+          );
+        }
+      }
+
+      // Extract customWords from F2 config (customLetters contains words for F2 Learn steps)
+      const customWordsForF2 = currentGetContentForF2?.customLetters;
+
+      console.log("Barakhadi render - F2 Learn step for Indic language:", {
+        mechanism: mechanism?.name,
+        isF2FlowActive,
+        milestoneLevel,
+        f2StepType: getF2FlowStep()?.step?.type,
+        lang,
+        f2IndexToUse,
+        customWordsForF2,
+        currentGetContentForF2,
+      });
+
+      return (
+        <Barakhadi
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header: `Speak the below word`,
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext: isF2LearnStepForBarakhadi
+              ? handleLetterTrainComplete
+              : handleNext, // Use same conditional pattern as LetterTrain
+            type: "word",
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+            customWords: customWordsForF2, // Pass customWords from F2 config (customLetters contains words)
           }}
         />
       );
