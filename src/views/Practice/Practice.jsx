@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import Mechanics2 from "../../components/Practice/Mechanics2";
 import Mechanics3 from "../../components/Practice/Mechanics3";
 import Mechanics4 from "../../components/Practice/Mechanics4";
@@ -110,8 +110,7 @@ const Practice = () => {
   const [wordCount, setWordCount] = useState(0);
   const [isShowCase, setIsShowCase] = useState(false);
   const [startShowCase, setStartShowCase] = useState(false);
-  // M4 to M9 milestone levels should show 10 contents instead of 5
-  const limit = useMemo(() => (level >= 4 && level <= 9 ? 10 : 5), [level]);
+  const limit = 5;
   const [disableScreen, setDisableScreen] = useState(false);
   const [mechanism, setMechanism] = useState("");
   const [refAudio, setRefAudio] = useState("");
@@ -4750,13 +4749,23 @@ const Practice = () => {
         setF2FlowIndexState(updatedF2FlowStep.index);
 
         // Store F2 flow progress in backend
+        // Save the next step index (1-indexed) so user resumes from the next step on relogin
+        // Example: L1 (index 0) completes → advances to P1 (index 1) → save lesson "2" (1-indexed)
         if (updatedF2FlowStep.step) {
           try {
+            // Ensure progress doesn't exceed 100%
+            const calculatedProgress =
+              ((updatedF2FlowStep.index + 1) / F2_FLOW.length) * 100;
+            const cappedProgress = Math.min(
+              100,
+              Math.round(calculatedProgress)
+            );
+
             await addLesson({
               sessionId,
               milestone: "practice",
               lesson: (updatedF2FlowStep.index + 1).toString(), // Convert to 1-indexed for backend
-              progress: ((updatedF2FlowStep.index + 1) / F2_FLOW.length) * 100,
+              progress: cappedProgress,
               language: lang,
               milestoneLevel: "B",
             });
@@ -4844,18 +4853,37 @@ const Practice = () => {
           }
         }
 
-        // If next step is LetterTrain, mechanism is already set above
+        // Set mechanism for the next step based on step type
+        const nextStepType = updatedF2FlowStep.step?.type;
+        const isIndicLanguage = lang !== "en"; // Any language other than English uses barakhadi
+
+        if (nextStepType === "P" || nextStepType === "A") {
+          // Next step is Practice or Apply - use LetterHunt
+          setMechanism({ id: "letterHunt", name: "letterHunt" });
+          setQuestions([]); // LetterHunt generates its own content
+        } else if (nextStepType === "L") {
+          // Next step is Learn - use barakhadi for Indic, letterTrain for English
+          const mechanismName = isIndicLanguage ? "barakhadi" : "letterTrain";
+          setMechanism({ id: mechanismName, name: mechanismName });
+        }
+
         // Force re-render by updating state
         setProgressData(practiceProgress);
 
-        console.log("LetterTrain completed for F2, next step:", {
+        console.log("LetterTrain/Barakhadi completed for F2, next step:", {
           newPracticeStep,
           nextStepContent,
           mechanism: nextStepContent?.mechanism,
           f2FlowStep: updatedF2FlowStep,
           f2FlowIndexState: updatedF2FlowStep.index,
+          nextStepType,
         });
 
+        // The component will automatically re-render when:
+        // - f2FlowIndexState changes (via setF2FlowIndexState) - this updates f2FlowStep
+        // - mechanism changes (via setMechanism) - this determines which component to render
+        // - progressData changes (via setProgressData) - this updates progress
+        // React will batch these state updates and re-render once with all new values
         return; // Exit early for F2 flow
       }
 
@@ -5308,7 +5336,9 @@ const Practice = () => {
 
       let newPracticeStep =
         currentQuestion === questions.length - 1 || isGameOver
-          ? currentPracticeStep + 1
+          ? currentPracticeStep === practiceSteps.length - 1
+            ? 0
+            : currentPracticeStep + 1
           : currentPracticeStep;
       newPracticeStep = Number(newPracticeStep);
       let newQuestionIndex =
@@ -5501,13 +5531,14 @@ const Practice = () => {
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: targetIndex.toString(),
+                lesson: (targetIndex + 1).toString(), // Convert to 1-indexed for backend (matches F1/F2 pattern)
                 progress: currentPracticeProgress,
                 language: lang,
                 milestoneLevel: "B",
               });
               console.log("F3 flow redirect progress saved:", {
                 index: targetIndex,
+                lessonSaved: (targetIndex + 1).toString(), // 1-indexed
                 progress: currentPracticeProgress,
               });
             } catch (e) {
@@ -5585,13 +5616,14 @@ const Practice = () => {
             await addLesson({
               sessionId,
               milestone: "practice",
-              lesson: currentF3FlowStep.index.toString(),
+              lesson: (currentF3FlowStep.index + 1).toString(), // Convert to 1-indexed for backend (matches F1/F2 pattern)
               progress: ((currentF3FlowStep.index + 1) / F3_FLOW.length) * 100,
               language: lang,
               milestoneLevel: "B",
             });
             console.log("F3 flow progress saved to backend by handleNext:", {
               index: currentF3FlowStep.index,
+              lessonSaved: (currentF3FlowStep.index + 1).toString(), // 1-indexed
               progress: ((currentF3FlowStep.index + 1) / F3_FLOW.length) * 100,
             });
           } catch (e) {
@@ -5812,6 +5844,7 @@ const Practice = () => {
 
         // ALWAYS set mechanism based on F2_FLOW step type (ignore config mechanism)
         const f2StepTypeForMechanism = currentF2FlowStep.step?.type;
+        const isIndicLanguage = lang !== "en"; // Any language other than English uses barakhadi
         console.log(
           "handleNext - Setting mechanism for F2 step type:",
           f2StepTypeForMechanism,
@@ -5819,7 +5852,8 @@ const Practice = () => {
           currentF2FlowStep.index
         );
         if (f2StepTypeForMechanism === "L") {
-          setMechanism({ id: "letterTrain", name: "letterTrain" });
+          const mechanismName = isIndicLanguage ? "barakhadi" : "letterTrain";
+          setMechanism({ id: mechanismName, name: mechanismName });
           console.log(
             "handleNext - Mechanism set to letterTrain for F2 index",
             currentF2FlowStep.index
@@ -5995,6 +6029,54 @@ const Practice = () => {
             currentF1FlowStep.index
           );
         }
+      } else {
+        currentGetContent = getCurrentContent(newPracticeStep);
+
+        // SIMPLE FIX: Don't set mechanism if we just completed a showcase
+        // The feedback screen will show, and mechanism will be set when user returns
+        const justCompletedAllQuestions =
+          currentQuestion === questions.length - 1 || isGameOver;
+        const currentStepTitle =
+          practiceSteps?.[practiceProgress?.currentPracticeStep]?.title;
+        const isCurrentStepShowcase =
+          currentStepTitle === "S1" || currentStepTitle === "S2";
+        const skipMechanismUpdate =
+          justCompletedAllQuestions && isCurrentStepShowcase;
+
+        // For non-F flows (m1, m2, etc.), set mechanism immediately from config
+        // This ensures the mechanism updates right away when moving between steps
+        if (!skipMechanismUpdate && currentGetContent?.mechanism) {
+          console.log(
+            "handleNext - Setting mechanism immediately for non-F flow:",
+            currentGetContent.mechanism,
+            "step:",
+            newPracticeStep
+          );
+          setMechanism(currentGetContent.mechanism);
+        } else if (!skipMechanismUpdate && !currentGetContent?.mechanism) {
+          // Explicitly reset mechanism to empty object if no mechanism in config
+          // This prevents using mechanism from previous step
+          console.log(
+            "handleNext - No mechanism in config for step:",
+            newPracticeStep,
+            "resetting mechanism to empty object"
+          );
+          setMechanism({});
+        } else if (skipMechanismUpdate) {
+          console.log(
+            "handleNext - Skipping mechanism update - showcase just completed:",
+            currentStepTitle
+          );
+        }
+      }
+
+      // Add null check for currentGetContent
+      if (!currentGetContent) {
+        console.error(
+          "handleNext - currentGetContent is undefined for newPracticeStep:",
+          newPracticeStep
+        );
+        return;
       }
 
       // // Add null check for currentGetContent
@@ -6244,6 +6326,139 @@ const Practice = () => {
           } catch (e) {
             // catch error
           }
+          if (level === 3 && completingStepLevel === "S1") {
+            const isPass = getSetData.sessionResult === "pass";
+            console.log("M3 S1 completed - showing feedback screen", {
+              level,
+              currentLevel,
+              completingStepLevel,
+              currentPracticeStep,
+              sessionResult: getSetData.sessionResult,
+              isPass: isPass,
+              willShowFeedback: true,
+            });
+
+            // Update lesson progress for M3 S1 (both pass and fail)
+            // S1 is at step 4, next step is L3 at index 5
+            const nextLessonStep = currentPracticeStep + 1; // 4 + 1 = 5
+            try {
+              const lang = getLocalData("lang") || "en";
+              await addLesson({
+                sessionId,
+                milestone: milestoneType,
+                lesson: nextLessonStep, // Use 5 (next step L3), not 0
+                progress: 0,
+                language: lang,
+                milestoneLevel: getSetData.currentLevel,
+              });
+              console.log(
+                "M3 S1 - Lesson progress updated (pass or fail), lesson:",
+                nextLessonStep
+              );
+            } catch (e) {
+              console.error("M3 S1 - Error updating lesson progress:", e);
+            }
+
+            // Advance to next step (L3, which is index 5) BEFORE showing feedback screen
+            // This ensures when user clicks practice button, they get the next step
+            const nextPracticeStep = currentPracticeStep + 1;
+            const nextPracticeProgress = Math.round(
+              ((nextPracticeStep + 1) / practiceSteps.length) * 100
+            );
+
+            const updatedPracticeProgress = {
+              currentQuestion: 0,
+              currentPracticeProgress: nextPracticeProgress,
+              currentPracticeStep: nextPracticeStep,
+            };
+
+            setLocalData(
+              "practiceProgress",
+              JSON.stringify(updatedPracticeProgress)
+            );
+            setProgressData(updatedPracticeProgress);
+            console.log("M3 S1 - Practice progress advanced:", {
+              from: currentPracticeStep,
+              to: nextPracticeStep,
+              nextStepName: practiceSteps?.[nextPracticeStep]?.name,
+              nextStepTitle: practiceSteps?.[nextPracticeStep]?.title,
+              nextStepTitleThree: practiceSteps?.[nextPracticeStep]?.titleThree,
+            });
+
+            // Show cat feedback screen for both pass and fail
+            // The Practice button will navigate to /_practice which loads the next step
+            console.log("M3 S1 - Showing cat feedback screen (pass or fail)");
+            gameOver({ link: "/_practice" }, isPass);
+            return;
+          }
+
+          // M3 S2 completion - show feedback screen for both pass and fail
+          if (level === 3 && completingStepLevel === "S2") {
+            console.log("M3 S2 completed - showing feedback screen", {
+              level,
+              currentLevel,
+              completingStepLevel,
+              currentPracticeStep,
+              sessionResult: getSetData.sessionResult,
+              isPass: getSetData.sessionResult === "pass",
+            });
+
+            // Update lesson progress for M3 S2 (both pass and fail)
+            // S2 is at step 9, next step wraps to 0 (or 10 for next milestone)
+            const nextLessonStep =
+              (currentPracticeStep + 1) % practiceSteps.length; // 9 + 1 = 10, then wrap
+            try {
+              const lang = getLocalData("lang") || "en";
+              await addLesson({
+                sessionId,
+                milestone: milestoneType,
+                lesson: nextLessonStep, // Use next step (10 or 0), not hardcoded 0
+                progress: 0,
+                language: lang,
+                milestoneLevel: getSetData.currentLevel,
+              });
+              console.log(
+                "M3 S2 - Lesson progress updated, lesson:",
+                nextLessonStep
+              );
+            } catch (e) {
+              console.error("M3 S2 - Error updating lesson progress:", e);
+            }
+
+            // Advance to next step (which would be step 0 for next milestone, or wrap around)
+            // For M3 S2, this is the last step, so we can either wrap to 0 or stay at 9
+            // Since S2 is the last step, we'll wrap to 0 (which will trigger gameOver in handleNext)
+            const nextPracticeStep =
+              (currentPracticeStep + 1) % practiceSteps.length;
+            const nextPracticeProgress = Math.round(
+              ((nextPracticeStep + 1) / practiceSteps.length) * 100
+            );
+
+            const updatedPracticeProgress = {
+              currentQuestion: 0,
+              currentPracticeProgress: nextPracticeProgress,
+              currentPracticeStep: nextPracticeStep,
+            };
+
+            setLocalData(
+              "practiceProgress",
+              JSON.stringify(updatedPracticeProgress)
+            );
+            setProgressData(updatedPracticeProgress);
+            console.log("M3 S2 - Practice progress advanced:", {
+              from: currentPracticeStep,
+              to: nextPracticeStep,
+              nextStepName: practiceSteps?.[nextPracticeStep]?.name,
+              nextStepTitle: practiceSteps?.[nextPracticeStep]?.title,
+            });
+
+            // Show cat feedback screen for both pass and fail
+            // The Practice button will navigate to /_practice which loads the next step
+            const isPass = getSetData.sessionResult === "pass";
+            console.log("M3 S2 - Showing cat feedback screen (pass or fail)");
+            gameOver({ link: "/_practice" }, isPass);
+            return;
+          }
 
           if (getSetData.sessionResult === "pass") {
             // Skip this block for F1/F2/F3 flows (milestoneLevel "B")
@@ -6331,7 +6546,7 @@ const Practice = () => {
 
         const shouldSkipAddLesson =
           (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
-          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
+          isF2FlowByMilestone ||
           isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
@@ -6361,37 +6576,14 @@ const Practice = () => {
           return;
         }
 
-        // Get content config for the NEXT step (newPracticeStep)
-        const currentGetContent = getCurrentContent(newPracticeStep);
-
         if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
-          // For M4-M9, always use limit (10), otherwise use contentCount from config if available
-          // Force limit to 10 for M4-M9 regardless of config
-          const contentLimit =
-            level >= 4 && level <= 9
-              ? 10
-              : currentGetContent?.contentCount || limit;
-
-          // Determine which API function to use for the next step
-          const isM3 = level === 3 || level === "3" || String(level) === "3";
-          const getContentFn = isM3
-            ? getContent
-            : currentGetContent?.mechanism ||
-              ((level === 1 || level === 2) && lang === "en")
-            ? getContent
-            : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-              lang === "en"
-            ? getContentNew
-            : getContent;
-
-          console.log("handleNext - Content fetch for next step:", {
-            level,
-            levelType: typeof level,
+          // Use contentCount from config if available, otherwise use default limit
+          const contentLimit = currentGetContent?.contentCount || limit;
+          console.log("handleNext - M3 S1 content fetch:", {
             step: currentGetContent?.title,
             contentCount: currentGetContent?.contentCount,
             contentLimit,
-            computedLimit: limit,
-            isM4ToM9: level >= 4 && level <= 9,
+            defaultLimit: limit,
             hasMechanism: !!currentGetContent?.mechanism,
             mechanismName: currentGetContent?.mechanism?.name,
             criteria: currentGetContent.criteria,
@@ -6411,26 +6603,11 @@ const Practice = () => {
             },
             level
           );
-          console.log("handleNext - API response for next step:", {
-            level,
+          console.log("handleNext - M3 S1 API response:", {
             contentCount: resGetContent?.content?.length,
             requestedLimit: contentLimit,
-            expectedCount: contentLimit,
-            actualCount: resGetContent?.content?.length,
             content: resGetContent?.content,
           });
-
-          // Verify we got the expected number of items
-          if (
-            level >= 4 &&
-            level <= 9 &&
-            resGetContent?.content?.length !== 10
-          ) {
-            console.warn(
-              "handleNext - M4-M9: Expected 10 items but got:",
-              resGetContent?.content?.length
-            );
-          }
 
           setTotalSyllableCount(resGetContent?.totalSyllableCount);
           setLivesData({
@@ -6444,7 +6621,7 @@ const Practice = () => {
           });
 
           let showcaseLevel =
-            currentPracticeStep === 3 || currentPracticeStep === 8;
+            currentPracticeStep === 4 || currentPracticeStep === 9;
           setIsShowCase(showcaseLevel);
           // TODO: API returns contents if 200 status
           quesArr = [...quesArr, ...(resGetContent?.content || [])];
@@ -6483,16 +6660,11 @@ const Practice = () => {
           // localStorage.setItem("storyTitle", resGetContent?.name);
 
           setQuestions(quesArr);
-
-          // Set mechanism for the next step
-          if (currentGetContent?.mechanism) {
-            setMechanism(currentGetContent.mechanism);
-          }
         }
 
         if (["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
           let showcaseLevel =
-            currentPracticeStep === 3 || currentPracticeStep === 8;
+            currentPracticeStep === 4 || currentPracticeStep === 9;
           setIsShowCase(showcaseLevel);
           setCurrentQuestion(0);
 
@@ -6577,61 +6749,11 @@ const Practice = () => {
             ? 0
             : practiceProgress.currentPracticeStep + 1;
         const currentGetContent = getCurrentContent(newPracticeStep);
-
-        // Fetch content for the next step if not F1/F2/F3 flow
-        if (
-          !["B", 0, 10, 11, 12, 13, 14, 15].includes(level) &&
-          currentGetContent?.criteria
-        ) {
-          try {
-            // For M4-M9, always use 10, otherwise use contentCount from config if available
-            const contentLimit =
-              level >= 4 && level <= 9
-                ? 10
-                : currentGetContent?.contentCount || limit;
-
-            const isM3 = level === 3 || level === "3" || String(level) === "3";
-            const getContentFn = isM3
-              ? getContent
-              : currentGetContent?.mechanism ||
-                ((level === 1 || level === 2) && lang === "en")
-              ? getContent
-              : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-                lang === "en"
-              ? getContentNew
-              : getContent;
-
-            const resGetContent = await getContentFn(
-              currentGetContent.criteria,
-              lang,
-              contentLimit,
-              {
-                mechanismId: currentGetContent?.mechanism?.id,
-                competency: currentGetContent?.competency,
-                tags: currentGetContent?.tags,
-                storyMode: currentGetContent?.storyMode,
-                CEFR_level: currentGetContent?.CEFR_level,
-                multilingual: currentGetContent?.multilingual,
-              },
-              level
-            );
-
-            if (resGetContent?.content && resGetContent.content.length > 0) {
-              setCurrentContentType(resGetContent?.content?.[0]?.contentType);
-              setCurrentCollectionId(resGetContent?.content?.[0]?.collectionId);
-              setAssessmentResponse(resGetContent);
-              setQuestions(resGetContent.content);
-              setCurrentQuestion(0);
-              setLocalData("storyTitle", resGetContent?.name);
-            }
-          } catch (error) {
-            console.error("Error fetching content in else block:", error);
+        setTimeout(() => {
+          if (currentGetContent?.mechanism) {
+            setMechanism(currentGetContent.mechanism);
           }
-        }
-
-        if (currentGetContent?.mechanism) {
-          setMechanism(currentGetContent.mechanism);
-        }
+        }, 1000);
 
         // Skip addLesson for F1/F2/F3 flows - they handle their own progress saving
         const f1FlowAdvancedByLetterHunt =
@@ -6647,7 +6769,7 @@ const Practice = () => {
 
         const shouldSkipAddLesson =
           (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
-          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
+          isF2FlowByMilestone ||
           isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
@@ -6836,26 +6958,9 @@ const Practice = () => {
           // But F2_FLOW array is 0-indexed (0-20), so convert
           const f2FlowIndex = userState > 0 ? userState - 1 : 0;
 
-          // IMPORTANT: Only reset F2 to 0 if transitioning from F1 to F2 AND backend shows stale progress
-          // If user already has F2 progress (lesson 2, 3, etc.), restore it normally
-          // Only reset if: F1 is complete AND this looks like stale F2 progress (lesson > 1 but no existing F2 localStorage)
-          const f1FlowIndex = getLocalData("f1FlowIndex");
-          const existingF2FlowIndex = getLocalData("f2FlowIndex");
-          const isTransitioningFromF1 =
-            f1FlowIndex === null && existingF2FlowIndex === null;
-          const looksLikeStaleProgress = f2FlowIndex > 0 && userState > 1; // lesson > 1 suggests stale progress
-
-          if (isTransitioningFromF1 && looksLikeStaleProgress) {
-            // This is a fresh F2 start after F1 completion, but backend has stale F2 progress
-            console.warn(
-              `F1 flow is complete and F2 is starting fresh, but backend shows lesson ${userState} (index ${f2FlowIndex}). ` +
-                `This might be stale F2 progress. Resetting F2 to index 0 to start fresh.`
-            );
-            setLocalData("f2FlowIndex", 0);
-            // IMPORTANT: Update state to trigger re-render
-            setF2FlowIndexState(0);
-            userState = 0;
-          } else if (f2FlowIndex >= 0 && f2FlowIndex < F2_FLOW.length) {
+          // Check if this is a valid F2 flow index (0 to F2_FLOW.length - 1)
+          if (f2FlowIndex >= 0 && f2FlowIndex < F2_FLOW.length) {
+            // Restore F2 flow index from backend
             console.log(
               `Restoring F2 flow progress: lesson ${userState} (1-indexed) -> flow index ${f2FlowIndex} (0-indexed) -> ${
                 F2_FLOW[f2FlowIndex]?.type
@@ -7144,11 +7249,8 @@ const Practice = () => {
 
       if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(levelToCheck)) {
         try {
-          // For M4-M9, always use 10, otherwise use contentCount from config if available
-          const contentLimit =
-            levelToCheck >= 4 && levelToCheck <= 9
-              ? 10
-              : currentGetContent?.contentCount || limit;
+          // Use contentCount from config if available, otherwise use default limit
+          const contentLimit = currentGetContent?.contentCount || limit;
           console.log(
             "Initial load - Fetching questions for level:",
             levelToCheck,
@@ -7273,17 +7375,22 @@ const Practice = () => {
       //   setMechanism({ id: "r3", name: "r3" });
       // }
 
-      let showcaseLevel = userState === 4 || userState === 9;
-      setIsShowCase(showcaseLevel);
-      if (showcaseLevel) {
-        await addLesson({
-          sessionId: sessionId,
-          milestone: "showcase",
-          lesson: userState,
-          progress: 0,
-          language: lang,
-          milestoneLevel: `m${level}`,
-        });
+      // Showcase logic only for old milestone system (m0, m1, m2), NOT for F1/F2/F3 flows
+      if (levels !== "B") {
+        let showcaseLevel = userState === 4 || userState === 9;
+        setIsShowCase(showcaseLevel);
+        let nextuserState =
+          userState === 4 ? 5 : userState === 9 ? 10 : userState;
+        if (showcaseLevel) {
+          await addLesson({
+            sessionId: sessionId,
+            milestone: "showcase",
+            lesson: nextuserState,
+            progress: 0,
+            language: lang,
+            milestoneLevel: `m${level}`,
+          });
+        }
       }
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
@@ -7466,11 +7573,8 @@ const Practice = () => {
       if (!["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
         // Add safety check for criteria
         if (currentGetContent?.criteria) {
-          // For M4-M9, always use 10, otherwise use contentCount from config if available
-          const contentLimit =
-            level >= 4 && level <= 9
-              ? 10
-              : currentGetContent?.contentCount || limit;
+          // Use contentCount from config if available, otherwise use default limit
+          const contentLimit = currentGetContent?.contentCount || limit;
           console.log("fetchDetails - M3 S1 content fetch:", {
             step: currentGetContent?.title,
             contentCount: currentGetContent?.contentCount,
@@ -7815,9 +7919,12 @@ const Practice = () => {
     ) {
       const currentF2Step = getF2FlowStep();
       const f2StepType = currentF2Step.step?.type;
+      const isIndicLanguage = lang !== "en"; // Any language other than English uses barakhadi
       const expectedMechanism =
         f2StepType === "L"
-          ? "letterTrain" // F2 Learn steps use LetterTrain
+          ? isIndicLanguage
+            ? "barakhadi"
+            : "letterTrain" // F2 Learn steps use LetterTrain
           : f2StepType === "P" || f2StepType === "A"
           ? "letterHunt" // F2 Practice and Apply steps use LetterHunt
           : null;
@@ -7861,9 +7968,14 @@ const Practice = () => {
           );
         }
         // Set the correct mechanism immediately
-        if (expectedMechanism === "letterTrain") {
+        if (expectedMechanism === "barakhadi") {
           console.log(
-            "renderMechanics - Setting mechanism to letterTrain for F2 Learn step"
+            "renderMechanics - Setting mechanism to barakhadi for F2 Learn step (Indic language)"
+          );
+          setMechanism({ id: "barakhadi", name: "barakhadi" });
+        } else if (expectedMechanism === "letterTrain") {
+          console.log(
+            "renderMechanics - Setting mechanism to letterTrain for F2 Learn step (English)"
           );
           setMechanism({ id: "letterTrain", name: "letterTrain" });
         } else if (expectedMechanism === "letterHunt") {
@@ -8249,6 +8361,7 @@ const Practice = () => {
         page,
         setPage,
         level: level,
+        currentLevel: currentLevel,
         header:
           questions[currentQuestion]?.contentType === "image"
             ? `Guess the below image`
@@ -9748,13 +9861,213 @@ const Practice = () => {
         />
       );
     } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "barakhadi" &&
+      isF2FlowActive &&
+      milestoneLevel === "B" &&
+      getF2FlowStep()?.step?.type === "L"
+    ) {
+      // Render Barakhadi for F2 Learn steps in Indic languages
+      const lang = getLocalData("lang") || "en";
+
+      // Check if this is a F2 Learn step for render
+      const currentF2StepForBarakhadi = getF2FlowStep();
+      const isF2LearnStepForBarakhadi =
+        currentF2StepForBarakhadi?.step?.type === "L";
+
+      // Get current F2 flow step to extract customWords (customLetters from config)
+      const currentF2Step = getF2FlowStep();
+      const f2IndexToUse = currentF2Step?.index ?? f2FlowIndexState;
+
+      // Get F2 config from constants
+      const f2Config = levelGetContent[lang]?.["F2"];
+      let currentGetContentForF2;
+
+      if (
+        f2Config &&
+        Array.isArray(f2Config) &&
+        f2IndexToUse >= 0 &&
+        f2IndexToUse < f2Config.length
+      ) {
+        currentGetContentForF2 = f2Config[f2IndexToUse];
+      } else {
+        // Fallback: try to get content using getCurrentContent
+        const currentF2FlowStep = getF2FlowStep();
+        if (currentF2FlowStep?.step?.title) {
+          currentGetContentForF2 = getCurrentContent(
+            level,
+            currentF2FlowStep.step.title,
+            lang
+          );
+        }
+      }
+
+      // Extract customWords from F2 config (customLetters contains words for F2 Learn steps)
+      const customWordsForF2 = currentGetContentForF2?.customLetters;
+
+      console.log("Barakhadi render - F2 Learn step for Indic language:", {
+        mechanism: mechanism?.name,
+        isF2FlowActive,
+        milestoneLevel,
+        f2StepType: getF2FlowStep()?.step?.type,
+        lang,
+        f2IndexToUse,
+        customWordsForF2,
+        currentGetContentForF2,
+      });
+
+      return (
+        <Barakhadi
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header: `Speak the below word`,
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext: isF2LearnStepForBarakhadi
+              ? handleLetterTrainComplete
+              : handleNext, // Use same conditional pattern as LetterTrain
+            type: "word",
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+            customWords: customWordsForF2, // Pass customWords from F2 config (customLetters contains words)
+          }}
+        />
+      );
+    } else if (
+      mechanism &&
+      typeof mechanism === "object" &&
+      mechanism.name === "barakhadi" &&
+      isF2FlowActive &&
+      milestoneLevel === "B" &&
+      getF2FlowStep()?.step?.type === "L"
+    ) {
+      // Render Barakhadi for F2 Learn steps in Indic languages
+      const lang = getLocalData("lang") || "en";
+
+      // Check if this is a F2 Learn step for render
+      const currentF2StepForBarakhadi = getF2FlowStep();
+      const isF2LearnStepForBarakhadi =
+        currentF2StepForBarakhadi?.step?.type === "L";
+
+      // Get current F2 flow step to extract customWords (customLetters from config)
+      const currentF2Step = getF2FlowStep();
+      const f2IndexToUse = currentF2Step?.index ?? f2FlowIndexState;
+
+      // Get F2 config from constants
+      const f2Config = levelGetContent[lang]?.["F2"];
+      let currentGetContentForF2;
+
+      if (
+        f2Config &&
+        Array.isArray(f2Config) &&
+        f2IndexToUse >= 0 &&
+        f2IndexToUse < f2Config.length
+      ) {
+        currentGetContentForF2 = f2Config[f2IndexToUse];
+      } else {
+        // Fallback: try to get content using getCurrentContent
+        const currentF2FlowStep = getF2FlowStep();
+        if (currentF2FlowStep?.step?.title) {
+          currentGetContentForF2 = getCurrentContent(
+            level,
+            currentF2FlowStep.step.title,
+            lang
+          );
+        }
+      }
+
+      // Extract customWords from F2 config (customLetters contains words for F2 Learn steps)
+      const customWordsForF2 = currentGetContentForF2?.customLetters;
+
+      console.log("Barakhadi render - F2 Learn step for Indic language:", {
+        mechanism: mechanism?.name,
+        isF2FlowActive,
+        milestoneLevel,
+        f2StepType: getF2FlowStep()?.step?.type,
+        lang,
+        f2IndexToUse,
+        customWordsForF2,
+        currentGetContentForF2,
+      });
+
+      return (
+        <Barakhadi
+          page={page}
+          setPage={setPage}
+          {...{
+            level: level,
+            header: `Speak the below word`,
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext: isF2LearnStepForBarakhadi
+              ? handleLetterTrainComplete
+              : handleNext, // Use same conditional pattern as LetterTrain
+            type: "word",
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+            customWords: customWordsForF2, // Pass customWords from F2 config (customLetters contains words)
+          }}
+        />
+      );
+    } else if (
       (mechanism &&
         typeof mechanism === "object" &&
         mechanism.name === "letterTrain") ||
       (isF2FlowActive &&
         milestoneLevel === "B" &&
         shouldShowF2 &&
-        getF2FlowStep()?.step?.type === "L") || // F2 Learn steps use LetterTrain
+        getF2FlowStep()?.step?.type === "L") || // F2 Learn steps use LetterTrain (for English)
       (isF1FlowActive &&
         milestoneLevel === "B" &&
         shouldShowF1 &&
