@@ -309,7 +309,7 @@ const PhrasesInAction = ({
     currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
-  let currentLevel = practiceSteps?.[currentPracticeStep]?.titleThree || "L1";
+  let currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
 
   let apiLevel = `M${level}-${currentLevel}`;
 
@@ -327,7 +327,7 @@ const PhrasesInAction = ({
     // Correct Image Phrase (step2): P2, L4
     if (String(milestoneLevel) === "3") {
       // For M3, use step1 for most steps, step2 only for P2 and L4
-      const isStep2 = stepLevel === "P2" || stepLevel === "L4";
+      const isStep2 = stepLevel === "L2" || stepLevel === "L4";
       console.log("M3 getInitialStep:", {
         stepLevel,
         milestoneLevel,
@@ -356,6 +356,7 @@ const PhrasesInAction = ({
   //console.log("m3", currentLevel, level);
 
   const levelContent = {
+    length: 10,
     en: {
       L1: [
         {
@@ -5803,7 +5804,7 @@ const PhrasesInAction = ({
   };
 
   const goToNextStep = () => {
-    if (currentWordIndex < content[currentLevel]?.length - 1) {
+    if (currentWordIndex < levelContent["length"] - 1) {
       callTelemetry();
       handleNext();
       //setCurrentSteps(getInitialStep(currentLevel));
@@ -5820,18 +5821,37 @@ const PhrasesInAction = ({
       setIsRecordingStopped2(false); // Reset second recording stop state
       setSelectedDiv2(null);
     } else {
-      // Last item - pass isGameOver: true to trigger completion logic
+      // Last item completed - check if this is a showcase step (S1 or S2)
       callTelemetry();
-      console.log(
-        "PhrasesInAction - Last item completed, calling handleNext with isGameOver: true",
-        {
-          currentWordIndex,
-          contentLength: content[currentLevel]?.length,
-          level,
-          currentLevel,
-        }
-      );
-      handleNext(true); // Pass true to indicate all content is completed
+
+      // Get current practice step info to determine if it's a showcase
+      let practiceProgress = getLocalData("practiceProgress");
+      if (typeof practiceProgress === "string") {
+        practiceProgress = JSON.parse(practiceProgress);
+      }
+      const currentPracticeStep = practiceProgress?.currentPracticeStep;
+      const stepTitle = practiceSteps?.[currentPracticeStep]?.title;
+      const isShowcaseStep = stepTitle === "S1" || stepTitle === "S2";
+
+      console.log("PhrasesInAction - Last item completed", {
+        currentWordIndex,
+        contentLength: content[currentLevel]?.length,
+        level,
+        currentLevel,
+        currentPracticeStep,
+        stepTitle,
+        isShowcaseStep,
+        willCallGameOver: isShowcaseStep,
+      });
+
+      // Only pass isGameOver=true for showcase steps (S1/S2)
+      // For regular steps (L1, P1, L2, etc.), just call handleNext() to continue to next step
+      if (isShowcaseStep) {
+        handleNext(true); // Pass true to indicate showcase completion
+      } else {
+        handleNext(); // Regular step completion - just continue to next step
+      }
+
       setSelectedDiv(null); // Reset selection
       setIncorrectWords([]); // Clear incorrect words
       setIsCorrectImageSelected(false); // Reset selection status

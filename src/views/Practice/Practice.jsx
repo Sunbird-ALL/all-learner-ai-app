@@ -5336,7 +5336,9 @@ const Practice = () => {
 
       let newPracticeStep =
         currentQuestion === questions.length - 1 || isGameOver
-          ? currentPracticeStep + 1
+          ? currentPracticeStep === practiceSteps.length - 1
+            ? 0
+            : currentPracticeStep + 1
           : currentPracticeStep;
       newPracticeStep = Number(newPracticeStep);
       let newQuestionIndex =
@@ -6027,6 +6029,54 @@ const Practice = () => {
             currentF1FlowStep.index
           );
         }
+      } else {
+        currentGetContent = getCurrentContent(newPracticeStep);
+
+        // SIMPLE FIX: Don't set mechanism if we just completed a showcase
+        // The feedback screen will show, and mechanism will be set when user returns
+        const justCompletedAllQuestions =
+          currentQuestion === questions.length - 1 || isGameOver;
+        const currentStepTitle =
+          practiceSteps?.[practiceProgress?.currentPracticeStep]?.title;
+        const isCurrentStepShowcase =
+          currentStepTitle === "S1" || currentStepTitle === "S2";
+        const skipMechanismUpdate =
+          justCompletedAllQuestions && isCurrentStepShowcase;
+
+        // For non-F flows (m1, m2, etc.), set mechanism immediately from config
+        // This ensures the mechanism updates right away when moving between steps
+        if (!skipMechanismUpdate && currentGetContent?.mechanism) {
+          console.log(
+            "handleNext - Setting mechanism immediately for non-F flow:",
+            currentGetContent.mechanism,
+            "step:",
+            newPracticeStep
+          );
+          setMechanism(currentGetContent.mechanism);
+        } else if (!skipMechanismUpdate && !currentGetContent?.mechanism) {
+          // Explicitly reset mechanism to empty object if no mechanism in config
+          // This prevents using mechanism from previous step
+          console.log(
+            "handleNext - No mechanism in config for step:",
+            newPracticeStep,
+            "resetting mechanism to empty object"
+          );
+          setMechanism({});
+        } else if (skipMechanismUpdate) {
+          console.log(
+            "handleNext - Skipping mechanism update - showcase just completed:",
+            currentStepTitle
+          );
+        }
+      }
+
+      // Add null check for currentGetContent
+      if (!currentGetContent) {
+        console.error(
+          "handleNext - currentGetContent is undefined for newPracticeStep:",
+          newPracticeStep
+        );
+        return;
       }
 
       // // Add null check for currentGetContent
@@ -6276,6 +6326,139 @@ const Practice = () => {
           } catch (e) {
             // catch error
           }
+          if (level === 3 && completingStepLevel === "S1") {
+            const isPass = getSetData.sessionResult === "pass";
+            console.log("M3 S1 completed - showing feedback screen", {
+              level,
+              currentLevel,
+              completingStepLevel,
+              currentPracticeStep,
+              sessionResult: getSetData.sessionResult,
+              isPass: isPass,
+              willShowFeedback: true,
+            });
+
+            // Update lesson progress for M3 S1 (both pass and fail)
+            // S1 is at step 4, next step is L3 at index 5
+            const nextLessonStep = currentPracticeStep + 1; // 4 + 1 = 5
+            try {
+              const lang = getLocalData("lang") || "en";
+              await addLesson({
+                sessionId,
+                milestone: milestoneType,
+                lesson: nextLessonStep, // Use 5 (next step L3), not 0
+                progress: 0,
+                language: lang,
+                milestoneLevel: getSetData.currentLevel,
+              });
+              console.log(
+                "M3 S1 - Lesson progress updated (pass or fail), lesson:",
+                nextLessonStep
+              );
+            } catch (e) {
+              console.error("M3 S1 - Error updating lesson progress:", e);
+            }
+
+            // Advance to next step (L3, which is index 5) BEFORE showing feedback screen
+            // This ensures when user clicks practice button, they get the next step
+            const nextPracticeStep = currentPracticeStep + 1;
+            const nextPracticeProgress = Math.round(
+              ((nextPracticeStep + 1) / practiceSteps.length) * 100
+            );
+
+            const updatedPracticeProgress = {
+              currentQuestion: 0,
+              currentPracticeProgress: nextPracticeProgress,
+              currentPracticeStep: nextPracticeStep,
+            };
+
+            setLocalData(
+              "practiceProgress",
+              JSON.stringify(updatedPracticeProgress)
+            );
+            setProgressData(updatedPracticeProgress);
+            console.log("M3 S1 - Practice progress advanced:", {
+              from: currentPracticeStep,
+              to: nextPracticeStep,
+              nextStepName: practiceSteps?.[nextPracticeStep]?.name,
+              nextStepTitle: practiceSteps?.[nextPracticeStep]?.title,
+              nextStepTitleThree: practiceSteps?.[nextPracticeStep]?.titleThree,
+            });
+
+            // Show cat feedback screen for both pass and fail
+            // The Practice button will navigate to /_practice which loads the next step
+            console.log("M3 S1 - Showing cat feedback screen (pass or fail)");
+            gameOver({ link: "/_practice" }, isPass);
+            return;
+          }
+
+          // M3 S2 completion - show feedback screen for both pass and fail
+          if (level === 3 && completingStepLevel === "S2") {
+            console.log("M3 S2 completed - showing feedback screen", {
+              level,
+              currentLevel,
+              completingStepLevel,
+              currentPracticeStep,
+              sessionResult: getSetData.sessionResult,
+              isPass: getSetData.sessionResult === "pass",
+            });
+
+            // Update lesson progress for M3 S2 (both pass and fail)
+            // S2 is at step 9, next step wraps to 0 (or 10 for next milestone)
+            const nextLessonStep =
+              (currentPracticeStep + 1) % practiceSteps.length; // 9 + 1 = 10, then wrap
+            try {
+              const lang = getLocalData("lang") || "en";
+              await addLesson({
+                sessionId,
+                milestone: milestoneType,
+                lesson: nextLessonStep, // Use next step (10 or 0), not hardcoded 0
+                progress: 0,
+                language: lang,
+                milestoneLevel: getSetData.currentLevel,
+              });
+              console.log(
+                "M3 S2 - Lesson progress updated, lesson:",
+                nextLessonStep
+              );
+            } catch (e) {
+              console.error("M3 S2 - Error updating lesson progress:", e);
+            }
+
+            // Advance to next step (which would be step 0 for next milestone, or wrap around)
+            // For M3 S2, this is the last step, so we can either wrap to 0 or stay at 9
+            // Since S2 is the last step, we'll wrap to 0 (which will trigger gameOver in handleNext)
+            const nextPracticeStep =
+              (currentPracticeStep + 1) % practiceSteps.length;
+            const nextPracticeProgress = Math.round(
+              ((nextPracticeStep + 1) / practiceSteps.length) * 100
+            );
+
+            const updatedPracticeProgress = {
+              currentQuestion: 0,
+              currentPracticeProgress: nextPracticeProgress,
+              currentPracticeStep: nextPracticeStep,
+            };
+
+            setLocalData(
+              "practiceProgress",
+              JSON.stringify(updatedPracticeProgress)
+            );
+            setProgressData(updatedPracticeProgress);
+            console.log("M3 S2 - Practice progress advanced:", {
+              from: currentPracticeStep,
+              to: nextPracticeStep,
+              nextStepName: practiceSteps?.[nextPracticeStep]?.name,
+              nextStepTitle: practiceSteps?.[nextPracticeStep]?.title,
+            });
+
+            // Show cat feedback screen for both pass and fail
+            // The Practice button will navigate to /_practice which loads the next step
+            const isPass = getSetData.sessionResult === "pass";
+            console.log("M3 S2 - Showing cat feedback screen (pass or fail)");
+            gameOver({ link: "/_practice" }, isPass);
+            return;
+          }
 
           if (getSetData.sessionResult === "pass") {
             // Skip this block for F1/F2/F3 flows (milestoneLevel "B")
@@ -6438,7 +6621,7 @@ const Practice = () => {
           });
 
           let showcaseLevel =
-            currentPracticeStep === 3 || currentPracticeStep === 8;
+            currentPracticeStep === 4 || currentPracticeStep === 9;
           setIsShowCase(showcaseLevel);
           // TODO: API returns contents if 200 status
           quesArr = [...quesArr, ...(resGetContent?.content || [])];
@@ -6481,7 +6664,7 @@ const Practice = () => {
 
         if (["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
           let showcaseLevel =
-            currentPracticeStep === 3 || currentPracticeStep === 8;
+            currentPracticeStep === 4 || currentPracticeStep === 9;
           setIsShowCase(showcaseLevel);
           setCurrentQuestion(0);
 
@@ -7196,11 +7379,13 @@ const Practice = () => {
       if (levels !== "B") {
         let showcaseLevel = userState === 4 || userState === 9;
         setIsShowCase(showcaseLevel);
+        let nextuserState =
+          userState === 4 ? 5 : userState === 9 ? 10 : userState;
         if (showcaseLevel) {
           await addLesson({
             sessionId: sessionId,
             milestone: "showcase",
-            lesson: userState,
+            lesson: nextuserState,
             progress: 0,
             language: lang,
             milestoneLevel: `m${level}`,

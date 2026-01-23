@@ -90,7 +90,7 @@ const LoginPage = () => {
         const { visitorId } = await fp.get();
         await initService(visitorId);
 
-        setLocalData("readMatch", true);
+        // setLocalData("readMatch", true);
         //setLocalData("rFlow", true);
         //setLocalData("wordWall", true);
         // Show audio diagnostic modal first
