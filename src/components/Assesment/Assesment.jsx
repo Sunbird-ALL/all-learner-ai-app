@@ -101,6 +101,7 @@ import { getF1FlowStep } from "../../RFlow/F1";
 import { getF2FlowStep } from "../../RFlow/F2";
 import { getF3FlowStep } from "../../RFlow/F3";
 import AlphabetChart from "./AlphabetChart";
+import AlphabetChartPreview from "./AlphabetChartPreview";
 
 const theme = createTheme();
 
@@ -468,6 +469,7 @@ export const ProfileHeader = ({
   const [milestone, setMilestone] = useState(0);
   const [showAudioDiagnostic, setShowAudioDiagnostic] = useState(false);
   const [openAlphabetModal, setOpenAlphabetModal] = useState(false);
+  const [openAlphabetPreview, setOpenAlphabetPreview] = useState(false);
 
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
@@ -899,7 +901,7 @@ export const ProfileHeader = ({
                   <Divider />
                   <ListItemButton
                     onClick={() => {
-                      setOpenAlphabetModal(true);
+                      setOpenAlphabetPreview(true);
                       setMenuOpen(false);
                     }}
                   >
@@ -943,25 +945,79 @@ export const ProfileHeader = ({
               alignItems: "center",
             }}
           >
-            <CustomTooltip title="Alphabet Chart">
-              <IconButton
-                onClick={() => setOpenAlphabetModal(true)}
-                sx={{
-                  mr: { xs: "5px", sm: "10px" },
-                  padding: isMobile ? "6px" : "8px",
-                  backgroundColor: "rgba(255, 255, 255, 0.7)",
-                  "&:hover": {
-                    backgroundColor: "rgba(255, 255, 255, 255, 0.9)",
-                  },
-                }}
-              >
-                <MenuBookIcon
+            <CustomTooltip
+              title={
+                <Box sx={{ textAlign: "center", p: 0.5 }}>
+                  <Typography sx={{ fontWeight: 600, fontSize: "14px" }}>
+                    📚 Alphabet Chart
+                  </Typography>
+                  <Typography sx={{ fontSize: "12px", opacity: 0.9 }}>
+                    Refer here for letters & syllables you struggle with!
+                  </Typography>
+                </Box>
+              }
+              arrow
+              placement="bottom"
+            >
+              <Box sx={{ position: "relative", display: "inline-flex" }}>
+                <IconButton
+                  onClick={() => setOpenAlphabetPreview(true)}
                   sx={{
-                    color: "#EE6931",
-                    fontSize: isMobile ? "24px" : "24px",
+                    mr: { xs: "5px", sm: "10px" },
+                    padding: isMobile ? "6px" : "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    animation: "pulseGlow 2s ease-in-out infinite",
+                    "@keyframes pulseGlow": {
+                      "0%, 100%": {
+                        boxShadow: "0 0 0 0 rgba(238, 105, 49, 0.4)",
+                      },
+                      "50%": {
+                        boxShadow: "0 0 0 8px rgba(238, 105, 49, 0)",
+                      },
+                    },
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    },
                   }}
-                />
-              </IconButton>
+                >
+                  <MenuBookIcon
+                    sx={{
+                      color: "#EE6931",
+                      fontSize: isMobile ? "24px" : "24px",
+                    }}
+                  />
+                </IconButton>
+                {/* Animated finger pointer */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    bottom: isMobile ? -20 : -25,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    animation: "pointToChart 1.5s ease-in-out infinite",
+                    "@keyframes pointToChart": {
+                      "0%, 100%": {
+                        transform: "translateX(-50%) translateY(0)",
+                        opacity: 1,
+                      },
+                      "50%": {
+                        transform: "translateX(-50%) translateY(-8px)",
+                        opacity: 0.7,
+                      },
+                    },
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: isMobile ? "16px" : "20px",
+                      display: "inline-block",
+                    }}
+                  >
+                    👆
+                  </span>
+                </Box>
+              </Box>
             </CustomTooltip>
 
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
@@ -1081,6 +1137,15 @@ export const ProfileHeader = ({
           </Box>
         )}
       </Box>
+      <AlphabetChartPreview
+        open={openAlphabetPreview}
+        onClose={() => setOpenAlphabetPreview(false)}
+        lang={language}
+        onStartExploring={() => {
+          setOpenAlphabetPreview(false);
+          setOpenAlphabetModal(true);
+        }}
+      />
       <AlphabetChart
         open={openAlphabetModal}
         onClose={() => setOpenAlphabetModal(false)}
