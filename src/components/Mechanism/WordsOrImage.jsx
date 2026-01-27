@@ -1136,7 +1136,7 @@ const WordsOrImage = ({
                           isTranscriptCorrect === true
                             ? "green"
                             : isTranscriptCorrect === false
-                            ? "red"
+                            ? "#333F61" // todo: need to change to red
                             : "#333F61",
                       }}
                     >
