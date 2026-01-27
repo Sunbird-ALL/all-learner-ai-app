@@ -6502,9 +6502,9 @@ const Practice = () => {
           setQuestions(quesArr);
 
           // Set mechanism for the next step
-          if (currentGetContent?.mechanism) {
-            setMechanism(currentGetContent.mechanism);
-          }
+          // if (currentGetContent?.mechanism) {
+          setMechanism(currentGetContent.mechanism || {});
+          // }
         }
 
         if (["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
@@ -6646,9 +6646,9 @@ const Practice = () => {
           }
         }
 
-        if (currentGetContent?.mechanism) {
-          setMechanism(currentGetContent.mechanism);
-        }
+        // if (currentGetContent?.mechanism) {
+        setMechanism(currentGetContent.mechanism || {});
+        // }
 
         // Skip addLesson for F1/F2/F3 flows - they handle their own progress saving
         const f1FlowAdvancedByLetterHunt =
@@ -7589,9 +7589,12 @@ const Practice = () => {
 
       setTimeout(() => {
         // Add safety check for mechanism
-        if (currentGetContent?.mechanism) {
-          setMechanism(currentGetContent.mechanism);
-        }
+        // if (currentGetContent?.mechanism) {
+        setMechanism(currentGetContent.mechanism || {});
+        // }
+        // else{
+        //   renderMechanics();
+        // }
       }, 1000);
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));

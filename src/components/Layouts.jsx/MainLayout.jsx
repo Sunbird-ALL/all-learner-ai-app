@@ -969,7 +969,7 @@ const MainLayout = (props) => {
                   {(showNext || showProgress) &&
                     !(
                       rFlow === "true" &&
-                      ![1, "B"]?.includes(LEVEL) &&
+                      ![1, "B", 3]?.includes(LEVEL) &&
                       !isF1FlowActive &&
                       !isF2FlowActive &&
                       !isF3FlowActive
@@ -1091,9 +1091,10 @@ const MainLayout = (props) => {
                             </Box>
                           </Box>
                         )}
-                        {/* Hide flowNames progress bar when F1 or F2 flow is active - use displayPracticeSteps instead */}
+                        {/* Hide flowNames progress bar when F1, F2, F3, or M3 flow is active - use displayPracticeSteps instead */}
+                        {/* M3 (LEVEL 3) should use displayPracticeSteps, not flowNames */}
                         {rFlow === "true" &&
-                          ![1, "B"]?.includes(LEVEL) &&
+                          ![1, "B", 3]?.includes(LEVEL) &&
                           !isF1FlowActive &&
                           !isF2FlowActive &&
                           !isF3FlowActive && (
