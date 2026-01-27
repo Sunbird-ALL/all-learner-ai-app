@@ -2322,7 +2322,7 @@ const SoundHunt = ({
         </div>
       ) : (
         <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontSize: "24px" }}>{currentQuestion.word}</h2>
+          <h2 style={{ fontSize: "24px" }}>{currentQuestion?.word}</h2>
           {currentQuestion.img && (
             <img
               src={currentQuestion.img}

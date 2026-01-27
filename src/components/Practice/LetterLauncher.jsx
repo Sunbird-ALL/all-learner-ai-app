@@ -154,7 +154,7 @@ const LetterLauncher = ({
 
   const handleStart = () => {
     setIsPlaying(true);
-    setTimeRemaining(30);
+    setTimeRemaining(45);
     setCorrectCount(0);
     setWrongCount(0);
     setCurrentItemIndex(0);
@@ -265,7 +265,7 @@ const LetterLauncher = ({
     setScore(0);
     setIsComplete(false);
     setIsPlaying(false);
-    setTimeRemaining(30);
+    setTimeRemaining(45);
     if (items.length > 0) {
       setCurrentItem(items[0]);
     }
