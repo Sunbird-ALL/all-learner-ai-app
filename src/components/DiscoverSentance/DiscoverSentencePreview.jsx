@@ -606,7 +606,7 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         setIsNextButtonCalled={setIsNextButtonCalled}
         setOpenMessageDialog={() => {}}
         startShowCase={true}
-        isShowCase={true}
+        isDemo={true}
         showSpeakButton={showSpeakButton}
         showStopButton={showStopButton}
         showListenRetryButtons={showListenRetryButtons}
