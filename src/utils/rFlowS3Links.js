@@ -2320,3 +2320,341 @@ export const అImg = "ghf39912-a715-47a5-a9c7-c51735cf0e12.png";
 export const అAudio = "61b80846-4aa4-40a3-88ad-3b55f8e4138b.wav";
 export const ఱపImg = "3409bc12-d115-4b26-8abc-aaeb61440a40.png";
 export const ఱపAudio = "d3343f4e-aa38-4527-9b27-782646ad76c9.wav";
+
+//  English Alphabatic chart audio files
+
+// E
+export const EForEggAudio = "2515eeba-9012-4d1c-83e3-c081358bb6ae.wav";
+export const EForPenAudio = "c39139dc-3a32-4d27-a1ef-37bb4fa7f54c.wav";
+export const EForKiteAudio = "747d91c8-cbb2-4fb6-9e6d-81f9ff91a6a0.wav";
+
+// A
+export const AForAppleAudio = "f598d102-13f3-46a0-b9af-3e622abad375.wav";
+export const AForCatAudio = "05fc4e45-2244-4082-bf7d-c0d80e26f56b.wav";
+export const AForPeaAudio = "322e3e1d-44a1-44c3-9b88-23716af32fdc.wav";
+
+// O
+export const OForOrangeAudio = "82e7fc3b-3f32-411e-854d-9ccdf815d5b4.wav";
+export const OForDogAudio = "77b3dd1d-a821-46f1-81c0-01c97982b77a.wav";
+export const OForMangoAudio = "35a6443f-d246-4a96-b48f-dbd799ddf830.wav";
+
+// I
+export const IForIceAudio = "5a0c39a3-72c3-42da-b273-da45d080c59b.wav";
+export const IForPigAudio = "a0b9f40b-10fc-43d2-9c8f-fafe1e710107.wav";
+export const IForChillyAudio = "fc9e55e0-6e26-42e6-acac-ad61ed20c6fe.wav";
+
+// U
+export const UForUmbrellaAudio = "611404ee-c235-432c-8f65-fad121aec7c9.wav";
+export const UForDustbinAudio = "93e68509-5a29-4df3-9c75-e02b65ac4814.wav";
+export const UForLadduAudio = "58984ac8-21ec-45e8-a1ba-57cb6034ab0e.wav";
+
+// T
+export const TForTigerAudio = "a3724ed0-e3fb-4010-ac25-f8fbd62006cf.wav";
+export const TForWatchAudio = "df661acd-4d6e-4ed6-952b-a81611718a0e.wav";
+export const TForPlantAudio = "6be9dc9a-99b2-4a5a-8811-8246b6bb3df7.wav";
+
+// N
+export const NForNestAudio = "2164c504-199e-4667-b31a-8c22bba8ddb4.wav";
+export const NForHoneyAudio = "a9eae2c0-7120-488c-9590-b578e1ba59a1.wav";
+export const NForPenAudio = "2c0e1f0c-6029-47c2-ba65-07b742bcc2e8.wav";
+
+// S
+export const SForSunAudio = "42e2449b-b6d5-4e9b-b8c4-8607fc494465.wav";
+export const SForHorseAudio = "ab753059-da16-4304-929e-127ede9523d3.wav";
+export const SForBusAudio = "35eeef2a-9e4d-4349-8e49-80b8b755d2ed.wav";
+
+// R
+export const RForRatAudio = "14bea4de-4c59-4e6d-939e-3bbd46c7543e.wav";
+export const RForCarrotAudio = "7f9a95cc-c5f1-4260-821c-b3bdd25964c3.wav";
+export const RForCarAudio = "9d9e46ef-1ac2-4c26-9f33-382fb497d0c0.wav";
+
+// H
+export const HForHandAudio = "0aaad6e1-194a-4508-b592-acd973fb1b76.wav";
+export const HForTeacherAudio = "d9f37c5b-5a06-4d7e-b12e-ea8243f3a544.wav";
+export const HForEarthAudio = "dc5bcdf2-fdb1-466f-bf4d-0745098ef9c4.wav";
+
+// L
+export const LForLionAudio = "0239daaf-cd3f-46ae-9662-67649fd916a4.wav";
+export const LForBalloonAudio = "c944813f-2e4f-4b9b-b1c6-29232a473805.wav";
+export const LForBellAudio = "e8fc724a-9249-496f-a6cc-bd2363110932.wav";
+
+// D
+export const DForDogAudio = "da47db39-90e3-45e5-b351-601f6be408ef.wav";
+export const DForWindowAudio = "c2dff408-acdc-4ddc-9177-5c3f5296847d.wav";
+export const DForSwordAudio = "8ea22cdf-c810-459b-bbce-a15084a8c68d.wav";
+
+// C
+export const CForCatAudio = "6b28371e-81dd-41c2-a2c9-34c53c2fb925.wav";
+export const CForIceAudio = "6066c331-0946-4661-ad62-8ff674f083d4.wav";
+export const CForGarlicAudio = "a3023315-cbe4-4575-885a-467dd75490db.wav";
+
+// M
+export const MForMangoAudio = "be8dfa70-7bcf-4fd1-b1cc-043c74bda0e4.wav";
+export const MForLemonAudio = "904c2791-c283-4e4d-99cf-523dd51479e9.wav";
+export const MForJamAudio = "d0394475-6b44-459e-a54f-74e8b8c30d07.wav";
+
+// F
+export const FForFishAudio = "132fd81a-dbae-4d0f-a71c-d2a0fb29cbb7.wav";
+export const FForGiraffeAudio = "6a368f3f-c8a6-4a63-8063-b824d4283850.wav";
+export const FForLeafAudio = "1f65b4a9-04ca-4bbd-bbc3-841e7a14a7c5.wav";
+
+// Y
+export const YForYakAudio = "36df248f-7dc3-48f3-9598-de01a6adabb4.wav";
+export const YForPapayaAudio = "950fe741-cd71-4d63-b177-2ed536d4736a.wav";
+export const YForKeyAudio = "4f9be1ef-1a6a-453e-a5fc-fd9971cb09a9.wav";
+
+// W
+export const WForWindowAudio = "770c780f-0d05-421b-ae8c-984ba2835d61.wav";
+export const WForSwordAudio = "fe103524-86fd-4275-8327-2ef665f9d726.wav";
+export const WForCrowAudio = "57ec12a1-4d4b-4f3d-a1a8-93443912bbe4.wav";
+
+// G
+export const GForGoatAudio = "76cf4677-9c49-466d-b061-e6f9d400cc5f.wav";
+export const GForTigerAudio = "dcf7fdb5-b0b9-4a3c-b3cb-f1bd0d0023b0.wav";
+export const GForDogAudio = "bd62dd6b-93c6-41b8-a6c1-e529bc12b4f1.wav";
+
+// P
+export const PForPenAudio = "328d8995-7570-4784-b4a3-ffc5370e43ac.wav";
+export const PForAppleAudio = "f28531ae-e205-43f9-8e40-782ef12b578c.wav";
+export const PForCapAudio = "65d8044a-b04c-40c9-9240-8d42bc546d0d.wav";
+
+// B
+export const BForBallAudio = "8599da32-cf7c-4cd7-9aac-300835857e29.wav";
+export const BForZebraAudio = "4b4dddba-908e-4e0f-850b-07d4dd88e21c.wav";
+export const BForCubAudio = "3389299b-3896-454b-b840-97818fc6128f.wav";
+
+// V
+export const VForVanAudio = "cc0986f6-80e7-4ddc-a814-9320bbf95e72.wav";
+export const VForGuavaAudio = "3f1c5922-69a9-4731-b43a-9d081c8a0e97.wav";
+
+// K
+export const KForKiteAudio = "8dd0951c-1567-412a-8afe-3a6d6199283d.wav";
+export const KForMonkeyAudio = "b993bc8d-7cf5-43e3-bf39-4c3c06d2cb1a.wav";
+export const KForBookAudio = "0d3a57dd-f12c-489d-b6e9-a98b952e556b.wav";
+
+// J
+export const JForJamAudio = "995c4bbf-19b4-4545-a895-3cf199aa51a4.wav";
+export const JForBrinjalAudio = "b60fa907-b2ff-4fec-a28f-ae4b9e108019.wav";
+
+// X
+export const XForXrayAudio = "e0ed8bbb-0019-4b80-80f1-40ddae155a08.wav";
+export const XForTextbookAudio = "2ea194d0-62fe-4e7b-84eb-247bce877cb6.wav";
+export const XForFoxAudio = "95a6b44b-ccd6-42d2-bf21-ba1bc8a94ddc.wav";
+
+// Q
+export const QForQueenAudio = "e4d5fa29-8864-4832-82bb-a9c4455e0848.wav";
+export const QForMosquitoAudio = "0f1b513a-c2e7-48c0-8dae-e0df411e41d4.wav";
+
+// Z
+export const ZForZebraAudio = "e35c3798-85b2-430e-937f-c72e9f2ce0b9.wav";
+export const ZForPuzzleAudio = "c1ee2575-7104-4be8-95fb-54e8da24c79d.wav";
+export const ZForQuizAudio = "7d17e2a7-78db-4f3c-9b8b-218741a72e8b.wav";
+
+//  Telugu Alphabatic chart audio files
+
+// త
+export const తతబలAudio = "e368570e-4d17-4a10-9d1a-d094d469aa3e.wav";
+export const తజాతరAudio = "c4b0b3af-6531-4a86-b933-0ba16fdc910c.wav";
+export const తఈతAudio = "06c36389-30f6-469e-8e37-500838acaa8d.wav";
+
+// బ
+export const బబంతిAudio = "804083e2-2359-4fb2-a3c3-83a51230d338.wav";
+export const బతబలAudio = "34730d9a-6d45-4080-9c54-9aa75c460de0.wav";
+export const బలబలబAudio = "32049957-1ab4-4bf1-b4e2-4155a70736ca.wav";
+
+// ల
+export const లలతAudio = "6bc0d5e5-64a1-4e4f-be7e-0a7195ccbb3c.wav";
+export const లబలపంAudio = "38b1ed47-5e45-4889-abfe-3b5cc73b9e0c.wav";
+export const లవెలAudio = "8ffd036d-38ef-4281-a0e0-df7c496a7ae2.wav";
+
+// క
+export const కకంజరAudio = "6d3c0397-c8e5-46e9-914d-b022a7c2d91d.wav";
+export const కఆకలిAudio = "8bf3c14a-98a5-4408-9a6e-eee8d50c1abb.wav";
+export const కచిలుకAudio = "f3fd2ed0-dd49-4eb5-b992-e143308a5c79.wav";
+
+// జ
+export const జజడAudio = "5dd0c5a4-1e23-459c-b0f2-081d119a832c.wav";
+export const జకంజరAudio = "cb66ba1a-e92b-4efe-beec-e6d05200e2c8.wav";
+export const జజలజAudio = "da40489a-26a7-4714-96a5-398bf8a9ae1c.wav";
+
+// ర
+export const రరవిAudio = "cee98aad-7e7d-4aa6-ba7a-94c7aebcede0.wav";
+export const రగిరకAudio = "93db15d3-01e1-4d6a-9ea6-db24eb188ca4.wav";
+export const రచీరAudio = "d9ef786f-8949-49b1-8c6a-f2ce915a8787.wav";
+
+// ఆ
+export const ఆఆటAudio = "d21ab9ef-ae51-4354-9f9f-31a66a8c214e.wav";
+
+// ట
+export const టటమాటAudio = "9eabf7f6-4681-4fdb-bb74-72b0bb1f6363.wav";
+export const టనాటకంAudio = "2fab597c-c092-4e13-901f-0f651e57875e.wav";
+export const టతోటAudio = "819ffa51-79d5-45c3-afb3-5a46075cd107.wav";
+
+// ఉ
+export const ఉఉంగరంAudio = "51bd6eb3-90ab-4a3d-a7c9-5807946f2416.wav";
+
+// గ
+export const గగదAudio = "b040f3a4-8564-4434-80b4-9e0d858a80d2.wav";
+export const గఉంగరంAudio = "a5cbea8d-7601-4f4a-87ac-58766a13ad46.wav";
+export const గపండుగAudio = "8bd53264-2dcb-4059-814f-8c510eda4e15.wav";
+
+// శ
+export const శశనగAudio = "1e0fca89-507e-460e-8a56-20f5bab59293.wav";
+export const శదశమిAudio = "6027b5e4-faa0-42ab-9a77-b39e2b3cf1f9.wav";
+export const శదిశAudio = "610e252f-bbe5-4336-9198-4d26c491021e.wav";
+
+// అ
+export const అఅనపAudio = "b46b1e16-9b96-42aa-b6cf-54a196e43081.wav";
+
+// ప
+export const పపంటAudio = "2fb6b402-1e36-4104-b492-8bf0312a5a82.wav";
+export const పచేపలుAudio = "12e0ae64-2430-4e99-b21d-cb0163fa3379.wav";
+export const పపాపAudio = "ea0809fc-51fd-41d4-9fea-fdb7947fc484.wav";
+
+// స
+export const ససవరంAudio = "2bf80eeb-f9e6-401f-9e78-64e7aff3305b.wav";
+export const సదసరాAudio = "fad2f812-2dfa-480d-b8a7-59f20f60b419.wav";
+export const సపనసAudio = "017ec6ff-4662-4647-a210-24a69033c81a.wav";
+
+// వ
+export const వవలAudio = "4d7aaf5a-c772-438f-b15d-da36b3e28dfb.wav";
+export const వలవణంAudio = "f26c92a2-ad1d-4c1d-a7db-9033e5adfb8a.wav";
+export const వపడవAudio = "30f6d802-dd0f-4fde-a49e-7854c118c461.wav";
+
+// ఊ
+export const ఊఊయలAudio = "4556cae3-9029-404b-a64f-c7ed43df0666.wav";
+
+// డ
+export const డడబ్బాAudio = "8152b0fd-9d10-4a18-b496-2ac3373d62b1.wav";
+export const డఅడవిAudio = "8fdad419-54a6-4c14-8d6e-687b5a0a435a.wav";
+export const డబండAudio = "caca2d21-3052-473c-b038-9bbeba2e90ab.wav";
+
+// ద
+export const దదండAudio = "6bac6a0f-8282-4287-a7c9-14b7f22f3e54.wav";
+export const దఉదయంAudio = "6eae3bf9-4ef7-4760-840f-9344627e89b0.wav";
+export const దకిందAudio = "c19ec88e-a775-4b1f-b02c-bb28378702c5.wav";
+
+// ఈ
+export const ఈఈతAudio = "e53f07b7-c3a3-4372-841d-43336e95a89b.wav";
+
+// మ
+export const మమరAudio = "583c7279-821f-472e-a3dd-06aff52fa85c.wav";
+export const మనెమలిAudio = "5d766fc1-6453-4a31-bad8-e07427d708fb.wav";
+export const మచీమAudio = "a2d6d808-868c-4dfe-8822-9ab6acdb05e7.wav";
+
+// చ
+export const చచరకాAudio = "fc51e04f-b2a1-4b7d-99fe-3353c48db2fc.wav";
+export const చరచనAudio = "c174c84f-aada-42bb-8d40-9db38c37fb81.wav";
+export const చకిచకిచAudio = "39d619a5-b1a7-4f03-8b50-6d6f4bc2cf0c.wav";
+export const ఒఒకAudio = "cc95b761-837b-48de-93bb-a125934a4c5e.wav";
+
+// ఓ
+export const ఓఓడAudio = "920cb7c6-6d8e-4f4c-be37-586e45798eaf.wav";
+export const ఔఔటుAudio = "d3e7bc78-fbad-402d-9b46-99c31b4c57a7.wav";
+
+// య
+export const యయదAudio = "58e1707d-d5b0-4382-8181-877ef95c5401.wav";
+export const యకాయలుAudio = "c84fe9d4-8386-43b4-b64e-ee328a7a841d.wav";
+export const యవంకాయAudio = "7928a11a-0bfb-4a3d-8b14-41e9e38bb476.wav";
+
+// ఇ
+export const ఇఇటుకAudio = "f0b48c06-0b2a-4f28-8449-bde21365a802.wav";
+
+// ఎ
+export const ఎఎలుకAudio = "7f40265e-3955-4290-a078-d46d151bd871.wav";
+
+// ఏ
+export const ఏఏనుగుAudio = "a0e732fa-28d3-4ac0-94e7-30f5b85c21d0.wav";
+
+// ఐ
+export const ఐఐదుAudio = "cdcdb2cc-0d02-4168-a86e-16845bfe0123.wav";
+
+// ణ
+export const ణగణపతిAudio = "f79f1e21-5653-4b8c-b957-98aafcc31a9f.wav";
+export const ణవీణAudio = "9a6fb5ad-08b6-471b-a41f-72db49594d75.wav";
+
+// ళ
+export const ళతాళంAudio = "73e2acca-d9c1-4bf0-a74b-7f7cd2b73e3f.wav";
+export const ళకళAudio = "da9bf10c-b41a-412c-acf1-0a055bccd2ed.wav";
+
+// హ
+export const హహంసAudio = "ea4aa993-cce7-4f86-ad5a-8d194205d386.wav";
+export const హవాహనంAudio = "b9e93855-2852-45a7-83fa-599cd978a78a.wav";
+export const హగుహAudio = "a152cba6-c2fc-482d-8ac6-05ae77abe49c.wav";
+
+// ఖ
+export const ఖఖగంAudio = "7c5cda20-51c8-4110-873d-e50c7061282a.wav";
+export const ఖముఖముAudio = "62e78bf1-71c4-4a0a-8256-085572d8132e.wav";
+export const ఖశంఖంAudio = "8df7b151-20b4-4520-a662-4928d13ab066.wav";
+
+// ఛ
+export const ఛఛత్రముAudio = "3ea2b313-c59d-4ffa-9566-eeb9909ca104.wav";
+export const ఛపింఛంAudio = "fd77c926-30dc-4ff8-96ed-1d28a59750c1.wav";
+
+// ఠ
+export const ఠపాఠశాలAudio = "79c16b15-14ee-45d0-ae09-ce7d9f5d97d2.wav";
+export const ఠపాఠంAudio = "9abef1b9-bcda-46d6-893a-f3c6ede1d508.wav";
+
+// ఢ
+export const ఢఢమఢమAudio = "b0a2d4ab-b539-4d6e-8d11-97100efcffe2.wav";
+
+// ఘ
+export const ఘఘటంAudio = "1c08c73b-175f-4a01-b2bc-576c84111440.wav";
+export const ఘసంఘటనAudio = "4adc5ef2-1df3-48e2-9f9b-06d71828264a.wav";
+export const ఘమేఘంAudio = "3bce22a4-b970-4f48-97d2-890870967538.wav";
+
+// ఝ
+export const ఝఝషంAudio = "e25b9277-daa1-44d9-87d6-9f1a6411f8a3.wav";
+
+// ఋ
+export const ఋఋషిAudio = "48990066-6673-4c0a-af23-b2d984847fe6.wav";
+
+// ష
+export const షషరాAudio = "071b1e9c-4bc4-4e13-8d34-debfca4f9efd.wav";
+export const షవిషముAudio = "2417835e-c414-440d-a029-a5fe53cd9737.wav";
+export const షఉషAudio = "3fe29189-6177-4698-ae5b-50395015391b.wav";
+
+// థ
+export const థథర్మోస్Audio = "d30ded47-4925-43aa-9d8f-b3d577b8486d.wav";
+export const థరథముAudio = "d563dfd9-bbb2-4835-868b-c195648742cc.wav";
+export const థకథAudio = "3aebf0d4-be54-4873-8981-74ef00b18e6d.wav";
+
+// ధ
+export const ధధనంAudio = "bc22404b-51f7-4076-bbb9-3e2d296a5c08.wav";
+export const ధక్రోధముAudio = "eaba3074-81d8-4341-83a9-2fbcd2fd8e21.wav";
+export const ధబాధAudio = "2b4c170e-cff4-4d1d-9abb-2fdf1ea5543a.wav";
+
+// ఫ
+export const ఫఫలముAudio = "a2cc579a-9a7d-438f-80c5-f1b22c0dee7f.wav";
+export const ఫటెలిఫోనుAudio = "9abdb5cd-046b-4dfd-a265-411c821cf0ca.wav";
+export const ఫసీతాఫలంAudio = "9ee56f4f-01c9-435b-97f6-586d09102020.wav";
+
+// భ
+export const భభజనAudio = "5ab059b3-3fb8-4045-ba93-73368a972ac2.wav";
+export const భసభAudio = "012f4056-1338-4b8c-a46d-90d36bb4ac96.wav";
+
+// క్ష
+export const క్షక్షత్రియుడుAudio = "a0974a68-4bba-43f0-9946-00b9f3d831f9.wav";
+export const క్షఅక్షరంAudio = "5ee3c4d8-256f-4949-b4e9-524e28877d18.wav";
+export const క్షపరీక్షAudio = "25d5b1b9-6f8e-4275-94a9-34efc3a01f16.wav";
+
+// అం
+export const అంఅంగడిAudio = "c9cf0040-6581-4e9c-8b31-e00d25b72938.wav";
+
+// ఙ
+export const ఙఙAudio = "b3620be8-eb3c-418a-adff-637bcb6c20fa.wav";
+
+// ఞ
+export const ఞఞAudio = "9bf3c533-46bd-4da0-b768-c831cd2f4b1e.wav";
+
+// అః
+export const అఃఅఃAudio = "cce673f8-9b25-4f1f-a193-1c57716ee52b.wav";
+
+// ఱ
+export const ఱఱంపంAudio = "77946613-6d78-4292-acfa-163b1620e59c.wav";
+
+// న
+export const ననగAudio = "c90c2967-d501-4389-adcb-8d6562086394.wav";
+
+// ౠ
+export const ౠౠకAudio = "c55c9287-3dcc-4cba-ad32-787ae015675e.wav";
