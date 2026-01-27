@@ -1095,7 +1095,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
               <span>
                 {selectedLevel !== null && selectedLevel !== gameProgress.currentLevel ? 
                   `Level ${selectedLevel}` : 
-                  `Level ${currentLevel} / ${languageLevels.maxLevels}`
+                  `Level ${currentLevel}`
                 }
               </span>
             </div>
