@@ -20,6 +20,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import TranslateIcon from "@mui/icons-material/Translate";
 import MicIcon from "@mui/icons-material/Mic";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useMediaQuery, useTheme } from "@mui/material";
 import LogoutImg from "../../assets/images/logout.svg";
 import { styled } from "@mui/material/styles";
@@ -99,6 +100,7 @@ import { AudioDiagnosticModal } from "../AudioDiagnostic";
 import { getF1FlowStep } from "../../RFlow/F1";
 import { getF2FlowStep } from "../../RFlow/F2";
 import { getF3FlowStep } from "../../RFlow/F3";
+import AlphabetChart from "./AlphabetChart";
 
 const theme = createTheme();
 
@@ -465,6 +467,7 @@ export const ProfileHeader = ({
   const [animatedWordCount, setAnimatedWordCount] = useState(0);
   const [milestone, setMilestone] = useState(0);
   const [showAudioDiagnostic, setShowAudioDiagnostic] = useState(false);
+  const [openAlphabetModal, setOpenAlphabetModal] = useState(false);
 
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
@@ -894,6 +897,24 @@ export const ProfileHeader = ({
                     />
                   </ListItemButton>
                   <Divider />
+                  <ListItemButton
+                    onClick={() => {
+                      setOpenAlphabetModal(true);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
+                    <ListItemText
+                      primary="Alphabet Chart"
+                      primaryTypographyProps={{
+                        fontFamily: "Quicksand",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        color: "#333F61",
+                      }}
+                    />
+                  </ListItemButton>
+                  <Divider />
                   <ListItemButton onClick={handleLogout}>
                     <LogoutIcon sx={{ mr: 1 }} />
                     <ListItemText
@@ -922,6 +943,27 @@ export const ProfileHeader = ({
               alignItems: "center",
             }}
           >
+            <CustomTooltip title="Alphabet Chart">
+              <IconButton
+                onClick={() => setOpenAlphabetModal(true)}
+                sx={{
+                  mr: { xs: "5px", sm: "10px" },
+                  padding: isMobile ? "6px" : "8px",
+                  backgroundColor: "rgba(255, 255, 255, 0.7)",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 255, 0.9)",
+                  },
+                }}
+              >
+                <MenuBookIcon
+                  sx={{
+                    color: "#EE6931",
+                    fontSize: isMobile ? "24px" : "24px",
+                  }}
+                />
+              </IconButton>
+            </CustomTooltip>
+
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
               <Box sx={{ position: "relative" }} mr="10px">
                 <img
@@ -1016,21 +1058,34 @@ export const ProfileHeader = ({
             </CustomTooltip>
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
               <CustomTooltip title="Logout">
-                <Box>
-                  <CustomIconButton onClick={handleLogout}>
-                    <img
-                      className="logout-img"
-                      style={{ height: 30, width: 35 }}
-                      src={LogoutImg}
-                      alt="Logout"
-                    />
-                  </CustomIconButton>
-                </Box>
+                <IconButton
+                  onClick={handleLogout}
+                  sx={{
+                    mr: { xs: "5px", sm: "10px" },
+                    padding: isMobile ? "6px" : "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    },
+                  }}
+                >
+                  <img
+                    className="logout-img"
+                    style={{ height: 25, width: 25 }}
+                    src={LogoutImg}
+                    alt="Logout"
+                  />
+                </IconButton>
               </CustomTooltip>
             )}
           </Box>
         )}
       </Box>
+      <AlphabetChart
+        open={openAlphabetModal}
+        onClose={() => setOpenAlphabetModal(false)}
+        lang={language}
+      />
     </>
   );
 };
