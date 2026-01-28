@@ -4333,38 +4333,54 @@ const SoundHuntS1Combined = ({
               {/* Word Hunt (Sound Match) - Listen to Sound and choose the right word */}
               {isSoundMatch && !isPictureWords && currentQuestion?.allwords && (
                 <>
-                  <button
-                    onClick={handlePlayMainAudio}
-                    disabled={isPlaying}
-                    style={{
-                      position: "relative",
-                      marginBottom: "75px",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <img
-                      src={
-                        isPlaying ? Assets.pauseButtonImg : Assets.playButtonImg
-                      }
-                      alt="Audio"
-                      style={{
-                        width: "55px",
-                        height: "55px",
-                        transform: `scale(${scale})`,
-                        transition: "transform 0.5s ease-in-out",
-                      }}
-                    />
-                  </button>
-
+                  {/* Play Audio Button - Separate */}
                   <div
                     style={{
                       display: "flex",
-                      gap: "24px",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      marginBottom: "60px",
+                    }}
+                  >
+                    <button
+                      onClick={handlePlayMainAudio}
+                      disabled={isPlaying}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "8px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        src={
+                          isPlaying
+                            ? Assets.pauseButtonImg
+                            : Assets.playButtonImg
+                        }
+                        alt="Audio"
+                        style={{
+                          width: isMobile ? "50px" : "60px",
+                          height: isMobile ? "50px" : "60px",
+                          transform: `scale(${scale})`,
+                          transition: "transform 0.5s ease-in-out",
+                        }}
+                      />
+                    </button>
+                  </div>
+
+                  {/* Word options - separated play and select */}
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: isMobile ? "20px" : "40px",
                       marginTop: "24px",
                       flexWrap: "wrap",
                       justifyContent: "center",
+                      alignItems: "flex-start",
                     }}
                   >
                     {currentQuestion?.allwords.map((item, index) => {
@@ -4373,45 +4389,187 @@ const SoundHuntS1Combined = ({
                         <div
                           key={index}
                           style={{
-                            backgroundColor: isSelected ? "#4CAF50" : "#1897DE",
-                            padding: isMobile ? "12px 16px" : "16px 24px",
-                            borderRadius: "12px",
-                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                            border: isSelected
-                              ? "5px solid #2E7D32"
-                              : "5px solid #10618E",
                             display: "flex",
+                            flexDirection: "column",
                             alignItems: "center",
-                            justifyContent: "center",
-                            backdropFilter: "blur(56px)",
-                            WebkitBackdropFilter: "blur(56px)",
-                            cursor:
-                              isAudioPlayedOnce && !hasSelectedOption
-                                ? "pointer"
-                                : "not-allowed",
+                            gap: "24px",
+                            padding: "24px",
+                            backgroundColor: "#FFFFFF",
+                            borderRadius: "16px",
+                            boxShadow: isSelected
+                              ? "0px 8px 16px rgba(76, 175, 80, 0.3)"
+                              : "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                            border: isSelected
+                              ? "3px solid #4CAF50"
+                              : "2px solid #E0E0E0",
+                            minWidth: isMobile ? "120px" : "160px",
+                            transition: "all 0.3s ease-in-out",
                             opacity:
-                              isAudioPlayedOnce && !hasSelectedOption ? 1 : 0.7,
-                            transition: "background-color 0.3s ease-in-out",
-                            minWidth: isMobile ? "80px" : "120px",
-                            minHeight: isMobile ? "50px" : "60px",
-                          }}
-                          onClick={() => {
-                            if (isAudioPlayedOnce && !hasSelectedOption) {
-                              handleWordClick(item.text);
-                            }
+                              isAudioPlayedOnce && !hasSelectedOption
+                                ? 1
+                                : hasSelectedOption && !isSelected
+                                ? 0.6
+                                : 0.7,
+                            transform: isSelected ? "scale(1.05)" : "scale(1)",
+                            animation: isSelected
+                              ? "pulseSelect 0.6s ease-in-out"
+                              : "none",
                           }}
                         >
-                          <span
+                          {/* Word Display */}
+                          <div
                             style={{
-                              color: "#FFFFFF",
-                              fontWeight: 600,
-                              fontSize: isMobile ? "20px" : "28px",
-                              fontFamily: "Quicksand",
-                              textAlign: "center",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: "8px",
                             }}
                           >
-                            {item.text}
-                          </span>
+                            <span
+                              style={{
+                                color: isSelected ? "#4CAF50" : "#1897DE",
+                                fontWeight: 600,
+                                fontSize: isMobile ? "24px" : "32px",
+                                fontFamily: "Quicksand",
+                                textAlign: "center",
+                              }}
+                            >
+                              {item.text}
+                            </span>
+                          </div>
+
+                          {/* Divider line between word and checkbox */}
+                          <div
+                            style={{
+                              width: "100%",
+                              height: "1px",
+                              backgroundColor: "#E0E0E0",
+                              margin: "8px 0",
+                            }}
+                          />
+
+                          {/* Checkbox for Selection - Separate */}
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              position: "relative",
+                            }}
+                          >
+                            {/* Ripple effect on selection */}
+                            {isSelected && (
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  width: isMobile ? "60px" : "70px",
+                                  height: isMobile ? "60px" : "70px",
+                                  borderRadius: "50%",
+                                  backgroundColor: "rgba(76, 175, 80, 0.2)",
+                                  animation: "ripple 0.6s ease-out",
+                                  pointerEvents: "none",
+                                }}
+                              />
+                            )}
+                            <label
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                cursor:
+                                  isAudioPlayedOnce && !hasSelectedOption
+                                    ? "pointer"
+                                    : "not-allowed",
+                                userSelect: "none",
+                                position: "relative",
+                                zIndex: 1,
+                              }}
+                              onClick={(e) => {
+                                if (isAudioPlayedOnce && !hasSelectedOption) {
+                                  e.preventDefault();
+                                  handleWordClick(item.text);
+                                }
+                              }}
+                            >
+                              <div
+                                style={{
+                                  position: "relative",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => {
+                                    if (
+                                      isAudioPlayedOnce &&
+                                      !hasSelectedOption
+                                    ) {
+                                      handleWordClick(item.text);
+                                    }
+                                  }}
+                                  disabled={
+                                    !isAudioPlayedOnce || hasSelectedOption
+                                  }
+                                  style={{
+                                    width: isMobile ? "28px" : "32px",
+                                    height: isMobile ? "28px" : "32px",
+                                    cursor:
+                                      isAudioPlayedOnce && !hasSelectedOption
+                                        ? "pointer"
+                                        : "not-allowed",
+                                    accentColor: "#4CAF50",
+                                    transform: isSelected
+                                      ? "scale(1.2)"
+                                      : "scale(1)",
+                                    transition: "transform 0.3s ease-in-out",
+                                  }}
+                                />
+                                {/* Checkmark animation overlay */}
+                                {isSelected && (
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      width: isMobile ? "28px" : "32px",
+                                      height: isMobile ? "28px" : "32px",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      pointerEvents: "none",
+                                      animation: "checkmarkPop 0.4s ease-out",
+                                    }}
+                                  >
+                                    <svg
+                                      width={isMobile ? "20" : "24"}
+                                      height={isMobile ? "20" : "24"}
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      style={{
+                                        stroke: "#4CAF50",
+                                        strokeWidth: "3",
+                                        strokeLinecap: "round",
+                                        strokeLinejoin: "round",
+                                      }}
+                                    >
+                                      <path
+                                        d="M5 13l4 4L19 7"
+                                        style={{
+                                          strokeDasharray: "24",
+                                          strokeDashoffset: isSelected
+                                            ? "0"
+                                            : "24",
+                                          transition:
+                                            "stroke-dashoffset 0.4s ease-out",
+                                        }}
+                                      />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                            </label>
+                          </div>
                         </div>
                       );
                     })}
