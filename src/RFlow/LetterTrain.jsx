@@ -6323,8 +6323,6 @@ const LetterTrain = ({
 
   const singleAudio = playlist[currentIndex]?.item?.singleAudio || null;
 
-  //console.log("letters", singleAudio);
-
   const playAudio = (src) => {
     if (!src) return;
 
@@ -6333,8 +6331,17 @@ const LetterTrain = ({
       audioRef.current.currentTime = 0;
     }
 
-    audioRef.current = new Audio(src);
-    audioRef.current.play().catch((err) => {
+    const audio = new Audio(src);
+    audioRef.current = audio;
+
+    audio.onended = () => {
+      if (currentIndex === 0) {
+        setLocalData("alphabetdemo", "true");
+        window.dispatchEvent(new Event("alphabetDemoComplete"));
+      }
+    };
+
+    audio.play().catch((err) => {
       console.log("Audio play error:", err);
     });
   };
@@ -6350,6 +6357,57 @@ const LetterTrain = ({
       }
     };
   }, [currentIndex]);
+
+  // const playAudio = (src) => {
+  //   if (!src) return;
+
+  //   if (audioRef.current) {
+  //     audioRef.current.pause();
+  //     audioRef.current.currentTime = 0;
+  //   }
+
+  //   const audio = new Audio(src);
+  //   audioRef.current = audio;
+
+  //   audio.play().catch((err) => {
+  //     console.log("Audio play error:", err);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   if (!currentAudio) return;
+
+  //   // 🔹 Special case: index 0 (only once, delayed)
+  //   if (currentIndex === 0) {
+  //     if (localStorage.getItem("alphabetdemo") === "true") return;
+
+  //     // Set immediately
+  //     setLocalData("alphabetdemo", "true");
+  //     window.dispatchEvent(new Event("alphabetDemoComplete"));
+
+  //     const timeoutId = setTimeout(() => {
+  //       playAudio(currentAudio);
+  //     }, 6000);
+
+  //     return () => {
+  //       clearTimeout(timeoutId);
+  //       if (audioRef.current) {
+  //         audioRef.current.pause();
+  //         audioRef.current = null;
+  //       }
+  //     };
+  //   }
+
+  //   // 🔹 Normal case: index 1 → 20 (play immediately)
+  //   playAudio(currentAudio);
+
+  //   return () => {
+  //     if (audioRef.current) {
+  //       audioRef.current.pause();
+  //       audioRef.current = null;
+  //     }
+  //   };
+  // }, [currentIndex]);
 
   const currentUI = useMemo(() => {
     return playlist[currentIndex]?.type;

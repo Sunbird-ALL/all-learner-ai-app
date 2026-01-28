@@ -504,8 +504,12 @@ export const ProfileHeader = ({
   }, [wordCount]);
 
   // Listen for demo completion to trigger chart pointer
+
   useEffect(() => {
     const playChartAudio = () => {
+      // 🔒 Prevent double audio
+      if (chartAudioRef.current) return;
+
       const audioPath = `/audio/audio-preview/Alphabet Chart/Chart Icon/${language}/ChartNarration.wav`;
       const audio = new Audio(audioPath);
       chartAudioRef.current = audio;
@@ -515,52 +519,52 @@ export const ProfileHeader = ({
       };
 
       audio.onended = () => {
+        setShowChartPointer(true); // 👈 demo finished
         chartAudioRef.current = null;
+
+        // ✅ Audio done → now wait for user click
+        setLocalData("alphabetdemo", "false");
       };
 
       audio.onerror = () => {
-        console.warn(
-          "Chart audio file not found, skipping audio but showing pointer"
-        );
-        setShowChartPointer(true);
+        console.warn("Chart audio missing, showing pointer only");
+        setShowChartPointer(false);
+        setLocalData("alphabetdemo", "false");
         chartAudioRef.current = null;
       };
 
-      // Small delay to ensure component is ready
       setTimeout(() => {
-        audio.play().catch((e) => {
-          console.warn("Chart audio playback failed:", e);
-          setShowChartPointer(true);
+        audio.play().catch(() => {
+          setShowChartPointer(false);
+          setLocalData("alphabetdemo", "false");
+          chartAudioRef.current = null;
         });
       }, 500);
     };
 
     const checkDemoCompletion = () => {
-      const isDemoComplete = getLocalData("alphabetdemo") === "true";
-      if (isDemoComplete && !showChartPointer) {
-        console.log(
-          "Alphabet demo completion detected, triggering chart pointer"
-        );
+      const demoState = getLocalData("alphabetdemo");
+
+      // 🔥 Only trigger when demo JUST completed
+      if (demoState === "true") {
         playChartAudio();
-        // Clear the flag so it doesn't trigger again unless demo is re-run
-        // localStorage.removeItem("alphabetdemo");
       }
     };
 
-    // Check immediately on mount/language change
+    // Initial check
     checkDemoCompletion();
 
-    // Also listen for changes in case it's completed while this component is mounted
     const handleStorageChange = (e) => {
       if (e.key === "alphabetdemo" && e.newValue === "true") {
         checkDemoCompletion();
       }
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    const handleCustomStorageChange = () => {
+      checkDemoCompletion();
+    };
 
-    // Custom event listener for internal storage changes (since 'storage' event only fires between tabs)
-    const handleCustomStorageChange = () => checkDemoCompletion();
+    window.addEventListener("storage", handleStorageChange);
     window.addEventListener("alphabetDemoComplete", handleCustomStorageChange);
 
     return () => {
@@ -569,6 +573,7 @@ export const ProfileHeader = ({
         "alphabetDemoComplete",
         handleCustomStorageChange
       );
+
       if (chartAudioRef.current) {
         chartAudioRef.current.pause();
         chartAudioRef.current = null;
@@ -577,14 +582,11 @@ export const ProfileHeader = ({
   }, [language]);
 
   const handleAlphabetChartOpen = () => {
-    const isDemoComplete = getLocalData("alphabetdemo") === "true";
-
-    if (isDemoComplete) {
+    if (showChartPointer) {
+      // 🎬 Demo flow
       setOpenAlphabetPreview(true);
-
-      // ✅ REMOVE HERE (user action completed)
-      localStorage.removeItem("alphabetdemo");
     } else {
+      // 📘 Normal chart
       setOpenAlphabetModal(true);
     }
 
