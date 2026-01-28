@@ -3727,8 +3727,7 @@ const SoundHuntS1Combined = ({
             const s1StepIndex = practiceSteps.findIndex(
               (step) => step.title === "S1"
             );
-            const stepIndex =
-              s1StepIndex !== -1 ? s1StepIndex : currentStep || 0;
+            const stepIndex = progressData?.currentPracticeStep || 0;
 
             // Calculate progress (S1 is a showcase step)
             const totalSteps = practiceSteps.length;
@@ -3740,7 +3739,7 @@ const SoundHuntS1Combined = ({
               await addLesson({
                 sessionId: sessionId,
                 milestone: "showcase", // S1 is a showcase step
-                lesson: stepIndex + 1,
+                lesson: stepIndex == 9 ? 0 : stepIndex + 1,
                 progress: Math.min(100, progress),
                 language: lang,
                 milestoneLevel: milestoneLevel,
@@ -3923,8 +3922,7 @@ const SoundHuntS1Combined = ({
             const s1StepIndex = practiceSteps.findIndex(
               (step) => step.title === "S1"
             );
-            const stepIndex =
-              s1StepIndex !== -1 ? s1StepIndex : currentStep || 0;
+            const stepIndex = progressData?.currentPracticeStep || 0;
 
             // Calculate progress (S1 is a showcase step)
             const totalSteps = practiceSteps.length;
@@ -3936,7 +3934,7 @@ const SoundHuntS1Combined = ({
               await addLesson({
                 sessionId: sessionId,
                 milestone: "showcase", // S1 is a showcase step
-                lesson: stepIndex + 1,
+                lesson: stepIndex == 9 ? 0 : stepIndex + 1,
                 progress: Math.min(100, progress),
                 language: lang,
                 milestoneLevel: milestoneLevel,

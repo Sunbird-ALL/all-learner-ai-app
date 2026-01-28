@@ -34,13 +34,14 @@ interface LetterGameProps {
   onLevelFailure?: (level: number) => void; // Optional: callback when any level fails in showcase mode
   customLetters?: string[]; // Optional: custom letters to use instead of level-based letters
   sub_session_id?: string; // Optional: Sub session ID for F1 flow
+  sessionId?: string; // Optional: Session ID
   sub_milestone_level?: string; // Optional: Sub milestone level (e.g., "F1")
   apply_level?: string; // Optional: Apply level (e.g., "A1", "A2", "A3")
   sub_apply_level?: number; // Optional: Sub apply level (1, 2, or 3 - the level within the Apply step)
   onA3Pass?: () => void; // Optional: callback when A3 passes and sessionResult is "Pass"
 }
 
-export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, sub_session_id, sub_milestone_level, apply_level, sub_apply_level, onA3Pass }: LetterGameProps) {
+export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, sub_session_id,sessionId, sub_milestone_level, apply_level, sub_apply_level, onA3Pass }: LetterGameProps) {
   const navigate = useNavigate();
   const params = useParams<{ level?: string }>();
   const { level: urlLevel } = params || {};
@@ -215,7 +216,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           : 'en';
       
       // For Telugu, Kannada, and Marathi, use exact level mapping
-      if (supportedLanguage === 'te' || supportedLanguage === 'kn' || supportedLanguage === 'mr') {
+      if (supportedLanguage === 'te' || supportedLanguage === 'kn' || supportedLanguage === 'mr' || supportedLanguage === 'en') {
         const levelKey = level.toString();
         return memoryGameDataLoader.getLettersByLevel(supportedLanguage, levelKey);
       }
@@ -274,7 +275,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
       let attempts = 0;
       const maxAttempts = lettersToUse.length * 3; // Reasonable upper bound
       
-      while (options.length < 4 && attempts < maxAttempts) {
+      while (options.length < 4 ) { // && attempts < maxAttempts
         const randomLetter = lettersToUse[Math.floor(Math.random() * lettersToUse.length)];
         // Exclude if already in options or if it's the corresponding vowel (for Indic languages)
         const isExcluded = options.includes(randomLetter) || 
@@ -509,7 +510,8 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
 
         const currentSession = sessionTelemetryManager.getCurrentSession();
         const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
-        const sessionId = currentSession?.sessionId;
+        // Use sessionId prop if provided, otherwise fallback to telemetry sessionId
+        const effectiveSessionId = sessionId || currentSession?.sessionId;
         const subsessionId = currentSubSession?.subSessionId;
 
         // For lives lost scenario: maxScore = totalCorrect, totalScore = totalAttempts
@@ -533,7 +535,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
             totalScore: totalAttempts, // This becomes totalScore (actual score = number of attempts)
             timeSpent: totalTimeSpent,
             assessmentSummary: latestSummaries,
-            sessionId: sessionId,
+            sessionId: effectiveSessionId,
             subsessionId: subsessionId,
             sub_session_id: sub_session_id, // Pass F1/F2 flow sub session ID
             sub_milestone_level: sub_milestone_level, // Pass F1/F2 flow sub milestone level ("F1" or "F2")
@@ -644,7 +646,8 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
       if (currentUser) {
         const currentSession = sessionTelemetryManager.getCurrentSession();
         const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
-        const sessionId = currentSession?.sessionId;
+        // Use sessionId prop if provided, otherwise fallback to telemetry sessionId
+        const effectiveSessionId = sessionId || currentSession?.sessionId;
         const subsessionId = currentSubSession?.subSessionId;
 
         // Set flag BEFORE calling API to prevent duplicate calls (use ref for synchronous check)
@@ -671,7 +674,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
             totalScore: totalAttempts, // Also pass explicitly (though service calculates from correctAnswers)
             timeSpent: totalTimeSpent,
             assessmentSummary: latestSummaries,
-            sessionId: sessionId,
+            sessionId: effectiveSessionId,
             subsessionId: subsessionId,
             sub_session_id: sub_session_id, // Pass F1 flow sub session ID
             sub_milestone_level: sub_milestone_level, // Pass F1 flow sub milestone level ("F1")

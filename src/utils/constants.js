@@ -10230,7 +10230,7 @@ export const practiceSteps = [
     fullName: "Practice 1",
     fullNameMOne: "Learn 1",
     fullNameMTwo: "Practice 1",
-    fullNameMThree: "Phrase Reading", // M3 L1: Phrase Reading
+    fullNameMThree: "Learn 1", // M3 L1: Phrase Reading
     title: "L1",
     titleNew: "L1",
     titleThree: "L1", // Changed from "P1" to "L1" for correct sequence
@@ -10239,8 +10239,8 @@ export const practiceSteps = [
     name: "P2",
     fullName: "Practice 2",
     fullNameMOne: "Learn 2",
-    fullNameMTwo: "Learn 1",
-    fullNameMThree: "Repeat Phrase", // M3 P1: Repeat Phrase
+    fullNameMTwo: "Learn 2",
+    fullNameMThree: "Learn 2", // M3 P1: Repeat Phrase
     title: "L2",
     titleNew: "L2",
     titleThree: "P1", // Changed from "L1" to "P1" for correct sequence
@@ -10250,7 +10250,7 @@ export const practiceSteps = [
     fullName: "Practice 3",
     fullNameMOne: "Practice 1",
     fullNameMTwo: "Learn 2",
-    fullNameMThree: "Correct Image Phrase", // M3 P2: Correct Image Phrase
+    fullNameMThree: "Practice 1", // M3 P2: Correct Image Phrase
     title: "P1",
     titleNew: "P1",
     titleThree: "P2", // Changed from "L2" to "P2" for correct sequence
@@ -10260,7 +10260,7 @@ export const practiceSteps = [
     fullName: "Practice 4",
     fullNameMOne: "Practice 2",
     fullNameMTwo: "Practice 2",
-    fullNameMThree: "Phrase Reading", // M3 L2: Phrase Reading
+    fullNameMThree: "Practice 2", // M3 L2: Phrase Reading
     title: "P2",
     titleNew: "P2",
     titleThree: "L2", // Changed from "P2" to "L2" for correct sequence
@@ -10280,7 +10280,7 @@ export const practiceSteps = [
     fullName: "Practice 5",
     fullNameMOne: "Learn 3",
     fullNameMTwo: "Learn 3",
-    fullNameMThree: "Repeat Phrase", // M3 L3: Repeat Phrase
+    fullNameMThree: "Learn 3", // M3 L3: Repeat Phrase
     title: "L3",
     titleNew: "L3",
     titleThree: "L3",
@@ -10290,7 +10290,7 @@ export const practiceSteps = [
     fullName: "Practice 6",
     fullNameMOne: "Learn 4",
     fullNameMTwo: "Learn 4",
-    fullNameMThree: "Phrase Reading", // M3 P3: Phrase Reading
+    fullNameMThree: "Learn 4", // M3 P3: Phrase Reading
     title: "L4",
     titleNew: "L4",
     titleThree: "P3",
@@ -10300,7 +10300,7 @@ export const practiceSteps = [
     fullName: "Practice 7",
     fullNameMOne: "Practice 3",
     fullNameMTwo: "Practice 3",
-    fullNameMThree: "Correct Image Phrase", // M3 L4: Correct Image Phrase
+    fullNameMThree: "Practice 3", // M3 L4: Correct Image Phrase
     title: "P3",
     titleNew: "P3",
     titleThree: "L4",
@@ -10310,7 +10310,7 @@ export const practiceSteps = [
     fullName: "Practice 8",
     fullNameMOne: "Practice 4",
     fullNameMTwo: "Practice 4",
-    fullNameMThree: "Phrase Reading", // M3 P4: Phrase Reading
+    fullNameMThree: "Practice 4", // M3 P4: Phrase Reading
     title: "P4",
     titleNew: "P4",
     titleThree: "P4",
@@ -10440,7 +10440,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L1",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["a", "m", "s", "t"],
+        customLetters: ["E", "T", "A", "O"],
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -10461,7 +10461,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P1",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["b", "d", "f", "g"],
+        customLetters: ["I", "N", "S", "R"],
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -10482,7 +10482,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L3",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["h", "j", "k", "l"],
+        customLetters: ["H", "L", "D", "C"],
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -10519,7 +10519,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P4",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["n", "p", "q", "r"],
+        customLetters: ["U", "M", "F", "P"],
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
       {
@@ -10529,7 +10529,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P5",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 4,
         letterHuntContentCount: 10,
       },
       // Learn 5 - Letter Train
@@ -10540,7 +10540,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L5",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["u", "v", "w", "x"],
+        customLetters: ["G", "W", "Y", "B"],
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -10550,7 +10550,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L6",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 5,
         letterHuntContentCount: 10,
       },
       // Learn 6 - Letter Train
@@ -10561,7 +10561,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P6",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["y", "z", "c", "e"],
+        customLetters: ["V", "K", "X", "J"],
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -10571,7 +10571,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P7",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 6,
         letterHuntContentCount: 10,
       },
       // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -10582,8 +10582,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P8",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 4,
+        letterHuntEndLevel: 6,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 2,
@@ -10598,7 +10598,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P9",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["i", "o", "u", "a"],
+        customLetters: ["Q", "Z", "E", "T"],
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
       {
@@ -10608,7 +10608,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P10",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 7,
         letterHuntContentCount: 10,
       },
       // Learn 8 - Letter Train
@@ -10619,7 +10619,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P11",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["e", "i", "o", "u"],
+        customLetters: ["A", "O", "I", "N"],
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -10629,7 +10629,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P12",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 8,
         letterHuntContentCount: 10,
       },
       // Learn 9 - Letter Train
@@ -10640,7 +10640,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P13",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["a", "e", "i", "o", "u"],
+        customLetters: ["S", "R", "H", "L"],
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -10650,7 +10650,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P14",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 9,
         letterHuntContentCount: 10,
       },
       // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -10661,8 +10661,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P15",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 7,
+        letterHuntEndLevel: 9,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 3,
@@ -10679,7 +10679,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L1",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["me", "be", "he", "the", "her"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["me", "be", "he", "the", "her", "ear"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -10691,7 +10691,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
-        customLetters: ["In", "The", "On", "An", "Am"],
+        customLetters: ["me", "be", "he", "the", "her", "ear"],
       },
       // Learn 2 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -10701,7 +10701,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P1",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["at", "hat", "rat", "an", "Am"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["Go", "Do", "So", "No", "to", "not"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -10710,7 +10710,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_P2",
         mechanism: { id: "letterHunt", name: "letterHunt" },
-        customLetters: ["At", "It", "He", "She", "His"],
+        customLetters: ["Go", "Do", "So", "No", "to", "not"],
         multilingual: true,
         letterHuntLevel: 2,
         letterHuntContentCount: 10,
@@ -10723,7 +10723,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L3",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["Go", "Do", "So", "No", "to"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["or", "of", "our", "on", "one", "Ox"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -10732,7 +10732,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_L4",
         mechanism: { id: "letterHunt", name: "letterHunt" },
-        customLetters: ["The", "Is", "Are", "Or", "Up", "On"],
+        customLetters: ["or", "of", "our", "on", "one", "Ox"],
         multilingual: true,
         letterHuntLevel: 3,
         letterHuntContentCount: 10,
@@ -10745,8 +10745,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P3",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 10,
+        letterHuntEndLevel: 12,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 1,
@@ -10761,7 +10761,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P4",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["or", "of", "our", "on", "one"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["as", "was", "Up", "Us", "all", "for"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
       {
@@ -10770,7 +10770,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M1_P5",
         mechanism: { id: "letterHunt", name: "letterHunt" },
-        customLetters: ["All", "In", "Ter", "Ing", "Up", "Him"],
+        customLetters: ["as", "was", "Up", "Us", "all", "for"],
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
@@ -10783,7 +10783,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P6",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["My", "hi", "his", "is", "in"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["My", "hi", "his", "is", "in", "Ink"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -10794,6 +10794,7 @@ export const levelGetContent = {
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
         letterHuntLevel: 1,
+        customLetters: ["My", "hi", "his", "is", "in", "Ink"],
         letterHuntContentCount: 10,
       },
       // Learn 6 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
@@ -10804,7 +10805,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P8",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["ate", "Age", "Ask", "Act", "Arm"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["at", "hat", "rat", "an", "Am", "and"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -10814,6 +10815,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P9",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
+        customLetters: ["at", "hat", "rat", "an", "Am", "and"],
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
       },
@@ -10825,8 +10827,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P10",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 13,
+        letterHuntEndLevel: 15,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 2,
@@ -10841,7 +10843,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P11",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["it", "wit", "Bit", "Fit", "Fun"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["it", "wit", "Bit", "Fit", "Fun", "men"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
       {
@@ -10851,6 +10853,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P12",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
+        customLetters: ["it", "wit", "Bit", "Fit", "Fun", "men"],
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
       },
@@ -10862,7 +10865,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P13",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["as", "was", "Up", "Us", "all"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["ate", "Age", "Ask", "Act", "Arm", "Art"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -10872,6 +10875,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P14",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
+        customLetters: ["ate", "Age", "Ask", "Act", "Arm", "Art"],
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
       },
@@ -10883,7 +10887,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P15",
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["Bed", "Fly", "Ice", "Key", "Car"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["Bed", "Fly", "Ice", "Key", "Car", "Air"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -10895,6 +10899,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        customLetters: ["Bed", "Fly", "Ice", "Key", "Car", "Air"],
       },
       // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -10904,8 +10909,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P17",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 16,
+        letterHuntEndLevel: 18,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 3,
@@ -11379,7 +11384,7 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_READ",
         mechanism: { id: "Fluency_P1", name: "fluencyP1" },
         multilingual: true,
       },
@@ -11387,7 +11392,7 @@ export const levelGetContent = {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_READ",
         mechanism: { id: "Fluency_P2", name: "fluencyP2" },
         multilingual: true,
       },
@@ -11395,7 +11400,7 @@ export const levelGetContent = {
         title: "P3",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_READ",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
         multilingual: true,
       },
@@ -11403,7 +11408,7 @@ export const levelGetContent = {
         title: "P4",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_READ",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
         multilingual: true,
       },
@@ -11412,7 +11417,7 @@ export const levelGetContent = {
         criteria: "sentence",
         template: "simple",
         competency: "L1.1",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_MECH",
         CEFR_level: "A1",
         mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
@@ -11420,7 +11425,7 @@ export const levelGetContent = {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_READ",
         mechanism: { id: "Fluency_P1", name: "fluencyP1" },
         multilingual: true,
       },
@@ -11428,7 +11433,7 @@ export const levelGetContent = {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_READ",
         mechanism: { id: "Fluency_P2", name: "fluencyP2" },
         multilingual: true,
       },
@@ -11436,7 +11441,7 @@ export const levelGetContent = {
         title: "P7",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_READ",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
         multilingual: true,
       },
@@ -11444,7 +11449,7 @@ export const levelGetContent = {
         title: "P8",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_READ",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
         multilingual: true,
       },
@@ -11453,7 +11458,7 @@ export const levelGetContent = {
         criteria: "sentence",
         template: "simple",
         competency: "L1.2",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M4_GEN-EN_MECH",
         CEFR_level: "A1",
         mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
@@ -11463,7 +11468,7 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_READ",
         mechanism: { id: "Fluency_P1", name: "fluencyP1" },
         multilingual: true,
       },
@@ -11471,7 +11476,7 @@ export const levelGetContent = {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_READ",
         mechanism: { id: "Fluency_P2", name: "fluencyP2" },
         multilingual: true,
       },
@@ -11479,7 +11484,7 @@ export const levelGetContent = {
         title: "P3",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_READ",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
         multilingual: true,
       },
@@ -11487,7 +11492,7 @@ export const levelGetContent = {
         title: "P4",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_READ",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
         multilingual: true,
       },
@@ -11496,7 +11501,7 @@ export const levelGetContent = {
         criteria: "sentence",
         template: "simple",
         competency: "L1.7",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_MECH",
         CEFR_level: "A1",
         mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
@@ -11504,7 +11509,7 @@ export const levelGetContent = {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_READ",
         mechanism: { id: "Fluency_P1", name: "fluencyP1" },
         multilingual: true,
       },
@@ -11512,7 +11517,7 @@ export const levelGetContent = {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_READ",
         mechanism: { id: "Fluency_P2", name: "fluencyP2" },
         multilingual: true,
       },
@@ -11520,7 +11525,7 @@ export const levelGetContent = {
         title: "P7",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_READ",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
         multilingual: true,
       },
@@ -11528,7 +11533,7 @@ export const levelGetContent = {
         title: "P8",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_READ",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
         multilingual: true,
       },
@@ -11537,7 +11542,7 @@ export const levelGetContent = {
         criteria: "sentence",
         template: "simple",
         competency: "L1.6",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M5_GEN-EN_MECH",
         CEFR_level: "A1",
         mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
@@ -11547,7 +11552,7 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
         mechanism: { id: "Fluency_P1", name: "fluencyP1" },
         multilingual: true,
       },
@@ -11555,7 +11560,7 @@ export const levelGetContent = {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
         mechanism: { id: "Fluency_P2", name: "fluencyP2" },
         multilingual: true,
       },
@@ -11563,7 +11568,7 @@ export const levelGetContent = {
         title: "P3",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
         multilingual: true,
       },
@@ -11571,21 +11576,21 @@ export const levelGetContent = {
         title: "P4",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
         multilingual: true,
       },
       {
         title: "S1",
-        criteria: "paragraph",
+        criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
       },
       {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
         mechanism: { id: "Fluency_P1", name: "fluencyP1" },
         multilingual: true,
       },
@@ -11593,7 +11598,7 @@ export const levelGetContent = {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
         mechanism: { id: "Fluency_P2", name: "fluencyP2" },
         multilingual: true,
       },
@@ -11601,7 +11606,7 @@ export const levelGetContent = {
         title: "P7",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
         mechanism: { id: "Fluency_P3", name: "fluencyP3" },
         multilingual: true,
       },
@@ -11609,7 +11614,7 @@ export const levelGetContent = {
         title: "P8",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
         mechanism: { id: "Fluency_P4", name: "fluencyP4" },
         multilingual: true,
       },
@@ -11617,7 +11622,7 @@ export const levelGetContent = {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        tags: "CEFR_GENERAL_ENG",
+        tags: "M6_GEN-EN_READ",
       },
     ],
     7: [
@@ -14174,61 +14179,61 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "P3",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "P4",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "P7",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "P8",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
       {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M4_TE_READ",
       },
     ],
     5: [
@@ -14236,61 +14241,61 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "P3",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "P4",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "P7",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "P8",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
       {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M5_TE_READ",
       },
     ],
     6: [
@@ -14298,61 +14303,61 @@ export const levelGetContent = {
         title: "P1",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "P3",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "P4",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "P5",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "P7",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "P8",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
       {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        tags: "TE_M4-M6_SENT",
+        tags: "M6_TE_READ",
       },
     ],
     7: [
