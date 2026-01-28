@@ -8267,6 +8267,8 @@ const Practice = () => {
       mechanism.name === "soundHuntS1Combined"
     ) {
       // SoundHuntS1Combined mechanism - handles both Word Hunt and Sound Hunt for m1 s1
+      // This component uses its own filteredContent (10 soundMatch + 10 pictureWords = 20 items)
+      // So we need to set steps to 20, not questions?.length
       const getCurrentContentForCombined = getCurrentContent(
         progressData?.currentPracticeStep || 0
       );
@@ -8294,8 +8296,8 @@ const Practice = () => {
         enableNext,
         showTimer: false,
         points,
-        steps: 0, //questions?.length,
-        currentStep: currentQuestion + 1,
+        steps: 20, // SoundHuntS1Combined always has 20 items (10 soundMatch + 10 pictureWords)
+        currentStep: currentQuestion + 1, // This will be updated by the component internally
         progressData,
         showProgress: true,
         background:
