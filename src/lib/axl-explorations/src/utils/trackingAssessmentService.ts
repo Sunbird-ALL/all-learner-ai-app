@@ -206,6 +206,16 @@ class TrackingAssessmentService {
     contentId?: string;
     unitId?: string;
   }): Promise<any> {
+    // API call disabled - return empty result
+    console.log('⚠️ searchAssessmentTracking API call is disabled');
+    return {
+      success: true,
+      data: null,
+      highestScore: null,
+      recentRecord: null,
+    };
+    
+    /* DISABLED - Original API call code
     try {
       const searchEndpoint = `${TRACKING_API_BASE_URL}/assessment/search`;
       
@@ -241,6 +251,7 @@ class TrackingAssessmentService {
         error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
+    */
   }
 
   /**
