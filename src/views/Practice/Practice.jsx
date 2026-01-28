@@ -6296,10 +6296,12 @@ const Practice = () => {
                 gameOver({ link: "/assesment-end" }, true);
                 setLocalData("tFlow", true);
                 //setLocalData("wordWall", true);
+                return; // Exit to show feedback screen for M3/M6/M9
               }
               if (lang === "en") {
                 gameOver({ link: "/assesment-end" }, true);
                 setLocalData("wordWall", true);
+                return; // Exit to show feedback screen
               }
 
               try {
@@ -6502,9 +6504,9 @@ const Practice = () => {
           setQuestions(quesArr);
 
           // Set mechanism for the next step
-          if (currentGetContent?.mechanism) {
-            setMechanism(currentGetContent.mechanism);
-          }
+          // if (currentGetContent?.mechanism) {
+          setMechanism(currentGetContent.mechanism || {});
+          // }
         }
 
         if (["B", 0, 10, 11, 12, 13, 14, 15].includes(level)) {
@@ -6646,9 +6648,9 @@ const Practice = () => {
           }
         }
 
-        if (currentGetContent?.mechanism) {
-          setMechanism(currentGetContent.mechanism);
-        }
+        // if (currentGetContent?.mechanism) {
+        setMechanism(currentGetContent.mechanism || {});
+        // }
 
         // Skip addLesson for F1/F2/F3 flows - they handle their own progress saving
         const f1FlowAdvancedByLetterHunt =
@@ -7589,9 +7591,12 @@ const Practice = () => {
 
       setTimeout(() => {
         // Add safety check for mechanism
-        if (currentGetContent?.mechanism) {
-          setMechanism(currentGetContent.mechanism);
-        }
+        // if (currentGetContent?.mechanism) {
+        setMechanism(currentGetContent.mechanism || {});
+        // }
+        // else{
+        //   renderMechanics();
+        // }
       }, 1000);
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
@@ -8291,7 +8296,7 @@ const Practice = () => {
         enableNext,
         showTimer: false,
         points,
-        steps: questions?.length,
+        steps: 0, //questions?.length,
         currentStep: currentQuestion + 1,
         progressData,
         showProgress: true,
@@ -10344,6 +10349,7 @@ const Practice = () => {
         const readAloudContentCount =
           currentGetContentForF3?.readAloudContentCount;
         const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+        const sessionId = getLocalData("sessionId");
 
         // Track which sub-step we're on for Apply steps (Letter Launcher -> Memory Challenge -> Read Aloud)
         const f3ApplySubStepState =
@@ -10364,6 +10370,7 @@ const Practice = () => {
                 level={memoryChallengeLevel}
                 endLevel={memoryChallengeEndLevel || 3}
                 contentCount={memoryChallengeContentCount}
+                sessionId={sessionId}
                 handleNext={() => {
                   // Check for redirect request first
                   const f3FlowRedirect = getLocalData("f3FlowRedirect");
@@ -10471,6 +10478,7 @@ const Practice = () => {
             contentType={contentType}
             contentCount={letterLauncherContentCount}
             isShowCase={isShowcase}
+            sessionId={sessionId}
             handleNext={() => {
               // FIRST: Check if there's a redirect request (e.g., from failed level)
               // This takes priority over moving to Memory Challenge
@@ -11052,6 +11060,7 @@ const Practice = () => {
         const passRedirect = currentGetContentForF3?.passRedirect;
         const isShowcase = currentGetContentForF3?.isShowcase || false;
         const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+        const sessionId = getLocalData("sessionId");
 
         return (
           <MemoryChallengeMechanics
@@ -11060,6 +11069,7 @@ const Practice = () => {
             level={memoryChallengeLevel}
             endLevel={memoryChallengeEndLevel}
             contentCount={memoryChallengeContentCount}
+            sessionId={sessionId}
             handleNext={() => {
               // Check for redirect request first
               const f3FlowRedirect = getLocalData("f3FlowRedirect");

@@ -2658,3 +2658,46 @@ export const ననగAudio = "c90c2967-d501-4389-adcb-8d6562086394.wav";
 
 // ౠ
 export const ౠౠకAudio = "c55c9287-3dcc-4cba-ad32-787ae015675e.wav";
+
+//F1 New assets
+export const underImg = "1ca4d613-a5b3-4a05-8b76-922b576b6c78.png";
+export const underAudio = "87fe21d5-5182-4c03-93ab-a1df00392837.wav";
+export const underSingleAudio = "1ca4d613-a5b3-4a05-8b76-922b576b6c78.wav";
+export const DustSingleAudio = "85918c66-eb87-403e-842e-baed2bb5da62.wav";
+export const LadyImg = "48e50de5-aa47-4989-a6ad-95c7a0319ebb.png";
+export const LadySingleAudio = "48e50de5-aa47-4989-a6ad-95c7a0319ebb.wav";
+export const SadImg = "e4217e84-d7b1-4ecc-bc52-3b2e24142f26.png";
+export const SadSingleAudio = "e4217e84-d7b1-4ecc-bc52-3b2e24142f26.wav";
+export const WindImg = "5b97396d-021a-441b-80f5-c02e18cee70f.png";
+export const WindAudio = "a5e73645-8955-4a5b-bda4-8d8ca30a9cb6.wav";
+export const WindSingleAudio = "5b97396d-021a-441b-80f5-c02e18cee70f.wav";
+export const SweetImg = "3916e540-7b61-410c-ba4a-589eabbab489.png";
+export const SweetSingleAudio = "3916e540-7b61-410c-ba4a-589eabbab489.wav";
+export const EqualImg = "dcbc93ac-49cd-4f7f-a8fb-04132b1a2cda.png";
+export const EqualSingleAudio = "dcbc93ac-49cd-4f7f-a8fb-04132b1a2cda.wav";
+
+//F2 New assets
+export const HearImg = "33f0d932-879c-4943-a41a-4c9c187ec3d3.png";
+export const HearSingleAudio = "33f0d932-879c-4943-a41a-4c9c187ec3d3.wav";
+export const atlasImg = "1fe1a332-0e9c-42fb-9c9b-ce4ae6521d7e.png";
+export const atlasSingleAudio = "1fe1a332-0e9c-42fb-9c9b-ce4ae6521d7e.wav";
+export const sitImg = "b2dea51d-b37e-4740-8c65-add26ac48ae5.png";
+export const sitSingleAudio = "b2dea51d-b37e-4740-8c65-add26ac48ae5.wav";
+export const MotherImg = "4c81ceff-e680-40ab-8c13-8d1d5dc027c0.png";
+export const MotherSingleAudio = "4c81ceff-e680-40ab-8c13-8d1d5dc027c0.wav";
+
+//F2 Telugu assets
+
+export const గదిAudio = "a412d0ae-c80b-42b2-aa37-d0d01cd35478.wav";
+export const చేనుAudio = "6d77c3e7-096d-404d-87ad-a374bcbc5274.wav";
+export const గీరుAudio = "1734e535-62d4-4c73-8fb5-9a3b6d7c6247.wav";
+export const కోకిలAudio = "3e136472-4fc9-4acc-9582-5f7118c9f983.wav";
+export const నీకుAudio = "b94ad383-8a3b-4b0d-972c-4028a5fa0d9a.wav";
+export const బాలికAudio = "5a305c06-d14e-4d24-adae-f7186211f62b.wav";
+export const నెమలిsplitAudio = "dca125fa-2293-4f78-ac7d-f89879d99bc8.wav";
+export const నుదురుAudio = "e88113f6-dfce-412c-9a74-0fbbd9197381.wav";
+export const మైదానంAudio = "15d25aa8-be33-45f8-99a4-4a82dfd87583.wav";
+export const మొదలుAudio = "673c3eb9-d7d2-41bd-a493-dc76d745d7e7.wav";
+export const మాటలుAudio = "d9e87544-c93f-4c00-a6f9-cfe951fa7528.wav";
+export const చూడలేదుAudio = "0456a5d0-e645-4bb7-839a-0c0e01d05ec5.wav";
+export const తోలుAudio = "53a752bd-4f2b-431a-abad-b16c3adf4878.wav";

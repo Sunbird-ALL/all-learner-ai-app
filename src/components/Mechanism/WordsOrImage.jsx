@@ -83,6 +83,7 @@ const WordsOrImage = ({
   callUpdateLearner,
   disableScreen,
   isShowCase,
+  isDemo = false,
   handleBack,
   setEnableNext,
   startShowCase,
@@ -125,21 +126,21 @@ const WordsOrImage = ({
     useState(false);
   const [answer, setAnswer] = useState(null);
 
-  // Use prop values if in showcase mode, otherwise use internal state
+  // Use prop values if in demo mode, otherwise use internal state
   const isRecording =
-    isShowCase && isRecordingProp !== undefined
+    isDemo && isRecordingProp !== undefined
       ? isRecordingProp
       : isRecordingState;
   const showSpeakButton =
-    isShowCase && showSpeakButtonProp !== undefined
+    isDemo && showSpeakButtonProp !== undefined
       ? showSpeakButtonProp
       : showSpeakButtonState;
   const showStopButton =
-    isShowCase && showStopButtonProp !== undefined
+    isDemo && showStopButtonProp !== undefined
       ? showStopButtonProp
       : showStopButtonState;
   const showListenRetryButtons =
-    isShowCase && showListenRetryButtonsProp !== undefined
+    isDemo && showListenRetryButtonsProp !== undefined
       ? showListenRetryButtonsProp
       : showListenRetryButtonsState;
   const [recordedAudioBlob, setRecordedAudioBlob] = useState(null);
@@ -1135,7 +1136,7 @@ const WordsOrImage = ({
                           isTranscriptCorrect === true
                             ? "green"
                             : isTranscriptCorrect === false
-                            ? "red"
+                            ? "#333F61" // todo: need to change to red
                             : "#333F61",
                       }}
                     >
@@ -1222,22 +1223,21 @@ const WordsOrImage = ({
             mt: isMobile ? 2 : 0,
           }}
         >
-          {(level === 15 && !isShowCase) ||
-          (isShowCase && (level < 1 || level > 15)) ? (
+          {(level === 15 && !isShowCase) || isDemo ? (
             <div>
               {showSpeakButton && (
                 <Box
                   sx={{
                     cursor:
-                      isShowCase && isInstructionPlaying
+                      isDemo && isInstructionPlaying
                         ? "not-allowed"
                         : "pointer",
-                    opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                    opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
                     pointerEvents:
-                      isShowCase && isInstructionPlaying ? "none" : "auto",
+                      isDemo && isInstructionPlaying ? "none" : "auto",
                   }}
                   onClick={() =>
-                    isShowCase && onMicClick
+                    isDemo && onMicClick
                       ? onMicClick()
                       : startRecording(words, true)
                   }
@@ -1258,15 +1258,15 @@ const WordsOrImage = ({
                   <Box
                     sx={{
                       cursor:
-                        isShowCase && isInstructionPlaying
+                        isDemo && isInstructionPlaying
                           ? "not-allowed"
                           : "pointer",
-                      opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                      opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
                       pointerEvents:
-                        isShowCase && isInstructionPlaying ? "none" : "auto",
+                        isDemo && isInstructionPlaying ? "none" : "auto",
                     }}
                     onClick={() =>
-                      isShowCase && onStopClick
+                      isDemo && onStopClick
                         ? onStopClick()
                         : stopRecording(words)
                     }
@@ -1338,18 +1338,16 @@ const WordsOrImage = ({
                           //minWidth: { xs: "50px", sm: "60px", md: "70px" },
                           //cursor: `url(${clapImage}) 32 24, auto`,
                           //marginLeft: getMarginLeft(0),
-                          opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                          opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
                           cursor:
-                            isShowCase && isInstructionPlaying
+                            isDemo && isInstructionPlaying
                               ? "not-allowed"
                               : "pointer",
                           pointerEvents:
-                            isShowCase && isInstructionPlaying
-                              ? "none"
-                              : "auto",
+                            isDemo && isInstructionPlaying ? "none" : "auto",
                         }}
                         onClick={() => {
-                          if (isShowCase && onPlayClick) {
+                          if (isDemo && onPlayClick) {
                             onPlayClick();
                           } else {
                             playRecordings();
@@ -1365,7 +1363,7 @@ const WordsOrImage = ({
                             height: "70px",
                             width: "70px",
                             cursor:
-                              isShowCase && isInstructionPlaying
+                              isDemo && isInstructionPlaying
                                 ? "not-allowed"
                                 : "pointer",
                           }}
@@ -1377,16 +1375,16 @@ const WordsOrImage = ({
                   <Box
                     sx={{
                       cursor:
-                        isShowCase && isInstructionPlaying
+                        isDemo && isInstructionPlaying
                           ? "not-allowed"
                           : "pointer",
                       marginLeft: "16px",
-                      opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                      opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
                       pointerEvents:
-                        isShowCase && isInstructionPlaying ? "none" : "auto",
+                        isDemo && isInstructionPlaying ? "none" : "auto",
                     }}
                     onClick={() =>
-                      isShowCase && onRetryClick
+                      isDemo && onRetryClick
                         ? onRetryClick()
                         : retryRecording(words, true)
                     }
@@ -1396,18 +1394,16 @@ const WordsOrImage = ({
                   <Box
                     sx={{
                       cursor:
-                        isShowCase && isInstructionPlaying
+                        isDemo && isInstructionPlaying
                           ? "not-allowed"
                           : "pointer",
                       marginLeft: "16px",
-                      opacity: isShowCase && isInstructionPlaying ? 0.5 : 1,
+                      opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
                       pointerEvents:
-                        isShowCase && isInstructionPlaying ? "none" : "auto",
+                        isDemo && isInstructionPlaying ? "none" : "auto",
                     }}
                     onClick={() =>
-                      isShowCase && onNextClick
-                        ? onNextClick()
-                        : nextRecording()
+                      isDemo && onNextClick ? onNextClick() : nextRecording()
                     }
                   >
                     <NextButtonRound />

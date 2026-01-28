@@ -1204,6 +1204,7 @@ const LetterHuntMechanicsContent = ({
     localStorage.getItem("selectedAudioLanguage") ||
     getLocalData("lang") ||
     "en";
+  const sessionId = getLocalData("sessionId");
 
   if (!sessionInitialized) {
     return (
@@ -1290,6 +1291,7 @@ const LetterHuntMechanicsContent = ({
                 sub_milestone_level={assessmentParams.sub_milestone_level} // Pass "F1" or "F2" based on active flow
                 apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
                 onA3Pass={handleA3Pass} // Callback when A3 passes
+                sessionId={sessionId}
                 // sub_apply_level is calculated dynamically in LetterGame based on currentLevel
               />
             </div>
