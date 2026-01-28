@@ -231,12 +231,71 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     return []; // Return empty array for unsupported languages (like "ta")
   }, [lang]);
 
+  const TELUGU_ORDER = [
+    "అ",
+    "ఆ",
+    "ఇ",
+    "ఈ",
+    "ఉ",
+    "ఊ",
+    "ఋ",
+    "ౠ",
+    "ఎ",
+    "ఏ",
+    "ఐ",
+    "ఒ",
+    "ఓ",
+    "ఔ",
+    "అం",
+    "అః",
+    "క",
+    "ఖ",
+    "గ",
+    "ఘ",
+    "ఙ",
+    "చ",
+    "ఛ",
+    "జ",
+    "ఝ",
+    "ఞ",
+    "ట",
+    "ఠ",
+    "డ",
+    "ఢ",
+    "ణ",
+    "త",
+    "థ",
+    "ద",
+    "ధ",
+    "న",
+    "ప",
+    "ఫ",
+    "బ",
+    "భ",
+    "మ",
+    "య",
+    "ర",
+    "ల",
+    "వ",
+    "శ",
+    "ష",
+    "స",
+    "హ",
+    "ళ",
+    "క్ష",
+    "ఱ",
+  ];
+
+  const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
+    acc[letter] = index;
+    return acc;
+  }, {});
+
   const alphabetItems = useMemo(() => {
     return rawData
-      .filter((group) => "letter" in group && group.letter) // only letter-based groups
+      .filter((group) => "letter" in group && group.letter)
       .map((group) => {
         const first = group.items?.[0] || {};
-        // console.log("first", first);
 
         return {
           key: group.letter,
@@ -247,9 +306,16 @@ const AlphabetChart = ({ open, onClose, lang }) => {
           alaphabetChartAudio: first.alaphabetChartAudio || "",
         };
       })
-      .sort((a, b) =>
-        (a.display || "").localeCompare(b.display || "", activeLang)
-      );
+      .sort((a, b) => {
+        if (activeLang === "te") {
+          const aIndex = TELUGU_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
+          const bIndex = TELUGU_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
+          return aIndex - bIndex;
+        }
+
+        // default for other languages
+        return (a.display || "").localeCompare(b.display || "", activeLang);
+      });
   }, [rawData, activeLang]);
 
   const wordItems = useMemo(() => {
