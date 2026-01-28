@@ -1439,17 +1439,17 @@ const MainLayout = (props) => {
                                 )}
                               </Typography>
                               <Stack
-                                sx={{
-                                  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
-                                  paddingY: { xs: "20px", md: "49px" },
-                                  paddingX: { xs: "15px", md: "30px" },
-                                  borderRadius: "13px",
-                                  marginLeft: { xs: 0, md: "80px" },
-                                  bgcolor: "#FFFFFF",
-                                  zIndex: 100,
-                                  width: { xs: "100%", md: "auto" },
-                                }}
-                                direction={{ xs: "column", md: "row" }}
+                              // sx={{
+                              //   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
+                              //   paddingY: { xs: "20px", md: "49px" },
+                              //   paddingX: { xs: "15px", md: "30px" },
+                              //   borderRadius: "13px",
+                              //   marginLeft: { xs: 0, md: "80px" },
+                              //   bgcolor: "#FFFFFF",
+                              //   zIndex: 100,
+                              //   width: { xs: "100%", md: "auto" },
+                              // }}
+                              // direction={{ xs: "column", md: "row" }}
                               >
                                 <Stack
                                   sx={{
