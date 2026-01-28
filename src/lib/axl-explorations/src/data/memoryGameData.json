@@ -39,6 +39,26 @@
         "Y": ["V", "J", "X", "W", "K"],
         "Z": ["N", "S", "X", "Y", "M"]
       },
+      "levelLetters": {
+        "1": ["E", "T", "A", "O"],
+        "2": ["I", "N", "S", "R"],
+        "3": ["H", "L", "D", "C"],
+        "4": ["U", "M", "F", "P"],
+        "5": ["G", "W", "Y", "B"],
+        "6": ["V", "K", "X", "J"],
+        "7": ["Q", "Z", "E", "T"],
+        "8": ["A", "O", "I", "N"],
+        "9": ["S", "R","H", "L"],
+        "10": ["me", "be", "he", "the", "her", "ear"],
+        "11": ["Go", "Do", "So", "No", "to", "not"],
+        "12": ["or", "of", "our", "on", "one", "Ox"],
+        "13": ["as", "was", "Up", "Us", "all", "for"],
+        "14": ["My", "hi", "his", "is", "in", "Ink"],
+        "15": ["at", "hat", "rat", "an", "Am", "and"],
+        "16": ["it", "wit", "Bit", "Fit", "Fun", "men"],
+        "17": ["ate", "Age", "Ask", "Act", "Arm", "Art"],
+        "18": ["Bed", "Fly", "Ice", "Key", "Car", "Air"]
+      },
       "audioTexts": {
         "instruction": "Remember these letters:",
         "correct": "Excellent memory!",

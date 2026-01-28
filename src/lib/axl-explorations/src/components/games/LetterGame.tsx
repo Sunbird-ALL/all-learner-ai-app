@@ -216,7 +216,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           : 'en';
       
       // For Telugu, Kannada, and Marathi, use exact level mapping
-      if (supportedLanguage === 'te' || supportedLanguage === 'kn' || supportedLanguage === 'mr') {
+      if (supportedLanguage === 'te' || supportedLanguage === 'kn' || supportedLanguage === 'mr' || supportedLanguage === 'en') {
         const levelKey = level.toString();
         return memoryGameDataLoader.getLettersByLevel(supportedLanguage, levelKey);
       }
@@ -275,7 +275,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
       let attempts = 0;
       const maxAttempts = lettersToUse.length * 3; // Reasonable upper bound
       
-      while (options.length < 4 && attempts < maxAttempts) {
+      while (options.length < 4 ) { // && attempts < maxAttempts
         const randomLetter = lettersToUse[Math.floor(Math.random() * lettersToUse.length)];
         // Exclude if already in options or if it's the corresponding vowel (for Indic languages)
         const isExcluded = options.includes(randomLetter) || 
