@@ -10230,7 +10230,7 @@ export const practiceSteps = [
     fullName: "Practice 1",
     fullNameMOne: "Learn 1",
     fullNameMTwo: "Practice 1",
-    fullNameMThree: "Phrase Reading", // M3 L1: Phrase Reading
+    fullNameMThree: "Learn 1", // M3 L1: Phrase Reading
     title: "L1",
     titleNew: "L1",
     titleThree: "L1", // Changed from "P1" to "L1" for correct sequence
@@ -10239,8 +10239,8 @@ export const practiceSteps = [
     name: "P2",
     fullName: "Practice 2",
     fullNameMOne: "Learn 2",
-    fullNameMTwo: "Learn 1",
-    fullNameMThree: "Repeat Phrase", // M3 P1: Repeat Phrase
+    fullNameMTwo: "Learn 2",
+    fullNameMThree: "Learn 2", // M3 P1: Repeat Phrase
     title: "L2",
     titleNew: "L2",
     titleThree: "P1", // Changed from "L1" to "P1" for correct sequence
@@ -10250,7 +10250,7 @@ export const practiceSteps = [
     fullName: "Practice 3",
     fullNameMOne: "Practice 1",
     fullNameMTwo: "Learn 2",
-    fullNameMThree: "Correct Image Phrase", // M3 P2: Correct Image Phrase
+    fullNameMThree: "Practice 1", // M3 P2: Correct Image Phrase
     title: "P1",
     titleNew: "P1",
     titleThree: "P2", // Changed from "L2" to "P2" for correct sequence
@@ -10260,7 +10260,7 @@ export const practiceSteps = [
     fullName: "Practice 4",
     fullNameMOne: "Practice 2",
     fullNameMTwo: "Practice 2",
-    fullNameMThree: "Phrase Reading", // M3 L2: Phrase Reading
+    fullNameMThree: "Practice 2", // M3 L2: Phrase Reading
     title: "P2",
     titleNew: "P2",
     titleThree: "L2", // Changed from "P2" to "L2" for correct sequence
@@ -10280,7 +10280,7 @@ export const practiceSteps = [
     fullName: "Practice 5",
     fullNameMOne: "Learn 3",
     fullNameMTwo: "Learn 3",
-    fullNameMThree: "Repeat Phrase", // M3 L3: Repeat Phrase
+    fullNameMThree: "Learn 3", // M3 L3: Repeat Phrase
     title: "L3",
     titleNew: "L3",
     titleThree: "L3",
@@ -10290,7 +10290,7 @@ export const practiceSteps = [
     fullName: "Practice 6",
     fullNameMOne: "Learn 4",
     fullNameMTwo: "Learn 4",
-    fullNameMThree: "Phrase Reading", // M3 P3: Phrase Reading
+    fullNameMThree: "Learn 4", // M3 P3: Phrase Reading
     title: "L4",
     titleNew: "L4",
     titleThree: "P3",
@@ -10300,7 +10300,7 @@ export const practiceSteps = [
     fullName: "Practice 7",
     fullNameMOne: "Practice 3",
     fullNameMTwo: "Practice 3",
-    fullNameMThree: "Correct Image Phrase", // M3 L4: Correct Image Phrase
+    fullNameMThree: "Practice 3", // M3 L4: Correct Image Phrase
     title: "P3",
     titleNew: "P3",
     titleThree: "L4",
@@ -10310,7 +10310,7 @@ export const practiceSteps = [
     fullName: "Practice 8",
     fullNameMOne: "Practice 4",
     fullNameMTwo: "Practice 4",
-    fullNameMThree: "Phrase Reading", // M3 P4: Phrase Reading
+    fullNameMThree: "Practice 4", // M3 P4: Phrase Reading
     title: "P4",
     titleNew: "P4",
     titleThree: "P4",
