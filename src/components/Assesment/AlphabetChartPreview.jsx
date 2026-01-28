@@ -24,6 +24,10 @@ import {
 import { wordData } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  playTTS,
+  stopAllAudio,
+} from "../../lib/axl-explorations/src/utils/audioUtils";
 
 // Demo instructions for each language
 const demoInstructions = {
@@ -297,7 +301,7 @@ const DemoAlphabetCard = ({
           <Box
             sx={{
               position: "absolute",
-              top: "50%",
+              top: "65%",
               left: "50%",
               transform: "translate(-50%, -50%)",
               zIndex: 10,
@@ -310,7 +314,7 @@ const DemoAlphabetCard = ({
           >
             <TouchAppIcon
               sx={{
-                fontSize: "48px",
+                fontSize: "64px",
                 color: "#6366f1",
                 filter: "drop-shadow(0 4px 8px rgba(99, 102, 241, 0.4))",
               }}
@@ -629,6 +633,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
   // Stop audio on unmount
   useEffect(() => {
     return () => {
+      stopAllAudio();
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -637,7 +642,6 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
         narrationRef.current.pause();
         narrationRef.current = null;
       }
-      speechSynthesis.cancel();
     };
   }, []);
 
@@ -715,35 +719,62 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     (currentPage + 1) * itemsPerPage
   );
 
-  // Play TTS narration
-  const playNarration = async (text) => {
-    if (isPlayingNarration) return;
-    setIsPlayingNarration(true);
+  // Get narration step key based on current state
+  const getNarrationStepKey = () => {
+    if (viewMode === "alphabet") {
+      if (waitingForToggle) {
+        return "alphabetNarration3";
+      } else if (alphabetClickCount >= 2) {
+        return "alphabetNarration2";
+      } else {
+        return "alphabetNarration1";
+      }
+    } else {
+      if (syllableClickCount >= 3) {
+        return "syllableNarration3";
+      } else if (syllableClickCount >= 1) {
+        return "syllableNarration2";
+      } else {
+        return "syllableNarration1";
+      }
+    }
+  };
 
-    return new Promise((resolve) => {
-      speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang =
-        activeLang === "te"
-          ? "te-IN"
-          : activeLang === "kn"
-          ? "kn-IN"
-          : activeLang === "hi"
-          ? "hi-IN"
-          : activeLang === "mr"
-          ? "mr-IN"
-          : "en-US";
-      utterance.rate = 0.9;
-      utterance.onend = () => {
-        setIsPlayingNarration(false);
-        resolve();
-      };
-      utterance.onerror = () => {
-        setIsPlayingNarration(false);
-        resolve();
-      };
-      speechSynthesis.speak(utterance);
-    });
+  // Play narration using audio files with TTS fallback
+  const playNarration = async (text, stepKey = null) => {
+    if (isPlayingNarration) {
+      return;
+    }
+    setIsPlayingNarration(true);
+    // Get the step key if not provided
+    const narrationKey = stepKey || getNarrationStepKey();
+    const audioPath = `/audio/audio-preview/Alphabet Chart/${activeLang}/${narrationKey}.wav`;
+    try {
+      // Try to play the audio file first
+      const audio = new Audio(audioPath);
+
+      await new Promise((resolve, reject) => {
+        audio.onended = () => {
+          resolve();
+        };
+        audio.onerror = (e) => {
+          reject(new Error("Audio file not found"));
+        };
+        audio.play().catch((e) => {
+          reject(e);
+        });
+      });
+    } catch (error) {
+      // Fall back to TTS
+      try {
+        speechSynthesis.cancel();
+        await playTTS(text, activeLang);
+      } catch (ttsError) {
+        console.warn("TTS also failed:", ttsError);
+      }
+    } finally {
+      setIsPlayingNarration(false);
+    }
   };
 
   // Play card audio
@@ -751,8 +782,8 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     const audioSrc = specificAudio || item.audio;
     if (!audioSrc) return;
 
-    // Don't allow clicks if waiting for toggle
-    if (waitingForToggle) return;
+    // Don't allow clicks if waiting for toggle or if narration is playing
+    if (waitingForToggle || isPlayingNarration) return;
 
     if (playingKey === item.key && currentSrcRef.current === audioSrc) {
       return;
@@ -788,7 +819,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
             setAlphabetPhaseComplete(true);
             setWaitingForToggle(true);
             setCurrentStepIndex(1);
-            playNarration(instructions.alphabetNarration3);
+            // Narration is handled by useEffect when waitingForToggle changes
           }
         } else {
           // Syllable mode
@@ -799,11 +830,11 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
           if (newCount >= 3) {
             // Demo complete!
             setCurrentStepIndex(2);
-            playNarration(instructions.syllableNarration3).then(() => {
-              setTimeout(() => {
-                setPreviewPhase("completion");
-              }, 1000);
-            });
+            // Narration is handled by useEffect when syllableClickCount changes
+            // Transition to completion after a delay to allow narration to play
+            setTimeout(() => {
+              setPreviewPhase("completion");
+            }, 3000);
           }
         }
       }
@@ -835,29 +866,25 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     if (newMode === "word" && waitingForToggle) {
       // User switched to syllable mode as instructed
       setWaitingForToggle(false);
-      playNarration(instructions.syllableNarration1);
+      // Narration is handled by useEffect when viewMode changes
     }
   };
 
   // Handle countdown complete
   const handleCountdownComplete = () => {
     setPreviewPhase("demo");
-    setTimeout(() => {
-      playNarration(instructions.alphabetNarration1);
-    }, 500);
+    // Narration is now handled by the useEffect that tracks instruction changes
   };
 
   // Handle skip demo
   const handleSkipDemo = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-    speechSynthesis.cancel();
+    stopAllAudio();
     onStartExploring();
   };
 
   // Handle replay demo
   const handleReplayDemo = () => {
+    stopAllAudio();
     setPreviewPhase("countdown");
     setViewMode("alphabet");
     setAlphabetClickCount(0);
@@ -888,6 +915,64 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
       }
     }
   };
+
+  // Get current narration text (for TTS)
+  const getCurrentNarration = () => {
+    if (viewMode === "alphabet") {
+      if (waitingForToggle) {
+        return instructions.alphabetNarration3;
+      } else if (alphabetClickCount >= 2) {
+        return instructions.alphabetNarration2;
+      } else {
+        return instructions.alphabetNarration1;
+      }
+    } else {
+      if (syllableClickCount >= 3) {
+        return instructions.syllableNarration3;
+      } else if (syllableClickCount >= 1) {
+        return instructions.syllableNarration2;
+      } else {
+        return instructions.syllableNarration1;
+      }
+    }
+  };
+
+  // Track the last played narration to avoid duplicate plays
+  const lastPlayedNarrationRef = useRef(null);
+
+  // Auto-play TTS when instruction changes during demo phase
+  useEffect(() => {
+    if (previewPhase !== "demo") {
+      lastPlayedNarrationRef.current = null;
+      return;
+    }
+
+    const currentNarration = getCurrentNarration();
+    // Only play if this is a new narration text
+    if (
+      currentNarration &&
+      currentNarration !== lastPlayedNarrationRef.current
+    ) {
+      lastPlayedNarrationRef.current = currentNarration;
+
+      // Small delay to ensure UI has updated
+      const timer = setTimeout(() => {
+        playNarration(currentNarration);
+      }, 300);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    previewPhase,
+    viewMode,
+    alphabetClickCount,
+    syllableClickCount,
+    waitingForToggle,
+    instructions,
+  ]);
 
   if (!open) return null;
 
@@ -1236,6 +1321,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
                         showHandPointer={
                           index === highlightedCardIndex &&
                           !waitingForToggle &&
+                          !isPlayingNarration &&
                           ((viewMode === "alphabet" &&
                             alphabetClickCount < 3) ||
                             (viewMode === "word" && syllableClickCount < 3))

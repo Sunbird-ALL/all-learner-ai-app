@@ -236,7 +236,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
       .filter((group) => "letter" in group && group.letter) // only letter-based groups
       .map((group) => {
         const first = group.items?.[0] || {};
-        console.log("first", first);
+        // console.log("first", first);
 
         return {
           key: group.letter,
@@ -340,32 +340,17 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     });
   };
 
-  // const getTitle = () => {
-  //   if (lang === "en") {
-  //     return viewMode === "alphabet" ? "Alphabet Chart" : "Syllable Chart";
-  //   }
+  const getToggleLabel = (type) => {
+    const labels = {
+      en: { alphabet: "Alphabet", syllable: "Syllable" },
+      hi: { alphabet: "वर्णमाला", syllable: "मात्रा" },
+      te: { alphabet: "అక్షరమాల", syllable: "గుణింతాలు" },
+      kn: { alphabet: "ಅಕ್ಷರಮಾಲೆ", syllable: "ಗುಣಿತಾಕ್ಷರ" },
+      ta: { alphabet: "எழுத்துக்கள்", syllable: "சொற்கள்" },
+    };
 
-  //   if (lang === "hi") {
-  //     return viewMode === "alphabet" ? "वर्णमाला चार्ट" : "मात्रा चार्ट";
-  //   }
-
-  //   if (lang === "te") {
-  //     return viewMode === "alphabet" ? "అక్షరమాల చార్ట్" : "గుణింతాల చార్ట్";
-  //   }
-
-  //   if (lang === "kn") {
-  //     return viewMode === "alphabet" ? "ಅಕ್ಷರಮಾಲೆ ಚಾರ್ಟ್" : "ಗುಣಿತಾಕ್ಷರ ಚಾರ್ಟ್";
-  //   }
-
-  //   if (lang === "ta") {
-  //     return viewMode === "alphabet"
-  //       ? "எழுத்துக்கள் பட்டியல்"
-  //       : "சொற்கள் பட்டியல்";
-  //   }
-
-  //   // Default for other languages or unknown
-  //   return viewMode === "alphabet" ? "Alphabet Chart" : "Syllable Chart";
-  // };
+    return labels[lang]?.[type] || labels.en[type];
+  };
 
   useEffect(() => {
     setCurrentPage(0);
@@ -436,8 +421,13 @@ const AlphabetChart = ({ open, onClose, lang }) => {
             },
           }}
         >
-          <ToggleButton value="alphabet">Alphabet</ToggleButton>
-          <ToggleButton value="word">Syllable</ToggleButton>
+          <ToggleButton value="alphabet">
+            {getToggleLabel("alphabet")}
+          </ToggleButton>
+
+          <ToggleButton value="syllable">
+            {getToggleLabel("syllable")}
+          </ToggleButton>
         </ToggleButtonGroup>
 
         {/* RIGHT — Close */}

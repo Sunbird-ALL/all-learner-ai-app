@@ -10,6 +10,7 @@ import { playAudio, playTTS, playSuccessSound, playFailureSound, stopAllAudio, i
 import { CountdownTimer } from "../CountdownTimer";
 import { DemoCompletionScreen } from "../DemoCompletionScreen";
 import { LetterHuntGameCore, type LetterHuntQuestion } from "./LetterHuntGameCore";
+import { setLocalData } from "../../../../../utils/constants";
 
 interface LetterGamePreviewProps {
   onStartGame: () => void;
@@ -164,8 +165,19 @@ export function LetterGamePreview({
   const speakerButtonRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
 
-  const audioLanguage = selectedAudioLanguage || 'en';
-  const contentLanguage = selectedLanguage || 'en';
+  // Trigger chart pointer when demo completes
+  useEffect(() => {
+    if (previewPhase === "completion") {
+      console.log("Demo complete, setting alphabetdemo flag in localStorage");
+      // localStorage.setItem("alphabetdemo", "true");
+      setLocalData("alphabetdemo", "true");
+      // Dispatch custom event for intra-tab communication
+      window.dispatchEvent(new Event("alphabetDemoComplete"));
+    }
+  }, [previewPhase]);
+
+  const audioLanguage = selectedAudioLanguage || "en";
+  const contentLanguage = selectedLanguage || "en";
   const instructions = gameInstructions[contentLanguage];
 
   // Create demo question for preview

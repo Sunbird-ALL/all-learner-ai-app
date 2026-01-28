@@ -470,6 +470,8 @@ export const ProfileHeader = ({
   const [showAudioDiagnostic, setShowAudioDiagnostic] = useState(false);
   const [openAlphabetModal, setOpenAlphabetModal] = useState(false);
   const [openAlphabetPreview, setOpenAlphabetPreview] = useState(false);
+  const [showChartPointer, setShowChartPointer] = useState(false);
+  const chartAudioRef = React.useRef(null);
 
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
@@ -500,6 +502,119 @@ export const ProfileHeader = ({
 
     return () => clearTimeout(timeout);
   }, [wordCount]);
+
+  // Listen for demo completion to trigger chart pointer
+  useEffect(() => {
+    const playChartAudio = () => {
+      const audioPath = `/audio/audio-preview/Alphabet Chart/Chart Icon/${language}/ChartNarration.wav`;
+      const audio = new Audio(audioPath);
+      chartAudioRef.current = audio;
+
+      audio.onplay = () => {
+        setShowChartPointer(true);
+      };
+
+      audio.onended = () => {
+        chartAudioRef.current = null;
+      };
+
+      audio.onerror = () => {
+        console.warn(
+          "Chart audio file not found, skipping audio but showing pointer"
+        );
+        setShowChartPointer(true);
+        chartAudioRef.current = null;
+      };
+
+      // Small delay to ensure component is ready
+      setTimeout(() => {
+        audio.play().catch((e) => {
+          console.warn("Chart audio playback failed:", e);
+          setShowChartPointer(true);
+        });
+      }, 500);
+    };
+
+    const checkDemoCompletion = () => {
+      const isDemoComplete = getLocalData("alphabetdemo") === "true";
+      if (isDemoComplete && !showChartPointer) {
+        console.log(
+          "Alphabet demo completion detected, triggering chart pointer"
+        );
+        playChartAudio();
+        // Clear the flag so it doesn't trigger again unless demo is re-run
+        // localStorage.removeItem("alphabetdemo");
+      }
+    };
+
+    // Check immediately on mount/language change
+    checkDemoCompletion();
+
+    // Also listen for changes in case it's completed while this component is mounted
+    const handleStorageChange = (e) => {
+      if (e.key === "alphabetdemo" && e.newValue === "true") {
+        checkDemoCompletion();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Custom event listener for internal storage changes (since 'storage' event only fires between tabs)
+    const handleCustomStorageChange = () => checkDemoCompletion();
+    window.addEventListener("alphabetDemoComplete", handleCustomStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "alphabetDemoComplete",
+        handleCustomStorageChange
+      );
+      if (chartAudioRef.current) {
+        chartAudioRef.current.pause();
+        chartAudioRef.current = null;
+      }
+    };
+  }, [language]);
+
+  const handleAlphabetChartOpen = () => {
+    const isDemoComplete = getLocalData("alphabetdemo") === "true";
+
+    if (isDemoComplete) {
+      setOpenAlphabetPreview(true);
+
+      // ✅ REMOVE HERE (user action completed)
+      localStorage.removeItem("alphabetdemo");
+    } else {
+      setOpenAlphabetModal(true);
+    }
+
+    setShowChartPointer(false);
+
+    if (chartAudioRef.current) {
+      chartAudioRef.current.pause();
+      chartAudioRef.current = null;
+    }
+  };
+
+  const getAlphabetTooltipText = () => {
+    const texts = {
+      en: {
+        title: "📚 Alphabet Chart",
+        desc: "If you need help with an alphabet or syllable, check the chart here.",
+      },
+      te: {
+        title: "📚 అక్షరమాల చార్ట్",
+        desc: "మీకు ఏదైనా అక్షరం లేదా అక్షర సమూహంతో సహాయం కావాలా? అయితే, ఇక్కడ ఉన్న పట్టికను చూడండి.",
+      },
+      kn: {
+        title: "📚 ಅಕ್ಷರಮಾಲೆ ಚಾರ್ಟ್",
+        desc: "ನಿಮಗೆ ಅಕ್ಷರಮಾಲೆ ಅಥವಾ ಉಚ್ಚಾರಾಂಶದ ಬಗ್ಗೆ ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿ ಚಾರ್ಟ್ ಪರಿಶೀಲಿಸಿ.",
+      },
+    };
+
+    return texts[lang] || texts.en;
+  };
+  const tooltipText = getAlphabetTooltipText();
 
   const handleProfileBack = () => {
     try {
@@ -898,24 +1013,23 @@ export const ProfileHeader = ({
                       }}
                     />
                   </ListItemButton>
-                  <Divider />
-                  <ListItemButton
-                    onClick={() => {
-                      setOpenAlphabetPreview(true);
-                      setMenuOpen(false);
-                    }}
-                  >
-                    <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
-                    <ListItemText
-                      primary="Alphabet Chart"
-                      primaryTypographyProps={{
-                        fontFamily: "Quicksand",
-                        fontWeight: 600,
-                        fontSize: "14px",
-                        color: "#333F61",
-                      }}
-                    />
-                  </ListItemButton>
+                  {["B", "m1", "m2", "m3"].includes(milestoneLevel) && (
+                    <>
+                      <Divider />
+                      <ListItemButton onClick={handleAlphabetChartOpen}>
+                        <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
+                        <ListItemText
+                          primary="Alphabet Chart"
+                          primaryTypographyProps={{
+                            fontFamily: "Quicksand",
+                            fontWeight: 600,
+                            fontSize: "14px",
+                            color: "#333F61",
+                          }}
+                        />
+                      </ListItemButton>
+                    </>
+                  )}
                   <Divider />
                   <ListItemButton onClick={handleLogout}>
                     <LogoutIcon sx={{ mr: 1 }} />
@@ -945,80 +1059,89 @@ export const ProfileHeader = ({
               alignItems: "center",
             }}
           >
-            <CustomTooltip
-              title={
-                <Box sx={{ textAlign: "center", p: 0.5 }}>
-                  <Typography sx={{ fontWeight: 600, fontSize: "14px" }}>
-                    📚 Alphabet Chart
-                  </Typography>
-                  <Typography sx={{ fontSize: "12px", opacity: 0.9 }}>
-                    Refer here for letters & syllables you struggle with!
-                  </Typography>
-                </Box>
-              }
-              arrow
-              placement="bottom"
-            >
-              <Box sx={{ position: "relative", display: "inline-flex" }}>
-                <IconButton
-                  onClick={() => setOpenAlphabetPreview(true)}
-                  sx={{
-                    mr: { xs: "5px", sm: "10px" },
-                    padding: isMobile ? "6px" : "8px",
-                    backgroundColor: "rgba(255, 255, 255, 0.7)",
-                    animation: "pulseGlow 2s ease-in-out infinite",
-                    "@keyframes pulseGlow": {
-                      "0%, 100%": {
-                        boxShadow: "0 0 0 0 rgba(238, 105, 49, 0.4)",
-                      },
-                      "50%": {
-                        boxShadow: "0 0 0 8px rgba(238, 105, 49, 0)",
-                      },
-                    },
-                    "&:hover": {
-                      backgroundColor: "rgba(255, 255, 255, 0.9)",
-                    },
-                  }}
-                >
-                  <MenuBookIcon
+            {["B", "m1", "m2", "m3"].includes(milestoneLevel) && (
+              <CustomTooltip
+                open={showChartPointer}
+                title={
+                  <Box sx={{ textAlign: "center", p: 0.5 }}>
+                    <Typography
+                      sx={{ fontWeight: 600, fontSize: "18px", color: "#fff" }}
+                    >
+                      {tooltipText.title}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: "16px", opacity: 0.9, color: "#fff" }}
+                    >
+                      {tooltipText.desc}
+                    </Typography>
+                  </Box>
+                }
+                arrow
+                placement="bottom"
+              >
+                <Box sx={{ position: "relative", display: "inline-flex" }}>
+                  <IconButton
+                    onClick={handleAlphabetChartOpen}
                     sx={{
-                      color: "#EE6931",
-                      fontSize: isMobile ? "24px" : "24px",
-                    }}
-                  />
-                </IconButton>
-                {/* Animated finger pointer */}
-                <Box
-                  sx={{
-                    position: "absolute",
-                    bottom: isMobile ? -20 : -25,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    animation: "pointToChart 1.5s ease-in-out infinite",
-                    "@keyframes pointToChart": {
-                      "0%, 100%": {
-                        transform: "translateX(-50%) translateY(0)",
-                        opacity: 1,
+                      mr: { xs: "5px", sm: "10px" },
+                      padding: isMobile ? "6px" : "8px",
+                      backgroundColor: "rgba(255, 255, 255, 0.7)",
+                      animation: "pulseGlow 2s ease-in-out infinite",
+                      "@keyframes pulseGlow": {
+                        "0%, 100%": {
+                          boxShadow: "0 0 0 0 rgba(238, 105, 49, 0.4)",
+                        },
+                        "50%": {
+                          boxShadow: "0 0 0 8px rgba(238, 105, 49, 0)",
+                        },
                       },
-                      "50%": {
-                        transform: "translateX(-50%) translateY(-8px)",
-                        opacity: 0.7,
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
                       },
-                    },
-                    pointerEvents: "none",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: isMobile ? "16px" : "20px",
-                      display: "inline-block",
                     }}
                   >
-                    👆
-                  </span>
+                    <MenuBookIcon
+                      sx={{
+                        color: "#EE6931",
+                        fontSize: isMobile ? "24px" : "24px",
+                      }}
+                    />
+                  </IconButton>
+                  {/* Animated finger pointer - only show when audio is playing */}
+                  {showChartPointer && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: isMobile ? -20 : -35,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        animation: "pointToChart 1.5s ease-in-out infinite",
+                        "@keyframes pointToChart": {
+                          "0%, 100%": {
+                            transform: "translateX(-50%) translateY(0)",
+                            opacity: 1,
+                          },
+                          "50%": {
+                            transform: "translateX(-50%) translateY(-8px)",
+                            opacity: 0.7,
+                          },
+                        },
+                        pointerEvents: "none",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: isMobile ? "25px" : "40px",
+                          display: "inline-block",
+                        }}
+                      >
+                        👆
+                      </span>
+                    </Box>
+                  )}
                 </Box>
-              </Box>
-            </CustomTooltip>
+              </CustomTooltip>
+            )}
 
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
               <Box sx={{ position: "relative" }} mr="10px">
@@ -1200,7 +1323,7 @@ const Assesment = ({ discoverStart }) => {
     setLocalData("rStepZero", 0);
   }
 
-  console.log("nLang", nativeLang, nativeLangEnable, level);
+  // console.log("nLang", nativeLang, nativeLangEnable, level);
 
   useEffect(() => {
     setLocalData("lang", lang);
@@ -1242,7 +1365,7 @@ const Assesment = ({ discoverStart }) => {
           }
         }
 
-        console.log("Assigned LEVEL:", level);
+        // console.log("Assigned LEVEL:", level);
 
         localStorage.setItem(
           "virtualId",
@@ -1321,7 +1444,7 @@ const Assesment = ({ discoverStart }) => {
           }
         }
 
-        console.log("Assigned LEVEL:", level);
+        // console.log("Assigned LEVEL:", level);
 
         let sessionId = getLocalData("sessionId");
 
@@ -1485,19 +1608,19 @@ const Assesment = ({ discoverStart }) => {
   const f3FlowStep = getF3FlowStep();
   const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
 
-  console.log("Discovery Start - F1/F2/F3 detection:", {
-    milestoneLevel,
-    subMilestoneLevel,
-    shouldShowF1,
-    shouldShowF2,
-    shouldShowF3,
-    isF1FlowActive,
-    isF2FlowActive,
-    isF3FlowActive,
-    f1FlowStepIndex: f1FlowStep.index,
-    f2FlowStepIndex: f2FlowStep.index,
-    f3FlowStepIndex: f3FlowStep.index,
-  });
+  // console.log("Discovery Start - F1/F2/F3 detection:", {
+  //   milestoneLevel,
+  //   subMilestoneLevel,
+  //   shouldShowF1,
+  //   shouldShowF2,
+  //   shouldShowF3,
+  //   isF1FlowActive,
+  //   isF2FlowActive,
+  //   isF3FlowActive,
+  //   f1FlowStepIndex: f1FlowStep.index,
+  //   f2FlowStepIndex: f2FlowStep.index,
+  //   f3FlowStepIndex: f3FlowStep.index,
+  // });
 
   const sectionStyle = {
     width: "100vw",
