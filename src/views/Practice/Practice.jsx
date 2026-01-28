@@ -6296,10 +6296,12 @@ const Practice = () => {
                 gameOver({ link: "/assesment-end" }, true);
                 setLocalData("tFlow", true);
                 //setLocalData("wordWall", true);
+                return; // Exit to show feedback screen for M3/M6/M9
               }
               if (lang === "en") {
                 gameOver({ link: "/assesment-end" }, true);
                 setLocalData("wordWall", true);
+                return; // Exit to show feedback screen
               }
 
               try {
@@ -10347,6 +10349,7 @@ const Practice = () => {
         const readAloudContentCount =
           currentGetContentForF3?.readAloudContentCount;
         const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+        const sessionId = getLocalData("sessionId");
 
         // Track which sub-step we're on for Apply steps (Letter Launcher -> Memory Challenge -> Read Aloud)
         const f3ApplySubStepState =
@@ -10367,6 +10370,7 @@ const Practice = () => {
                 level={memoryChallengeLevel}
                 endLevel={memoryChallengeEndLevel || 3}
                 contentCount={memoryChallengeContentCount}
+                sessionId={sessionId}
                 handleNext={() => {
                   // Check for redirect request first
                   const f3FlowRedirect = getLocalData("f3FlowRedirect");
@@ -10474,6 +10478,7 @@ const Practice = () => {
             contentType={contentType}
             contentCount={letterLauncherContentCount}
             isShowCase={isShowcase}
+            sessionId={sessionId}
             handleNext={() => {
               // FIRST: Check if there's a redirect request (e.g., from failed level)
               // This takes priority over moving to Memory Challenge
@@ -11055,6 +11060,7 @@ const Practice = () => {
         const passRedirect = currentGetContentForF3?.passRedirect;
         const isShowcase = currentGetContentForF3?.isShowcase || false;
         const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+        const sessionId = getLocalData("sessionId");
 
         return (
           <MemoryChallengeMechanics
@@ -11063,6 +11069,7 @@ const Practice = () => {
             level={memoryChallengeLevel}
             endLevel={memoryChallengeEndLevel}
             contentCount={memoryChallengeContentCount}
+            sessionId={sessionId}
             handleNext={() => {
               // Check for redirect request first
               const f3FlowRedirect = getLocalData("f3FlowRedirect");

@@ -61,6 +61,7 @@ const MemoryChallengeMechanicsContent = ({
   isF3FlowActive,
   f3FlowStep,
   contentCount = 5, // Number of sequences per level
+  sessionId, // Optional: Session ID from parent
 }) => {
   const [currentGameLevel, setCurrentGameLevel] = useState(level || 1);
   const [isGameComplete, setIsGameComplete] = useState(false);
@@ -406,9 +407,11 @@ const MemoryChallengeMechanicsContent = ({
     // Call assessment API for both pass and fail
     const currentUser = sessionManager.getCurrentUser();
     if (currentUser && questionSummaries.length > 0) {
-      const sessionId = sessionTelemetryManager.getCurrentSession()?.sessionId;
-      const subsessionId =
-        sessionTelemetryManager.getCurrentSubSession()?.subSessionId;
+      const currentSession = sessionTelemetryManager.getCurrentSession();
+      const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
+      // Use sessionId prop if provided, otherwise fallback to telemetry sessionId
+      const effectiveSessionId = sessionId || currentSession?.sessionId;
+      const subsessionId = currentSubSession?.subSessionId;
       const actualCorrect = questionSummaries.filter((q) => q.isCorrect).length;
 
       try {
@@ -423,7 +426,7 @@ const MemoryChallengeMechanicsContent = ({
           totalScore: actualCorrect,
           timeSpent: timeSpent,
           assessmentSummary: questionSummaries,
-          sessionId: sessionId,
+          sessionId: effectiveSessionId,
           subsessionId: subsessionId,
           sub_session_id: assessmentParams.sub_session_id,
           sub_milestone_level: assessmentParams.sub_milestone_level,
