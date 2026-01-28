@@ -8294,7 +8294,7 @@ const Practice = () => {
         enableNext,
         showTimer: false,
         points,
-        steps: questions?.length,
+        steps: 0, //questions?.length,
         currentStep: currentQuestion + 1,
         progressData,
         showProgress: true,
