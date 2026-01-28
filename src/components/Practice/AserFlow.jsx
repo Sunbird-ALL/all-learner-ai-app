@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Confetti from "react-confetti";
 import headerImg from "../../assets/headerImg.svg";
 import speakButton from "../../assets/speakButton.svg";
@@ -63,6 +64,7 @@ import magnifier from "../../assets/magnifier.png";
 import { Box } from "@mui/material";
 import listenBearGif from "../../assets/beardances.gif";
 import hintimg from "../../assets/hintsicon.svg";
+import { MessageDialog } from "../Assesment/Assesment";
 
 const AserFlow = ({
   // setVoiceText,
@@ -91,7 +93,7 @@ const AserFlow = ({
   handleBack,
   // setEnableNext,
   loading,
-  // setOpenMessageDialog,
+  setOpenMessageDialog,
   audio,
   currentImg,
   vocabCount,
@@ -131,7 +133,6 @@ const AserFlow = ({
   const [initialAssesment, setInitialAssesment] = useState(true);
   const [disableScreen, setDisableScreen] = useState(false);
   // const [play] = useSound(LevelCompleteAudio);
-  const [openMessageDialog, setOpenMessageDialog] = useState("");
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -142,7 +143,8 @@ const AserFlow = ({
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [open, setOpen] = useState(false);
   const [currentItemNumber, setCurrentItemNumber] = useState(0);
-  const TOTAL_ITEMS = 12;
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const TOTAL_ITEMS = 10;
 
   const completionPercentage = Math.min(
     (currentItemNumber / TOTAL_ITEMS) * 100,
@@ -245,11 +247,36 @@ const AserFlow = ({
       onSpeakerClick();
     }
 
-    const audio = new Audio(
-      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentItem?.contentId}.wav`
-    );
-    setIsAudioPlaying(true);
-    audio.play();
+    // Only play audio if contentId exists and is not a fake item
+    if (currentItem?.contentId && !currentItem?.isFake) {
+      try {
+        const audio = new Audio(
+          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentItem.contentId}.wav`
+        );
+        setIsAudioPlaying(true);
+
+        // Handle audio events
+        audio.onended = () => {
+          setIsAudioPlaying(false);
+        };
+
+        audio.onerror = (error) => {
+          console.error("Error loading audio:", error);
+          setIsAudioPlaying(false);
+        };
+
+        audio.play().catch((error) => {
+          console.error("Error playing audio:", error);
+          setIsAudioPlaying(false);
+        });
+      } catch (error) {
+        console.error("Error creating audio:", error);
+        setIsAudioPlaying(false);
+      }
+    } else {
+      // If no valid audio, just set playing to false
+      setIsAudioPlaying(false);
+    }
   };
 
   const handleCompletion = async () => {
@@ -274,7 +301,6 @@ const AserFlow = ({
       };
 
       const result = await updateLearnerProfile(lang, requestBody);
-      console.log("Learner progress result:", result);
     } catch (error) {
       console.error("Error creating learner progress:", error);
     }
@@ -286,7 +312,6 @@ const AserFlow = ({
         currentCollectionId,
         totalSyllableCount
       );
-      console.log("GetSet result:", getSetResultRes);
     } catch (error) {
       console.error("Error fetching set result:", error);
     }
@@ -345,51 +370,53 @@ const AserFlow = ({
     if (correct) correctAudio.play();
     else wrongAudio.play();
 
-    // ✅ Increase progress on every bubble click
-    setCurrentItemNumber((prev) => Math.min(prev + 1, TOTAL_ITEMS));
-
     // If in demo mode and custom handler provided, call it (in addition to normal flow)
     // Pass whether the answer was correct
     if (isShowCase && onBubbleClick) {
       onBubbleClick(letter, index, correct);
     }
 
-    // Only proceed to next question if NOT in blocked demo mode OR if answer is correct
+    // Always proceed to next question (unless in blocked demo mode with wrong answer)
     if (!blockProgression || correct) {
       setTimeout(() => {
-        handleNextClick();
+        handleNextClick(correct);
+      }, 1000);
+    } else {
+      // Even if blocked, we should still allow progression after showing feedback
+      setTimeout(() => {
+        handleNextClick(false);
       }, 1000);
     }
   };
 
-  const handleNextClick = async () => {
+  const handleNextClick = async (wasCorrect = false) => {
     setSelectedLetter("");
     setIsCorrect(null);
     setShowNext(false);
     setIsAudioPlaying(false);
 
-    if (currentIndex < questions.length - 3) {
-      setCurrentIndex((prev) => prev + 1);
-    } else {
-      const totalAnswered = Object.keys(ansSelectionStatus).length;
-      const correctCount = Object.values(ansSelectionStatus).filter(
-        (val) => val === true
-      ).length;
+    // Increment progress for both correct and wrong answers
+    const newItemNumber = Math.min(currentItemNumber + 1, TOTAL_ITEMS);
+    setCurrentItemNumber(newItemNumber);
 
-      const correctPercentage =
-        totalAnswered > 0 ? (correctCount / totalAnswered) * 100 : 0;
+    // After completing 10 items (regardless of correct/wrong), show success message
+    if (newItemNumber >= TOTAL_ITEMS) {
+      // Show success message immediately
+      setShowSuccessMessage(true);
 
-      if (correctPercentage >= 80) {
-        await handleCompletion();
-        setLocalData("rFlow", false);
-      }
+      await handleCompletion();
+      setLocalData("rFlow", false);
       callTelemetryDiscovery("Discovery-AserFlow");
-      handleNext?.();
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-        navigate("/");
-      } else {
-        navigate("/discover-start");
-      }
+
+      // Don't auto-navigate - wait for user to click Continue button
+      // Navigation will happen in the closeDialog callback
+
+      return;
+    }
+
+    // Always move to next question (whether correct or wrong)
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
     }
   };
 
@@ -817,6 +844,24 @@ const AserFlow = ({
           `}
         </style>
       )}
+
+      {/* Success Message Dialog with Panda - Rendered via Portal to ensure proper centering */}
+      {showSuccessMessage &&
+        createPortal(
+          <MessageDialog
+            message="You have successfully completed the character game"
+            closeDialog={() => {
+              setShowSuccessMessage(false);
+              handleNext?.();
+              if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                navigate("/");
+              } else {
+                navigate("/discover-start");
+              }
+            }}
+          />,
+          document.body
+        )}
     </MainLayout>
   );
 };
