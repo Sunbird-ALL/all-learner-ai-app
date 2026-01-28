@@ -2206,14 +2206,14 @@ const wordData = {
 
   te: [
     {
-      text: "నది",
-      audio: "6ed1fe0d-647d-436a-b2cf-1f676f7e3801.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.నదిAudio),
+      text: "గది",
+      audio: "99be1000-4455-456b-aec4-7bb64eb03357.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గదిAudio),
     },
     {
-      text: "చేప",
-      audio: "5449b6cc-6995-454a-8607-0df7fa671ce7.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.చేపAudio),
+      text: "చేను",
+      audio: "5cb22860-042d-4faa-972d-d9f5c51f9616.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చేనుAudio),
     },
     {
       text: "చీర",
@@ -2241,9 +2241,9 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.జాతరAudio),
     },
     {
-      text: "గీత",
-      audio: "41f708d4-02ea-476e-9334-61ac0bedb149.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.గీతAudio),
+      text: "గీరు",
+      audio: "76a165f2-960e-4445-9c60-89ac34197a2b.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గీరుAudio),
     },
     {
       text: "జైలు",
@@ -2251,9 +2251,9 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.జైలుAudio),
     },
     {
-      text: "కోతి",
-      audio: "c4fcbe5e-00d8-41d0-b58d-0de2a911d9f9.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.కోతిAudio),
+      text: "కోకిల",
+      audio: "adfb12ce-cc02-447d-bea6-c75455fa4eb3.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.కోకిలAudio),
     },
     {
       text: "నౌక",
@@ -2261,9 +2261,9 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.నౌకAudio),
     },
     {
-      text: "నీరు",
-      audio: "31be02e2-b3ed-4b2c-9243-8f4ed81e9316.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.నీరుAudio),
+      text: "నీకు",
+      audio: "d767350b-192c-46ab-8794-c23936999100.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నీకుAudio),
     },
     {
       text: "పోరు",
@@ -2316,14 +2316,14 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.టౌనుAudio),
     },
     {
-      text: "పులి",
-      audio: "abb65b54-772c-451d-a530-617caa98e1c7.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.పులిAudio),
+      text: "బాలిక",
+      audio: "5a661a20-5587-4a05-8b04-7bb80c78af7f.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.బాలికAudio),
     },
     {
-      text: "తేనె",
-      audio: "3163a125-1731-4e69-9e1d-71bbf802ebab.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.తేనెAudio),
+      text: "నెమలి",
+      audio: "ba2d7442-074d-454e-9c24-2780eb6f2e59.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నెమలిsplitAudio),
     },
     {
       text: "పశువు",
@@ -2336,14 +2336,14 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.బూడిదAudio),
     },
     {
-      text: "ప్రకృతి",
-      audio: "002bddba-7629-412e-b4c9-397f1cb0cf4e.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.ప్రకృతిAudio),
+      text: "నుదురు",
+      audio: "3e27d58d-72c3-4cc3-8886-e0444293f576.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నుదురుAudio),
     },
     {
-      text: "మైదాకు",
-      audio: "bf89b3f3-2b29-4647-92bf-44574e968f47.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.మైదాకుAudio),
+      text: "మైదానం",
+      audio: "62d51ed5-c606-435e-a23d-cee6cbd5446d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మైదానంAudio),
     },
     {
       text: "నొసలు",
@@ -2401,14 +2401,14 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.పైసలుAudio),
     },
     {
-      text: "మొసలి",
-      audio: "1100588c-3f6e-4e2c-9ca2-873ac4855a79.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.మొసలిAudio),
+      text: "మొదలు",
+      audio: "06b635ed-ee50-4979-bf3d-6120053e423c.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మొదలుAudio),
     },
     {
-      text: "సినిమా",
-      audio: "06c0f1ac-ea35-4033-94aa-7d0ca1f7e2b0.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.సినిమాAudio),
+      text: "మాటలు",
+      audio: "7ff704dc-f1f0-48d0-8ab3-6fa3de08c68e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మాటలుAudio),
     },
     {
       text: "వివాహం",
@@ -2466,9 +2466,9 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.ఊరేగింపుAudio),
     },
     {
-      text: "లేగదూడ",
-      audio: "5939f0e0-eb6c-40a6-b118-fcc6a234f09a.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.లేగదూడAudio),
+      text: "చూడలేదు",
+      audio: "41640d7e-a923-4cc2-a174-072f27000c31.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చూడలేదుAudio),
     },
     {
       text: "గులాబీలు",
@@ -2501,9 +2501,9 @@ const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.నేలAudio),
     },
     {
-      text: "బృందం",
-      audio: "9983f09a-f95d-4711-8962-cc1f2cbfcf77.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.బృందంAudio),
+      text: "తోలు",
+      audio: "a661db28-f049-4268-99a2-6cbf10ba23c0.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.తోలుAudio),
     },
   ],
   kn: [
