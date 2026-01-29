@@ -388,6 +388,7 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
           top: "150px",
           left: "50%",
           transform: "translateX(-50%)",
+          zIndex: 10,
         }}
       >
         <h1
@@ -408,8 +409,9 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
           position: "relative",
           width: "100px",
           height: "100px",
-          marginTop: "60px",
+          marginTop: "140px",
           marginBottom: "30px",
+          zIndex: 5,
         }}
       >
         <img
