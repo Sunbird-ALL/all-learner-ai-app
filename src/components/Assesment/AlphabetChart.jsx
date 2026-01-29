@@ -87,12 +87,12 @@ const AlphabetCard = ({ item, playAudio, isActive, mode }) => {
         sx={{
           bgcolor: "#FFFFFF",
           borderRadius: "16px",
-          p: 2,
+          p: 1.5,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
-          height: "240px",
+          height: "215px",
           cursor: "pointer",
 
           boxShadow: isActive
@@ -126,7 +126,7 @@ const AlphabetCard = ({ item, playAudio, isActive, mode }) => {
             sx={{
               fontWeight: "bold",
               color: "#333F61",
-              fontSize: mode === "alphabet" ? "3.8rem" : "2.8rem",
+              fontSize: mode === "alphabet" ? "2.8rem" : "2.2rem",
               width: "100%",
             }}
           >
@@ -145,7 +145,7 @@ const AlphabetCard = ({ item, playAudio, isActive, mode }) => {
               }
             }}
           >
-            <VolumeUpIcon />
+            <VolumeUpIcon sx={{ fontSize: "1.2rem" }} />
           </IconButton>
         </Box>
 
@@ -158,7 +158,7 @@ const AlphabetCard = ({ item, playAudio, isActive, mode }) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              my: 1,
+              my: 0.5,
               overflow: "hidden",
               cursor: "pointer",
               "&:hover": {
@@ -188,8 +188,8 @@ const AlphabetCard = ({ item, playAudio, isActive, mode }) => {
             fontWeight: 600,
             color: "#333F61",
             textAlign: "center",
-            fontSize: "1.5rem",
-            mt: 1,
+            fontSize: "1.3rem",
+            mt: 0.5,
           }}
         >
           {renderHighlightedWord()}
@@ -427,6 +427,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
   return (
     <Dialog
       fullScreen
+      // width="90%"
+      // maxWidth="1200px"
       open={open}
       onClose={onClose}
       PaperProps={{
@@ -436,6 +438,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
           display: "flex",
           flexDirection: "column",
           backdropFilter: "blur(25px)",
+          zIndex: 9999,
         },
       }}
     >
@@ -511,7 +514,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
               },
             }}
           >
-            <CloseIcon sx={{ fontSize: { xs: "2rem", sm: "2rem" } }} />
+            <CloseIcon sx={{ fontSize: { xs: "1.7rem", sm: "1.5rem" } }} />
           </IconButton>
         </Box>
       </Box>

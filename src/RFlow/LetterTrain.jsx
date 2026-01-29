@@ -6334,10 +6334,18 @@ const LetterTrain = ({
     const audio = new Audio(src);
     audioRef.current = audio;
 
+    const alphabetDemoStatus = getLocalData("showAlphabetDemo");
+    console.log("alphabetDemoStatus", alphabetDemoStatus);
+
     audio.onended = () => {
       if (currentIndex === 0) {
-        setLocalData("alphabetdemo", "true");
-        window.dispatchEvent(new Event("alphabetDemoComplete"));
+        // ✅ Set only if key does NOT exist
+        if (alphabetDemoStatus === null) {
+          setLocalData("showAlphabetDemo", "true");
+          window.dispatchEvent(new Event("alphabetDemoComplete"));
+        }
+
+        // ❌ If it's already "false" or "true", do nothing
       }
     };
 

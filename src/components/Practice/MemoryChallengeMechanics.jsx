@@ -84,7 +84,10 @@ const MemoryChallengeMechanicsContent = ({
       : "en";
   const initialAudioLanguage = initialLanguage;
 
-  // Initialize telemetry session before game starts
+  useEffect(() => {
+    localStorage.setItem("selectedLanguage", initialLanguage);
+    localStorage.setItem("selectedAudioLanguage", initialAudioLanguage);
+  }, [initialLanguage, initialAudioLanguage]); // Initialize telemetry session before game starts
   useEffect(() => {
     const initializeSession = async () => {
       try {

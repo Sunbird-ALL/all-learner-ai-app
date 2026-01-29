@@ -1215,13 +1215,25 @@ const LetterHuntMechanicsContent = ({
     }
   };
 
+  // Use getLocalData("lang") as the primary source for language
+  // This ensures the main app's language setting takes precedence over the library's selectedLanguage
+  const lang = getLocalData("lang") || "en";
   const initialLanguage =
-    localStorage.getItem("selectedLanguage") || getLocalData("lang") || "en";
-  const initialAudioLanguage =
-    localStorage.getItem("selectedAudioLanguage") ||
-    getLocalData("lang") ||
-    "en";
+    lang === "en"
+      ? "en"
+      : lang === "te"
+      ? "te"
+      : lang === "kn"
+      ? "kn"
+      : lang === "mr"
+      ? "mr"
+      : "en";
+  const initialAudioLanguage = initialLanguage;
   const sessionId = getLocalData("sessionId");
+  useEffect(() => {
+    localStorage.setItem("selectedLanguage", initialLanguage);
+    localStorage.setItem("selectedAudioLanguage", initialAudioLanguage);
+  }, [initialLanguage, initialAudioLanguage]);
 
   if (!sessionInitialized) {
     return (
