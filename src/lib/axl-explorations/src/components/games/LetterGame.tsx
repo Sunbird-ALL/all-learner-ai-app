@@ -1093,7 +1093,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
             <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
               Letter Recognition
             </h1>
-            <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-sm sm:text-base md:text-lg mt-0.5">
+            {/* <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-sm sm:text-base md:text-lg mt-0.5">
               <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
               <span>
                 {selectedLevel !== null && selectedLevel !== gameProgress.currentLevel ? 
@@ -1101,7 +1101,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
                   `Level ${currentLevel}`
                 }
               </span>
-            </div>
+            </div> */}
           </div>
           
           {/* <Button 
