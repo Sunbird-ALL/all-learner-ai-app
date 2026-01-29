@@ -6414,7 +6414,10 @@ const LetterTrain = ({
   }, [currentIndex, playlist]);
 
   const handleNextWord = () => {
-    const currentLetter = playlist[currentIndex]?.item?.letter || "";
+    const currentLetter =
+      playlist[currentIndex]?.item?.letter ||
+      playlist[currentIndex]?.item?.syllable ||
+      "";
 
     if (currentLetter && current.type === "UI1") {
       setLetters((prev) =>
