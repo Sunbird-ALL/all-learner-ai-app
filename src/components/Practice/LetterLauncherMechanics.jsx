@@ -116,6 +116,10 @@ const LetterLauncherMechanicsContent = ({
       ? "mr"
       : "en";
   const initialAudioLanguage = initialLanguage;
+  useEffect(() => {
+    localStorage.setItem("selectedLanguage", initialLanguage);
+    localStorage.setItem("selectedAudioLanguage", initialAudioLanguage);
+  }, [initialLanguage, initialAudioLanguage]);
 
   // Initialize telemetry session before game starts
   useEffect(() => {
