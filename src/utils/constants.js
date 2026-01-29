@@ -10441,6 +10441,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["E", "T", "A", "O"],
+        contentCount: 10,
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -10451,6 +10452,7 @@ export const levelGetContent = {
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
         letterHuntLevel: 1,
+        contentCount: 10,
         letterHuntContentCount: 10,
       },
       // Learn 2 - Letter Train
@@ -10462,6 +10464,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["I", "N", "S", "R"],
+        contentCount: 10,
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -10472,6 +10475,7 @@ export const levelGetContent = {
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
         letterHuntLevel: 2,
+        contentCount: 10,
         letterHuntContentCount: 10,
       },
       // Learn 3 - Letter Train
@@ -10483,6 +10487,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["H", "L", "D", "C"],
+        contentCount: 10,
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -10493,6 +10498,7 @@ export const levelGetContent = {
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
         letterHuntLevel: 3,
+        contentCount: 10,
         letterHuntContentCount: 10,
       },
       // Apply 1 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -10508,6 +10514,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 1,
+        contentCount: 30,
         failRedirect: "L1", // If fail at any level, go to Learn 1
         passRedirect: "L4", // If pass all levels, go to Learn 4
       },
@@ -10520,6 +10527,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["U", "M", "F", "P"],
+        contentCount: 10,
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
       {
@@ -10531,6 +10539,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 4,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 5 - Letter Train
       {
@@ -10541,6 +10550,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["G", "W", "Y", "B"],
+        contentCount: 10,
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -10552,6 +10562,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 5,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 6 - Letter Train
       {
@@ -10562,6 +10573,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["V", "K", "X", "J"],
+        contentCount: 10,
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -10573,6 +10585,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 6,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -10587,6 +10600,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 2,
+        contentCount: 30,
         failRedirect: "L4", // If fail at any level, go to Learn 4
         passRedirect: "L7", // If pass all levels, go to Learn 7
       },
@@ -10599,6 +10613,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["Q", "Z", "E", "T"],
+        contentCount: 10,
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
       {
@@ -10610,6 +10625,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 7,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 8 - Letter Train
       {
@@ -10620,6 +10636,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["A", "O", "I", "N"],
+        contentCount: 10,
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -10631,6 +10648,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 8,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 9 - Letter Train
       {
@@ -10641,6 +10659,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["S", "R", "H", "L"],
+        contentCount: 10,
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -10652,6 +10671,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 9,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -10666,6 +10686,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 3,
+        contentCount: 30,
         failRedirect: "L7", // If fail at any level, go to Learn 7
         passRedirect: "F2", // If pass all levels, go to F2
       },
@@ -10680,6 +10701,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["me", "be", "he", "the", "her", "ear"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -10691,6 +10713,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
         customLetters: ["me", "be", "he", "the", "her", "ear"],
       },
       // Learn 2 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
@@ -10702,6 +10725,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["Go", "Do", "So", "No", "to", "not"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -10714,6 +10738,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 2,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 3 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -10724,6 +10749,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["or", "of", "our", "on", "one", "Ox"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -10736,6 +10762,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 3,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 1 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -10750,6 +10777,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 1,
+        contentCount: 30,
         failRedirect: "L1", // If fail at any level, go to Learn 1
         passRedirect: "L4", // If pass all levels, go to Learn 4
       },
@@ -10762,6 +10790,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["as", "was", "Up", "Us", "all", "for"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
       {
@@ -10774,6 +10803,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 5 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -10784,6 +10814,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["My", "hi", "his", "is", "in", "Ink"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -10796,6 +10827,7 @@ export const levelGetContent = {
         letterHuntLevel: 1,
         customLetters: ["My", "hi", "his", "is", "in", "Ink"],
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 6 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -10806,6 +10838,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["at", "hat", "rat", "an", "Am", "and"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -10818,6 +10851,7 @@ export const levelGetContent = {
         customLetters: ["at", "hat", "rat", "an", "Am", "and"],
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -10832,6 +10866,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 2,
+        contentCount: 30,
         failRedirect: "L4", // If fail at any level, go to Learn 4
         passRedirect: "L7", // If pass all levels, go to Learn 7
       },
@@ -10844,6 +10879,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["it", "wit", "Bit", "Fit", "Fun", "men"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
       {
@@ -10856,6 +10892,7 @@ export const levelGetContent = {
         customLetters: ["it", "wit", "Bit", "Fit", "Fun", "men"],
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 8 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -10866,6 +10903,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["ate", "Age", "Ask", "Act", "Arm", "Art"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -10878,6 +10916,7 @@ export const levelGetContent = {
         customLetters: ["ate", "Age", "Ask", "Act", "Arm", "Art"],
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 9 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -10888,6 +10927,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["Bed", "Fly", "Ice", "Key", "Car", "Air"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -10899,6 +10939,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
         customLetters: ["Bed", "Fly", "Ice", "Key", "Car", "Air"],
       },
       // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -10914,6 +10955,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 3,
+        contentCount: 30,
         failRedirect: "L7", // If fail at any level, go to Learn 7
         passRedirect: "F3", // If pass all levels, go to F3
       },
@@ -10929,6 +10971,7 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "letter", // Alphabet sets
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 2 - Letter Speed (Letter Launcher) - Alphabet sets
       {
@@ -10941,6 +10984,7 @@ export const levelGetContent = {
         contentType: "letter",
         letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 3 - Letter Speed (Letter Launcher) - Alphabet sets
       {
@@ -10952,6 +10996,7 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "letter",
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 4 - Letter Speed (Letter Launcher) - Alphabet sets
       {
@@ -10964,6 +11009,7 @@ export const levelGetContent = {
         contentType: "letter",
         letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 5 - Letter Speed (Letter Launcher) - Alphabet sets
       {
@@ -10975,6 +11021,7 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "letter",
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Apply 1 - Letter Speed (Letter Launcher) 3 levels + Memory Challenge 3 levels
       {
@@ -10990,6 +11037,7 @@ export const levelGetContent = {
         letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 1,
+        contentCount: 35, // 20 letterLauncher + 15 memoryChallenge (3 levels × 5 sequences)
         failRedirect: "P1", // If fail at any level, go to Practice 1
         passRedirect: "P6", // If pass all levels, go to Practice 6
         // After Letter Launcher completes, show Memory Challenge
@@ -11007,6 +11055,7 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "syllable", // Syllable sets
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 7 - Syllable Speed (Letter Launcher) - Syllable sets
       {
@@ -11019,6 +11068,7 @@ export const levelGetContent = {
         contentType: "syllable",
         letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 8 - Syllable Speed (Letter Launcher) - Syllable sets
       {
@@ -11030,6 +11080,7 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "syllable",
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 9 - Syllable Speed (Letter Launcher) - Syllable sets
       {
@@ -11042,6 +11093,7 @@ export const levelGetContent = {
         contentType: "syllable",
         letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 10 - Syllable Speed (Letter Launcher) - Syllable sets
       {
@@ -11053,6 +11105,7 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "syllable",
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Apply 2 - Syllable Speed (Letter Launcher) 1 level + Memory Challenge 3 levels + Read Aloud
       {
@@ -11068,6 +11121,7 @@ export const levelGetContent = {
         letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 2,
+        contentCount: 45, // 20 letterLauncher + 15 memoryChallenge (3 levels × 5 sequences) + 10 readAloud
         failRedirect: "P6", // If fail at any level, go to Practice 6
         passRedirect: "complete", // If pass all levels, complete F3
         // After Letter Launcher completes, show Memory Challenge
@@ -13255,6 +13309,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["త", "బ", "ల", "క", "జ"],
+        contentCount: 10,
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -13266,6 +13321,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 2 - Letter Train
       {
@@ -13276,6 +13332,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["ర", "ఆ", "ట", "ఉ", "గ"],
+        contentCount: 10,
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -13287,6 +13344,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 2,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 3 - Letter Train
       {
@@ -13297,6 +13355,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["శ", "అ", "ప", "స", "వ"],
+        contentCount: 10,
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -13308,6 +13367,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 3,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 1 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -13322,6 +13382,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 1,
+        contentCount: 30,
         failRedirect: "L1", // If fail at any level, go to Learn 1
         passRedirect: "L4", // If pass all levels, go to Learn 4
       },
@@ -13334,6 +13395,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["ఊ", "డ", "ద", "ఈ", "మ"],
+        contentCount: 10,
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
       {
@@ -13345,6 +13407,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 5 - Letter Train
       {
@@ -13355,6 +13418,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["చ", "ఒ", "ఓ", "ఔ", "య"],
+        contentCount: 10,
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -13366,6 +13430,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 6 - Letter Train
       {
@@ -13376,6 +13441,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["ఇ", "ఎ", "ఏ", "ఐ", "ణ"],
+        contentCount: 10,
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -13387,6 +13453,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -13401,6 +13468,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 2,
+        contentCount: 30,
         failRedirect: "L4", // If fail at any level, go to Learn 4
         passRedirect: "L7", // If pass all levels, go to Learn 7
       },
@@ -13413,6 +13481,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["ళ", "హ", "ఖ", "ఛ", "ఠ"],
+        contentCount: 10,
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
       {
@@ -13424,6 +13493,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 8 - Letter Train
       {
@@ -13434,6 +13504,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["ఢ", "ఘ", "ఝ", "ఋ", "ష"],
+        contentCount: 10,
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -13445,6 +13516,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 9 - Letter Train
       {
@@ -13455,6 +13527,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "letterTrain", name: "letterTrain" },
         customLetters: ["థ", "ధ", "ఫ", "భ", "క్ష"],
+        contentCount: 10,
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -13466,6 +13539,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -13480,6 +13554,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 3,
+        contentCount: 30,
         failRedirect: "L7", // If fail at any level, go to Learn 7
         passRedirect: "F2", // If pass all levels, go to F2
       },
@@ -13494,6 +13569,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["నది", "చేప", "చీర", "గెల", "సౌధం"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -13505,6 +13581,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
         // customLetters: ["In", "The", "On", "An", "Am"],
       },
       // Learn 2 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
@@ -13516,6 +13593,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["గృహం", "జాతర", "గీత", "జైలు", "కోతి"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -13528,6 +13606,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 2,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 3 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -13538,6 +13617,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["నౌక", "నీరు", "పోరు", "మెడ", "టోపీ"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -13550,6 +13630,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 3,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 1 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -13564,6 +13645,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 1,
+        contentCount: 30,
         failRedirect: "L1", // If fail at any level, go to Learn 1
         passRedirect: "L4", // If pass all levels, go to Learn 4
       },
@@ -13576,6 +13658,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         customLetters: ["డైరీ", "రోకలి", "సూది", "జౌళి", "సీసా"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
       {
@@ -13588,6 +13671,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 5 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -13598,6 +13682,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         customLetters: ["బంతి", "టౌను", "పులి", "తేనె", "పశువు"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -13609,6 +13694,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 6 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -13619,6 +13705,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
         customLetters: ["బూడిద", "చీపురు", "మైదాకు", "నొసలు", "పొదుపు"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -13630,6 +13717,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -13644,6 +13732,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 2,
+        contentCount: 30,
         failRedirect: "L4", // If fail at any level, go to Learn 4
         passRedirect: "L7", // If pass all levels, go to Learn 7
       },
@@ -13656,6 +13745,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         customLetters: ["మేఘం", "పెరుగు", "భూకంపం", "పావురం", "జూకాలు"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
       {
@@ -13667,6 +13757,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 8 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -13677,6 +13768,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         customLetters: ["పసిడి", "గాజులు", "నృపతి", "పైసలు", "మొసలి"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -13688,6 +13780,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Learn 9 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
       {
@@ -13698,6 +13791,7 @@ export const levelGetContent = {
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         customLetters: ["సినిమా", "వివాహం", "మూకుడు", "హృదయం", "బేడీలు"], // Placeholder - adjust based on F2 requirements
+        contentCount: 10,
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -13709,6 +13803,7 @@ export const levelGetContent = {
         multilingual: true,
         letterHuntLevel: 1,
         letterHuntContentCount: 10,
+        contentCount: 10,
       },
       // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
       {
@@ -13723,6 +13818,7 @@ export const levelGetContent = {
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 3,
+        contentCount: 30,
         failRedirect: "L7", // If fail at any level, go to Learn 7
         passRedirect: "F3", // If pass all levels, go to F3
       },
@@ -13739,6 +13835,7 @@ export const levelGetContent = {
         contentType: "letter", // Alphabet sets
         letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 2 - Letter Speed (Letter Launcher) - Alphabet sets
       {
@@ -13751,6 +13848,7 @@ export const levelGetContent = {
         contentType: "letter",
         letterLauncherLevel: 2,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 3 - Letter Speed (Letter Launcher) - Alphabet sets
       {
@@ -13763,6 +13861,7 @@ export const levelGetContent = {
         contentType: "letter",
         letterLauncherLevel: 3,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 4 - Letter Speed (Letter Launcher) - Alphabet sets
       {
@@ -13775,6 +13874,7 @@ export const levelGetContent = {
         contentType: "letter",
         letterLauncherLevel: 2,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 5 - Letter Speed (Letter Launcher) - Alphabet sets
       {
@@ -13787,6 +13887,7 @@ export const levelGetContent = {
         contentType: "letter",
         letterLauncherLevel: 3,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Apply 1 - Letter Speed (Letter Launcher) 3 levels + Memory Challenge 3 levels
       {
@@ -13802,6 +13903,7 @@ export const levelGetContent = {
         letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 1,
+        contentCount: 35, // 20 letterLauncher + 15 memoryChallenge (3 levels × 5 sequences)
         failRedirect: "P1", // If fail at any level, go to Practice 1
         passRedirect: "P6", // If pass all levels, go to Practice 6
         // After Letter Launcher completes, show Memory Challenge
@@ -13820,6 +13922,7 @@ export const levelGetContent = {
         contentType: "syllable", // Syllable sets
         letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 7 - Syllable Speed (Letter Launcher) - Syllable sets
       {
@@ -13832,6 +13935,7 @@ export const levelGetContent = {
         contentType: "syllable",
         letterLauncherLevel: 2,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 8 - Syllable Speed (Letter Launcher) - Syllable sets
       {
@@ -13844,6 +13948,7 @@ export const levelGetContent = {
         contentType: "syllable",
         letterLauncherLevel: 3,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 9 - Syllable Speed (Letter Launcher) - Syllable sets
       {
@@ -13856,6 +13961,7 @@ export const levelGetContent = {
         contentType: "syllable",
         letterLauncherLevel: 1,
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Practice 10 - Syllable Speed (Letter Launcher) - Syllable sets
       {
@@ -13867,6 +13973,7 @@ export const levelGetContent = {
         multilingual: true,
         contentType: "syllable",
         letterLauncherContentCount: 10,
+        contentCount: 10,
       },
       // Apply 2 - Syllable Speed (Letter Launcher) 1 level + Memory Challenge 3 levels + Read Aloud
       {
@@ -13882,6 +13989,7 @@ export const levelGetContent = {
         letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 2,
+        contentCount: 45, // 20 letterLauncher + 15 memoryChallenge (3 levels × 5 sequences) + 10 readAloud
         failRedirect: "P6", // If fail at any level, go to Practice 6
         passRedirect: "complete", // If pass all levels, complete F3
         // After Letter Launcher completes, show Memory Challenge

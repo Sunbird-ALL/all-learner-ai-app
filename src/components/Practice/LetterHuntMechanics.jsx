@@ -55,6 +55,7 @@ const LetterHuntMechanicsContent = ({
   setStartShowCase, // Optional: setStartShowCase function
   setProgressData, // Optional: function to update progressData state in parent
   setCurrentQuestion, // Optional: function to reset currentQuestion state in parent
+  setPoints, // Optional: function to update points state in parent
   applyStep, // Optional: Apply step number (1, 2, or 3) for F1 flow
   failRedirect, // Optional: Redirect target on failure (e.g., "L1", "L4", "L7")
   passRedirect, // Optional: Redirect target on pass (e.g., "L4", "L7", "F2")
@@ -881,6 +882,7 @@ const LetterHuntMechanicsContent = ({
               const totalPoints = result?.result?.totalLanguagePoints;
 
               if (result && result.result) {
+                const totalPoints = result?.result?.totalLanguagePoints;
                 console.log("F2 flow points updated by LetterHuntMechanics:", {
                   completedStepIndex: currentF2FlowStep.index,
                   pointsAdded: pointsToAdd,
@@ -888,7 +890,14 @@ const LetterHuntMechanicsContent = ({
                   contentCount,
                   totalPoints,
                 });
-                // Note: setPoints is not available here, parent component will fetch points
+                // Update UI points if setPoints is available
+                if (setPoints && totalPoints !== undefined) {
+                  setPoints(totalPoints);
+                  console.log(
+                    "F2 flow points UI updated via setPoints:",
+                    totalPoints
+                  );
+                }
               } else {
                 console.warn(
                   "F2 flow - Unexpected addPointer response format:",
@@ -1037,6 +1046,7 @@ const LetterHuntMechanicsContent = ({
               const totalPoints = result?.result?.totalLanguagePoints;
 
               if (result && result.result) {
+                const totalPoints = result?.result?.totalLanguagePoints;
                 console.log("F1 flow points updated by LetterHuntMechanics:", {
                   completedStepIndex: currentF1FlowStep.index,
                   stepType: currentF1FlowStep.step?.type,
@@ -1045,7 +1055,14 @@ const LetterHuntMechanicsContent = ({
                   contentCount,
                   totalPoints,
                 });
-                // Note: setPoints is not available here, parent component will fetch points
+                // Update UI points if setPoints is available
+                if (setPoints && totalPoints !== undefined) {
+                  setPoints(totalPoints);
+                  console.log(
+                    "F1 flow points UI updated via setPoints:",
+                    totalPoints
+                  );
+                }
               } else {
                 console.warn(
                   "F1 flow - Unexpected addPointer response format:",

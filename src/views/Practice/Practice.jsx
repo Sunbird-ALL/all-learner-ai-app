@@ -6062,36 +6062,42 @@ const Practice = () => {
         (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
         (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt);
 
-      // Update points for F1/F2/F3 flows when they complete (even if shouldSkipContentFetch is true)
+      // Update UI points for F1/F2 flows when they complete via LetterHuntMechanics
+      // LetterHuntMechanics already updated points in backend, we just need to fetch and update UI
       if (
         (currentQuestion === questions.length - 1 || isGameOver) &&
         shouldSkipContentFetch &&
         !localStorage.getItem("contentSessionId")
       ) {
-        try {
-          const lang = getLocalData("lang") || "en";
-          let pointsToAdd = 1;
-          let currentStepContent = null;
-
-          // Get contentCount based on flow type
-          if (isF1FlowByMilestone) {
-            const f1Config = levelGetContent[lang]?.["F1"];
-            const currentF1Step = getF1FlowStep();
-            currentStepContent = f1Config?.[currentF1Step.index];
-            pointsToAdd =
-              currentStepContent?.contentCount || questions.length || 1;
-          } else if (isF2FlowByMilestone) {
-            const f2Config = levelGetContent[lang]?.["F2"];
-            const currentF2Step = getF2FlowStep();
-            currentStepContent = f2Config?.[currentF2Step.index];
-            pointsToAdd =
-              currentStepContent?.contentCount || questions.length || 1;
-          } else if (isF3FlowByMilestone) {
+        // LetterHuntMechanics already called addPointer, so we just need to fetch updated points
+        // to update the UI. Don't call addPointer again to avoid duplicate points.
+        if (f1FlowAdvancedByLetterHunt || f2FlowAdvancedByLetterHunt) {
+          try {
+            const updatedPoints = await fetchUserPoints();
+            setPoints(updatedPoints || 0);
+            console.log(
+              "F1/F2 flow points UI updated (LetterHuntMechanics already updated backend):",
+              {
+                flow: f1FlowAdvancedByLetterHunt ? "F1" : "F2",
+                totalPoints: updatedPoints,
+              }
+            );
+          } catch (error) {
+            console.error(
+              "Error fetching updated points after LetterHuntMechanics completion:",
+              error
+            );
+          }
+        } else if (isF3FlowByMilestone) {
+          // F3 flow points are handled by LetterLauncherMechanics, but if it didn't update,
+          // we should update here
+          try {
+            const lang = getLocalData("lang") || "en";
             const f3Config = levelGetContent[lang]?.["F3"];
             const currentF3Step = getF3FlowStep();
-            currentStepContent = f3Config?.[currentF3Step.index];
+            const currentStepContent = f3Config?.[currentF3Step.index];
             // For F3, contentCount might be in sub-steps
-            pointsToAdd =
+            const pointsToAdd =
               currentStepContent?.letterLauncherContentCount ||
               currentStepContent?.soundHuntS1CombinedContentCount ||
               currentStepContent?.soundHuntContentCount ||
@@ -6101,34 +6107,24 @@ const Practice = () => {
               currentStepContent?.contentCount ||
               questions.length ||
               1;
-          }
 
-          const milestone = "B"; // F1/F2/F3 flows use milestone "B"
-          const result = await addPointer(pointsToAdd, milestone);
-          const awardedPoints = result?.result?.points;
+            const milestone = "B"; // F3 flow uses milestone "B"
+            const result = await addPointer(pointsToAdd, milestone);
+            const awardedPoints = result?.result?.points;
 
-          if (awardedPoints === pointsToAdd) {
-            setPoints(result?.result?.totalLanguagePoints || 0);
-            console.log(
-              "F1/F2/F3 flow points updated (shouldSkipContentFetch):",
-              {
-                flow: isF1FlowByMilestone
-                  ? "F1"
-                  : isF2FlowByMilestone
-                  ? "F2"
-                  : "F3",
+            if (awardedPoints === pointsToAdd) {
+              setPoints(result?.result?.totalLanguagePoints || 0);
+              console.log("F3 flow points updated (shouldSkipContentFetch):", {
                 pointsAdded: pointsToAdd,
-                contentCount:
-                  currentStepContent?.contentCount || questions.length,
                 totalPoints: result?.result?.totalLanguagePoints,
-              }
+              });
+            }
+          } catch (error) {
+            console.error(
+              "Error updating F3 flow points (shouldSkipContentFetch):",
+              error
             );
           }
-        } catch (error) {
-          console.error(
-            "Error updating F1/F2/F3 flow points (shouldSkipContentFetch):",
-            error
-          );
         }
       }
 
@@ -6164,10 +6160,42 @@ const Practice = () => {
             sendTestRigScore(5);
           }
         } else {
-          let points = 1;
+          // Get contentCount from config for the COMPLETED step
+          let points = 1; // Default fallback
+          try {
+            const lang = getLocalData("lang") || "en";
+            const levelKey = `m${level}`;
+            const levelConfig = levelGetContent[lang]?.[levelKey];
+            const completingStepTitle =
+              practiceSteps?.[currentPracticeStep]?.title ||
+              practiceSteps?.[currentPracticeStep]?.name;
+            const completedStepContent = levelConfig?.find(
+              (step) => step.title === completingStepTitle
+            );
+            const contentCount = completedStepContent?.contentCount;
+
+            // Use contentCount if available, otherwise fallback to 1
+            if (contentCount && contentCount > 0) {
+              points = contentCount;
+            }
+
+            console.log("Points calculation for completed step:", {
+              currentPracticeStep,
+              completingStepTitle,
+              contentCount,
+              points,
+              levelKey,
+            });
+          } catch (error) {
+            console.error("Error getting contentCount for points:", error);
+            // Keep default points = 1
+          }
+
           let milestone = `m${level}`;
 
-          if (points !== 1) {
+          // Validate that points is a valid positive number
+          if (!points || points <= 0) {
+            console.error("Invalid points value:", points);
             if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
               navigate("/");
             } else {
@@ -6183,7 +6211,13 @@ const Practice = () => {
           const result = await addPointer(points, milestone);
           const awardedPoints = result?.result?.points;
 
-          if (awardedPoints !== 1) {
+          // Validate that the awarded points match what we expected to add
+          if (awardedPoints !== points) {
+            console.warn("Points mismatch:", {
+              expected: points,
+              awarded: awardedPoints,
+              milestone,
+            });
             if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
               navigate("/");
             } else {
@@ -6192,6 +6226,11 @@ const Practice = () => {
             return;
           }
           setPoints(result?.result?.totalLanguagePoints || 0);
+          console.log("Points updated successfully:", {
+            pointsAdded: points,
+            totalPoints: result?.result?.totalLanguagePoints,
+            milestone,
+          });
         }
 
         // Check if this is a showcase step (S1 or S2) or game over
@@ -6505,7 +6544,7 @@ const Practice = () => {
 
           // Set mechanism for the next step
           // if (currentGetContent?.mechanism) {
-          setMechanism(currentGetContent.mechanism || {});
+          setMechanism(currentGetContent?.mechanism || {});
           // }
         }
 
@@ -6649,7 +6688,7 @@ const Practice = () => {
         }
 
         // if (currentGetContent?.mechanism) {
-        setMechanism(currentGetContent.mechanism || {});
+        setMechanism(currentGetContent?.mechanism || {});
         // }
 
         // Skip addLesson for F1/F2/F3 flows - they handle their own progress saving
@@ -7592,7 +7631,7 @@ const Practice = () => {
       setTimeout(() => {
         // Add safety check for mechanism
         // if (currentGetContent?.mechanism) {
-        setMechanism(currentGetContent.mechanism || {});
+        setMechanism(currentGetContent?.mechanism || {});
         // }
         // else{
         //   renderMechanics();
@@ -10951,6 +10990,7 @@ const Practice = () => {
                 setStartShowCase,
                 setProgressData, // Pass setProgressData to update state when resetting to P1
                 setCurrentQuestion, // Pass setCurrentQuestion to reset currentQuestion state when resetting to P1
+                setPoints, // Pass setPoints to update UI when points are added
                 applyStep, // Pass Apply step number
                 failRedirect, // Pass fail redirect (e.g., "L1", "L4", "L7")
                 passRedirect, // Pass pass redirect (e.g., "L4", "L7", "F2")
@@ -11024,6 +11064,7 @@ const Practice = () => {
               setStartShowCase,
               setProgressData,
               setCurrentQuestion,
+              setPoints, // Pass setPoints to update UI when points are added
               applyStep,
               failRedirect,
               passRedirect,
