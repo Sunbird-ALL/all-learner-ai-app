@@ -276,19 +276,22 @@ const DemoAlphabetCard = ({
           alignItems: "center",
           justifyContent: "space-between",
           height: "200px",
-          cursor: "pointer",
+          cursor: showHandPointer ? "pointer" : "default",
           position: "relative",
           boxShadow: isActive
             ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
             : isHighlighted
             ? "0 0 0 4px #fbbf24, 0 0 20px rgba(251, 191, 36, 0.5)"
             : "0 4px 12px rgba(0,0,0,0.1)",
-          transition: "box-shadow 0.3s ease",
+          transition: "all 0.3s ease",
+          opacity: isHighlighted || isActive ? 1 : 0.6,
+          filter: isHighlighted || isActive ? "none" : "grayscale(0.4)",
           "&:hover": {
-            transform: "scale(1.02)",
+            transform: showHandPointer ? "scale(1.02)" : "none",
           },
         }}
         onClick={() => {
+          if (!showHandPointer) return;
           if (mode === "alphabet" && item.alaphabetChartAudio) {
             playAudio(item, item.alaphabetChartAudio);
           } else {
@@ -345,15 +348,21 @@ const DemoAlphabetCard = ({
 
           <IconButton
             size="small"
-            sx={{ color: "#333F61" }}
+            sx={{
+              color: "#333F61",
+              opacity: isHighlighted ? 1 : 0.5,
+              cursor: showHandPointer ? "pointer" : "default",
+            }}
             onClick={(e) => {
               e.stopPropagation();
+              if (!showHandPointer) return;
               if (mode === "alphabet" && item.alaphabetChartAudio) {
                 playAudio(item, item.alaphabetChartAudio);
               } else {
                 playAudio(item);
               }
             }}
+            disabled={!showHandPointer}
           >
             <VolumeUpIcon />
           </IconButton>
@@ -370,9 +379,9 @@ const DemoAlphabetCard = ({
               justifyContent: "center",
               my: 1,
               overflow: "hidden",
-              cursor: "pointer",
+              cursor: showHandPointer ? "pointer" : "default",
               "&:hover": {
-                transform: "scale(1.05)",
+                transform: showHandPointer ? "scale(1.05)" : "none",
               },
               transition: "transform 0.2s ease",
             }}
@@ -742,9 +751,13 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
 
   // Play narration using audio files with TTS fallback
   const playNarration = async (text, stepKey = null) => {
-    if (isPlayingNarration) {
-      return;
+    // Stop current narration if any
+    if (narrationRef.current) {
+      narrationRef.current.pause();
+      narrationRef.current = null;
     }
+    speechSynthesis.cancel();
+
     setIsPlayingNarration(true);
     // Get the step key if not provided
     const narrationKey = stepKey || getNarrationStepKey();
@@ -752,22 +765,25 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     try {
       // Try to play the audio file first
       const audio = new Audio(audioPath);
+      narrationRef.current = audio;
 
       await new Promise((resolve, reject) => {
         audio.onended = () => {
+          narrationRef.current = null;
           resolve();
         };
         audio.onerror = (e) => {
+          narrationRef.current = null;
           reject(new Error("Audio file not found"));
         };
         audio.play().catch((e) => {
+          narrationRef.current = null;
           reject(e);
         });
       });
     } catch (error) {
       // Fall back to TTS
       try {
-        speechSynthesis.cancel();
         await playTTS(text, activeLang);
       } catch (ttsError) {
         console.warn("TTS also failed:", ttsError);
@@ -858,6 +874,24 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
   // Handle toggle change
   const handleToggleChange = (_, newMode) => {
     if (!newMode) return;
+
+    // Block switching to syllable if it's not the right time or narration is playing
+    if (newMode === "word" && (!waitingForToggle || isPlayingNarration)) {
+      return;
+    }
+
+    // Block switching back to alphabet once syllable phase has started
+    if (newMode === "alphabet" && viewMode === "word") {
+      return;
+    }
+
+    // Stop ongoing narration if any
+    if (narrationRef.current) {
+      narrationRef.current.pause();
+      narrationRef.current = null;
+    }
+    speechSynthesis.cancel();
+    setIsPlayingNarration(false);
 
     setViewMode(newMode);
     setCurrentPage(0);
@@ -1002,6 +1036,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
           position: "relative",
           backgroundColor: "#e0e7ec",
           borderBottom: "1px solid #d1dbe0",
+          minHeight: { xs: "80px", sm: "90px" },
         }}
       >
         {/* Toggle in Header */}
@@ -1038,6 +1073,8 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
             <ToggleButton
               value="alphabet"
               sx={{
+                pointerEvents: viewMode === "word" ? "none" : "auto",
+                cursor: viewMode === "word" ? "default" : "pointer",
                 position: "relative",
                 "&::after":
                   alphabetPhaseComplete && !waitingForToggle
@@ -1079,6 +1116,17 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
                   },
                 },
                 position: "relative",
+                cursor:
+                  viewMode === "alphabet" &&
+                  (!waitingForToggle || isPlayingNarration)
+                    ? "default"
+                    : "pointer",
+                pointerEvents:
+                  viewMode === "alphabet" &&
+                  (!waitingForToggle || isPlayingNarration)
+                    ? "none"
+                    : "auto",
+                transition: "all 0.3s ease",
                 "&::after":
                   syllableClickCount >= 3
                     ? {
@@ -1101,7 +1149,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
               }}
             >
               {instructions.syllableLabel}
-              {/* Finger pointer for Syllable toggle */}
+              {/* Finger pointer for Syllable toggle - show after narration finishes */}
               {waitingForToggle && (
                 <Box
                   sx={{
@@ -1140,11 +1188,12 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
         {/* Title for countdown */}
         {previewPhase === "countdown" && (
           <Typography
-            variant="h5"
             sx={{
               fontWeight: "bold",
               color: "#333F61",
               fontFamily: "Quicksand",
+              fontSize: { xs: "1.2rem", sm: "1.5rem" },
+              textAlign: "center",
             }}
           >
             {instructions.title} - {instructions.howToPlay}
@@ -1166,7 +1215,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
               },
             }}
           >
-            <CloseIcon sx={{ fontSize: { xs: "2rem", sm: "2rem" } }} />
+            <CloseIcon sx={{ fontSize: { xs: "1.7rem", sm: "1.5rem" } }} />
           </IconButton>
         </Box>
       </Box>

@@ -13,6 +13,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  Button,
   ListItemText,
   Divider,
 } from "../../../node_modules/@mui/material/index";
@@ -102,6 +103,8 @@ import { getF2FlowStep } from "../../RFlow/F2";
 import { getF3FlowStep } from "../../RFlow/F3";
 import AlphabetChart from "./AlphabetChart";
 import AlphabetChartPreview from "./AlphabetChartPreview";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const theme = createTheme();
 
@@ -472,6 +475,7 @@ export const ProfileHeader = ({
   const [openAlphabetPreview, setOpenAlphabetPreview] = useState(false);
   const [showChartPointer, setShowChartPointer] = useState(false);
   const chartAudioRef = React.useRef(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
@@ -508,7 +512,11 @@ export const ProfileHeader = ({
   useEffect(() => {
     const playChartAudio = () => {
       // 🔒 Prevent double audio
-      if (chartAudioRef.current) return;
+      if (chartAudioRef.current) {
+        chartAudioRef.current.pause();
+        chartAudioRef.current.currentTime = 0; // rewind (good practice)
+        chartAudioRef.current = null;
+      }
 
       const audioPath = `/audio/audio-preview/Alphabet Chart/Chart Icon/${language}/ChartNarration.wav`;
       const audio = new Audio(audioPath);
@@ -516,34 +524,38 @@ export const ProfileHeader = ({
 
       audio.onplay = () => {
         setShowChartPointer(true);
+        setIsAudioPlaying(true);
       };
 
       audio.onended = () => {
-        setShowChartPointer(true); // 👈 demo finished
+        setShowChartPointer(false); // 👈 demo finished
+        setIsAudioPlaying(false);
         chartAudioRef.current = null;
 
         // ✅ Audio done → now wait for user click
-        setLocalData("alphabetdemo", "false");
+        setLocalData("showAlphabetDemo", "false");
       };
 
       audio.onerror = () => {
         console.warn("Chart audio missing, showing pointer only");
         setShowChartPointer(false);
-        setLocalData("alphabetdemo", "false");
+        setIsAudioPlaying(false);
+        setLocalData("showAlphabetDemo", "false");
         chartAudioRef.current = null;
       };
 
       setTimeout(() => {
         audio.play().catch(() => {
           setShowChartPointer(false);
-          setLocalData("alphabetdemo", "false");
+          setIsAudioPlaying(false);
+          setLocalData("showAlphabetDemo", "false");
           chartAudioRef.current = null;
         });
       }, 500);
     };
 
     const checkDemoCompletion = () => {
-      const demoState = getLocalData("alphabetdemo");
+      const demoState = getLocalData("showAlphabetDemo");
 
       // 🔥 Only trigger when demo JUST completed
       if (demoState === "true") {
@@ -555,7 +567,7 @@ export const ProfileHeader = ({
     checkDemoCompletion();
 
     const handleStorageChange = (e) => {
-      if (e.key === "alphabetdemo" && e.newValue === "true") {
+      if (e.key === "showAlphabetDemo" && e.newValue === "true") {
         checkDemoCompletion();
       }
     };
@@ -582,21 +594,43 @@ export const ProfileHeader = ({
   }, [language]);
 
   const handleAlphabetChartOpen = () => {
-    if (showChartPointer) {
-      // 🎬 Demo flow
-      setOpenAlphabetPreview(true);
-    } else {
-      // 📘 Normal chart
+    // Check if demo was already completed (returns null first time → falsy)
+    const isDemoComplete = getLocalData("AlphabetDemoCompleted") === "true";
+
+    if (isDemoComplete) {
+      // 📘 User has seen demo before → show normal chart/modal
       setOpenAlphabetModal(true);
+    } else {
+      // 🎬 First time → show demo/preview
+      setOpenAlphabetPreview(true);
+
+      // Mark as completed so next time we skip demo
+      setLocalData("AlphabetDemoCompleted", "true");
     }
 
+    // Common cleanup regardless of demo or normal mode
     setShowChartPointer(false);
+    setIsAudioPlaying(false);
 
     if (chartAudioRef.current) {
       chartAudioRef.current.pause();
       chartAudioRef.current = null;
     }
   };
+
+  useEffect(() => {
+    // Cleanup function – runs when component unmounts
+    // or when dependencies change (if you add any)
+    return () => {
+      if (chartAudioRef.current) {
+        chartAudioRef.current.pause();
+        chartAudioRef.current.currentTime = 0;
+        chartAudioRef.current = null;
+        setShowChartPointer(false); // important if pointer is visual
+        setIsAudioPlaying(false);
+      }
+    };
+  }, []);
 
   const getAlphabetTooltipText = () => {
     const texts = {
@@ -1062,87 +1096,142 @@ export const ProfileHeader = ({
             }}
           >
             {["B", "m1", "m2", "m3"].includes(milestoneLevel) && (
-              <CustomTooltip
-                open={showChartPointer}
-                title={
-                  <Box sx={{ textAlign: "center", p: 0.5 }}>
-                    <Typography
-                      sx={{ fontWeight: 600, fontSize: "18px", color: "#fff" }}
-                    >
-                      {tooltipText.title}
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: "16px", opacity: 0.9, color: "#fff" }}
-                    >
-                      {tooltipText.desc}
-                    </Typography>
-                  </Box>
-                }
-                arrow
-                placement="bottom"
-              >
-                <Box sx={{ position: "relative", display: "inline-flex" }}>
-                  <IconButton
-                    onClick={handleAlphabetChartOpen}
-                    sx={{
-                      mr: { xs: "5px", sm: "10px" },
-                      padding: isMobile ? "6px" : "8px",
-                      backgroundColor: "rgba(255, 255, 255, 0.7)",
-                      animation: "pulseGlow 2s ease-in-out infinite",
-                      "@keyframes pulseGlow": {
-                        "0%, 100%": {
-                          boxShadow: "0 0 0 0 rgba(238, 105, 49, 0.4)",
-                        },
-                        "50%": {
-                          boxShadow: "0 0 0 8px rgba(238, 105, 49, 0)",
-                        },
-                      },
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      },
-                    }}
-                  >
-                    <MenuBookIcon
-                      sx={{
-                        color: "#EE6931",
-                        fontSize: isMobile ? "24px" : "24px",
-                      }}
-                    />
-                  </IconButton>
-                  {/* Animated finger pointer - only show when audio is playing */}
-                  {showChartPointer && (
+              <>
+                <Backdrop
+                  sx={{
+                    zIndex: (theme) => theme.zIndex.drawer + 2, // higher than most things
+                  }}
+                  open={isAudioPlaying}
+                  invisible={true}
+                />
+                <CustomTooltip
+                  {...(showChartPointer ? { open: true } : {})}
+                  interactive
+                  title={
                     <Box
                       sx={{
-                        position: "absolute",
-                        bottom: isMobile ? -20 : -35,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        animation: "pointToChart 1.5s ease-in-out infinite",
-                        "@keyframes pointToChart": {
-                          "0%, 100%": {
-                            transform: "translateX(-50%) translateY(0)",
-                            opacity: 1,
-                          },
-                          "50%": {
-                            transform: "translateX(-50%) translateY(-8px)",
-                            opacity: 0.7,
-                          },
-                        },
-                        pointerEvents: "none",
+                        textAlign: "center",
+                        p: 2, // ✅ more inner spacing
+                        position: "relative",
+                        minWidth: "180px", // ✅ better width for text
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1, // ✅ space between title & desc
                       }}
                     >
-                      <span
-                        style={{
-                          fontSize: isMobile ? "25px" : "40px",
-                          display: "inline-block",
+                      {showChartPointer && (
+                        <IconButton
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowChartPointer(false);
+                          }}
+                          sx={{
+                            position: "absolute",
+                            top: 6,
+                            right: 6,
+                            color: "#fff",
+                            p: 0.5, // ✅ better touch area
+                            "&:hover": {
+                              backgroundColor: "rgba(255, 255, 255, 0.2)",
+                            },
+                          }}
+                        >
+                          <CloseIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                      )}
+
+                      <Typography
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: "18px",
+                          color: "#fff",
+                          lineHeight: 1.4, // ✅ clearer title
                         }}
                       >
-                        👆
-                      </span>
+                        {tooltipText.title}
+                      </Typography>
+
+                      {showChartPointer && (
+                        <Typography
+                          sx={{
+                            fontSize: "15px",
+                            opacity: 0.9,
+                            color: "#fff",
+                            lineHeight: 1.5, // ✅ readable description
+                          }}
+                        >
+                          {tooltipText.desc}
+                        </Typography>
+                      )}
                     </Box>
-                  )}
-                </Box>
-              </CustomTooltip>
+                  }
+                  arrow
+                  placement="bottom"
+                >
+                  <Box sx={{ position: "relative", display: "inline-flex" }}>
+                    <IconButton
+                      onClick={handleAlphabetChartOpen}
+                      sx={{
+                        mr: { xs: "5px", sm: "10px" },
+                        padding: isMobile ? "6px" : "8px",
+                        backgroundColor: "rgba(255, 255, 255, 0.7)",
+                        animation: "pulseGlow 2s ease-in-out infinite",
+                        "@keyframes pulseGlow": {
+                          "0%, 100%": {
+                            boxShadow: "0 0 0 0 rgba(238, 105, 49, 0.4)",
+                          },
+                          "50%": {
+                            boxShadow: "0 0 0 8px rgba(238, 105, 49, 0)",
+                          },
+                        },
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 255, 255, 0.9)",
+                        },
+                      }}
+                    >
+                      <MenuBookIcon
+                        sx={{
+                          color: "#EE6931",
+                          fontSize: isMobile ? "24px" : "24px",
+                        }}
+                      />
+                    </IconButton>
+                    {/* Animated finger pointer - only show when audio is playing */}
+                    {showChartPointer && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          bottom: isMobile ? -20 : -35,
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                          animation: "pointToChart 1.5s ease-in-out infinite",
+                          "@keyframes pointToChart": {
+                            "0%, 100%": {
+                              transform: "translateX(-50%) translateY(0)",
+                              opacity: 1,
+                            },
+                            "50%": {
+                              transform: "translateX(-50%) translateY(-8px)",
+                              opacity: 0.7,
+                            },
+                          },
+                          pointerEvents: "none",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: isMobile ? "25px" : "40px",
+                            display: "inline-block",
+                          }}
+                        >
+                          👆
+                        </span>
+                      </Box>
+                    )}
+                  </Box>
+                </CustomTooltip>
+              </>
             )}
 
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
