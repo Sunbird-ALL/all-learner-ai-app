@@ -20,6 +20,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import TranslateIcon from "@mui/icons-material/Translate";
 import MicIcon from "@mui/icons-material/Mic";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { useMediaQuery, useTheme } from "@mui/material";
 import LogoutImg from "../../assets/images/logout.svg";
 import { styled } from "@mui/material/styles";
@@ -99,6 +100,8 @@ import { AudioDiagnosticModal } from "../AudioDiagnostic";
 import { getF1FlowStep } from "../../RFlow/F1";
 import { getF2FlowStep } from "../../RFlow/F2";
 import { getF3FlowStep } from "../../RFlow/F3";
+import AlphabetChart from "./AlphabetChart";
+import AlphabetChartPreview from "./AlphabetChartPreview";
 
 const theme = createTheme();
 
@@ -465,6 +468,10 @@ export const ProfileHeader = ({
   const [animatedWordCount, setAnimatedWordCount] = useState(0);
   const [milestone, setMilestone] = useState(0);
   const [showAudioDiagnostic, setShowAudioDiagnostic] = useState(false);
+  const [openAlphabetModal, setOpenAlphabetModal] = useState(false);
+  const [openAlphabetPreview, setOpenAlphabetPreview] = useState(false);
+  const [showChartPointer, setShowChartPointer] = useState(false);
+  const chartAudioRef = React.useRef(null);
 
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
@@ -495,6 +502,121 @@ export const ProfileHeader = ({
 
     return () => clearTimeout(timeout);
   }, [wordCount]);
+
+  // Listen for demo completion to trigger chart pointer
+
+  useEffect(() => {
+    const playChartAudio = () => {
+      // 🔒 Prevent double audio
+      if (chartAudioRef.current) return;
+
+      const audioPath = `/audio/audio-preview/Alphabet Chart/Chart Icon/${language}/ChartNarration.wav`;
+      const audio = new Audio(audioPath);
+      chartAudioRef.current = audio;
+
+      audio.onplay = () => {
+        setShowChartPointer(true);
+      };
+
+      audio.onended = () => {
+        setShowChartPointer(true); // 👈 demo finished
+        chartAudioRef.current = null;
+
+        // ✅ Audio done → now wait for user click
+        setLocalData("alphabetdemo", "false");
+      };
+
+      audio.onerror = () => {
+        console.warn("Chart audio missing, showing pointer only");
+        setShowChartPointer(false);
+        setLocalData("alphabetdemo", "false");
+        chartAudioRef.current = null;
+      };
+
+      setTimeout(() => {
+        audio.play().catch(() => {
+          setShowChartPointer(false);
+          setLocalData("alphabetdemo", "false");
+          chartAudioRef.current = null;
+        });
+      }, 500);
+    };
+
+    const checkDemoCompletion = () => {
+      const demoState = getLocalData("alphabetdemo");
+
+      // 🔥 Only trigger when demo JUST completed
+      if (demoState === "true") {
+        playChartAudio();
+      }
+    };
+
+    // Initial check
+    checkDemoCompletion();
+
+    const handleStorageChange = (e) => {
+      if (e.key === "alphabetdemo" && e.newValue === "true") {
+        checkDemoCompletion();
+      }
+    };
+
+    const handleCustomStorageChange = () => {
+      checkDemoCompletion();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("alphabetDemoComplete", handleCustomStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "alphabetDemoComplete",
+        handleCustomStorageChange
+      );
+
+      if (chartAudioRef.current) {
+        chartAudioRef.current.pause();
+        chartAudioRef.current = null;
+      }
+    };
+  }, [language]);
+
+  const handleAlphabetChartOpen = () => {
+    if (showChartPointer) {
+      // 🎬 Demo flow
+      setOpenAlphabetPreview(true);
+    } else {
+      // 📘 Normal chart
+      setOpenAlphabetModal(true);
+    }
+
+    setShowChartPointer(false);
+
+    if (chartAudioRef.current) {
+      chartAudioRef.current.pause();
+      chartAudioRef.current = null;
+    }
+  };
+
+  const getAlphabetTooltipText = () => {
+    const texts = {
+      en: {
+        title: "📚 Alphabet Chart",
+        desc: "If you need help with an alphabet or syllable, check the chart here.",
+      },
+      te: {
+        title: "📚 అక్షరమాల చార్ట్",
+        desc: "మీకు ఏదైనా అక్షరం లేదా అక్షర సమూహంతో సహాయం కావాలా? అయితే, ఇక్కడ ఉన్న పట్టికను చూడండి.",
+      },
+      kn: {
+        title: "📚 ಅಕ್ಷರಮಾಲೆ ಚಾರ್ಟ್",
+        desc: "ನಿಮಗೆ ಅಕ್ಷರಮಾಲೆ ಅಥವಾ ಉಚ್ಚಾರಾಂಶದ ಬಗ್ಗೆ ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿ ಚಾರ್ಟ್ ಪರಿಶೀಲಿಸಿ.",
+      },
+    };
+
+    return texts[lang] || texts.en;
+  };
+  const tooltipText = getAlphabetTooltipText();
 
   const handleProfileBack = () => {
     try {
@@ -893,6 +1015,23 @@ export const ProfileHeader = ({
                       }}
                     />
                   </ListItemButton>
+                  {["B", "m1", "m2", "m3"].includes(milestoneLevel) && (
+                    <>
+                      <Divider />
+                      <ListItemButton onClick={handleAlphabetChartOpen}>
+                        <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
+                        <ListItemText
+                          primary="Alphabet Chart"
+                          primaryTypographyProps={{
+                            fontFamily: "Quicksand",
+                            fontWeight: 600,
+                            fontSize: "14px",
+                            color: "#333F61",
+                          }}
+                        />
+                      </ListItemButton>
+                    </>
+                  )}
                   <Divider />
                   <ListItemButton onClick={handleLogout}>
                     <LogoutIcon sx={{ mr: 1 }} />
@@ -922,6 +1061,90 @@ export const ProfileHeader = ({
               alignItems: "center",
             }}
           >
+            {["B", "m1", "m2", "m3"].includes(milestoneLevel) && (
+              <CustomTooltip
+                open={showChartPointer}
+                title={
+                  <Box sx={{ textAlign: "center", p: 0.5 }}>
+                    <Typography
+                      sx={{ fontWeight: 600, fontSize: "18px", color: "#fff" }}
+                    >
+                      {tooltipText.title}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: "16px", opacity: 0.9, color: "#fff" }}
+                    >
+                      {tooltipText.desc}
+                    </Typography>
+                  </Box>
+                }
+                arrow
+                placement="bottom"
+              >
+                <Box sx={{ position: "relative", display: "inline-flex" }}>
+                  <IconButton
+                    onClick={handleAlphabetChartOpen}
+                    sx={{
+                      mr: { xs: "5px", sm: "10px" },
+                      padding: isMobile ? "6px" : "8px",
+                      backgroundColor: "rgba(255, 255, 255, 0.7)",
+                      animation: "pulseGlow 2s ease-in-out infinite",
+                      "@keyframes pulseGlow": {
+                        "0%, 100%": {
+                          boxShadow: "0 0 0 0 rgba(238, 105, 49, 0.4)",
+                        },
+                        "50%": {
+                          boxShadow: "0 0 0 8px rgba(238, 105, 49, 0)",
+                        },
+                      },
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                      },
+                    }}
+                  >
+                    <MenuBookIcon
+                      sx={{
+                        color: "#EE6931",
+                        fontSize: isMobile ? "24px" : "24px",
+                      }}
+                    />
+                  </IconButton>
+                  {/* Animated finger pointer - only show when audio is playing */}
+                  {showChartPointer && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: isMobile ? -20 : -35,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        animation: "pointToChart 1.5s ease-in-out infinite",
+                        "@keyframes pointToChart": {
+                          "0%, 100%": {
+                            transform: "translateX(-50%) translateY(0)",
+                            opacity: 1,
+                          },
+                          "50%": {
+                            transform: "translateX(-50%) translateY(-8px)",
+                            opacity: 0.7,
+                          },
+                        },
+                        pointerEvents: "none",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: isMobile ? "25px" : "40px",
+                          display: "inline-block",
+                        }}
+                      >
+                        👆
+                      </span>
+                    </Box>
+                  )}
+                </Box>
+              </CustomTooltip>
+            )}
+
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
               <Box sx={{ position: "relative" }} mr="10px">
                 <img
@@ -1016,21 +1239,43 @@ export const ProfileHeader = ({
             </CustomTooltip>
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
               <CustomTooltip title="Logout">
-                <Box>
-                  <CustomIconButton onClick={handleLogout}>
-                    <img
-                      className="logout-img"
-                      style={{ height: 30, width: 35 }}
-                      src={LogoutImg}
-                      alt="Logout"
-                    />
-                  </CustomIconButton>
-                </Box>
+                <IconButton
+                  onClick={handleLogout}
+                  sx={{
+                    mr: { xs: "5px", sm: "10px" },
+                    padding: isMobile ? "6px" : "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    },
+                  }}
+                >
+                  <img
+                    className="logout-img"
+                    style={{ height: 25, width: 25 }}
+                    src={LogoutImg}
+                    alt="Logout"
+                  />
+                </IconButton>
               </CustomTooltip>
             )}
           </Box>
         )}
       </Box>
+      <AlphabetChartPreview
+        open={openAlphabetPreview}
+        onClose={() => setOpenAlphabetPreview(false)}
+        lang={language}
+        onStartExploring={() => {
+          setOpenAlphabetPreview(false);
+          setOpenAlphabetModal(true);
+        }}
+      />
+      <AlphabetChart
+        open={openAlphabetModal}
+        onClose={() => setOpenAlphabetModal(false)}
+        lang={language}
+      />
     </>
   );
 };
@@ -1080,7 +1325,7 @@ const Assesment = ({ discoverStart }) => {
     setLocalData("rStepZero", 0);
   }
 
-  console.log("nLang", nativeLang, nativeLangEnable, level);
+  // console.log("nLang", nativeLang, nativeLangEnable, level);
 
   useEffect(() => {
     setLocalData("lang", lang);
@@ -1122,7 +1367,7 @@ const Assesment = ({ discoverStart }) => {
           }
         }
 
-        console.log("Assigned LEVEL:", level);
+        // console.log("Assigned LEVEL:", level);
 
         localStorage.setItem(
           "virtualId",
@@ -1201,7 +1446,7 @@ const Assesment = ({ discoverStart }) => {
           }
         }
 
-        console.log("Assigned LEVEL:", level);
+        // console.log("Assigned LEVEL:", level);
 
         let sessionId = getLocalData("sessionId");
 
@@ -1365,19 +1610,19 @@ const Assesment = ({ discoverStart }) => {
   const f3FlowStep = getF3FlowStep();
   const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
 
-  console.log("Discovery Start - F1/F2/F3 detection:", {
-    milestoneLevel,
-    subMilestoneLevel,
-    shouldShowF1,
-    shouldShowF2,
-    shouldShowF3,
-    isF1FlowActive,
-    isF2FlowActive,
-    isF3FlowActive,
-    f1FlowStepIndex: f1FlowStep.index,
-    f2FlowStepIndex: f2FlowStep.index,
-    f3FlowStepIndex: f3FlowStep.index,
-  });
+  // console.log("Discovery Start - F1/F2/F3 detection:", {
+  //   milestoneLevel,
+  //   subMilestoneLevel,
+  //   shouldShowF1,
+  //   shouldShowF2,
+  //   shouldShowF3,
+  //   isF1FlowActive,
+  //   isF2FlowActive,
+  //   isF3FlowActive,
+  //   f1FlowStepIndex: f1FlowStep.index,
+  //   f2FlowStepIndex: f2FlowStep.index,
+  //   f3FlowStepIndex: f3FlowStep.index,
+  // });
 
   const sectionStyle = {
     width: "100vw",

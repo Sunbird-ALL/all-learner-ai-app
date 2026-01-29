@@ -37,7 +37,7 @@ import hintimg from "../assets/hintsicon.svg";
 
 const theme = createTheme();
 
-const dataEn = [
+export const dataEn = [
   {
     syllable: "he",
     items: [
@@ -1290,8 +1290,9 @@ const dataEn = [
         letter: "e",
         word: "Egg",
         image: getAssetUrl(s3Assets.eggFiveImg),
-        audio: getAssetAudioUrl(s3Assets.eggPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.eggPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.EForEggAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.EForEggAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.EForEggAudio),
       },
       {
         id: 2,
@@ -1302,6 +1303,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.penFourteenImg),
         audio: getAssetAudioUrl(s3Assets.penPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.penPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.EForPenAudio),
       },
       {
         id: 3,
@@ -1312,6 +1314,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.kiteFiveImg),
         audio: getAssetAudioUrl(s3Assets.kitePhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.kitePhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.EForKiteAudio),
       },
     ],
   },
@@ -1325,8 +1328,9 @@ const dataEn = [
         letter: "a",
         word: "Apple",
         image: getAssetUrl(s3Assets.appleOneImg),
-        audio: getAssetAudioUrl(s3Assets.applePhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.applePhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.AForAppleAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.AForAppleAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.AForAppleAudio),
       },
       {
         id: 5,
@@ -1337,6 +1341,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.catOneImg),
         audio: getAssetAudioUrl(s3Assets.catPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.catPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.AForCatAudio),
       },
       {
         id: 6,
@@ -1347,6 +1352,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.peaOneImg),
         audio: getAssetAudioUrl(s3Assets.peaPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.peaPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.AForPeaAudio),
       },
     ],
   },
@@ -1360,8 +1366,9 @@ const dataEn = [
         letter: "o",
         word: "Orange",
         image: getAssetUrl(s3Assets.orangeFifteenImg),
-        audio: getAssetAudioUrl(s3Assets.orangePhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.orangePhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.OForOrangeAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.OForOrangeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.OForOrangeAudio),
       },
       {
         id: 8,
@@ -1372,6 +1379,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.dogSevenImg),
         audio: getAssetAudioUrl(s3Assets.dogPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.dogPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.OForDogAudio),
       },
       {
         id: 9,
@@ -1382,6 +1390,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.mangoThirteenImg),
         audio: getAssetAudioUrl(s3Assets.mangoPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.mangoPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.OForMangoAudio),
       },
     ],
   },
@@ -1395,8 +1404,9 @@ const dataEn = [
         letter: "i",
         word: "Ice",
         image: getAssetUrl(s3Assets.iceThreeImg),
-        audio: getAssetAudioUrl(s3Assets.icePhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.icePhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.IForIceAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.IForIceAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.IForIceAudio),
       },
       {
         id: 11,
@@ -1407,6 +1417,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.pigNineImg),
         audio: getAssetAudioUrl(s3Assets.pigPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.pigPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.IForPigAudio),
       },
       {
         id: 12,
@@ -1417,6 +1428,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.chilliImg),
         audio: getAssetAudioUrl(s3Assets.chillyAud),
         singleAudio: getAssetAudioUrl(s3Assets.chillyAud),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.IForChillyAudio),
       },
     ],
   },
@@ -1432,6 +1444,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.underImg),
         audio: getAssetAudioUrl(s3Assets.underAudio),
         singleAudio: getAssetAudioUrl(s3Assets.underAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.underAudio),
       },
       {
         id: 14,
@@ -1452,6 +1465,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.LadduTwentyOneImg),
         audio: getAssetAudioUrl(s3Assets.ladduPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ladduPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.UForLadduAudio),
       },
     ],
   },
@@ -1465,8 +1479,9 @@ const dataEn = [
         letter: "t",
         word: "Tiger",
         image: getAssetUrl(s3Assets.tigerSevenImg),
-        audio: getAssetAudioUrl(s3Assets.tigerPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.tigerPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.TForTigerAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.TForTigerAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.TForTigerAudio),
       },
       {
         id: 17,
@@ -1477,6 +1492,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.watchTwentyImg),
         audio: getAssetAudioUrl(s3Assets.watchPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.watchPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.TForWatchAudio),
       },
       {
         id: 18,
@@ -1487,6 +1503,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.plantTwentyImg),
         audio: getAssetAudioUrl(s3Assets.plantPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.plantPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.TForPlantAudio),
       },
     ],
   },
@@ -1500,8 +1517,9 @@ const dataEn = [
         letter: "n",
         word: "Nest",
         image: getAssetUrl(s3Assets.NestFourteenImg),
-        audio: getAssetAudioUrl(s3Assets.nestPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.nestPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.NForNestAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.NForNestAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.NForNestAudio),
       },
       {
         id: 20,
@@ -1512,6 +1530,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.HoneyFourteenImg),
         audio: getAssetAudioUrl(s3Assets.honeyPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.honeyPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.NForHoneyAudio),
       },
       {
         id: 21,
@@ -1522,6 +1541,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.penFiveImg),
         audio: getAssetAudioUrl(s3Assets.penPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.penPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.NForPenAudio),
       },
     ],
   },
@@ -1535,8 +1555,9 @@ const dataEn = [
         letter: "s",
         word: "Sun",
         image: getAssetUrl(s3Assets.sunNineteenImg),
-        audio: getAssetAudioUrl(s3Assets.sunPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.sunPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.SForSunAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.SForSunAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.SForSunAudio),
       },
       {
         id: 23,
@@ -1547,6 +1568,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.horseNineteenImg),
         audio: getAssetAudioUrl(s3Assets.horsePhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.horsePhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.SForHorseAudio),
       },
       {
         id: 24,
@@ -1557,6 +1579,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.busNineteenImg),
         audio: getAssetAudioUrl(s3Assets.busPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.busPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.SForBusAudio),
       },
     ],
   },
@@ -1570,8 +1593,9 @@ const dataEn = [
         letter: "r",
         word: "Rat",
         image: getAssetUrl(s3Assets.ratEighteenImg),
-        audio: getAssetAudioUrl(s3Assets.ratPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ratPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.RForRatAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.RForRatAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.RForRatAudio),
       },
       {
         id: 26,
@@ -1582,6 +1606,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.carrotEighteenImg),
         audio: getAssetAudioUrl(s3Assets.carrotPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.carrotPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.RForCarrotAudio),
       },
       {
         id: 27,
@@ -1592,6 +1617,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.carEighteenImg),
         audio: getAssetAudioUrl(s3Assets.carPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.carPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.RForCarAudio),
       },
     ],
   },
@@ -1605,8 +1631,9 @@ const dataEn = [
         letter: "h",
         word: "Hand",
         image: getAssetUrl(s3Assets.handEightImg),
-        audio: getAssetAudioUrl(s3Assets.handPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.handPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.HForHandAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.HForHandAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.HForHandAudio),
       },
       {
         id: 29,
@@ -1617,6 +1644,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.teacherEightImg),
         audio: getAssetAudioUrl(s3Assets.teacherPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.teacherPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.HForTeacherAudio),
       },
       {
         id: 30,
@@ -1627,6 +1655,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.earthEightImg),
         audio: getAssetAudioUrl(s3Assets.earthPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.earthPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.HForEarthAudio),
       },
     ],
   },
@@ -1640,8 +1669,9 @@ const dataEn = [
         letter: "l",
         word: "Lion",
         image: getAssetUrl(s3Assets.LionTwelveImg),
-        audio: getAssetAudioUrl(s3Assets.lionPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.lionPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.LForLionAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.LForLionAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.LForLionAudio),
       },
       {
         id: 32,
@@ -1652,6 +1682,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.ballTwoImg),
         audio: getAssetAudioUrl(s3Assets.balloonPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.balloonPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.LForBalloonAudio),
       },
       {
         id: 33,
@@ -1662,6 +1693,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.bellTwelveImg),
         audio: getAssetAudioUrl(s3Assets.bellPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.bellPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.LForBellAudio),
       },
     ],
   },
@@ -1675,8 +1707,9 @@ const dataEn = [
         letter: "d",
         word: "Dog",
         image: getAssetUrl(s3Assets.dogFourImg),
-        audio: getAssetAudioUrl(s3Assets.dogPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.dogPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.DForDogAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.DForDogAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.DForDogAudio),
       },
       {
         id: 35,
@@ -1710,8 +1743,9 @@ const dataEn = [
         letter: "c",
         word: "Cat",
         image: getAssetUrl(s3Assets.catOneImg),
-        audio: getAssetAudioUrl(s3Assets.catPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.catPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.CForCatAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.CForCatAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.CForCatAudio),
       },
       {
         id: 38,
@@ -1722,6 +1756,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.iceThreeImg),
         audio: getAssetAudioUrl(s3Assets.icePhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.icePhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.CForIceAudio),
       },
       {
         id: 39,
@@ -1732,6 +1767,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.garlicThreeImg),
         audio: getAssetAudioUrl(s3Assets.garlicPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.garlicPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.CForGarlicAudio),
       },
     ],
   },
@@ -1745,8 +1781,9 @@ const dataEn = [
         letter: "m",
         word: "Mango",
         image: getAssetUrl(s3Assets.mangoThirteenImg),
-        audio: getAssetAudioUrl(s3Assets.mangoPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.mangoPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.MForMangoAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.MForMangoAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.MForMangoAudio),
       },
       {
         id: 41,
@@ -1757,6 +1794,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.lemonThirteenImg),
         audio: getAssetAudioUrl(s3Assets.lemonPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.lemonPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.MForLemonAudio),
       },
       {
         id: 42,
@@ -1767,6 +1805,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.jamTenImg),
         audio: getAssetAudioUrl(s3Assets.jamPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.jamPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.MForJamAudio),
       },
     ],
   },
@@ -1780,8 +1819,9 @@ const dataEn = [
         letter: "f",
         word: "Fish",
         image: getAssetUrl(s3Assets.fishSixImg),
-        audio: getAssetAudioUrl(s3Assets.fishPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.fishPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.FForFishAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.FForFishAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.FForFishAudio),
       },
       {
         id: 44,
@@ -1792,6 +1832,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.girraffeSixImg),
         audio: getAssetAudioUrl(s3Assets.giraffePhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.giraffePhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.FForGiraffeAudio),
       },
       {
         id: 45,
@@ -1802,6 +1843,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.LeafSixImg),
         audio: getAssetAudioUrl(s3Assets.leafPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.leafPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.FForLeafAudio),
       },
     ],
   },
@@ -1815,8 +1857,9 @@ const dataEn = [
         letter: "y",
         word: "Yak",
         image: getAssetUrl(s3Assets.yakTwentyFiveImg),
-        audio: getAssetAudioUrl(s3Assets.yakPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.yakPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.YForYakAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.YForYakAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.YForYakAudio),
       },
       {
         id: 47,
@@ -1827,6 +1870,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.papayaTwentyFiveImg),
         audio: getAssetAudioUrl(s3Assets.papayaPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.papayaPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.YForPapayaAudio),
       },
       {
         id: 48,
@@ -1837,6 +1881,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.KeyTwentyFiveImg),
         audio: getAssetAudioUrl(s3Assets.keyPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.keyPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.YForKeyAudio),
       },
     ],
   },
@@ -1852,6 +1897,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.WindImg),
         audio: getAssetAudioUrl(s3Assets.WindAudio),
         singleAudio: getAssetAudioUrl(s3Assets.WindAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.WindAudio),
       },
       {
         id: 50,
@@ -1872,6 +1918,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.CrowTwentyThreeImg),
         audio: getAssetAudioUrl(s3Assets.crowPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.crowPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.WForCrowAudio),
       },
     ],
   },
@@ -1885,8 +1932,9 @@ const dataEn = [
         letter: "g",
         word: "Goat",
         image: getAssetUrl(s3Assets.goatSevenImg),
-        audio: getAssetAudioUrl(s3Assets.goatPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.goatPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.GForGoatAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.GForGoatAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.GForGoatAudio),
       },
       {
         id: 53,
@@ -1897,6 +1945,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.tigerSevenImg),
         audio: getAssetAudioUrl(s3Assets.tigerPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.tigerPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.GForTigerAudio),
       },
       {
         id: 54,
@@ -1907,6 +1956,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.dogFourImg),
         audio: getAssetAudioUrl(s3Assets.dogPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.dogPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.GForDogAudio),
       },
     ],
   },
@@ -1920,8 +1970,9 @@ const dataEn = [
         letter: "p",
         word: "Pen",
         image: getAssetUrl(s3Assets.penFiveImg),
-        audio: getAssetAudioUrl(s3Assets.penPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.penPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.PForPenAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.PForPenAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.PForPenAudio),
       },
       {
         id: 56,
@@ -1932,6 +1983,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.appleOneImg),
         audio: getAssetAudioUrl(s3Assets.applePhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.applePhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.PForAppleAudio),
       },
       {
         id: 57,
@@ -1942,6 +1994,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.capSixteenImg),
         audio: getAssetAudioUrl(s3Assets.capPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.capPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.PForCapAudio),
       },
     ],
   },
@@ -1955,8 +2008,9 @@ const dataEn = [
         letter: "b",
         word: "Ball",
         image: getAssetUrl(s3Assets.ballGif),
-        audio: getAssetAudioUrl(s3Assets.ballPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ballPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.BForBallAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.BForBallAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.BForBallAudio),
       },
       {
         id: 59,
@@ -1967,6 +2021,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.zebraTwentySixImg),
         audio: getAssetAudioUrl(s3Assets.zebraPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.zebraPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.BForZebraAudio),
       },
       {
         id: 60,
@@ -1977,6 +2032,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.cubTwoImg),
         audio: getAssetAudioUrl(s3Assets.cubPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.cubPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.BForCubAudio),
       },
     ],
   },
@@ -1990,8 +2046,9 @@ const dataEn = [
         letter: "v",
         word: "Van",
         image: getAssetUrl(s3Assets.VanTwentyTwoImg),
-        audio: getAssetAudioUrl(s3Assets.vanPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.vanPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.VForVanAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.VForVanAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.VForVanAudio),
       },
       {
         id: 62,
@@ -2002,6 +2059,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.GuavaTwentyTwoImg),
         audio: getAssetAudioUrl(s3Assets.guavaPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.guavaPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.VForGuavaAudio),
       },
     ],
   },
@@ -2015,8 +2073,9 @@ const dataEn = [
         letter: "k",
         word: "Kite",
         image: getAssetUrl(s3Assets.kiteFiveImg),
-        audio: getAssetAudioUrl(s3Assets.kitePhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.kitePhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.KForKiteAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.KForKiteAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.KForKiteAudio),
       },
       {
         id: 65,
@@ -2027,6 +2086,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.monkeyElevenImg),
         audio: getAssetAudioUrl(s3Assets.monkeyPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.monkeyPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.KForMonkeyAudio),
       },
       {
         id: 66,
@@ -2037,6 +2097,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.bookElevenImg),
         audio: getAssetAudioUrl(s3Assets.bookPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.bookPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.KForBookAudio),
       },
     ],
   },
@@ -2050,8 +2111,9 @@ const dataEn = [
         letter: "j",
         word: "Jam",
         image: getAssetUrl(s3Assets.jamTenImg),
-        audio: getAssetAudioUrl(s3Assets.jamPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.jamPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.JForJamAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.JForJamAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.JForJamAudio),
       },
       {
         id: 68,
@@ -2062,6 +2124,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.brinjalTenImg),
         audio: getAssetAudioUrl(s3Assets.brinjalPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.brinjalPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.JForBrinjalAudio),
       },
     ],
   },
@@ -2075,8 +2138,9 @@ const dataEn = [
         letter: "x",
         word: "Xray",
         image: getAssetUrl(s3Assets.xrayTwentyFourImg),
-        audio: getAssetAudioUrl(s3Assets.xrayPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.xrayPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.XForXrayAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.XForXrayAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.XForXrayAudio),
       },
       {
         id: 71,
@@ -2087,6 +2151,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.bookElevenImg),
         audio: getAssetAudioUrl(s3Assets.textbookPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.textbookPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.XForTextbookAudio),
       },
       {
         id: 72,
@@ -2097,6 +2162,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.foxTwentyFourImg),
         audio: getAssetAudioUrl(s3Assets.foxPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.foxPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.XForFoxAudio),
       },
     ],
   },
@@ -2110,8 +2176,9 @@ const dataEn = [
         letter: "q",
         word: "Queen",
         image: getAssetUrl(s3Assets.queenSixteenImg),
-        audio: getAssetAudioUrl(s3Assets.queenPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.queenPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.QForQueenAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.QForQueenAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.QForQueenAudio),
       },
       {
         id: 74,
@@ -2135,8 +2202,9 @@ const dataEn = [
         letter: "z",
         word: "Zebra",
         image: getAssetUrl(s3Assets.zebraTwentySixImg),
-        audio: getAssetAudioUrl(s3Assets.zebraPhonemeAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.zebraPhonemeAudio),
+        audio: getAssetAudioUrl(s3Assets.ZForZebraAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ZForZebraAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ZForZebraAudio),
       },
       {
         id: 77,
@@ -2147,6 +2215,7 @@ const dataEn = [
         image: getAssetUrl(s3Assets.PuzzleTwentySixImg),
         audio: getAssetAudioUrl(s3Assets.puzzlePhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.puzzlePhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ZForPuzzleAudio),
       },
       {
         id: 78,
@@ -2157,12 +2226,13 @@ const dataEn = [
         image: getAssetUrl(s3Assets.PuzzleTwentySixImg),
         audio: getAssetAudioUrl(s3Assets.quizPhonemeAudio),
         singleAudio: getAssetAudioUrl(s3Assets.quizPhonemeAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ZForQuizAudio),
       },
     ],
   },
 ];
 
-const dataKn = [
+export const dataKn = [
   {
     letter: "ಅ",
     items: [
@@ -3469,7 +3539,8 @@ const dataKn = [
     ],
   },
 ];
-const dataHi = [
+
+export const dataHi = [
   {
     letter: "अ",
     items: [
@@ -4752,7 +4823,7 @@ const dataHi = [
   },
 ];
 
-const dataTe = [
+export const dataTe = [
   {
     letter: "త",
     items: [
@@ -4762,8 +4833,9 @@ const dataTe = [
         letter: "త",
         word: "తబల",
         image: getAssetUrl(s3Assets.తబలImg),
-        audio: getAssetAudioUrl(s3Assets.తబలAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.తబలAudio),
+        audio: getAssetAudioUrl(s3Assets.తతబలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.తతబలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.తతబలAudio),
       },
       {
         id: 2,
@@ -4773,6 +4845,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.జతరImg),
         audio: getAssetAudioUrl(s3Assets.జతరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.జతరAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.తజాతరAudio),
       },
       {
         id: 3,
@@ -4782,6 +4855,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.ఈతImg),
         audio: getAssetAudioUrl(s3Assets.ఈతAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ఈతAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.తఈతAudio),
       },
     ],
   },
@@ -4794,8 +4868,9 @@ const dataTe = [
         letter: "బ",
         word: "బంతి",
         image: getAssetUrl(s3Assets.బతImg),
-        audio: getAssetAudioUrl(s3Assets.బతAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.బతAudio),
+        audio: getAssetAudioUrl(s3Assets.బబంతిAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.బబంతిAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.బబంతిAudio),
       },
       {
         id: 5,
@@ -4805,6 +4880,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.తబల2Img),
         audio: getAssetAudioUrl(s3Assets.తబల2Audio),
         singleAudio: getAssetAudioUrl(s3Assets.తబల2Audio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.బతబలAudio),
       },
       {
         id: 6,
@@ -4814,6 +4890,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.లబలబImg),
         audio: getAssetAudioUrl(s3Assets.లబలబAudio),
         singleAudio: getAssetAudioUrl(s3Assets.లబలబAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.బలబలబAudio),
       },
     ],
   },
@@ -4826,8 +4903,9 @@ const dataTe = [
         letter: "ల",
         word: "లత",
         image: getAssetUrl(s3Assets.లతImg),
-        audio: getAssetAudioUrl(s3Assets.లతAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.లతAudio),
+        audio: getAssetAudioUrl(s3Assets.లలతAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.లలతAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.లలతAudio),
       },
       {
         id: 8,
@@ -4837,6 +4915,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.బలపImg),
         audio: getAssetAudioUrl(s3Assets.బలపAudio),
         singleAudio: getAssetAudioUrl(s3Assets.బలపAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.లబలపంAudio),
       },
       {
         id: 9,
@@ -4846,6 +4925,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.వలImg),
         audio: getAssetAudioUrl(s3Assets.వలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.వలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.లవెలAudio),
       },
     ],
   },
@@ -4858,8 +4938,9 @@ const dataTe = [
         letter: "క",
         word: "కంజర",
         image: getAssetUrl(s3Assets.కజరImg),
-        audio: getAssetAudioUrl(s3Assets.కజరAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.కజరAudio),
+        audio: getAssetAudioUrl(s3Assets.కకంజరAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.కకంజరAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.కకంజరAudio),
       },
       {
         id: 11,
@@ -4869,6 +4950,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.ఆకలImg),
         audio: getAssetAudioUrl(s3Assets.ఆకలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ఆకలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.కఆకలిAudio),
       },
       {
         id: 12,
@@ -4878,6 +4960,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.చలకImg),
         audio: getAssetAudioUrl(s3Assets.చలకAudio),
         singleAudio: getAssetAudioUrl(s3Assets.చలకAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.కచిలుకAudio),
       },
     ],
   },
@@ -4890,8 +4973,9 @@ const dataTe = [
         letter: "జ",
         word: "జడ",
         image: getAssetUrl(s3Assets.జడImg),
-        audio: getAssetAudioUrl(s3Assets.జడAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.జడAudio),
+        audio: getAssetAudioUrl(s3Assets.జజడAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.జజడAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.జజడAudio),
       },
       {
         id: 14,
@@ -4901,6 +4985,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.కజర2Img),
         audio: getAssetAudioUrl(s3Assets.కజర2Audio),
         singleAudio: getAssetAudioUrl(s3Assets.కజర2Audio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.జకంజరAudio),
       },
       {
         id: 15,
@@ -4908,8 +4993,9 @@ const dataTe = [
         letter: "జ",
         word: "జలజ",
         image: getAssetUrl(s3Assets.జలజImg),
-        audio: getAssetAudioUrl(s3Assets.జలజAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.జలజAudio),
+        audio: getAssetAudioUrl(s3Assets.జజలజAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.జజలజAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.జజలజAudio),
       },
     ],
   },
@@ -4922,8 +5008,9 @@ const dataTe = [
         letter: "ర",
         word: "రవి",
         image: getAssetUrl(s3Assets.రవImg),
-        audio: getAssetAudioUrl(s3Assets.రవAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.రవAudio),
+        audio: getAssetAudioUrl(s3Assets.రరవిAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.రరవిAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.రరవిAudio),
       },
       {
         id: 17,
@@ -4933,6 +5020,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.గరకImg),
         audio: getAssetAudioUrl(s3Assets.గరకAudio),
         singleAudio: getAssetAudioUrl(s3Assets.గరకAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.రగిరకAudio),
       },
       {
         id: 18,
@@ -4942,6 +5030,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.చరImg),
         audio: getAssetAudioUrl(s3Assets.చరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.చరAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.రచీరAudio),
       },
     ],
   },
@@ -4954,8 +5043,9 @@ const dataTe = [
         letter: "ఆ",
         word: "ఆట",
         image: getAssetUrl(s3Assets.ఆటImg),
-        audio: getAssetAudioUrl(s3Assets.ఆటAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఆటAudio),
+        audio: getAssetAudioUrl(s3Assets.ఆఆటAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఆఆటAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఆఆటAudio),
       },
     ],
   },
@@ -4968,8 +5058,9 @@ const dataTe = [
         letter: "ట",
         word: "టమాట",
         image: getAssetUrl(s3Assets.టమటImg),
-        audio: getAssetAudioUrl(s3Assets.టమటAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.టమటAudio),
+        audio: getAssetAudioUrl(s3Assets.టటమాటAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.టటమాటAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.టటమాటAudio),
       },
       {
         id: 21,
@@ -4979,6 +5070,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.నటకImg),
         audio: getAssetAudioUrl(s3Assets.నటకAudio),
         singleAudio: getAssetAudioUrl(s3Assets.నటకAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.టనాటకంAudio),
       },
       {
         id: 22,
@@ -4988,6 +5080,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.తటImg),
         audio: getAssetAudioUrl(s3Assets.తటAudio),
         singleAudio: getAssetAudioUrl(s3Assets.తటAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.టతోటAudio),
       },
     ],
   },
@@ -5000,8 +5093,9 @@ const dataTe = [
         letter: "ఉ",
         word: "ఉంగరం",
         image: getAssetUrl(s3Assets.ఉగరImg),
-        audio: getAssetAudioUrl(s3Assets.ఉగరAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఉగరAudio),
+        audio: getAssetAudioUrl(s3Assets.ఉఉంగరంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఉఉంగరంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఉఉంగరంAudio),
       },
     ],
   },
@@ -5014,8 +5108,9 @@ const dataTe = [
         letter: "గ",
         word: "గద",
         image: getAssetUrl(s3Assets.గదImg),
-        audio: getAssetAudioUrl(s3Assets.గదAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.గదAudio),
+        audio: getAssetAudioUrl(s3Assets.గగదAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.గగదAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.గగదAudio),
       },
       {
         id: 25,
@@ -5025,6 +5120,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.ఉగర2Img),
         audio: getAssetAudioUrl(s3Assets.ఉగర2Audio),
         singleAudio: getAssetAudioUrl(s3Assets.ఉగర2Audio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.గఉంగరంAudio),
       },
       {
         id: 26,
@@ -5034,6 +5130,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.పడగImg),
         audio: getAssetAudioUrl(s3Assets.పడగAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పడగAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.గపండుగAudio),
       },
     ],
   },
@@ -5046,8 +5143,9 @@ const dataTe = [
         letter: "శ",
         word: "శనగ",
         image: getAssetUrl(s3Assets.శనగImg),
-        audio: getAssetAudioUrl(s3Assets.శనగAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.శనగAudio),
+        audio: getAssetAudioUrl(s3Assets.శశనగAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.శశనగAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.శశనగAudio),
       },
       {
         id: 28,
@@ -5057,6 +5155,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.దశమImg),
         audio: getAssetAudioUrl(s3Assets.దశమAudio),
         singleAudio: getAssetAudioUrl(s3Assets.దశమAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.శదశమిAudio),
       },
       {
         id: 29,
@@ -5066,6 +5165,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.దశImg),
         audio: getAssetAudioUrl(s3Assets.దశAudio),
         singleAudio: getAssetAudioUrl(s3Assets.దశAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.శదిశAudio),
       },
     ],
   },
@@ -5078,8 +5178,9 @@ const dataTe = [
         letter: "అ",
         word: "అనప",
         image: getAssetUrl(s3Assets.అనపImg),
-        audio: getAssetAudioUrl(s3Assets.అనపAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.అనపAudio),
+        audio: getAssetAudioUrl(s3Assets.అఅనపAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.అఅనపAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.అఅనపAudio),
       },
     ],
   },
@@ -5092,8 +5193,9 @@ const dataTe = [
         letter: "ప",
         word: "పంట",
         image: getAssetUrl(s3Assets.పటImg),
-        audio: getAssetAudioUrl(s3Assets.పటAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.పటAudio),
+        audio: getAssetAudioUrl(s3Assets.పపంటAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.పపంటAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.పపంటAudio),
       },
       {
         id: 32,
@@ -5103,6 +5205,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.చపలImg),
         audio: getAssetAudioUrl(s3Assets.చపలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.చపలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.పచేపలుAudio),
       },
       {
         id: 33,
@@ -5112,6 +5215,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.పపImg),
         audio: getAssetAudioUrl(s3Assets.పపAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పపAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.పపాపAudio),
       },
     ],
   },
@@ -5124,8 +5228,9 @@ const dataTe = [
         letter: "స",
         word: "సవరం",
         image: getAssetUrl(s3Assets.సవరImg),
-        audio: getAssetAudioUrl(s3Assets.సవరAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.సవరAudio),
+        audio: getAssetAudioUrl(s3Assets.ససవరంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ససవరంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ససవరంAudio),
       },
       {
         id: 35,
@@ -5135,6 +5240,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.దసరImg),
         audio: getAssetAudioUrl(s3Assets.దసరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.దసరAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.సదసరాAudio),
       },
       {
         id: 36,
@@ -5144,6 +5250,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.పనసImg),
         audio: getAssetAudioUrl(s3Assets.పనసAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పనసAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.సపనసAudio),
       },
     ],
   },
@@ -5156,8 +5263,9 @@ const dataTe = [
         letter: "వ",
         word: "వల",
         image: getAssetUrl(s3Assets.వల2Img),
-        audio: getAssetAudioUrl(s3Assets.వల2Audio),
-        singleAudio: getAssetAudioUrl(s3Assets.వల2Audio),
+        audio: getAssetAudioUrl(s3Assets.వవలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.వవలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.వవలAudio),
       },
       {
         id: 38,
@@ -5167,6 +5275,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.లవణImg),
         audio: getAssetAudioUrl(s3Assets.లవణAudio),
         singleAudio: getAssetAudioUrl(s3Assets.లవణAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.వలవణంAudio),
       },
       {
         id: 39,
@@ -5176,6 +5285,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.పడవImg),
         audio: getAssetAudioUrl(s3Assets.పడవAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పడవAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.వపడవAudio),
       },
     ],
   },
@@ -5188,8 +5298,9 @@ const dataTe = [
         letter: "ఊ",
         word: "ఊయల",
         image: getAssetUrl(s3Assets.ఊయలImg),
-        audio: getAssetAudioUrl(s3Assets.ఊయలAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఊయలAudio),
+        audio: getAssetAudioUrl(s3Assets.ఊఊయలAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఊఊయలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఊఊయలAudio),
       },
     ],
   },
@@ -5202,8 +5313,9 @@ const dataTe = [
         letter: "డ",
         word: "డబ్బా",
         image: getAssetUrl(s3Assets.డబబImg),
-        audio: getAssetAudioUrl(s3Assets.డబబAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.డబబAudio),
+        audio: getAssetAudioUrl(s3Assets.డడబ్బాAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.డడబ్బాAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.డడబ్బాAudio),
       },
       {
         id: 42,
@@ -5213,6 +5325,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.అడవImg),
         audio: getAssetAudioUrl(s3Assets.అడవAudio),
         singleAudio: getAssetAudioUrl(s3Assets.అడవAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.డఅడవిAudio),
       },
       {
         id: 43,
@@ -5222,6 +5335,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.బడImg),
         audio: getAssetAudioUrl(s3Assets.బడAudio),
         singleAudio: getAssetAudioUrl(s3Assets.బడAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.డబండAudio),
       },
     ],
   },
@@ -5234,8 +5348,9 @@ const dataTe = [
         letter: "ద",
         word: "దండ",
         image: getAssetUrl(s3Assets.దడImg),
-        audio: getAssetAudioUrl(s3Assets.దడAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.దడAudio),
+        audio: getAssetAudioUrl(s3Assets.దదండAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.దదండAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.దదండAudio),
       },
       {
         id: 45,
@@ -5245,6 +5360,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.ఉదయImg),
         audio: getAssetAudioUrl(s3Assets.ఉదయAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ఉదయAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.దఉదయంAudio),
       },
       {
         id: 46,
@@ -5254,6 +5370,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.కదImg),
         audio: getAssetAudioUrl(s3Assets.కదAudio),
         singleAudio: getAssetAudioUrl(s3Assets.కదAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.దకిందAudio),
       },
     ],
   },
@@ -5266,8 +5383,9 @@ const dataTe = [
         letter: "ఈ",
         word: "ఈత",
         image: getAssetUrl(s3Assets.ఈత2Img),
-        audio: getAssetAudioUrl(s3Assets.ఈత2Audio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఈత2Audio),
+        audio: getAssetAudioUrl(s3Assets.ఈఈతAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఈఈతAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఈఈతAudio),
       },
     ],
   },
@@ -5280,8 +5398,9 @@ const dataTe = [
         letter: "మ",
         word: "మర",
         image: getAssetUrl(s3Assets.మరImg),
-        audio: getAssetAudioUrl(s3Assets.మరAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.మరAudio),
+        audio: getAssetAudioUrl(s3Assets.మమరAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.మమరAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.మమరAudio),
       },
       {
         id: 49,
@@ -5291,6 +5410,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.నమలImg),
         audio: getAssetAudioUrl(s3Assets.నమలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.నమలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.మనెమలిAudio),
       },
       {
         id: 50,
@@ -5300,6 +5420,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.చమImg),
         audio: getAssetAudioUrl(s3Assets.చమAudio),
         singleAudio: getAssetAudioUrl(s3Assets.చమAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.మచీమAudio),
       },
     ],
   },
@@ -5312,8 +5433,9 @@ const dataTe = [
         letter: "చ",
         word: "చరకా",
         image: getAssetUrl(s3Assets.చరకImg),
-        audio: getAssetAudioUrl(s3Assets.చరకAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.చరకAudio),
+        audio: getAssetAudioUrl(s3Assets.చచరకాAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.చచరకాAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.చచరకాAudio),
       },
       {
         id: 52,
@@ -5323,6 +5445,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.రచనImg),
         audio: getAssetAudioUrl(s3Assets.రచనAudio),
         singleAudio: getAssetAudioUrl(s3Assets.రచనAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.చరచనAudio),
       },
       {
         id: 53,
@@ -5332,6 +5455,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.కచకచImg),
         audio: getAssetAudioUrl(s3Assets.కచకచAudio),
         singleAudio: getAssetAudioUrl(s3Assets.కచకచAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.చకిచకిచAudio),
       },
     ],
   },
@@ -5344,8 +5468,9 @@ const dataTe = [
         letter: "ఒ",
         word: "ఒక",
         image: getAssetUrl(s3Assets.ఒకImg),
-        audio: getAssetAudioUrl(s3Assets.ఒకAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఒకAudio),
+        audio: getAssetAudioUrl(s3Assets.ఒఒకAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఒఒకAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఒఒకAudio),
       },
     ],
   },
@@ -5358,8 +5483,9 @@ const dataTe = [
         letter: "ఓ",
         word: "ఓడ",
         image: getAssetUrl(s3Assets.ఓడImg),
-        audio: getAssetAudioUrl(s3Assets.ఓడAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఓడAudio),
+        audio: getAssetAudioUrl(s3Assets.ఓఓడAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఓఓడAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఓఓడAudio),
       },
     ],
   },
@@ -5372,8 +5498,9 @@ const dataTe = [
         letter: "ఔ",
         word: "ఔటు",
         image: getAssetUrl(s3Assets.ఔటImg),
-        audio: getAssetAudioUrl(s3Assets.ఔటAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఔటAudio),
+        audio: getAssetAudioUrl(s3Assets.ఔఔటుAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఔఔటుAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఔఔటుAudio),
       },
     ],
   },
@@ -5386,8 +5513,9 @@ const dataTe = [
         letter: "య",
         word: "యద",
         image: getAssetUrl(s3Assets.యదImg),
-        audio: getAssetAudioUrl(s3Assets.యదAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.యదAudio),
+        audio: getAssetAudioUrl(s3Assets.యయదAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.యయదAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.యయదAudio),
       },
       {
         id: 58,
@@ -5397,6 +5525,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.కయలImg),
         audio: getAssetAudioUrl(s3Assets.కయలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.కయలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.యకాయలుAudio),
       },
       {
         id: 59,
@@ -5406,6 +5535,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.వకయImg),
         audio: getAssetAudioUrl(s3Assets.వకయAudio),
         singleAudio: getAssetAudioUrl(s3Assets.వకయAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.యవంకాయAudio),
       },
     ],
   },
@@ -5418,8 +5548,9 @@ const dataTe = [
         letter: "ఇ",
         word: "ఇటుక",
         image: getAssetUrl(s3Assets.ఇటకImg),
-        audio: getAssetAudioUrl(s3Assets.ఇటకAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఇటకAudio),
+        audio: getAssetAudioUrl(s3Assets.ఇఇటుకAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఇఇటుకAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఇఇటుకAudio),
       },
     ],
   },
@@ -5432,8 +5563,9 @@ const dataTe = [
         letter: "ఎ",
         word: "ఎలుక",
         image: getAssetUrl(s3Assets.ఎలకImg),
-        audio: getAssetAudioUrl(s3Assets.ఎలకAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఎలకAudio),
+        audio: getAssetAudioUrl(s3Assets.ఎఎలుకAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఎఎలుకAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఎఎలుకAudio),
       },
     ],
   },
@@ -5446,8 +5578,9 @@ const dataTe = [
         letter: "ఏ",
         word: "ఏనుగు",
         image: getAssetUrl(s3Assets.ఏనగImg),
-        audio: getAssetAudioUrl(s3Assets.ఏనగAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఏనగAudio),
+        audio: getAssetAudioUrl(s3Assets.ఏఏనుగుAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఏఏనుగుAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఏఏనుగుAudio),
       },
     ],
   },
@@ -5460,8 +5593,9 @@ const dataTe = [
         letter: "ఐ",
         word: "ఐదు",
         image: getAssetUrl(s3Assets.ఐదImg),
-        audio: getAssetAudioUrl(s3Assets.ఐదAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఐదAudio),
+        audio: getAssetAudioUrl(s3Assets.ఐఐదుAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఐఐదుAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఐఐదుAudio),
       },
     ],
   },
@@ -5476,6 +5610,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.గణపతImg),
         audio: getAssetAudioUrl(s3Assets.గణపతAudio),
         singleAudio: getAssetAudioUrl(s3Assets.గణపతAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ణగణపతిAudio),
       },
       {
         id: 65,
@@ -5483,8 +5618,9 @@ const dataTe = [
         letter: "ణ",
         word: "వీణ",
         image: getAssetUrl(s3Assets.వణImg),
-        audio: getAssetAudioUrl(s3Assets.వణAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.వణAudio),
+        audio: getAssetAudioUrl(s3Assets.ణవీణAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ణవీణAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ణవీణAudio),
       },
     ],
   },
@@ -5497,8 +5633,9 @@ const dataTe = [
         letter: "ళ",
         word: "తాళం",
         image: getAssetUrl(s3Assets.తళImg),
-        audio: getAssetAudioUrl(s3Assets.తళAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.తళAudio),
+        audio: getAssetAudioUrl(s3Assets.ళతాళంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ళతాళంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ళతాళంAudio),
       },
       {
         id: 67,
@@ -5508,6 +5645,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.కళImg),
         audio: getAssetAudioUrl(s3Assets.కళAudio),
         singleAudio: getAssetAudioUrl(s3Assets.కళAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ళకళAudio),
       },
     ],
   },
@@ -5520,8 +5658,9 @@ const dataTe = [
         letter: "హ",
         word: "హంస",
         image: getAssetUrl(s3Assets.హసImg),
-        audio: getAssetAudioUrl(s3Assets.హసAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.హసAudio),
+        audio: getAssetAudioUrl(s3Assets.హహంసAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.హహంసAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.హహంసAudio),
       },
       {
         id: 69,
@@ -5531,6 +5670,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.వహనImg),
         audio: getAssetAudioUrl(s3Assets.వహనAudio),
         singleAudio: getAssetAudioUrl(s3Assets.వహనAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.హవాహనంAudio),
       },
       {
         id: 70,
@@ -5540,6 +5680,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.గహImg),
         audio: getAssetAudioUrl(s3Assets.గహAudio),
         singleAudio: getAssetAudioUrl(s3Assets.గహAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.హగుహAudio),
       },
     ],
   },
@@ -5552,8 +5693,9 @@ const dataTe = [
         letter: "ఖ",
         word: "ఖగం",
         image: getAssetUrl(s3Assets.ఖగImg),
-        audio: getAssetAudioUrl(s3Assets.ఖగAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఖగAudio),
+        audio: getAssetAudioUrl(s3Assets.ఖఖగంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఖఖగంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఖఖగంAudio),
       },
       {
         id: 72,
@@ -5563,6 +5705,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.మఖమImg),
         audio: getAssetAudioUrl(s3Assets.మఖమAudio),
         singleAudio: getAssetAudioUrl(s3Assets.మఖమAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఖముఖముAudio),
       },
       {
         id: 73,
@@ -5572,6 +5715,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.శఖImg),
         audio: getAssetAudioUrl(s3Assets.శఖAudio),
         singleAudio: getAssetAudioUrl(s3Assets.శఖAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఖశంఖంAudio),
       },
     ],
   },
@@ -5584,8 +5728,9 @@ const dataTe = [
         letter: "ఛ",
         word: "ఛత్రము",
         image: getAssetUrl(s3Assets.ఛతరమImg),
-        audio: getAssetAudioUrl(s3Assets.ఛతరమAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఛతరమAudio),
+        audio: getAssetAudioUrl(s3Assets.ఛఛత్రముAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఛఛత్రముAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఛఛత్రముAudio),
       },
       {
         id: 75,
@@ -5595,6 +5740,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.పఛImg),
         audio: getAssetAudioUrl(s3Assets.పఛAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పఛAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఛపింఛంAudio),
       },
     ],
   },
@@ -5609,6 +5755,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.పఠశలImg),
         audio: getAssetAudioUrl(s3Assets.పఠశలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పఠశలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఠపాఠశాలAudio),
       },
       {
         id: 77,
@@ -5616,8 +5763,9 @@ const dataTe = [
         letter: "ఠ",
         word: "పాఠం",
         image: getAssetUrl(s3Assets.పఠImg),
-        audio: getAssetAudioUrl(s3Assets.పఠAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.పఠAudio),
+        audio: getAssetAudioUrl(s3Assets.ఠపాఠంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఠపాఠంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఠపాఠంAudio),
       },
     ],
   },
@@ -5630,8 +5778,9 @@ const dataTe = [
         letter: "ఢ",
         word: "ఢమఢమ",
         image: getAssetUrl(s3Assets.ఢమఢమImg),
-        audio: getAssetAudioUrl(s3Assets.ఢమఢమAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఢమఢమAudio),
+        audio: getAssetAudioUrl(s3Assets.ఢఢమఢమAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఢఢమఢమAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఢఢమఢమAudio),
       },
     ],
   },
@@ -5644,8 +5793,9 @@ const dataTe = [
         letter: "ఘ",
         word: "ఘటం",
         image: getAssetUrl(s3Assets.ఘటImg),
-        audio: getAssetAudioUrl(s3Assets.ఘటAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఘటAudio),
+        audio: getAssetAudioUrl(s3Assets.ఘఘటంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఘఘటంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఘఘటంAudio),
       },
       {
         id: 80,
@@ -5655,6 +5805,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.సఘటనImg),
         audio: getAssetAudioUrl(s3Assets.సఘటనAudio),
         singleAudio: getAssetAudioUrl(s3Assets.సఘటనAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఘసంఘటనAudio),
       },
       {
         id: 81,
@@ -5664,6 +5815,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.మఘImg),
         audio: getAssetAudioUrl(s3Assets.మఘAudio),
         singleAudio: getAssetAudioUrl(s3Assets.మఘAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఘమేఘంAudio),
       },
     ],
   },
@@ -5676,8 +5828,9 @@ const dataTe = [
         letter: "ఝ",
         word: "ఝషం",
         image: getAssetUrl(s3Assets.ఝషImg),
-        audio: getAssetAudioUrl(s3Assets.ఝషAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఝషAudio),
+        audio: getAssetAudioUrl(s3Assets.ఝఝషంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఝఝషంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఝఝషంAudio),
       },
     ],
   },
@@ -5690,8 +5843,9 @@ const dataTe = [
         letter: "ఋ",
         word: "ఋషి",
         image: getAssetUrl(s3Assets.ఋషImg),
-        audio: getAssetAudioUrl(s3Assets.ఋషAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఋషAudio),
+        audio: getAssetAudioUrl(s3Assets.ఋఋషిAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఋఋషిAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఋఋషిAudio),
       },
     ],
   },
@@ -5704,8 +5858,9 @@ const dataTe = [
         letter: "ష",
         word: "షరా",
         image: getAssetUrl(s3Assets.షరImg),
-        audio: getAssetAudioUrl(s3Assets.షరAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.షరAudio),
+        audio: getAssetAudioUrl(s3Assets.షషరాAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.షషరాAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.షషరాAudio),
       },
       {
         id: 85,
@@ -5715,6 +5870,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.వషమImg),
         audio: getAssetAudioUrl(s3Assets.వషమAudio),
         singleAudio: getAssetAudioUrl(s3Assets.వషమAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.షవిషముAudio),
       },
       {
         id: 86,
@@ -5724,6 +5880,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.ఉషImg),
         audio: getAssetAudioUrl(s3Assets.ఉషAudio),
         singleAudio: getAssetAudioUrl(s3Assets.ఉషAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.షఉషAudio),
       },
     ],
   },
@@ -5736,8 +5893,9 @@ const dataTe = [
         letter: "థ",
         word: "థర్మోస్",
         image: getAssetUrl(s3Assets.థరమసImg),
-        audio: getAssetAudioUrl(s3Assets.థరమసAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.థరమసAudio),
+        audio: getAssetAudioUrl(s3Assets.థథర్మోస్Audio),
+        singleAudio: getAssetAudioUrl(s3Assets.థథర్మోస్Audio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.థథర్మోస్Audio),
       },
       {
         id: 88,
@@ -5747,6 +5905,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.రథమImg),
         audio: getAssetAudioUrl(s3Assets.రథమAudio),
         singleAudio: getAssetAudioUrl(s3Assets.రథమAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.థరథముAudio),
       },
       {
         id: 89,
@@ -5756,6 +5915,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.కథImg),
         audio: getAssetAudioUrl(s3Assets.కథAudio),
         singleAudio: getAssetAudioUrl(s3Assets.కథAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.థకథAudio),
       },
     ],
   },
@@ -5768,8 +5928,9 @@ const dataTe = [
         letter: "ధ",
         word: "ధనం",
         image: getAssetUrl(s3Assets.ధనImg),
-        audio: getAssetAudioUrl(s3Assets.ధనAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ధనAudio),
+        audio: getAssetAudioUrl(s3Assets.ధధనంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ధధనంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ధధనంAudio),
       },
       {
         id: 91,
@@ -5779,6 +5940,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.కరధమImg),
         audio: getAssetAudioUrl(s3Assets.కరధమAudio),
         singleAudio: getAssetAudioUrl(s3Assets.కరధమAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ధక్రోధముAudio),
       },
       {
         id: 92,
@@ -5788,6 +5950,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.బధImg),
         audio: getAssetAudioUrl(s3Assets.బధAudio),
         singleAudio: getAssetAudioUrl(s3Assets.బధAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ధబాధAudio),
       },
     ],
   },
@@ -5800,8 +5963,9 @@ const dataTe = [
         letter: "ఫ",
         word: "ఫలము",
         image: getAssetUrl(s3Assets.ఫలమImg),
-        audio: getAssetAudioUrl(s3Assets.ఫలమAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఫలమAudio),
+        audio: getAssetAudioUrl(s3Assets.ఫఫలముAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఫఫలముAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఫఫలముAudio),
       },
       {
         id: 94,
@@ -5811,6 +5975,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.టలఫనImg),
         audio: getAssetAudioUrl(s3Assets.టలఫనAudio),
         singleAudio: getAssetAudioUrl(s3Assets.టలఫనAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఫటెలిఫోనుAudio),
       },
       {
         id: 95,
@@ -5820,6 +5985,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.సతఫలImg),
         audio: getAssetAudioUrl(s3Assets.సతఫలAudio),
         singleAudio: getAssetAudioUrl(s3Assets.సతఫలAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఫసీతాఫలంAudio),
       },
     ],
   },
@@ -5832,8 +5998,9 @@ const dataTe = [
         letter: "భ",
         word: "భజన",
         image: getAssetUrl(s3Assets.భజనImg),
-        audio: getAssetAudioUrl(s3Assets.భజనAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.భజనAudio),
+        audio: getAssetAudioUrl(s3Assets.భభజనAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.భభజనAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.భభజనAudio),
       },
       {
         id: 97,
@@ -5843,6 +6010,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.సభImg),
         audio: getAssetAudioUrl(s3Assets.సభAudio),
         singleAudio: getAssetAudioUrl(s3Assets.సభAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.భసభAudio),
       },
     ],
   },
@@ -5855,8 +6023,9 @@ const dataTe = [
         letter: "క్ష",
         word: "క్షత్రియుడు",
         image: getAssetUrl(s3Assets.కషతరయడImg),
-        audio: getAssetAudioUrl(s3Assets.కషతరయడAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.కషతరయడAudio),
+        audio: getAssetAudioUrl(s3Assets.క్షక్షత్రియుడుAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.క్షక్షత్రియుడుAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.క్షక్షత్రియుడుAudio),
       },
       {
         id: 99,
@@ -5866,6 +6035,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.అకషరImg),
         audio: getAssetAudioUrl(s3Assets.అకషరAudio),
         singleAudio: getAssetAudioUrl(s3Assets.అకషరAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.క్షఅక్షరంAudio),
       },
       {
         id: 100,
@@ -5875,6 +6045,7 @@ const dataTe = [
         image: getAssetUrl(s3Assets.పరకషImg),
         audio: getAssetAudioUrl(s3Assets.పరకషAudio),
         singleAudio: getAssetAudioUrl(s3Assets.పరకషAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.క్షపరీక్షAudio),
       },
     ],
   },
@@ -5887,8 +6058,9 @@ const dataTe = [
         letter: "అం",
         word: "అంగడి",
         image: getAssetUrl(s3Assets.అగడImg),
-        audio: getAssetAudioUrl(s3Assets.అగడAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.అగడAudio),
+        audio: getAssetAudioUrl(s3Assets.అంఅంగడిAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.అంఅంగడిAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.అంఅంగడిAudio),
       },
     ],
   },
@@ -5901,8 +6073,9 @@ const dataTe = [
         letter: "ఙ",
         word: "ఙ",
         image: getAssetUrl(s3Assets.ఙImg),
-        audio: getAssetAudioUrl(s3Assets.ఙAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఙAudio),
+        audio: getAssetAudioUrl(s3Assets.ఙఙAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఙఙAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఙఙAudio),
       },
     ],
   },
@@ -5915,8 +6088,9 @@ const dataTe = [
         letter: "ఞ",
         word: "ఞ",
         image: getAssetUrl(s3Assets.ఞImg),
-        audio: getAssetAudioUrl(s3Assets.ఞAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఞAudio),
+        audio: getAssetAudioUrl(s3Assets.ఞఞAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఞఞAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఞఞAudio),
       },
     ],
   },
@@ -5929,8 +6103,9 @@ const dataTe = [
         letter: "అః",
         word: "అః",
         image: getAssetUrl(s3Assets.అImg),
-        audio: getAssetAudioUrl(s3Assets.అAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.అAudio),
+        audio: getAssetAudioUrl(s3Assets.అఃఅఃAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.అఃఅఃAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.అఃఅఃAudio),
       },
     ],
   },
@@ -5943,12 +6118,44 @@ const dataTe = [
         letter: "ఱ",
         word: "ఱంపం",
         image: getAssetUrl(s3Assets.ఱపImg),
-        audio: getAssetAudioUrl(s3Assets.ఱపAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ఱపAudio),
+        audio: getAssetAudioUrl(s3Assets.ఱఱంపంAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ఱఱంపంAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఱఱంపంAudio),
+      },
+    ],
+  },
+  {
+    letter: "న",
+    items: [
+      {
+        id: 106,
+        title: "Letter",
+        letter: "న",
+        word: "నగ",
+        image: getAssetUrl(s3Assets.నగImg),
+        audio: getAssetAudioUrl(s3Assets.ననగAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ననగAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ననగAudio),
+      },
+    ],
+  },
+  {
+    letter: "ౠ",
+    items: [
+      {
+        id: 107,
+        title: "Letter",
+        letter: "ౠ",
+        word: "ౠక",
+        image: getAssetUrl(s3Assets.ౠకImg),
+        audio: getAssetAudioUrl(s3Assets.ౠౠకAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ౠౠకAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ౠౠకAudio),
       },
     ],
   },
 ];
+
 const LetterTrain = ({
   setVoiceText,
   setRecordedAudio,
@@ -6116,8 +6323,6 @@ const LetterTrain = ({
 
   const singleAudio = playlist[currentIndex]?.item?.singleAudio || null;
 
-  //console.log("letters", singleAudio);
-
   const playAudio = (src) => {
     if (!src) return;
 
@@ -6126,8 +6331,17 @@ const LetterTrain = ({
       audioRef.current.currentTime = 0;
     }
 
-    audioRef.current = new Audio(src);
-    audioRef.current.play().catch((err) => {
+    const audio = new Audio(src);
+    audioRef.current = audio;
+
+    audio.onended = () => {
+      if (currentIndex === 0) {
+        setLocalData("alphabetdemo", "true");
+        window.dispatchEvent(new Event("alphabetDemoComplete"));
+      }
+    };
+
+    audio.play().catch((err) => {
       console.log("Audio play error:", err);
     });
   };
@@ -6143,6 +6357,57 @@ const LetterTrain = ({
       }
     };
   }, [currentIndex]);
+
+  // const playAudio = (src) => {
+  //   if (!src) return;
+
+  //   if (audioRef.current) {
+  //     audioRef.current.pause();
+  //     audioRef.current.currentTime = 0;
+  //   }
+
+  //   const audio = new Audio(src);
+  //   audioRef.current = audio;
+
+  //   audio.play().catch((err) => {
+  //     console.log("Audio play error:", err);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   if (!currentAudio) return;
+
+  //   // 🔹 Special case: index 0 (only once, delayed)
+  //   if (currentIndex === 0) {
+  //     if (localStorage.getItem("alphabetdemo") === "true") return;
+
+  //     // Set immediately
+  //     setLocalData("alphabetdemo", "true");
+  //     window.dispatchEvent(new Event("alphabetDemoComplete"));
+
+  //     const timeoutId = setTimeout(() => {
+  //       playAudio(currentAudio);
+  //     }, 6000);
+
+  //     return () => {
+  //       clearTimeout(timeoutId);
+  //       if (audioRef.current) {
+  //         audioRef.current.pause();
+  //         audioRef.current = null;
+  //       }
+  //     };
+  //   }
+
+  //   // 🔹 Normal case: index 1 → 20 (play immediately)
+  //   playAudio(currentAudio);
+
+  //   return () => {
+  //     if (audioRef.current) {
+  //       audioRef.current.pause();
+  //       audioRef.current = null;
+  //     }
+  //   };
+  // }, [currentIndex]);
 
   const currentUI = useMemo(() => {
     return playlist[currentIndex]?.type;
