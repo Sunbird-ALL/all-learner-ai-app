@@ -81,8 +81,57 @@ class MemoryGameDataLoader {
 
   // Get letters for specific language and exact level (for Telugu)
   getLettersByLevel(language: Language, level: string): string[] {
-    const langData = this.data.languages[language];
+    let langData = this.data.languages[language];
     if (!langData) return [];
+    if (language === 'en'&& 'levelLetters' in langData && langData.levelLetters ) {
+      const levelLetters = langData.levelLetters
+      function combineLevels(
+        sourceKeys: number[],
+        groupSize: number,
+        startLevel: number
+      ) {
+        let nextLevel = startLevel
+        let index = 0
+
+        while (index < sourceKeys.length) {
+          const group = sourceKeys.slice(index, index + groupSize)
+          if (group.length < groupSize) break
+
+          levelLetters[nextLevel] = []
+
+          for (const k of group) {
+            levelLetters[nextLevel].push(...levelLetters[k])
+          }
+
+          nextLevel++
+          index += groupSize
+        }
+
+        return nextLevel
+      }
+
+      // ---- Phase 1: use original levels only ----
+      const originalKeys = Object.keys(levelLetters)
+        .map(Number)
+        .sort((a, b) => a - b)
+
+      const firstGeneratedLevel = Math.max(...originalKeys) + 1
+
+      const nextAfterPhase1 = combineLevels(
+        originalKeys,
+        3,
+        firstGeneratedLevel
+      )
+
+      // ---- Phase 2: use generated levels ----
+      const generatedKeys: number[] = []
+      for (let i = firstGeneratedLevel; i < nextAfterPhase1; i++) {
+        generatedKeys.push(i)
+      }
+
+      combineLevels(generatedKeys, 3, nextAfterPhase1)
+      
+    }
 
     // Check if levelLetters exists (for Telugu)
     if ('levelLetters' in langData && langData.levelLetters) {
@@ -138,7 +187,7 @@ class MemoryGameDataLoader {
     
     // For Telugu, Kannada, and Marathi, use exact level mapping
     let letters: string[];
-    if (language === 'te' || language === 'kn' || language === 'mr') {
+    if (language === 'te' || language === 'kn' || language === 'mr' || language === 'en') {
       const levelKey = level.toString();
       letters = this.getLettersByLevel(language, levelKey);
     } else {

@@ -199,44 +199,34 @@ const LetterLauncherMechanicsContent = ({
   const generateQuestions = () => {
     const questions = [];
     let letters = [];
+    // Ensure only supported languages are passed
+    const supportedLanguage =
+      initialLanguage === "te" ||
+      initialLanguage === "mr" ||
+      initialLanguage === "kn"
+        ? initialLanguage
+        : "en";
 
-    // For English, use existing hardcoded approach (don't change English flow)
-    if (initialLanguage === "en") {
-      letters =
-        contentType === "letter"
-          ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
-          : ["at", "an", "in", "on", "am", "it", "up", "en", "ed", "ot"];
-    }
-    // For non-English languages (Telugu, Kannada, Marathi, etc.), use language-specific letters
-    else {
-      // Ensure only supported languages are passed
-      const supportedLanguage =
-        initialLanguage === "te" ||
-        initialLanguage === "mr" ||
-        initialLanguage === "kn"
-          ? initialLanguage
-          : "en";
-
-      if (contentType === "letter" || contentType === "syllable") {
-        // For Telugu, Kannada, and Marathi, use exact level mapping
-        if (
-          supportedLanguage === "te" ||
-          supportedLanguage === "kn" ||
-          supportedLanguage === "mr"
-        ) {
-          const levelKey = currentGameLevel.toString();
-          letters = memoryGameDataLoader.getLettersByLevel(
-            supportedLanguage,
-            levelKey
-          );
-          console.log(
-            `Letter Launcher - Using ${supportedLanguage} letters for level ${currentGameLevel}:`,
-            {
-              lettersCount: letters.length,
-              sampleLetters: letters.slice(0, 10),
-            }
-          );
-        }
+    if (contentType === "letter" || contentType === "syllable") {
+      // For Telugu, Kannada, and Marathi, use exact level mapping
+      if (
+        supportedLanguage === "te" ||
+        supportedLanguage === "kn" ||
+        supportedLanguage === "mr" ||
+        supportedLanguage === "en"
+      ) {
+        const levelKey = currentGameLevel.toString();
+        letters = memoryGameDataLoader.getLettersByLevel(
+          supportedLanguage,
+          levelKey
+        );
+        console.log(
+          `Letter Launcher - Using ${supportedLanguage} letters for level ${currentGameLevel}:`,
+          {
+            lettersCount: letters.length,
+            sampleLetters: letters.slice(0, 10),
+          }
+        );
       }
     }
 
