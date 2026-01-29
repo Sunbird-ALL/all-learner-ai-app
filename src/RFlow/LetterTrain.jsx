@@ -7035,7 +7035,7 @@ const LetterTrain = ({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              padding: "20px 0",
+              padding: "30px 0",
             }}
           >
             <Box
