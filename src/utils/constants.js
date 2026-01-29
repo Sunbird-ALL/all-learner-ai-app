@@ -13349,7 +13349,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P5",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 4,
         letterHuntContentCount: 10,
       },
       // Learn 5 - Letter Train
@@ -13370,7 +13370,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L6",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 5,
         letterHuntContentCount: 10,
       },
       // Learn 6 - Letter Train
@@ -13391,7 +13391,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P7",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 6,
         letterHuntContentCount: 10,
       },
       // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -13402,8 +13402,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P8",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 4,
+        letterHuntEndLevel: 6,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 2,
@@ -13428,7 +13428,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P10",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 7,
         letterHuntContentCount: 10,
       },
       // Learn 8 - Letter Train
@@ -13449,7 +13449,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P12",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 8,
         letterHuntContentCount: 10,
       },
       // Learn 9 - Letter Train
@@ -13470,7 +13470,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P14",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 9,
         letterHuntContentCount: 10,
       },
       // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -13481,8 +13481,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P15",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 7,
+        letterHuntEndLevel: 9,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 3,
@@ -13499,7 +13499,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L1",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["నది", "చేప", "చీర", "గెల", "సౌధం"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["గది", "చేను", "చీర", "గెల", "సౌధం"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -13509,7 +13509,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L2",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 10,
         letterHuntContentCount: 10,
         // customLetters: ["In", "The", "On", "An", "Am"],
       },
@@ -13521,7 +13521,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P1",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["గృహం", "జాతర", "గీత", "జైలు", "కోతి"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["గృహం", "జాతర", "గీరు", "జైలు", "కోకిల"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -13532,7 +13532,7 @@ export const levelGetContent = {
         mechanism: { id: "letterHunt", name: "letterHunt" },
         // customLetters: ["At", "It", "He", "She", "His"],
         multilingual: true,
-        letterHuntLevel: 2,
+        letterHuntLevel: 11,
         letterHuntContentCount: 10,
       },
       // Learn 3 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
@@ -13543,7 +13543,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L3",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["నౌక", "నీరు", "పోరు", "మెడ", "టోపీ"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["నౌక", "నీకు", "పోరు", "మెడ", "టోపీ"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -13554,7 +13554,7 @@ export const levelGetContent = {
         mechanism: { id: "letterHunt", name: "letterHunt" },
         // customLetters: ["The", "Is", "Are", "Or", "Up", "On"],
         multilingual: true,
-        letterHuntLevel: 3,
+        letterHuntLevel: 12,
         letterHuntContentCount: 10,
       },
       // Apply 1 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -13565,8 +13565,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P3",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 10,
+        letterHuntEndLevel: 12,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 1,
@@ -13592,7 +13592,7 @@ export const levelGetContent = {
         mechanism: { id: "letterHunt", name: "letterHunt" },
         // customLetters: ["All", "In", "Ter", "Ing", "Up", "Him"],
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 13,
         letterHuntContentCount: 10,
       },
       // Learn 5 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
@@ -13603,7 +13603,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P6",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["బంతి", "టౌను", "పులి", "తేనె", "పశువు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["బంతి", "టౌను", "బాలిక", "నెమలి", "పశువు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -13613,7 +13613,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P7",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 14,
         letterHuntContentCount: 10,
       },
       // Learn 6 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
@@ -13624,7 +13624,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P8",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["బూడిద", "చీపురు", "మైదాకు", "నొసలు", "పొదుపు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["బూడిద", "నుదురు", "మైదానం", "నొసలు", "పొదుపు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -13634,7 +13634,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P9",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 15,
         letterHuntContentCount: 10,
       },
       // Apply 2 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -13645,8 +13645,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P10",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 13,
+        letterHuntEndLevel: 15,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 2,
@@ -13671,7 +13671,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P12",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 16,
         letterHuntContentCount: 10,
       },
       // Learn 8 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
@@ -13682,7 +13682,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P13",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["పసిడి", "గాజులు", "నృపతి", "పైసలు", "మొసలి"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["పసిడి", "గాజులు", "నృపతి", "పైసలు", "మొదలు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -13692,7 +13692,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P14",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 17,
         letterHuntContentCount: 10,
       },
       // Learn 9 - Syllable Clap/Letter Hunt (English) or Barakadi (Indic)
@@ -13703,7 +13703,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P15",
         multilingual: true,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["సినిమా", "వివాహం", "మూకుడు", "హృదయం", "బేడీలు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["మాటలు", "వివాహం", "మూకుడు", "హృదయం", "బేడీలు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -13713,7 +13713,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P16",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
+        letterHuntLevel: 18,
         letterHuntContentCount: 10,
       },
       // Apply 3 - Letter Hunt (3 levels, 13 content per level, showcase mode)
@@ -13724,8 +13724,8 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P17",
         mechanism: { id: "letterHunt", name: "letterHunt" },
         multilingual: true,
-        letterHuntLevel: 1,
-        letterHuntEndLevel: 3,
+        letterHuntLevel: 16,
+        letterHuntEndLevel: 18,
         letterHuntContentCount: 13,
         isShowcase: true,
         applyStep: 3,
@@ -13743,7 +13743,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter", // Alphabet sets
-        letterLauncherLevel: 1,
+        letterLauncherLevel: 19,
         letterLauncherContentCount: 10,
       },
       // Practice 2 - Letter Speed (Letter Launcher) - Alphabet sets
@@ -13755,7 +13755,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
-        letterLauncherLevel: 2,
+        letterLauncherLevel: 20,
         letterLauncherContentCount: 10,
       },
       // Practice 3 - Letter Speed (Letter Launcher) - Alphabet sets
@@ -13767,7 +13767,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
-        letterLauncherLevel: 3,
+        letterLauncherLevel: 21,
         letterLauncherContentCount: 10,
       },
       // Practice 4 - Letter Speed (Letter Launcher) - Alphabet sets
@@ -13779,7 +13779,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
-        letterLauncherLevel: 2,
+        letterLauncherLevel: 20,
         letterLauncherContentCount: 10,
       },
       // Practice 5 - Letter Speed (Letter Launcher) - Alphabet sets
@@ -13791,7 +13791,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
-        letterLauncherLevel: 3,
+        letterLauncherLevel: 21,
         letterLauncherContentCount: 10,
       },
       // Apply 1 - Letter Speed (Letter Launcher) 3 levels + Memory Challenge 3 levels
@@ -13803,16 +13803,16 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "letter",
-        letterLauncherLevel: 1,
-        letterLauncherEndLevel: 1,
+        letterLauncherLevel: 19,
+        letterLauncherEndLevel: 21,
         letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 1,
         failRedirect: "P1", // If fail at any level, go to Practice 1
         passRedirect: "P6", // If pass all levels, go to Practice 6
         // After Letter Launcher completes, show Memory Challenge
-        memoryChallengeLevel: 1,
-        memoryChallengeEndLevel: 3,
+        memoryChallengeLevel: 19,
+        memoryChallengeEndLevel: 21,
         memoryChallengeContentCount: 5, // 5 sequences per level
       },
       // Practice 6 - Syllable Speed (Letter Launcher) - Syllable sets
@@ -13824,7 +13824,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable", // Syllable sets
-        letterLauncherLevel: 1,
+        letterLauncherLevel: 22,
         letterLauncherContentCount: 10,
       },
       // Practice 7 - Syllable Speed (Letter Launcher) - Syllable sets
@@ -13836,7 +13836,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable",
-        letterLauncherLevel: 2,
+        letterLauncherLevel: 23,
         letterLauncherContentCount: 10,
       },
       // Practice 8 - Syllable Speed (Letter Launcher) - Syllable sets
@@ -13848,7 +13848,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable",
-        letterLauncherLevel: 3,
+        letterLauncherLevel: 24,
         letterLauncherContentCount: 10,
       },
       // Practice 9 - Syllable Speed (Letter Launcher) - Syllable sets
@@ -13860,7 +13860,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable",
-        letterLauncherLevel: 1,
+        letterLauncherLevel: 23,
         letterLauncherContentCount: 10,
       },
       // Practice 10 - Syllable Speed (Letter Launcher) - Syllable sets
@@ -13872,6 +13872,7 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable",
+        letterLauncherLevel: 24,
         letterLauncherContentCount: 10,
       },
       // Apply 2 - Syllable Speed (Letter Launcher) 1 level + Memory Challenge 3 levels + Read Aloud
@@ -13883,16 +13884,16 @@ export const levelGetContent = {
         mechanism: { id: "letterLauncher", name: "letterLauncher" },
         multilingual: true,
         contentType: "syllable",
-        letterLauncherLevel: 1,
-        letterLauncherEndLevel: 1,
+        letterLauncherLevel: 22,
+        letterLauncherEndLevel: 24,
         letterLauncherContentCount: 20,
         isShowcase: true,
         applyStep: 2,
         failRedirect: "P6", // If fail at any level, go to Practice 6
         passRedirect: "complete", // If pass all levels, complete F3
         // After Letter Launcher completes, show Memory Challenge
-        memoryChallengeLevel: 1,
-        memoryChallengeEndLevel: 3,
+        memoryChallengeLevel: 22,
+        memoryChallengeEndLevel: 24,
         memoryChallengeContentCount: 5, // 5 sequences per level
         // After Memory Challenge completes, show Read Aloud
         readAloudContentCount: 10, // 10 simple root words

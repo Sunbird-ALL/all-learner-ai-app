@@ -83,7 +83,7 @@ class MemoryGameDataLoader {
   getLettersByLevel(language: Language, level: string): string[] {
     let langData = this.data.languages[language];
     if (!langData) return [];
-    if (language === 'en'&& 'levelLetters' in langData && langData.levelLetters ) {
+    if ((language === 'en' || language === 'te')&& 'levelLetters' in langData && langData.levelLetters ) {
       const levelLetters = langData.levelLetters
       function combineLevels(
         sourceKeys: number[],
