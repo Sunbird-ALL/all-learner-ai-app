@@ -532,6 +532,7 @@ const MainLayout = (props) => {
   // State for progress bar pagination (dynamic steps based on width)
   const [progressBarStartIndex, setProgressBarStartIndex] = useState(0);
   const progressBarContainerRef = useRef(null);
+  const progressBarParentRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(0);
 
   // Calculate how many steps can fit based on available width
@@ -546,11 +547,16 @@ const MainLayout = (props) => {
     const buttonWidth = isMobile ? 40 : isTablet ? 48 : 56; // Button width
     const buttonGap = isMobile ? 8 : 12; // Gap between button and container
 
-    // Check if buttons are actually visible (we'll calculate this more accurately)
-    // For now, reserve space for one button on each side (worst case)
+    // Account for left and right margins (180px mobile, 200px tablet, 220px desktop)
+    const leftMargin = isMobile ? 180 : isTablet ? 200 : 220;
+    const rightMargin = isMobile ? 180 : isTablet ? 200 : 220;
+
+    // The containerWidth is the width of the progress bar container (after margins)
+    // But we need to calculate based on the actual available space
+    // Available width = containerWidth (which already accounts for margins) - padding - button space
     const reservedForButtons = buttonWidth * 2 + buttonGap * 2;
 
-    // Available width for steps = total width - padding - reserved button space
+    // Available width for steps = container width - padding - reserved button space
     const availableWidth =
       containerWidth - containerPadding - reservedForButtons;
 
@@ -561,22 +567,22 @@ const MainLayout = (props) => {
     );
 
     // Be more generous - if we have space, use it!
-    // Minimum 5 steps (instead of 3), maximum 25 steps (very wide screens)
+    // Minimum 5 steps, maximum 25 steps (very wide screens)
     const calculatedSteps = Math.max(5, Math.min(stepsThatFit, 25));
 
     // Debug log to help troubleshoot
-    if (process.env.NODE_ENV === "development") {
-      console.log("Progress bar width calculation:", {
-        containerWidth,
-        availableWidth,
-        stepWidth,
-        stepMargin,
-        stepsThatFit,
-        calculatedSteps,
-        isMobile,
-        isTablet,
-      });
-    }
+    console.log("Progress bar width calculation:", {
+      containerWidth,
+      availableWidth,
+      stepWidth,
+      stepMargin,
+      containerPadding,
+      reservedForButtons,
+      stepsThatFit,
+      calculatedSteps,
+      isMobile,
+      isTablet,
+    });
 
     return calculatedSteps;
   }, [containerWidth, isMobile, isTablet]);
@@ -694,8 +700,23 @@ const MainLayout = (props) => {
     if (!showProgress) return;
 
     const measureWidth = () => {
-      if (progressBarContainerRef.current) {
-        // Use requestAnimationFrame to ensure DOM is fully rendered
+      // Measure the parent container width (before margins are applied)
+      if (progressBarParentRef.current) {
+        requestAnimationFrame(() => {
+          if (progressBarParentRef.current) {
+            const parentWidth = progressBarParentRef.current.offsetWidth;
+            // Account for margins: subtract left and right margins
+            const leftMargin = isMobile ? 180 : isTablet ? 200 : 220;
+            const rightMargin = isMobile ? 180 : isTablet ? 200 : 220;
+            const actualWidth = parentWidth - leftMargin - rightMargin;
+
+            if (actualWidth > 0) {
+              setContainerWidth(actualWidth);
+            }
+          }
+        });
+      } else if (progressBarContainerRef.current) {
+        // Fallback: measure the container itself
         requestAnimationFrame(() => {
           if (progressBarContainerRef.current) {
             const width = progressBarContainerRef.current.offsetWidth;
@@ -708,13 +729,13 @@ const MainLayout = (props) => {
     };
 
     // Measure after a short delay to ensure layout is complete
-    const timeoutId = setTimeout(measureWidth, 150);
+    const timeoutId = setTimeout(measureWidth, 200);
 
     // Measure on window resize with debounce
     let resizeTimeout;
     const handleResize = () => {
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(measureWidth, 100);
+      resizeTimeout = setTimeout(measureWidth, 150);
     };
 
     window.addEventListener("resize", handleResize);
@@ -1166,6 +1187,7 @@ const MainLayout = (props) => {
                       !isF3FlowActive
                     ) && (
                       <Box
+                        ref={progressBarParentRef}
                         sx={{
                           display: "flex",
                           justifyContent: currentPracticeStep
