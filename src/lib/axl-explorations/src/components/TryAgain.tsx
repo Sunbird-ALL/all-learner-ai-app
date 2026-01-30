@@ -64,8 +64,8 @@ export function TryAgain({
   }, []);
 
   const content = (
-    <div className={`h-full w-full flex items-center justify-center p-4 sm:p-6 transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ height: "100%", width: "100%", overflow: "hidden" }}>
-      <Card className={`${fuelMode && useSpaceBackground ? 'w-full max-w-md sm:max-w-lg' : 'max-w-md w-full'} ${fuelMode && useSpaceBackground ? 'bg-gradient-to-b from-slate-900/95 to-slate-800/95 border border-white/20' : 'bg-white/95 backdrop-blur-sm'} shadow-2xl transition-all duration-700 ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`} style={{
+    <div className={`h-full w-full flex items-center justify-center p-3 sm:p-4 transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ height: "100%", width: "100%", overflow: "hidden" }}>
+      <Card className={`${fuelMode && useSpaceBackground ? 'w-full max-w-sm sm:max-w-md' : 'max-w-sm sm:max-w-md w-full'} ${fuelMode && useSpaceBackground ? 'bg-gradient-to-b from-slate-900/95 to-slate-800/95 border border-white/20' : 'bg-white/95 backdrop-blur-sm'} shadow-2xl transition-all duration-700 ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`} style={{
         ...(fuelMode && useSpaceBackground ? {
           backgroundImage: `radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
                             radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
@@ -75,11 +75,11 @@ export function TryAgain({
           maxHeight: 'calc(100vh - 200px)',
           height: 'auto',
           width: '100%',
-          maxWidth: '500px',
+          maxWidth: '400px',
           overflow: 'hidden'
         } : {
           width: '100%',
-          maxWidth: '90vw',
+          maxWidth: '380px',
           maxHeight: 'calc(100vh - 200px)',
           overflow: 'hidden'
         })
@@ -104,61 +104,61 @@ export function TryAgain({
             ))}
           </div>
         )}
-        <div className="p-4 sm:p-6 text-center relative z-10">
-          <div className="mb-4 sm:mb-6">
+        <div className="p-4 sm:p-5 text-center relative z-10">
+          <div className="mb-3 sm:mb-4">
             {/* Rocket icon for fuel mode */}
             {fuelMode && (
-              <div className="mb-4 flex justify-center">
-                <Rocket className="h-16 w-16 sm:h-20 sm:w-20 text-red-500" />
+              <div className="mb-3 flex justify-center">
+                <Rocket className="h-12 w-12 sm:h-14 sm:w-14 text-red-500" />
               </div>
             )}
             
-            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 mx-auto mb-3 sm:mb-4 flex items-center justify-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-2 sm:mb-3 flex items-center justify-center gap-1">
               {livesLost ?
-                <><span className="text-4xl sm:text-5xl md:text-6xl animate-pulse">💔</span>
-                <span className="text-4xl sm:text-5xl md:text-6xl animate-pulse delay-100">💔</span>
-                <span className="text-4xl sm:text-5xl md:text-6xl animate-pulse delay-200">💔</span></>
+                <><span className="text-3xl sm:text-4xl animate-pulse">💔</span>
+                <span className="text-3xl sm:text-4xl animate-pulse delay-100">💔</span>
+                <span className="text-3xl sm:text-4xl animate-pulse delay-200">💔</span></>
                 :
-                fuelMode ? null : <TrendingUp className="h-8 w-8 sm:h-10 sm:w-10 text-red-500" />
+                fuelMode ? null : <TrendingUp className="h-7 w-7 sm:h-8 sm:w-8 text-red-500" />
               }
             </div>
             
             {/* Fuel mode display */}
             {fuelMode && (
               <>
-                <h1 className={`text-2xl sm:text-3xl font-bold mb-4 ${useSpaceBackground ? 'text-white' : 'text-gray-800'}`}>
+                <h1 className={`text-xl sm:text-2xl font-bold mb-3 ${useSpaceBackground ? 'text-white' : 'text-gray-800'}`}>
                   Need more fuel!
                 </h1>
-                <div className="mb-4 flex items-center justify-center gap-2">
-                  <Fuel className="h-6 w-6 text-red-500" />
-                  <span className={`text-xl sm:text-2xl font-bold ${useSpaceBackground ? 'text-white' : 'text-gray-800'}`}>
+                <div className="mb-3 flex items-center justify-center gap-2">
+                  <Fuel className="h-5 w-5 text-red-500" />
+                  <span className={`text-lg sm:text-xl font-bold ${useSpaceBackground ? 'text-white' : 'text-gray-800'}`}>
                     {fuelCollected} / {fuelRequired}
                   </span>
-                  <Fuel className="h-6 w-6 text-blue-500" />
+                  <Fuel className="h-5 w-5 text-blue-500" />
                 </div>
                 {destination && (
-                  <div className={`mb-4 flex items-center justify-center gap-2 ${useSpaceBackground ? 'text-white/90' : 'text-gray-600'}`}>
-                    <span className="text-2xl">🌙</span>
-                    <span className="text-lg font-semibold">{destination}</span>
+                  <div className={`mb-3 flex items-center justify-center gap-2 ${useSpaceBackground ? 'text-white/90' : 'text-gray-600'}`}>
+                    <span className="text-xl">🌙</span>
+                    <span className="text-base font-semibold">{destination}</span>
                   </div>
                 )}
               </>
             )}
             
-            {/* "Oh No!" text - only in English, for all languages */}
+            {/* "Game Over!" text - only in English, for all languages */}
             {livesLost && (
-              <h1 className="text-3xl sm:text-4xl md:text-4xl font-bold text-gray-800 mb-2 animate-fade-in">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 animate-fade-in">
                 Game Over!
               </h1>
             )}
             { !livesLost && !fuelMode && <>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
               {selectedLanguage === 'te' ? 'మంచి ప్రయత్నం! 💪' :
                selectedLanguage === 'mr' ? 'चांगला प्रयत्न! 💪' :
                selectedLanguage === 'kn' ? 'ಒಳ್ಳೆಯ ಪ್ರಯತ್ನ! 💪' :
                'Good Try! 💪'}
             </h2>
-            <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
+            <p className="text-gray-600 mb-2 text-sm">
               {selectedLanguage === 'te' ? 
                 `మీరు ${totalCorrect} / ${totalQuestions} ప్రశ్నలకు సరైన సమాధానాలు ఇచ్చారు (${scorePercentage.toFixed(0)}%)` :
                selectedLanguage === 'mr' ? 
@@ -168,7 +168,7 @@ export function TryAgain({
                `You got ${totalCorrect} / ${totalQuestions} questions correct (${scorePercentage.toFixed(0)}%)`
               }
             </p>
-            <p className="text-xs sm:text-sm text-gray-500">
+            <p className="text-xs text-gray-500">
               {selectedLanguage === 'te' ? 
                 'మీరు తదుపరి స్థాయికి వెళ్లడానికి కనీసం 80% స్కోర్ అవసరం' :
                selectedLanguage === 'mr' ? 
@@ -181,14 +181,14 @@ export function TryAgain({
             </>}
           </div>
           
-          <div className="flex flex-col gap-2 sm:gap-3">
+          <div className="flex flex-col gap-2">
             <Button
               onClick={onTryAgain}
               variant="game"
               size="lg"
-              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600"
+              className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-sm sm:text-base py-2.5 px-6"
             >
-              <RotateCcw className="h-5 w-5" />
+              <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5" />
               Play Again
             </Button>
             
