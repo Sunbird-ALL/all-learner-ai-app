@@ -147,7 +147,7 @@ const AserFlow = ({
   const TOTAL_ITEMS = 10;
 
   const completionPercentage = Math.min(
-    (currentItemNumber / TOTAL_ITEMS) * 100,
+    (Math.min(currentItemNumber + 1, TOTAL_ITEMS) / TOTAL_ITEMS) * 100,
     100
   );
 
@@ -491,7 +491,7 @@ const AserFlow = ({
               display: hideProgress ? "none" : "block",
             }}
           >
-            {currentItemNumber}/{TOTAL_ITEMS}
+            {Math.min(currentItemNumber + 1, TOTAL_ITEMS)}/{TOTAL_ITEMS}
           </Box>
 
           <Box
