@@ -58,7 +58,7 @@ import Confetti from "react-confetti";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import gameLoseAudio from "../../assets/audio/gameLose.wav";
 import * as Assets from "../../utils/imageAudioLinks";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { levelMapping } from "../../utils/levelData";
 import { jwtDecode } from "jwt-decode";
@@ -529,9 +529,59 @@ const MainLayout = (props) => {
   const [currentPageStart, setCurrentPageStart] = useState(0);
   const prevActiveFlow = useRef(null);
 
-  // State for progress bar pagination (show only 5 steps at a time)
+  // State for progress bar pagination (dynamic steps based on width)
   const [progressBarStartIndex, setProgressBarStartIndex] = useState(0);
-  const VISIBLE_STEPS = 5; // Show 5 steps at a time
+  const progressBarContainerRef = useRef(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  // Calculate how many steps can fit based on available width
+  // This is calculated dynamically based on actual container width
+  const calculateVisibleSteps = useMemo(() => {
+    if (containerWidth === 0) return 5; // Default to 5 if width not measured yet
+
+    // Step dimensions based on screen size
+    const stepWidth = isMobile ? 28 : isTablet ? 32 : 36; // xs: 28px, sm: 32px, md: 36px, lg: 40px
+    const stepMargin = isMobile ? 4 : isTablet ? 8 : 12; // xs: 0.5 * 8px, sm: 1 * 8px, md: 1.5 * 8px
+    const containerPadding = isMobile ? 16 : isTablet ? 24 : 32; // xs: 8px*2, sm: 12px*2, md: 16px*2
+    const buttonWidth = isMobile ? 40 : isTablet ? 48 : 56; // Button width
+    const buttonGap = isMobile ? 8 : 12; // Gap between button and container
+
+    // Check if buttons are actually visible (we'll calculate this more accurately)
+    // For now, reserve space for one button on each side (worst case)
+    const reservedForButtons = buttonWidth * 2 + buttonGap * 2;
+
+    // Available width for steps = total width - padding - reserved button space
+    const availableWidth =
+      containerWidth - containerPadding - reservedForButtons;
+
+    // Calculate how many steps can fit: (availableWidth + stepMargin) / (stepWidth + stepMargin)
+    // We add stepMargin to availableWidth because the first step doesn't have left margin
+    const stepsThatFit = Math.floor(
+      (availableWidth + stepMargin) / (stepWidth + stepMargin)
+    );
+
+    // Be more generous - if we have space, use it!
+    // Minimum 5 steps (instead of 3), maximum 25 steps (very wide screens)
+    const calculatedSteps = Math.max(5, Math.min(stepsThatFit, 25));
+
+    // Debug log to help troubleshoot
+    if (process.env.NODE_ENV === "development") {
+      console.log("Progress bar width calculation:", {
+        containerWidth,
+        availableWidth,
+        stepWidth,
+        stepMargin,
+        stepsThatFit,
+        calculatedSteps,
+        isMobile,
+        isTablet,
+      });
+    }
+
+    return calculatedSteps;
+  }, [containerWidth, isMobile, isTablet]);
+
+  const VISIBLE_STEPS = calculateVisibleSteps;
 
   // Get F1 steps for progress bar when F1 flow is active
   // Labels should be: L1, P1, L2, P2, L3, P3, A1, L4, P4, etc.
@@ -607,7 +657,7 @@ const MainLayout = (props) => {
     ? getF1PracticeSteps() || practiceSteps
     : practiceSteps;
 
-  // Calculate visible steps range (show only 5 steps, ensure current step is visible)
+  // Calculate visible steps range (show dynamic steps based on width, ensure current step is visible)
   const totalSteps = displayPracticeSteps?.length || 0;
 
   // Calculate visible range ensuring current step is always visible
@@ -639,6 +689,69 @@ const MainLayout = (props) => {
   const canGoPrev = visibleRange.start > 0;
   const canGoNext = visibleRange.end < totalSteps;
 
+  // Measure container width on mount, resize, and when dependencies change
+  useEffect(() => {
+    if (!showProgress) return;
+
+    const measureWidth = () => {
+      if (progressBarContainerRef.current) {
+        // Use requestAnimationFrame to ensure DOM is fully rendered
+        requestAnimationFrame(() => {
+          if (progressBarContainerRef.current) {
+            const width = progressBarContainerRef.current.offsetWidth;
+            if (width > 0) {
+              setContainerWidth(width);
+            }
+          }
+        });
+      }
+    };
+
+    // Measure after a short delay to ensure layout is complete
+    const timeoutId = setTimeout(measureWidth, 150);
+
+    // Measure on window resize with debounce
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(measureWidth, 100);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearTimeout(resizeTimeout);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [
+    showProgress,
+    milestoneLevel,
+    isF1FlowActive,
+    isF2FlowActive,
+    isF3FlowActive,
+  ]);
+
+  // Also measure when the container ref becomes available using ResizeObserver
+  useEffect(() => {
+    if (!showProgress || !progressBarContainerRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width = entry.contentRect.width;
+        if (width > 0) {
+          setContainerWidth(width);
+        }
+      }
+    });
+
+    observer.observe(progressBarContainerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [showProgress]);
+
   // Update progress bar start index when current step changes to keep it visible
   useEffect(() => {
     if (totalSteps <= VISIBLE_STEPS) {
@@ -666,7 +779,7 @@ const MainLayout = (props) => {
       }
       setProgressBarStartIndex(newStart);
     }
-  }, [currentPracticeStep, totalSteps]);
+  }, [currentPracticeStep, totalSteps, VISIBLE_STEPS]);
 
   const handleProgressBarPrev = () => {
     const newStart = Math.max(0, progressBarStartIndex - VISIBLE_STEPS);
@@ -1061,18 +1174,79 @@ const MainLayout = (props) => {
                           alignItems: "center",
                           width: "100%",
                           height: "100%",
+                          position: "relative",
+                          zIndex: 10001,
                         }}
                       >
                         {/* Show progress bar - use F2 flow steps when F2 is active, F1 flow steps when F1 is active, otherwise use regular steps */}
-                        {/* Show only 5 steps at a time with prev/next buttons */}
+                        {/* Show dynamic steps based on available width with prev/next buttons */}
                         {showProgress && (
                           <Box
+                            ref={progressBarContainerRef}
                             sx={{
                               display: "flex",
                               justifyContent: "center",
                               alignItems: "center",
-                              width: "100%",
+                              width:
+                                milestoneLevel === "B" &&
+                                (isF1FlowActive ||
+                                  isF2FlowActive ||
+                                  isF3FlowActive)
+                                  ? {
+                                      xs: "calc(100% - 180px - 180px)",
+                                      sm: "calc(100% - 200px - 200px)",
+                                      md: "calc(100% - 220px - 220px)",
+                                    }
+                                  : "100%",
                               gap: { xs: 1, sm: 2 },
+                              marginLeft: {
+                                xs:
+                                  milestoneLevel === "B" &&
+                                  (isF1FlowActive ||
+                                    isF2FlowActive ||
+                                    isF3FlowActive)
+                                    ? "180px"
+                                    : "0px",
+                                sm:
+                                  milestoneLevel === "B" &&
+                                  (isF1FlowActive ||
+                                    isF2FlowActive ||
+                                    isF3FlowActive)
+                                    ? "200px"
+                                    : "0px",
+                                md:
+                                  milestoneLevel === "B" &&
+                                  (isF1FlowActive ||
+                                    isF2FlowActive ||
+                                    isF3FlowActive)
+                                    ? "220px"
+                                    : "0px",
+                              },
+                              marginRight: {
+                                xs:
+                                  milestoneLevel === "B" &&
+                                  (isF1FlowActive ||
+                                    isF2FlowActive ||
+                                    isF3FlowActive)
+                                    ? "180px"
+                                    : "0px",
+                                sm:
+                                  milestoneLevel === "B" &&
+                                  (isF1FlowActive ||
+                                    isF2FlowActive ||
+                                    isF3FlowActive)
+                                    ? "200px"
+                                    : "0px",
+                                md:
+                                  milestoneLevel === "B" &&
+                                  (isF1FlowActive ||
+                                    isF2FlowActive ||
+                                    isF3FlowActive)
+                                    ? "220px"
+                                    : "0px",
+                              },
+                              position: "relative",
+                              zIndex: 10000,
                             }}
                           >
                             {/* Previous Button */}
@@ -1131,6 +1305,8 @@ const MainLayout = (props) => {
                                   sm: "280px",
                                   md: "320px",
                                 },
+                                flex: 1,
+                                maxWidth: "100%",
                               }}
                             >
                               {visibleSteps.map((elem, visibleIndex) => {
