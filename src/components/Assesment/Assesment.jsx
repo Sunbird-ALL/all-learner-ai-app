@@ -1105,67 +1105,8 @@ export const ProfileHeader = ({
                   invisible={true}
                 />
                 <CustomTooltip
-                  {...(showChartPointer ? { open: true } : {})}
                   interactive
-                  title={
-                    <Box
-                      sx={{
-                        textAlign: "center",
-                        p: 2, // ✅ more inner spacing
-                        position: "relative",
-                        minWidth: "180px", // ✅ better width for text
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1, // ✅ space between title & desc
-                      }}
-                    >
-                      {showChartPointer && (
-                        <IconButton
-                          size="small"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowChartPointer(false);
-                          }}
-                          sx={{
-                            position: "absolute",
-                            top: 6,
-                            right: 6,
-                            color: "#fff",
-                            p: 0.5, // ✅ better touch area
-                            "&:hover": {
-                              backgroundColor: "rgba(255, 255, 255, 0.2)",
-                            },
-                          }}
-                        >
-                          <CloseIcon sx={{ fontSize: 16 }} />
-                        </IconButton>
-                      )}
-
-                      <Typography
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "18px",
-                          color: "#fff",
-                          lineHeight: 1.4, // ✅ clearer title
-                        }}
-                      >
-                        {tooltipText.title}
-                      </Typography>
-
-                      {showChartPointer && (
-                        <Typography
-                          sx={{
-                            fontSize: "15px",
-                            opacity: 0.9,
-                            color: "#fff",
-                            lineHeight: 1.5, // ✅ readable description
-                          }}
-                        >
-                          {tooltipText.desc}
-                        </Typography>
-                      )}
-                    </Box>
-                  }
+                  title="Alphabet Chart"
                   arrow
                   placement="bottom"
                 >
@@ -1231,6 +1172,55 @@ export const ProfileHeader = ({
                     )}
                   </Box>
                 </CustomTooltip>
+                {showChartPointer && (
+                  <Dialog
+                    open
+                    PaperProps={{
+                      sx: {
+                        borderRadius: 3,
+                        p: 4,
+                        maxWidth: 600, // ⬆️ wider dialog
+                        // zIndex: 6000,
+                      },
+                    }}
+                  >
+                    <Box>
+                      {/* Header */}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          mb: 2,
+                        }}
+                      >
+                        <Typography
+                          fontWeight={700}
+                          fontSize="22px" // ⬆️ bigger header
+                          lineHeight={1.3}
+                        >
+                          {tooltipText.title}
+                        </Typography>
+
+                        <IconButton
+                          size="medium"
+                          onClick={() => setShowChartPointer(false)}
+                        >
+                          <CloseIcon fontSize="medium" />
+                        </IconButton>
+                      </Box>
+
+                      {/* Description */}
+                      <Typography
+                        fontSize="18px" // ⬆️ bigger description
+                        lineHeight={1.7}
+                        color="text.secondary"
+                      >
+                        {tooltipText.desc}
+                      </Typography>
+                    </Box>
+                  </Dialog>
+                )}
               </>
             )}
 
