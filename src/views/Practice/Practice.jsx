@@ -31,7 +31,7 @@ import PhrasesInAction from "../../components/Practice/PhrasesInAction";
 import WhatsMissing from "../../components/Practice/WhatsMissing";
 import ArrangePicture from "../../components/Practice/ArrangePicture";
 import AnouncementFlow from "../../components/Practice/AnouncementFlow";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   callConfetti,
   getLocalData,
@@ -48,6 +48,7 @@ import { splitGraphemes } from "split-graphemes";
 import { Typography } from "@mui/material";
 import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../../components/Assesment/Assesment";
+import { RetryDialog } from "../../components/Practice/RetryDialog";
 import { Log } from "../../services/telementryService";
 import Mechanics6 from "../../components/Practice/Mechanics6";
 import Mechanics7 from "../../components/Practice/Mechanics7";
@@ -95,6 +96,7 @@ const Practice = () => {
   const [voiceAnimate, setVoiceAnimate] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
   const [assessmentResponse, setAssessmentResponse] = useState(undefined);
   const [currentContentType, setCurrentContentType] = useState("");
   const [currentCollectionId, setCurrentCollectionId] = useState("");
@@ -121,6 +123,8 @@ const Practice = () => {
   const LIVES = 5;
   const TARGETS_PERCENTAGE = 0.3;
   const [openMessageDialog, setOpenMessageDialog] = useState("");
+  const [showRetryDialog, setShowRetryDialog] = useState(false);
+  const [retryDialogMessage, setRetryDialogMessage] = useState("");
   const lang = getLocalData("lang");
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
   const [percentage, setPercentage] = useState("");
@@ -9016,11 +9020,15 @@ const Practice = () => {
         contentSourceDataForP2
       );
 
-      // If still no data, don't render
+      // If still no data, show retry dialog
       if (!contentSourceDataForP2) {
         console.warn(
-          "FluencyP2 - No contentSourceData found, waiting for data to load"
+          "FluencyP2 - No contentSourceData found, showing retry dialog"
         );
+        if (!showRetryDialog) {
+          setRetryDialogMessage("Unable to load content. Please retry.");
+          setShowRetryDialog(true);
+        }
         return null;
       }
 
@@ -10300,13 +10308,17 @@ const Practice = () => {
           hasStep: !!currentF3Step.step,
         });
 
-        // If we don't have a valid step, wait for next render
+        // If we don't have a valid step, show retry dialog
         if (!currentF3Step.step) {
           console.warn(
             "LetterLauncher render - No F3 step found at index:",
             currentF3Step.index,
-            "waiting for next render"
+            "showing retry dialog"
           );
+          if (!showRetryDialog) {
+            setRetryDialogMessage("Unable to load F3 flow step. Please retry.");
+            setShowRetryDialog(true);
+          }
           return null;
         }
 
@@ -10591,13 +10603,17 @@ const Practice = () => {
           hasStep: !!currentF2Step.step,
         });
 
-        // If we don't have a valid step, wait for next render
+        // If we don't have a valid step, show retry dialog
         if (!currentF2Step.step) {
           console.warn(
             "LetterHunt render - No F2 step found at index:",
             currentF2Step.index,
-            "waiting for next render"
+            "showing retry dialog"
           );
+          if (!showRetryDialog) {
+            setRetryDialogMessage("Unable to load F2 flow step. Please retry.");
+            setShowRetryDialog(true);
+          }
           return null;
         }
 
@@ -10794,13 +10810,17 @@ const Practice = () => {
           hasStep: !!currentF1Step.step,
         });
 
-        // If we don't have a valid step, wait for next render
+        // If we don't have a valid step, show retry dialog
         if (!currentF1Step.step) {
           console.warn(
             "LetterHunt render - No F1 step found at index:",
             currentF1Step.index,
-            "waiting for next render"
+            "showing retry dialog"
           );
+          if (!showRetryDialog) {
+            setRetryDialogMessage("Unable to load F1 flow step. Please retry.");
+            setShowRetryDialog(true);
+          }
           return null;
         }
 
@@ -11369,6 +11389,21 @@ const Practice = () => {
           }}
           isError={openMessageDialog.isError}
           dontShowHeader={openMessageDialog.dontShowHeader}
+        />
+      )}
+      {showRetryDialog && (
+        <RetryDialog
+          message={retryDialogMessage}
+          onRetry={() => {
+            setShowRetryDialog(false);
+            setRetryDialogMessage("");
+            // Redirect to discover-start route
+            navigate("/discover-start", { replace: true });
+          }}
+          onClose={() => {
+            setShowRetryDialog(false);
+            setRetryDialogMessage("");
+          }}
         />
       )}
       {renderMechanics()}
