@@ -6894,26 +6894,9 @@ const Practice = () => {
           // But F2_FLOW array is 0-indexed (0-20), so convert
           const f2FlowIndex = userState > 0 ? userState - 1 : 0;
 
-          // IMPORTANT: Only reset F2 to 0 if transitioning from F1 to F2 AND backend shows stale progress
-          // If user already has F2 progress (lesson 2, 3, etc.), restore it normally
-          // Only reset if: F1 is complete AND this looks like stale F2 progress (lesson > 1 but no existing F2 localStorage)
-          const f1FlowIndex = getLocalData("f1FlowIndex");
-          const existingF2FlowIndex = getLocalData("f2FlowIndex");
-          const isTransitioningFromF1 =
-            f1FlowIndex === null && existingF2FlowIndex === null;
-          const looksLikeStaleProgress = f2FlowIndex > 0 && userState > 1; // lesson > 1 suggests stale progress
-
-          if (isTransitioningFromF1 && looksLikeStaleProgress) {
-            // This is a fresh F2 start after F1 completion, but backend has stale F2 progress
-            console.warn(
-              `F1 flow is complete and F2 is starting fresh, but backend shows lesson ${userState} (index ${f2FlowIndex}). ` +
-                `This might be stale F2 progress. Resetting F2 to index 0 to start fresh.`
-            );
-            setLocalData("f2FlowIndex", 0);
-            // IMPORTANT: Update state to trigger re-render
-            setF2FlowIndexState(0);
-            userState = 0;
-          } else if (f2FlowIndex >= 0 && f2FlowIndex < F2_FLOW.length) {
+          // Always restore F2 flow index from backend lesson value
+          // The backend is the source of truth, especially after browser refresh/relogin when localStorage is cleared
+          if (f2FlowIndex >= 0 && f2FlowIndex < F2_FLOW.length) {
             console.log(
               `Restoring F2 flow progress: lesson ${userState} (1-indexed) -> flow index ${f2FlowIndex} (0-indexed) -> ${
                 F2_FLOW[f2FlowIndex]?.type
