@@ -7314,18 +7314,9 @@ const Practice = () => {
       //   setMechanism({ id: "r3", name: "r3" });
       // }
 
-      let showcaseLevel = userState === 4 || userState === 9;
+      let showcaseLevel =
+        levels !== "B" && (userState === 4 || userState === 9);
       setIsShowCase(showcaseLevel);
-      if (showcaseLevel) {
-        await addLesson({
-          sessionId: sessionId,
-          milestone: "showcase",
-          lesson: userState,
-          progress: 0,
-          language: lang,
-          milestoneLevel: `m${level}`,
-        });
-      }
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
       setProgressData(practiceProgress);
