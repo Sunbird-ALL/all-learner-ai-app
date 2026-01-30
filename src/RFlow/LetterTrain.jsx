@@ -7112,8 +7112,8 @@ const LetterTrain = ({
                 marginBottom: "40px",
                 maxWidth: "75%",
                 height: "140px",
-                width: "200px",
-                minWidth: "200px",
+                width: "350px",
+                minWidth: "350px",
                 flexShrink: 0,
                 marginTop: "10px",
               }}
