@@ -529,6 +529,10 @@ const MainLayout = (props) => {
   const [currentPageStart, setCurrentPageStart] = useState(0);
   const prevActiveFlow = useRef(null);
 
+  // State for progress bar pagination (show only 5 steps at a time)
+  const [progressBarStartIndex, setProgressBarStartIndex] = useState(0);
+  const VISIBLE_STEPS = 5; // Show 5 steps at a time
+
   // Get F1 steps for progress bar when F1 flow is active
   // Labels should be: L1, P1, L2, P2, L3, P3, A1, L4, P4, etc.
   const getF1PracticeSteps = () => {
@@ -602,6 +606,80 @@ const MainLayout = (props) => {
     : isF1FlowActive
     ? getF1PracticeSteps() || practiceSteps
     : practiceSteps;
+
+  // Calculate visible steps range (show only 5 steps, ensure current step is visible)
+  const totalSteps = displayPracticeSteps?.length || 0;
+
+  // Calculate visible range ensuring current step is always visible
+  const calculateVisibleRange = () => {
+    if (totalSteps <= VISIBLE_STEPS) {
+      // If total steps <= 5, show all
+      return { start: 0, end: totalSteps };
+    }
+
+    // Ensure current step is always visible
+    let start = progressBarStartIndex;
+    let end = Math.min(start + VISIBLE_STEPS, totalSteps);
+
+    // If current step is not in visible range, adjust to include it
+    if (currentPracticeStep < start) {
+      start = Math.max(0, currentPracticeStep - 2); // Show 2 steps before current
+      end = Math.min(start + VISIBLE_STEPS, totalSteps);
+    } else if (currentPracticeStep >= end) {
+      end = Math.min(currentPracticeStep + 3, totalSteps); // Show 2 steps after current
+      start = Math.max(0, end - VISIBLE_STEPS);
+    }
+
+    return { start, end };
+  };
+
+  const visibleRange = calculateVisibleRange();
+  const visibleSteps =
+    displayPracticeSteps?.slice(visibleRange.start, visibleRange.end) || [];
+  const canGoPrev = visibleRange.start > 0;
+  const canGoNext = visibleRange.end < totalSteps;
+
+  // Update progress bar start index when current step changes to keep it visible
+  useEffect(() => {
+    if (totalSteps <= VISIBLE_STEPS) {
+      setProgressBarStartIndex(0);
+      return;
+    }
+
+    // Calculate if current step is in the current visible range
+    const currentStart = progressBarStartIndex;
+    const currentEnd = Math.min(currentStart + VISIBLE_STEPS, totalSteps);
+
+    // If current step is outside visible range, adjust to center it
+    if (
+      currentPracticeStep < currentStart ||
+      currentPracticeStep >= currentEnd
+    ) {
+      // Center current step: show 2 before and 2 after (or adjust if near edges)
+      let newStart;
+      if (currentPracticeStep < 2) {
+        newStart = 0;
+      } else if (currentPracticeStep >= totalSteps - 2) {
+        newStart = Math.max(0, totalSteps - VISIBLE_STEPS);
+      } else {
+        newStart = Math.max(0, currentPracticeStep - 2);
+      }
+      setProgressBarStartIndex(newStart);
+    }
+  }, [currentPracticeStep, totalSteps]);
+
+  const handleProgressBarPrev = () => {
+    const newStart = Math.max(0, progressBarStartIndex - VISIBLE_STEPS);
+    setProgressBarStartIndex(newStart);
+  };
+
+  const handleProgressBarNext = () => {
+    const newStart = Math.min(
+      totalSteps - VISIBLE_STEPS,
+      progressBarStartIndex + VISIBLE_STEPS
+    );
+    setProgressBarStartIndex(newStart);
+  };
 
   useEffect(() => {
     if (!flowNames || !activeFlow) return;
@@ -986,109 +1064,179 @@ const MainLayout = (props) => {
                         }}
                       >
                         {/* Show progress bar - use F2 flow steps when F2 is active, F1 flow steps when F1 is active, otherwise use regular steps */}
+                        {/* Show only 5 steps at a time with prev/next buttons */}
                         {showProgress && (
                           <Box
                             sx={{
                               display: "flex",
                               justifyContent: "center",
+                              alignItems: "center",
                               width: "100%",
+                              gap: { xs: 1, sm: 2 },
                             }}
                           >
+                            {/* Previous Button */}
+                            {canGoPrev && (
+                              <IconButton
+                                onClick={handleProgressBarPrev}
+                                disabled={!canGoPrev}
+                                sx={{
+                                  width: { xs: "32px", sm: "40px", md: "48px" },
+                                  height: {
+                                    xs: "32px",
+                                    sm: "40px",
+                                    md: "48px",
+                                  },
+                                  backgroundColor: "white",
+                                  border: "1.5px solid rgba(51, 63, 97, 0.15)",
+                                  borderRadius: "50%",
+                                  "&:hover": {
+                                    backgroundColor: "#f5f5f5",
+                                  },
+                                  "&:disabled": {
+                                    opacity: 0.3,
+                                  },
+                                }}
+                              >
+                                <ChevronLeft
+                                  sx={{
+                                    fontSize: {
+                                      xs: "20px",
+                                      sm: "24px",
+                                      md: "28px",
+                                    },
+                                    color: "#333F61",
+                                  }}
+                                />
+                              </IconButton>
+                            )}
+
+                            {/* Progress Steps Container */}
                             <Box
                               sx={{
                                 display: "flex",
                                 justifyContent: "center",
-                                flexDirection: "column",
+                                alignItems: "center",
+                                height: "48px",
+                                border: "1.5px solid rgba(51, 63, 97, 0.15)",
+                                borderRadius: "30px",
+                                background: "white",
+                                padding: {
+                                  xs: "4px 8px",
+                                  sm: "4px 12px",
+                                  md: "4px 16px",
+                                },
+                                minWidth: {
+                                  xs: "200px",
+                                  sm: "280px",
+                                  md: "320px",
+                                },
                               }}
                             >
-                              {" "}
-                              <Box
+                              {visibleSteps.map((elem, visibleIndex) => {
+                                const actualIndex =
+                                  visibleRange.start + visibleIndex;
+                                return (
+                                  <Box
+                                    key={actualIndex}
+                                    sx={{
+                                      width: {
+                                        xs: "28px",
+                                        sm: "32px",
+                                        md: "36px",
+                                        lg: "40px",
+                                      },
+                                      height: {
+                                        xs: "28px",
+                                        sm: "32px",
+                                        md: "36px",
+                                        lg: "40px",
+                                      },
+                                      background:
+                                        currentPracticeStep > actualIndex
+                                          ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
+                                          : currentPracticeStep === actualIndex
+                                          ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
+                                          : "rgba(0, 0, 0, 0.04)",
+                                      ml:
+                                        visibleIndex > 0
+                                          ? { xs: 0.5, sm: 1, md: 1.5 }
+                                          : 0,
+                                      borderRadius: "50%",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      flexShrink: 0,
+                                    }}
+                                  >
+                                    {currentPracticeStep > actualIndex ? (
+                                      <GreenTick />
+                                    ) : (
+                                      <span
+                                        style={{
+                                          color:
+                                            currentPracticeStep === actualIndex
+                                              ? "white"
+                                              : "#1E2937",
+                                          fontWeight: 600,
+                                          lineHeight: "20px",
+                                          fontSize: isMobile
+                                            ? "11px"
+                                            : isTablet
+                                            ? "12px"
+                                            : "14px",
+                                          fontFamily: "Quicksand",
+                                        }}
+                                      >
+                                        {LEVEL === 1
+                                          ? elem.title
+                                          : LEVEL === 2
+                                          ? elem.titleNew
+                                          : LEVEL === 3
+                                          ? elem.titleNew
+                                          : elem.name}
+                                      </span>
+                                    )}
+                                  </Box>
+                                );
+                              })}
+                            </Box>
+
+                            {/* Next Button */}
+                            {canGoNext && (
+                              <IconButton
+                                onClick={handleProgressBarNext}
+                                disabled={!canGoNext}
                                 sx={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  height: "48px",
-                                  border: "1.5px solid rgba(51, 63, 97, 0.15)",
-                                  ml: {
-                                    xs: 10,
-                                    sm: 15,
-                                    lg: 25,
-                                    md: 18,
+                                  width: { xs: "32px", sm: "40px", md: "48px" },
+                                  height: {
+                                    xs: "32px",
+                                    sm: "40px",
+                                    md: "48px",
                                   },
-                                  borderRadius: "30px",
-                                  background: "white",
+                                  backgroundColor: "white",
+                                  border: "1.5px solid rgba(51, 63, 97, 0.15)",
+                                  borderRadius: "50%",
+                                  "&:hover": {
+                                    backgroundColor: "#f5f5f5",
+                                  },
+                                  "&:disabled": {
+                                    opacity: 0.3,
+                                  },
                                 }}
                               >
-                                {displayPracticeSteps.map((elem, i) => {
-                                  return (
-                                    <Box
-                                      key={i}
-                                      sx={{
-                                        width: {
-                                          xs: "16px",
-                                          sm: "26px",
-                                          md: "28px",
-                                          lg: "36px",
-                                        },
-                                        height: {
-                                          xs: "16px",
-                                          sm: "26px",
-                                          md: "28px",
-                                          lg: "36px",
-                                        },
-                                        background:
-                                          currentPracticeStep > i
-                                            ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
-                                            : currentPracticeStep === i
-                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                            : "rgba(0, 0, 0, 0.04)",
-                                        ml: {
-                                          xs: 0.5,
-                                          sm: 0.5,
-                                          md: 1.5,
-                                          lg: 2,
-                                        },
-                                        mr:
-                                          i === displayPracticeSteps?.length - 1
-                                            ? 2
-                                            : 0,
-                                        borderRadius: "30px",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      {currentPracticeStep > i ? (
-                                        <GreenTick />
-                                      ) : (
-                                        <span
-                                          style={{
-                                            color:
-                                              currentPracticeStep === i
-                                                ? "white"
-                                                : "#1E2937",
-                                            fontWeight: 600,
-                                            lineHeight: "20px",
-                                            fontSize: isMobile
-                                              ? "13px"
-                                              : "16px",
-                                            fontFamily: "Quicksand",
-                                          }}
-                                        >
-                                          {LEVEL === 1
-                                            ? elem.title
-                                            : LEVEL === 2
-                                            ? elem.titleNew
-                                            : LEVEL === 3
-                                            ? elem.titleNew
-                                            : elem.name}
-                                        </span>
-                                      )}
-                                    </Box>
-                                  );
-                                })}
-                              </Box>
-                            </Box>
+                                <ChevronRight
+                                  sx={{
+                                    fontSize: {
+                                      xs: "20px",
+                                      sm: "24px",
+                                      md: "28px",
+                                    },
+                                    color: "#333F61",
+                                  }}
+                                />
+                              </IconButton>
+                            )}
                           </Box>
                         )}
                         {/* Hide flowNames progress bar when F1, F2, F3, or M3 flow is active - use displayPracticeSteps instead */}
