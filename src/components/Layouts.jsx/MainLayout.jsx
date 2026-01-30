@@ -79,6 +79,7 @@ import { getF3FlowStep, F3_FLOW } from "../../RFlow/F3";
 const theme = createTheme();
 
 const MainLayout = (props) => {
+  // console.log("MainLayout props:", props);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
@@ -177,7 +178,7 @@ const MainLayout = (props) => {
       backgroundColor: `${levelConfig[9].color}60`,
     },
   };
-
+  const hasTriggeredDemoRef = useRef(false);
   const rFlow = String(getLocalData("rFlow"));
   const rStep = getLocalData("rStepZero");
   const tFlow = String(getLocalData("tFlow"));
@@ -219,7 +220,7 @@ const MainLayout = (props) => {
   const f3FlowStep = getF3FlowStep();
   const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
 
-  console.log("rStep", rStep);
+  // console.log("rStep", rStep);
 
   let LEVEL = props?.level;
 
@@ -516,6 +517,24 @@ const MainLayout = (props) => {
       };
     }
   }, [startShowCase, isShowCase, gameOverData, audioCache]);
+  // console.log(" MainLayout gameOverData", gameOverData);
+  // console.log(" MainLayout LEVEL", LEVEL);
+
+  useEffect(() => {
+    if (hasTriggeredDemoRef.current) return;
+
+    if (
+      gameOverData &&
+      gameOverData?.userWon === false &&
+      (LEVEL === 1 || LEVEL === 2 || LEVEL === 3) &&
+      props.progressData?.currentPracticeStep === 9
+    ) {
+      hasTriggeredDemoRef.current = true;
+      setLocalData("showAlphabetDemo", "true");
+      // console.log("Triggering alphabet demo");
+      window.dispatchEvent(new Event("alphabetDemoComplete"));
+    }
+  }, [gameOverData, LEVEL, props.progressData]);
 
   let currentPracticeStep = progressData?.currentPracticeStep;
   // For F1/F2/F3 flow, use the flow index instead of currentPracticeStep
@@ -863,7 +882,11 @@ const MainLayout = (props) => {
   };
 
   const steps = props.steps;
+  // console.log("steps:", steps);
+
   const currentStep = props.currentStep;
+  // console.log("currentStep:", currentStep);
+
   const stepsArr = [...Array(steps || 0).keys()];
   let width = window.innerWidth * 0.85;
 
@@ -1096,14 +1119,14 @@ const MainLayout = (props) => {
                   >
                     <footer>
                       {/* Debug: Log milestone level and LEVEL for troubleshooting */}
-                      {console.log(
+                      {/* {console.log(
                         "MainLayout footer - milestoneLevel:",
                         milestoneLevel,
                         "LEVEL:",
                         LEVEL,
                         "rFlow:",
                         rFlow
-                      )}
+                      )} */}
 
                       {/* Only show F flow images when milestone level is "B" */}
                       {milestoneLevel === "B" && isF3FlowActive ? (
