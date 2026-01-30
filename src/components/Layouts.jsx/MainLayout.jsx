@@ -1187,63 +1187,21 @@ const MainLayout = (props) => {
                               display: "flex",
                               justifyContent: "center",
                               alignItems: "center",
-                              width:
-                                milestoneLevel === "B" &&
-                                (isF1FlowActive ||
-                                  isF2FlowActive ||
-                                  isF3FlowActive)
-                                  ? {
-                                      xs: "calc(100% - 180px - 180px)",
-                                      sm: "calc(100% - 200px - 200px)",
-                                      md: "calc(100% - 220px - 220px)",
-                                    }
-                                  : "100%",
+                              width: {
+                                xs: "calc(100% - 180px - 180px)",
+                                sm: "calc(100% - 200px - 200px)",
+                                md: "calc(100% - 220px - 220px)",
+                              },
                               gap: { xs: 1, sm: 2 },
                               marginLeft: {
-                                xs:
-                                  milestoneLevel === "B" &&
-                                  (isF1FlowActive ||
-                                    isF2FlowActive ||
-                                    isF3FlowActive)
-                                    ? "180px"
-                                    : "0px",
-                                sm:
-                                  milestoneLevel === "B" &&
-                                  (isF1FlowActive ||
-                                    isF2FlowActive ||
-                                    isF3FlowActive)
-                                    ? "200px"
-                                    : "0px",
-                                md:
-                                  milestoneLevel === "B" &&
-                                  (isF1FlowActive ||
-                                    isF2FlowActive ||
-                                    isF3FlowActive)
-                                    ? "220px"
-                                    : "0px",
+                                xs: "180px",
+                                sm: "200px",
+                                md: "220px",
                               },
                               marginRight: {
-                                xs:
-                                  milestoneLevel === "B" &&
-                                  (isF1FlowActive ||
-                                    isF2FlowActive ||
-                                    isF3FlowActive)
-                                    ? "180px"
-                                    : "0px",
-                                sm:
-                                  milestoneLevel === "B" &&
-                                  (isF1FlowActive ||
-                                    isF2FlowActive ||
-                                    isF3FlowActive)
-                                    ? "200px"
-                                    : "0px",
-                                md:
-                                  milestoneLevel === "B" &&
-                                  (isF1FlowActive ||
-                                    isF2FlowActive ||
-                                    isF3FlowActive)
-                                    ? "220px"
-                                    : "0px",
+                                xs: "180px",
+                                sm: "200px",
+                                md: "220px",
                               },
                               position: "relative",
                               zIndex: 10000,
