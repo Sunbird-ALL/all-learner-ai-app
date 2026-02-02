@@ -34,6 +34,7 @@ import {
   languages,
   levelConfig,
   setLocalData,
+  getLanguageOrDefault,
 } from "../../utils/constants";
 import practicebg from "../../assets/images/practice-bg.svg";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
@@ -1374,7 +1375,7 @@ const Assesment = ({ discoverStart }) => {
   const [level, setLevel] = useState("");
   const dispatch = useDispatch();
   const [openLangModal, setOpenLangModal] = useState(false);
-  const [lang, setLang] = useState(getLocalData("lang") || "en");
+  const [lang, setLang] = useState(getLanguageOrDefault());
   const [points, setPoints] = useState(0);
   const [vocabCount, setVocabCount] = useState(0);
   const [wordCount, setWordCount] = useState(0);

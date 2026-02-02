@@ -14863,6 +14863,16 @@ export const languages = AllLanguages.filter((lang) =>
   appLanguages.includes(lang.lang)
 );
 
+// Get default language from environment variable, fallback to "en"
+export const getDefaultLanguage = () => {
+  return process.env.REACT_APP_LANGUAGE || "en";
+};
+
+// Get language from localStorage or use default from environment variable
+export const getLanguageOrDefault = () => {
+  return getLocalData("lang") || getDefaultLanguage();
+};
+
 export const randomizeArray = (arr) => {
   let wordsArr = [...arr];
   for (let i = wordsArr.length - 1; i > 0; i--) {
