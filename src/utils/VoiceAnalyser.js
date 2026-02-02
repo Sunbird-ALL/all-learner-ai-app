@@ -535,7 +535,8 @@ function VoiceAnalyser(props) {
         (props.pageName === "wordsorimage" || props.pageName === "m5")
       ) {
         const isMatching =
-          data?.createScoreData?.session?.error_rate?.character === 0;
+          data?.createScoreData?.session?.error_rate?.character === 0 ||
+          (data?.createScoreData === undefined && texttemp === tempteacherText);
         if (typeof props.updateStoredData === "function") {
           props.updateStoredData(recordedAudio, isMatching);
         }

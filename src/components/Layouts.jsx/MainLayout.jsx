@@ -518,23 +518,33 @@ const MainLayout = (props) => {
     }
   }, [startShowCase, isShowCase, gameOverData, audioCache]);
   // console.log(" MainLayout gameOverData", gameOverData);
+  // console.log(" MainLayout gameOverData userWon", gameOverData?.userWon);
   // console.log(" MainLayout LEVEL", LEVEL);
+  // console.log(" MainLayout progressData", props);
+  // console.log(
+  //   " MainLayout progressData prop",
+  //   props?.progressData?.currentPracticeStep
+  // );
 
   useEffect(() => {
     if (hasTriggeredDemoRef.current) return;
 
-    if (
-      gameOverData &&
-      gameOverData?.userWon === false &&
-      (LEVEL === 1 || LEVEL === 2 || LEVEL === 3) &&
-      props.progressData?.currentPracticeStep === 9
-    ) {
+    // ❌ wait until gameOverData is available
+    if (!gameOverData) return;
+
+    const userDidNotWin = gameOverData.userWon !== true;
+    const isValidLevel = [1, 2, 3].includes(LEVEL);
+    const isStepNine = props?.progressData?.currentPracticeStep === 9;
+
+    if (userDidNotWin && isValidLevel && isStepNine) {
       hasTriggeredDemoRef.current = true;
+
       setLocalData("showAlphabetDemo", "true");
       // console.log("Triggering alphabet demo");
+
       window.dispatchEvent(new Event("alphabetDemoComplete"));
     }
-  }, [gameOverData, LEVEL, props.progressData]);
+  }, [gameOverData, LEVEL, props?.progressData?.currentPracticeStep]);
 
   let currentPracticeStep = progressData?.currentPracticeStep;
   // For F1/F2/F3 flow, use the flow index instead of currentPracticeStep
@@ -1765,171 +1775,216 @@ const MainLayout = (props) => {
                                   </Typography>
                                 )}
                               </Typography>
-                              <Stack
-                              // sx={{
-                              //   boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px;",
-                              //   paddingY: { xs: "20px", md: "49px" },
-                              //   paddingX: { xs: "15px", md: "30px" },
-                              //   borderRadius: "13px",
-                              //   marginLeft: { xs: 0, md: "80px" },
-                              //   bgcolor: "#FFFFFF",
-                              //   zIndex: 100,
-                              //   width: { xs: "100%", md: "auto" },
-                              // }}
-                              // direction={{ xs: "column", md: "row" }}
-                              >
-                                <Stack
-                                  sx={{
-                                    paddingRight:
-                                      (props.pageName === "wordsorimage" ||
-                                        props.pageName === "m5") &&
-                                      !fluency
-                                        ? { xs: 0, md: "20px" }
-                                        : "0px",
-                                    borderRight:
-                                      (props.pageName === "wordsorimage" ||
-                                        props.pageName === "m5") &&
-                                      !fluency
-                                        ? { xs: "none", md: "1px dashed grey" }
-                                        : "none",
-                                  }}
-                                >
-                                  {(props.pageName === "wordsorimage" ||
-                                    props.pageName === "m5") &&
-                                    storedData?.map((elem, index) => (
-                                      <Stack
-                                        key={index}
-                                        justifyContent={"start"}
-                                        alignItems={"center"}
-                                        direction={"row"}
-                                        mt={
-                                          index > 0
-                                            ? { xs: "10px", md: "25px" }
-                                            : 0
-                                        }
-                                      >
-                                        <Box
-                                          sx={{
-                                            marginLeft: {
-                                              xs: "10px",
-                                              md: "35px",
-                                            },
-                                            marginRight: "5px",
-                                          }}
-                                        >
-                                          {elem?.audioUrl ? (
-                                            <button
-                                              onClick={() =>
-                                                handleAudioPlay(index)
-                                              }
-                                              style={{
-                                                height: "30px",
-                                                cursor: "pointer",
-                                                background: "none",
-                                                border: "none",
-                                                padding: "0",
-                                              }}
-                                              aria-label={
-                                                audioPlaying === index
-                                                  ? "Pause audio"
-                                                  : "Play audio"
-                                              }
-                                            >
-                                              <img
-                                                src={
-                                                  audioPlaying === index
-                                                    ? pauseButton
-                                                    : playButton
-                                                }
-                                                alt={
-                                                  audioPlaying === index
-                                                    ? "Pause"
-                                                    : "Play"
-                                                }
-                                                style={{ height: "30px" }}
-                                              />
-                                            </button>
-                                          ) : (
-                                            <Box></Box>
-                                          )}
-                                          <audio
-                                            ref={(el) =>
-                                              (audioRefs.current[index] = el)
-                                            }
-                                            src={elem?.audioUrl}
-                                          />
-                                        </Box>
-
-                                        {elem?.correctAnswer === false ? (
-                                          <img
-                                            src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/wrong.svg"
-                                            alt="wrongImage"
-                                          />
-                                        ) : (
-                                          <img
-                                            src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/correct.svg"
-                                            alt="correctImage"
-                                          />
-                                        )}
-                                        <span
-                                          style={{
-                                            marginLeft: "8px",
-                                            color: "#1E2937",
-                                            fontWeight: 700,
-                                            lineHeight: "30px",
-                                            fontSize: {
-                                              xs: "12px",
-                                              md: "15px",
-                                            },
-                                            fontFamily: "Quicksand",
-                                            minWidth: {
-                                              xs: "70px",
-                                              md: "100px",
-                                            },
-                                          }}
-                                        >
-                                          {elem.selectedAnswer || "Binocular"}
-                                        </span>
-                                      </Stack>
-                                    ))}
-                                </Stack>
-                                {(fluency ||
-                                  [10, 11, 12, 13, 14, 15].includes(LEVEL)) && (
-                                  <Stack
+                              {(props.pageName === "wordsorimage" ||
+                                props.pageName === "m5") &&
+                                storedData?.length > 0 && (
+                                  <Box
                                     sx={{
-                                      paddingLeft:
-                                        (props.pageName === "wordsorimage" ||
-                                          props.pageName === "m5") &&
-                                        !fluency
-                                          ? { xs: 0, md: "20px" }
-                                          : "0px",
-                                      mt: { xs: 2, md: 0 },
+                                      boxShadow:
+                                        "rgba(0, 0, 0, 0.12) 0px 4px 16px",
+                                      padding: { xs: "16px", md: "20px" },
+                                      borderRadius: "16px",
+                                      bgcolor: "#FFFFFF",
+                                      width: { xs: "95%", md: "600px" },
+                                      maxWidth: { xs: "100%", md: "700px" },
                                     }}
-                                    justifyContent={"center"}
-                                    alignItems={"center"}
                                   >
-                                    <img
-                                      src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/turtle.svg"
-                                      alt="turtleImage"
-                                      style={{
-                                        width: { xs: "80px", md: "100px" },
-                                      }}
-                                    />
-                                    <span
-                                      style={{
-                                        marginTop: "12px",
-                                        color: "#1E2937",
-                                        fontWeight: 700,
-                                        lineHeight: "25px",
-                                        fontSize: { xs: "16px", md: "20px" },
-                                        fontFamily: "Quicksand",
+                                    <Box
+                                      sx={{
+                                        maxHeight: { xs: "220px", md: "280px" },
+                                        overflowY: "auto",
+                                        overflowX: "hidden",
+                                        paddingRight: "8px",
+                                        "&::-webkit-scrollbar": {
+                                          width: "6px",
+                                        },
+                                        "&::-webkit-scrollbar-track": {
+                                          background: "#f5f5f5",
+                                          borderRadius: "10px",
+                                        },
+                                        "&::-webkit-scrollbar-thumb": {
+                                          background: "#d1d1d1",
+                                          borderRadius: "10px",
+                                        },
+                                        "&::-webkit-scrollbar-thumb:hover": {
+                                          background: "#b1b1b1",
+                                        },
                                       }}
                                     >
-                                      {"Oops, a bit slow!"}
-                                    </span>
-                                  </Stack>
+                                      <Box
+                                        sx={{
+                                          display: "grid",
+                                          gridTemplateColumns: {
+                                            xs: "1fr",
+                                            sm: "1fr 1fr",
+                                            md: "1fr 1fr",
+                                          },
+                                          gap: { xs: "10px", md: "12px" },
+                                        }}
+                                      >
+                                        {storedData?.map((elem, index) => (
+                                          <Box
+                                            key={index}
+                                            sx={{
+                                              display: "flex",
+                                              alignItems: "center",
+                                              padding: "10px 14px",
+                                              borderRadius: "12px",
+                                              backgroundColor:
+                                                elem?.correctAnswer === false
+                                                  ? "rgba(239, 68, 68, 0.08)"
+                                                  : "rgba(34, 197, 94, 0.08)",
+                                              border:
+                                                elem?.correctAnswer === false
+                                                  ? "1.5px solid rgba(239, 68, 68, 0.25)"
+                                                  : "1.5px solid rgba(34, 197, 94, 0.25)",
+                                              transition:
+                                                "transform 0.15s ease, box-shadow 0.15s ease",
+                                              "&:hover": {
+                                                transform: "translateY(-1px)",
+                                                boxShadow:
+                                                  "0 2px 8px rgba(0,0,0,0.08)",
+                                              },
+                                            }}
+                                          >
+                                            {/* Play Button */}
+                                            <Box
+                                              sx={{
+                                                marginRight: "10px",
+                                                flexShrink: 0,
+                                              }}
+                                            >
+                                              {elem?.audioUrl ? (
+                                                <button
+                                                  onClick={() =>
+                                                    handleAudioPlay(index)
+                                                  }
+                                                  style={{
+                                                    height: "30px",
+                                                    cursor: "pointer",
+                                                    background: "none",
+                                                    border: "none",
+                                                    padding: "0",
+                                                  }}
+                                                  aria-label={
+                                                    audioPlaying === index
+                                                      ? "Pause audio"
+                                                      : "Play audio"
+                                                  }
+                                                >
+                                                  <img
+                                                    src={
+                                                      audioPlaying === index
+                                                        ? pauseButton
+                                                        : playButton
+                                                    }
+                                                    alt={
+                                                      audioPlaying === index
+                                                        ? "Pause"
+                                                        : "Play"
+                                                    }
+                                                    style={{ height: "30px" }}
+                                                  />
+                                                </button>
+                                              ) : (
+                                                <Box></Box>
+                                              )}
+                                              <audio
+                                                ref={(el) =>
+                                                  (audioRefs.current[index] =
+                                                    el)
+                                                }
+                                                src={elem?.audioUrl}
+                                              />
+                                            </Box>
+
+                                            {/* Status Icon */}
+                                            <Box sx={{ flexShrink: 0, mr: 1 }}>
+                                              {elem?.correctAnswer === false ? (
+                                                <img
+                                                  src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/wrong.svg"
+                                                  alt="wrongImage"
+                                                  style={{
+                                                    width: "22px",
+                                                    height: "22px",
+                                                  }}
+                                                />
+                                              ) : (
+                                                <img
+                                                  src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/correct.svg"
+                                                  alt="correctImage"
+                                                  style={{
+                                                    width: "22px",
+                                                    height: "22px",
+                                                  }}
+                                                />
+                                              )}
+                                            </Box>
+
+                                            {/* Word Text */}
+                                            <Typography
+                                              sx={{
+                                                color: "#1E2937",
+                                                fontWeight: 600,
+                                                fontSize: {
+                                                  xs: "14px",
+                                                  md: "15px",
+                                                },
+                                                fontFamily: "Quicksand",
+                                                flex: 1,
+                                                wordBreak: "break-word",
+                                                lineHeight: 1.3,
+                                              }}
+                                            >
+                                              {elem.selectedAnswer || "—"}
+                                            </Typography>
+                                          </Box>
+                                        ))}
+                                      </Box>
+                                    </Box>
+                                    {(fluency ||
+                                      [10, 11, 12, 13, 14, 15].includes(
+                                        LEVEL
+                                      )) && (
+                                      <Stack
+                                        sx={{
+                                          mt: 2,
+                                          pt: 2,
+                                          borderTop: "1px dashed #e0e0e0",
+                                          backgroundColor:
+                                            "rgba(255, 152, 0, 0.08)",
+                                          borderRadius: "10px",
+                                          padding: "12px",
+                                          marginTop: "16px",
+                                        }}
+                                        justifyContent={"center"}
+                                        alignItems={"center"}
+                                        direction={"row"}
+                                        spacing={1.5}
+                                      >
+                                        <img
+                                          src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/turtle.svg"
+                                          alt="turtleImage"
+                                          style={{
+                                            width: "45px",
+                                            height: "45px",
+                                          }}
+                                        />
+                                        <span
+                                          style={{
+                                            color: "#E65100",
+                                            fontWeight: 700,
+                                            lineHeight: "22px",
+                                            fontSize: "15px",
+                                            fontFamily: "Quicksand",
+                                          }}
+                                        >
+                                          {"Oops, a bit slow!"}
+                                        </span>
+                                      </Stack>
+                                    )}
+                                  </Box>
                                 )}
-                              </Stack>
                             </Stack>
                             {/* second stack below*/}
                             <Stack
@@ -2027,6 +2082,7 @@ const MainLayout = (props) => {
                       display: "flex",
                       justifyContent: "right",
                       mr: 4,
+                      mt: 4,
                     }}
                   >
                     <Box

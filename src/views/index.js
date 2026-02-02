@@ -17,3 +17,4 @@ export { LetterLauncherDemo } from "./LetterLauncherDemo";
 export { MemoryDemo } from "./MemoryDemo";
 
 export { DiscoverDemo } from "./DiscoverDemo";
+export { MilestoneFormPage } from "./MilestoneForm";

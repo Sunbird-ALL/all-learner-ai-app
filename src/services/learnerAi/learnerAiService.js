@@ -233,3 +233,32 @@ const blobToBase64 = (blob) =>
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
+
+export const setMilestoneScore = async (
+  language,
+  milestoneLevel,
+  sessionId,
+  subSessionId
+) => {
+  try {
+    // Construct URL - ensure no double slashes
+    const baseUrl = API_LEARNER_AI_APP_HOST?.replace(/\/$/, "") || "";
+    const path = config.URLS.SET_MILESTONE_SCORE?.replace(/^\//, "") || "";
+    const url = `${baseUrl}/${path}`;
+
+    const response = await axios.post(
+      url,
+      {
+        language: language,
+        milestone_level: milestoneLevel,
+        session_id: sessionId,
+        sub_session_id: subSessionId,
+      },
+      getHeaders()
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error setting milestone score:", error);
+    throw error;
+  }
+};
