@@ -78,6 +78,12 @@ const routData = [
     component: reviews.TowreFlowPage,
     requiresAuth: true,
   },
+  {
+    id: "route-016",
+    path: "/Reset",
+    component: reviews.MilestoneFormPage,
+    requiresAuth: true,
+  },
   // ============================================
   // DEMO ROUTE - Letter Hunt Game Standalone Demo
   // TODO: Remove this route after demo is complete

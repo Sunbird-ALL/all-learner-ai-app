@@ -12,6 +12,7 @@
         "UPDATE_LEARNER_PROFILE": "scores/updateLearnerProfile",
         "GET_CONTENT": "scores/GetContent",
         "GET_CONTENT_NEW": "scores/getRecommendation",
+        "SET_MILESTONE_SCORE": "scores/milestone/set",
         "GET_LESSON_PROGRESS_BY_ID": "api/lesson/getLessonProgressByUserId",
         "CREATE_LEARNER_PROGRESS": "api/learnerProgress/createLearnerProgress"
     }
