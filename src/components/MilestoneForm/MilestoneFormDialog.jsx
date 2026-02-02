@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { getLocalData } from "../../utils/constants";
@@ -22,6 +23,7 @@ const MilestoneFormDialog = ({ language, onSuccess, onError }) => {
     sub_session_id: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState({ text: "", isError: false });
 
   // Auto-open form when on /Reset route
   useEffect(() => {
@@ -52,13 +54,12 @@ const MilestoneFormDialog = ({ language, onSuccess, onError }) => {
       !formData.session_id ||
       !formData.sub_session_id
     ) {
-      if (onError) {
-        onError("Please fill all fields");
-      }
+      setMessage({ text: "Please fill all fields", isError: true });
       return;
     }
 
     setIsSubmitting(true);
+    setMessage({ text: "", isError: false });
     try {
       await setMilestoneScore(
         formData.language,
@@ -66,19 +67,28 @@ const MilestoneFormDialog = ({ language, onSuccess, onError }) => {
         formData.session_id,
         formData.sub_session_id
       );
+      setMessage({ text: "Milestone score set successfully!", isError: false });
       if (onSuccess) {
         onSuccess("Milestone score set successfully!");
       }
-      setOpenMilestoneForm(false);
-      setFormData({
-        language: language || "en",
-        milestone_level: "",
-        session_id: "",
-        sub_session_id: "",
-      });
+      // Reset form after success
+      setTimeout(() => {
+        setOpenMilestoneForm(false);
+        setFormData({
+          language: language || "en",
+          milestone_level: "",
+          session_id: "",
+          sub_session_id: "",
+        });
+        setMessage({ text: "", isError: false });
+      }, 2000);
     } catch (error) {
+      setMessage({
+        text: "Failed to set milestone. Please try again.",
+        isError: true,
+      });
       if (onError) {
-        onError("Failed to set milestone score. Please try again.");
+        onError("Failed to set milestone. Please try again.");
       }
     } finally {
       setIsSubmitting(false);
@@ -111,7 +121,7 @@ const MilestoneFormDialog = ({ language, onSuccess, onError }) => {
           textAlign: "center",
         }}
       >
-        Set Milestone Score
+        Set Milestone
       </DialogTitle>
       <DialogContent>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
@@ -172,6 +182,30 @@ const MilestoneFormDialog = ({ language, onSuccess, onError }) => {
               },
             }}
           />
+          {/* Success/Error Message */}
+          {message.text && (
+            <Box
+              sx={{
+                mt: 1,
+                p: 2,
+                borderRadius: "10px",
+                backgroundColor: message.isError ? "#ffebee" : "#e8f5e9",
+                border: `1px solid ${message.isError ? "#f44336" : "#4caf50"}`,
+              }}
+            >
+              <Typography
+                sx={{
+                  color: message.isError ? "#d32f2f" : "#2e7d32",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  fontFamily: "Quicksand",
+                  textAlign: "center",
+                }}
+              >
+                {message.text}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </DialogContent>
       <DialogActions

@@ -96,7 +96,6 @@ import {
   fetchUserPoints,
   logoutUser,
 } from "../../services/orchestration/orchestrationService";
-import { MilestoneFormDialog } from "../MilestoneForm";
 import { fetchVirtualId } from "../../services/userservice/userService";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
@@ -1361,24 +1360,6 @@ export const ProfileHeader = ({
         onClose={() => setOpenAlphabetModal(false)}
         lang={language}
       />
-      {/* Milestone Form Dialog - Only works on /Reset route */}
-      {location.pathname === "/Reset" && (
-        <MilestoneFormDialog
-          language={language}
-          onSuccess={(message) => {
-            setOpenMessageDialog({
-              message: message,
-              isError: false,
-            });
-          }}
-          onError={(message) => {
-            setOpenMessageDialog({
-              message: message,
-              isError: true,
-            });
-          }}
-        />
-      )}
     </>
   );
 };
