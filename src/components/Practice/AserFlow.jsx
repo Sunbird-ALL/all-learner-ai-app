@@ -390,6 +390,22 @@ const AserFlow = ({
   };
 
   const handleNextClick = async (wasCorrect = false) => {
+    // If all items are completed, handle navigation
+    if (currentItemNumber >= TOTAL_ITEMS) {
+      setShowSuccessMessage(true);
+
+      await handleCompletion();
+      setLocalData("rFlow", false);
+      callTelemetryDiscovery("Discovery-AserFlow");
+      handleNext?.();
+      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        navigate("/");
+      } else {
+        navigate("/discover-start");
+      }
+      return;
+    }
+
     setSelectedLetter("");
     setIsCorrect(null);
     setShowNext(false);
@@ -399,18 +415,22 @@ const AserFlow = ({
     const newItemNumber = Math.min(currentItemNumber + 1, TOTAL_ITEMS);
     setCurrentItemNumber(newItemNumber);
 
-    // After completing 10 items (regardless of correct/wrong), show success message
-    if (newItemNumber >= TOTAL_ITEMS) {
-      // Show success message immediately
-      setShowSuccessMessage(true);
+    console.log("AserFlow - Progress update:", {
+      currentItemNumber,
+      newItemNumber,
+      TOTAL_ITEMS,
+      isComplete: newItemNumber >= TOTAL_ITEMS,
+    });
 
+    // After completing 10 items (regardless of correct/wrong)
+    if (newItemNumber >= TOTAL_ITEMS) {
+      console.log(
+        "AserFlow - All 10 items completed! Next button should appear."
+      );
+      setShowSuccessMessage(true);
       await handleCompletion();
       setLocalData("rFlow", false);
       callTelemetryDiscovery("Discovery-AserFlow");
-
-      // Don't auto-navigate - wait for user to click Continue button
-      // Navigation will happen in the closeDialog callback
-
       return;
     }
 
@@ -799,19 +819,42 @@ const AserFlow = ({
               <ListenButton height={50} width={50} />
             </Box>
           </Box>
-          <img
-            src={nextImg}
-            alt="next"
-            style={{
-              width: "50px",
-              cursor: "pointer",
-              marginLeft: "10px",
-              opacity: hideContentDuringDemo ? 0 : 1,
-              visibility: hideContentDuringDemo ? "hidden" : "visible",
-              transition: "opacity 0.3s ease",
-            }}
-            onClick={() => handleNextClick()}
-          />
+          {/* Show next button only after completing all 10 items */}
+          {(() => {
+            const shouldShowNext = currentItemNumber >= TOTAL_ITEMS;
+            console.log("AserFlow - Next button render check:", {
+              currentItemNumber,
+              TOTAL_ITEMS,
+              shouldShowNext,
+              showSuccessMessage,
+            });
+            return shouldShowNext;
+          })() && (
+            <img
+              src={nextImg}
+              alt="next"
+              style={{
+                width: "50px",
+                cursor: "pointer",
+                marginLeft: "10px",
+                opacity: hideContentDuringDemo ? 0 : 1,
+                visibility: hideContentDuringDemo ? "hidden" : "visible",
+                transition: "opacity 0.3s ease",
+                zIndex: 10001,
+                position: "relative",
+              }}
+              onClick={() => {
+                console.log("AserFlow - Next button clicked after completion");
+                // Handle navigation when next button is clicked after completion
+                handleNext?.();
+                if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                  navigate("/");
+                } else {
+                  navigate("/discover-start");
+                }
+              }}
+            />
+          )}
           <img
             src={listenBearGif}
             alt="bear"
@@ -852,12 +895,13 @@ const AserFlow = ({
             message="You have successfully completed the character game"
             closeDialog={() => {
               setShowSuccessMessage(false);
-              handleNext?.();
-              if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                navigate("/");
-              } else {
-                navigate("/discover-start");
-              }
+              // Don't auto-navigate - let user click next button instead
+              // handleNext?.();
+              // if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              //   navigate("/");
+              // } else {
+              //   navigate("/discover-start");
+              // }
             }}
           />,
           document.body
