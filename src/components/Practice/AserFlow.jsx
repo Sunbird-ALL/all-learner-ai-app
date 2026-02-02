@@ -392,8 +392,6 @@ const AserFlow = ({
   const handleNextClick = async (wasCorrect = false) => {
     // If all items are completed, handle navigation
     if (currentItemNumber >= TOTAL_ITEMS) {
-      setShowSuccessMessage(true);
-
       await handleCompletion();
       setLocalData("rFlow", false);
       callTelemetryDiscovery("Discovery-AserFlow");
@@ -427,10 +425,16 @@ const AserFlow = ({
       console.log(
         "AserFlow - All 10 items completed! Next button should appear."
       );
-      setShowSuccessMessage(true);
       await handleCompletion();
       setLocalData("rFlow", false);
       callTelemetryDiscovery("Discovery-AserFlow");
+
+      // Delay showing success message to allow next button to appear first
+      // Show success message after a short delay (optional - user can use next button instead)
+      setTimeout(() => {
+        setShowSuccessMessage(true);
+      }, 1000);
+
       return;
     }
 
