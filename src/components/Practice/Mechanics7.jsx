@@ -1553,6 +1553,27 @@ const Mechanics7 = ({
                     onClick={() => {
                       if (isLastSyllable && enableMultilingual) {
                         setShowMultiLingual(true);
+                      } else if (isLastSyllable && !enableMultilingual) {
+                        // If multilingual is disabled, proceed to next content
+                        const newWordData = {
+                          original_text: currentText,
+                          content_id: contentId,
+                          milestone_level: "m1",
+                          practice_level: currentLevel,
+                          session_id: sessionId,
+                          practiced: true,
+                          learned: isWordCorrect ? true : false,
+                          subsession_id: "session_123",
+                        };
+
+                        callTelemetry();
+                        setLocalData("correctPracticeWords", [
+                          ...(correctPracticeWords || []),
+                          newWordData,
+                        ]);
+                        handleNext();
+                        setStepIndex(0);
+                        setIsRecorded(false);
                       } else {
                         setStepIndex((prev) => prev + 1);
                         setIsRecorded(false);
