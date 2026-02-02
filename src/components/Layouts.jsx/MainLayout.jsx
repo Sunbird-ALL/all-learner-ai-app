@@ -518,23 +518,33 @@ const MainLayout = (props) => {
     }
   }, [startShowCase, isShowCase, gameOverData, audioCache]);
   // console.log(" MainLayout gameOverData", gameOverData);
+  // console.log(" MainLayout gameOverData userWon", gameOverData?.userWon);
   // console.log(" MainLayout LEVEL", LEVEL);
+  // console.log(" MainLayout progressData", props);
+  // console.log(
+  //   " MainLayout progressData prop",
+  //   props?.progressData?.currentPracticeStep
+  // );
 
   useEffect(() => {
     if (hasTriggeredDemoRef.current) return;
 
-    if (
-      gameOverData &&
-      gameOverData?.userWon === false &&
-      (LEVEL === 1 || LEVEL === 2 || LEVEL === 3) &&
-      props.progressData?.currentPracticeStep === 9
-    ) {
+    // ❌ wait until gameOverData is available
+    if (!gameOverData) return;
+
+    const userDidNotWin = gameOverData.userWon !== true;
+    const isValidLevel = [1, 2, 3].includes(LEVEL);
+    const isStepNine = props?.progressData?.currentPracticeStep === 9;
+
+    if (userDidNotWin && isValidLevel && isStepNine) {
       hasTriggeredDemoRef.current = true;
+
       setLocalData("showAlphabetDemo", "true");
       // console.log("Triggering alphabet demo");
+
       window.dispatchEvent(new Event("alphabetDemoComplete"));
     }
-  }, [gameOverData, LEVEL, props.progressData]);
+  }, [gameOverData, LEVEL, props?.progressData?.currentPracticeStep]);
 
   let currentPracticeStep = progressData?.currentPracticeStep;
   // For F1/F2/F3 flow, use the flow index instead of currentPracticeStep
