@@ -1026,6 +1026,12 @@ const BingoCard = ({
         if (isCorrectPair) {
           setMatchedPair({ fullWord: currentWord, parts: requiredParts });
 
+          // Play success sound when correct pair is matched
+          const audio = new Audio(correctSound);
+          audio.play().catch((error) => {
+            console.error("Error playing success sound:", error);
+          });
+
           setTimeout(() => setShowConfetti(true), 500);
 
           setTimeout(() => {
@@ -1050,6 +1056,12 @@ const BingoCard = ({
             setCurrentHintPair(null);
           }, 3500);
         } else {
+          // Play wrong sound when incorrect pair is selected
+          const audio = new Audio(wrongSound);
+          audio.play().catch((error) => {
+            console.error("Error playing wrong sound:", error);
+          });
+
           setWrongPair(newSelected);
           setTimeout(() => {
             setWrongPair([]);
