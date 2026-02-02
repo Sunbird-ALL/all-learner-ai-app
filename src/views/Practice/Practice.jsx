@@ -8827,6 +8827,12 @@ const Practice = () => {
       typeof mechanism === "object" &&
       mechanism.name === "formAWord2"
     ) {
+      // Get the multilingual config from the step config
+      const currentStepConfig = getCurrentContent(
+        progressData?.currentPracticeStep
+      );
+      const enableMultilingual = currentStepConfig?.multilingual !== false;
+
       return (
         <Mechanics7
           page={page}
@@ -8841,6 +8847,7 @@ const Practice = () => {
             currentImg: questions[currentQuestion]?.contentSourceData?.[0],
             parentWords: questions[currentQuestion]?.mechanics_data?.[0],
             multilingual: questions[currentQuestion]?.multilingual,
+            enableMultilingual: enableMultilingual,
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,
