@@ -14300,7 +14300,8 @@ export const levelGetContent = {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "M4_TE_READ",
+        tags: "M4_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P3",
@@ -14318,7 +14319,8 @@ export const levelGetContent = {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        tags: "M4_TE_READ",
+        tags: "M4_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P5",
@@ -14330,7 +14332,8 @@ export const levelGetContent = {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "M4_TE_READ",
+        tags: "M4_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P7",
@@ -14348,7 +14351,8 @@ export const levelGetContent = {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        tags: "M4_TE_READ",
+        tags: "M4_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
     ],
     5: [
@@ -14362,7 +14366,8 @@ export const levelGetContent = {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "M5_TE_READ",
+        tags: "M5_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P3",
@@ -14380,7 +14385,8 @@ export const levelGetContent = {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        tags: "M5_TE_READ",
+        tags: "M5_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P5",
@@ -14392,7 +14398,8 @@ export const levelGetContent = {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "M5_TE_READ",
+        tags: "M5_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P7",
@@ -14410,7 +14417,8 @@ export const levelGetContent = {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        tags: "M5_TE_READ",
+        tags: "M5_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
     ],
     6: [
@@ -14424,7 +14432,8 @@ export const levelGetContent = {
         title: "P2",
         criteria: "sentence",
         template: "simple",
-        tags: "M6_TE_READ",
+        tags: "M6_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P3",
@@ -14442,7 +14451,8 @@ export const levelGetContent = {
         title: "S1",
         criteria: "sentence",
         template: "simple",
-        tags: "M6_TE_READ",
+        tags: "M6_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P5",
@@ -14454,7 +14464,8 @@ export const levelGetContent = {
         title: "P6",
         criteria: "sentence",
         template: "simple",
-        tags: "M6_TE_READ",
+        tags: "M6_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
       {
         title: "P7",
@@ -14472,7 +14483,8 @@ export const levelGetContent = {
         title: "S2",
         criteria: "sentence",
         template: "simple",
-        tags: "M6_TE_READ",
+        tags: "M6_TE_MECH",
+        mechanism: { id: "mechanic_2", name: "readTheImage" },
       },
     ],
     7: [
