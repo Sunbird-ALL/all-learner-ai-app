@@ -37,10 +37,7 @@ import {
   getLanguageOrDefault,
 } from "../../utils/constants";
 import practicebg from "../../assets/images/practice-bg.svg";
-import {
-  useNavigate,
-  useLocation,
-} from "../../../node_modules/react-router-dom/dist/index";
+import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 import { useEffect, useState } from "react";
 import HelpLogo from "../../assets/help.png";
 import CloseIcon from "@mui/icons-material/Close";
@@ -466,7 +463,6 @@ export const ProfileHeader = ({
   }
 
   const navigate = useNavigate();
-  const location = useLocation();
   const [openMessageDialog, setOpenMessageDialog] = useState("");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
