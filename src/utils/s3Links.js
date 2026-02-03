@@ -4530,6 +4530,48 @@ export const చననAudio = "df8da017-bf1e-49c5-a9cb-f334524b32ca.wav";
 export const సరమలలAudio = "bf11d000-3541-4349-89fc-2cd7c6ea0df2.wav";
 export const బయయAudio = "fc139f70-cb67-49ac-a2c1-836ec16d57cd.wav";
 
+// --- M3 Telugu Image Assets ---
+export const అమలపలకImg = "c8a9949f-a728-44e0-b2e3-dc286d50fdb7.png";
+export const వపకచదImg = "91644b18-860d-4cdd-be52-d9052e12153b.png";
+export const గననలపలImg = "948956ef-736c-4bee-a769-b793e9b84cd3.png";
+export const బవగరకImg = "1e383257-d413-4ba6-b46b-94bc3e7fa1b3.png";
+export const పసరగరలImg = "9c4aea67-aabc-4139-ae64-7d131ee046d6.png";
+export const ఎరరగలబImg = "25c70abf-1afc-429f-a09a-23580116edc3.png";
+export const సవరతజడImg = "36e092c9-a082-4b9c-beb0-64b41935967a.png";
+export const కడమదగడImg = "67882140-754b-4baf-8ca1-0e29e4d23bbc.png";
+export const చతలగడగImg = "ba9db3d5-4c97-4111-8118-89774c851d86.png";
+export const తలలనఏనగImg = "163de671-439a-4bd3-9685-f34ae1781b72.png";
+export const సననయపటImg = "79b957ff-89c9-4f97-8a1a-158ab78adbd6.png";
+export const అకకజడImg = "f484b5c6-b9c1-4468-ae3d-5983db19ce6b.png";
+export const గడమదబలలImg = "b55ea3fe-4b10-4ba9-9127-c5a53179e979.png";
+export const తలమదటపImg = "2f8eab95-2556-4ebf-a095-d9151e027a9d.png";
+export const బదలనళలImg = "86f4f2e7-74e0-49c7-9f6f-6020f52acbb3.png";
+export const చటటమలకImg = "074841c2-7417-4d31-bc67-a72595aa5f1d.png";
+export const చలకమకకImg = "827d0369-f2c5-4302-811f-1baa46cd58bb.png";
+export const పలలపటటImg = "7e8f9399-5797-46ab-8b7d-99836e9042a0.png";
+
+// --- M3 Telugu Audio Assets ---
+export const వపకచదAudio2 = "82cb8888-73d0-413f-a5e7-944fe796b8da.wav";
+export const కడమదగడAudio2 = "49e13b86-9fc1-4772-ba0b-b9b45554e4ad.wav";
+export const అమలపలకAudio = "c89f13a7-e355-4bba-9a0b-36a935cc2262.wav";
+export const వపకచదAudio = "17d2517a-82a0-4eca-9fc4-27d9b1f1dd33.wav";
+export const గననలపలAudio = "ad9c153c-24b4-42a8-bacd-4cd4c64057bf.wav";
+export const బవగరకAudio = "be1f2e4a-1780-4de4-9053-7e69666541e3.wav";
+export const పసరగరలAudio = "418008cf-389e-4719-82bf-28f5eeda3b20.wav";
+export const ఎరరగలబAudio = "af6f5b0d-46fd-4689-8359-5ef8df2e9325.wav";
+export const సవరతజడAudio = "74a10681-ee8d-4fd6-bd47-d620a94f3ee3.wav";
+export const కడమదగడAudio = "a64437f3-3b37-469d-8c05-06fac958b51b.wav";
+export const చతలగడగAudio = "d3016756-29a6-4434-b135-a7ef0b8bb899.wav";
+export const తలలనఏనగAudio = "9ff6e257-cbc6-4a16-94b2-493c32c31501.wav";
+export const సననయపటAudio = "84db9492-a10c-42a8-809d-8bf320c93f3f.wav";
+export const అకకజడAudio = "02631590-fcd0-4235-97f4-ff336fe6a387.wav";
+export const గడమదబలలAudio = "c996ce62-3ea2-4dfd-9979-d739a7f7d738.wav";
+export const తలమదటపAudio = "f396e9b1-2e3d-42d6-847d-b466b9fd940f.wav";
+export const బదలనళలAudio = "bf58a00e-231d-4e52-9eb9-bfe6a7d47731.wav";
+export const చటటమలకAudio = "439f1d46-dcb4-4a09-868c-ad7a7c4d6c9d.wav";
+export const చలకమకకAudio = "fb629dc9-a338-4d06-8c39-cffef136bd7c.wav";
+export const పలలపటటAudio = "8bf89a5c-78d9-489e-ac99-69336b022165.wav";
+
 /////////////////////////////////////////////////////////////////
 
 // Temp Fix
