@@ -197,7 +197,6 @@ const PhrasesInAction = ({
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
-    //console.log("Live Transcript:", transcript);
 
     // Only check if there's new content and we're not already in abusive state
     if (transcript && !abusiveFound) {
@@ -352,8 +351,6 @@ const PhrasesInAction = ({
     currentPracticeStep,
     currentWordIndex,
   });
-
-  //console.log("m3", currentLevel, level);
 
   const levelContent = {
     length: 10,
@@ -5651,7 +5648,7 @@ const PhrasesInAction = ({
       language,
     });
     const hardcodedContent = content?.[currentLevel]?.[currentWordIndex];
-    console.log("PhrasesInAction - hardcodedContent:", hardcodedContent);
+
     if (hardcodedContent) {
       if (currentSteps === "step1") {
         levelData = hardcodedContent.step1;
@@ -6667,6 +6664,13 @@ const PhrasesInAction = ({
                       display: "flex",
                       alignItems: "center",
                       position: "relative",
+                      marginTop: isMatched
+                        ? isMobile
+                          ? "30px"
+                          : isTablet
+                          ? "40px"
+                          : "50px"
+                        : "20px",
                     }}
                   >
                     {isRecording2 && (

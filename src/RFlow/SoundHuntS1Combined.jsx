@@ -3670,7 +3670,7 @@ const SoundHuntS1Combined = ({
           const userWon = sessionResult?.toLowerCase() === "pass";
           const isFail = sessionResult?.toLowerCase() === "fail";
 
-          // If pass, reset lesson progress and update milestone level, then navigate to discover-start
+          // If pass, reset lesson progress and update milestone level
           if (userWon) {
             console.log(
               "S1 passed - resetting lesson progress and updating milestone level"
@@ -3701,9 +3701,20 @@ const SoundHuntS1Combined = ({
               );
             } catch (addLessonError) {
               console.error("Error calling addLesson on pass:", addLessonError);
-              // Continue to navigate even if addLesson fails
+              // Continue even if addLesson fails
             }
 
+            // For showcase mode, show end screen
+            if (isShowCase) {
+              console.log("S1 showcase passed - showing end screen");
+              setGameOverData({
+                userWon: true,
+                link: "/_practice", // MainLayout will navigate here, parent will handle handleNext
+              });
+              return; // Don't navigate yet - wait for user to click button on end screen
+            }
+
+            // For non-showcase mode, navigate immediately
             console.log("S1 passed - navigating to discover-start");
             setLocalData("rFlow", false);
             setLocalData("mFail", false);
@@ -3865,7 +3876,7 @@ const SoundHuntS1Combined = ({
           const userWon = sessionResult?.toLowerCase() === "pass";
           const isFail = sessionResult?.toLowerCase() === "fail";
 
-          // If pass, reset lesson progress and update milestone level, then navigate to discover-start
+          // If pass, reset lesson progress and update milestone level
           if (userWon) {
             console.log(
               "S1 passed - resetting lesson progress and updating milestone level"
@@ -3896,9 +3907,20 @@ const SoundHuntS1Combined = ({
               );
             } catch (addLessonError) {
               console.error("Error calling addLesson on pass:", addLessonError);
-              // Continue to navigate even if addLesson fails
+              // Continue even if addLesson fails
             }
 
+            // For showcase mode, show end screen
+            if (isShowCase) {
+              console.log("S1 showcase passed - showing end screen");
+              setGameOverData({
+                userWon: true,
+                link: "/_practice", // MainLayout will navigate here, parent will handle handleNext
+              });
+              return; // Don't navigate yet - wait for user to click button on end screen
+            }
+
+            // For non-showcase mode, navigate immediately
             console.log("S1 passed - navigating to discover-start");
             setLocalData("rFlow", false);
             setLocalData("mFail", false);
@@ -4335,16 +4357,27 @@ const SoundHuntS1Combined = ({
                 >
                   {currentQuestion?.allwords.map((item, index) => {
                     const isSelected = selectedWord === item.text;
+                    const isCorrect =
+                      item.text?.toLowerCase() ===
+                      currentQuestion.correctWord?.toLowerCase();
+                    const showCorrect = isSelected && isCorrect;
+                    const showWrong = isSelected && !isCorrect;
                     return (
                       <div
                         key={index}
                         style={{
-                          backgroundColor: isSelected ? "#4CAF50" : "#1897DE",
+                          backgroundColor: showCorrect
+                            ? "#4CAF50"
+                            : showWrong
+                            ? "#F44336"
+                            : "#1897DE",
                           padding: isMobile ? "12px 16px" : "16px 24px",
                           borderRadius: "12px",
                           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                          border: isSelected
+                          border: showCorrect
                             ? "5px solid #2E7D32"
+                            : showWrong
+                            ? "5px solid #C62828"
                             : "5px solid #10618E",
                           display: "flex",
                           alignItems: "center",
