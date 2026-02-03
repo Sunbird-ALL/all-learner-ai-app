@@ -131,11 +131,11 @@ const AudioRecorder = (props) => {
           };
 
           recognition.onerror = (event) => {
-            console.warn("Speech recognition error:", event.error);
+            // Speech recognition error - handled gracefully
           };
         }
       } catch (srError) {
-        console.warn("Browser speech recognition not available:", srError);
+        // Browser speech recognition not available - handled gracefully
       }
 
       // Use RecordRTC with specific configurations to match the blob structure
@@ -169,13 +169,12 @@ const AudioRecorder = (props) => {
           if (blob) {
             setAudioBlob(blob);
             saveBlob(blob);
-            console.log("isShowCase", props.isShowCase);
 
             // Stop speech recognition
             try {
               SpeechRecognition.stopListening();
             } catch (srError) {
-              console.warn("Error stopping speech recognition:", srError);
+              // Error stopping speech recognition - non-critical
             }
 
             if (props.noOffline !== true && !props.isShowCase) {
@@ -189,7 +188,6 @@ const AudioRecorder = (props) => {
                 // Only check correctness if transcript is not empty
                 // If user didn't speak, transcript will be empty and should be marked as incorrect
                 if (!transcripts || transcripts.trim().length === 0) {
-                  console.warn("Empty transcript - marking as incorrect");
                   props.setIsCorrect?.(false);
                 } else {
                   // Check for exact match first (most strict)
@@ -217,18 +215,8 @@ const AudioRecorder = (props) => {
                     const knLatin = transliterateKannadaToLatin(target);
                     const comparison = compareWords(transcripts, knLatin);
                     props.setIsCorrect?.(comparison?.isFine);
-                    console.log(
-                      `Speech Match: ${comparison?.similarity}% similarity - ${
-                        comparison?.isFine ? "✅ CORRECT" : "❌ INCORRECT"
-                      }`
-                    );
                   } else {
                     props.setIsCorrect?.(isCorrect);
-                    console.log(
-                      `Speech Match: ${similarity.toFixed(1)}% similarity - ${
-                        isCorrect ? "✅ CORRECT" : "❌ INCORRECT"
-                      }`
-                    );
                   }
                 }
                 setShowLoader(false);

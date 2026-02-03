@@ -4476,26 +4476,12 @@ const Practice = () => {
     f2FlowIndexFromStorage !== null &&
     Number(f2FlowIndexFromStorage) !== f2FlowIndexState
   ) {
-    console.log(
-      `F2 flow index mismatch detected: state=${f2FlowIndexState}, storage=${f2FlowIndexFromStorage}, using storage value for rendering`
-    );
     // Force state update to match localStorage immediately
     setF2FlowIndexState(Number(f2FlowIndexFromStorage));
   }
 
-  // Log F2 flow step calculation for debugging
   if (shouldShowF2) {
-    console.log(`F2 flow step calculation:`, {
-      f2FlowIndexState,
-      f2FlowIndexFromStorage,
-      effectiveF2FlowIndex,
-      step: f2FlowStep.step,
-      stepType: f2FlowStep.step?.type,
-      stepNumber: f2FlowStep.step?.step,
-      shouldShowF2,
-      milestoneLevel,
-      subMilestoneLevel,
-    });
+    // F2 flow is active
   }
 
   // Check if F3 flow is active
@@ -4719,21 +4705,12 @@ const Practice = () => {
       if (isF2FlowActive && isF2LearnStep) {
         // Get current F2 flow step BEFORE advancement
         const currentF2FlowStep = getF2FlowStep();
-        console.log(
-          "Before advanceF2Flow - currentF2FlowStep:",
-          currentF2FlowStep
-        );
 
         // Advance F2 flow - this updates localStorage
         const nextStep = advanceF2Flow();
-        console.log("advanceF2Flow returned:", nextStep);
 
         // Get the updated F2 flow step AFTER advancement
         let updatedF2FlowStep = getF2FlowStep();
-        console.log(
-          "After advanceF2Flow - updatedF2FlowStep:",
-          updatedF2FlowStep
-        );
 
         // Verify the index was actually incremented
         if (updatedF2FlowStep.index === currentF2FlowStep.index) {
@@ -4747,7 +4724,6 @@ const Practice = () => {
           const forcedIndex = currentF2FlowStep.index + 1;
           setLocalData("f2FlowIndex", forcedIndex);
           updatedF2FlowStep = getF2FlowStep();
-          console.log("Forced F2 flow step:", updatedF2FlowStep);
         }
 
         // Update state to trigger re-render
@@ -4766,11 +4742,6 @@ const Practice = () => {
               progress: cappedProgress,
               language: lang,
               milestoneLevel: "B",
-            });
-            console.log("F2 Learn step progress saved:", {
-              completedStepIndex: currentF2FlowStep.index,
-              nextStepIndex: updatedF2FlowStep.index,
-              lessonSaved: (updatedF2FlowStep.index + 1).toString(), // 1-indexed
             });
           } catch (e) {
             console.error("Error storing F2 flow progress:", e);
@@ -4814,11 +4785,6 @@ const Practice = () => {
 
             if (awardedPoints === pointsToAdd) {
               setPoints(result?.result?.totalLanguagePoints || 0);
-              console.log("F2 flow points updated:", {
-                pointsAdded: pointsToAdd,
-                contentCount,
-                totalPoints: result?.result?.totalLanguagePoints,
-              });
             }
           } catch (error) {
             console.error("Error updating F2 flow points:", error);
@@ -4830,13 +4796,6 @@ const Practice = () => {
         if (isF2FlowActive) {
           const effectiveLang = lang || "en";
           const f2Config = levelGetContent[effectiveLang]?.["F2"];
-          console.log("F2 config lookup:", {
-            lang: effectiveLang,
-            hasF2Config: !!f2Config,
-            f2ConfigLength: f2Config?.length,
-            targetIndex: updatedF2FlowStep.index,
-            f2FlowStep: updatedF2FlowStep.step,
-          });
 
           if (
             f2Config &&
@@ -4844,10 +4803,6 @@ const Practice = () => {
             f2Config[updatedF2FlowStep.index]
           ) {
             nextStepContent = f2Config[updatedF2FlowStep.index];
-            console.log("F2 next step content from config:", {
-              index: updatedF2FlowStep.index,
-              content: nextStepContent,
-            });
           }
         }
 
@@ -4867,43 +4822,18 @@ const Practice = () => {
         }
         setProgressData(practiceProgress);
 
-        console.log("LetterTrain completed for F2, next step:", {
-          newPracticeStep,
-          nextStepContent,
-          mechanism: nextStepContent?.mechanism,
-          f2FlowStep: updatedF2FlowStep,
-          f2FlowIndexState: updatedF2FlowStep.index,
-        });
-
         return; // Exit early for F2 flow
       }
 
       // Handle F1 flow Learn step completion (existing logic)
       // Get current F1 flow step BEFORE advancement
       const currentF1FlowStep = getF1FlowStep();
-      console.log(
-        "Before advanceF1Flow - currentF1FlowStep:",
-        currentF1FlowStep
-      );
-      console.log(
-        "Before advanceF1Flow - localStorage f1FlowIndex:",
-        getLocalData("f1FlowIndex")
-      );
 
       // Advance F1 flow - this updates localStorage
       const nextStep = advanceF1Flow();
-      console.log("advanceF1Flow returned:", nextStep);
-      console.log(
-        "After advanceF1Flow - localStorage f1FlowIndex:",
-        getLocalData("f1FlowIndex")
-      );
 
       // Get the updated F1 flow step AFTER advancement
       let updatedF1FlowStep = getF1FlowStep();
-      console.log(
-        "After advanceF1Flow - updatedF1FlowStep:",
-        updatedF1FlowStep
-      );
 
       // Verify the index was actually incremented
       if (updatedF1FlowStep.index === currentF1FlowStep.index) {

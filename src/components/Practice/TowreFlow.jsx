@@ -1120,7 +1120,6 @@ const TowreFlow = ({
 
   useEffect(() => {
     transcriptRef.current = transcript;
-    console.log("Live Transcript:", transcript);
   }, [transcript]);
 
   useEffect(() => {
@@ -1284,9 +1283,7 @@ const TowreFlow = ({
       };
 
       mediaRecorder.onstop = async () => {
-        //console.log("Recording stopped.");
         if (chunksRef.current.length === 0) {
-          console.warn("No data to create blob.");
           return;
         }
 
@@ -1298,9 +1295,6 @@ const TowreFlow = ({
 
         // Validate audio blob before processing
         if (!audioBlob || audioBlob.size === 0) {
-          console.warn(
-            "Audio blob is empty or invalid, using fallback transcription"
-          );
           setTranscripts(transcriptRef.current || "");
           const transcriptWords = normalize(transcriptRef.current || "").filter(
             (w) => w && w.trim().length > 0
@@ -1375,11 +1369,6 @@ const TowreFlow = ({
 
         // Get transcript from browser speech recognition (already captured during recording)
         const transcripts = transcriptRef.current || "";
-        console.log(
-          "Using browser speech recognition transcript:",
-          transcripts
-        );
-
         setTranscripts(transcripts);
         const transcriptWords = normalize(transcripts).filter(
           (w) => w && w.trim().length > 0
@@ -1434,30 +1423,17 @@ const TowreFlow = ({
 
             try {
               await S3Client.send(command);
-              console.log("Audio upload successful");
             } catch (uploadErr) {
-              console.warn(
-                "S3 upload failed (non-critical):",
-                uploadErr.message
-              );
-              // Continue even if upload fails
+              // S3 upload failed (non-critical) - continue
             }
 
             try {
               await addTowreRecord(audioFileName, allWords, lang);
-              console.log("TOWRE record saved successfully");
             } catch (apiErr) {
-              console.warn(
-                "Error saving TOWRE record (non-critical):",
-                apiErr.message
-              );
-              // Continue even if API call fails
+              // Error saving TOWRE record (non-critical) - continue
             }
           } catch (processErr) {
-            console.warn(
-              "Error processing audio for upload (non-critical):",
-              processErr.message
-            );
+            // Error processing audio for upload (non-critical) - continue
             // Continue even if audio processing fails
           }
         }
@@ -1480,8 +1456,6 @@ const TowreFlow = ({
       mediaRecorderRef.current.state !== "inactive"
     ) {
       mediaRecorderRef.current.stop();
-    } else {
-      console.warn("Recorder already inactive or null.");
     }
   };
 
