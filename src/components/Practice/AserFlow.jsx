@@ -41,7 +41,6 @@ import {
   callTelemetryDiscovery,
 } from "../../utils/apiUtil";
 import AudioTooltipModal from "./AudioTooltipModal";
-import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";

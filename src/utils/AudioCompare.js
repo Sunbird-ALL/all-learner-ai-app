@@ -12,12 +12,9 @@ import RecordVoiceVisualizer from "./RecordVoiceVisualizer";
 import playButton from "../../src/assets/listen.png";
 import pauseButton from "../../src/assets/pause.png";
 import PropTypes from "prop-types";
-import { pipeline, env } from "@xenova/transformers";
-import { loadTranscriber } from "./transcriber";
+import SpeechRecognition from "react-speech-recognition";
 import { doubleMetaphone } from "double-metaphone";
 import { transliterateKannadaToLatin, compareWords } from "../utils/textUtils";
-
-env.localModelPath = "https://huggingface.co/Xenova/whisper-tiny/resolve/main/";
 
 const AudioRecorder = (props) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -27,6 +24,19 @@ const AudioRecorder = (props) => {
   const mediaStreamRef = useRef(null);
   const [showLoader, setShowLoader] = useState(false);
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
+  const transcriptRef = useRef("");
+
+  // Map language codes to browser speech recognition format
+  const getBrowserLanguage = (langCode) => {
+    const browserLangMap = {
+      en: "en-US",
+      hi: "hi-IN",
+      te: "te-IN",
+      ka: "kn-IN",
+      ta: "ta-IN",
+    };
+    return browserLangMap[langCode] || "en-US";
+  };
 
   function sanitize(text) {
     return text
@@ -65,6 +75,35 @@ const AudioRecorder = (props) => {
       setStatus("recording");
       mediaStreamRef.current = stream;
 
+      // Reset transcript
+      transcriptRef.current = "";
+
+      // Start browser speech recognition
+      try {
+        SpeechRecognition.startListening({
+          continuous: true,
+          interimResults: true,
+          language: getBrowserLanguage(language),
+        });
+
+        // Listen for results
+        const recognition = SpeechRecognition.getRecognition();
+        if (recognition) {
+          recognition.onresult = (event) => {
+            const transcript = Array.from(event.results)
+              .map((result) => result[0].transcript)
+              .join(" ");
+            transcriptRef.current = transcript;
+          };
+
+          recognition.onerror = (event) => {
+            console.warn("Speech recognition error:", event.error);
+          };
+        }
+      } catch (srError) {
+        console.warn("Browser speech recognition not available:", srError);
+      }
+
       // Use RecordRTC with specific configurations to match the blob structure
       recorderRef.current = new RecordRTC(stream, {
         type: "audio",
@@ -98,19 +137,17 @@ const AudioRecorder = (props) => {
             saveBlob(blob);
             console.log("isShowCase", props.isShowCase);
 
+            // Stop speech recognition
+            try {
+              SpeechRecognition.stopListening();
+            } catch (srError) {
+              console.warn("Error stopping speech recognition:", srError);
+            }
+
             if (props.noOffline !== true && !props.isShowCase) {
               try {
-                // setLoading(true);
-                const transcriber = await loadTranscriber();
-                console.log("Transcriber is:", transcriber);
-                const audioUrl = URL.createObjectURL(blob);
-                const output = await transcriber(audioUrl, {
-                  chunk_length_s: 20,
-                  stride_length_s: 5,
-                  task: "transcribe",
-                  language: "en",
-                });
-                const transcripts = sanitize(output.text);
+                // Use browser speech recognition transcript (captured during recording)
+                const transcripts = sanitize(transcriptRef.current || "");
                 const target = sanitize(props.originalText);
 
                 console.log("Transcription resultss 1:", transcripts);

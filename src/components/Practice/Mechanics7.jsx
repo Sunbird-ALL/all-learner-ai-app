@@ -46,7 +46,6 @@ import {
 } from "../../utils/apiUtil";
 import AudioTooltipModal from "./AudioTooltipModal";
 import ZoomableImage from "./ZoomableImage";
-import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import loadingJson from "../../assets/loadingJson.json";
 import Lottie from "lottie-react";
@@ -304,17 +303,9 @@ const Mechanics7 = ({
         if (isLastSyllable) {
           try {
             setIsLoading(true);
-            const transcriber = await loadTranscriber();
-            //console.log("Transcriber is:", transcriber);
-            const audioUrl = URL.createObjectURL(audioBlob);
-            const output = await transcriber(audioUrl, {
-              chunk_length_s: 20,
-              stride_length_s: 5,
-              task: "transcribe",
-              language: "en",
-            });
 
-            const transcripts = sanitize(output.text);
+            // Use browser speech recognition transcript (already captured during recording)
+            const transcripts = sanitize(transcriptRef.current || "");
             const target = sanitize(currentText);
             const isCorrect =
               transcripts.includes(target) ||
