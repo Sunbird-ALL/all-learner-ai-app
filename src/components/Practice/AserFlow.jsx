@@ -135,7 +135,8 @@ const AserFlow = ({
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
   const [questions, setQuestions] = useState([]);
-  const [ansSelectionStatus, setAnsSelectionStatus] = useState({});
+  // Track character selections for ansSelectionStatus - now an array of objects
+  const [ansSelectionStatus, setAnsSelectionStatus] = useState([]);
   const lang = getLocalData("lang");
   const virtualId = getLocalData("virtualId");
   const [clickedIndex, setClickedIndex] = useState(null);
@@ -361,10 +362,14 @@ const AserFlow = ({
     setIsCorrect(correct);
     setShowNext(true);
 
-    setAnsSelectionStatus((prev) => ({
-      ...prev,
-      [letter]: correct,
-    }));
+    setAnsSelectionStatus((prev) => {
+      const newEntry = {
+        text: letter,
+        status: correct,
+        gameType: "letter-hunt",
+      };
+      return [...prev, newEntry];
+    });
 
     if (correct) correctAudio.play();
     else wrongAudio.play();
@@ -689,12 +694,16 @@ const AserFlow = ({
                     style={{
                       width: "100px",
                       height: "100px",
-                      filter:
-                        ansSelectionStatus[char] === true
-                          ? "drop-shadow(0 0 10px #08a169ff)"
-                          : ansSelectionStatus[char] === false
-                          ? "drop-shadow(0 0 10px #d31818ff)"
-                          : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
+                      filter: ansSelectionStatus.some(
+                        (item) => item.text === char && item.status === true
+                      )
+                        ? "drop-shadow(0 0 10px #08a169ff)"
+                        : ansSelectionStatus.some(
+                            (item) =>
+                              item.text === char && item.status === false
+                          )
+                        ? "drop-shadow(0 0 10px #d31818ff)"
+                        : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
                       transition: "filter 0.3s ease",
                     }}
                   />
