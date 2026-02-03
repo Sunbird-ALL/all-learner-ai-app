@@ -379,16 +379,32 @@ const WordsOrImage = ({
         setShowStopButton(false);
         setShowListenRetryButtons(true);
 
+        // Check if transcript is empty - if user didn't speak, mark as incorrect
+        if (!transcript || transcript.trim().length === 0) {
+          console.warn("Empty transcript - marking as incorrect");
+          setAnswer(false);
+          const audio = new Audio(wrongSound);
+          audio.play();
+          stopAudioRecording();
+          return;
+        }
+
         const matchPercentage = phoneticMatch(
           currentWordRef.current,
           transcript
         );
 
-        if (matchPercentage < 49) {
+        if (matchPercentage < 80) {
+          console.log(
+            `Word Match: ${matchPercentage.toFixed(1)}% - ❌ INCORRECT`
+          );
           setAnswer(false);
           const audio = new Audio(wrongSound);
           audio.play();
         } else {
+          console.log(
+            `Word Match: ${matchPercentage.toFixed(1)}% - ✅ CORRECT`
+          );
           setAnswer(true);
           const audio = new Audio(correctSound);
           audio.play();
@@ -439,7 +455,18 @@ const WordsOrImage = ({
       SpeechRecognition.stopListening();
       stopAudioRecording();
       const finalTranscript = transcriptRef.current;
-      //console.log("transcript", finalTranscript, currentWordRef.current);
+
+      // Check if transcript is empty - if user didn't speak, mark as incorrect
+      if (!finalTranscript || finalTranscript.trim().length === 0) {
+        console.warn("Empty transcript - marking as incorrect");
+        setAnswer(false);
+        const audio = new Audio(wrongSound);
+        audio.play();
+        setIsRecording(false);
+        setShowStopButton(false);
+        setShowListenRetryButtons(true);
+        return;
+      }
 
       const matchPercentage = phoneticMatch(
         currentWordRef.current,
@@ -451,15 +478,22 @@ const WordsOrImage = ({
         navigator.userAgent.toLowerCase().includes("firefox");
 
       if (isFirefox) {
+        console.log("Word Match: Firefox detected - ✅ CORRECT");
         setAnswer(true);
         const audio = new Audio(correctSound);
         audio.play();
       } else {
-        if (matchPercentage < 49) {
+        if (matchPercentage < 80) {
+          console.log(
+            `Word Match: ${matchPercentage.toFixed(1)}% - ❌ INCORRECT`
+          );
           setAnswer(false);
           const audio = new Audio(wrongSound);
           audio.play();
         } else {
+          console.log(
+            `Word Match: ${matchPercentage.toFixed(1)}% - ✅ CORRECT`
+          );
           setAnswer(true);
           const audio = new Audio(correctSound);
           audio.play();

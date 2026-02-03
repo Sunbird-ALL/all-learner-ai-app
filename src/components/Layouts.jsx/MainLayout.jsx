@@ -235,15 +235,6 @@ const MainLayout = (props) => {
     const milestoneNumber = parseInt(milestoneLevel.substring(1), 10);
     if (!isNaN(milestoneNumber)) {
       LEVEL = milestoneNumber;
-      console.log(
-        "MainLayout - Extracted milestone level:",
-        milestoneLevel,
-        "-> LEVEL:",
-        LEVEL,
-        "(was:",
-        props?.level,
-        ")"
-      );
     }
   } else if (milestoneLevel && milestoneLevel !== "B") {
     // If milestone level is not "B" and not "m1", "m2", etc., try to extract number anyway

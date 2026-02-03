@@ -197,7 +197,7 @@ const PhrasesInAction = ({
   const transcriptRef = useRef("");
   useEffect(() => {
     transcriptRef.current = transcript;
-    //console.log("Live Transcript:", transcript);
+    console.log("Live Transcript:", transcript);
 
     // Only check if there's new content and we're not already in abusive state
     if (transcript && !abusiveFound) {

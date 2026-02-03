@@ -52,6 +52,40 @@ const AudioRecorder = (props) => {
     return a1 === b1 || a1 === b2 || a2 === b1 || a2 === b2;
   }
 
+  // Calculate similarity percentage between two strings
+  function calculateSimilarity(str1, str2) {
+    if (!str1 || !str2) return 0;
+
+    // Exact match
+    if (str1 === str2) return 100;
+
+    // Split into words for sentence comparison
+    const words1 = str1.trim().split(/\s+/);
+    const words2 = str2.trim().split(/\s+/);
+
+    // If single words, use phonetic matching
+    if (words1.length === 1 && words2.length === 1) {
+      const isPhoneticMatch = phoneticMatch(words1[0], words2[0]);
+      return isPhoneticMatch ? 85 : 0; // Give 85% for phonetic match of single words
+    }
+
+    // For sentences, calculate word-by-word similarity
+    let matchedWords = 0;
+    const minLength = Math.min(words1.length, words2.length);
+    const maxLength = Math.max(words1.length, words2.length);
+
+    // Check each word in the shorter sentence
+    for (let i = 0; i < minLength; i++) {
+      if (words1[i] === words2[i] || phoneticMatch(words1[i], words2[i])) {
+        matchedWords++;
+      }
+    }
+
+    // Calculate percentage: matched words / total words in target
+    const similarity = (matchedWords / maxLength) * 100;
+    return similarity;
+  }
+
   //console.log("pageName", props.pageName);
 
   useEffect(() => {
@@ -147,22 +181,55 @@ const AudioRecorder = (props) => {
             if (props.noOffline !== true && !props.isShowCase) {
               try {
                 // Use browser speech recognition transcript (captured during recording)
-                const transcripts = sanitize(transcriptRef.current || "");
-                const target = sanitize(props.originalText);
+                const rawTranscript = transcriptRef.current || "";
+                const transcripts = sanitize(rawTranscript);
+                const rawTarget = props.originalText || "";
+                const target = sanitize(rawTarget);
 
-                console.log("Transcription resultss 1:", transcripts);
-                console.log("Transcription resultss 2:", target);
-
-                const isCorrect =
-                  transcripts.includes(target) ||
-                  phoneticMatch(transcripts, target);
-
-                if (language === "kn") {
-                  const knLatin = transliterateKannadaToLatin(target);
-                  const comparison = compareWords(transcripts, knLatin);
-                  props.setIsCorrect?.(comparison?.isFine);
+                // Only check correctness if transcript is not empty
+                // If user didn't speak, transcript will be empty and should be marked as incorrect
+                if (!transcripts || transcripts.trim().length === 0) {
+                  console.warn("Empty transcript - marking as incorrect");
+                  props.setIsCorrect?.(false);
                 } else {
-                  props.setIsCorrect?.(isCorrect);
+                  // Check for exact match first (most strict)
+                  const exactMatch = transcripts === target;
+
+                  // Calculate similarity percentage
+                  const similarity = calculateSimilarity(transcripts, target);
+
+                  // Check if target is contained in transcript as a complete phrase
+                  // Only allow this if similarity is already high (>= 70%)
+                  const transcriptContainsTarget = transcripts.includes(target);
+                  const targetContainsTranscript = target.includes(transcripts);
+
+                  // Require at least 80% similarity for correctness
+                  // OR exact match
+                  // OR if transcript contains target AND similarity is >= 70% (user said more than expected but correctly)
+                  // OR if target contains transcript AND similarity is >= 70% (user said less but correctly)
+                  const isCorrect =
+                    exactMatch ||
+                    similarity >= 80 ||
+                    (transcriptContainsTarget && similarity >= 70) ||
+                    (targetContainsTranscript && similarity >= 70);
+
+                  if (language === "kn") {
+                    const knLatin = transliterateKannadaToLatin(target);
+                    const comparison = compareWords(transcripts, knLatin);
+                    props.setIsCorrect?.(comparison?.isFine);
+                    console.log(
+                      `Speech Match: ${comparison?.similarity}% similarity - ${
+                        comparison?.isFine ? "✅ CORRECT" : "❌ INCORRECT"
+                      }`
+                    );
+                  } else {
+                    props.setIsCorrect?.(isCorrect);
+                    console.log(
+                      `Speech Match: ${similarity.toFixed(1)}% similarity - ${
+                        isCorrect ? "✅ CORRECT" : "❌ INCORRECT"
+                      }`
+                    );
+                  }
                 }
                 setShowLoader(false);
                 setStatus("inactive");
