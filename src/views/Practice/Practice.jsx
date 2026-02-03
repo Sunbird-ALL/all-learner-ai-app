@@ -7251,8 +7251,16 @@ const Practice = () => {
         ["B", 0, 10, 11, 12, 13, 14, 15].includes(level)
       ) {
         setMechanism(currentGetContent?.mechanism || {});
+        console.log(
+          "Initial load - Mechanism set to:",
+          currentGetContent?.mechanism
+        );
       } else {
-        // Set mechanism anyway if questions not loaded yet
+        console.warn(
+          "Initial load - Mechanism not set yet, questions not loaded. Questions length:",
+          questions.length
+        );
+        // Set mechanism anyway, but log a warning
         setMechanism(currentGetContent?.mechanism || {});
       }
 
@@ -7285,73 +7293,6 @@ const Practice = () => {
   useEffect(() => {
     setLocalData("mechanism_id", (mechanism && mechanism.id) || "");
   }, [mechanism]);
-
-  // Use useEffect to set mechanism based on flow state - prevents race conditions
-  // Only runs when flow state changes, not during initial render
-  useEffect(() => {
-    // Skip if mechanism is already set and valid
-    if (
-      mechanism &&
-      typeof mechanism === "object" &&
-      (mechanism.id || mechanism.name)
-    ) {
-      return;
-    }
-
-    // For F1 flow
-    if (
-      isF1FlowActive &&
-      f1FlowStep?.step &&
-      milestoneLevel === "B" &&
-      !isF2FlowActive &&
-      !isF3FlowActive
-    ) {
-      const currentF1Step = getF1FlowStep();
-      const f1StepType = currentF1Step.step?.type;
-      if (f1StepType === "L") {
-        setMechanism({ id: "letterTrain", name: "letterTrain" });
-      } else if (f1StepType === "P" || f1StepType === "A") {
-        setMechanism({ id: "letterHunt", name: "letterHunt" });
-      }
-    }
-    // For F2 flow
-    else if (
-      isF2FlowActive &&
-      f2FlowStep?.step &&
-      milestoneLevel === "B" &&
-      !isF3FlowActive
-    ) {
-      const currentF2Step = getF2FlowStep();
-      const f2StepType = currentF2Step.step?.type;
-      const isIndicLanguage = lang !== "en";
-      if (f2StepType === "L") {
-        setMechanism(
-          isIndicLanguage
-            ? { id: "barakhadi", name: "barakhadi" }
-            : { id: "letterTrain", name: "letterTrain" }
-        );
-      } else if (f2StepType === "P" || f2StepType === "A") {
-        setMechanism({ id: "letterHunt", name: "letterHunt" });
-      }
-    }
-    // For F3 flow
-    else if (isF3FlowActive && f3FlowStep?.step && milestoneLevel === "B") {
-      const currentF3Step = getF3FlowStep();
-      const f3StepType = currentF3Step.step?.type;
-      if (f3StepType === "P" || f3StepType === "A") {
-        setMechanism({ id: "letterLauncher", name: "letterLauncher" });
-      }
-    }
-  }, [
-    isF1FlowActive,
-    isF2FlowActive,
-    isF3FlowActive,
-    f1FlowIndexState,
-    f2FlowIndexState,
-    f3FlowIndexState,
-    milestoneLevel,
-    lang,
-  ]);
 
   const getCurrentContent = (stepKey) => {
     const lang = getLocalData("lang") || "en";
@@ -7619,8 +7560,15 @@ const Practice = () => {
         setQuestions(dummyQuestions);
       }
 
-      // Set mechanism immediately - no delay to prevent race conditions
-      setMechanism(currentGetContent?.mechanism || {});
+      setTimeout(() => {
+        // Add safety check for mechanism
+        // if (currentGetContent?.mechanism) {
+        setMechanism(currentGetContent?.mechanism || {});
+        // }
+        // else{
+        //   renderMechanics();
+        // }
+      }, 1000);
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
     } else {
@@ -7802,6 +7750,17 @@ const Practice = () => {
           ? "letterLauncher" // F3 Practice and Apply steps use Letter Launcher
           : null;
 
+      console.log("renderMechanics - F3 flow check", {
+        isF3FlowActive,
+        f3StepType,
+        expectedMechanism,
+        currentMechanism:
+          typeof mechanism === "object" ? mechanism?.name : mechanism,
+        mechanismType: typeof mechanism,
+        f3FlowIndexState,
+        milestoneLevel,
+      });
+
       // If mechanism doesn't match expected, fix it immediately
       if (
         expectedMechanism &&
@@ -7829,7 +7788,13 @@ const Practice = () => {
             }
           );
         }
-        // Mechanism will be set by useEffect to prevent race conditions
+        // Set the correct mechanism immediately
+        if (expectedMechanism === "letterLauncher") {
+          console.log(
+            "renderMechanics - Setting mechanism to letterLauncher for F3 step"
+          );
+          setMechanism({ id: "letterLauncher", name: "letterLauncher" });
+        }
       }
     }
     // For F2 flow, ensure mechanism matches F2_FLOW step type
@@ -7852,6 +7817,17 @@ const Practice = () => {
           : f2StepType === "P" || f2StepType === "A"
           ? "letterHunt" // F2 Practice and Apply steps use LetterHunt
           : null;
+
+      console.log("renderMechanics - F2 flow check", {
+        isF2FlowActive,
+        f2StepType,
+        expectedMechanism,
+        currentMechanism:
+          typeof mechanism === "object" ? mechanism?.name : mechanism,
+        mechanismType: typeof mechanism,
+        f2FlowIndexState,
+        milestoneLevel,
+      });
 
       // If mechanism doesn't match expected, fix it immediately
       if (
@@ -7919,6 +7895,17 @@ const Practice = () => {
           ? "letterHunt"
           : null;
 
+      console.log("renderMechanics - F1 flow check", {
+        isF1FlowActive,
+        f1StepType,
+        expectedMechanism,
+        currentMechanism:
+          typeof mechanism === "object" ? mechanism?.name : mechanism,
+        mechanismType: typeof mechanism,
+        f1FlowIndexState,
+        milestoneLevel,
+      });
+
       // If mechanism doesn't match expected, fix it immediately
       // Only log warning if mechanism exists but is wrong (not just undefined during initialization)
       if (
@@ -7947,8 +7934,14 @@ const Practice = () => {
             }
           );
         }
-        // Mechanism will be set by useEffect to prevent race conditions
-        // Don't set state during render
+        // Set the correct mechanism immediately (this will happen even if mechanism is undefined/empty during initialization)
+        if (expectedMechanism === "letterTrain") {
+          console.log("renderMechanics - Setting mechanism to letterTrain");
+          setMechanism({ id: "letterTrain", name: "letterTrain" });
+        } else if (expectedMechanism === "letterHunt") {
+          console.log("renderMechanics - Setting mechanism to letterHunt");
+          setMechanism({ id: "letterHunt", name: "letterHunt" });
+        }
       }
     }
 
@@ -7965,6 +7958,21 @@ const Practice = () => {
       !mechanism ||
       (typeof mechanism === "string" && mechanism === "") ||
       (typeof mechanism === "object" && !mechanism.id && !mechanism.name);
+
+    console.log("renderMechanics - Checking WordsOrImage condition", {
+      isF1LearnStepForRender,
+      isMechanismEmpty,
+      mechanism:
+        typeof mechanism === "object"
+          ? mechanism?.name || mechanism?.id
+          : mechanism,
+      mechanismType: typeof mechanism,
+      isF1FlowActive,
+      milestoneLevel,
+      shouldShowF1,
+      f1StepType: getF1FlowStep()?.step?.type,
+      isNonFFlow,
+    });
 
     // For non-F flows (m1, m2, etc.), if no mechanism from config, render WordsOrImage
     // For F flows, use existing logic
