@@ -331,8 +331,6 @@ const PhrasesInAction = ({
 
   // Note: levelData is computed later
 
-  //console.log("m3", currentLevel, level);
-
   const levelContent = {
     length: 10,
     en: {
@@ -6605,6 +6603,13 @@ const PhrasesInAction = ({
                       display: "flex",
                       alignItems: "center",
                       position: "relative",
+                      marginTop: isMatched
+                        ? isMobile
+                          ? "30px"
+                          : isTablet
+                          ? "40px"
+                          : "50px"
+                        : "20px",
                     }}
                   >
                     {isRecording2 && (
