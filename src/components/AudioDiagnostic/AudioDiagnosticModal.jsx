@@ -25,6 +25,9 @@ import panda from "../../assets/images/panda.svg";
 import { impression, interact, Log } from "../../services/telementryService";
 import { getRandomAudioPrompt } from "../../constants/audioDiagnosticPrompts";
 import { getTranslations } from "../../constants/audioDiagnosticTranslations";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import "./AudioDiagnosticModal.css";
 
 const AudioDiagnosticModal = ({ show, onClose }) => {
@@ -38,6 +41,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPlayingBack, setIsPlayingBack] = useState(false);
   const [recordingProgress, setRecordingProgress] = useState(0);
+  const [recordingTimeRemaining, setRecordingTimeRemaining] = useState(5);
   const [audioLevel, setAudioLevel] = useState(0);
   const [recordedAudioUrl, setRecordedAudioUrl] = useState(null);
   const [testMessage, setTestMessage] = useState("");
@@ -61,9 +65,32 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
   const audioLevelsRef = useRef([]);
   const micTestStartTimeRef = useRef(null);
   const speakerTestStartTimeRef = useRef(null);
+  const transcriptRef = useRef("");
+
+  // Get browser speech recognition transcript
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
+
+  // Update transcript ref when transcript changes
+  useEffect(() => {
+    transcriptRef.current = transcript;
+  }, [transcript]);
 
   // Get translations based on current language
   const translations = getTranslations(lang);
+
+  // Map language codes to browser speech recognition format
+  const getBrowserLanguage = (langCode) => {
+    const browserLangMap = {
+      en: "en-US",
+      hi: "hi-IN",
+      te: "te-IN",
+      ka: "kn-IN",
+      kn: "kn-IN",
+      ta: "ta-IN",
+    };
+    return browserLangMap[langCode] || "en-US";
+  };
 
   // Reset all state to initial values
   const resetDiagnostic = () => {
@@ -84,6 +111,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     setIsPlaying(false);
     setIsPlayingBack(false);
     setRecordingProgress(0);
+    setRecordingTimeRemaining(5);
     setAudioLevel(0);
     setRecordedAudioUrl(null);
     setTestMessage("");
@@ -98,6 +126,16 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     micTestStartTimeRef.current = null;
     speakerTestStartTimeRef.current = null;
     recordedChunksRef.current = [];
+    transcriptRef.current = "";
+
+    // Reset speech recognition transcript if supported
+    if (browserSupportsSpeechRecognition) {
+      try {
+        resetTranscript();
+      } catch (e) {
+        // Ignore errors
+      }
+    }
   };
 
   useEffect(() => {
@@ -421,6 +459,13 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     audioDetectedRef.current = false;
     audioLevelsRef.current = [];
     micTestStartTimeRef.current = Date.now();
+
+    // Reset transcript
+    if (browserSupportsSpeechRecognition) {
+      resetTranscript();
+      transcriptRef.current = "";
+    }
+
     // Don't regenerate prompt - use the one already set
     if (!audioPrompt) {
       const currentLang = getLocalData("lang") || "en";
@@ -430,6 +475,20 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
     // Interact event for button click
     interact("ET", "Test Microphone", "audio-diagnostics");
+
+    // Start browser speech recognition to capture transcript
+    if (browserSupportsSpeechRecognition) {
+      try {
+        const browserLang = getBrowserLanguage(lang);
+        SpeechRecognition.startListening({
+          continuous: true,
+          interimResults: true,
+          language: browserLang,
+        });
+      } catch (srError) {
+        // Speech recognition not available - continue with audio level detection only
+      }
+    }
 
     try {
       // Check for getUserMedia support with fallbacks for all browsers
@@ -513,7 +572,22 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         }
       };
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
+        // Stop speech recognition and get final transcript
+        let finalTranscript = "";
+        if (browserSupportsSpeechRecognition) {
+          try {
+            SpeechRecognition.stopListening();
+            // Wait a bit for final transcript to be processed
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            finalTranscript = transcriptRef.current || transcript || "";
+          } catch (e) {
+            finalTranscript = transcriptRef.current || transcript || "";
+          }
+        }
+
+        const hasTranscript = finalTranscript.trim().length > 0;
+
         // Analyze the recorded audio to check if actual sound was detected
         const hasAudioData = recordedChunksRef.current.length > 0;
         // Determine blob type based on what was recorded
@@ -610,31 +684,21 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         // Otherwise, be lenient with blob size
         const blobSizeCheck = hasReasonableBlobSize || !isLikelyMutedMic;
 
-        // Debug logging to help diagnose issues
-        console.log("Audio Detection Debug:", {
-          hasAudioData,
-          blobSize: blob?.size || 0,
-          hasActualAudio,
-          audioDetectedFlag: audioDetectedRef.current,
-          averageLevel: averageLevel.toFixed(4),
-          maxLevel: maxLevel.toFixed(4),
-          minLevel: minLevel.toFixed(4),
-          audioVariation: audioVariation.toFixed(4),
-          sustainedAudioRatio: sustainedAudioRatio.toFixed(2),
-          samplesAboveThreshold,
-          hasReasonableBlobSize,
-          audioLevelsCount: audioLevelsRef.current.length,
-        });
-
         // Only pass if we have audio data AND actual audio was detected
-        // Very lenient to allow all speech, but catch muted mics
-        if (
+        // If speech recognition is available, REQUIRE transcript (user must have spoken words)
+        // If speech recognition is not available, fall back to audio level detection
+        const transcriptRequired = browserSupportsSpeechRecognition;
+        const transcriptCheck = transcriptRequired ? hasTranscript : true;
+
+        const testPassed =
           hasAudioData &&
           blob &&
           blob.size > 0 &&
           hasActualAudio &&
-          blobSizeCheck
-        ) {
+          blobSizeCheck &&
+          transcriptCheck;
+
+        if (testPassed) {
           // Create audio URL for playback
           const audioUrl = URL.createObjectURL(blob);
           setRecordedAudioUrl(audioUrl);
@@ -684,6 +748,19 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             "ET"
           );
           audioContext.close();
+        } else if (browserSupportsSpeechRecognition && !hasTranscript) {
+          // We have audio data but no transcript - user didn't speak words
+          setMicStatus("failed");
+          setMicError(getTranslations(lang).micErrorMuted);
+          // Log test result - failed (no speech)
+          Log(
+            `Microphone test - FAILED. Duration: ${testDuration}s, Reason: No speech detected in transcript, Transcript: "${finalTranscript}", Blob size: ${
+              blob ? blob.size : 0
+            } bytes`,
+            "audio-diagnostics",
+            "ET"
+          );
+          audioContext.close();
         } else {
           // We have blob data but no actual audio was detected (muted or silent)
           setMicStatus("failed");
@@ -718,9 +795,14 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       setIsRecording(true);
 
       let progress = 0;
+      let timeRemaining = 5;
+      setRecordingTimeRemaining(5);
+
       recordingTimerRef.current = setInterval(() => {
-        progress += 33.33;
+        progress += 20; // 20% per second for 5 seconds
         setRecordingProgress(Math.min(progress, 100));
+        timeRemaining = Math.max(0, 5 - Math.ceil(progress / 20));
+        setRecordingTimeRemaining(timeRemaining);
       }, 1000);
 
       setTimeout(() => {
@@ -730,7 +812,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         if (recordingTimerRef.current) {
           clearInterval(recordingTimerRef.current);
         }
-      }, 3000);
+        setRecordingTimeRemaining(0);
+      }, 5000);
     } catch (error) {
       setMicStatus("failed");
       setMicError(getTranslations(lang).micErrorPermission);
@@ -1185,6 +1268,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     setMicError("");
     setSpeakerError("");
     setRecordingProgress(0);
+    setRecordingTimeRemaining(5);
     setAudioLevel(0);
     setIsPlayingBack(false);
     setTestMessage("");
@@ -1604,18 +1688,136 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                       )}
                       {isRecording && (
                         <>
+                          {/* Stopwatch-style countdown timer */}
+                          {(() => {
+                            // Determine color based on remaining time
+                            // Green: 5-3 seconds, Orange: 2 seconds, Red: 1-0 seconds
+                            let circleColor = "#6DAF19"; // Green
+                            let textColor = "#6DAF19"; // Green
+
+                            if (recordingTimeRemaining <= 1) {
+                              circleColor = "#f44336"; // Red
+                              textColor = "#f44336"; // Red
+                            } else if (recordingTimeRemaining <= 2) {
+                              circleColor = "#ff9800"; // Orange
+                              textColor = "#ff9800"; // Orange
+                            }
+
+                            return (
+                              <Box
+                                sx={{
+                                  position: "relative",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  width: {
+                                    xs: "120px",
+                                    sm: "140px",
+                                    md: "160px",
+                                  },
+                                  height: {
+                                    xs: "120px",
+                                    sm: "140px",
+                                    md: "160px",
+                                  },
+                                  mb: 2,
+                                }}
+                              >
+                                {/* Circular progress background */}
+                                <CircularProgress
+                                  variant="determinate"
+                                  value={100}
+                                  size="100%"
+                                  thickness={4}
+                                  sx={{
+                                    position: "absolute",
+                                    color: "rgba(0, 0, 0, 0.1)",
+                                    "& .MuiCircularProgress-circle": {
+                                      strokeLinecap: "round",
+                                    },
+                                  }}
+                                />
+                                {/* Circular progress foreground with dynamic color */}
+                                <CircularProgress
+                                  variant="determinate"
+                                  value={recordingProgress}
+                                  size="100%"
+                                  thickness={4}
+                                  sx={{
+                                    position: "absolute",
+                                    color: circleColor,
+                                    transform: "rotate(-90deg)",
+                                    transition: "color 0.3s ease",
+                                    "& .MuiCircularProgress-circle": {
+                                      strokeLinecap: "round",
+                                    },
+                                  }}
+                                />
+                                {/* Timer number */}
+                                <Box
+                                  sx={{
+                                    position: "absolute",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  <Typography
+                                    sx={{
+                                      fontFamily: "Quicksand",
+                                      fontSize: {
+                                        xs: "36px",
+                                        sm: "42px",
+                                        md: "48px",
+                                      },
+                                      fontWeight: 700,
+                                      color: textColor,
+                                      lineHeight: 1,
+                                      transition: "color 0.3s ease",
+                                    }}
+                                  >
+                                    {recordingTimeRemaining > 0
+                                      ? recordingTimeRemaining
+                                      : "0"}
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      fontFamily: "Quicksand",
+                                      fontSize: {
+                                        xs: "12px",
+                                        sm: "14px",
+                                        md: "16px",
+                                      },
+                                      fontWeight: 600,
+                                      color: textColor,
+                                      opacity: 0.8,
+                                      mt: 0.5,
+                                      transition: "color 0.3s ease",
+                                    }}
+                                  >
+                                    {recordingTimeRemaining > 0
+                                      ? "seconds"
+                                      : "stopping"}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            );
+                          })()}
                           <LinearProgress
                             variant="determinate"
                             value={recordingProgress}
                             sx={{
-                              height: 10,
-                              borderRadius: 5,
+                              height: 8,
+                              borderRadius: 4,
                               backgroundColor: "rgba(109, 175, 25, 0.1)",
-                              mt: 2,
+                              mt: 1,
+                              mb: 1,
+                              width: "100%",
                               "& .MuiLinearProgress-bar": {
                                 background:
                                   "linear-gradient(90deg, #6DAF19, #4caf50)",
-                                borderRadius: 5,
+                                borderRadius: 4,
                               },
                             }}
                           />
