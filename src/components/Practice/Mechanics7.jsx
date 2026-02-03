@@ -287,9 +287,7 @@ const Mechanics7 = ({
       };
 
       mediaRecorder.onstop = async () => {
-        console.log("⛔ Recording stopped.");
         if (chunksRef.current.length === 0) {
-          console.warn("❗ No data to create blob.");
           return;
         }
 
@@ -342,8 +340,6 @@ const Mechanics7 = ({
     ) {
       //console.log("🛑 Stopping recording...");
       mediaRecorderRef.current.stop();
-    } else {
-      console.warn("❗ Recorder already inactive or null.");
     }
   };
 
@@ -457,7 +453,7 @@ const Mechanics7 = ({
         setIsMicOn(false);
         console.error("Speech recognition error:", event.error);
         if (event.error === "no-speech") {
-          console.log("No Speech!");
+          // No speech detected
         } else if (event.error === "aborted") {
           recognitionInstance.start();
         }
@@ -575,8 +571,6 @@ const Mechanics7 = ({
 
     if (matchedSyllable) {
       playAudio(matchedSyllable.audio);
-    } else {
-      console.warn(`No audio found for the syllable: ${elem}`);
     }
   };
 
@@ -935,7 +929,6 @@ const Mechanics7 = ({
             },
           }}
           callback={(data) => {
-            console.log('Joyride callback:', data);
             if (data.status === 'finished' || data.status === 'skipped') {
               setRun(false);
             }

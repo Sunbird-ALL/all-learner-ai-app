@@ -504,12 +504,9 @@ const FluencyP5 = ({
   };
 
   const playWordAudio = (audio) => {
-    console.log("playWordAudio called with:", audio, audioRefs.current);
-
     if (!audio || !audioRefs.current) return;
 
     if (!audioRefs.current.paused) {
-      console.log("Already playing, skipping...");
       return;
     }
 
@@ -519,7 +516,6 @@ const FluencyP5 = ({
       .play()
       .then(() => {
         setIsPlaying(true);
-        console.log("Playing word audio once:", audio);
       })
       .catch((error) => {
         console.error("Error playing audio:", error);

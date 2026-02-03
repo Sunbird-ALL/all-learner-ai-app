@@ -123,11 +123,6 @@ const BingoPage = React.memo(
       return transformed?.arrM?.[currentWordIndex];
     }, [transformed, currentWordIndex]);
 
-    console.log(
-      "currentWord",
-      transformed?.imageAudioMap?.[currentWord]?.audio
-    );
-
     const updateStoredData = useCallback((audio, isCorrect) => {}, []);
 
     const handleRecordingComplete = useCallback((base64Data) => {
@@ -172,8 +167,6 @@ const BingoPage = React.memo(
         setLocalIsRecordingComplete(false);
         setLocalRecAudio(null);
         setLocalShowConfetti(false);
-      } else {
-        console.log("All words completed!");
       }
     }, [currentWordIndex, transformed]);
 
@@ -341,8 +334,6 @@ const BingoPage = React.memo(
 );
 
 const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
-  console.log("SuccessPage rendering");
-
   return (
     <div
       style={{
@@ -738,7 +729,6 @@ const BingoCard = ({
 
         mediaRecorder.onstop = async () => {
           if (recordedChunksRef.current.length === 0) {
-            console.warn("No audio data captured.");
             setRecordedBlob(null);
             return;
           }

@@ -269,7 +269,6 @@ const WordsOrImage = ({
 
       mediaRecorder.onstop = () => {
         if (recordedChunksRef.current.length === 0) {
-          console.warn("No audio data captured.");
           setRecordedBlob(null);
           return;
         }
@@ -381,7 +380,6 @@ const WordsOrImage = ({
 
         // Check if transcript is empty - if user didn't speak, mark as incorrect
         if (!transcript || transcript.trim().length === 0) {
-          console.warn("Empty transcript - marking as incorrect");
           setAnswer(false);
           const audio = new Audio(wrongSound);
           audio.play();
@@ -395,16 +393,10 @@ const WordsOrImage = ({
         );
 
         if (matchPercentage < 80) {
-          console.log(
-            `Word Match: ${matchPercentage.toFixed(1)}% - ❌ INCORRECT`
-          );
           setAnswer(false);
           const audio = new Audio(wrongSound);
           audio.play();
         } else {
-          console.log(
-            `Word Match: ${matchPercentage.toFixed(1)}% - ✅ CORRECT`
-          );
           setAnswer(true);
           const audio = new Audio(correctSound);
           audio.play();
@@ -416,7 +408,7 @@ const WordsOrImage = ({
         setIsRecording(false);
         console.error("Speech recognition error:", event.error);
         if (event.error === "no-speech") {
-          console.log("No Speech!");
+          // No speech detected
         } else if (event.error === "aborted") {
           recognitionInstance.start();
         }
@@ -458,7 +450,6 @@ const WordsOrImage = ({
 
       // Check if transcript is empty - if user didn't speak, mark as incorrect
       if (!finalTranscript || finalTranscript.trim().length === 0) {
-        console.warn("Empty transcript - marking as incorrect");
         setAnswer(false);
         const audio = new Audio(wrongSound);
         audio.play();
@@ -478,22 +469,15 @@ const WordsOrImage = ({
         navigator.userAgent.toLowerCase().includes("firefox");
 
       if (isFirefox) {
-        console.log("Word Match: Firefox detected - ✅ CORRECT");
         setAnswer(true);
         const audio = new Audio(correctSound);
         audio.play();
       } else {
         if (matchPercentage < 80) {
-          console.log(
-            `Word Match: ${matchPercentage.toFixed(1)}% - ❌ INCORRECT`
-          );
           setAnswer(false);
           const audio = new Audio(wrongSound);
           audio.play();
         } else {
-          console.log(
-            `Word Match: ${matchPercentage.toFixed(1)}% - ✅ CORRECT`
-          );
           setAnswer(true);
           const audio = new Audio(correctSound);
           audio.play();
@@ -644,14 +628,10 @@ const WordsOrImage = ({
     //   return "green";
     // }
 
-    console.log("ccc", answer);
-
     if (answer === true) return "green";
     if (answer === false) return "red";
     return "#333F61";
   };
-
-  console.log("isTranscriptCorrect", isTranscriptCorrect);
 
   //console.log("wds", words, matchedChar, answer);
 

@@ -242,12 +242,6 @@ const MainLayout = (props) => {
     const milestoneNumber = parseInt(milestoneLevel, 10);
     if (!isNaN(milestoneNumber)) {
       LEVEL = milestoneNumber;
-      console.log(
-        "MainLayout - Parsed milestone level as number:",
-        milestoneLevel,
-        "-> LEVEL:",
-        LEVEL
-      );
     }
   }
 
@@ -589,20 +583,6 @@ const MainLayout = (props) => {
     // Be more generous - if we have space, use it!
     // Minimum 5 steps, maximum 25 steps (very wide screens)
     const calculatedSteps = Math.max(5, Math.min(stepsThatFit, 25));
-
-    // Debug log to help troubleshoot
-    console.log("Progress bar width calculation:", {
-      containerWidth,
-      availableWidth,
-      stepWidth,
-      stepMargin,
-      containerPadding,
-      reservedForButtons,
-      stepsThatFit,
-      calculatedSteps,
-      isMobile,
-      isTablet,
-    });
 
     return calculatedSteps;
   }, [containerWidth, isMobile, isTablet]);
