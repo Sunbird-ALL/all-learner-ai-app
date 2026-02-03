@@ -34,6 +34,7 @@ import { getAssetUrl } from "../utils/rFlowS3Links";
 import { getAssetAudioUrl } from "../utils/rFlowS3Links";
 import { ArrowLeft } from "lucide-react"; // or your icon library
 import hintimg from "../assets/hintsicon.svg";
+import ZoomableImage from "../components/Practice/ZoomableImage";
 
 const theme = createTheme();
 
@@ -6867,13 +6868,12 @@ const LetterTrain = ({
                   p: 0.2,
                 }}
               >
-                <Box
-                  component="img"
+                <ZoomableImage
                   src={item.image}
                   alt={item.word}
-                  sx={{
-                    width: { xs: 60, md: 85 },
-                    height: { xs: 60, md: 85 },
+                  imageStyle={{
+                    width: isMobile ? "60px" : "85px",
+                    height: isMobile ? "60px" : "85px",
                     objectFit: "contain",
                   }}
                 />

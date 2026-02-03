@@ -12,7 +12,6 @@ import pandaTimerImg from "../../assets/pandaTimer1.svg";
 import timerBoxImg from "../../assets/timerBox.svg";
 import initialMessageBoxImg from "../../assets/initialMessageBox.svg";
 import { doubleMetaphone } from "double-metaphone";
-import { pipeline, env } from "@xenova/transformers";
 import { Box, useMediaQuery, createTheme } from "@mui/material";
 import reportBoyImg from "../../assets/monkeyReport.svg";
 import reportStarsandcloudsImg from "../../assets/starsandclouds.png";
@@ -31,8 +30,6 @@ import { addTowreRecord } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
 import S3Client from "../../config/awsS3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-
-env.localModelPath = "https://huggingface.co/Xenova/whisper-tiny/resolve/main/";
 
 const allEnglishWords = [
   { title: "is", isCorrect: false },
@@ -1091,6 +1088,18 @@ const TowreFlow = ({
   } = useSpeechRecognition();
   const lang = getLocalData("lang");
 
+  // Map language codes to browser Speech Recognition format
+  const getBrowserLanguage = (langCode) => {
+    const browserLangMap = {
+      en: "en-US",
+      hi: "hi-IN",
+      te: "te-IN",
+      ka: "kn-IN", // Kannada
+      ta: "ta-IN",
+    };
+    return browserLangMap[langCode] || "en-US";
+  };
+
   const wordsByLang = {
     en: allEnglishWords,
     hi: allHindiWords,
@@ -1111,7 +1120,6 @@ const TowreFlow = ({
 
   useEffect(() => {
     transcriptRef.current = transcript;
-    //console.log("Live Transcript:", transcript);
   }, [transcript]);
 
   useEffect(() => {
@@ -1203,7 +1211,7 @@ const TowreFlow = ({
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
-      language: "en-US",
+      language: getBrowserLanguage(lang),
     });
     let counter = 3;
     setCount(counter);
@@ -1275,9 +1283,7 @@ const TowreFlow = ({
       };
 
       mediaRecorder.onstop = async () => {
-        //console.log("Recording stopped.");
         if (chunksRef.current.length === 0) {
-          console.warn("No data to create blob.");
           return;
         }
 
@@ -1287,92 +1293,153 @@ const TowreFlow = ({
 
         streamRef.current?.getTracks().forEach((track) => track.stop());
 
-        try {
-          setLoading(true);
-          const transcriber = await pipeline(
-            "automatic-speech-recognition",
-            "Xenova/whisper-tiny",
-            { quantized: true }
+        // Validate audio blob before processing
+        if (!audioBlob || audioBlob.size === 0) {
+          setTranscripts(transcriptRef.current || "");
+          const transcriptWords = normalize(transcriptRef.current || "").filter(
+            (w) => w && w.trim().length > 0
+          );
+          const transcriptPhonetics = new Set(
+            transcriptWords.map(getPhonetic).filter((ph) => ph && ph.length > 0)
           );
 
-          const audioUrl = URL.createObjectURL(audioBlob);
-
-          const output = await transcriber(audioUrl, {
-            chunk_length_s: 20,
-            stride_length_s: 5,
-          });
-
-          //console.log("Transcription result:", output.text);
-
-          const transcripts = output.text;
-          setTranscripts(transcripts);
-          const transcriptWords = normalize(transcripts);
-          const transcriptPhonetics = new Set(transcriptWords.map(getPhonetic));
-
           allWords.forEach((word) => {
-            const lower = word?.title?.toLowerCase();
+            const lower = word?.title?.toLowerCase()?.trim();
+
+            if (!lower || lower.length === 0) {
+              word.isCorrect = false;
+              return;
+            }
+
+            const wordPhonetic = getPhonetic(lower);
+            const hasValidPhonetic = wordPhonetic && wordPhonetic.length > 0;
+
             const isSpoken =
               transcriptWords.includes(lower) ||
-              transcriptPhonetics.has(getPhonetic(lower));
+              (hasValidPhonetic && transcriptPhonetics.has(wordPhonetic));
 
             word.isCorrect = isSpoken;
           });
 
-          const base64Audio = await blobToBase64(audioBlob);
-
-          const sessionId = getLocalData("sessionId");
-          var audioFileName = "";
-          let getContentId = "towre";
-          audioFileName = `${
-            process.env.REACT_APP_CHANNEL
-          }/${sessionId}-${Date.now()}-${getContentId}.wav`;
-
-          const command = new PutObjectCommand({
-            Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-            Key: audioFileName,
-            Body: Uint8Array.from(window.atob(base64Audio), (c) =>
-              c.charCodeAt(0)
-            ),
-            ContentType: "audio/wav",
-          });
-          try {
-            await S3Client.send(command);
-            //console.log("Upload success");
-          } catch (err) {
-            console.error("Upload failed:", err);
-          }
-
-          await addTowreRecord(audioFileName, allWords);
-
           setLoading(false);
           setCompleted(true);
-        } catch (error) {
-          console.error("Error during transcription:", error);
-          //console.log("transcriptok", transcriptRef.current);
-          setTranscripts(transcriptRef.current);
-          const transcriptWords = normalize(transcriptRef.current);
-          const transcriptPhonetics = new Set(transcriptWords.map(getPhonetic));
-
-          allWords.forEach((word) => {
-            const lower = word?.title?.toLowerCase();
-            const isSpoken =
-              transcriptWords.includes(lower) ||
-              transcriptPhonetics.has(getPhonetic(lower));
-
-            word.isCorrect = isSpoken;
-          });
-
-          try {
-            await addTowreRecord(audioFileName, allWords);
-          } catch (apiErr) {
-            console.error("Error sending TOWRE record:", apiErr);
-            setLoading(false);
-            setCompleted(true);
-          }
-
-          setLoading(false);
-          setCompleted(true);
+          return;
         }
+
+        // Check minimum audio size (at least 1KB to ensure valid audio)
+        const MIN_AUDIO_SIZE = 1024; // 1KB minimum
+        if (audioBlob.size < MIN_AUDIO_SIZE) {
+          console.warn(
+            `Audio blob too small (${audioBlob.size} bytes), using fallback transcription`
+          );
+          setTranscripts(transcriptRef.current || "");
+          const transcriptWords = normalize(transcriptRef.current || "").filter(
+            (w) => w && w.trim().length > 0
+          );
+          const transcriptPhonetics = new Set(
+            transcriptWords.map(getPhonetic).filter((ph) => ph && ph.length > 0)
+          );
+
+          allWords.forEach((word) => {
+            const lower = word?.title?.toLowerCase()?.trim();
+
+            if (!lower || lower.length === 0) {
+              word.isCorrect = false;
+              return;
+            }
+
+            const wordPhonetic = getPhonetic(lower);
+            const hasValidPhonetic = wordPhonetic && wordPhonetic.length > 0;
+
+            const isSpoken =
+              transcriptWords.includes(lower) ||
+              (hasValidPhonetic && transcriptPhonetics.has(wordPhonetic));
+
+            word.isCorrect = isSpoken;
+          });
+
+          setLoading(false);
+          setCompleted(true);
+          return;
+        }
+
+        // Use browser speech recognition as primary method (it's already working!)
+        // Browser SR captures transcript in real-time during recording via transcriptRef.current
+        setLoading(true);
+
+        // Get transcript from browser speech recognition (already captured during recording)
+        const transcripts = transcriptRef.current || "";
+        setTranscripts(transcripts);
+        const transcriptWords = normalize(transcripts).filter(
+          (w) => w && w.trim().length > 0
+        ); // Filter out empty strings
+        const transcriptPhonetics = new Set(
+          transcriptWords.map(getPhonetic).filter((ph) => ph && ph.length > 0) // Filter out empty phonetic codes
+        );
+
+        allWords.forEach((word) => {
+          const lower = word?.title?.toLowerCase()?.trim();
+
+          // Skip empty or invalid words
+          if (!lower || lower.length === 0) {
+            word.isCorrect = false;
+            return;
+          }
+
+          // Get phonetic code for the word (only if valid)
+          const wordPhonetic = getPhonetic(lower);
+          const hasValidPhonetic = wordPhonetic && wordPhonetic.length > 0;
+
+          // Match only if:
+          // 1. Exact match in transcript words, OR
+          // 2. Phonetic match (only if both have valid phonetic codes)
+          const isSpoken =
+            transcriptWords.includes(lower) ||
+            (hasValidPhonetic && transcriptPhonetics.has(wordPhonetic));
+
+          word.isCorrect = isSpoken;
+        });
+
+        // Try to upload audio and save record (non-blocking - continue even if it fails)
+        if (audioBlob && audioBlob.size > 0) {
+          try {
+            const base64Audio = await blobToBase64(audioBlob);
+
+            const sessionId = getLocalData("sessionId");
+            var audioFileName = "";
+            let getContentId = "towre";
+            audioFileName = `${
+              process.env.REACT_APP_CHANNEL
+            }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+
+            const command = new PutObjectCommand({
+              Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
+              Key: audioFileName,
+              Body: Uint8Array.from(window.atob(base64Audio), (c) =>
+                c.charCodeAt(0)
+              ),
+              ContentType: "audio/wav",
+            });
+
+            try {
+              await S3Client.send(command);
+            } catch (uploadErr) {
+              // S3 upload failed (non-critical) - continue
+            }
+
+            try {
+              await addTowreRecord(audioFileName, allWords, lang);
+            } catch (apiErr) {
+              // Error saving TOWRE record (non-critical) - continue
+            }
+          } catch (processErr) {
+            // Error processing audio for upload (non-critical) - continue
+            // Continue even if audio processing fails
+          }
+        }
+
+        setLoading(false);
+        setCompleted(true);
       };
 
       mediaRecorder.start();
@@ -1389,8 +1456,6 @@ const TowreFlow = ({
       mediaRecorderRef.current.state !== "inactive"
     ) {
       mediaRecorderRef.current.stop();
-    } else {
-      console.warn("Recorder already inactive or null.");
     }
   };
 

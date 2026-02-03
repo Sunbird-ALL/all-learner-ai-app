@@ -45,7 +45,6 @@ import {
 } from "../../utils/apiUtil";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import AudioTooltipModal from "./AudioTooltipModal";
-import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import loadingJson from "../../assets/loadingJson.json";
 import Lottie from "lottie-react";
@@ -124,11 +123,6 @@ const BingoPage = React.memo(
       return transformed?.arrM?.[currentWordIndex];
     }, [transformed, currentWordIndex]);
 
-    console.log(
-      "currentWord",
-      transformed?.imageAudioMap?.[currentWord]?.audio
-    );
-
     const updateStoredData = useCallback((audio, isCorrect) => {}, []);
 
     const handleRecordingComplete = useCallback((base64Data) => {
@@ -173,8 +167,6 @@ const BingoPage = React.memo(
         setLocalIsRecordingComplete(false);
         setLocalRecAudio(null);
         setLocalShowConfetti(false);
-      } else {
-        console.log("All words completed!");
       }
     }, [currentWordIndex, transformed]);
 
@@ -342,8 +334,6 @@ const BingoPage = React.memo(
 );
 
 const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
-  console.log("SuccessPage rendering");
-
   return (
     <div
       style={{
@@ -739,7 +729,6 @@ const BingoCard = ({
 
         mediaRecorder.onstop = async () => {
           if (recordedChunksRef.current.length === 0) {
-            console.warn("No audio data captured.");
             setRecordedBlob(null);
             return;
           }
@@ -750,16 +739,9 @@ const BingoCard = ({
 
           try {
             setIsLoading(true);
-            const transcriber = await loadTranscriber();
-            const audioUrl = URL.createObjectURL(blob);
-            const output = await transcriber(audioUrl, {
-              chunk_length_s: 20,
-              stride_length_s: 5,
-              task: "transcribe",
-              language: "en",
-            });
 
-            const transcripts = sanitize(output.text);
+            // Use browser speech recognition transcript (already captured during recording)
+            const transcripts = sanitize(transcriptRef.current || "");
             const isCorrect =
               transcripts.includes(word) || phoneticMatch(transcripts, word);
 

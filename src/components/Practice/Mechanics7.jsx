@@ -45,7 +45,7 @@ import {
   callTelemetryApi,
 } from "../../utils/apiUtil";
 import AudioTooltipModal from "./AudioTooltipModal";
-import { loadTranscriber } from "../../utils/transcriber";
+import ZoomableImage from "./ZoomableImage";
 import { doubleMetaphone } from "double-metaphone";
 import loadingJson from "../../assets/loadingJson.json";
 import Lottie from "lottie-react";
@@ -97,6 +97,7 @@ const Mechanics7 = ({
   vocabCount,
   wordCount,
   multilingual,
+  enableMultilingual = true,
 }) => {
   const [words, setWords] = useState(
     type === "word" ? [] : ["Friend", "She is", "My"]
@@ -286,9 +287,7 @@ const Mechanics7 = ({
       };
 
       mediaRecorder.onstop = async () => {
-        console.log("⛔ Recording stopped.");
         if (chunksRef.current.length === 0) {
-          console.warn("❗ No data to create blob.");
           return;
         }
 
@@ -302,17 +301,9 @@ const Mechanics7 = ({
         if (isLastSyllable) {
           try {
             setIsLoading(true);
-            const transcriber = await loadTranscriber();
-            //console.log("Transcriber is:", transcriber);
-            const audioUrl = URL.createObjectURL(audioBlob);
-            const output = await transcriber(audioUrl, {
-              chunk_length_s: 20,
-              stride_length_s: 5,
-              task: "transcribe",
-              language: "en",
-            });
 
-            const transcripts = sanitize(output.text);
+            // Use browser speech recognition transcript (already captured during recording)
+            const transcripts = sanitize(transcriptRef.current || "");
             const target = sanitize(currentText);
             const isCorrect =
               transcripts.includes(target) ||
@@ -349,8 +340,6 @@ const Mechanics7 = ({
     ) {
       //console.log("🛑 Stopping recording...");
       mediaRecorderRef.current.stop();
-    } else {
-      console.warn("❗ Recorder already inactive or null.");
     }
   };
 
@@ -464,7 +453,7 @@ const Mechanics7 = ({
         setIsMicOn(false);
         console.error("Speech recognition error:", event.error);
         if (event.error === "no-speech") {
-          console.log("No Speech!");
+          // No speech detected
         } else if (event.error === "aborted") {
           recognitionInstance.start();
         }
@@ -582,8 +571,6 @@ const Mechanics7 = ({
 
     if (matchedSyllable) {
       playAudio(matchedSyllable.audio);
-    } else {
-      console.warn(`No audio found for the syllable: ${elem}`);
     }
   };
 
@@ -942,7 +929,6 @@ const Mechanics7 = ({
             },
           }}
           callback={(data) => {
-            console.log('Joyride callback:', data);
             if (data.status === 'finished' || data.status === 'skipped') {
               setRun(false);
             }
@@ -974,12 +960,12 @@ const Mechanics7 = ({
               {match && <span style={{ color: "#333F61" }}>{match}</span>}
               {after && <span style={{ color: "grey" }}>{after}</span>}
             </span>
-            <img
+            <ZoomableImage
               src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${parentWords?.image_url}`}
               alt="pencil"
-              height={"150px"}
-              width={"150px"}
-              style={{
+              imageStyle={{
+                height: "150px",
+                width: "150px",
                 zIndex: 2,
               }}
             />
@@ -1086,7 +1072,7 @@ const Mechanics7 = ({
                     {currentText}
                   </span>
                 )}
-                {showMultiLingual && (
+                {showMultiLingual && enableMultilingual && (
                   <AudioTooltipModal
                     audioSrc={multilingual?.kn?.audio_url}
                     description={currentText}
@@ -1136,7 +1122,7 @@ const Mechanics7 = ({
                   </AudioTooltipModal>
                 )}
               </Box>
-              {isRecorded && !showMultiLingual && (
+              {isRecorded && (!showMultiLingual || !enableMultilingual) && (
                 <img
                   src={Assets.graph}
                   alt="graph"
@@ -1145,7 +1131,7 @@ const Mechanics7 = ({
               )}
             </Box>
 
-            {showMultiLingual && (
+            {showMultiLingual && enableMultilingual && (
               <img
                 src={Assets.graph}
                 alt="graph"
@@ -1153,7 +1139,7 @@ const Mechanics7 = ({
               />
             )}
 
-            {showMultiLingual && (
+            {showMultiLingual && enableMultilingual && (
               <Box
                 sx={{
                   display: "flex",
@@ -1212,115 +1198,117 @@ const Mechanics7 = ({
               </Box>
             )}
 
-            {!isRecording && !isRecorded && !showMultiLingual && (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  maskBorderWidth: 6,
-                  gap: 5,
-                  height: "250px",
-                }}
-              >
-                {isPlaying ? (
-                  <div>
-                    <Box
-                      sx={{
-                        marginTop: "5px",
-                        position: "relative",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                        cursor: "pointer",
-                        marginLeft: getMarginLeft(0),
-                      }}
-                      onClick={stopCompleteAudio}
-                    >
-                      <StopButton height={50} width={50} />
-                    </Box>
-                  </div>
-                ) : (
-                  <div>
-                    <Box
-                      className="walkthrough-step-1"
-                      sx={{
-                        marginTop: "5px",
-                        position: "relative",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                        cursor: `url(${clapImage}) 32 24, auto`,
-                        marginLeft: getMarginLeft(0),
-                      }}
-                      onClick={() => {
-                        playWordAudio(
-                          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentAudio}`
-                        );
-                      }}
-                    >
-                      <ListenButton height={50} width={50} />
-                    </Box>
-                  </div>
-                )}
+            {!isRecording &&
+              !isRecorded &&
+              (!showMultiLingual || !enableMultilingual) && (
                 <Box
-                  className="walkthrough-step-2"
                   sx={{
-                    position: "relative",
-                    width: "90px",
-                    height: "90px",
                     display: "flex",
+                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    marginTop: "7px",
-                    //marginLeft: getMarginLeft(0),
-                    cursor: `url(${clapImage}) 32 24, auto`,
-                  }}
-                  onClick={() => {
-                    setIsRecording(true);
-                    startRecording(currentText);
-                    //startAudioRecording();
+                    maskBorderWidth: 6,
+                    gap: 5,
+                    height: "250px",
                   }}
                 >
+                  {isPlaying ? (
+                    <div>
+                      <Box
+                        sx={{
+                          marginTop: "5px",
+                          position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                          cursor: "pointer",
+                          marginLeft: getMarginLeft(0),
+                        }}
+                        onClick={stopCompleteAudio}
+                      >
+                        <StopButton height={50} width={50} />
+                      </Box>
+                    </div>
+                  ) : (
+                    <div>
+                      <Box
+                        className="walkthrough-step-1"
+                        sx={{
+                          marginTop: "5px",
+                          position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                          cursor: `url(${clapImage}) 32 24, auto`,
+                          marginLeft: getMarginLeft(0),
+                        }}
+                        onClick={() => {
+                          playWordAudio(
+                            `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentAudio}`
+                          );
+                        }}
+                      >
+                        <ListenButton height={50} width={50} />
+                      </Box>
+                    </div>
+                  )}
                   <Box
-                    sx={{
-                      position: "absolute",
-                      width: "90px",
-                      height: "90px",
-                      backgroundColor: "#58CC0233",
-                      borderRadius: "50%",
-                      animation: "pulse 1.2s linear infinite",
-                      "@keyframes pulse": {
-                        "0%": {
-                          transform: "scale(0.6)",
-                          opacity: 0,
-                        },
-                        "50%": {
-                          opacity: 1,
-                        },
-                        "100%": {
-                          transform: "scale(1.4)",
-                          opacity: 0,
-                        },
-                      },
-                    }}
-                  />
-                  <Box
+                    className="walkthrough-step-2"
                     sx={{
                       position: "relative",
-                      zIndex: 1,
+                      width: "90px",
+                      height: "90px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: "7px",
+                      //marginLeft: getMarginLeft(0),
+                      cursor: `url(${clapImage}) 32 24, auto`,
+                    }}
+                    onClick={() => {
+                      setIsRecording(true);
+                      startRecording(currentText);
+                      //startAudioRecording();
                     }}
                   >
-                    <SpeakButton height={50} width={50} />
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        width: "90px",
+                        height: "90px",
+                        backgroundColor: "#58CC0233",
+                        borderRadius: "50%",
+                        animation: "pulse 1.2s linear infinite",
+                        "@keyframes pulse": {
+                          "0%": {
+                            transform: "scale(0.6)",
+                            opacity: 0,
+                          },
+                          "50%": {
+                            opacity: 1,
+                          },
+                          "100%": {
+                            transform: "scale(1.4)",
+                            opacity: 0,
+                          },
+                        },
+                      }}
+                    />
+                    <Box
+                      sx={{
+                        position: "relative",
+                        zIndex: 1,
+                      }}
+                    >
+                      <SpeakButton height={50} width={50} />
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            )}
+              )}
 
-            {isRecording && !showMultiLingual && (
+            {isRecording && (!showMultiLingual || !enableMultilingual) && (
               <Box
                 sx={{
                   display: "flex",
@@ -1424,7 +1412,7 @@ const Mechanics7 = ({
             )}
 
             {isRecorded &&
-              !showMultiLingual &&
+              (!showMultiLingual || !enableMultilingual) &&
               (isLoading ? (
                 <div
                   style={{
@@ -1548,8 +1536,29 @@ const Mechanics7 = ({
                     className="walkthrough-step-5"
                     mb={2}
                     onClick={() => {
-                      if (isLastSyllable) {
+                      if (isLastSyllable && enableMultilingual) {
                         setShowMultiLingual(true);
+                      } else if (isLastSyllable && !enableMultilingual) {
+                        // If multilingual is disabled, proceed to next content
+                        const newWordData = {
+                          original_text: currentText,
+                          content_id: contentId,
+                          milestone_level: "m1",
+                          practice_level: currentLevel,
+                          session_id: sessionId,
+                          practiced: true,
+                          learned: isWordCorrect ? true : false,
+                          subsession_id: "session_123",
+                        };
+
+                        callTelemetry();
+                        setLocalData("correctPracticeWords", [
+                          ...(correctPracticeWords || []),
+                          newWordData,
+                        ]);
+                        handleNext();
+                        setStepIndex(0);
+                        setIsRecorded(false);
                       } else {
                         setStepIndex((prev) => prev + 1);
                         setIsRecorded(false);

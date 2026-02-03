@@ -182,13 +182,6 @@ const PhrasesInAction = ({
   );
 
   // Note: currentSteps is declared later, so we can't use it here yet
-  console.log("PhrasesInAction - Data check (before currentSteps init):", {
-    parentWords,
-    currentImg,
-    levelDataRaw,
-    hasOptions: parentWords?.options?.length > 0,
-    optionsCount: parentWords?.options?.length,
-  });
 
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
@@ -253,7 +246,6 @@ const PhrasesInAction = ({
 
       mediaRecorder.onstop = () => {
         if (recordedChunksRef.current.length === 0) {
-          console.warn("No audio data captured.");
           setRecordedBlob(null);
           return;
         }
@@ -327,12 +319,6 @@ const PhrasesInAction = ({
     if (String(milestoneLevel) === "3") {
       // For M3, use step1 for most steps, step2 only for P2 and L4
       const isStep2 = stepLevel === "L2" || stepLevel === "L4";
-      console.log("M3 getInitialStep:", {
-        stepLevel,
-        milestoneLevel,
-        isStep2,
-        result: isStep2 ? "step2" : "step1",
-      });
       return isStep2 ? "step2" : "step1";
     }
     // For other levels, use original logic
@@ -343,14 +329,7 @@ const PhrasesInAction = ({
     getInitialStep(currentLevel, level)
   );
 
-  // Note: levelData is computed later, so we can't log it here
-  console.log("PhrasesInAction - Initial:", {
-    currentSteps,
-    currentLevel,
-    level,
-    currentPracticeStep,
-    currentWordIndex,
-  });
+  // Note: levelData is computed later
 
   const levelContent = {
     length: 10,
@@ -5637,31 +5616,13 @@ const PhrasesInAction = ({
     (currentSteps === "step1" && !levelData?.allwords) ||
     (currentSteps === "step2" && !levelData?.allwordsTwo)
   ) {
-    console.log("PhrasesInAction - Using fallback hardcoded content for:", {
-      currentLevel,
-      currentSteps,
-      currentWordIndex,
-      API_data: levelDataRaw,
-      content_exists: !!content?.[currentLevel],
-      content_length: content?.[currentLevel]?.length,
-      available_keys: Object.keys(content || {}),
-      language,
-    });
     const hardcodedContent = content?.[currentLevel]?.[currentWordIndex];
-
     if (hardcodedContent) {
       if (currentSteps === "step1") {
         levelData = hardcodedContent.step1;
       } else {
         levelData = hardcodedContent.step2;
       }
-      console.log("PhrasesInAction - Fallback levelData set:", {
-        hasLevelData: !!levelData,
-        hasAllwords: !!levelData?.allwords,
-        hasAllwordsTwo: !!levelData?.allwordsTwo,
-        allwordsLength: levelData?.allwords?.length,
-        allwordsTwoLength: levelData?.allwordsTwo?.length,
-      });
     } else {
       console.error("PhrasesInAction - No hardcoded content found for:", {
         currentLevel,
@@ -5673,17 +5634,6 @@ const PhrasesInAction = ({
       });
     }
   }
-
-  console.log("PhrasesInAction - Final levelData:", {
-    hasLevelData: !!levelData,
-    hasAllwords: !!levelData?.allwords,
-    hasAllwordsTwo: !!levelData?.allwordsTwo,
-    allwordsLength: levelData?.allwords?.length,
-    allwordsTwoLength: levelData?.allwordsTwo?.length,
-    currentSteps,
-    currentLevel,
-    currentWordIndex,
-  });
 
   let audioElement = new Audio(levelData?.audio);
 
@@ -5829,17 +5779,6 @@ const PhrasesInAction = ({
       const currentPracticeStep = practiceProgress?.currentPracticeStep;
       const stepTitle = practiceSteps?.[currentPracticeStep]?.title;
       const isShowcaseStep = stepTitle === "S1" || stepTitle === "S2";
-
-      console.log("PhrasesInAction - Last item completed", {
-        currentWordIndex,
-        contentLength: content[currentLevel]?.length,
-        level,
-        currentLevel,
-        currentPracticeStep,
-        stepTitle,
-        isShowcaseStep,
-        willCallGameOver: isShowcaseStep,
-      });
 
       // Only pass isGameOver=true for showcase steps (S1/S2)
       // For regular steps (L1, P1, L2, etc.), just call handleNext() to continue to next step

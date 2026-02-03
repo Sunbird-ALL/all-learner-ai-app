@@ -12,12 +12,9 @@ import RecordVoiceVisualizer from "./RecordVoiceVisualizer";
 import playButton from "../../src/assets/listen.png";
 import pauseButton from "../../src/assets/pause.png";
 import PropTypes from "prop-types";
-import { pipeline, env } from "@xenova/transformers";
-import { loadTranscriber } from "./transcriber";
+import SpeechRecognition from "react-speech-recognition";
 import { doubleMetaphone } from "double-metaphone";
 import { transliterateKannadaToLatin, compareWords } from "../utils/textUtils";
-
-env.localModelPath = "https://huggingface.co/Xenova/whisper-tiny/resolve/main/";
 
 const AudioRecorder = (props) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -27,6 +24,19 @@ const AudioRecorder = (props) => {
   const mediaStreamRef = useRef(null);
   const [showLoader, setShowLoader] = useState(false);
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
+  const transcriptRef = useRef("");
+
+  // Map language codes to browser speech recognition format
+  const getBrowserLanguage = (langCode) => {
+    const browserLangMap = {
+      en: "en-US",
+      hi: "hi-IN",
+      te: "te-IN",
+      ka: "kn-IN",
+      ta: "ta-IN",
+    };
+    return browserLangMap[langCode] || "en-US";
+  };
 
   function sanitize(text) {
     return text
@@ -40,6 +50,40 @@ const AudioRecorder = (props) => {
     const [a1, a2] = doubleMetaphone(a);
     const [b1, b2] = doubleMetaphone(b);
     return a1 === b1 || a1 === b2 || a2 === b1 || a2 === b2;
+  }
+
+  // Calculate similarity percentage between two strings
+  function calculateSimilarity(str1, str2) {
+    if (!str1 || !str2) return 0;
+
+    // Exact match
+    if (str1 === str2) return 100;
+
+    // Split into words for sentence comparison
+    const words1 = str1.trim().split(/\s+/);
+    const words2 = str2.trim().split(/\s+/);
+
+    // If single words, use phonetic matching
+    if (words1.length === 1 && words2.length === 1) {
+      const isPhoneticMatch = phoneticMatch(words1[0], words2[0]);
+      return isPhoneticMatch ? 85 : 0; // Give 85% for phonetic match of single words
+    }
+
+    // For sentences, calculate word-by-word similarity
+    let matchedWords = 0;
+    const minLength = Math.min(words1.length, words2.length);
+    const maxLength = Math.max(words1.length, words2.length);
+
+    // Check each word in the shorter sentence
+    for (let i = 0; i < minLength; i++) {
+      if (words1[i] === words2[i] || phoneticMatch(words1[i], words2[i])) {
+        matchedWords++;
+      }
+    }
+
+    // Calculate percentage: matched words / total words in target
+    const similarity = (matchedWords / maxLength) * 100;
+    return similarity;
   }
 
   //console.log("pageName", props.pageName);
@@ -64,6 +108,35 @@ const AudioRecorder = (props) => {
       }
       setStatus("recording");
       mediaStreamRef.current = stream;
+
+      // Reset transcript
+      transcriptRef.current = "";
+
+      // Start browser speech recognition
+      try {
+        SpeechRecognition.startListening({
+          continuous: true,
+          interimResults: true,
+          language: getBrowserLanguage(language),
+        });
+
+        // Listen for results
+        const recognition = SpeechRecognition.getRecognition();
+        if (recognition) {
+          recognition.onresult = (event) => {
+            const transcript = Array.from(event.results)
+              .map((result) => result[0].transcript)
+              .join(" ");
+            transcriptRef.current = transcript;
+          };
+
+          recognition.onerror = (event) => {
+            // Speech recognition error - handled gracefully
+          };
+        }
+      } catch (srError) {
+        // Browser speech recognition not available - handled gracefully
+      }
 
       // Use RecordRTC with specific configurations to match the blob structure
       recorderRef.current = new RecordRTC(stream, {
@@ -96,36 +169,55 @@ const AudioRecorder = (props) => {
           if (blob) {
             setAudioBlob(blob);
             saveBlob(blob);
-            console.log("isShowCase", props.isShowCase);
+
+            // Stop speech recognition
+            try {
+              SpeechRecognition.stopListening();
+            } catch (srError) {
+              // Error stopping speech recognition - non-critical
+            }
 
             if (props.noOffline !== true && !props.isShowCase) {
               try {
-                // setLoading(true);
-                const transcriber = await loadTranscriber();
-                console.log("Transcriber is:", transcriber);
-                const audioUrl = URL.createObjectURL(blob);
-                const output = await transcriber(audioUrl, {
-                  chunk_length_s: 20,
-                  stride_length_s: 5,
-                  task: "transcribe",
-                  language: "en",
-                });
-                const transcripts = sanitize(output.text);
-                const target = sanitize(props.originalText);
+                // Use browser speech recognition transcript (captured during recording)
+                const rawTranscript = transcriptRef.current || "";
+                const transcripts = sanitize(rawTranscript);
+                const rawTarget = props.originalText || "";
+                const target = sanitize(rawTarget);
 
-                console.log("Transcription resultss 1:", transcripts);
-                console.log("Transcription resultss 2:", target);
-
-                const isCorrect =
-                  transcripts.includes(target) ||
-                  phoneticMatch(transcripts, target);
-
-                if (language === "kn") {
-                  const knLatin = transliterateKannadaToLatin(target);
-                  const comparison = compareWords(transcripts, knLatin);
-                  props.setIsCorrect?.(comparison?.isFine);
+                // Only check correctness if transcript is not empty
+                // If user didn't speak, transcript will be empty and should be marked as incorrect
+                if (!transcripts || transcripts.trim().length === 0) {
+                  props.setIsCorrect?.(false);
                 } else {
-                  props.setIsCorrect?.(isCorrect);
+                  // Check for exact match first (most strict)
+                  const exactMatch = transcripts === target;
+
+                  // Calculate similarity percentage
+                  const similarity = calculateSimilarity(transcripts, target);
+
+                  // Check if target is contained in transcript as a complete phrase
+                  // Only allow this if similarity is already high (>= 70%)
+                  const transcriptContainsTarget = transcripts.includes(target);
+                  const targetContainsTranscript = target.includes(transcripts);
+
+                  // Require at least 80% similarity for correctness
+                  // OR exact match
+                  // OR if transcript contains target AND similarity is >= 70% (user said more than expected but correctly)
+                  // OR if target contains transcript AND similarity is >= 70% (user said less but correctly)
+                  const isCorrect =
+                    exactMatch ||
+                    similarity >= 80 ||
+                    (transcriptContainsTarget && similarity >= 70) ||
+                    (targetContainsTranscript && similarity >= 70);
+
+                  if (language === "kn") {
+                    const knLatin = transliterateKannadaToLatin(target);
+                    const comparison = compareWords(transcripts, knLatin);
+                    props.setIsCorrect?.(comparison?.isFine);
+                  } else {
+                    props.setIsCorrect?.(isCorrect);
+                  }
                 }
                 setShowLoader(false);
                 setStatus("inactive");

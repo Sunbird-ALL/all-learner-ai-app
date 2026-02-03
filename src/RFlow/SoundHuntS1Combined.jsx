@@ -1886,6 +1886,468 @@ const soundMatchContent = {
         type: "soundMatch",
       },
     ],
+    3: [
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.అమలపలకImg),
+            text: "అమల పలక",
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.వపకచదImg),
+            text: "వేపాకు చేదు",
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.గననలపలImg),
+            text: "గిన్నెలో పాలు",
+            audio: getAssetAudioUrl(s3Assets.గననలపలAudio),
+          },
+        ],
+        correctWord: "వేపాకు చేదు",
+        audio: getAssetAudioUrl(s3Assets.వపకచదAudio2),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.అమలపలకImg),
+            text: "అమల పలక",
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.బవగరకImg),
+            text: "బావి గిరక",
+            audio: getAssetAudioUrl(s3Assets.బవగరకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.పసరగరలImg),
+            text: "పెసర గారెలు",
+            audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+          },
+        ],
+        correctWord: "బావి గిరక",
+        audio: getAssetAudioUrl(s3Assets.బవగరకAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.బవగరకImg),
+            text: "బావి గిరక",
+            audio: getAssetAudioUrl(s3Assets.బవగరకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.అమలపలకImg),
+            text: "అమల పలక",
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.పసరగరలImg),
+            text: "పెసర గారెలు",
+            audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+          },
+        ],
+        correctWord: "పెసర గారెలు",
+        audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.ఎరరగలబImg),
+            text: "ఎర్ర గులాబి",
+            audio: getAssetAudioUrl(s3Assets.ఎరరగలబAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.అమలపలకImg),
+            text: "అమల పలక",
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.సవరతజడImg),
+            text: "సవరంతో జడ",
+            audio: getAssetAudioUrl(s3Assets.సవరతజడAudio),
+          },
+        ],
+        correctWord: "అమల పలక",
+        audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.కడమదగడImg),
+            text: "కొండమీద గుడి",
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.వపకచదImg),
+            text: "వేపాకు చేదు",
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.సవరతజడImg),
+            text: "సవరంతో జడ",
+            audio: getAssetAudioUrl(s3Assets.సవరతజడAudio),
+          },
+        ],
+        correctWord: "సవరంతో జడ",
+        audio: getAssetAudioUrl(s3Assets.సవరతజడAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.చతలగడగImg),
+            text: "చేతిలో గొడుగు",
+            audio: getAssetAudioUrl(s3Assets.చతలగడగAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.కడమదగడImg),
+            text: "కొండమీద గుడి",
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.తలలనఏనగImg),
+            text: "తెల్లని ఏనుగు",
+            audio: getAssetAudioUrl(s3Assets.తలలనఏనగAudio),
+          },
+        ],
+        correctWord: "చేతిలో గొడుగు",
+        audio: getAssetAudioUrl(s3Assets.చతలగడగAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.గననలపలImg),
+            text: "గిన్నెలో పాలు",
+            audio: getAssetAudioUrl(s3Assets.గననలపలAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.కడమదగడImg),
+            text: "కొండమీద గుడి",
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.పసరగరలImg),
+            text: "పెసర గారెలు",
+            audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+          },
+        ],
+        correctWord: "కొండమీద గుడి",
+        audio: getAssetAudioUrl(s3Assets.కడమదగడAudio2),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.ఎరరగలబImg),
+            text: "ఎర్ర గులాబి",
+            audio: getAssetAudioUrl(s3Assets.ఎరరగలబAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.సవరతజడImg),
+            text: "సవరంతో జడ",
+            audio: getAssetAudioUrl(s3Assets.సవరతజడAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.కడమదగడImg),
+            text: "కొండమీద గుడి",
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+          },
+        ],
+        correctWord: "ఎర్ర గులాబి",
+        audio: getAssetAudioUrl(s3Assets.ఎరరగలబAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.అమలపలకImg),
+            text: "అమల పలక",
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.బవగరకImg),
+            text: "బావి గిరక",
+            audio: getAssetAudioUrl(s3Assets.బవగరకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.గననలపలImg),
+            text: "గిన్నెలో పాలు",
+            audio: getAssetAudioUrl(s3Assets.గననలపలAudio),
+          },
+        ],
+        correctWord: "గిన్నెలో పాలు",
+        audio: getAssetAudioUrl(s3Assets.గననలపలAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.అమలపలకImg),
+            text: "అమల పలక",
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.పసరగరలImg),
+            text: "పెసర గారెలు",
+            audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.తలలనఏనగImg),
+            text: "తెల్లని ఏనుగు",
+            audio: getAssetAudioUrl(s3Assets.తలలనఏనగAudio),
+          },
+        ],
+        correctWord: "తెల్లని ఏనుగు",
+        audio: getAssetAudioUrl(s3Assets.తలలనఏనగAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.సననయపటImg),
+            text: "సన్నాయి పాట",
+            audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.అకకజడImg),
+            text: "అక్క జడ",
+            audio: getAssetAudioUrl(s3Assets.అకకజడAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.వపకచదImg),
+            text: "వేపాకు చేదు",
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+          },
+        ],
+        correctWord: "వేపాకు చేదు",
+        audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.వపకచదImg),
+            text: "వేపాకు చేదు",
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.కడమదగడImg),
+            text: "కొండమీద గుడి",
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.గడమదబలలImg),
+            text: "గోడమీద బల్లి",
+            audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+          },
+        ],
+        correctWord: "కొండమీద గుడి",
+        audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.తలమదటపImg),
+            text: "తలమీద టోపి",
+            audio: getAssetAudioUrl(s3Assets.తలమదటపAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.వపకచదImg),
+            text: "వేపాకు చేదు",
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.బదలనళలImg),
+            text: "బిందెలో నీళ్లు",
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+          },
+        ],
+        correctWord: "తలమీద టోపి",
+        audio: getAssetAudioUrl(s3Assets.తలమదటపAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.అకకజడImg),
+            text: "అక్క జడ",
+            audio: getAssetAudioUrl(s3Assets.అకకజడAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.చటటమలకImg),
+            text: "చిట్టి మొలక",
+            audio: getAssetAudioUrl(s3Assets.చటటమలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.సననయపటImg),
+            text: "సన్నాయి పాట",
+            audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+          },
+        ],
+        correctWord: "సన్నాయి పాట",
+        audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.చలకమకకImg),
+            text: "చిలుక ముక్కు",
+            audio: getAssetAudioUrl(s3Assets.చలకమకకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.సననయపటImg),
+            text: "సన్నాయి పాట",
+            audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.గడమదబలలImg),
+            text: "గోడమీద బల్లి",
+            audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+          },
+        ],
+        correctWord: "గోడమీద బల్లి",
+        audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.పలలపటటImg),
+            text: "పల్లి పట్టి",
+            audio: getAssetAudioUrl(s3Assets.పలలపటటAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.గడమదబలలImg),
+            text: "గోడమీద బల్లి",
+            audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.బదలనళలImg),
+            text: "బిందెలో నీళ్లు",
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+          },
+        ],
+        correctWord: "పల్లి పట్టి",
+        audio: getAssetAudioUrl(s3Assets.పలలపటటAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.చటటమలకImg),
+            text: "చిట్టి మొలక",
+            audio: getAssetAudioUrl(s3Assets.చటటమలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.అకకజడImg),
+            text: "అక్క జడ",
+            audio: getAssetAudioUrl(s3Assets.అకకజడAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.బదలనళలImg),
+            text: "బిందెలో నీళ్లు",
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+          },
+        ],
+        correctWord: "అక్క జడ",
+        audio: getAssetAudioUrl(s3Assets.అకకజడAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.బదలనళలImg),
+            text: "బిందెలో నీళ్లు",
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.చలకమకకImg),
+            text: "చిలుక ముక్కు",
+            audio: getAssetAudioUrl(s3Assets.చలకమకకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.కడమదగడImg),
+            text: "కొండమీద గుడి",
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+          },
+        ],
+        correctWord: "చిలుక ముక్కు",
+        audio: getAssetAudioUrl(s3Assets.చలకమకకAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.బదలనళలImg),
+            text: "బిందెలో నీళ్లు",
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.గడమదబలలImg),
+            text: "గోడమీద బల్లి",
+            audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.పలలపటటImg),
+            text: "పల్లి పట్టి",
+            audio: getAssetAudioUrl(s3Assets.పలలపటటAudio),
+          },
+        ],
+        correctWord: "బిందెలో నీళ్లు",
+        audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.సననయపటImg),
+            text: "సన్నాయి పాట",
+            audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.చటటమలకImg),
+            text: "చిట్టి మొలక",
+            audio: getAssetAudioUrl(s3Assets.చటటమలకAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.పలలపటటImg),
+            text: "పల్లి పట్టి",
+            audio: getAssetAudioUrl(s3Assets.పలలపటటAudio),
+          },
+        ],
+        correctWord: "చిట్టి మొలక",
+        audio: getAssetAudioUrl(s3Assets.చటటమలకAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+    ],
   },
 };
 
@@ -3424,6 +3886,388 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
     ],
+    3: [
+      {
+        word: "వేపాకు చేదు",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.గననలపలAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "బావి గిరక",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.బవగరకAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "పెసర గారెలు",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.బవగరకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "అమల పలక",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.ఎరరగలబAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.సవరతజడAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "సవరంతో జడ",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.సవరతజడAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "చేతిలో గొడుగు",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.చతలగడగAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.తలలనఏనగAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "కొండమీద గుడి",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.గననలపలAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "ఎర్ర గులాబి",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.ఎరరగలబAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.సవరతజడAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "గిన్నెలో పాలు",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.బవగరకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.గననలపలAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "తెల్లని ఏనుగు",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.అమలపలకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.పసరగరలAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.తలలనఏనగAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "వేపాకు చేదు",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.అకకజడAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "కొండమీద గుడి",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "తలమీద టోపి",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.తలమదటపAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.వపకచదAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "సన్నాయి పాట",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.అకకజడAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.చటటమలకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "గోడమీద బల్లి",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.చలకమకకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "పల్లి పట్టి",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.పలలపటటAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "అక్క జడ",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.చటటమలకAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.అకకజడAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "చిలుక ముక్కు",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.చలకమకకAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.కడమదగడAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "బిందెలో నీళ్లు",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.గడమదబలలAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.పలలపటటAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "చిట్టి మొలక",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.సననయపటAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.చటటమలకAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.పలలపటటAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+    ],
   },
 };
 
@@ -3482,8 +4326,8 @@ const SoundHuntS1Combined = ({
   const [isAudioPlayedOnce, setIsAudioPlayedOnce] = useState(false);
   const [playingAudioIndex, setPlayingAudioIndex] = useState(null);
   const [scale, setScale] = useState(1);
-  // Track word selections for ansSelectionStatus
-  const [ansSelectionStatus, setAnsSelectionStatus] = useState({});
+  // Track word selections for ansSelectionStatus - now an array of objects
+  const [ansSelectionStatus, setAnsSelectionStatus] = useState([]);
   // Track if an option has been selected (to show Next button)
   const [hasSelectedOption, setHasSelectedOption] = useState(false);
   // Track game over data for showcase end screen
@@ -3627,20 +4471,16 @@ const SoundHuntS1Combined = ({
     const isCorrect = wordLower === correctWordLower;
 
     // Track selection status for ansSelectionStatus
+    // Track only the selected word (one entry per question)
+    let currentSelection = null;
     if (wordLower) {
+      currentSelection = {
+        text: wordLower,
+        status: isCorrect,
+        gameType: "SoundMatch",
+      };
       setAnsSelectionStatus((prev) => {
-        const updated = {
-          ...prev,
-          [wordLower]: isCorrect,
-        };
-        // Also ensure the correct word is tracked
-        if (correctWordLower && correctWordLower !== wordLower) {
-          // If wrong word selected, mark correct word as not selected (false)
-          if (!isCorrect) {
-            updated[correctWordLower] = false;
-          }
-        }
-        return updated;
+        return [...prev, currentSelection];
       });
     }
 
@@ -3661,7 +4501,8 @@ const SoundHuntS1Combined = ({
 
         try {
           // First update learner profile (this is called inside handleS1Complete)
-          const result = await handleS1Complete();
+          // Pass currentSelection to ensure it's included in the API call
+          const result = await handleS1Complete(currentSelection);
           // handleS1Complete already calls updateLearnerProfileOnCompletion() first
 
           // Check sessionResult from API response
@@ -3843,11 +4684,16 @@ const SoundHuntS1Combined = ({
     }
 
     // Track selection status for ansSelectionStatus
+    let currentSelection = null;
     if (wordLower) {
-      setAnsSelectionStatus((prev) => ({
-        ...prev,
-        [wordLower]: isCorrect,
-      }));
+      currentSelection = {
+        text: wordLower,
+        status: isCorrect,
+        gameType: "PictureWords",
+      };
+      setAnsSelectionStatus((prev) => {
+        return [...prev, currentSelection];
+      });
     }
 
     // Mark that an option has been selected
@@ -3867,7 +4713,8 @@ const SoundHuntS1Combined = ({
 
         try {
           // First update learner profile (this is called inside handleS1Complete)
-          const result = await handleS1Complete();
+          // Pass currentSelection to ensure it's included in the API call
+          const result = await handleS1Complete(currentSelection);
           // handleS1Complete already calls updateLearnerProfileOnCompletion() first
 
           // Check sessionResult from API response
@@ -4141,43 +4988,26 @@ const SoundHuntS1Combined = ({
   };
 
   // Build ansSelectionStatus with all words from S1 questions
-  const buildAnsSelectionStatus = () => {
-    // Use filteredContent which already contains only S1 questions
-    const s1Questions = filteredContent;
-    const status = {};
-
-    // Get all unique words from S1 questions
-    s1Questions.forEach((question) => {
-      if (question.type === "soundMatch") {
-        // For soundMatch, track all words in allwords array
-        question.allwords?.forEach((wordObj) => {
-          const word = wordObj.text?.toLowerCase();
-          if (word && !(word in status)) {
-            // Check if this word was correctly selected
-            status[word] = ansSelectionStatus[word] || false;
-          }
-        });
-      } else if (question.type === "pictureWords") {
-        // For pictureWords, track the word itself
-        const word = question.word?.toLowerCase();
-        if (word && !(word in status)) {
-          status[word] = ansSelectionStatus[word] || false;
-        }
-      }
-    });
-
-    return status;
+  const buildAnsSelectionStatus = (currentSelection = null) => {
+    // If currentSelection is provided, include it in the array
+    // This ensures the last selection is included even if state hasn't updated yet
+    if (currentSelection) {
+      return [...ansSelectionStatus, currentSelection];
+    }
+    // Return the array directly - it already contains all selections with gameType
+    return ansSelectionStatus;
   };
 
   // Update learner profile after S1 completion
-  const updateLearnerProfileOnCompletion = async () => {
+  const updateLearnerProfileOnCompletion = async (currentSelection = null) => {
     try {
       const lang = getLocalData("lang") || "en";
       const sessionId = getLocalData("sessionId");
       const sub_session_id = getLocalData("sub_session_id");
 
       // Build ansSelectionStatus with all words from S1
-      const ansSelectionStatusObj = buildAnsSelectionStatus();
+      // Include currentSelection if provided (for the last question)
+      const ansSelectionStatusObj = buildAnsSelectionStatus(currentSelection);
 
       const requestBody = {
         original_text: "Char",
@@ -4214,10 +5044,11 @@ const SoundHuntS1Combined = ({
   };
 
   // Get/Set result when S1 is complete
-  const handleS1Complete = async () => {
+  const handleS1Complete = async (currentSelection = null) => {
     try {
       // First update learner profile
-      await updateLearnerProfileOnCompletion();
+      // Pass currentSelection to ensure the last answer is included
+      await updateLearnerProfileOnCompletion(currentSelection);
 
       // Then get/set result
       const sub_session_id = getLocalData("sub_session_id");

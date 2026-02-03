@@ -43,6 +43,7 @@ import {
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import { green } from "@mui/material/colors";
 import AudioTooltipModal from "../Practice/AudioTooltipModal";
+import ZoomableImage from "../Practice/ZoomableImage";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -268,7 +269,6 @@ const WordsOrImage = ({
 
       mediaRecorder.onstop = () => {
         if (recordedChunksRef.current.length === 0) {
-          console.warn("No audio data captured.");
           setRecordedBlob(null);
           return;
         }
@@ -378,12 +378,21 @@ const WordsOrImage = ({
         setShowStopButton(false);
         setShowListenRetryButtons(true);
 
+        // Check if transcript is empty - if user didn't speak, mark as incorrect
+        if (!transcript || transcript.trim().length === 0) {
+          setAnswer(false);
+          const audio = new Audio(wrongSound);
+          audio.play();
+          stopAudioRecording();
+          return;
+        }
+
         const matchPercentage = phoneticMatch(
           currentWordRef.current,
           transcript
         );
 
-        if (matchPercentage < 49) {
+        if (matchPercentage < 80) {
           setAnswer(false);
           const audio = new Audio(wrongSound);
           audio.play();
@@ -399,7 +408,7 @@ const WordsOrImage = ({
         setIsRecording(false);
         console.error("Speech recognition error:", event.error);
         if (event.error === "no-speech") {
-          console.log("No Speech!");
+          // No speech detected
         } else if (event.error === "aborted") {
           recognitionInstance.start();
         }
@@ -438,7 +447,17 @@ const WordsOrImage = ({
       SpeechRecognition.stopListening();
       stopAudioRecording();
       const finalTranscript = transcriptRef.current;
-      //console.log("transcript", finalTranscript, currentWordRef.current);
+
+      // Check if transcript is empty - if user didn't speak, mark as incorrect
+      if (!finalTranscript || finalTranscript.trim().length === 0) {
+        setAnswer(false);
+        const audio = new Audio(wrongSound);
+        audio.play();
+        setIsRecording(false);
+        setShowStopButton(false);
+        setShowListenRetryButtons(true);
+        return;
+      }
 
       const matchPercentage = phoneticMatch(
         currentWordRef.current,
@@ -454,7 +473,7 @@ const WordsOrImage = ({
         const audio = new Audio(correctSound);
         audio.play();
       } else {
-        if (matchPercentage < 49) {
+        if (matchPercentage < 80) {
           setAnswer(false);
           const audio = new Audio(wrongSound);
           audio.play();
@@ -609,14 +628,10 @@ const WordsOrImage = ({
     //   return "green";
     // }
 
-    console.log("ccc", answer);
-
     if (answer === true) return "green";
     if (answer === false) return "red";
     return "#333F61";
   };
-
-  console.log("isTranscriptCorrect", isTranscriptCorrect);
 
   //console.log("wds", words, matchedChar, answer);
 
@@ -792,34 +807,34 @@ const WordsOrImage = ({
                     justifyContent: "center",
                     width: "100%",
                     mb: isMobile ? 2 : 0,
+                    position: "relative",
                   }}
                 >
                   <Box sx={{ position: "relative" }}>
-                    <img
+                    <ZoomableImage
                       src={image}
-                      onLoad={() => setImageLoaded(true)} // When image loads, set state to true
-                      onError={(e) => {
-                        e.target.style.display = "none"; // Hide if error occurs
-                        setImageLoaded(false);
-                      }}
-                      style={{
-                        width: "100%", // Image will take full width of the parent container
+                      alt="Responsive content"
+                      imageStyle={{
+                        width: "100%",
                         maxWidth: isMobile
                           ? "150px"
                           : isTablet
                           ? "350px"
                           : "400px",
                         marginBottom: isMobile ? "10px" : "40px",
-                        height: "auto", // Maintain aspect ratio
+                        height: "auto",
                         maxHeight: isMobile
                           ? "200px"
                           : isTablet
                           ? "280px"
                           : "340px",
-                        objectFit: "contain", // Ensures the image fits well within the dimensions
+                        objectFit: "contain",
                         marginRight: isMobile ? "30px" : "0px",
                       }}
-                      alt="Responsive content" // Adding alt text for accessibility
+                      containerStyle={{
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
                     />
                     {hints && (
                       <Box
@@ -1136,7 +1151,7 @@ const WordsOrImage = ({
                           isTranscriptCorrect === true
                             ? "green"
                             : isTranscriptCorrect === false
-                            ? "#333F61" // todo: need to change to red
+                            ? "red" // todo: need to change to red
                             : "#333F61",
                       }}
                     >
