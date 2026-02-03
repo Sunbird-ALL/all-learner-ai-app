@@ -14239,8 +14239,7 @@ export const levelGetContent = {
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_M3_S1",
-        contentCount: 10,
-        multilingual: false,
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
       },
       {
         title: "P5",
@@ -14284,9 +14283,7 @@ export const levelGetContent = {
         criteria: "sentence",
         template: "simple",
         tags: "CEFR_M3_S2",
-        // mechanism: { id: "PhrasesInAction", name: "PhrasesInAction" },
-        contentCount: 10,
-        multilingual: false,
+        mechanism: { id: "soundHuntS1Combined", name: "soundHuntS1Combined" },
       },
     ],
     4: [
