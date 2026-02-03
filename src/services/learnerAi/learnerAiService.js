@@ -203,13 +203,17 @@ export const updateLearnerProfile = async (lang, requestBody) => {
   }
 };
 
-export const addTowreRecord = async (audioPath, towreResult) => {
+export const addTowreRecord = async (
+  audioPath,
+  towreResult,
+  language = "en"
+) => {
   const sessionId = getLocalData("sessionId");
 
   const payload = {
     audio_file_path: `${audioPath}`,
     session_id: sessionId,
-    language: "en",
+    language: language,
     towre_result: towreResult,
   };
 

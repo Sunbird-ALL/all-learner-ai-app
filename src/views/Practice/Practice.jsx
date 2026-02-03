@@ -6333,15 +6333,39 @@ const Practice = () => {
                 return;
               }
               if (
-                lang === "en" &&
+                (lang === "en" || lang === "te") &&
                 (level === 3 || level === 6 || level === 9)
               ) {
+                try {
+                  await addLesson({
+                    sessionId,
+                    milestone: milestoneType,
+                    lesson: "0",
+                    progress: 0,
+                    language: lang,
+                    milestoneLevel: getSetData.currentLevel,
+                  });
+                } catch (e) {
+                  // catch error
+                }
                 gameOver({ link: "/assesment-end" }, true);
                 setLocalData("tFlow", true);
                 //setLocalData("wordWall", true);
                 return; // Exit to show feedback screen for M3/M6/M9
               }
-              if (lang === "en") {
+              if (lang === "en" || lang === "te") {
+                try {
+                  await addLesson({
+                    sessionId,
+                    milestone: milestoneType,
+                    lesson: "0",
+                    progress: 0,
+                    language: lang,
+                    milestoneLevel: getSetData.currentLevel,
+                  });
+                } catch (e) {
+                  // catch error
+                }
                 gameOver({ link: "/assesment-end" }, true);
                 setLocalData("wordWall", true);
                 return; // Exit to show feedback screen
@@ -8022,9 +8046,15 @@ const Practice = () => {
 
     // For non-F flows (m1, m2, etc.), if no mechanism from config, render WordsOrImage
     // For F flows, use existing logic
+    // IMPORTANT: Always check for special flows (tFlow, wordWallFlow, etc.) before falling back to WordsOrImage
     if (
       !isF1LearnStepForRender &&
-      ((isNonFFlow && isMechanismEmpty) ||
+      ((isNonFFlow &&
+        isMechanismEmpty &&
+        rFlow !== "true" &&
+        tFlow !== "true" &&
+        readMatch !== "true" &&
+        wordWallFlow !== "true") ||
         (!isNonFFlow &&
           ((isMechanismEmpty &&
             rFlow !== "true" &&
@@ -8827,6 +8857,12 @@ const Practice = () => {
       typeof mechanism === "object" &&
       mechanism.name === "formAWord2"
     ) {
+      // Get the multilingual config from the step config
+      const currentStepConfig = getCurrentContent(
+        progressData?.currentPracticeStep
+      );
+      const enableMultilingual = currentStepConfig?.multilingual !== false;
+
       return (
         <Mechanics7
           page={page}
@@ -8841,6 +8877,7 @@ const Practice = () => {
             currentImg: questions[currentQuestion]?.contentSourceData?.[0],
             parentWords: questions[currentQuestion]?.mechanics_data?.[0],
             multilingual: questions[currentQuestion]?.multilingual,
+            enableMultilingual: enableMultilingual,
             contentType: currentContentType,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,

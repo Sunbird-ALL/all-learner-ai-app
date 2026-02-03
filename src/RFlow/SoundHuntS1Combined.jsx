@@ -3482,8 +3482,8 @@ const SoundHuntS1Combined = ({
   const [isAudioPlayedOnce, setIsAudioPlayedOnce] = useState(false);
   const [playingAudioIndex, setPlayingAudioIndex] = useState(null);
   const [scale, setScale] = useState(1);
-  // Track word selections for ansSelectionStatus
-  const [ansSelectionStatus, setAnsSelectionStatus] = useState({});
+  // Track word selections for ansSelectionStatus - now an array of objects
+  const [ansSelectionStatus, setAnsSelectionStatus] = useState([]);
   // Track if an option has been selected (to show Next button)
   const [hasSelectedOption, setHasSelectedOption] = useState(false);
   // Track game over data for showcase end screen
@@ -3627,20 +3627,16 @@ const SoundHuntS1Combined = ({
     const isCorrect = wordLower === correctWordLower;
 
     // Track selection status for ansSelectionStatus
+    // Track only the selected word (one entry per question)
+    let currentSelection = null;
     if (wordLower) {
+      currentSelection = {
+        text: wordLower,
+        status: isCorrect,
+        gameType: "SoundMatch",
+      };
       setAnsSelectionStatus((prev) => {
-        const updated = {
-          ...prev,
-          [wordLower]: isCorrect,
-        };
-        // Also ensure the correct word is tracked
-        if (correctWordLower && correctWordLower !== wordLower) {
-          // If wrong word selected, mark correct word as not selected (false)
-          if (!isCorrect) {
-            updated[correctWordLower] = false;
-          }
-        }
-        return updated;
+        return [...prev, currentSelection];
       });
     }
 
@@ -3661,7 +3657,8 @@ const SoundHuntS1Combined = ({
 
         try {
           // First update learner profile (this is called inside handleS1Complete)
-          const result = await handleS1Complete();
+          // Pass currentSelection to ensure it's included in the API call
+          const result = await handleS1Complete(currentSelection);
           // handleS1Complete already calls updateLearnerProfileOnCompletion() first
 
           // Check sessionResult from API response
@@ -3832,11 +3829,16 @@ const SoundHuntS1Combined = ({
     }
 
     // Track selection status for ansSelectionStatus
+    let currentSelection = null;
     if (wordLower) {
-      setAnsSelectionStatus((prev) => ({
-        ...prev,
-        [wordLower]: isCorrect,
-      }));
+      currentSelection = {
+        text: wordLower,
+        status: isCorrect,
+        gameType: "PictureWords",
+      };
+      setAnsSelectionStatus((prev) => {
+        return [...prev, currentSelection];
+      });
     }
 
     // Mark that an option has been selected
@@ -3856,7 +3858,8 @@ const SoundHuntS1Combined = ({
 
         try {
           // First update learner profile (this is called inside handleS1Complete)
-          const result = await handleS1Complete();
+          // Pass currentSelection to ensure it's included in the API call
+          const result = await handleS1Complete(currentSelection);
           // handleS1Complete already calls updateLearnerProfileOnCompletion() first
 
           // Check sessionResult from API response
@@ -4119,43 +4122,26 @@ const SoundHuntS1Combined = ({
   };
 
   // Build ansSelectionStatus with all words from S1 questions
-  const buildAnsSelectionStatus = () => {
-    // Use filteredContent which already contains only S1 questions
-    const s1Questions = filteredContent;
-    const status = {};
-
-    // Get all unique words from S1 questions
-    s1Questions.forEach((question) => {
-      if (question.type === "soundMatch") {
-        // For soundMatch, track all words in allwords array
-        question.allwords?.forEach((wordObj) => {
-          const word = wordObj.text?.toLowerCase();
-          if (word && !(word in status)) {
-            // Check if this word was correctly selected
-            status[word] = ansSelectionStatus[word] || false;
-          }
-        });
-      } else if (question.type === "pictureWords") {
-        // For pictureWords, track the word itself
-        const word = question.word?.toLowerCase();
-        if (word && !(word in status)) {
-          status[word] = ansSelectionStatus[word] || false;
-        }
-      }
-    });
-
-    return status;
+  const buildAnsSelectionStatus = (currentSelection = null) => {
+    // If currentSelection is provided, include it in the array
+    // This ensures the last selection is included even if state hasn't updated yet
+    if (currentSelection) {
+      return [...ansSelectionStatus, currentSelection];
+    }
+    // Return the array directly - it already contains all selections with gameType
+    return ansSelectionStatus;
   };
 
   // Update learner profile after S1 completion
-  const updateLearnerProfileOnCompletion = async () => {
+  const updateLearnerProfileOnCompletion = async (currentSelection = null) => {
     try {
       const lang = getLocalData("lang") || "en";
       const sessionId = getLocalData("sessionId");
       const sub_session_id = getLocalData("sub_session_id");
 
       // Build ansSelectionStatus with all words from S1
-      const ansSelectionStatusObj = buildAnsSelectionStatus();
+      // Include currentSelection if provided (for the last question)
+      const ansSelectionStatusObj = buildAnsSelectionStatus(currentSelection);
 
       const requestBody = {
         original_text: "Char",
@@ -4192,10 +4178,11 @@ const SoundHuntS1Combined = ({
   };
 
   // Get/Set result when S1 is complete
-  const handleS1Complete = async () => {
+  const handleS1Complete = async (currentSelection = null) => {
     try {
       // First update learner profile
-      await updateLearnerProfileOnCompletion();
+      // Pass currentSelection to ensure the last answer is included
+      await updateLearnerProfileOnCompletion(currentSelection);
 
       // Then get/set result
       const sub_session_id = getLocalData("sub_session_id");
