@@ -45,7 +45,6 @@ import {
 } from "../../utils/apiUtil";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import AudioTooltipModal from "./AudioTooltipModal";
-import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import loadingJson from "../../assets/loadingJson.json";
 import Lottie from "lottie-react";
@@ -750,16 +749,9 @@ const BingoCard = ({
 
           try {
             setIsLoading(true);
-            const transcriber = await loadTranscriber();
-            const audioUrl = URL.createObjectURL(blob);
-            const output = await transcriber(audioUrl, {
-              chunk_length_s: 20,
-              stride_length_s: 5,
-              task: "transcribe",
-              language: "en",
-            });
 
-            const transcripts = sanitize(output.text);
+            // Use browser speech recognition transcript (already captured during recording)
+            const transcripts = sanitize(transcriptRef.current || "");
             const isCorrect =
               transcripts.includes(word) || phoneticMatch(transcripts, word);
 

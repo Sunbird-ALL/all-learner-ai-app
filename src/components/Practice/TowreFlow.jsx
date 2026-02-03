@@ -12,7 +12,6 @@ import pandaTimerImg from "../../assets/pandaTimer1.svg";
 import timerBoxImg from "../../assets/timerBox.svg";
 import initialMessageBoxImg from "../../assets/initialMessageBox.svg";
 import { doubleMetaphone } from "double-metaphone";
-import { pipeline, env } from "@xenova/transformers";
 import { Box, useMediaQuery, createTheme } from "@mui/material";
 import reportBoyImg from "../../assets/monkeyReport.svg";
 import reportStarsandcloudsImg from "../../assets/starsandclouds.png";
@@ -31,8 +30,6 @@ import { addTowreRecord } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
 import S3Client from "../../config/awsS3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-
-env.localModelPath = "https://huggingface.co/Xenova/whisper-tiny/resolve/main/";
 
 const allEnglishWords = [
   { title: "is", isCorrect: false },
@@ -1091,18 +1088,6 @@ const TowreFlow = ({
   } = useSpeechRecognition();
   const lang = getLocalData("lang");
 
-  // Map language codes to Whisper AI format
-  const getWhisperLanguage = (langCode) => {
-    const whisperLangMap = {
-      en: "en",
-      hi: "hi",
-      te: "te",
-      ka: "kn", // Kannada
-      ta: "ta",
-    };
-    return whisperLangMap[langCode] || "en";
-  };
-
   // Map language codes to browser Speech Recognition format
   const getBrowserLanguage = (langCode) => {
     const browserLangMap = {
@@ -1459,7 +1444,7 @@ const TowreFlow = ({
             }
 
             try {
-              await addTowreRecord(audioFileName, allWords);
+              await addTowreRecord(audioFileName, allWords, lang);
               console.log("TOWRE record saved successfully");
             } catch (apiErr) {
               console.warn(

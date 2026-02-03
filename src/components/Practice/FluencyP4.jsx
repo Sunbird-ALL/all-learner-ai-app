@@ -44,7 +44,6 @@ import {
   callTelemetryApi,
 } from "../../utils/apiUtil";
 import AudioTooltipModal from "./AudioTooltipModal";
-import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
 import hintimg from "../../assets/hintsicon.svg";
