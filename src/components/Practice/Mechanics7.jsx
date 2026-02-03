@@ -45,6 +45,7 @@ import {
   callTelemetryApi,
 } from "../../utils/apiUtil";
 import AudioTooltipModal from "./AudioTooltipModal";
+import ZoomableImage from "./ZoomableImage";
 import { loadTranscriber } from "../../utils/transcriber";
 import { doubleMetaphone } from "double-metaphone";
 import loadingJson from "../../assets/loadingJson.json";
@@ -975,12 +976,12 @@ const Mechanics7 = ({
               {match && <span style={{ color: "#333F61" }}>{match}</span>}
               {after && <span style={{ color: "grey" }}>{after}</span>}
             </span>
-            <img
+            <ZoomableImage
               src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${parentWords?.image_url}`}
               alt="pencil"
-              height={"150px"}
-              width={"150px"}
-              style={{
+              imageStyle={{
+                height: "150px",
+                width: "150px",
                 zIndex: 2,
               }}
             />

@@ -43,6 +43,7 @@ import {
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import { green } from "@mui/material/colors";
 import AudioTooltipModal from "../Practice/AudioTooltipModal";
+import ZoomableImage from "../Practice/ZoomableImage";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -792,34 +793,34 @@ const WordsOrImage = ({
                     justifyContent: "center",
                     width: "100%",
                     mb: isMobile ? 2 : 0,
+                    position: "relative",
                   }}
                 >
                   <Box sx={{ position: "relative" }}>
-                    <img
+                    <ZoomableImage
                       src={image}
-                      onLoad={() => setImageLoaded(true)} // When image loads, set state to true
-                      onError={(e) => {
-                        e.target.style.display = "none"; // Hide if error occurs
-                        setImageLoaded(false);
-                      }}
-                      style={{
-                        width: "100%", // Image will take full width of the parent container
+                      alt="Responsive content"
+                      imageStyle={{
+                        width: "100%",
                         maxWidth: isMobile
                           ? "150px"
                           : isTablet
                           ? "350px"
                           : "400px",
                         marginBottom: isMobile ? "10px" : "40px",
-                        height: "auto", // Maintain aspect ratio
+                        height: "auto",
                         maxHeight: isMobile
                           ? "200px"
                           : isTablet
                           ? "280px"
                           : "340px",
-                        objectFit: "contain", // Ensures the image fits well within the dimensions
+                        objectFit: "contain",
                         marginRight: isMobile ? "30px" : "0px",
                       }}
-                      alt="Responsive content" // Adding alt text for accessibility
+                      containerStyle={{
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
                     />
                     {hints && (
                       <Box
