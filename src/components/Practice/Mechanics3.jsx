@@ -15,10 +15,8 @@ import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import removeSound from "../../assets/remove.wav";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
-import { Modal } from "@mui/material";
-import ZoomInIcon from "@mui/icons-material/ZoomIn";
-import CloseIcon from "@mui/icons-material/Close";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
+import ZoomableImage from "./ZoomableImage";
 import {
   ThemeProvider,
   createTheme,
@@ -75,7 +73,6 @@ const Mechanics2 = ({
 }) => {
   const [words, setWords] = useState([]);
   const [sentences, setSentences] = useState([]);
-  const [zoomOpen, setZoomOpen] = useState(false);
   const [selectedWord, setSelectedWord] = useState("");
   // const [loading, setLoading] = useState(false);
   const [shake, setShake] = useState(false);
@@ -299,110 +296,14 @@ const Mechanics2 = ({
                 }}
               >
                 {image?.split("/")?.[4] && (
-                  <Box sx={{ position: "relative", cursor: "zoom-in" }}>
-                    <img
-                      onClick={() => setZoomOpen(true)}
-                      src={image}
-                      style={{
-                        borderRadius: "20px",
-                        maxWidth: "100%",
-                        height: "clamp(150px, 20vw, 220px)",
-                      }}
-                      alt=""
-                    />
-
-                    {/* Subtle gradient overlay across the top */}
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "40px", // Height of the gradient overlay
-                        background:
-                          "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
-                        borderTopLeftRadius: "20px",
-                        borderTopRightRadius: "20px",
-                        display: "flex",
-                        alignItems: "center",
-                        paddingLeft: "8px",
-                      }}
-                    >
-                      {/* Zoom icon positioned in the top-left corner */}
-                      <ZoomInIcon
-                        onClick={() => setZoomOpen(true)}
-                        sx={{
-                          color: "white",
-                          fontSize: "22px",
-                          cursor: "pointer",
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                )}
-                <Modal
-                  open={zoomOpen}
-                  onClose={() => setZoomOpen(false)}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: isMobile ? "0px" : isTablet ? "45px" : "0px",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      position: "relative",
-                      outline: "none",
-                      height: "500px",
-                      width: "500px",
+                  <ZoomableImage
+                    src={image}
+                    alt=""
+                    imageStyle={{
+                      height: "clamp(150px, 20vw, 220px)",
                     }}
-                  >
-                    {/* Subtle gradient overlay at the top of the zoomed image */}
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "40px", // Adjust height as needed
-                        background:
-                          "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                        paddingRight: "8px",
-                        borderTopLeftRadius: "8px",
-                        borderTopRightRadius: "8px",
-                      }}
-                    >
-                      {/* Close icon positioned within the gradient overlay */}
-                      <CloseIcon
-                        onClick={() => setZoomOpen(false)}
-                        sx={{
-                          color: "white",
-                          fontSize: isMobile ? "20px" : "24px",
-                          cursor: "pointer",
-                          backgroundColor: "rgba(0, 0, 0, 0.5)",
-                          borderRadius: "50%",
-                          padding: "4px",
-                        }}
-                      />
-                    </Box>
-
-                    <img
-                      src={image}
-                      alt="Zoomed content"
-                      style={{
-                        // maxWidth: "90vw",
-                        // maxHeight: "90vh",
-                        // height:"500px",
-                        width: "100%",
-                        borderRadius: "8px",
-                      }}
-                    />
-                  </Box>
-                </Modal>
+                  />
+                )}
               </Grid>
 
               <Box
