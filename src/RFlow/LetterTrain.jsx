@@ -1012,7 +1012,7 @@ export const dataEn = [
         id: 85,
         title: "Syllable",
         syllable: "the",
-        word: "theif",
+        word: "thief",
         image: getAssetUrl(s3Assets.theifImg),
         audio: getAssetAudioUrl(s3Assets.theifAudio),
         singleAudio: getAssetAudioUrl(s3Assets.theifAudio),
