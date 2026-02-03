@@ -4752,6 +4752,14 @@ const SoundHuntS1Combined = ({
                 "addLesson completed - lesson progress reset and milestone level updated:",
                 milestoneLevelFromAPI
               );
+              if (level === 3 || level === 6 || level === 9) {
+                setGameOverData({
+                  userWon: true,
+                  link: "/assesment-end",
+                });
+                setLocalData("tFlow", true);
+                return; // Exit to show feedback screen for M3/M6/M9
+              }
             } catch (addLessonError) {
               console.error("Error calling addLesson on pass:", addLessonError);
               // Continue even if addLesson fails
