@@ -4742,6 +4742,7 @@ const Practice = () => {
               progress: cappedProgress,
               language: lang,
               milestoneLevel: "B",
+              subMilestoneLevel: "F2",
             });
           } catch (e) {
             console.error("Error storing F2 flow progress:", e);
@@ -4870,6 +4871,7 @@ const Practice = () => {
             progress: cappedProgress,
             language: lang,
             milestoneLevel: "B",
+            subMilestoneLevel: "F1",
           });
           console.log("F1 Learn step progress saved:", {
             completedStepIndex: currentF1FlowStep.index,
@@ -5326,6 +5328,7 @@ const Practice = () => {
               progress: cappedProgress,
               language: lang,
               milestoneLevel: "B", // F1 flow is for milestone level B
+              subMilestoneLevel: "F1",
             });
             console.log("F1 flow progress saved (handleNext):", {
               completedStepIndex: currentF1FlowStepBeforeAdvance.index,
@@ -5454,6 +5457,7 @@ const Practice = () => {
                 progress: currentPracticeProgress,
                 language: lang,
                 milestoneLevel: "B",
+                subMilestoneLevel: "F3",
               });
               console.log("F3 flow redirect progress saved:", {
                 index: targetIndex,
@@ -5538,6 +5542,7 @@ const Practice = () => {
               progress: ((currentF3FlowStep.index + 1) / F3_FLOW.length) * 100,
               language: lang,
               milestoneLevel: "B",
+              subMilestoneLevel: "F3",
             });
             console.log("F3 flow progress saved to backend by handleNext:", {
               index: currentF3FlowStep.index,
@@ -7365,6 +7370,7 @@ const Practice = () => {
           ),
           language: lang,
           milestoneLevel: "B",
+          subMilestoneLevel: "F1",
         });
 
         setProgressData(practiceProgress);

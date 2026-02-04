@@ -1292,6 +1292,7 @@ const LetterLauncherMechanicsContent = ({
                         progress: nextStepProgress, // Progress for the next step
                         language: lang,
                         milestoneLevel: "B",
+                        subMilestoneLevel: "F3",
                       });
                       console.log(
                         "F3 flow progress saved by LetterLauncherMechanics (after step completion):",
