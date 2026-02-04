@@ -1392,8 +1392,8 @@ const Assesment = ({ discoverStart }) => {
     let jwtToken = localStorage.getItem("token");
     var userDetails = jwtDecode(jwtToken);
     username = userDetails.student_name;
+    setLocalData("profileName", username);
   }
-  setLocalData("profileName", username);
 
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [profileName, setProfileName] = useState(username);
