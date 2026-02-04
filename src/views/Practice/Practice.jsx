@@ -45,7 +45,7 @@ import WordsOrImage from "../../components/Mechanism/WordsOrImage";
 import { uniqueId } from "../../services/utilService";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import { splitGraphemes } from "split-graphemes";
-import { Typography } from "@mui/material";
+import { Typography, Box, CircularProgress } from "@mui/material";
 import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../../components/Assesment/Assesment";
 import { RetryDialog } from "../../components/Practice/RetryDialog";
@@ -7299,6 +7299,26 @@ const Practice = () => {
     setLocalData("mechanism_id", (mechanism && mechanism.id) || "");
   }, [mechanism]);
 
+  // Reset startShowCase to false when entering an Apply step (to show "Hurray!!! Ready for Challenge?" screen)
+  useEffect(() => {
+    const isF1ApplyStep = isF1FlowActive && f1FlowStep.step?.type === "A";
+    const isF2ApplyStep = isF2FlowActive && f2FlowStep.step?.type === "A";
+    const isF3ApplyStep = isF3FlowActive && f3FlowStep.step?.type === "A";
+
+    if (isF1ApplyStep || isF2ApplyStep || isF3ApplyStep) {
+      // Reset startShowCase to false when entering an Apply step
+      // This ensures the "Hurray!!! Ready for Challenge?" screen is shown
+      setStartShowCase(false);
+    }
+  }, [
+    isF1FlowActive,
+    f1FlowStep.step?.type,
+    isF2FlowActive,
+    f2FlowStep.step?.type,
+    isF3FlowActive,
+    f3FlowStep.step?.type,
+  ]);
+
   const getCurrentContent = (stepKey) => {
     const lang = getLocalData("lang") || "en";
 
@@ -11349,6 +11369,73 @@ const Practice = () => {
     } else if (page === 1) {
       return <Mechanics2 page={page} setPage={setPage} />;
     }
+
+    // Fallback: If no conditions match, show loading or default to WordsOrImage
+    if (loading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
+
+    // Default fallback - render WordsOrImage if questions are available
+    if (questions && questions.length > 0 && questions[currentQuestion]) {
+      return (
+        <WordsOrImage
+          {...{
+            level: level,
+            audioLink: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${questions[currentQuestion]?.contentId}.wav`,
+            mechanism_id: mechanism?.id,
+            header:
+              questions[currentQuestion]?.contentType === "image"
+                ? `Guess the below image`
+                : `Speak the below ${questions[currentQuestion]?.contentType}`,
+            words: questions[currentQuestion]?.contentSourceData?.[0]?.text,
+            currentImg: currentImage,
+            parentWords: parentWords,
+            contentType: currentContentType,
+            contentId: questions[currentQuestion]?.contentId,
+            setVoiceText,
+            setRecordedAudio,
+            setVoiceAnimate,
+            storyLine,
+            handleNext,
+            type: "word",
+            enableNext,
+            showTimer: false,
+            points,
+            steps: questions?.length,
+            currentStep: currentQuestion + 1,
+            progressData,
+            showProgress: true,
+            background:
+              isShowCase &&
+              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            playTeacherAudio,
+            callUpdateLearner: isShowCase,
+            disableScreen,
+            isShowCase,
+            handleBack: !isShowCase && handleBack,
+            setEnableNext,
+            loading,
+            setOpenMessageDialog,
+            vocabCount,
+            wordCount,
+          }}
+        />
+      );
+    }
+
+    // Final fallback - return null if nothing can be rendered
+    return null;
   };
 
   return (

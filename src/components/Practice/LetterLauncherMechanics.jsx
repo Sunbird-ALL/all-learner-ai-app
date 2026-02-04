@@ -116,6 +116,11 @@ const LetterLauncherMechanicsContent = ({
       ? "mr"
       : "en";
   const initialAudioLanguage = initialLanguage;
+
+  // Game key for telemetry (matches LetterLauncherGame format)
+  const gameKey = initialLanguage
+    ? `letterLauncher_${initialLanguage}`
+    : "letterLauncher";
   useEffect(() => {
     localStorage.setItem("selectedLanguage", initialLanguage);
     localStorage.setItem("selectedAudioLanguage", initialAudioLanguage);
@@ -168,7 +173,20 @@ const LetterLauncherMechanicsContent = ({
     };
   }, []);
 
-  const handleGameBack = () => {
+  const handleGameBack = async () => {
+    // End telemetry subsession with back button (matches LetterGame pattern)
+    try {
+      await sessionTelemetryManager.endSubSessionWithBackButton();
+      console.log(
+        "✅ Letter Launcher telemetry subsession ended (back button)"
+      );
+    } catch (error) {
+      console.error(
+        "Error ending Letter Launcher telemetry subsession (back button):",
+        error
+      );
+    }
+
     if (handleBack) {
       handleBack();
     }
@@ -372,15 +390,46 @@ const LetterLauncherMechanicsContent = ({
   ]);
 
   useEffect(() => {
-    if (sessionInitialized) {
-      const generatedQuestions = generateQuestions();
-      setQuestions(generatedQuestions);
-      // Initialize level start time and reset question summaries
-      setLevelStartTime(Date.now());
-      setQuestionSummaries([]);
-      setTotalTimeSpent(0);
-    }
-  }, [sessionInitialized, contentType, contentCount]);
+    const initializeGameSession = async () => {
+      if (sessionInitialized) {
+        const generatedQuestions = generateQuestions();
+        setQuestions(generatedQuestions);
+        // Initialize level start time and reset question summaries
+        const now = Date.now();
+        setLevelStartTime(now);
+        setQuestionSummaries([]);
+        setTotalTimeSpent(0);
+
+        // Start telemetry subsession when game starts
+        // This matches the pattern used in LetterGame
+        try {
+          const currentSubSession =
+            sessionTelemetryManager.getCurrentSubSession();
+          if (currentSubSession && currentSubSession.isActive) {
+            await sessionTelemetryManager.endSubSession();
+          }
+          await sessionTelemetryManager.startSubSession(
+            gameKey,
+            currentGameLevel,
+            initialLanguage
+          );
+          console.log("✅ Letter Launcher telemetry subsession started:", {
+            gameKey,
+            level: currentGameLevel,
+            language: initialLanguage,
+          });
+        } catch (error) {
+          console.error(
+            "Error starting Letter Launcher telemetry subsession:",
+            error
+          );
+        }
+      }
+    };
+
+    initializeGameSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionInitialized, contentType, contentCount, currentGameLevel]);
 
   // Play audio and show letter after audio ends
   // For Apply steps, don't start until startShowCase is true
@@ -492,7 +541,7 @@ const LetterLauncherMechanicsContent = ({
     );
   };
 
-  const handleAnswerSelect = (isMatch) => {
+  const handleAnswerSelect = async (isMatch) => {
     if (showFeedback || isPlayingAudio || !showLetter) return;
 
     const currentQuestion = questions[currentQuestionIndex];
@@ -515,11 +564,50 @@ const LetterLauncherMechanicsContent = ({
 
     // Track question for assessment
     const responseTime = questionStartTime ? Date.now() - questionStartTime : 0;
+
+    // Send telemetry ASSESS event (matches LetterLauncherGame format)
+    // Format user answer as colon-separated string: "audioLetter:displayedLetter:userSelected"
+    // Example: "A:A:true" (user selected match) or "A:B:false" (user selected non-match)
+    const userAnswer = `${currentQuestion.audioLetter}:${
+      currentQuestion.displayedLetter
+    }:${isMatch ? "true" : "false"}`;
+
+    // Format correct answer as colon-separated string: "audioLetter:displayedLetter:isMatch"
+    // Example: "A:A:true" (is a match) or "A:B:false" (is not a match)
+    const correctAnswer = `${currentQuestion.audioLetter}:${
+      currentQuestion.displayedLetter
+    }:${currentQuestion.isMatch ? "true" : "false"}`;
+
+    const questionId = `letterLauncher_${currentGameLevel}_${currentQuestionIndex}`;
+
+    try {
+      await sessionTelemetryManager.sendAssessEvent(
+        questionId,
+        "letterLauncher",
+        userAnswer,
+        correctAnswer,
+        isCorrectAnswer,
+        responseTime
+      );
+      // Update subsession with correct/incorrect
+      sessionTelemetryManager.updateSubSession(isCorrectAnswer);
+      console.log("✅ Letter Launcher telemetry assess event sent:", {
+        questionId,
+        isCorrect: isCorrectAnswer,
+        responseTime,
+      });
+    } catch (error) {
+      console.error(
+        "Error sending Letter Launcher telemetry assess event:",
+        error
+      );
+    }
+
     const questionSummary = {
-      questionId: `q${currentQuestionIndex + 1}`,
+      questionId: questionId,
       questionType: "letterLauncher", // Required by QuestionSummary interface
-      userAnswer: isMatch ? "match" : "no_match",
-      correctAnswer: currentQuestion.isMatch ? "match" : "no_match",
+      userAnswer: userAnswer, // Use colon-separated format for consistency
+      correctAnswer: correctAnswer, // Use colon-separated format for consistency
       isCorrect: isCorrectAnswer,
       responseTime: responseTime,
       complexity: currentQuestion.complexity || "simple",
@@ -736,6 +824,18 @@ const LetterLauncherMechanicsContent = ({
       : 0;
     setTotalTimeSpent((prev) => prev + timeSpent);
 
+    // End telemetry subsession and flush events (matches LetterGame pattern)
+    try {
+      await sessionTelemetryManager.endSubSession();
+      await sessionTelemetryManager.flushAssessEventBatch();
+      console.log("✅ Letter Launcher telemetry subsession ended and flushed");
+    } catch (error) {
+      console.error(
+        "Error ending Letter Launcher telemetry subsession:",
+        error
+      );
+    }
+
     // Call assessment API
     const currentUser = sessionManager.getCurrentUser();
     if (currentUser && questionSummaries.length > 0) {
@@ -796,6 +896,20 @@ const LetterLauncherMechanicsContent = ({
     setIsTimerRunning(false);
     setIsGameComplete(true);
     setLevelFailed(true);
+
+    // End telemetry subsession and flush events (matches LetterGame pattern)
+    try {
+      await sessionTelemetryManager.endSubSession();
+      await sessionTelemetryManager.flushAssessEventBatch();
+      console.log(
+        "✅ Letter Launcher telemetry subsession ended and flushed (failure)"
+      );
+    } catch (error) {
+      console.error(
+        "Error ending Letter Launcher telemetry subsession:",
+        error
+      );
+    }
 
     // For Apply steps with failRedirect, store failure info for redirect
     // A1: Letter Launcher failure → P1 (failRedirect)
@@ -892,6 +1006,20 @@ const LetterLauncherMechanicsContent = ({
     const timeSpent = levelStartTime
       ? Math.round((Date.now() - levelStartTime) / 1000)
       : 0;
+
+    // End telemetry subsession and flush events (matches LetterGame pattern)
+    try {
+      await sessionTelemetryManager.endSubSession();
+      await sessionTelemetryManager.flushAssessEventBatch();
+      console.log(
+        "✅ Letter Launcher telemetry subsession ended and flushed (step complete)"
+      );
+    } catch (error) {
+      console.error(
+        "Error ending Letter Launcher telemetry subsession:",
+        error
+      );
+    }
 
     // Call assessment API for Practice steps
     const currentUser = sessionManager.getCurrentUser();
@@ -1016,11 +1144,43 @@ const LetterLauncherMechanicsContent = ({
     setFuelEarned(null);
     setQuestionStartTime(null);
     setQuestionSummaries([]);
-    setLevelStartTime(Date.now());
+    const now = Date.now();
+    setLevelStartTime(now);
     setIsTimerRunning(false);
     setTimeRemaining(90);
     const newQuestions = generateQuestions();
     setQuestions(newQuestions);
+
+    // Start new telemetry subsession for retry (matches LetterGame pattern)
+    const startNewSubSession = async () => {
+      try {
+        const currentSubSession =
+          sessionTelemetryManager.getCurrentSubSession();
+        if (currentSubSession && currentSubSession.isActive) {
+          await sessionTelemetryManager.endSubSession();
+        }
+        await sessionTelemetryManager.startSubSession(
+          gameKey,
+          currentGameLevel,
+          initialLanguage
+        );
+        console.log(
+          "✅ Letter Launcher telemetry subsession started (retry):",
+          {
+            gameKey,
+            level: currentGameLevel,
+            language: initialLanguage,
+          }
+        );
+      } catch (error) {
+        console.error(
+          "Error starting Letter Launcher telemetry subsession (retry):",
+          error
+        );
+      }
+    };
+    startNewSubSession();
+
     if (effectiveIsShowCase) {
       // Reset to the current level (don't change level - user retries same level)
       setCurrentGameLevel(currentGameLevel);
@@ -1228,13 +1388,12 @@ const LetterLauncherMechanicsContent = ({
                     return;
                   } else {
                     // More levels to complete - advance to next level
+                    const nextLevel = currentGameLevel + 1;
                     console.log(
-                      `Letter Launcher - Level ${currentGameLevel} passed, moving to Level ${
-                        currentGameLevel + 1
-                      }`
+                      `Letter Launcher - Level ${currentGameLevel} passed, moving to Level ${nextLevel}`
                     );
                     // Reset game state for next level
-                    setCurrentGameLevel((prev) => prev + 1);
+                    setCurrentGameLevel(nextLevel);
                     setCurrentQuestionIndex(0);
                     setCorrectCount(0);
                     setWrongCount(0);
@@ -1244,10 +1403,42 @@ const LetterLauncherMechanicsContent = ({
                     setFuelEarned(null);
                     setCurrentFuel(0);
                     setQuestionSummaries([]);
-                    setLevelStartTime(Date.now());
+                    const now = Date.now();
+                    setLevelStartTime(now);
                     setIsTimerRunning(false);
                     const newQuestions = generateQuestions();
                     setQuestions(newQuestions);
+
+                    // Start new telemetry subsession for next level (matches LetterGame pattern)
+                    const startNextLevelSubSession = async () => {
+                      try {
+                        const currentSubSession =
+                          sessionTelemetryManager.getCurrentSubSession();
+                        if (currentSubSession && currentSubSession.isActive) {
+                          await sessionTelemetryManager.endSubSession();
+                        }
+                        await sessionTelemetryManager.startSubSession(
+                          gameKey,
+                          nextLevel,
+                          initialLanguage
+                        );
+                        console.log(
+                          "✅ Letter Launcher telemetry subsession started (next level):",
+                          {
+                            gameKey,
+                            level: nextLevel,
+                            language: initialLanguage,
+                          }
+                        );
+                      } catch (error) {
+                        console.error(
+                          "Error starting Letter Launcher telemetry subsession (next level):",
+                          error
+                        );
+                      }
+                    };
+                    startNextLevelSubSession();
+
                     // Reset start screen for next level
                     if (effectiveIsShowCase) {
                       effectiveSetStartShowCase(false);
