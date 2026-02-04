@@ -407,6 +407,32 @@ export const MessageDialog = ({
   );
 };
 
+const CustomIconButton = styled(IconButton)({
+  padding: "6px 20px",
+  color: "white",
+  fontSize: "20px",
+  fontWeight: 500,
+  borderRadius: "8px",
+  marginRight: "10px",
+  fontFamily: '"Lato", "sans-serif"',
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  "& .logout-img": {
+    display: "block",
+    filter: "invert(1)",
+  },
+});
+
+const CustomTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .MuiTooltip-tooltip`]: {
+    fontSize: "1.2rem", // Adjust the font size as needed
+  },
+});
+
 export const ProfileHeader = ({
   level,
   setOpenLangModal,
@@ -682,31 +708,31 @@ export const ProfileHeader = ({
     }
   };
 
-  const CustomIconButton = styled(IconButton)({
-    padding: "6px 20px",
-    color: "white",
-    fontSize: "20px",
-    fontWeight: 500,
-    borderRadius: "8px",
-    marginRight: "10px",
-    fontFamily: '"Lato", "sans-serif"',
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    "& .logout-img": {
-      display: "block",
-      filter: "invert(1)",
-    },
-  });
+  // const CustomIconButton = styled(IconButton)({
+  //   padding: "6px 20px",
+  //   color: "white",
+  //   fontSize: "20px",
+  //   fontWeight: 500,
+  //   borderRadius: "8px",
+  //   marginRight: "10px",
+  //   fontFamily: '"Lato", "sans-serif"',
+  //   position: "relative",
+  //   display: "flex",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   "& .logout-img": {
+  //     display: "block",
+  //     filter: "invert(1)",
+  //   },
+  // });
 
-  const CustomTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))({
-    [`& .MuiTooltip-tooltip`]: {
-      fontSize: "1.2rem", // Adjust the font size as needed
-    },
-  });
+  // const CustomTooltip = styled(({ className, ...props }) => (
+  //   <Tooltip {...props} classes={{ popper: className }} />
+  // ))({
+  //   [`& .MuiTooltip-tooltip`]: {
+  //     fontSize: "1.2rem", // Adjust the font size as needed
+  //   },
+  // });
 
   return (
     <>
@@ -1366,8 +1392,13 @@ const Assesment = ({ discoverStart }) => {
     let jwtToken = localStorage.getItem("token");
     var userDetails = jwtDecode(jwtToken);
     username = userDetails.student_name;
-    setLocalData("profileName", username);
   }
+
+  useEffect(() => {
+    if (username) {
+      setLocalData("profileName", username);
+    }
+  }, [username]);
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [profileName, setProfileName] = useState(username);
   const [openMessageDialog, setOpenMessageDialog] = useState("");
@@ -1396,18 +1427,21 @@ const Assesment = ({ discoverStart }) => {
     }
   }, []);
 
-  if (
-    (level === "B" && (rStepNo !== 1 || rStepNo === "1")) ||
-    (level === "B" && rFlows !== "true")
-  ) {
-    setLocalData("mFail", "true");
-    setLocalData("rFlow", "true");
-    setLocalData("rStepZero", 0);
-  }
+  useEffect(() => {
+    if (
+      (level === "B" && (rStepNo !== 1 || rStepNo === "1")) ||
+      (level === "B" && rFlows !== "true")
+    ) {
+      setLocalData("mFail", "true");
+      setLocalData("rFlow", "true");
+      setLocalData("rStepZero", 0);
+    }
+  }, [level, rStepNo, rFlows]);
 
   // console.log("nLang", nativeLang, nativeLangEnable, level);
 
   useEffect(() => {
+    console.log("Assesment: lang effect triggered", { lang });
     setLocalData("lang", lang);
     let contentSessionId = localStorage.getItem("contentSessionId");
     let session_id = getLocalData("sessionId");
@@ -1552,6 +1586,13 @@ const Assesment = ({ discoverStart }) => {
       })();
     }
   }, [lang]);
+  console.log("Assesment state/props for MainLayout:", {
+    level,
+    lang,
+    points,
+    vocabCount,
+    wordCount,
+  });
 
   const TOKEN = localStorage.getItem("apiToken");
   let virtualId;
@@ -1837,6 +1878,7 @@ const Assesment = ({ discoverStart }) => {
             points,
           }}
         >
+          {console.log("MainLayout being rendered within Assesment children")}
           <Box
             sx={{
               position: "absolute",
