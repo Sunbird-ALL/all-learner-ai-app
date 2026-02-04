@@ -1393,12 +1393,8 @@ const Assesment = ({ discoverStart }) => {
     var userDetails = jwtDecode(jwtToken);
     username = userDetails.student_name;
   }
+  setLocalData("profileName", username);
 
-  useEffect(() => {
-    if (username) {
-      setLocalData("profileName", username);
-    }
-  }, [username]);
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [profileName, setProfileName] = useState(username);
   const [openMessageDialog, setOpenMessageDialog] = useState("");
@@ -1427,21 +1423,18 @@ const Assesment = ({ discoverStart }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (
-      (level === "B" && (rStepNo !== 1 || rStepNo === "1")) ||
-      (level === "B" && rFlows !== "true")
-    ) {
-      setLocalData("mFail", "true");
-      setLocalData("rFlow", "true");
-      setLocalData("rStepZero", 0);
-    }
-  }, [level, rStepNo, rFlows]);
+  if (
+    (level === "B" && (rStepNo !== 1 || rStepNo === "1")) ||
+    (level === "B" && rFlows !== "true")
+  ) {
+    setLocalData("mFail", "true");
+    setLocalData("rFlow", "true");
+    setLocalData("rStepZero", 0);
+  }
 
   // console.log("nLang", nativeLang, nativeLangEnable, level);
 
   useEffect(() => {
-    console.log("Assesment: lang effect triggered", { lang });
     setLocalData("lang", lang);
     let contentSessionId = localStorage.getItem("contentSessionId");
     let session_id = getLocalData("sessionId");
@@ -1586,13 +1579,6 @@ const Assesment = ({ discoverStart }) => {
       })();
     }
   }, [lang]);
-  console.log("Assesment state/props for MainLayout:", {
-    level,
-    lang,
-    points,
-    vocabCount,
-    wordCount,
-  });
 
   const TOKEN = localStorage.getItem("apiToken");
   let virtualId;
@@ -1878,7 +1864,6 @@ const Assesment = ({ discoverStart }) => {
             points,
           }}
         >
-          {console.log("MainLayout being rendered within Assesment children")}
           <Box
             sx={{
               position: "absolute",
