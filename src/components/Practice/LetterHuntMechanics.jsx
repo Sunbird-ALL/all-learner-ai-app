@@ -90,6 +90,7 @@ const LetterHuntMechanicsContent = ({
             progress: 100, // F1 flow is complete
             language: lang,
             milestoneLevel: "B",
+            subMilestoneLevel: "F1",
           });
           console.log("F1 A3 completion progress saved successfully");
         } catch (error) {
@@ -116,6 +117,7 @@ const LetterHuntMechanicsContent = ({
           progress: f2Progress,
           language: lang,
           milestoneLevel: "B",
+          subMilestoneLevel: "F2",
         });
         console.log(
           "F2 flow initialized at lesson 1 (index 0) after F1 completion"
@@ -152,6 +154,7 @@ const LetterHuntMechanicsContent = ({
             progress: 100, // F2 flow is complete
             language: lang,
             milestoneLevel: "B",
+            subMilestoneLevel: "F2",
           });
           console.log("F2 A3 completion progress saved successfully");
         } catch (error) {
@@ -179,6 +182,7 @@ const LetterHuntMechanicsContent = ({
           progress: f3Progress,
           language: lang,
           milestoneLevel: "B",
+          subMilestoneLevel: "F3",
         });
         console.log(
           "F3 flow initialized at lesson 1 (index 0) after F2 completion"
@@ -848,6 +852,7 @@ const LetterHuntMechanicsContent = ({
             progress: currentPracticeProgress,
             language: lang,
             milestoneLevel: "B",
+            subMilestoneLevel: "F2",
           });
           console.log(
             "F2 Practice step progress saved by LetterHuntMechanics:",
@@ -1011,6 +1016,7 @@ const LetterHuntMechanicsContent = ({
             progress: currentPracticeProgress,
             language: lang,
             milestoneLevel: "B",
+            subMilestoneLevel: "F1",
           });
           console.log(
             "F1 Practice step progress saved by LetterHuntMechanics:",

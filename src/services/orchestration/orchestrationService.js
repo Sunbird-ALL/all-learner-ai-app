@@ -184,6 +184,7 @@ export const addLesson = async ({
   progress = 0,
   language,
   milestoneLevel,
+  subMilestoneLevel,
 }) => {
   // Validate required fields
   if (!sessionId) {
@@ -217,6 +218,7 @@ export const addLesson = async ({
         progress: cappedProgress,
         language: language,
         milestoneLevel: milestoneLevel,
+        subMilestoneLevel: subMilestoneLevel,
       },
       getHeaders()
     );
