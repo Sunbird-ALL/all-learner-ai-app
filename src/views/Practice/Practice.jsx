@@ -7294,6 +7294,26 @@ const Practice = () => {
     setLocalData("mechanism_id", (mechanism && mechanism.id) || "");
   }, [mechanism]);
 
+  // Reset startShowCase to false when entering an Apply step (to show "Hurray!!! Ready for Challenge?" screen)
+  useEffect(() => {
+    const isF1ApplyStep = isF1FlowActive && f1FlowStep.step?.type === "A";
+    const isF2ApplyStep = isF2FlowActive && f2FlowStep.step?.type === "A";
+    const isF3ApplyStep = isF3FlowActive && f3FlowStep.step?.type === "A";
+
+    if (isF1ApplyStep || isF2ApplyStep || isF3ApplyStep) {
+      // Reset startShowCase to false when entering an Apply step
+      // This ensures the "Hurray!!! Ready for Challenge?" screen is shown
+      setStartShowCase(false);
+    }
+  }, [
+    isF1FlowActive,
+    f1FlowStep.step?.type,
+    isF2FlowActive,
+    f2FlowStep.step?.type,
+    isF3FlowActive,
+    f3FlowStep.step?.type,
+  ]);
+
   const getCurrentContent = (stepKey) => {
     const lang = getLocalData("lang") || "en";
 
