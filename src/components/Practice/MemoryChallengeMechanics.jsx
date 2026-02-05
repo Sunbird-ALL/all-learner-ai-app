@@ -329,20 +329,21 @@ const MemoryChallengeMechanicsContent = ({
 
     // Track question summary for assessment
     const questionStartTime = levelStartTime || Date.now();
-    const responseTime = Date.now() - questionStartTime;
+    const responseTime = Date.now() - (questionStartTime || Date.now());
 
-    setQuestionSummaries((prev) => [
-      ...prev,
-      {
-        questionId: `sequence_${currentSequenceIndex + 1}`,
-        questionType: "memoryChallenge",
-        isCorrect: isCorrectAnswer,
-        userAnswer: userInput.join(""),
-        correctAnswer: currentSequence.sequence.join(""),
-        responseTime: responseTime,
-      },
-    ]);
+    const newSummary = {
+      questionId: `sequence_${currentSequenceIndex + 1}`,
+      questionType: "memoryChallenge",
+      isCorrect: isCorrectAnswer,
+      userAnswer: userInput.join(""),
+      correctAnswer: currentSequence.sequence.join(""),
+      responseTime,
+    };
 
+    // ✅ compute updated summaries synchronously
+    const updatedSummaries = [...questionSummaries, newSummary];
+
+    setQuestionSummaries(updatedSummaries);
     setIsCorrect(isCorrectAnswer);
     setShowFeedback(true);
 
@@ -352,50 +353,35 @@ const MemoryChallengeMechanicsContent = ({
       setWrongCount((prev) => prev + 1);
     }
 
-    // Increment completed sequences count immediately
-    setCompletedSequences((prev) => {
-      const newCount = prev + 1;
-      console.log(
-        `Memory Challenge - Sequence ${
-          currentSequenceIndex + 1
-        } completed. Total completed: ${newCount}/${sequences.length}`
-      );
-      return newCount;
-    });
+    setCompletedSequences((prev) => prev + 1);
 
-    // Move to next sequence after feedback
     setTimeout(() => {
       const isLastSequence = currentSequenceIndex >= sequences.length - 1;
 
       if (isLastSequence) {
-        // Completed all sequences in this level
-        console.log(
-          `Memory Challenge - All ${sequences.length} sequences completed. Calling handleLevelComplete.`
-        );
-        handleLevelComplete();
+        // ✅ pass summaries forward
+        handleLevelComplete(updatedSummaries);
       } else {
-        // Move to next sequence
-        setCurrentSequenceIndex((prev) => {
-          const nextIndex = prev + 1;
-          console.log(
-            `Memory Challenge - Moving to next sequence: ${nextIndex + 1}/${
-              sequences.length
-            }`
-          );
-          setShowSequence(true);
-          setUserInput([]);
-          setShowFeedback(false);
-          setShowTimeoutMessage(false); // Reset timeout message for new sequence
-          return nextIndex;
-        });
+        setCurrentSequenceIndex((prev) => prev + 1);
+        setShowSequence(true);
+        setUserInput([]);
+        setShowFeedback(false);
+        setShowTimeoutMessage(false);
       }
     }, 1500);
   };
 
-  const handleLevelComplete = async () => {
+  const handleLevelComplete = async (questionSummariesParam) => {
+    const questionSummaries = questionSummariesParam || [];
     // Check pass criteria: >= 80% accuracy
     // Use Math.round to avoid floating point precision issues
-    const accuracy = Math.round((correctCount / sequences.length) * 100);
+    const totalQuestions = questionSummaries.length;
+    const actualCorrect = questionSummaries.filter((q) => q.isCorrect).length;
+
+    const accuracy =
+      totalQuestions > 0
+        ? Math.round((actualCorrect / totalQuestions) * 100)
+        : 0;
 
     console.log(
       `Memory Challenge - Level ${currentGameLevel} completed. Accuracy: ${accuracy}% (${correctCount}/${sequences.length} correct)`
