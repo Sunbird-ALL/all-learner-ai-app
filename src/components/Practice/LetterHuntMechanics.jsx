@@ -512,6 +512,11 @@ const LetterHuntMechanicsContent = ({
           progress: currentPracticeProgress,
           language: lang,
           milestoneLevel: milestoneLevel || "B",
+          subMilestoneLevel: isF1FlowActive
+            ? "F1"
+            : isF2FlowActive
+            ? "F2"
+            : undefined,
         });
 
         // Update local storage
@@ -650,6 +655,7 @@ const LetterHuntMechanicsContent = ({
                 progress: cappedProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
+                subMilestoneLevel: "F1",
               });
 
               const updatedPracticeProgress = {
@@ -720,6 +726,7 @@ const LetterHuntMechanicsContent = ({
                 progress: cappedProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
+                subMilestoneLevel: "F2",
               });
 
               const updatedPracticeProgress = {
