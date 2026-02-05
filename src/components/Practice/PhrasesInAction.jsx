@@ -96,6 +96,23 @@ const PhrasesInAction = ({
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
   const [finalTranscript, setFinalTranscript] = useState("");
   const [recAudio, setRecAudio] = useState("");
+
+  // Get native language symbol based on nativeLang
+  const getNativeLangSymbol = () => {
+    const nativeLang = getLocalData("nativeLang");
+    const langSymbolMap = {
+      ka: "ಕ", // Kannada (from LanguageModal)
+      kn: "ಕ", // Kannada (from AllLanguages)
+      tn: "இ", // Tamil (from AllLanguages, using "ta" symbol)
+      ta: "இ", // Tamil (from AllLanguages)
+      te: "ఈ", // Telugu (from AllLanguages)
+      hi: "क", // Hindi (from AllLanguages)
+      gu: "ક", // Gujarati (from AllLanguages)
+      or: "କ", // Odia (from AllLanguages)
+    };
+    return langSymbolMap[nativeLang] || "ಕ"; // Default to Kannada if not found
+  };
+  const nativeLangSymbol = getNativeLangSymbol();
   const {
     transcript,
     interimTranscript,
@@ -6211,7 +6228,7 @@ const PhrasesInAction = ({
                                     fontStyle: "Quicksand",
                                   }}
                                 >
-                                  ಕ
+                                  {nativeLangSymbol}
                                 </span>
                               </Box>
 
@@ -6755,7 +6772,7 @@ const PhrasesInAction = ({
                                     fontStyle: "Quicksand",
                                   }}
                                 >
-                                  ಕ
+                                  {nativeLangSymbol}
                                 </span>
                               </Box>
 
