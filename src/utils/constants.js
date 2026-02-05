@@ -11296,7 +11296,6 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M2_L3",
         mechanism: { id: "bingo_card", name: "bingoCard" },
         multilingual: true,
-        contentCount: 10,
       },
       {
         title: "P6",
@@ -11305,7 +11304,6 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M2_L4",
         mechanism: { id: "bingo_card", name: "bingoCard" },
         multilingual: true,
-        contentCount: 10,
       },
       {
         title: "P7",
