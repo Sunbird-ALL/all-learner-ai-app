@@ -2292,6 +2292,9 @@ const SoundHunt = ({
                   setIsPlaying(false);
                   setIsAudioPlayedOnce(false);
                   await handleNext();
+                  if (currentQuestionIndex === filteredContent.length - 1) {
+                    return;
+                  }
                   // if (currentQuestionIndex === filteredContent.length - 1) {
                   //   // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
                   //   if (handleNext && typeof handleNext === "function") {
@@ -2322,11 +2325,11 @@ const SoundHunt = ({
         </div>
       ) : (
         <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontSize: "24px" }}>{currentQuestion?.word}</h2>
-          {currentQuestion.img && (
+          <h2 style={{ fontSize: "24px" }}>{currentQuestion?.correctWord}</h2>
+          {correctImage && (
             <img
-              src={currentQuestion.img}
-              alt={currentQuestion.word}
+              src={correctImage}
+              alt={currentQuestion?.correctWord}
               style={{ width: "120px", height: "120px" }}
             />
           )}

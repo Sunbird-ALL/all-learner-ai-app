@@ -4289,7 +4289,7 @@ const Practice = () => {
       setLocalData("f1FlowIndex", 0);
     }
     // Also set rFlow for backward compatibility
-    setLocalData("rFlow", true);
+    // setLocalData("rFlow", true);
   } else if (
     (level === "B" || level === 1) &&
     rStepZero !== 1 &&
@@ -4297,7 +4297,7 @@ const Practice = () => {
   ) {
     // Legacy R0/R1 flow (only if milestone_level is not F1)
     setLocalData("mFail", true);
-    setLocalData("rFlow", true);
+    // setLocalData("rFlow", true);
     setLocalData("rStepZero", 0);
   }
 
@@ -4505,9 +4505,9 @@ const Practice = () => {
       // F3_FLOW indices: P1=0, P2=1, P3=2, P4=3, P5=4, A1=5, P6=6, P7=7, P8=8, P9=9, P10=10, A2=11
       // So P1-P5 map to 0-4, P6-P10 map to 6-10
       if (practiceNum >= 1 && practiceNum <= 5) {
-        return practiceNum - 1; // P1=0, P2=1, P3=2, P4=3, P5=4
+        return practiceNum; // P1=0, P2=1, P3=2, P4=3, P5=4
       } else if (practiceNum >= 6 && practiceNum <= 10) {
-        return practiceNum; // P6=6, P7=7, P8=8, P9=9, P10=10
+        return practiceNum + 1; // P6=6, P7=7, P8=8, P9=9, P10=10
       }
     }
 
@@ -6323,10 +6323,10 @@ const Practice = () => {
             }
           } else if (currentLevel === "S2" && (level === 1 || level === 2)) {
             setLocalData("mFail", true);
-            setTimeout(() => {
-              setLocalData("rFlow", true);
-              setLocalData("rStepZero", 0);
-            }, 7000);
+            // setTimeout(() => {
+            //   // setLocalData("rFlow", true);
+            //   setLocalData("rStepZero", 0);
+            // }, 7000);
           }
         }
 

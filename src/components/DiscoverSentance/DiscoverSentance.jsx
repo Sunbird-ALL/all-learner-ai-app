@@ -233,17 +233,20 @@ const SpeakSentenceComponent = () => {
           setCurrentQuestion(0);
           setSentencePassedCounter(newSentencePassedCounter);
           setQuestions(quesArr);
-        } else if (getSetData.sessionResult === "pass" && lang === "en") {
+        } else if (
+          getSetData.sessionResult === "pass" &&
+          currentContentType === "Sentence"
+        ) {
           //navigate("/discover-end");
-          navigate("/towre-flow");
-        } else if (getSetData.sessionResult === "pass" && lang !== "en") {
-          navigate("/discover-end");
+          lang === "te" || lang == "en"
+            ? navigate("/towre-flow")
+            : navigate("/discover-end"); // all 3 passed mean sentence all are
         } else if (
           getSetData.sessionResult === "fail" &&
           currentContentType === "Sentence"
         ) {
           if (getSetData.currentLevel !== "m0") {
-            navigate("/letter-hunt");
+            navigate("/discover-end");
           }
           const words = assessmentResponse?.data?.find(
             (elem) => elem.category === "Word"
@@ -262,22 +265,12 @@ const SpeakSentenceComponent = () => {
           getSetData.sessionResult === "fail" &&
           currentContentType === "Word"
         ) {
-          navigate("/letter-hunt");
+          getSetData.currentLevel === "B"
+            ? navigate("/letter-hunt")
+            : navigate("/discover-end");
           console.log("fail 2");
-
-          // const char = assessmentResponse?.data?.find(
-          //   (elem) => elem.category === "Char"
-          // );
-          // const resCharPagination = await axios.get(
-          //   `${process.env.REACT_APP_LEARNER_AI_APP_HOST}/content-service/v1/content/pagination?page=1&limit=5&collectionId=${char?.content?.[0]?.collectionId}`
-          // );
-          // setCurrentContentType("Char");
-          // setCurrentCollectionId(char?.content?.[0]?.collectionId);
-          // setCurrentQuestion(0);
-          // let quesArr = [...(resCharPagination?.data?.data || [])];
-          // setQuestions(quesArr);
         } else {
-          navigate("/letter-hunt");
+          navigate("/discover-end");
           console.log("fail 3");
         }
         await addLesson({
