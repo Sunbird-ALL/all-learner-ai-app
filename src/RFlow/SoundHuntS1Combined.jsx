@@ -4731,9 +4731,7 @@ const SoundHuntS1Combined = ({
 
             // Get milestoneLevel from getSetResult API response
             const milestoneLevelFromAPI =
-              getSetData?.milestoneLevel ||
-              getSetData?.milestone_level ||
-              (level ? `m${level}` : "m1");
+              getSetData?.currentLevel || (level ? `m${level}` : "m1");
 
             const sessionId = getLocalData("sessionId");
             const lang = getLocalData("lang") || "en";
@@ -4742,7 +4740,7 @@ const SoundHuntS1Combined = ({
             try {
               await addLesson({
                 sessionId: sessionId,
-                milestone: "showcase", // S1 is a showcase step
+                milestone: "practice", // S1 is a showcase step
                 lesson: 0, // Reset lesson progress to 0
                 progress: 0, // Reset progress to 0
                 language: lang,
