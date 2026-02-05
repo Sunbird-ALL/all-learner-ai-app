@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
@@ -474,6 +474,7 @@ const LetterLauncherMechanicsContent = ({
     isGameComplete,
     effectiveIsShowCase,
     effectiveStartShowCase,
+    initialLanguage,
   ]);
 
   // Start timer when start screen is dismissed for Apply steps
@@ -496,7 +497,27 @@ const LetterLauncherMechanicsContent = ({
     sessionInitialized,
     questions.length,
     isGameComplete,
+    isTimerRunning,
   ]);
+
+  // Handle timer expiration - wrapped in useCallback to prevent dependency issues
+  const handleTimeUp = useCallback(() => {
+    setIsTimerRunning(false);
+
+    // IMPORTANT: Don't complete the game immediately when timer expires
+    // For Apply steps with timer: stop showing new questions, but allow current question to finish
+    // The game will complete in handleAnswerSelect after the current question is answered
+    // This ensures all questions that were started can be completed
+
+    console.log(
+      "Letter Launcher - Timer expired, stopping timer but allowing current question to complete:",
+      {
+        currentQuestionIndex,
+        questionsLength: questions.length,
+        totalQuestions: contentCount,
+      }
+    );
+  }, [currentQuestionIndex, questions.length, contentCount]);
 
   // Timer countdown for Apply steps
   useEffect(() => {
@@ -520,27 +541,10 @@ const LetterLauncherMechanicsContent = ({
   }, [
     effectiveIsShowCase,
     effectiveStartShowCase,
+    handleTimeUp,
     isTimerRunning,
     timeRemaining,
   ]);
-
-  const handleTimeUp = () => {
-    setIsTimerRunning(false);
-
-    // IMPORTANT: Don't complete the game immediately when timer expires
-    // For Apply steps with timer: stop showing new questions, but allow current question to finish
-    // The game will complete in handleAnswerSelect after the current question is answered
-    // This ensures all questions that were started can be completed
-
-    console.log(
-      "Letter Launcher - Timer expired, stopping timer but allowing current question to complete:",
-      {
-        currentQuestionIndex,
-        questionsLength: questions.length,
-        totalQuestions: contentCount,
-      }
-    );
-  };
 
   const handleAnswerSelect = async (isMatch) => {
     if (showFeedback || isPlayingAudio || !showLetter) return;
@@ -550,10 +554,13 @@ const LetterLauncherMechanicsContent = ({
 
     // Calculate fuel based on response time
     let fuelResult = null;
+    let updatedFuel = currentFuel; // Track updated fuel to pass to handlers
     if (questionStartTime) {
       const responseTime = Date.now() - questionStartTime;
       fuelResult = calculateFuel(responseTime, isCorrectAnswer);
       if (isCorrectAnswer) {
+        // Calculate updated fuel total including current question
+        updatedFuel = currentFuel + fuelResult.fuelEarned;
         setCurrentFuel((prev) => prev + fuelResult.fuelEarned);
       }
     }
@@ -613,7 +620,13 @@ const LetterLauncherMechanicsContent = ({
       responseTime: responseTime,
       complexity: currentQuestion.complexity || "simple",
     };
-    setQuestionSummaries((prev) => [...prev, questionSummary]);
+    // CRITICAL: Use functional update to ensure we always have the latest state
+    // This prevents race conditions when questions are answered quickly
+    let updatedSummaries;
+    setQuestionSummaries((prev) => {
+      updatedSummaries = [...prev, questionSummary];
+      return updatedSummaries;
+    });
 
     if (isCorrectAnswer) {
       setCorrectCount((prev) => prev + 1);
@@ -670,11 +683,12 @@ const LetterLauncherMechanicsContent = ({
         );
 
         // Check pass criteria before deciding what to do
+        // CRITICAL: Use updatedFuel (includes last question) instead of currentFuel (stale state)
         const { requiredFuel } = getFuelRequirement(
           currentGameLevel,
           contentCount
         );
-        const hasEnoughFuel = currentFuel >= requiredFuel;
+        const hasEnoughFuel = updatedFuel >= requiredFuel;
         const minCorrectThreshold = Math.max(7, Math.floor(contentCount * 0.7));
         const hasEnoughCorrect = correctCount >= minCorrectThreshold;
 
@@ -685,6 +699,7 @@ const LetterLauncherMechanicsContent = ({
           minCorrectThreshold,
           hasEnoughCorrect,
           currentFuel,
+          updatedFuel,
           requiredFuel,
           hasEnoughFuel,
           isShowCase,
@@ -708,7 +723,7 @@ const LetterLauncherMechanicsContent = ({
                   : `, all levels complete`
               }`
             );
-            handleLevelPass();
+            handleLevelPass(updatedSummaries, updatedFuel);
           } else {
             // User failed - show failure screen, will redirect to P1 on "Try Again"
             // Level 1/2/3 fail → P1
@@ -717,7 +732,7 @@ const LetterLauncherMechanicsContent = ({
                 failRedirect || "P1"
               } on Try Again`
             );
-            handleLevelFail();
+            handleLevelFail(updatedSummaries, updatedFuel);
           }
         } else {
           // Practice step: pass if user has enough fuel OR enough correct answers
@@ -725,10 +740,10 @@ const LetterLauncherMechanicsContent = ({
           // Use the same threshold calculated above (70% accuracy, minimum 7)
           if (hasEnoughFuel) {
             // User passed - show success screen
-            handleStepComplete();
+            handleStepComplete(updatedSummaries, updatedFuel);
           } else {
             // User failed - show failure screen, do NOT advance
-            handleLevelFail();
+            handleLevelFail(updatedSummaries, updatedFuel);
           }
         }
       } else if (timerExpired && currentQuestionIndex < questions.length - 1) {
@@ -744,11 +759,12 @@ const LetterLauncherMechanicsContent = ({
         );
 
         // Check pass criteria before deciding what to do
+        // CRITICAL: Use updatedFuel (includes last question) instead of currentFuel (stale state)
         const { requiredFuel } = getFuelRequirement(
           currentGameLevel,
           contentCount
         );
-        const hasEnoughFuel = currentFuel >= requiredFuel;
+        const hasEnoughFuel = updatedFuel >= requiredFuel;
         const minCorrectThreshold = Math.max(7, Math.floor(contentCount * 0.7));
         const hasEnoughCorrect = correctCount >= minCorrectThreshold;
 
@@ -759,6 +775,7 @@ const LetterLauncherMechanicsContent = ({
           minCorrectThreshold,
           hasEnoughCorrect,
           currentFuel,
+          updatedFuel,
           requiredFuel,
           hasEnoughFuel,
           effectiveIsShowCase,
@@ -771,18 +788,18 @@ const LetterLauncherMechanicsContent = ({
             console.log(
               `Letter Launcher - Level ${currentGameLevel} passed (timer expired)`
             );
-            handleLevelPass();
+            handleLevelPass(updatedSummaries, updatedFuel);
           } else {
             console.log(
               `Letter Launcher - Level ${currentGameLevel} failed (timer expired)`
             );
-            handleLevelFail();
+            handleLevelFail(updatedSummaries, updatedFuel);
           }
         } else {
           if (hasEnoughFuel || hasEnoughCorrect) {
-            handleStepComplete();
+            handleStepComplete(updatedSummaries, updatedFuel);
           } else {
-            handleLevelFail();
+            handleLevelFail(updatedSummaries, updatedFuel);
           }
         }
       } else if (currentQuestionIndex < contentCount - 1 && !timerExpired) {
@@ -814,10 +831,16 @@ const LetterLauncherMechanicsContent = ({
 
   const [levelFailed, setLevelFailed] = useState(false);
 
-  const handleLevelPass = async () => {
+  const handleLevelPass = async (questionSummariesParam, fuelParam) => {
     setIsTimerRunning(false);
     setIsGameComplete(true);
     setLevelFailed(false);
+
+    // CRITICAL: Always use the parameter as it contains the latest question
+    // The parameter is always passed from handleAnswerSelect to ensure all questions are included
+    const questionSummaries = questionSummariesParam || [];
+    // CRITICAL: Use passed fuel parameter (includes last question) instead of stale currentFuel state
+    const finalFuel = fuelParam !== undefined ? fuelParam : currentFuel;
 
     // Calculate total time spent
     const timeSpent = levelStartTime
@@ -839,14 +862,13 @@ const LetterLauncherMechanicsContent = ({
 
     // Call assessment API
     const currentUser = sessionManager.getCurrentUser();
-    if (currentUser && questionSummaries.length > 0) {
+    if (currentUser && questionSummaries && questionSummaries.length > 0) {
       const currentSession = sessionTelemetryManager.getCurrentSession();
       const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
       // Use sessionId prop if provided, otherwise fallback to telemetry sessionId
       const effectiveSessionId = sessionId || currentSession?.sessionId;
       const subsessionId = currentSubSession?.subSessionId;
       const actualCorrect = questionSummaries.filter((q) => q.isCorrect).length;
-      const finalFuel = currentFuel;
       const { requiredFuel } = getFuelRequirement(
         currentGameLevel,
         contentCount
@@ -893,10 +915,16 @@ const LetterLauncherMechanicsContent = ({
     // The SuccessScreen's Continue button will handle moving to next level or Memory Challenge
   };
 
-  const handleLevelFail = async () => {
+  const handleLevelFail = async (questionSummariesParam, fuelParam) => {
     setIsTimerRunning(false);
     setIsGameComplete(true);
     setLevelFailed(true);
+
+    // CRITICAL: Always use the parameter as it contains the latest question
+    // The parameter is always passed from handleAnswerSelect to ensure all questions are included
+    const questionSummaries = questionSummariesParam || [];
+    // CRITICAL: Use passed fuel parameter (includes last question) instead of stale currentFuel state
+    const finalFuel = fuelParam !== undefined ? fuelParam : currentFuel;
 
     // End telemetry subsession and flush events (matches LetterGame pattern)
     try {
@@ -942,14 +970,13 @@ const LetterLauncherMechanicsContent = ({
 
     // Call assessment API for failed level
     const currentUser = sessionManager.getCurrentUser();
-    if (currentUser && questionSummaries.length > 0) {
+    if (currentUser && questionSummaries && questionSummaries.length > 0) {
       const currentSession = sessionTelemetryManager.getCurrentSession();
       const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
       // Use sessionId prop if provided, otherwise fallback to telemetry sessionId
       const effectiveSessionId = sessionId || currentSession?.sessionId;
       const subsessionId = currentSubSession?.subSessionId;
       const actualCorrect = questionSummaries.filter((q) => q.isCorrect).length;
-      const finalFuel = currentFuel;
       const { requiredFuel } = getFuelRequirement(
         currentGameLevel,
         contentCount
@@ -997,11 +1024,17 @@ const LetterLauncherMechanicsContent = ({
     // When user clicks "Try Again", resetGame() will redirect to P1
   };
 
-  const handleStepComplete = async () => {
+  const handleStepComplete = async (questionSummariesParam, fuelParam) => {
     // Only mark as complete and update progress when ALL questions are answered
     // This function is only called when we've answered the last question
     setIsGameComplete(true);
     setLevelFailed(false);
+
+    // CRITICAL: Always use the parameter as it contains the latest question
+    // The parameter is always passed from handleAnswerSelect to ensure all questions are included
+    const questionSummaries = questionSummariesParam || [];
+    // CRITICAL: Use passed fuel parameter (includes last question) instead of stale currentFuel state
+    const finalFuel = fuelParam !== undefined ? fuelParam : currentFuel;
 
     // Calculate total time spent
     const timeSpent = levelStartTime
@@ -1024,14 +1057,13 @@ const LetterLauncherMechanicsContent = ({
 
     // Call assessment API for Practice steps
     const currentUser = sessionManager.getCurrentUser();
-    if (currentUser && questionSummaries.length > 0) {
+    if (currentUser && questionSummaries && questionSummaries.length > 0) {
       const currentSession = sessionTelemetryManager.getCurrentSession();
       const currentSubSession = sessionTelemetryManager.getCurrentSubSession();
       // Use sessionId prop if provided, otherwise fallback to telemetry sessionId
       const effectiveSessionId = sessionId || currentSession?.sessionId;
       const subsessionId = currentSubSession?.subSessionId;
       const actualCorrect = questionSummaries.filter((q) => q.isCorrect).length;
-      const finalFuel = currentFuel;
       const { requiredFuel } = getFuelRequirement(
         currentGameLevel,
         contentCount

@@ -4505,9 +4505,9 @@ const Practice = () => {
       // F3_FLOW indices: P1=0, P2=1, P3=2, P4=3, P5=4, A1=5, P6=6, P7=7, P8=8, P9=9, P10=10, A2=11
       // So P1-P5 map to 0-4, P6-P10 map to 6-10
       if (practiceNum >= 1 && practiceNum <= 5) {
-        return practiceNum - 1; // P1=0, P2=1, P3=2, P4=3, P5=4
+        return practiceNum; // P1=0, P2=1, P3=2, P4=3, P5=4
       } else if (practiceNum >= 6 && practiceNum <= 10) {
-        return practiceNum; // P6=6, P7=7, P8=8, P9=9, P10=10
+        return practiceNum + 1; // P6=6, P7=7, P8=8, P9=9, P10=10
       }
     }
 
