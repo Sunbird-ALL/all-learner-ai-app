@@ -274,8 +274,9 @@ const LetterLauncherMechanicsContent = ({
       const isMatch = Math.random() > 0.3;
       const displayedLetter = isMatch
         ? audioLetter
-        : letters[Math.floor(Math.random() * letters.length)];
-
+        : letters.filter((l) => l !== audioLetter)[
+            Math.floor(Math.random() * (letters.length - 1))
+          ];
       questions.push({
         audioLetter,
         displayedLetter,
@@ -297,7 +298,7 @@ const LetterLauncherMechanicsContent = ({
 
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(90);
+  const [timeRemaining, setTimeRemaining] = useState(100);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -487,7 +488,7 @@ const LetterLauncherMechanicsContent = ({
     ) {
       // Start the timer for Apply steps when game begins
       setIsTimerRunning(true);
-      setTimeRemaining(90);
+      setTimeRemaining(100);
     }
   }, [
     effectiveIsShowCase,
@@ -722,7 +723,7 @@ const LetterLauncherMechanicsContent = ({
           // Practice step: pass if user has enough fuel OR enough correct answers
           // Fuel is preferred metric, but also allow passing with good accuracy
           // Use the same threshold calculated above (70% accuracy, minimum 7)
-          if (hasEnoughFuel || hasEnoughCorrect) {
+          if (hasEnoughFuel) {
             // User passed - show success screen
             handleStepComplete();
           } else {
@@ -1147,7 +1148,7 @@ const LetterLauncherMechanicsContent = ({
     const now = Date.now();
     setLevelStartTime(now);
     setIsTimerRunning(false);
-    setTimeRemaining(90);
+    setTimeRemaining(100);
     const newQuestions = generateQuestions();
     setQuestions(newQuestions);
 
