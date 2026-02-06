@@ -1120,7 +1120,85 @@ const TowreFlow = ({
 
   useEffect(() => {
     transcriptRef.current = transcript;
-  }, [transcript]);
+    // Always log, even if transcript is empty or unchanged
+    console.log(
+      "Live Transcript:",
+      transcript,
+      "| Interim:",
+      interimTranscript,
+      "| Listening:",
+      listening,
+      "| Timestamp:",
+      new Date().toISOString()
+    );
+
+    // Use interimTranscript if transcript is empty but interimTranscript has content
+    if (!transcript && interimTranscript) {
+      console.log("📝 Using interim transcript:", interimTranscript);
+    }
+  }, [transcript, interimTranscript, listening]);
+
+  // Track listening state changes and auto-restart if it stops unexpectedly
+  const shouldBeListeningRef = useRef(false);
+
+  useEffect(() => {
+    console.log("🎧 Speech recognition listening state changed:", listening);
+    if (!listening && transcript) {
+      console.log(
+        "⚠️ Speech recognition stopped but transcript exists:",
+        transcript
+      );
+    }
+
+    // If we should be listening but we're not, try to restart
+    if (
+      shouldBeListeningRef.current &&
+      !listening &&
+      showFinalWords &&
+      !showResults
+    ) {
+      console.warn(
+        "⚠️ Speech recognition stopped unexpectedly. Attempting to restart..."
+      );
+      setTimeout(() => {
+        if (
+          browserSupportsSpeechRecognition &&
+          shouldBeListeningRef.current &&
+          !listening
+        ) {
+          try {
+            resetTranscript();
+            SpeechRecognition.startListening({
+              continuous: true,
+              interimResults: true,
+              language: getBrowserLanguage(lang),
+            });
+            console.log("🔄 Restarted speech recognition");
+          } catch (error) {
+            console.error("❌ Error restarting speech recognition:", error);
+          }
+        }
+      }, 500);
+    }
+  }, [
+    listening,
+    transcript,
+    showFinalWords,
+    showResults,
+    browserSupportsSpeechRecognition,
+    lang,
+  ]);
+
+  // Check browser support on mount
+  useEffect(() => {
+    console.log(
+      "🔍 Browser supports speech recognition:",
+      browserSupportsSpeechRecognition
+    );
+    if (!browserSupportsSpeechRecognition) {
+      console.error("❌ Speech recognition is not supported in this browser!");
+    }
+  }, [browserSupportsSpeechRecognition]);
 
   useEffect(() => {
     let interval;
@@ -1205,14 +1283,131 @@ const TowreFlow = ({
     }
   };
 
-  const startCountdown = () => {
+  const startCountdown = async () => {
     setShowCountdown(true);
-    startAudioRecording();
-    SpeechRecognition.startListening({
-      continuous: true,
-      interimResults: true,
-      language: getBrowserLanguage(lang),
-    });
+
+    // Check browser support before starting
+    if (!browserSupportsSpeechRecognition) {
+      console.error(
+        "❌ Cannot start speech recognition: Browser does not support it"
+      );
+      return;
+    }
+
+    // Check microphone permission
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach((track) => track.stop()); // Stop immediately, we just needed permission
+      console.log("✅ Microphone permission granted");
+    } catch (error) {
+      console.error("❌ Microphone permission denied or error:", error);
+      alert(
+        "Microphone access is required for speech recognition. Please allow microphone access and try again."
+      );
+      return;
+    }
+
+    // Start audio recording
+    await startAudioRecording();
+
+    // Reset transcript before starting
+    resetTranscript();
+    transcriptRef.current = "";
+
+    console.log(
+      "🎤 Starting speech recognition, language:",
+      getBrowserLanguage(lang)
+    );
+
+    try {
+      shouldBeListeningRef.current = true;
+
+      SpeechRecognition.startListening({
+        continuous: true,
+        interimResults: true,
+        language: getBrowserLanguage(lang),
+      });
+      console.log("✅ Speech recognition start command sent");
+
+      // Try to access the underlying recognition instance to add error handlers
+      try {
+        const recognition = SpeechRecognition.getRecognition?.();
+        if (recognition) {
+          recognition.onerror = (event) => {
+            console.error("❌ Speech recognition error:", event.error, event);
+            if (event.error === "no-speech") {
+              console.log(
+                "ℹ️ No speech detected (this is normal if user hasn't spoken yet)"
+              );
+            } else if (event.error === "aborted") {
+              console.log("ℹ️ Speech recognition aborted");
+            } else if (event.error === "network") {
+              console.error("❌ Network error in speech recognition");
+            } else if (event.error === "not-allowed") {
+              console.error("❌ Microphone permission denied");
+            } else {
+              console.error(
+                "❌ Unknown speech recognition error:",
+                event.error
+              );
+            }
+          };
+
+          recognition.onend = () => {
+            console.log("ℹ️ Speech recognition ended");
+            // If we should still be listening, restart it
+            if (
+              shouldBeListeningRef.current &&
+              showFinalWords &&
+              !showResults
+            ) {
+              setTimeout(() => {
+                if (shouldBeListeningRef.current && !listening) {
+                  console.log(
+                    "🔄 Auto-restarting speech recognition after onend"
+                  );
+                  try {
+                    SpeechRecognition.startListening({
+                      continuous: true,
+                      interimResults: true,
+                      language: getBrowserLanguage(lang),
+                    });
+                  } catch (restartError) {
+                    console.error("❌ Error auto-restarting:", restartError);
+                  }
+                }
+              }, 100);
+            }
+          };
+
+          recognition.onstart = () => {
+            console.log(
+              "✅ Speech recognition actually started (onstart event)"
+            );
+          };
+        }
+      } catch (getRecognitionError) {
+        console.warn(
+          "⚠️ Could not access recognition instance:",
+          getRecognitionError
+        );
+      }
+
+      // Verify it actually started after a short delay
+      setTimeout(() => {
+        if (!listening) {
+          console.warn(
+            "⚠️ Speech recognition may not have started. Listening state:",
+            listening
+          );
+        } else {
+          console.log("✅ Speech recognition confirmed active");
+        }
+      }, 1000);
+    } catch (error) {
+      console.error("❌ Error starting speech recognition:", error);
+      shouldBeListeningRef.current = false;
+    }
     let counter = 3;
     setCount(counter);
     const interval = setInterval(() => {
@@ -1449,6 +1644,11 @@ const TowreFlow = ({
   };
 
   const stopAudioRecording = () => {
+    shouldBeListeningRef.current = false;
+    console.log(
+      "🛑 Stopping speech recognition, final transcript:",
+      transcriptRef.current
+    );
     SpeechRecognition.stopListening();
     setFinalTranscript(transcriptRef.current);
     if (
@@ -1492,7 +1692,7 @@ const TowreFlow = ({
         currentStep,
         level,
         progressData,
-        showProgress,
+        showProgress: false, // Hide progress bar for Towre Flow
         playTeacherAudio,
         handleBack,
         disableScreen,
