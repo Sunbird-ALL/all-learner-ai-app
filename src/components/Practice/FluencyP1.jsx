@@ -401,6 +401,23 @@ const FluencyP1 = ({
     }
   };
 
+  // Get multilingual language code for audio (maps nativeLang to multilingual object keys)
+  const getMultilingualLangCode = () => {
+    const nativeLang = getLocalData("nativeLang");
+    const langCodeMap = {
+      ka: "kn", // Kannada (from LanguageModal -> multilingual key)
+      kn: "kn", // Kannada (from AllLanguages)
+      tn: "ta", // Tamil (from LanguageModal -> multilingual key)
+      ta: "ta", // Tamil (from AllLanguages)
+      te: "te", // Telugu
+      hi: "hi", // Hindi
+      gu: "gu", // Gujarati
+      or: "or", // Odia
+    };
+    return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
+  };
+  const multilingualLangCode = getMultilingualLangCode();
+
   const sentencesData = [
     {
       id: 1,
@@ -411,7 +428,7 @@ const FluencyP1 = ({
         ? Object.fromEntries(
             Object.entries(parentWords).map(([word, data]) => [
               word,
-              data?.kn?.audio_url || "",
+              data?.[multilingualLangCode]?.audio_url || "",
             ])
           )
         : {},

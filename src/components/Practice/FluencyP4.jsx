@@ -375,6 +375,24 @@ const FluencyP4 = ({
   const [parentModalOpen, setParentModalOpen] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // < 600px
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  // Get multilingual language code for audio (maps nativeLang to multilingual object keys)
+  const getMultilingualLangCode = () => {
+    const nativeLang = getLocalData("nativeLang");
+    const langCodeMap = {
+      ka: "kn", // Kannada (from LanguageModal -> multilingual key)
+      kn: "kn", // Kannada (from AllLanguages)
+      tn: "ta", // Tamil (from LanguageModal -> multilingual key)
+      ta: "ta", // Tamil (from AllLanguages)
+      te: "te", // Telugu
+      hi: "hi", // Hindi
+      gu: "gu", // Gujarati
+      or: "or", // Odia
+    };
+    return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
+  };
+  const multilingualLangCode = getMultilingualLangCode();
+
   const buildSentencesData = (apiData) => {
     return apiData?.map((item, index) => {
       const sentence = item?.contentSourceData[0].text;
@@ -385,7 +403,8 @@ const FluencyP4 = ({
       const underlinedWords = Object?.keys(multilingualData);
 
       const hints = underlinedWords?.reduce((acc, word) => {
-        acc[word] = multilingualData[word]?.kn?.audio_url || null;
+        acc[word] =
+          multilingualData[word]?.[multilingualLangCode]?.audio_url || null;
         return acc;
       }, {});
 
