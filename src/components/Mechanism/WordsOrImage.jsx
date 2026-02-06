@@ -147,6 +147,23 @@ const WordsOrImage = ({
   const [recordedAudioBlob, setRecordedAudioBlob] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Get native language symbol based on nativeLang
+  const getNativeLangSymbol = () => {
+    const nativeLang = getLocalData("nativeLang");
+    const langSymbolMap = {
+      ka: "ಕ", // Kannada (from LanguageModal)
+      kn: "ಕ", // Kannada (from AllLanguages)
+      tn: "இ", // Tamil (from AllLanguages, using "ta" symbol)
+      ta: "இ", // Tamil (from AllLanguages)
+      te: "ఈ", // Telugu (from AllLanguages)
+      hi: "क", // Hindi (from AllLanguages)
+      gu: "ક", // Gujarati (from AllLanguages)
+      or: "କ", // Odia (from AllLanguages)
+    };
+    return langSymbolMap[nativeLang] || "ಕ"; // Default to Kannada if not found
+  };
+  const nativeLangSymbol = getNativeLangSymbol();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const [abusiveFound, setAbusiveFound] = useState(false);
@@ -1199,7 +1216,7 @@ const WordsOrImage = ({
                                   fontStyle: "Quicksand",
                                 }}
                               >
-                                ಕ
+                                {nativeLangSymbol}
                               </span>
                             </Box>
 

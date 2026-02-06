@@ -86,13 +86,7 @@ export function getFuelRequirement(level: number, contentCount?: number): { requ
   // Level 4-6: ~67% of max fuel (100/150 for 30 questions)
   // Level 7-10: ~80% of max fuel (120/150 for 30 questions)
   let requiredFuelPercentage: number;
-  if (level <= 3) {
-    requiredFuelPercentage = 80 / 150; // ~53.3%
-  } else if (level <= 6) {
-    requiredFuelPercentage = 100 / 150; // ~66.7%
-  } else {
-    requiredFuelPercentage = 120 / 150; // 80%
-  }
+    requiredFuelPercentage = 80 / 100; // 80%
   
   // Scale required fuel based on actual content count
   const requiredFuel = Math.round(maxFuel * requiredFuelPercentage);

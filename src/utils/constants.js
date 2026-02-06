@@ -11280,6 +11280,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M2_P2",
         multilingual: true,
+        contentCount: 10,
       },
       {
         title: "S1",
@@ -11319,6 +11320,7 @@ export const levelGetContent = {
         template: "simple",
         tags: "CEFR_GEN_M2_P4",
         multilingual: true,
+        contentCount: 10,
       },
       {
         title: "S2",
@@ -13360,7 +13362,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L3",
         multilingual: false,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["శ", "అ", "ప", 'న', "వ"],
+        customLetters: ["శ", "అ", "ప", "న", "వ"],
         contentCount: 10,
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)

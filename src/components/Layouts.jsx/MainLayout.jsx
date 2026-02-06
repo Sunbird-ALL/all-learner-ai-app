@@ -1110,68 +1110,69 @@ const MainLayout = (props) => {
                       )} */}
 
                       {/* Only show F flow images when milestone level is "B" */}
-                      {milestoneLevel === "B" && isF3FlowActive ? (
-                        // F3 Flow - Show F3 milestone image
-                        <div style={{ height: "150px", width: "150px" }}>
-                          <img
-                            src={F3Image}
-                            alt="F3"
-                            height={isMobile ? "130px" : "200px"}
-                          />
-                        </div>
-                      ) : milestoneLevel === "B" && isF2FlowActive ? (
-                        // F2 Flow - Show F2 milestone image
-                        <div style={{ height: "150px", width: "150px" }}>
-                          <img
-                            src={F2Image}
-                            alt="F2"
-                            height={isMobile ? "130px" : "200px"}
-                          />
-                        </div>
-                      ) : milestoneLevel === "B" && isF1FlowActive ? (
-                        // F1 Flow - Show F1 milestone image
-                        <div style={{ height: "150px", width: "150px" }}>
-                          <img
-                            src={F1Image}
-                            alt="F1"
-                            height={isMobile ? "130px" : "200px"}
-                          />
-                        </div>
-                      ) : rFlow === "true" && milestoneLevel === "B" ? (
-                        // Only show R flow images when milestone level is "B"
-                        [1, "B"]?.includes(LEVEL) ? (
-                          // R0 - Show F1 milestone image instead of R0 image
-                          rStep == null || rStep === 0 || rStep === "0" ? (
+                      {tFlow !== "true" &&
+                        (milestoneLevel === "B" && isF3FlowActive ? (
+                          // F3 Flow - Show F3 milestone image
+                          <div style={{ height: "150px", width: "150px" }}>
+                            <img
+                              src={F3Image}
+                              alt="F3"
+                              height={isMobile ? "130px" : "200px"}
+                            />
+                          </div>
+                        ) : milestoneLevel === "B" && isF2FlowActive ? (
+                          // F2 Flow - Show F2 milestone image
+                          <div style={{ height: "150px", width: "150px" }}>
+                            <img
+                              src={F2Image}
+                              alt="F2"
+                              height={isMobile ? "130px" : "200px"}
+                            />
+                          </div>
+                        ) : milestoneLevel === "B" && isF1FlowActive ? (
+                          // F1 Flow - Show F1 milestone image
+                          <div style={{ height: "150px", width: "150px" }}>
                             <img
                               src={F1Image}
                               alt="F1"
                               height={isMobile ? "130px" : "200px"}
                             />
-                          ) : (
+                          </div>
+                        ) : rFlow === "true" && milestoneLevel === "B" ? (
+                          // Only show R flow images when milestone level is "B"
+                          [1, "B"]?.includes(LEVEL) ? (
+                            // R0 - Show F1 milestone image instead of R0 image
+                            rStep == null || rStep === 0 || rStep === "0" ? (
+                              <img
+                                src={F1Image}
+                                alt="F1"
+                                height={isMobile ? "130px" : "200px"}
+                              />
+                            ) : (
+                              <img
+                                src={Assets.rOneMileImage}
+                                alt="R One"
+                                height={isMobile ? "130px" : "200px"}
+                              />
+                            )
+                          ) : LEVEL === 2 ? (
                             <img
-                              src={Assets.rOneMileImage}
-                              alt="R One"
+                              src={
+                                props.rStep === 2
+                                  ? Assets.r2MileImg
+                                  : props.rStep === 3
+                                  ? Assets.r3MileImg
+                                  : props.rStep === 4
+                                  ? Assets.r4MileImg
+                                  : null
+                              }
+                              alt={`R Step ${props.rStep}`}
                               height={isMobile ? "130px" : "200px"}
                             />
-                          )
-                        ) : LEVEL === 2 ? (
-                          <img
-                            src={
-                              props.rStep === 2
-                                ? Assets.r2MileImg
-                                : props.rStep === 3
-                                ? Assets.r3MileImg
-                                : props.rStep === 4
-                                ? Assets.r4MileImg
-                                : null
-                            }
-                            alt={`R Step ${props.rStep}`}
-                            height={isMobile ? "130px" : "200px"}
-                          />
-                        ) : null
-                      ) : (
-                        LEVEL && levelsImages?.[LEVEL]?.milestone
-                      )}
+                          ) : null
+                        ) : (
+                          LEVEL && levelsImages?.[LEVEL]?.milestone
+                        ))}
                     </footer>
                   </Box>
                   <Box
@@ -1183,6 +1184,7 @@ const MainLayout = (props) => {
                   {/* Show displayPracticeSteps progress bar - hide when flowNames progress bar is showing */}
                   {/* Show progress bar for F1, F2, or when conditions are met */}
                   {(showNext || showProgress) &&
+                    tFlow !== "true" &&
                     !(
                       rFlow === "true" &&
                       ![1, "B", 3]?.includes(LEVEL) &&
@@ -2075,7 +2077,7 @@ const MainLayout = (props) => {
                           (mFlow === true || mFlow === "true")
                         ) {
                           //console.log("mFlow value:", mFlow);
-                          setLocalData("rFlow", true);
+                          // setLocalData("rFlow", true);
                           setLocalData("rStepZero", 0);
                         }
                         // if (
