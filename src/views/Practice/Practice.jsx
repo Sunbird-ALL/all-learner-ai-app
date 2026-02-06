@@ -7253,7 +7253,7 @@ const Practice = () => {
       // This prevents race condition where component renders before data is ready
       if (
         questions.length > 0 ||
-        ["B", 0, 10, 11, 12, 13, 14, 15].includes(level)
+        ["B", 0, 10, 11, 12, 13, 14, 15].includes(levelToCheck)
       ) {
         setMechanism(currentGetContent?.mechanism || {});
         console.log(

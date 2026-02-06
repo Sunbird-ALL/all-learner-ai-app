@@ -1140,6 +1140,7 @@ const TowreFlow = ({
 
   // Track listening state changes and auto-restart if it stops unexpectedly
   const shouldBeListeningRef = useRef(false);
+  const recognitionStartedRef = useRef(false);
 
   useEffect(() => {
     console.log("🎧 Speech recognition listening state changed:", listening);
@@ -1330,9 +1331,12 @@ const TowreFlow = ({
       console.log("✅ Speech recognition start command sent");
 
       // Try to access the underlying recognition instance to add error handlers
+      recognitionStartedRef.current = false; // Reset before starting
+      let canAccessRecognition = false;
       try {
         const recognition = SpeechRecognition.getRecognition?.();
         if (recognition) {
+          canAccessRecognition = true;
           recognition.onerror = (event) => {
             console.error("❌ Speech recognition error:", event.error, event);
             if (event.error === "no-speech") {
@@ -1355,6 +1359,7 @@ const TowreFlow = ({
 
           recognition.onend = () => {
             console.log("ℹ️ Speech recognition ended");
+            recognitionStartedRef.current = false;
             // If we should still be listening, restart it
             if (
               shouldBeListeningRef.current &&
@@ -1381,6 +1386,7 @@ const TowreFlow = ({
           };
 
           recognition.onstart = () => {
+            recognitionStartedRef.current = true;
             console.log(
               "✅ Speech recognition actually started (onstart event)"
             );
@@ -1394,16 +1400,25 @@ const TowreFlow = ({
       }
 
       // Verify it actually started after a short delay
+      // Only warn if we could access recognition instance but onstart never fired
       setTimeout(() => {
-        if (!listening) {
+        if (canAccessRecognition && !recognitionStartedRef.current) {
+          // Only warn if we set up the onstart handler but it never fired
           console.warn(
-            "⚠️ Speech recognition may not have started. Listening state:",
-            listening
+            "⚠️ Speech recognition onstart event never fired. Recognition may not have started properly."
           );
-        } else {
-          console.log("✅ Speech recognition confirmed active");
+        } else if (recognitionStartedRef.current) {
+          console.log(
+            "✅ Speech recognition confirmed active (onstart event received)"
+          );
+        } else if (!canAccessRecognition) {
+          // If we can't access recognition instance, check listening state as fallback
+          // This is less reliable but better than nothing
+          console.log(
+            "ℹ️ Cannot verify recognition start (using listening state as fallback)"
+          );
         }
-      }, 1000);
+      }, 2000);
     } catch (error) {
       console.error("❌ Error starting speech recognition:", error);
       shouldBeListeningRef.current = false;
