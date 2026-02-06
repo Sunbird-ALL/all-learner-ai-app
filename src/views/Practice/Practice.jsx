@@ -7241,7 +7241,7 @@ const Practice = () => {
         }
       }
 
-      if ([10, 11, 12, 13, 14, 15].includes(level)) {
+      if ([10, 11, 12, 13, 14, 15].includes(levelToCheck)) {
         const dummyQuestions = Array.from({ length: 5 }, (_, i) => ({
           id: `dummy-${i + 1}`,
         }));
@@ -7253,7 +7253,7 @@ const Practice = () => {
       // This prevents race condition where component renders before data is ready
       if (
         questions.length > 0 ||
-        ["B", 0, 10, 11, 12, 13, 14, 15].includes(level)
+        ["B", 0, 10, 11, 12, 13, 14, 15].includes(levelToCheck)
       ) {
         setMechanism(currentGetContent?.mechanism || {});
         console.log(
