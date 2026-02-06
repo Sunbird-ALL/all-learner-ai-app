@@ -135,6 +135,23 @@ const Mechanics7 = ({
   } = useSpeechRecognition();
   const transcriptRef = useRef("");
 
+  // Get multilingual language code for audio (maps nativeLang to multilingual object keys)
+  const getMultilingualLangCode = () => {
+    const nativeLang = getLocalData("nativeLang");
+    const langCodeMap = {
+      ka: "kn", // Kannada (from LanguageModal -> multilingual key)
+      kn: "kn", // Kannada (from AllLanguages)
+      tn: "ta", // Tamil (from LanguageModal -> multilingual key)
+      ta: "ta", // Tamil (from AllLanguages)
+      te: "te", // Telugu
+      hi: "hi", // Hindi
+      gu: "gu", // Gujarati
+      or: "or", // Odia
+    };
+    return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
+  };
+  const multilingualLangCode = getMultilingualLangCode();
+
   let progressDatas = getLocalData("practiceProgress");
   //const virtualId = String(getLocalData("virtualId"));
 
@@ -1074,7 +1091,7 @@ const Mechanics7 = ({
                 )}
                 {showMultiLingual && enableMultilingual && (
                   <AudioTooltipModal
-                    audioSrc={multilingual?.kn?.audio_url}
+                    audioSrc={multilingual?.[multilingualLangCode]?.audio_url}
                     description={currentText}
                   >
                     <Box

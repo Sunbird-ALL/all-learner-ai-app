@@ -224,11 +224,28 @@ const WordWall = ({
               (data) => data?.language === selectedLang
             ) || item?.contentSourceData?.[0]; // Fallback to first entry if language not found
 
+          // Get multilingual language code for audio (maps nativeLang to multilingual object keys)
+          const getMultilingualLangCode = () => {
+            const nativeLang = getLocalData("nativeLang");
+            const langCodeMap = {
+              ka: "kn", // Kannada (from LanguageModal -> multilingual key)
+              kn: "kn", // Kannada (from AllLanguages)
+              tn: "ta", // Tamil (from LanguageModal -> multilingual key)
+              ta: "ta", // Tamil (from AllLanguages)
+              te: "te", // Telugu
+              hi: "hi", // Hindi
+              gu: "gu", // Gujarati
+              or: "or", // Odia
+            };
+            return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
+          };
+          const multilingualLangCode = getMultilingualLangCode();
+
           return {
             image_url: item?.imagePath || item.mechanics_data?.[0].image_url,
             text: contentData?.text,
             audio_en: `${item?.contentId}.wav`,
-            audio_hi: item?.multilingual?.kn?.audio_url,
+            audio_hi: item?.multilingual?.[multilingualLangCode]?.audio_url,
           };
         });
 

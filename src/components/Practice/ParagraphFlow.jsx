@@ -195,6 +195,23 @@ const ParagraphFlow = ({
   const sessionId = getLocalData("sessionId");
   console.log("audios", parentWords);
 
+  // Get multilingual language code for audio (maps nativeLang to multilingual object keys)
+  const getMultilingualLangCode = () => {
+    const nativeLang = getLocalData("nativeLang");
+    const langCodeMap = {
+      ka: "kn", // Kannada (from LanguageModal -> multilingual key)
+      kn: "kn", // Kannada (from AllLanguages)
+      tn: "ta", // Tamil (from LanguageModal -> multilingual key)
+      ta: "ta", // Tamil (from AllLanguages)
+      te: "te", // Telugu
+      hi: "hi", // Hindi
+      gu: "gu", // Gujarati
+      or: "or", // Odia
+    };
+    return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
+  };
+  const multilingualLangCode = getMultilingualLangCode();
+
   const paragraphPages = [
     {
       page: 1,
@@ -204,7 +221,7 @@ const ParagraphFlow = ({
         word,
         audio: `${
           process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL
-        }/multilingual_audios/${data?.kn?.audio_url || ""}`,
+        }/multilingual_audios/${data?.[multilingualLangCode]?.audio_url || ""}`,
       })),
     },
   ];
