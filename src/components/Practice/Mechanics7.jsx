@@ -281,7 +281,7 @@ const Mechanics7 = ({
   //   ? currentImg?.completeWord
   //   : currentImg?.syllablesAudio?.[stepIndex]?.name || "";
 
-  const currentAudio = parentWords?.syllable?.[stepIndex]?.audio_url || null;
+  const currentAudio = currentImg?.audioUrl || null;
   const [stepsIndex, setStepsIndex] = useState(0);
 
   //console.log("wordSyl", currentText);
