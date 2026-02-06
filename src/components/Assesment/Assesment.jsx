@@ -407,6 +407,32 @@ export const MessageDialog = ({
   );
 };
 
+const CustomIconButton = styled(IconButton)({
+  padding: "6px 20px",
+  color: "white",
+  fontSize: "20px",
+  fontWeight: 500,
+  borderRadius: "8px",
+  marginRight: "10px",
+  fontFamily: '"Lato", "sans-serif"',
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  "& .logout-img": {
+    display: "block",
+    filter: "invert(1)",
+  },
+});
+
+const CustomTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .MuiTooltip-tooltip`]: {
+    fontSize: "1.2rem", // Adjust the font size as needed
+  },
+});
+
 export const ProfileHeader = ({
   level,
   setOpenLangModal,
@@ -681,32 +707,6 @@ export const ProfileHeader = ({
       navigate("/login");
     }
   };
-
-  const CustomIconButton = styled(IconButton)({
-    padding: "6px 20px",
-    color: "white",
-    fontSize: "20px",
-    fontWeight: 500,
-    borderRadius: "8px",
-    marginRight: "10px",
-    fontFamily: '"Lato", "sans-serif"',
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    "& .logout-img": {
-      display: "block",
-      filter: "invert(1)",
-    },
-  });
-
-  const CustomTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))({
-    [`& .MuiTooltip-tooltip`]: {
-      fontSize: "1.2rem", // Adjust the font size as needed
-    },
-  });
 
   return (
     <>
@@ -1205,7 +1205,15 @@ export const ProfileHeader = ({
 
                         <IconButton
                           size="medium"
-                          onClick={() => setShowChartPointer(false)}
+                          onClick={() => {
+                            setShowChartPointer(false);
+                            if (chartAudioRef.current) {
+                              chartAudioRef.current.pause();
+                              chartAudioRef.current.currentTime = 0;
+                              chartAudioRef.current = null;
+                            }
+                            setIsAudioPlaying(false);
+                          }}
                         >
                           <CloseIcon fontSize="medium" />
                         </IconButton>
@@ -1368,6 +1376,7 @@ const Assesment = ({ discoverStart }) => {
     username = userDetails.student_name;
     setLocalData("profileName", username);
   }
+
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [profileName, setProfileName] = useState(username);
   const [openMessageDialog, setOpenMessageDialog] = useState("");
