@@ -900,7 +900,13 @@ const AnouncementFlow = ({
                 height={isMobile ? "" : "130px"}
                 width={isMobile ? "100px" : ""}
                 //onClick={handleNextClick}
-                style={{ cursor: "pointer", marginTop: "0px", zIndex: "9999" }}
+                style={{
+                  cursor: "pointer",
+                  marginTop: "0px",
+                  zIndex: "9999",
+                  height: isMobile ? "auto" : "130px",
+                  width: isMobile ? "100px" : "auto",
+                }}
               />
               <img
                 src={
@@ -917,7 +923,13 @@ const AnouncementFlow = ({
                 width={isMobile ? "100px" : ""}
                 //width={"75px"}
                 //onClick={handleNextClick}
-                style={{ cursor: "pointer", marginTop: "0px", zIndex: "9999" }}
+                style={{
+                  cursor: "pointer",
+                  marginTop: "0px",
+                  zIndex: "9999",
+                  height: isMobile ? "auto" : "130px",
+                  width: isMobile ? "100px" : "auto",
+                }}
               />
             </div>
           )}
