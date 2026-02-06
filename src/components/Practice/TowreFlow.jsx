@@ -1444,7 +1444,7 @@ const TowreFlow = ({
                       );
                     }
                   }
-                }, 300);
+                }, 1000);
               }
             } else if (event.error === "network") {
               console.error(
