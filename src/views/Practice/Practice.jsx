@@ -6530,6 +6530,10 @@ const Practice = () => {
           }));
 
           setQuestions(dummyQuestions);
+
+          // Set mechanism for the NEXT step (newPracticeStep) for M10-M15
+          const currentGetContent = getCurrentContent(newPracticeStep);
+          setMechanism(currentGetContent?.mechanism || {});
         }
 
         // Mechanism is now set immediately above for all flows:
