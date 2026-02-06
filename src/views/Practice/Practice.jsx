@@ -7241,7 +7241,7 @@ const Practice = () => {
         }
       }
 
-      if ([10, 11, 12, 13, 14, 15].includes(level)) {
+      if ([10, 11, 12, 13, 14, 15].includes(levelToCheck)) {
         const dummyQuestions = Array.from({ length: 5 }, (_, i) => ({
           id: `dummy-${i + 1}`,
         }));
