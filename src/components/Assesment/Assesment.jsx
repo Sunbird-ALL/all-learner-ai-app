@@ -702,9 +702,10 @@ export const ProfileHeader = ({
     } catch (error) {
       console.error("Logout failed, but proceeding with local logout");
     } finally {
-      localStorage.clear();
+      // localStorage.clear();
       end({});
-      navigate("/login");
+      // navigate("/login");
+      localStorage.setItem("logout_status", "complete");
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -32,6 +32,7 @@ const LoginPage = () => {
   const ranonce = useRef(false);
   const [showModal, setShowModal] = useState(false);
   const [showAudioDiagnostic, setShowAudioDiagnostic] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleWordClick = () => {
     setShowModal(true);
@@ -44,6 +45,7 @@ const LoginPage = () => {
       return;
     }
     localStorage.clear();
+    setLoading(true);
 
     try {
       const usernameDetails = await fetchVirtualId(username);
@@ -101,8 +103,32 @@ const LoginPage = () => {
     } catch (error) {
       console.error(error);
       alert("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("apiToken") !== null) {
+      navigate("/discover-start");
+    }
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(240,240,240,0.6)",
+        }}
+      >
+        <CircularProgress size="3rem" sx={{ color: "#E15404" }} />
+      </Box>
+    );
+  }
 
   return (
     <Box
