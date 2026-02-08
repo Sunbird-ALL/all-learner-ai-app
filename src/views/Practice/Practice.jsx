@@ -8098,6 +8098,8 @@ const Practice = () => {
         />
       );
     } else if (tFlow === "true") {
+      // Note: React.memo with custom comparison in TowreFlow will prevent
+      // unnecessary re-renders even if props object is recreated
       return (
         <TowreFlow
           page={page}
@@ -8108,7 +8110,6 @@ const Practice = () => {
               questions[currentQuestion]?.contentType === "image"
                 ? `Guess the below image`
                 : `Speak the below word`,
-            //
             currentImg: currentImage,
             parentWords: parentWords,
             contentType: currentContentType,
@@ -8119,7 +8120,6 @@ const Practice = () => {
             storyLine,
             handleNext,
             type: "word",
-            // image: elephant,
             enableNext,
             showTimer: false,
             points,
