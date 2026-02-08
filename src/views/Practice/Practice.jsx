@@ -7780,17 +7780,6 @@ const Practice = () => {
           ? "letterLauncher" // F3 Practice and Apply steps use Letter Launcher
           : null;
 
-      console.log("renderMechanics - F3 flow check", {
-        isF3FlowActive,
-        f3StepType,
-        expectedMechanism,
-        currentMechanism:
-          typeof mechanism === "object" ? mechanism?.name : mechanism,
-        mechanismType: typeof mechanism,
-        f3FlowIndexState,
-        milestoneLevel,
-      });
-
       // If mechanism doesn't match expected, fix it immediately
       if (
         expectedMechanism &&
@@ -7847,17 +7836,6 @@ const Practice = () => {
           : f2StepType === "P" || f2StepType === "A"
           ? "letterHunt" // F2 Practice and Apply steps use LetterHunt
           : null;
-
-      console.log("renderMechanics - F2 flow check", {
-        isF2FlowActive,
-        f2StepType,
-        expectedMechanism,
-        currentMechanism:
-          typeof mechanism === "object" ? mechanism?.name : mechanism,
-        mechanismType: typeof mechanism,
-        f2FlowIndexState,
-        milestoneLevel,
-      });
 
       // If mechanism doesn't match expected, fix it immediately
       if (
@@ -7925,17 +7903,6 @@ const Practice = () => {
           ? "letterHunt"
           : null;
 
-      console.log("renderMechanics - F1 flow check", {
-        isF1FlowActive,
-        f1StepType,
-        expectedMechanism,
-        currentMechanism:
-          typeof mechanism === "object" ? mechanism?.name : mechanism,
-        mechanismType: typeof mechanism,
-        f1FlowIndexState,
-        milestoneLevel,
-      });
-
       // If mechanism doesn't match expected, fix it immediately
       // Only log warning if mechanism exists but is wrong (not just undefined during initialization)
       if (
@@ -7988,21 +7955,6 @@ const Practice = () => {
       !mechanism ||
       (typeof mechanism === "string" && mechanism === "") ||
       (typeof mechanism === "object" && !mechanism.id && !mechanism.name);
-
-    console.log("renderMechanics - Checking WordsOrImage condition", {
-      isF1LearnStepForRender,
-      isMechanismEmpty,
-      mechanism:
-        typeof mechanism === "object"
-          ? mechanism?.name || mechanism?.id
-          : mechanism,
-      mechanismType: typeof mechanism,
-      isF1FlowActive,
-      milestoneLevel,
-      shouldShowF1,
-      f1StepType: getF1FlowStep()?.step?.type,
-      isNonFFlow,
-    });
 
     // For non-F flows (m1, m2, etc.), if no mechanism from config, render WordsOrImage
     // For F flows, use existing logic
@@ -8098,6 +8050,8 @@ const Practice = () => {
         />
       );
     } else if (tFlow === "true") {
+      // Note: React.memo with custom comparison in TowreFlow will prevent
+      // unnecessary re-renders even if props object is recreated
       return (
         <TowreFlow
           page={page}
@@ -8108,7 +8062,6 @@ const Practice = () => {
               questions[currentQuestion]?.contentType === "image"
                 ? `Guess the below image`
                 : `Speak the below word`,
-            //
             currentImg: currentImage,
             parentWords: parentWords,
             contentType: currentContentType,
@@ -8119,7 +8072,6 @@ const Practice = () => {
             storyLine,
             handleNext,
             type: "word",
-            // image: elephant,
             enableNext,
             showTimer: false,
             points,

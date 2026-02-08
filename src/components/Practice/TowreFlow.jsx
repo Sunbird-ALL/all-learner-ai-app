@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  memo,
+  useMemo,
+  useCallback,
+} from "react";
 import clockImg from "../../assets/clocck.svg";
 import handImg from "../../assets/hand.svg";
 import boxImg from "../../assets/box.svg";
@@ -23,9 +30,7 @@ import reportImg from "../../assets/reportImg.svg";
 import { setLocalData, getLocalData } from "../../utils/constants";
 import { useNavigate, useLocation } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+// Using native browser Speech Recognition API instead of library
 import { addTowreRecord } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
 import S3Client from "../../config/awsS3";
@@ -1079,17 +1084,14 @@ const TowreFlow = ({
   const [startTime, setStartTime] = useState(null);
   const [totalSec, setTotalSec] = useState(null);
   const [finalTranscript, setFinalTranscript] = useState("");
-  const {
-    transcript,
-    interimTranscript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  const [transcript, setTranscript] = useState("");
+  const [interimTranscript, setInterimTranscript] = useState("");
+  const [listening, setListening] = useState(false);
   const lang = getLocalData("lang");
 
   // Map language codes to browser Speech Recognition format
-  const getBrowserLanguage = (langCode) => {
+  // Memoize to prevent function recreation on every render
+  const getBrowserLanguage = useCallback((langCode) => {
     const browserLangMap = {
       en: "en-US",
       hi: "hi-IN",
@@ -1098,43 +1100,183 @@ const TowreFlow = ({
       ta: "ta-IN",
     };
     return browserLangMap[langCode] || "en-US";
-  };
+  }, []);
 
-  const wordsByLang = {
-    en: allEnglishWords,
-    hi: allHindiWords,
-    te: allTeluguWords,
-    ka: allKannadaWords,
-    ta: allTamilWords,
-  };
+  // Check browser support for native Speech Recognition API
+  const browserSupportsSpeechRecognition = useMemo(() => {
+    return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  }, []);
 
-  const allWords = wordsByLang[lang] || allEnglishWords;
+  // Create recognition instance
+  const recognitionRef = useRef(null);
 
-  const allWordSets = createWordSets(allWords);
+  // Initialize recognition instance
+  useEffect(() => {
+    if (browserSupportsSpeechRecognition && !recognitionRef.current) {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = getBrowserLanguage(lang);
+
+      // Set up event handlers
+      recognitionRef.current.onstart = () => {
+        console.log("✅ Speech recognition started (onstart event)");
+        setListening(true);
+        recognitionStartedRef.current = true;
+      };
+
+      recognitionRef.current.onresult = (event) => {
+        let interim = "";
+        let final = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            final += transcript + " ";
+          } else {
+            interim += transcript;
+          }
+        }
+
+        if (final) {
+          setTranscript((prev) => (prev + final).trim());
+          setInterimTranscript("");
+          console.log("✅ Final transcript received:", final.trim());
+        } else if (interim) {
+          setInterimTranscript(interim);
+          console.log("📝 Interim transcript:", interim);
+        }
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error("❌ Speech recognition error:", event.error);
+        if (event.error === "aborted") {
+          console.log("ℹ️ Speech recognition aborted");
+        } else if (event.error === "no-speech") {
+          console.log("ℹ️ No speech detected");
+        } else if (event.error === "network") {
+          console.error(
+            "❌ Network error - speech recognition requires internet connection"
+          );
+        }
+        setListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        console.log("ℹ️ Speech recognition ended");
+        setListening(false);
+
+        // Auto-restart if we should be listening
+        // Use refs to avoid stale closure issues
+        if (shouldBeListeningRef.current) {
+          setTimeout(() => {
+            // Check current state via refs
+            if (shouldBeListeningRef.current && recognitionRef.current) {
+              try {
+                recognitionRef.current.start();
+                console.log("🔄 Auto-restarting speech recognition");
+              } catch (error) {
+                // Recognition might already be starting, ignore error
+                console.log(
+                  "ℹ️ Recognition restart attempt (may already be starting):",
+                  error.message
+                );
+              }
+            }
+          }, 100);
+        }
+      };
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.onstart = null;
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.onerror = null;
+        recognitionRef.current.onend = null;
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          // Ignore errors during cleanup
+        }
+        recognitionRef.current = null;
+      }
+    };
+  }, [browserSupportsSpeechRecognition, lang, getBrowserLanguage]); // Only depend on these - recognition instance should persist
+
+  // Reset transcript function
+  const resetTranscript = useCallback(() => {
+    setTranscript("");
+    setInterimTranscript("");
+    transcriptRef.current = "";
+  }, []);
+
+  // Memoize language-based word selection to prevent recalculation on every render
+  const allWords = useMemo(() => {
+    const wordsByLang = {
+      en: allEnglishWords,
+      hi: allHindiWords,
+      te: allTeluguWords,
+      ka: allKannadaWords,
+      ta: allTamilWords,
+    };
+    return wordsByLang[lang] || allEnglishWords;
+  }, [lang]);
+
+  // Memoize word sets creation - only recalculate when words or currentWordSetIndex changes
+  const allWordSets = useMemo(() => createWordSets(allWords), [allWords]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const currentWordSet = allWordSets[currentWordSetIndex];
+  const currentWordSet = useMemo(
+    () => allWordSets[currentWordSetIndex],
+    [allWordSets, currentWordSetIndex]
+  );
   const transcriptRef = useRef("");
   const location = useLocation();
   background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
   showTimer = false;
 
   useEffect(() => {
-    transcriptRef.current = transcript;
-    // Always log, even if transcript is empty or unchanged
-    console.log(
-      "Live Transcript:",
-      transcript,
-      "| Interim:",
-      interimTranscript,
-      "| Listening:",
-      listening,
-      "| Timestamp:",
-      new Date().toISOString()
-    );
+    // Always log to see what's happening
+    if (listening) {
+      console.log(
+        `🎤 Listening - Transcript: "${transcript || ""}" | Interim: "${
+          interimTranscript || ""
+        }" | Listening: ${listening}`
+      );
 
-    // Use interimTranscript if transcript is empty but interimTranscript has content
-    if (!transcript && interimTranscript) {
-      console.log("📝 Using interim transcript:", interimTranscript);
+      // Log if we have interim results but no final transcript
+      if (interimTranscript && !transcript) {
+        console.log("📝 Interim transcript available:", interimTranscript);
+        transcriptRef.current = interimTranscript;
+      }
+
+      // Log if we have final transcript
+      if (transcript) {
+        console.log("✅ Final transcript received:", transcript);
+        transcriptRef.current = transcript;
+      }
+
+      // If listening but no transcript at all, log this to help debug
+      if (!transcript && !interimTranscript) {
+        console.log(
+          "⚠️ Listening but no transcript yet - speak clearly into microphone"
+        );
+      }
+    } else {
+      console.log(
+        `🔇 Not listening - Transcript: "${transcript || ""}" | Interim: "${
+          interimTranscript || ""
+        }" | Listening: ${listening}`
+      );
+    }
+
+    // Combine transcript and interimTranscript for the most up-to-date value
+    const combinedTranscript = transcript || interimTranscript || "";
+    if (combinedTranscript && combinedTranscript.trim().length > 0) {
+      transcriptRef.current = combinedTranscript;
     }
   }, [transcript, interimTranscript, listening]);
 
@@ -1144,9 +1286,100 @@ const TowreFlow = ({
   const retryCountRef = useRef(0);
   const maxRetries = 3;
   const retryTimeoutRef = useRef(null);
+  const isRestartingRef = useRef(false);
+  const lastListeningStateRef = useRef(listening);
+  const restartDebounceRef = useRef(null);
 
   useEffect(() => {
-    console.log("🎧 Speech recognition listening state changed:", listening);
+    // Only log if listening state actually changed
+    if (lastListeningStateRef.current !== listening) {
+      console.log("🎧 Speech recognition listening state changed:", listening);
+      lastListeningStateRef.current = listening;
+
+      // If we just started listening and we expected it to start, verify it's working
+      if (listening && recognitionStartedRef.current) {
+        console.log(
+          "✅ Speech recognition confirmed active (listening state is true)"
+        );
+
+        // Check if transcript is updating after delays (helps verify the library is working)
+        const transcriptCheckTimeout1 = setTimeout(() => {
+          // Re-check current state in the transcript useEffect - it will log if still no transcript
+          console.log(
+            "⏱️ 3 seconds elapsed - checking if transcript is being received..."
+          );
+          console.log("📊 Current state:", {
+            listening,
+            transcript: transcript || "(empty)",
+            interimTranscript: interimTranscript || "(empty)",
+            transcriptLength: transcript?.length || 0,
+            interimLength: interimTranscript?.length || 0,
+          });
+
+          if (listening && !transcript && !interimTranscript) {
+            console.warn(
+              "⚠️ Recognition is listening but no transcript received after 3 seconds."
+            );
+            console.warn("   Possible causes:");
+            console.warn(
+              "   1. Old handlers from hot-reload are interfering (do a hard refresh: Ctrl+Shift+R)"
+            );
+            console.warn(
+              "   2. Microphone is not picking up audio - try speaking louder"
+            );
+            console.warn("   3. Browser speech recognition API issue");
+            console.warn(
+              "   4. Network connectivity issue (speech recognition uses cloud service)"
+            );
+            console.warn(
+              "   💡 Try speaking clearly into the microphone - the API may need more time"
+            );
+          }
+        }, 3000);
+
+        // Check again after 10 seconds to see if results come in later
+        const transcriptCheckTimeout2 = setTimeout(() => {
+          console.log("⏱️ 10 seconds elapsed - final check...");
+          console.log("📊 Final state:", {
+            listening,
+            transcript: transcript || "(empty)",
+            interimTranscript: interimTranscript || "(empty)",
+            transcriptLength: transcript?.length || 0,
+            interimLength: interimTranscript?.length || 0,
+          });
+
+          if (listening && !transcript && !interimTranscript) {
+            console.error(
+              "❌ CRITICAL: Speech recognition is listening but NO transcript received after 10 seconds!"
+            );
+            console.error(
+              "   This indicates the Web Speech API is not returning results."
+            );
+            console.error("   Solutions:");
+            console.error(
+              "   1. Check internet connection (Web Speech API requires network)"
+            );
+            console.error(
+              "   2. Try a different browser (Chrome/Edge work best)"
+            );
+            console.error("   3. Check browser console for network errors");
+            console.error("   4. Verify microphone is working in other apps");
+            console.error("   5. Try restarting the browser");
+          } else if (transcript || interimTranscript) {
+            console.log(
+              "✅ Transcript received! The API is working, it just took longer than expected."
+            );
+          }
+        }, 10000);
+
+        // Cleanup timeouts on unmount or state change
+        return () => {
+          clearTimeout(transcriptCheckTimeout1);
+          clearTimeout(transcriptCheckTimeout2);
+        };
+      }
+    }
+
     if (!listening && transcript) {
       console.log(
         "⚠️ Speech recognition stopped but transcript exists:",
@@ -1155,74 +1388,97 @@ const TowreFlow = ({
     }
 
     // If we should be listening but we're not, try to restart with retry logic
+    // Add debounce to prevent rapid restart attempts during re-renders
     if (
       shouldBeListeningRef.current &&
       !listening &&
       showFinalWords &&
-      !showResults
+      !showResults &&
+      !isRestartingRef.current
     ) {
-      // Clear any existing retry timeout
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
+      // Clear any existing debounce timeout
+      if (restartDebounceRef.current) {
+        clearTimeout(restartDebounceRef.current);
       }
 
-      const attemptRestart = (attemptNumber) => {
+      // Debounce restart attempts to avoid rapid-fire restarts during re-renders
+      restartDebounceRef.current = setTimeout(() => {
+        // Double-check conditions after debounce delay
         if (
-          browserSupportsSpeechRecognition &&
           shouldBeListeningRef.current &&
           !listening &&
-          attemptNumber <= maxRetries
+          showFinalWords &&
+          !showResults &&
+          !isRestartingRef.current
         ) {
-          console.warn(
-            `⚠️ Speech recognition stopped unexpectedly. Attempting restart ${attemptNumber}/${maxRetries}...`
-          );
-          try {
-            resetTranscript();
-            SpeechRecognition.startListening({
-              continuous: true,
-              interimResults: true,
-              language: getBrowserLanguage(lang),
-            });
-            console.log(`🔄 Restart attempt ${attemptNumber} - command sent`);
-            retryCountRef.current = attemptNumber;
+          isRestartingRef.current = true;
 
-            // Check if it actually started after a delay
-            retryTimeoutRef.current = setTimeout(() => {
-              if (!listening && attemptNumber < maxRetries) {
-                // Retry with exponential backoff: 500ms, 1000ms, 2000ms
-                const delay = 500 * Math.pow(2, attemptNumber - 1);
-                attemptRestart(attemptNumber + 1);
-              } else if (!listening) {
-                console.error(
-                  "❌ Failed to restart speech recognition after all retries"
-                );
-                retryCountRef.current = 0;
-              } else {
-                console.log("✅ Speech recognition restarted successfully");
-                retryCountRef.current = 0;
-              }
-            }, 1000);
-          } catch (error) {
-            console.error(
-              `❌ Error in restart attempt ${attemptNumber}:`,
-              error
-            );
-            if (attemptNumber < maxRetries) {
-              const delay = 500 * Math.pow(2, attemptNumber - 1);
-              retryTimeoutRef.current = setTimeout(() => {
-                attemptRestart(attemptNumber + 1);
-              }, delay);
-            } else {
-              retryCountRef.current = 0;
-            }
+          // Clear any existing retry timeout
+          if (retryTimeoutRef.current) {
+            clearTimeout(retryTimeoutRef.current);
           }
-        }
-      };
 
-      // Start retry sequence with delay
-      retryTimeoutRef.current = setTimeout(() => {
-        attemptRestart(1);
-      }, 500);
+          const attemptRestart = (attemptNumber) => {
+            if (
+              browserSupportsSpeechRecognition &&
+              shouldBeListeningRef.current &&
+              attemptNumber <= maxRetries
+            ) {
+              // Check listening state right before attempting restart
+              // If already listening, don't restart
+              if (listening) {
+                console.log(
+                  "ℹ️ Recognition already listening, skipping restart"
+                );
+                isRestartingRef.current = false;
+                retryCountRef.current = 0;
+                return;
+              }
+
+              console.warn(
+                `⚠️ Speech recognition stopped unexpectedly. Attempting restart ${attemptNumber}/${maxRetries}...`
+              );
+              try {
+                resetTranscript();
+                if (recognitionRef.current) {
+                  recognitionRef.current.lang = getBrowserLanguage(lang);
+                  recognitionRef.current.start();
+                  console.log(
+                    `🔄 Restart attempt ${attemptNumber} - command sent`
+                  );
+                }
+                retryCountRef.current = attemptNumber;
+                isRestartingRef.current = false; // Reset immediately, let useEffect handle next check
+
+                // Don't check listening state here - it will be stale
+                // Let the useEffect cycle naturally check if it started
+                // If it didn't start, the useEffect will trigger again
+              } catch (error) {
+                console.error(
+                  `❌ Error in restart attempt ${attemptNumber}:`,
+                  error
+                );
+                isRestartingRef.current = false;
+                if (attemptNumber < maxRetries) {
+                  // Retry with exponential backoff: 1000ms, 2000ms, 4000ms
+                  const delay = 1000 * Math.pow(2, attemptNumber - 1);
+                  setTimeout(() => {
+                    attemptRestart(attemptNumber + 1);
+                  }, delay);
+                } else {
+                  retryCountRef.current = 0;
+                  isRestartingRef.current = false;
+                }
+              }
+            }
+          };
+
+          // Start retry sequence with delay
+          retryTimeoutRef.current = setTimeout(() => {
+            attemptRestart(1);
+          }, 1000); // Increased debounce delay to 1 second
+        }
+      }, 1000); // Debounce delay to prevent rapid restarts during re-renders
     }
   }, [
     listening,
@@ -1240,6 +1496,10 @@ const TowreFlow = ({
         clearTimeout(retryTimeoutRef.current);
         retryTimeoutRef.current = null;
       }
+      if (restartDebounceRef.current) {
+        clearTimeout(restartDebounceRef.current);
+        restartDebounceRef.current = null;
+      }
     };
   }, []);
 
@@ -1247,12 +1507,69 @@ const TowreFlow = ({
   useEffect(() => {
     if (showResults) {
       retryCountRef.current = 0;
+      isRestartingRef.current = false;
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
         retryTimeoutRef.current = null;
       }
+      if (restartDebounceRef.current) {
+        clearTimeout(restartDebounceRef.current);
+        restartDebounceRef.current = null;
+      }
     }
   }, [showResults]);
+
+  // Reset component state when it first mounts to ensure clean start
+  // This ensures TowreFlow starts fresh when rendered after M3 showcase
+  useEffect(() => {
+    // Reset all state to initial values when component mounts
+    setIsStarted(false);
+    setActiveSet(0);
+    setCurrentWordSetIndex(0);
+    setMessage(
+      "Look at the words.\nYou'll read them soon — left to right, top to bottom"
+    );
+    setShowCountdown(false);
+    setCount(3);
+    setShowFinalWords(false);
+    setCompletedAllSets(false);
+    setShowResults(false);
+    setTimer(45);
+    setWordsAttempted(0);
+    setWordsPerMinute(0);
+    setHandPosition({ x: 0, y: 0 });
+    setLoading(false);
+    setCompleted(false);
+    setRecordedAudioBlob(null);
+    setTranscripts("");
+    setStartTime(null);
+    setTotalSec(null);
+    setFinalTranscript("");
+
+    // Reset refs
+    transcriptRef.current = "";
+    chunksRef.current = [];
+    shouldBeListeningRef.current = false;
+    recognitionStartedRef.current = false;
+    retryCountRef.current = 0;
+    isRestartingRef.current = false;
+
+    // Stop any existing speech recognition and reset transcript
+    try {
+      if (listening && recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      resetTranscript();
+    } catch (error) {
+      // Ignore errors during cleanup
+      console.log("ℹ️ Error during TowreFlow reset:", error);
+    }
+
+    console.log(
+      "🔄 TowreFlow component mounted - state reset to initial values"
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run on mount (listening and resetTranscript are stable)
 
   // Check browser support on mount
   useEffect(() => {
@@ -1280,10 +1597,13 @@ const TowreFlow = ({
             const elapsedSeconds = (endTime - startTime) / 1000;
             //console.log("testingg");
             setTotalSec(elapsedSeconds);
-            stopAudioRecording();
-            setLoading(true);
             clearInterval(interval);
             setShowResults(true);
+            // Defer stopAudioRecording to avoid React warning about updating during render
+            setTimeout(() => {
+              stopAudioRecording();
+              setLoading(true);
+            }, 0);
             return 0;
           }
           return prevTimer - 1;
@@ -1341,286 +1661,21 @@ const TowreFlow = ({
       const endTime = Date.now();
       const elapsedSeconds = (endTime - startTime) / 1000;
       setTotalSec(elapsedSeconds);
-      stopAudioRecording();
-      setLoading(true);
       setCompletedAllSets(true);
       setShowResults(true);
+      // Defer stopAudioRecording to avoid React warning about updating during render
+      setTimeout(() => {
+        stopAudioRecording();
+        setLoading(true);
+      }, 0);
     }
   };
 
   const startCountdown = async () => {
+    // Start countdown immediately - no delay needed since countdown provides timing
     setShowCountdown(true);
 
-    // Check browser support before starting
-    if (!browserSupportsSpeechRecognition) {
-      console.error(
-        "❌ Cannot start speech recognition: Browser does not support it"
-      );
-      return;
-    }
-
-    // Check microphone permission
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach((track) => track.stop()); // Stop immediately, we just needed permission
-      console.log("✅ Microphone permission granted");
-    } catch (error) {
-      console.error("❌ Microphone permission denied or error:", error);
-      alert(
-        "Microphone access is required for speech recognition. Please allow microphone access and try again."
-      );
-      return;
-    }
-
-    // Start audio recording
-    await startAudioRecording();
-
-    // Reset transcript before starting
-    resetTranscript();
-    transcriptRef.current = "";
-
-    console.log(
-      "🎤 Starting speech recognition, language:",
-      getBrowserLanguage(lang)
-    );
-
-    try {
-      shouldBeListeningRef.current = true;
-      retryCountRef.current = 0; // Reset retry count when starting fresh
-
-      // Stop any existing recognition before starting new one
-      try {
-        SpeechRecognition.stopListening();
-        // Small delay to ensure clean stop
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      } catch (stopError) {
-        // Ignore errors when stopping (might not be running)
-      }
-
-      SpeechRecognition.startListening({
-        continuous: true,
-        interimResults: true,
-        language: getBrowserLanguage(lang),
-      });
-      console.log("✅ Speech recognition start command sent");
-
-      // Try to access the underlying recognition instance to add error handlers
-      recognitionStartedRef.current = false; // Reset before starting
-      let canAccessRecognition = false;
-      try {
-        const recognition = SpeechRecognition.getRecognition?.();
-        if (recognition) {
-          canAccessRecognition = true;
-          recognition.onerror = (event) => {
-            console.error("❌ Speech recognition error:", event.error, event);
-
-            // Handle different error types
-            if (event.error === "no-speech") {
-              console.log(
-                "ℹ️ No speech detected (this is normal if user hasn't spoken yet)"
-              );
-              // Don't restart for no-speech, it's expected
-            } else if (event.error === "aborted") {
-              console.log("ℹ️ Speech recognition aborted");
-              // Try to restart if we should be listening
-              if (
-                shouldBeListeningRef.current &&
-                showFinalWords &&
-                !showResults
-              ) {
-                setTimeout(() => {
-                  if (!listening) {
-                    console.log("🔄 Restarting after aborted error");
-                    try {
-                      SpeechRecognition.startListening({
-                        continuous: true,
-                        interimResults: true,
-                        language: getBrowserLanguage(lang),
-                      });
-                    } catch (restartError) {
-                      console.error(
-                        "❌ Error restarting after abort:",
-                        restartError
-                      );
-                    }
-                  }
-                }, 1000);
-              }
-            } else if (event.error === "network") {
-              console.error(
-                "❌ Network error in speech recognition - will retry"
-              );
-              // Retry on network errors
-              if (
-                shouldBeListeningRef.current &&
-                showFinalWords &&
-                !showResults
-              ) {
-                setTimeout(() => {
-                  if (!listening && retryCountRef.current < maxRetries) {
-                    retryCountRef.current++;
-                    console.log(
-                      `🔄 Retrying after network error (attempt ${retryCountRef.current})`
-                    );
-                    try {
-                      SpeechRecognition.startListening({
-                        continuous: true,
-                        interimResults: true,
-                        language: getBrowserLanguage(lang),
-                      });
-                    } catch (retryError) {
-                      console.error(
-                        "❌ Error retrying after network error:",
-                        retryError
-                      );
-                    }
-                  }
-                }, 1000);
-              }
-            } else if (event.error === "not-allowed") {
-              console.error("❌ Microphone permission denied");
-              shouldBeListeningRef.current = false;
-            } else if (event.error === "audio-capture") {
-              console.error(
-                "❌ Audio capture error - microphone may be in use"
-              );
-              // Retry after a delay
-              if (
-                shouldBeListeningRef.current &&
-                showFinalWords &&
-                !showResults
-              ) {
-                setTimeout(() => {
-                  if (!listening) {
-                    console.log("🔄 Retrying after audio-capture error");
-                    try {
-                      SpeechRecognition.startListening({
-                        continuous: true,
-                        interimResults: true,
-                        language: getBrowserLanguage(lang),
-                      });
-                    } catch (retryError) {
-                      console.error(
-                        "❌ Error retrying after audio-capture:",
-                        retryError
-                      );
-                    }
-                  }
-                }, 2000);
-              }
-            } else {
-              console.error(
-                "❌ Unknown speech recognition error:",
-                event.error
-              );
-              // For unknown errors, try to restart once
-              if (
-                shouldBeListeningRef.current &&
-                showFinalWords &&
-                !showResults &&
-                retryCountRef.current === 0
-              ) {
-                setTimeout(() => {
-                  if (!listening) {
-                    retryCountRef.current++;
-                    console.log("🔄 Retrying after unknown error");
-                    try {
-                      SpeechRecognition.startListening({
-                        continuous: true,
-                        interimResults: true,
-                        language: getBrowserLanguage(lang),
-                      });
-                    } catch (retryError) {
-                      console.error(
-                        "❌ Error retrying after unknown error:",
-                        retryError
-                      );
-                    }
-                  }
-                }, 1000);
-              }
-            }
-          };
-
-          recognition.onend = () => {
-            console.log("ℹ️ Speech recognition ended");
-            recognitionStartedRef.current = false;
-            // If we should still be listening, restart it with retry logic
-            if (
-              shouldBeListeningRef.current &&
-              showFinalWords &&
-              !showResults
-            ) {
-              // Use a longer delay for onend to avoid rapid restart loops
-              setTimeout(() => {
-                if (shouldBeListeningRef.current && !listening) {
-                  // Reset retry count for onend restarts
-                  if (retryCountRef.current >= maxRetries) {
-                    retryCountRef.current = 0;
-                  }
-
-                  if (retryCountRef.current < maxRetries) {
-                    retryCountRef.current++;
-                    console.log(
-                      `🔄 Auto-restarting speech recognition after onend (attempt ${retryCountRef.current})`
-                    );
-                    try {
-                      SpeechRecognition.startListening({
-                        continuous: true,
-                        interimResults: true,
-                        language: getBrowserLanguage(lang),
-                      });
-                    } catch (restartError) {
-                      console.error("❌ Error auto-restarting:", restartError);
-                      retryCountRef.current = 0;
-                    }
-                  } else {
-                    console.warn("⚠️ Max retries reached for onend restart");
-                    retryCountRef.current = 0;
-                  }
-                }
-              }, 200);
-            }
-          };
-
-          recognition.onstart = () => {
-            recognitionStartedRef.current = true;
-            console.log(
-              "✅ Speech recognition actually started (onstart event)"
-            );
-          };
-        }
-      } catch (getRecognitionError) {
-        console.warn(
-          "⚠️ Could not access recognition instance:",
-          getRecognitionError
-        );
-      }
-
-      // Verify it actually started after a short delay
-      // Only warn if we could access recognition instance but onstart never fired
-      setTimeout(() => {
-        if (canAccessRecognition && !recognitionStartedRef.current) {
-          // Only warn if we set up the onstart handler but it never fired
-          console.warn(
-            "⚠️ Speech recognition onstart event never fired. Recognition may not have started properly."
-          );
-        } else if (recognitionStartedRef.current) {
-          console.log(
-            "✅ Speech recognition confirmed active (onstart event received)"
-          );
-        } else if (!canAccessRecognition) {
-          // If we can't access recognition instance, check listening state as fallback
-          // This is less reliable but better than nothing
-          console.log(
-            "ℹ️ Cannot verify recognition start (using listening state as fallback)"
-          );
-        }
-      }, 2000);
-    } catch (error) {
-      console.error("❌ Error starting speech recognition:", error);
-      shouldBeListeningRef.current = false;
-    }
+    // Start countdown
     let counter = 3;
     setCount(counter);
     const interval = setInterval(() => {
@@ -1629,7 +1684,7 @@ const TowreFlow = ({
         setCount(counter);
       } else {
         clearInterval(interval);
-        setTimeout(() => {
+        setTimeout(async () => {
           setShowCountdown(false);
           setShowFinalWords(true);
           setTimer(45);
@@ -1637,6 +1692,93 @@ const TowreFlow = ({
 
           const wpm = Math.round((wordsAttempted / 45) * 60);
           setWordsPerMinute(wpm);
+
+          // Start speech recognition after countdown completes
+          // Check browser support before starting
+          if (!browserSupportsSpeechRecognition) {
+            console.error(
+              "❌ Cannot start speech recognition: Browser does not support it"
+            );
+            return;
+          }
+
+          // Check microphone permission
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+              audio: true,
+            });
+            stream.getTracks().forEach((track) => track.stop()); // Stop immediately, we just needed permission
+            console.log("✅ Microphone permission granted");
+          } catch (error) {
+            console.error("❌ Microphone permission denied or error:", error);
+            alert(
+              "Microphone access is required for speech recognition. Please allow microphone access and try again."
+            );
+            return;
+          }
+
+          // Start audio recording
+          await startAudioRecording();
+
+          // Reset transcript before starting
+          resetTranscript();
+          transcriptRef.current = "";
+
+          console.log(
+            "🎤 Starting speech recognition, language:",
+            getBrowserLanguage(lang)
+          );
+
+          try {
+            shouldBeListeningRef.current = true;
+            retryCountRef.current = 0; // Reset retry count when starting fresh
+            isRestartingRef.current = false; // Reset restart flag
+            recognitionStartedRef.current = false; // Reset start flag
+
+            // Always stop first if listening to ensure clean state
+            // This prevents conflicts from previous sessions
+            if (listening && recognitionRef.current) {
+              try {
+                console.log(
+                  "🛑 Stopping existing recognition for clean restart"
+                );
+                recognitionRef.current.stop();
+                // Wait for clean stop before starting again
+                await new Promise((resolve) => setTimeout(resolve, 500));
+              } catch (stopError) {
+                console.log(
+                  "ℹ️ Error stopping recognition (may already be stopped):",
+                  stopError
+                );
+              }
+            }
+
+            // Reset transcript before starting fresh
+            resetTranscript();
+            transcriptRef.current = "";
+
+            // Start recognition with a small delay to ensure clean state
+            await new Promise((resolve) => setTimeout(resolve, 200));
+
+            if (recognitionRef.current) {
+              recognitionRef.current.lang = getBrowserLanguage(lang);
+              recognitionRef.current.start();
+              console.log("✅ Speech recognition start command sent");
+            } else {
+              console.error("❌ Recognition instance not initialized");
+            }
+
+            // Don't access the recognition instance - let the library handle everything
+            // Accessing it can interfere with the library's internal handlers and prevent transcript updates
+            // We'll rely on the listening state and transcript from the hook instead
+
+            // Note: We don't check listening state here because it uses stale closure values
+            // The listening state will be tracked by the useEffect that watches listening changes
+            recognitionStartedRef.current = true;
+          } catch (error) {
+            console.error("❌ Error starting speech recognition:", error);
+            shouldBeListeningRef.current = false;
+          }
         }, 500);
       }
     }, 1000);
@@ -1859,6 +2001,7 @@ const TowreFlow = ({
   const stopAudioRecording = () => {
     shouldBeListeningRef.current = false;
     retryCountRef.current = 0; // Reset retry count when stopping
+    isRestartingRef.current = false; // Reset restart flag
 
     // Clear any pending retry timeouts
     if (retryTimeoutRef.current) {
@@ -1866,11 +2009,19 @@ const TowreFlow = ({
       retryTimeoutRef.current = null;
     }
 
+    // Clear debounce timeout
+    if (restartDebounceRef.current) {
+      clearTimeout(restartDebounceRef.current);
+      restartDebounceRef.current = null;
+    }
+
     console.log(
       "🛑 Stopping speech recognition, final transcript:",
       transcriptRef.current
     );
-    SpeechRecognition.stopListening();
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
     setFinalTranscript(transcriptRef.current);
     if (
       mediaRecorderRef.current &&
@@ -2605,4 +2756,62 @@ const TowreFlow = ({
   );
 };
 
-export default TowreFlow;
+// Memoize TowreFlow to prevent unnecessary re-renders
+// Only re-render when props that affect speech recognition or component behavior change
+// Note: Internal state changes (like transcript from useSpeechRecognition) will still trigger re-renders
+const TowreFlowMemo = memo(TowreFlow, (prevProps, nextProps) => {
+  // Props that should trigger re-render
+  const criticalProps = [
+    "level",
+    "currentStep",
+    "steps",
+    "contentId",
+    "contentType",
+    "enableNext",
+    "showTimer",
+    "isShowCase",
+    "loading",
+    "disableScreen",
+    "currentImg",
+    "parentWords",
+    "background",
+  ];
+
+  // Check if any critical props changed
+  for (const prop of criticalProps) {
+    if (prevProps[prop] !== nextProps[prop]) {
+      return false; // Re-render
+    }
+  }
+
+  // Check progressData.currentPracticeStep (the only part we actually use)
+  const prevStep = prevProps.progressData?.currentPracticeStep;
+  const nextStep = nextProps.progressData?.currentPracticeStep;
+  if (prevStep !== nextStep) {
+    return false; // Re-render
+  }
+
+  // Check function references that might affect behavior
+  const functionProps = [
+    "handleNext",
+    "handleBack",
+    "setOpenMessageDialog",
+    "playTeacherAudio",
+  ];
+
+  for (const prop of functionProps) {
+    if (prevProps[prop] !== nextProps[prop]) {
+      return false; // Re-render
+    }
+  }
+
+  // Ignore changes to these props (they change frequently but don't affect speech recognition)
+  // vocabCount, wordCount, showProgress (we override it anyway)
+  // These can change without causing a re-render
+  // NOTE: Internal state from useSpeechRecognition (transcript, listening) will still
+  // trigger re-renders because they're managed inside the component, not via props
+
+  return true; // Don't re-render
+});
+
+export default TowreFlowMemo;
