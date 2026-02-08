@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  memo,
+  useMemo,
+  useCallback,
+} from "react";
 import clockImg from "../../assets/clocck.svg";
 import handImg from "../../assets/hand.svg";
 import boxImg from "../../assets/box.svg";
@@ -1089,7 +1096,8 @@ const TowreFlow = ({
   const lang = getLocalData("lang");
 
   // Map language codes to browser Speech Recognition format
-  const getBrowserLanguage = (langCode) => {
+  // Memoize to prevent function recreation on every render
+  const getBrowserLanguage = useCallback((langCode) => {
     const browserLangMap = {
       en: "en-US",
       hi: "hi-IN",
@@ -1098,21 +1106,27 @@ const TowreFlow = ({
       ta: "ta-IN",
     };
     return browserLangMap[langCode] || "en-US";
-  };
+  }, []);
 
-  const wordsByLang = {
-    en: allEnglishWords,
-    hi: allHindiWords,
-    te: allTeluguWords,
-    ka: allKannadaWords,
-    ta: allTamilWords,
-  };
+  // Memoize language-based word selection to prevent recalculation on every render
+  const allWords = useMemo(() => {
+    const wordsByLang = {
+      en: allEnglishWords,
+      hi: allHindiWords,
+      te: allTeluguWords,
+      ka: allKannadaWords,
+      ta: allTamilWords,
+    };
+    return wordsByLang[lang] || allEnglishWords;
+  }, [lang]);
 
-  const allWords = wordsByLang[lang] || allEnglishWords;
-
-  const allWordSets = createWordSets(allWords);
+  // Memoize word sets creation - only recalculate when words or currentWordSetIndex changes
+  const allWordSets = useMemo(() => createWordSets(allWords), [allWords]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const currentWordSet = allWordSets[currentWordSetIndex];
+  const currentWordSet = useMemo(
+    () => allWordSets[currentWordSetIndex],
+    [allWordSets, currentWordSetIndex]
+  );
   const transcriptRef = useRef("");
   const location = useLocation();
   background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
@@ -1144,9 +1158,17 @@ const TowreFlow = ({
   const retryCountRef = useRef(0);
   const maxRetries = 3;
   const retryTimeoutRef = useRef(null);
+  const isRestartingRef = useRef(false);
+  const lastListeningStateRef = useRef(listening);
+  const restartDebounceRef = useRef(null);
 
   useEffect(() => {
-    console.log("🎧 Speech recognition listening state changed:", listening);
+    // Only log if listening state actually changed
+    if (lastListeningStateRef.current !== listening) {
+      console.log("🎧 Speech recognition listening state changed:", listening);
+      lastListeningStateRef.current = listening;
+    }
+
     if (!listening && transcript) {
       console.log(
         "⚠️ Speech recognition stopped but transcript exists:",
@@ -1155,74 +1177,102 @@ const TowreFlow = ({
     }
 
     // If we should be listening but we're not, try to restart with retry logic
+    // Add debounce to prevent rapid restart attempts during re-renders
     if (
       shouldBeListeningRef.current &&
       !listening &&
       showFinalWords &&
-      !showResults
+      !showResults &&
+      !isRestartingRef.current
     ) {
-      // Clear any existing retry timeout
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
+      // Clear any existing debounce timeout
+      if (restartDebounceRef.current) {
+        clearTimeout(restartDebounceRef.current);
       }
 
-      const attemptRestart = (attemptNumber) => {
+      // Debounce restart attempts to avoid rapid-fire restarts during re-renders
+      restartDebounceRef.current = setTimeout(() => {
+        // Double-check conditions after debounce delay
         if (
-          browserSupportsSpeechRecognition &&
           shouldBeListeningRef.current &&
           !listening &&
-          attemptNumber <= maxRetries
+          showFinalWords &&
+          !showResults &&
+          !isRestartingRef.current
         ) {
-          console.warn(
-            `⚠️ Speech recognition stopped unexpectedly. Attempting restart ${attemptNumber}/${maxRetries}...`
-          );
-          try {
-            resetTranscript();
-            SpeechRecognition.startListening({
-              continuous: true,
-              interimResults: true,
-              language: getBrowserLanguage(lang),
-            });
-            console.log(`🔄 Restart attempt ${attemptNumber} - command sent`);
-            retryCountRef.current = attemptNumber;
+          isRestartingRef.current = true;
 
-            // Check if it actually started after a delay
-            retryTimeoutRef.current = setTimeout(() => {
-              if (!listening && attemptNumber < maxRetries) {
-                // Retry with exponential backoff: 500ms, 1000ms, 2000ms
-                const delay = 500 * Math.pow(2, attemptNumber - 1);
-                attemptRestart(attemptNumber + 1);
-              } else if (!listening) {
-                console.error(
-                  "❌ Failed to restart speech recognition after all retries"
-                );
-                retryCountRef.current = 0;
-              } else {
-                console.log("✅ Speech recognition restarted successfully");
-                retryCountRef.current = 0;
-              }
-            }, 1000);
-          } catch (error) {
-            console.error(
-              `❌ Error in restart attempt ${attemptNumber}:`,
-              error
-            );
-            if (attemptNumber < maxRetries) {
-              const delay = 500 * Math.pow(2, attemptNumber - 1);
-              retryTimeoutRef.current = setTimeout(() => {
-                attemptRestart(attemptNumber + 1);
-              }, delay);
-            } else {
-              retryCountRef.current = 0;
-            }
+          // Clear any existing retry timeout
+          if (retryTimeoutRef.current) {
+            clearTimeout(retryTimeoutRef.current);
           }
-        }
-      };
 
-      // Start retry sequence with delay
-      retryTimeoutRef.current = setTimeout(() => {
-        attemptRestart(1);
-      }, 500);
+          const attemptRestart = (attemptNumber) => {
+            if (
+              browserSupportsSpeechRecognition &&
+              shouldBeListeningRef.current &&
+              !listening &&
+              attemptNumber <= maxRetries
+            ) {
+              console.warn(
+                `⚠️ Speech recognition stopped unexpectedly. Attempting restart ${attemptNumber}/${maxRetries}...`
+              );
+              try {
+                resetTranscript();
+                SpeechRecognition.startListening({
+                  continuous: true,
+                  interimResults: true,
+                  language: getBrowserLanguage(lang),
+                });
+                console.log(
+                  `🔄 Restart attempt ${attemptNumber} - command sent`
+                );
+                retryCountRef.current = attemptNumber;
+
+                // Check if it actually started after a delay
+                retryTimeoutRef.current = setTimeout(() => {
+                  // Check current listening state
+                  const currentListening = listening;
+                  if (!currentListening && attemptNumber < maxRetries) {
+                    // Retry with exponential backoff: 500ms, 1000ms, 2000ms
+                    const delay = 500 * Math.pow(2, attemptNumber - 1);
+                    attemptRestart(attemptNumber + 1);
+                  } else if (!currentListening) {
+                    console.error(
+                      "❌ Failed to restart speech recognition after all retries"
+                    );
+                    retryCountRef.current = 0;
+                    isRestartingRef.current = false;
+                  } else {
+                    console.log("✅ Speech recognition restarted successfully");
+                    retryCountRef.current = 0;
+                    isRestartingRef.current = false;
+                  }
+                }, 1500);
+              } catch (error) {
+                console.error(
+                  `❌ Error in restart attempt ${attemptNumber}:`,
+                  error
+                );
+                if (attemptNumber < maxRetries) {
+                  const delay = 500 * Math.pow(2, attemptNumber - 1);
+                  retryTimeoutRef.current = setTimeout(() => {
+                    attemptRestart(attemptNumber + 1);
+                  }, delay);
+                } else {
+                  retryCountRef.current = 0;
+                  isRestartingRef.current = false;
+                }
+              }
+            }
+          };
+
+          // Start retry sequence with delay
+          retryTimeoutRef.current = setTimeout(() => {
+            attemptRestart(1);
+          }, 1000); // Increased debounce delay to 1 second
+        }
+      }, 1000); // Debounce delay to prevent rapid restarts during re-renders
     }
   }, [
     listening,
@@ -1240,6 +1290,10 @@ const TowreFlow = ({
         clearTimeout(retryTimeoutRef.current);
         retryTimeoutRef.current = null;
       }
+      if (restartDebounceRef.current) {
+        clearTimeout(restartDebounceRef.current);
+        restartDebounceRef.current = null;
+      }
     };
   }, []);
 
@@ -1247,9 +1301,14 @@ const TowreFlow = ({
   useEffect(() => {
     if (showResults) {
       retryCountRef.current = 0;
+      isRestartingRef.current = false;
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
         retryTimeoutRef.current = null;
+      }
+      if (restartDebounceRef.current) {
+        clearTimeout(restartDebounceRef.current);
+        restartDebounceRef.current = null;
       }
     }
   }, [showResults]);
@@ -1387,12 +1446,14 @@ const TowreFlow = ({
     try {
       shouldBeListeningRef.current = true;
       retryCountRef.current = 0; // Reset retry count when starting fresh
+      isRestartingRef.current = false; // Reset restart flag
+      recognitionStartedRef.current = false; // Reset start flag
 
       // Stop any existing recognition before starting new one
       try {
         SpeechRecognition.stopListening();
         // Small delay to ensure clean stop
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 200));
       } catch (stopError) {
         // Ignore errors when stopping (might not be running)
       }
@@ -1585,6 +1646,8 @@ const TowreFlow = ({
 
           recognition.onstart = () => {
             recognitionStartedRef.current = true;
+            isRestartingRef.current = false; // Clear restart flag when actually started
+            retryCountRef.current = 0; // Reset retry count on successful start
             console.log(
               "✅ Speech recognition actually started (onstart event)"
             );
@@ -1859,11 +1922,18 @@ const TowreFlow = ({
   const stopAudioRecording = () => {
     shouldBeListeningRef.current = false;
     retryCountRef.current = 0; // Reset retry count when stopping
+    isRestartingRef.current = false; // Reset restart flag
 
     // Clear any pending retry timeouts
     if (retryTimeoutRef.current) {
       clearTimeout(retryTimeoutRef.current);
       retryTimeoutRef.current = null;
+    }
+
+    // Clear debounce timeout
+    if (restartDebounceRef.current) {
+      clearTimeout(restartDebounceRef.current);
+      restartDebounceRef.current = null;
     }
 
     console.log(
@@ -2605,4 +2675,59 @@ const TowreFlow = ({
   );
 };
 
-export default TowreFlow;
+// Memoize TowreFlow to prevent unnecessary re-renders
+// Only re-render when props that affect speech recognition or component behavior change
+const TowreFlowMemo = memo(TowreFlow, (prevProps, nextProps) => {
+  // Props that should trigger re-render
+  const criticalProps = [
+    "level",
+    "currentStep",
+    "steps",
+    "contentId",
+    "contentType",
+    "enableNext",
+    "showTimer",
+    "isShowCase",
+    "loading",
+    "disableScreen",
+    "currentImg",
+    "parentWords",
+    "background",
+  ];
+
+  // Check if any critical props changed
+  for (const prop of criticalProps) {
+    if (prevProps[prop] !== nextProps[prop]) {
+      return false; // Re-render
+    }
+  }
+
+  // Check progressData.currentPracticeStep (the only part we actually use)
+  const prevStep = prevProps.progressData?.currentPracticeStep;
+  const nextStep = nextProps.progressData?.currentPracticeStep;
+  if (prevStep !== nextStep) {
+    return false; // Re-render
+  }
+
+  // Check function references that might affect behavior
+  const functionProps = [
+    "handleNext",
+    "handleBack",
+    "setOpenMessageDialog",
+    "playTeacherAudio",
+  ];
+
+  for (const prop of functionProps) {
+    if (prevProps[prop] !== nextProps[prop]) {
+      return false; // Re-render
+    }
+  }
+
+  // Ignore changes to these props (they change frequently but don't affect speech recognition)
+  // vocabCount, wordCount, showProgress (we override it anyway)
+  // These can change without causing a re-render
+
+  return true; // Don't re-render
+});
+
+export default TowreFlowMemo;
