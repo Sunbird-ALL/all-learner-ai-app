@@ -22,6 +22,7 @@ import {
   getLocalData,
   setLocalData,
 } from "../../utils/constants";
+import { getFontFamily } from "../../utils/fontUtils";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import PropTypes from "prop-types";
 import { phoneticMatch } from "../../utils/phoneticUtils";
@@ -712,7 +713,7 @@ const WordsOrImage = ({
             letterSpacing: "1.5px",
             lineHeight: "normal",
             fontWeight: 600,
-            fontFamily: "Quicksand",
+            fontFamily: getFontFamily(language),
             marginLeft: isMobile ? "0px" : "20px",
             textAlign: "center",
           }}
@@ -812,7 +813,7 @@ const WordsOrImage = ({
                       letterSpacing: "2.2px",
                       lineHeight: "normal",
                       fontWeight: 600,
-                      fontFamily: "Quicksand",
+                      fontFamily: getFontFamily(language),
                       marginLeft: isMobile ? "10px" : "20px",
                     }}
                   >
@@ -1051,7 +1052,7 @@ const WordsOrImage = ({
                           ? "2rem"
                           : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: 700,
-                        fontFamily: "Quicksand",
+                        fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         ...(mechanism_id === "mechanic_15"
                           ? {
@@ -1107,7 +1108,7 @@ const WordsOrImage = ({
                           ? "2rem"
                           : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: 700,
-                        fontFamily: "Quicksand",
+                        fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                         "&::after": {
@@ -1178,7 +1179,7 @@ const WordsOrImage = ({
                           ? "2rem"
                           : "clamp(3rem, 4vw, 5rem)",
                         fontWeight: 700,
-                        fontFamily: "Quicksand",
+                        fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         //background: "#FFF0BD",
                         color:

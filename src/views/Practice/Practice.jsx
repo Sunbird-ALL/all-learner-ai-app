@@ -18,9 +18,7 @@ import Barakhadi from "../../RFlow/Barakhadi";
 import R3Flow from "../../RFlow/R3";
 import R4 from "../../RFlow/R4";
 import SoundHunt from "../../RFlow/SoundHunt";
-import SoundHuntS1 from "../../RFlow/SoundHuntS1";
 import SoundHuntS1Combined from "../../RFlow/SoundHuntS1Combined";
-import WordHuntS1 from "../../RFlow/WordHuntS1";
 import TowreFlow from "../../components/Practice/TowreFlow";
 import McqFlow from "../../components/Practice/McqFlow";
 import JumbledWord from "../../components/Practice/JumbledWord";
@@ -40,6 +38,7 @@ import {
   sendTestRigScore,
   setLocalData,
 } from "../../utils/constants";
+import { getFontFamily } from "../../utils/fontUtils";
 import axios from "axios";
 import WordsOrImage from "../../components/Mechanism/WordsOrImage";
 import { uniqueId } from "../../services/utilService";
@@ -7646,7 +7645,7 @@ const Practice = () => {
                   sx={{
                     fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                     fontWeight: 700,
-                    fontFamily: "Quicksand",
+                    fontFamily: getFontFamily(lang),
                     lineHeight: "50px",
                     background: "#FFF0BD",
                     color: color,
@@ -7671,7 +7670,7 @@ const Practice = () => {
                   color: color,
                   fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   lineHeight: "50px",
                 }}
               >
@@ -7697,7 +7696,7 @@ const Practice = () => {
                 sx={{
                   fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   lineHeight: "50px",
                   background: "#FFF0BD",
                 }}
@@ -7716,7 +7715,7 @@ const Practice = () => {
                 color: color,
                 fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
                 lineHeight: "50px",
               }}
               key={index}
@@ -8281,59 +8280,6 @@ const Practice = () => {
       return (
         <SoundHuntS1Combined {...commonProps} customLetters={customLetters} />
       );
-    } else if (
-      mechanism &&
-      typeof mechanism === "object" &&
-      mechanism.name === "wordHuntS1"
-    ) {
-      // WordHuntS1 mechanism from config - Read the word and choose the right sound
-      const getCurrentContentForWordHuntS1 = getCurrentContent(
-        progressData?.currentPracticeStep || 0
-      );
-      const customLetters = getCurrentContentForWordHuntS1?.customLetters;
-
-      // Common props for WordHuntS1 component
-      const commonProps = {
-        page,
-        setPage,
-        level: level,
-        header:
-          questions[currentQuestion]?.contentType === "image"
-            ? `Guess the below image`
-            : `Speak the below word`,
-        currentImg: currentImage,
-        parentWords: parentWords,
-        contentType: currentContentType,
-        contentId: questions[currentQuestion]?.contentId,
-        setVoiceText,
-        setRecordedAudio,
-        setVoiceAnimate,
-        storyLine,
-        handleNext,
-        type: "word",
-        enableNext,
-        showTimer: false,
-        points,
-        steps: questions?.length,
-        currentStep: currentQuestion + 1,
-        progressData,
-        showProgress: true,
-        background:
-          isShowCase &&
-          "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
-        playTeacherAudio,
-        callUpdateLearner: isShowCase,
-        disableScreen,
-        isShowCase,
-        handleBack: !isShowCase && handleBack,
-        setEnableNext,
-        loading,
-        setOpenMessageDialog,
-        vocabCount,
-        wordCount,
-      };
-
-      return <WordHuntS1 {...commonProps} customLetters={customLetters} />;
     } else if (readMatch === "true") {
       return (
         <ReadMatch

@@ -23,6 +23,7 @@ import {
   getLocalData,
   setLocalData,
 } from "../../utils/constants";
+import { getFontFamily } from "../../utils/fontUtils";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -1331,6 +1332,7 @@ const ParagraphFlow = ({
                     color: "#020202ff",
                     transition: "all 0.3s ease",
                     minHeight: "200px",
+                    fontFamily: getFontFamily(getLocalData("lang") || "en"),
                   }}
                   dangerouslySetInnerHTML={{
                     __html: getHighlightedText(),

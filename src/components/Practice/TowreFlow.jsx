@@ -28,6 +28,7 @@ import booksStackImg from "../../assets/totalWord.svg";
 import reportPandaImg from "../../assets/pandaa.svg";
 import reportImg from "../../assets/reportImg.svg";
 import { setLocalData, getLocalData } from "../../utils/constants";
+import { getFontFamily } from "../../utils/fontUtils";
 import { useNavigate, useLocation } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
 // Using native browser Speech Recognition API instead of library
@@ -2321,6 +2322,7 @@ const TowreFlow = ({
                               position: "absolute",
                               fontWeight: 700,
                               fontSize: isMobile ? 12 : 20,
+                              fontFamily: getFontFamily(lang),
                             }}
                           >
                             {wordObj.title}
@@ -2486,6 +2488,7 @@ const TowreFlow = ({
                                 color: isActive ? "#000" : "#aaa",
                                 fontWeight: 600,
                                 fontSize: isMobile ? 11 : 20,
+                                fontFamily: getFontFamily(lang),
                               }}
                             >
                               {wordObj.title}
