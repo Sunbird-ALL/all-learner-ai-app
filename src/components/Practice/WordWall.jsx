@@ -28,6 +28,7 @@ import Giftbox from "../../assets/Giftbox.json";
 import { getCorrectPracticeWords } from "../../services/orchestration/orchestrationService";
 import { shuffle } from "lodash";
 import { getLocalData, setLocalData } from "../../utils/constants";
+import { getFontFamily } from "../../utils/fontUtils";
 import giftscoreImg from "../../assets/giftscore.svg";
 import redboxImg from "../../assets/redbox.svg";
 import greenboxImg from "../../assets/greenbox.svg";
@@ -1276,7 +1277,7 @@ const WordWall = ({
                     fontSize: "50px",
                     lineHeight: "60px",
                     letterSpacing: "1%",
-                    fontFamily: "Quicksand",
+                    fontFamily: getFontFamily(lang),
                   }}
                 >
                   {currentAnswer?.text}

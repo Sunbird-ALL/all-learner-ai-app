@@ -31,6 +31,7 @@ import {
   getLocalData,
   setLocalData,
 } from "../../utils/constants";
+import { getFontFamily } from "../../utils/fontUtils";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -110,6 +111,7 @@ const UnderlinedSentence = ({
   hints,
   showUnderlines,
   onWordHover,
+  lang,
 }) => {
   const words = sentence.split(" ");
 
@@ -119,7 +121,7 @@ const UnderlinedSentence = ({
         fontSize: "20px",
         fontWeight: "600",
         color: "rgba(51, 63, 97, 1)",
-        fontFamily: "Quicksand",
+        fontFamily: getFontFamily(lang || "en"),
         fontStyle: "bold",
         textAlign: "center",
         lineHeight: "1.2",
@@ -781,6 +783,7 @@ const FluencyP4 = ({
                 hints={currentSentence.hints}
                 showUnderlines={showExtras}
                 onWordHover={handleWordHover}
+                lang={lang}
               />
 
               {hoveredWord && currentSentence?.hints[hoveredWord] && (

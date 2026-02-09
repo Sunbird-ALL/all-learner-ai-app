@@ -23,6 +23,7 @@ import {
   RetryIcon,
   setLocalData,
 } from "../utils/constants";
+import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import {
   updateLearnerProfile,
@@ -4337,6 +4338,9 @@ const SoundHuntS1Combined = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
+  // Get language from localStorage (accessible throughout component)
+  const language = getLocalData("lang") || "en";
+
   // Filter content based on milestone level and randomly select questions
   // Content selection logic:
   // 1. Get milestone level (M1 or M2) from level prop
@@ -4348,8 +4352,7 @@ const SoundHuntS1Combined = ({
   // 5. Randomly select 10 from each filtered list
   // 6. Combine: first 10 soundMatch, then 10 pictureWords
   const filteredContent = useMemo(() => {
-    // Get language from localStorage
-    const language = getLocalData("lang") || "en";
+    // Use language from component scope
 
     // Use currentLevel prop directly - it's already "S1" or "S2" or "P1", etc.
     const targetFlowName =
@@ -4379,7 +4382,7 @@ const SoundHuntS1Combined = ({
 
     // Combine: first 10 soundMatch, then 10 pictureWords
     return [...randomSoundMatch, ...randomPictureWords];
-  }, [level, currentLevel]);
+  }, [level, currentLevel, language]);
 
   // Audio recording state
   const mediaRecorderRef = React.useRef(null);
@@ -5242,7 +5245,7 @@ const SoundHuntS1Combined = ({
                             color: "#FFFFFF",
                             fontWeight: 600,
                             fontSize: isMobile ? "20px" : "28px",
-                            fontFamily: "Quicksand",
+                            fontFamily: getFontFamily(language),
                             textAlign: "center",
                           }}
                         >
@@ -5283,7 +5286,7 @@ const SoundHuntS1Combined = ({
                         color: "#FFFFFF",
                         fontWeight: 600,
                         fontSize: isMobile ? "32px" : "48px",
-                        fontFamily: "Quicksand",
+                        fontFamily: getFontFamily(language),
                         textAlign: "center",
                       }}
                     >
@@ -5473,7 +5476,7 @@ const SoundHuntS1Combined = ({
                                   : "#666666",
                               fontWeight: isSelected ? 600 : 500,
                               fontSize: isMobile ? "12px" : "14px",
-                              fontFamily: "Quicksand",
+                              fontFamily: getFontFamily(language),
                               textAlign: "center",
                             }}
                           >
@@ -5551,7 +5554,7 @@ const SoundHuntS1Combined = ({
                   color: "#FFFFFF",
                   fontWeight: 600,
                   fontSize: "28px",
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(language),
                   textAlign: "center",
                 }}
               >
@@ -5603,7 +5606,7 @@ const SoundHuntS1Combined = ({
                   color: "#FFFFFF",
                   fontWeight: 600,
                   fontSize: "28px",
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(language),
                   textAlign: "center",
                 }}
               >

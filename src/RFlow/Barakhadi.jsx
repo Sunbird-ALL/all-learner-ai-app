@@ -21,6 +21,7 @@ import {
   setLocalData,
   sendTestRigScore,
 } from "../utils/constants";
+import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telementryService";
 import { Typography, Stack, IconButton } from "@mui/material";
@@ -3864,6 +3865,7 @@ const Barakhadi = ({
                         margin: "0 2px",
                         fontSize: "18px",
                         flexShrink: 0,
+                        fontFamily: getFontFamily(lang),
                       }}
                     >
                       {v}
@@ -3903,6 +3905,7 @@ const Barakhadi = ({
                             margin: "4px 0",
                             fontSize: "18px",
                             flexShrink: 0,
+                            fontFamily: getFontFamily(lang),
                           }}
                         >
                           {consonant}
@@ -3933,6 +3936,7 @@ const Barakhadi = ({
                                     fontSize: "18px",
                                     fontWeight: "bold",
                                     minWidth: "55px",
+                                    fontFamily: getFontFamily(lang),
                                   }}
                                 >
                                   {syllable}
@@ -3957,7 +3961,7 @@ const Barakhadi = ({
                 fontSize: "22px",
                 fontWeight: "700",
                 color: "#333F61",
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
               }}
             >
               {lang === "hi"
@@ -4008,6 +4012,7 @@ const Barakhadi = ({
                     minWidth: "80px",
                     textAlign: "center",
                     display: "inline-block",
+                    fontFamily: getFontFamily(lang),
                   }}
                 >
                   {currentWordData?.text || ""}
@@ -4103,6 +4108,7 @@ const Barakhadi = ({
                   whiteSpace: "nowrap",
                   transition: "background 0.3s ease, color 0.3s ease",
                   marginBottom: "60px",
+                  fontFamily: getFontFamily(lang),
                 }}
               >
                 {word ? word : <span style={{ opacity: 0.4 }}></span>}

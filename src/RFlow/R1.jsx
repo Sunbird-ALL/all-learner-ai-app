@@ -23,6 +23,7 @@ import {
   setLocalData,
   sendTestRigScore,
 } from "../utils/constants";
+import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telementryService";
 import { Typography, Stack, IconButton } from "@mui/material";
@@ -1289,7 +1290,7 @@ const R1 = ({
                       >
                         <span
                           style={{
-                            fontFamily: "Quicksand",
+                            fontFamily: getFontFamily(lang),
                             color: "#FFFFFF",
                             fontSize: "25px",
                           }}
@@ -1356,7 +1357,7 @@ const R1 = ({
                   letterSpacing: 0.5,
                   display: "flex",
                   alignItems: "center",
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   gap: 0.3,
                   mt: 1,
                 }}
@@ -1596,7 +1597,7 @@ const R1 = ({
                   fontSize: "50px",
                   lineHeight: "1",
                   letterSpacing: "2%",
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                 }}
               >
                 {renderHighlightedWord(item?.word, item?.letter)}
