@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
@@ -69,34 +69,22 @@ const LetterHuntMechanicsContent = ({
   const [currentGameLevel, setCurrentGameLevel] = useState(1);
   const [isGameComplete, setIsGameComplete] = useState(false);
   const [sessionInitialized, setSessionInitialized] = useState(false);
+  const a3PassHandledRef = useRef(false);
   const navigate = useNavigate();
 
   // Handle A3 pass - redirect to discovery start (for F1) or next flow (for F2)
   const handleA3Pass = async () => {
+    if (a3PassHandledRef.current) {
+      return;
+    }
+    a3PassHandledRef.current = true;
+
     if (isF1FlowActive) {
       console.log("F1 A3 passed - saving progress and redirecting to F2");
 
       // Save F1 A3 completion progress before transitioning to F2
       const lang = getLocalData("lang") || "en";
       const sessionId = getLocalData("sessionId");
-
-      if (sessionId && lang) {
-        try {
-          // F1 A3 is the last step (index 20), so save as lesson 21 (1-indexed) with 100% progress
-          await addLesson({
-            sessionId: sessionId,
-            milestone: "practice",
-            lesson: "21", // F1 A3 is index 20, so 1-indexed is 21
-            progress: 100, // F1 flow is complete
-            language: lang,
-            milestoneLevel: "B",
-            subMilestoneLevel: "F1",
-          });
-          console.log("F1 A3 completion progress saved successfully");
-        } catch (error) {
-          console.error("Error saving F1 A3 completion progress:", error);
-        }
-      }
 
       // Clear F1 flow index to reset for F2
       setLocalData("f1FlowIndex", null);
@@ -140,55 +128,33 @@ const LetterHuntMechanicsContent = ({
     } else if (isF2FlowActive) {
       console.log("F2 A3 passed - saving progress and redirecting to F3");
 
-      // Save F2 A3 completion progress before transitioning to F3
       const lang = getLocalData("lang") || "en";
       const sessionId = getLocalData("sessionId");
 
+      setLocalData("f2FlowIndex", null);
+      setLocalData("f2FlowComplete", "true");
+      setLocalData("f3FlowIndex", 0);
+
       if (sessionId && lang) {
         try {
-          // F2 A3 is the last step (index 20), so save as lesson 21 (1-indexed) with 100% progress
+          const f3TotalSteps = F3_FLOW.length;
+          const f3Progress = Math.round(((0 + 1) / f3TotalSteps) * 100); // Index 0 = lesson 1
+
           await addLesson({
             sessionId: sessionId,
             milestone: "practice",
-            lesson: "21", // F2 A3 is index 20, so 1-indexed is 21
-            progress: 100, // F2 flow is complete
+            lesson: "1", // F3 starts at index 0, so 1-indexed is 1
+            progress: f3Progress,
             language: lang,
             milestoneLevel: "B",
-            subMilestoneLevel: "F2",
+            subMilestoneLevel: "F3",
           });
-          console.log("F2 A3 completion progress saved successfully");
+          console.log(
+            "F3 flow initialized at lesson 1 (index 0) after F2 completion"
+          );
         } catch (error) {
-          console.error("Error saving F2 A3 completion progress:", error);
+          console.error("Error initializing F3 flow progress:", error);
         }
-      }
-
-      // Clear F2 flow index to reset for F3
-      setLocalData("f2FlowIndex", null);
-      setLocalData("f2FlowComplete", "true");
-
-      // IMPORTANT: Initialize F3 flow index to 0 to start from F3-P1
-      // This ensures F3 starts fresh after F2 completes
-      setLocalData("f3FlowIndex", 0);
-
-      // Save F3 progress as lesson 1 (index 0) to ensure backend knows to start F3 from beginning
-      try {
-        const f3TotalSteps = F3_FLOW.length;
-        const f3Progress = Math.round(((0 + 1) / f3TotalSteps) * 100); // Index 0 = lesson 1
-
-        await addLesson({
-          sessionId: sessionId,
-          milestone: "practice",
-          lesson: "1", // F3 starts at index 0, so 1-indexed is 1
-          progress: f3Progress,
-          language: lang,
-          milestoneLevel: "B",
-          subMilestoneLevel: "F3",
-        });
-        console.log(
-          "F3 flow initialized at lesson 1 (index 0) after F2 completion"
-        );
-      } catch (error) {
-        console.error("Error initializing F3 flow progress:", error);
       }
 
       // Clear practice progress for F3 to start fresh
@@ -607,25 +573,12 @@ const LetterHuntMechanicsContent = ({
 
         // Store redirect info to execute after success screen is shown
         const executeRedirect = async () => {
-          console.log("executeRedirect called:", {
-            passRedirect,
-            isF1FlowActive,
-            isF2FlowActive,
-          });
           if (passRedirect === "F2" || passRedirect === "F3") {
-            // Transition to next milestone - use handleA3Pass to properly transition
-            console.log(
-              `A3 passed - redirecting to ${passRedirect} via handleA3Pass`
-            );
-            // Delay to allow success screen to show first
-            setTimeout(() => {
-              if (handleA3Pass) {
-                handleA3Pass();
-              } else if (handleNext) {
-                // Fallback if handleA3Pass not available
-                handleNext(false);
-              }
-            }, 4000); // 4 second delay to ensure success screen is visible
+            if (!a3PassHandledRef.current) {
+              await handleA3Pass();
+            } else {
+              navigate("/discover-start");
+            }
             return;
           }
 
