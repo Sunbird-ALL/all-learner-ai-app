@@ -3076,31 +3076,10 @@ const Barakhadi = ({
   }, [targetWord, lang]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const lang = getLocalData("lang");
-        // Fetch assessment data
-        const resAssessment = await fetchAssessmentData(lang);
-        const sentences = resAssessment?.data?.find(
-          (elem) => elem.category === "Char"
-        );
-
-        if (!sentences?.collectionId) {
-          console.error("No collection ID found for sentences.");
-          return;
-        }
-
-        const resPagination = await fetchPaginatedContent(
-          sentences.collectionId,
-          10
-        );
-
-        setTotalSyllableCount(resPagination?.totalSyllableCount);
-        setCurrentCollectionId(sentences?.collectionId);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    })();
+    // Removed unnecessary getAssessment & Pagination API calls
+    console.log(
+      "Barakhadi component mounted - skipping assessment/pagination API calls"
+    );
   }, []);
 
   const handleCompletion = async () => {
@@ -3131,17 +3110,7 @@ const Barakhadi = ({
       console.error("Error creating learner progress:", error);
     }
 
-    try {
-      const getSetResultRes = await fetchGetSetResult(
-        sub_session_id,
-        currentContentType,
-        currentCollectionId,
-        totalSyllableCount
-      );
-      console.log("GetSet result:", getSetResultRes);
-    } catch (error) {
-      console.error("Error fetching set result:", error);
-    }
+    // Removed fetchGetSetResult call since currentCollectionId and totalSyllableCount
 
     if (!(localStorage.getItem("contentSessionId") !== null)) {
       let point = 1;

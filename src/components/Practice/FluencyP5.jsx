@@ -442,8 +442,25 @@ const FluencyP5 = ({
   }, [showContent]);
 
   const handlePauseClick = () => {
+    // Capture transcript BEFORE stopping
+    const currentTranscript = (
+      transcript ||
+      transcriptRef.current ||
+      ""
+    ).trim();
+
+    // Stop listening
     SpeechRecognition.stopListening();
-    setFinalTranscript(transcriptRef.current);
+    const finalSimilarity = getSimilarity(
+      currentTranscript,
+      currentSentence.sentence
+    );
+    const finalIsMatch = finalSimilarity >= 0.6;
+
+    // Update isMatch state with final calculation
+    setIsMatch(finalIsMatch);
+
+    setFinalTranscript(currentTranscript);
     setPaused(true);
     setShowBearDance(true);
     setShowConfetti(true);
@@ -454,7 +471,6 @@ const FluencyP5 = ({
     setTimeout(() => {
       setShowConfetti(false);
       setShowBearDance(false);
-
       setShowFinalState(true);
       setShowResult(true);
     }, 3000);
@@ -470,12 +486,16 @@ const FluencyP5 = ({
   };
 
   const handleSpeakClick = () => {
+    const lang = getLocalData("lang") || "en";
+
     setIsSpeaking(true);
     setShowContent(true);
     resetTranscript();
+
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
+      language: lang === "en" ? "en-US" : lang,
     });
   };
 
@@ -764,7 +784,7 @@ const FluencyP5 = ({
               </span>
             ) : (
               <span style={{ fontWeight: "bold" }}>
-                Please try again, your speech didn’t match enough
+                Please try again, your speech didn't match enough
               </span>
             )}
           </div>
