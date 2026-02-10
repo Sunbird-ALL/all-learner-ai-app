@@ -5567,47 +5567,8 @@ const Practice = () => {
         setProgressData(practiceProgress);
         setCurrentQuestion(0);
 
-        // Update points for F3 flow based on contentCount
-        if (
-          currentF3FlowStep.step &&
-          !localStorage.getItem("contentSessionId")
-        ) {
-          try {
-            // Get current content config to get contentCount
-            const lang = getLocalData("lang") || "en";
-            const f3Config = levelGetContent[lang]?.["F3"];
-            const currentStepContent = f3Config?.[currentF3FlowStep.index];
-            // For F3, contentCount might be in sub-steps (letterLauncherContentCount, etc.)
-            const contentCount =
-              currentStepContent?.letterLauncherContentCount ||
-              currentStepContent?.soundHuntS1CombinedContentCount ||
-              currentStepContent?.soundHuntContentCount ||
-              currentStepContent?.letterHuntContentCount ||
-              currentStepContent?.memoryChallengeContentCount ||
-              currentStepContent?.readAloudContentCount ||
-              currentStepContent?.contentCount ||
-              questions.length ||
-              1;
-
-            // Points should be based on contentCount
-            const pointsToAdd = contentCount;
-            const milestone = "B"; // F3 flow uses milestone "B"
-
-            const result = await addPointer(pointsToAdd, milestone);
-            const awardedPoints = result?.result?.points;
-
-            if (awardedPoints === pointsToAdd) {
-              setPoints(result?.result?.totalLanguagePoints || 0);
-              console.log("F3 flow points updated:", {
-                pointsAdded: pointsToAdd,
-                contentCount,
-                totalPoints: result?.result?.totalLanguagePoints,
-              });
-            }
-          } catch (error) {
-            console.error("Error updating F3 flow points:", error);
-          }
-        }
+        // F3 flow points are handled entirely by LetterLauncherMechanics component
+        // Do not add points here to avoid duplicates
 
         // Use F3 flow index to get content from F3 config
         const effectiveLang = lang || "en";
@@ -6000,8 +5961,8 @@ const Practice = () => {
         (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
         (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt);
 
-      // Update UI points for F1/F2 flows when they complete via LetterHuntMechanics
-      // LetterHuntMechanics already updated points in backend, we just need to fetch and update UI
+      // Update UI points for F1/F2/F3 flows when they complete via LetterHuntMechanics/LetterLauncherMechanics
+      // LetterHuntMechanics/LetterLauncherMechanics already updated points in backend, we just need to fetch and update UI
       if (
         (currentQuestion === questions.length - 1 || isGameOver) &&
         shouldSkipContentFetch &&
@@ -6027,39 +5988,15 @@ const Practice = () => {
             );
           }
         } else if (isF3FlowByMilestone) {
-          // F3 flow points are handled by LetterLauncherMechanics, but if it didn't update,
-          // we should update here
+          // F3 flow points are handled entirely by LetterLauncherMechanics
+          // Just fetch the updated points from backend to update UI
           try {
-            const lang = getLocalData("lang") || "en";
-            const f3Config = levelGetContent[lang]?.["F3"];
-            const currentF3Step = getF3FlowStep();
-            const currentStepContent = f3Config?.[currentF3Step.index];
-            // For F3, contentCount might be in sub-steps
-            const pointsToAdd =
-              currentStepContent?.letterLauncherContentCount ||
-              currentStepContent?.soundHuntS1CombinedContentCount ||
-              currentStepContent?.soundHuntContentCount ||
-              currentStepContent?.letterHuntContentCount ||
-              currentStepContent?.memoryChallengeContentCount ||
-              currentStepContent?.readAloudContentCount ||
-              currentStepContent?.contentCount ||
-              questions.length ||
-              1;
-
-            const milestone = "B"; // F3 flow uses milestone "B"
-            const result = await addPointer(pointsToAdd, milestone);
-            const awardedPoints = result?.result?.points;
-
-            if (awardedPoints === pointsToAdd) {
-              setPoints(result?.result?.totalLanguagePoints || 0);
-              console.log("F3 flow points updated (shouldSkipContentFetch):", {
-                pointsAdded: pointsToAdd,
-                totalPoints: result?.result?.totalLanguagePoints,
-              });
-            }
+            const userPointsRes = await fetchUserPoints();
+            const totalPoints = userPointsRes?.result?.totalLanguagePoints || 0;
+            setPoints(totalPoints);
           } catch (error) {
             console.error(
-              "Error updating F3 flow points (shouldSkipContentFetch):",
+              "Error fetching F3 flow points (shouldSkipContentFetch):",
               error
             );
           }
@@ -6534,36 +6471,6 @@ const Practice = () => {
           const currentGetContent = getCurrentContent(newPracticeStep);
           setMechanism(currentGetContent?.mechanism || {});
         }
-
-        // Mechanism is now set immediately above for all flows:
-        // - F1/F2/F3 flows: Set based on flow step type
-        // - Non-F flows (m1, m2, etc.): Set immediately from getCurrentContent
-        // No setTimeout needed - this prevents blank screens and ensures immediate rendering
-
-        // if(virtualId === "6760800019"){
-        //   setLevel(12);
-        //   //setMechanism({ id: "read_aloud", name: "readAloud" });
-        // }
-
-        // if(virtualId === "1621936833"){
-        //   setLevel(13);
-        //   setMechanism({ id: "r3", name: "r3" });
-        // }
-        // if(virtualId === "9526496994"){
-        //   setLevel(14);
-        // }
-        // if(virtualId === "7656513916"){
-        //   setLevel(4);
-        // }
-        // if(virtualId === "3464419415"){
-        //   setLevel(5);
-        // }
-        // if(virtualId === "6131132191"){
-        //   setLevel(6);
-        // }
-        // if(virtualId === "8909322850"){
-        //   setLevel(7);
-        // }
 
         if (levelMapping[virtualId] !== undefined) {
           setLevel(levelMapping[virtualId]);
