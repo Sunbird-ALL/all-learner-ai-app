@@ -316,7 +316,7 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
       {/* Actual AserFlow Component */}
       <AserFlow
         key={gameKey}
-        isShowCase={true}
+        isDemo={true}
         handleBack={handleBack}
         onSpeakerClick={handleSpeakerClick}
         onBubbleClick={handleBubbleClick}

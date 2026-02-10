@@ -88,7 +88,7 @@ const AserFlow = ({
   playTeacherAudio = () => {},
   callUpdateLearner,
   // disableScreen,
-  isShowCase,
+  isDemo,
   handleBack,
   // setEnableNext,
   loading,
@@ -144,7 +144,8 @@ const AserFlow = ({
   const [open, setOpen] = useState(false);
   const [currentItemNumber, setCurrentItemNumber] = useState(0);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const TOTAL_ITEMS = 10;
+  // In demo mode, only show 1 question; otherwise show 10
+  const TOTAL_ITEMS = isDemo ? 1 : 10;
 
   const completionPercentage = Math.min(
     (Math.min(currentItemNumber + 1, TOTAL_ITEMS) / TOTAL_ITEMS) * 100,
@@ -170,19 +171,24 @@ const AserFlow = ({
           return;
         }
 
+        // In demo mode, only fetch 1 question; otherwise fetch 10
+        const questionCount = isDemo ? 1 : 10;
         const resPagination = await fetchPaginatedContent(
           sentences.collectionId,
-          10
+          questionCount
         );
 
-        await addLesson({
-          sessionId,
-          milestone: `practice`,
-          lesson: "0",
-          progress: 0,
-          language: lang,
-          milestoneLevel: "B",
-        });
+        // Only call addLesson if not in preview/demo mode
+        if (!isDemo) {
+          await addLesson({
+            sessionId,
+            milestone: `practice`,
+            lesson: "0",
+            progress: 0,
+            language: lang,
+            milestoneLevel: "B",
+          });
+        }
 
         // Update state
         setCurrentContentType("Char");
@@ -211,9 +217,12 @@ const AserFlow = ({
           (ch) => !existingLetters.includes(ch)
         );
 
+        // In demo mode, add more distractors (7-8) to have enough bubbles for selection
+        // In normal mode, add 2 distractors
+        const distractorCount = isDemo ? 7 : 2;
         const extraChars = availableChars
           .sort(() => 0.5 - Math.random())
-          .slice(0, 2);
+          .slice(0, distractorCount);
 
         const extraQuestions = extraChars.map((ch) => ({
           contentId: `fake_${ch}`,
@@ -228,7 +237,7 @@ const AserFlow = ({
         console.error("Error fetching data:", error);
       }
     })();
-  }, []);
+  }, [isDemo, sessionId]);
 
   useEffect(() => {
     if (questions?.length) {
@@ -243,7 +252,7 @@ const AserFlow = ({
 
   const handlePlayAudio = () => {
     // If in demo mode and custom handler provided, call it (in addition to normal flow)
-    if (isShowCase && onSpeakerClick) {
+    if (isDemo && onSpeakerClick) {
       onSpeakerClick();
     }
 
@@ -280,6 +289,11 @@ const AserFlow = ({
   };
 
   const handleCompletion = async () => {
+    // Skip API calls in preview/demo mode
+    if (isDemo) {
+      return;
+    }
+
     const sub_session_id = getLocalData("sub_session_id");
 
     try {
@@ -312,6 +326,15 @@ const AserFlow = ({
         currentCollectionId,
         totalSyllableCount
       );
+      const { data } = getSetResultRes;
+      await addLesson({
+        sessionId,
+        milestone: `practice`,
+        lesson: data?.currentLevel !== "B" ? "0" : "1",
+        progress: data?.currentLevel !== "B" ? 0 : 5,
+        language: lang,
+        milestoneLevel: data?.currentLevel || "B",
+      });
     } catch (error) {
       console.error("Error fetching set result:", error);
     }
@@ -376,8 +399,14 @@ const AserFlow = ({
 
     // If in demo mode and custom handler provided, call it (in addition to normal flow)
     // Pass whether the answer was correct
-    if (isShowCase && onBubbleClick) {
+    if (isDemo && onBubbleClick) {
       onBubbleClick(letter, index, correct);
+
+      // In demo mode, if answer is correct, don't proceed to next question
+      // Let the preview component handle the completion screen
+      if (correct) {
+        return; // Stop here, don't call handleNextClick
+      }
     }
 
     // Always proceed to next question (unless in blocked demo mode with wrong answer)
@@ -394,11 +423,19 @@ const AserFlow = ({
   };
 
   const handleNextClick = async (wasCorrect = false) => {
+    // In demo mode, don't proceed to next question - preview component handles completion
+    if (isDemo) {
+      return;
+    }
+
     // If all items are completed, handle navigation
     if (currentItemNumber >= TOTAL_ITEMS) {
       await handleCompletion();
       setLocalData("rFlow", false);
-      callTelemetryDiscovery("Discovery-AserFlow");
+      // Skip telemetry in preview/demo mode
+      if (!isDemo) {
+        callTelemetryDiscovery("Discovery-AserFlow");
+      }
       handleNext?.();
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
         navigate("/");
@@ -431,7 +468,10 @@ const AserFlow = ({
       );
       await handleCompletion();
       setLocalData("rFlow", false);
-      callTelemetryDiscovery("Discovery-AserFlow");
+      // Skip telemetry in preview/demo mode
+      if (!isDemo) {
+        callTelemetryDiscovery("Discovery-AserFlow");
+      }
 
       // Delay showing success message to allow next button to appear first
       // Show success message after a short delay (optional - user can use next button instead)
@@ -743,7 +783,7 @@ const AserFlow = ({
                   </span>
 
                   {/* Pointer under bubble for demo - show only for correct bubble in demo mode */}
-                  {isShowCase && char === correctLetter && !disableBubbles && (
+                  {isDemo && char === correctLetter && !disableBubbles && (
                     <div
                       style={{
                         position: "absolute",
@@ -831,8 +871,10 @@ const AserFlow = ({
               <ListenButton height={50} width={50} />
             </Box>
           </Box>
-          {/* Show next button only after completing all 10 items */}
+          {/* Show next button only after completing all items (hide in demo mode) */}
           {(() => {
+            // Don't show next button in demo mode - preview component handles completion
+            if (isDemo) return false;
             const shouldShowNext = currentItemNumber >= TOTAL_ITEMS;
             console.log("AserFlow - Next button render check:", {
               currentItemNumber,
@@ -885,7 +927,7 @@ const AserFlow = ({
       </div>
 
       {/* Animation styles for demo pointer */}
-      {isShowCase && (
+      {isDemo && (
         <style>
           {`
             @keyframes pointDown {
@@ -901,7 +943,9 @@ const AserFlow = ({
       )}
 
       {/* Success Message Dialog with Panda - Rendered via Portal to ensure proper centering */}
+      {/* Don't show success message in demo mode - preview component handles completion */}
       {showSuccessMessage &&
+        !isDemo &&
         createPortal(
           <MessageDialog
             message="You have successfully completed the character game"
