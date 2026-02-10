@@ -38,6 +38,7 @@ import {
   sendTestRigScore,
   setLocalData,
 } from "../../utils/constants";
+import { getFontFamily } from "../../utils/fontUtils";
 import axios from "axios";
 import WordsOrImage from "../../components/Mechanism/WordsOrImage";
 import { uniqueId } from "../../services/utilService";
@@ -7614,7 +7615,7 @@ const Practice = () => {
                   sx={{
                     fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                     fontWeight: 700,
-                    fontFamily: "Quicksand",
+                    fontFamily: getFontFamily(lang),
                     lineHeight: "50px",
                     background: "#FFF0BD",
                     color: color,
@@ -7639,7 +7640,7 @@ const Practice = () => {
                   color: color,
                   fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   lineHeight: "50px",
                 }}
               >
@@ -7665,7 +7666,7 @@ const Practice = () => {
                 sx={{
                   fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   lineHeight: "50px",
                   background: "#FFF0BD",
                 }}
@@ -7684,7 +7685,7 @@ const Practice = () => {
                 color: color,
                 fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
                 lineHeight: "50px",
               }}
               key={index}
@@ -8018,6 +8019,8 @@ const Practice = () => {
         />
       );
     } else if (tFlow === "true") {
+      // Note: React.memo with custom comparison in TowreFlow will prevent
+      // unnecessary re-renders even if props object is recreated
       return (
         <TowreFlow
           page={page}
