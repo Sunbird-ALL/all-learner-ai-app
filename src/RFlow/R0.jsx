@@ -22,6 +22,7 @@ import {
   RetryIcon,
   setLocalData,
 } from "../utils/constants";
+import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telementryService";
 import { Typography, Stack, IconButton } from "@mui/material";
@@ -5208,7 +5209,7 @@ const R0 = ({
             >
               <Typography
                 sx={{
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   fontWeight: 700,
                   fontSize: "20px",
                   color: "#FF9800",
@@ -5277,7 +5278,7 @@ const R0 = ({
                       >
                         <span
                           style={{
-                            fontFamily: "Quicksand",
+                            fontFamily: getFontFamily(lang),
                             color: "#FFFFFF",
                             fontSize: "28px",
                           }}
@@ -5315,7 +5316,7 @@ const R0 = ({
                   fontWeight: 500,
                   fontSize: { xs: 50, md: 75 },
                   lineHeight: 1,
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   flex: 1,
                   textAlign: "center",
                   p: 0.2,
@@ -5379,7 +5380,7 @@ const R0 = ({
                   fontSize: "50px",
                   lineHeight: "1",
                   letterSpacing: "2%",
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                 }}
               >
                 {renderHighlightedWord(item.word, item.letter)}

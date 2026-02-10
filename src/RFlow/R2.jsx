@@ -25,6 +25,7 @@ import {
   RetryIcon,
   setLocalData,
 } from "../utils/constants";
+import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import chairImg from "../assets/chair.svg";
 import correctTick from "../assets/correctTick.svg";

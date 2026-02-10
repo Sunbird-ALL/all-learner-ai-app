@@ -23,8 +23,9 @@ import {
 import { wordData } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
 import { motion, AnimatePresence } from "framer-motion";
+import { getFontFamily } from "../../utils/fontUtils";
 
-const AlphabetCard = ({ item, playAudio, isActive, mode }) => {
+const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
   const renderHighlightedWord = () => {
     const originalWord = item.word || "";
     const displayVal = item.display || "";
@@ -128,6 +129,7 @@ const AlphabetCard = ({ item, playAudio, isActive, mode }) => {
               color: "#333F61",
               fontSize: mode === "alphabet" ? "2.8rem" : "2.2rem",
               width: "100%",
+              fontFamily: getFontFamily(lang || "en"),
             }}
           >
             {item.display}
@@ -190,6 +192,7 @@ const AlphabetCard = ({ item, playAudio, isActive, mode }) => {
             textAlign: "center",
             fontSize: "1.3rem",
             mt: 0.5,
+            fontFamily: getFontFamily(lang || "en"),
           }}
         >
           {renderHighlightedWord()}
@@ -581,6 +584,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
                     transition={{ duration: 0.25, delay: index * 0.05 }}
                   >
                     <AlphabetCard
+                      lang={activeLang}
                       item={item}
                       playAudio={playAudio}
                       isAnimating={playingKey === item.key}

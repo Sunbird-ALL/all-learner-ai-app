@@ -22,6 +22,7 @@ import {
   RetryIcon,
   setLocalData,
 } from "../utils/constants";
+import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telementryService";
 import { Typography, Stack, IconButton } from "@mui/material";
@@ -5512,11 +5513,11 @@ export const dataTe = [
         id: 57,
         title: "Letter",
         letter: "య",
-        word: "యద",
-        image: getAssetUrl(s3Assets.యదImg),
-        audio: getAssetAudioUrl(s3Assets.యయదAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.యయదAudio),
-        alaphabetChartAudio: getAssetAudioUrl(s3Assets.యయదAudio),
+        word: "యమ",
+        image: getAssetUrl(s3Assets.యమImg),
+        audio: getAssetAudioUrl(s3Assets.యయమAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.యయమAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.యయమAudio),
       },
       {
         id: 58,
@@ -6806,7 +6807,7 @@ const LetterTrain = ({
                       >
                         <span
                           style={{
-                            fontFamily: "Quicksand",
+                            fontFamily: getFontFamily(lang),
                             color: "#FFFFFF",
                             fontSize: isMobile
                               ? "20px"
@@ -6848,7 +6849,7 @@ const LetterTrain = ({
                   fontWeight: 500,
                   fontSize: { xs: 50, md: 75 },
                   lineHeight: 1,
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   flex: 1,
                   textAlign: "center",
                   p: 0.2,
@@ -6915,7 +6916,7 @@ const LetterTrain = ({
                   fontSize: "50px",
                   lineHeight: "1",
                   letterSpacing: "2%",
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                 }}
               >
                 {renderHighlightedWord(item.word, item.syllable || item.letter)}

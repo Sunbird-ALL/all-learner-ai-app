@@ -13362,7 +13362,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L3",
         multilingual: false,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["శ", "అ", "ప", "న", "వ"],
+        customLetters: ["శ", "అ", "న", "ప", "స"],
         contentCount: 10,
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
@@ -13402,7 +13402,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P4",
         multilingual: false,
         mechanism: { id: "letterTrain", name: "letterTrain" },
-        customLetters: ["స", "ఊ", "డ", "ద", "ఈ"],
+        customLetters: ["వ", "ఊ", "డ", "ద", "ఈ"],
         contentCount: 10,
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
