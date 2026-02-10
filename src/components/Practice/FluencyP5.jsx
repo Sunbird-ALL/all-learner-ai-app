@@ -258,6 +258,18 @@ const FluencyP5 = ({
     return matches / total;
   };
 
+  const getBrowserLanguage = (langCode) => {
+    const browserLangMap = {
+      en: "en-US",
+      hi: "hi-IN",
+      te: "te-IN",
+      ka: "kn-IN",
+      kn: "kn-IN",
+      ta: "ta-IN",
+    };
+    return browserLangMap[langCode] || "en-US";
+  };
+
   useEffect(() => {
     transcriptRef.current = transcript;
     const similarity = getSimilarity(transcript, currentSentence.sentence);
@@ -495,7 +507,7 @@ const FluencyP5 = ({
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
-      language: lang === "en" ? "en-US" : lang,
+      language: getBrowserLanguage(lang),
     });
   };
 
