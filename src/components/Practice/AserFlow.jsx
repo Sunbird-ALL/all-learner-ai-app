@@ -330,7 +330,7 @@ const AserFlow = ({
       await addLesson({
         sessionId,
         milestone: `practice`,
-        lesson: data?.currentLevel !== "B" ? 0 : 1,
+        lesson: data?.currentLevel !== "B" ? "0" : "1",
         progress: data?.currentLevel !== "B" ? 0 : 5,
         language: lang,
         milestoneLevel: data?.currentLevel || "B",
