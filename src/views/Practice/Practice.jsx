@@ -6293,9 +6293,16 @@ const Practice = () => {
           isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
+          // Determine milestone type based on the NEXT step (newPracticeStep), not the current step
+          // This ensures that when P2 completes and next is S1, milestone is "showcase"
+          const nextStepTitle = practiceSteps?.[newPracticeStep]?.title || "";
+          const nextStepMilestoneType = ["S1", "S2"].includes(nextStepTitle)
+            ? "showcase"
+            : "practice";
+
           await addLesson({
             sessionId: sessionId,
-            milestone: milestoneType,
+            milestone: nextStepMilestoneType,
             lesson: newPracticeStep,
             progress: currentPracticeProgress,
             language: lang,
