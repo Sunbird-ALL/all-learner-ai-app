@@ -334,6 +334,7 @@ const AserFlow = ({
         progress: data?.currentLevel !== "B" ? 0 : 5,
         language: lang,
         milestoneLevel: data?.currentLevel || "B",
+        ...(data?.currentLevel === "B" && { subMilestoneLevel: "F1" }),
       });
     } catch (error) {
       console.error("Error fetching set result:", error);
