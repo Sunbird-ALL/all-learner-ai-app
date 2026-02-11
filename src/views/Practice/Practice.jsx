@@ -5452,7 +5452,7 @@ const Practice = () => {
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: targetIndex.toString(),
+                lesson: (targetIndex + 1).toString(), // Convert to 1-indexed for backend (matches F1/F2/F3 pattern)
                 progress: currentPracticeProgress,
                 language: lang,
                 milestoneLevel: "B",
@@ -5460,6 +5460,7 @@ const Practice = () => {
               });
               console.log("F3 flow redirect progress saved:", {
                 index: targetIndex,
+                lessonSaved: (targetIndex + 1).toString(), // 1-indexed
                 progress: currentPracticeProgress,
               });
             } catch (e) {
