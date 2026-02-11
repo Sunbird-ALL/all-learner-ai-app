@@ -5211,7 +5211,7 @@ const R0 = ({
                 sx={{
                   fontFamily: getFontFamily(lang),
                   fontWeight: 700,
-                  fontSize: "20px",
+                  fontSize: lang === "te" ? "23px" : "20px",
                   color: "#FF9800",
                   whiteSpace: "nowrap",
                   textAlign: "center",
@@ -5280,7 +5280,7 @@ const R0 = ({
                           style={{
                             fontFamily: getFontFamily(lang),
                             color: "#FFFFFF",
-                            fontSize: "28px",
+                            fontSize: lang === "te" ? "32px" : "28px",
                           }}
                         >
                           {ch}

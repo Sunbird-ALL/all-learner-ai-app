@@ -3863,7 +3863,7 @@ const Barakhadi = ({
                         justifyContent: "center",
                         alignItems: "center",
                         margin: "0 2px",
-                        fontSize: "18px",
+                        fontSize: lang === "te" ? "20px" : "18px",
                         flexShrink: 0,
                         fontFamily: getFontFamily(lang),
                       }}
@@ -3903,7 +3903,7 @@ const Barakhadi = ({
                             justifyContent: "center",
                             alignItems: "center",
                             margin: "4px 0",
-                            fontSize: "18px",
+                            fontSize: lang === "te" ? "20px" : "18px",
                             flexShrink: 0,
                             fontFamily: getFontFamily(lang),
                           }}
@@ -3933,7 +3933,7 @@ const Barakhadi = ({
                                     width: 55,
                                     height: 55,
                                     border: "1px solid #ccc",
-                                    fontSize: "18px",
+                                    fontSize: lang === "te" ? "20px" : "18px",
                                     fontWeight: "bold",
                                     minWidth: "55px",
                                     fontFamily: getFontFamily(lang),
@@ -3958,7 +3958,7 @@ const Barakhadi = ({
           <div style={titleStyle}>
             <span
               style={{
-                fontSize: "22px",
+                fontSize: lang === "te" ? "25px" : "22px",
                 fontWeight: "700",
                 color: "#333F61",
                 fontFamily: getFontFamily(lang),
