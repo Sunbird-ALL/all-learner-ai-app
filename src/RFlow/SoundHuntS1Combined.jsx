@@ -5244,7 +5244,14 @@ const SoundHuntS1Combined = ({
                           style={{
                             color: "#FFFFFF",
                             fontWeight: 600,
-                            fontSize: isMobile ? "20px" : "28px",
+                            fontSize:
+                              language === "te"
+                                ? isMobile
+                                  ? "24px"
+                                  : "32px"
+                                : isMobile
+                                ? "20px"
+                                : "28px",
                             fontFamily: getFontFamily(language),
                             textAlign: "center",
                           }}
@@ -5285,7 +5292,14 @@ const SoundHuntS1Combined = ({
                       style={{
                         color: "#FFFFFF",
                         fontWeight: 600,
-                        fontSize: isMobile ? "32px" : "48px",
+                        fontSize:
+                          language === "te"
+                            ? isMobile
+                              ? "38px"
+                              : "54px"
+                            : isMobile
+                            ? "32px"
+                            : "48px",
                         fontFamily: getFontFamily(language),
                         textAlign: "center",
                       }}
@@ -5475,7 +5489,14 @@ const SoundHuntS1Combined = ({
                                     : "#C62828"
                                   : "#666666",
                               fontWeight: isSelected ? 600 : 500,
-                              fontSize: isMobile ? "12px" : "14px",
+                              fontSize:
+                                language === "te"
+                                  ? isMobile
+                                    ? "14px"
+                                    : "16px"
+                                  : isMobile
+                                  ? "12px"
+                                  : "14px",
                               fontFamily: getFontFamily(language),
                               textAlign: "center",
                             }}
@@ -5553,7 +5574,7 @@ const SoundHuntS1Combined = ({
                 style={{
                   color: "#FFFFFF",
                   fontWeight: 600,
-                  fontSize: "28px",
+                  fontSize: language === "te" ? "32px" : "28px",
                   fontFamily: getFontFamily(language),
                   textAlign: "center",
                 }}
@@ -5605,7 +5626,7 @@ const SoundHuntS1Combined = ({
                 style={{
                   color: "#FFFFFF",
                   fontWeight: 600,
-                  fontSize: "28px",
+                  fontSize: language === "te" ? "32px" : "28px",
                   fontFamily: getFontFamily(language),
                   textAlign: "center",
                 }}

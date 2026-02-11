@@ -118,7 +118,7 @@ const UnderlinedSentence = ({
   return (
     <p
       style={{
-        fontSize: "20px",
+        fontSize: lang === "te" ? "24px" : "20px",
         fontWeight: "600",
         color: "rgba(51, 63, 97, 1)",
         fontFamily: getFontFamily(lang || "en"),

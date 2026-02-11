@@ -1292,7 +1292,7 @@ const R1 = ({
                           style={{
                             fontFamily: getFontFamily(lang),
                             color: "#FFFFFF",
-                            fontSize: "25px",
+                            fontSize: lang === "te" ? "29px" : "25px",
                           }}
                         >
                           {ch}
@@ -1319,7 +1319,8 @@ const R1 = ({
               sx={{
                 color: red,
                 fontWeight: 500,
-                fontSize: { xs: 120, md: 160 },
+                fontSize:
+                  lang === "te" ? { xs: 135, md: 180 } : { xs: 120, md: 160 },
                 lineHeight: 1,
                 ml: { xs: 1, md: 2 },
                 fontFamily: "Quicksand",

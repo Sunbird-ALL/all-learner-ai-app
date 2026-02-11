@@ -7643,7 +7643,10 @@ const Practice = () => {
                   variant="h5"
                   component="h4"
                   sx={{
-                    fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                    fontSize:
+                      lang === "te"
+                        ? "clamp(1.9rem, 2.8vw, 4.1rem)"
+                        : "clamp(1.6rem, 2.5vw, 3.8rem)",
                     fontWeight: 700,
                     fontFamily: getFontFamily(lang),
                     lineHeight: "50px",
@@ -7668,7 +7671,10 @@ const Practice = () => {
                 component="h4"
                 sx={{
                   color: color,
-                  fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                  fontSize:
+                    lang === "te"
+                      ? "clamp(1.9rem, 2.8vw, 4.1rem)"
+                      : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
                   lineHeight: "50px",
@@ -7694,7 +7700,10 @@ const Practice = () => {
                 component="h4"
                 ml={1}
                 sx={{
-                  fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                  fontSize:
+                    lang === "te"
+                      ? "clamp(1.9rem, 2.8vw, 4.1rem)"
+                      : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
                   lineHeight: "50px",
@@ -7713,7 +7722,10 @@ const Practice = () => {
               ml={1}
               sx={{
                 color: color,
-                fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                fontSize:
+                  lang === "te"
+                    ? "clamp(1.9rem, 2.8vw, 4.1rem)"
+                    : "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
                 fontFamily: getFontFamily(lang),
                 lineHeight: "50px",

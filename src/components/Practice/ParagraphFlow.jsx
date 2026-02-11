@@ -1322,7 +1322,8 @@ const ParagraphFlow = ({
               >
                 <p
                   style={{
-                    fontSize: "18px",
+                    fontSize:
+                      (getLocalData("lang") || "en") === "te" ? "20px" : "18px",
                     fontWeight: "500",
                     margin: "0",
                     lineHeight: "1.8",
