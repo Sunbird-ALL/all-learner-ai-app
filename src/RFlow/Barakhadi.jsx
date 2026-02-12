@@ -4250,7 +4250,7 @@ const Barakhadi = ({
                   alignItems: "center",
                   justifyContent: "flex-start",
                   fontSize: lang === "te" ? "26px" : "22px",
-                  fontWeight: "bold",
+                  fontWeight: lang === "te" ? "normal" : "bold",
                   color:
                     word === targetWord
                       ? "#27ae60"
