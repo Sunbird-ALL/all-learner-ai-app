@@ -1274,7 +1274,7 @@ const WordWall = ({
                   style={{
                     color: "#333F61",
                     fontWeight: 600,
-                    fontSize: "50px",
+                    fontSize: lang === "te" ? "56px" : "50px",
                     lineHeight: "60px",
                     letterSpacing: "1%",
                     fontFamily: getFontFamily(lang),

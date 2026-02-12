@@ -125,9 +125,16 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
           <Typography
             variant="h4"
             sx={{
-              fontWeight: "bold",
+              fontWeight: lang === "te" ? "normal" : "bold",
               color: "#333F61",
-              fontSize: mode === "alphabet" ? "2.8rem" : "2.2rem",
+              fontSize:
+                lang === "te"
+                  ? mode === "alphabet"
+                    ? "3.1rem"
+                    : "2.5rem"
+                  : mode === "alphabet"
+                  ? "2.8rem"
+                  : "2.2rem",
               width: "100%",
               fontFamily: getFontFamily(lang || "en"),
             }}

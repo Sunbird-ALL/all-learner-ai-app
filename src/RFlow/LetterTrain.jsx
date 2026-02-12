@@ -6809,11 +6809,18 @@ const LetterTrain = ({
                           style={{
                             fontFamily: getFontFamily(lang),
                             color: "#FFFFFF",
-                            fontSize: isMobile
-                              ? "20px"
-                              : isTablet
-                              ? "24px"
-                              : "28px",
+                            fontSize:
+                              lang === "te"
+                                ? isMobile
+                                  ? "24px"
+                                  : isTablet
+                                  ? "28px"
+                                  : "32px"
+                                : isMobile
+                                ? "20px"
+                                : isTablet
+                                ? "24px"
+                                : "28px",
                           }}
                         >
                           {ch}
@@ -6912,8 +6919,8 @@ const LetterTrain = ({
               <span
                 style={{
                   color: "#333F61",
-                  fontWeight: 700,
-                  fontSize: "50px",
+                  fontWeight: lang === "te" ? 400 : 700,
+                  fontSize: lang === "te" ? "56px" : "50px",
                   lineHeight: "1",
                   letterSpacing: "2%",
                   fontFamily: getFontFamily(lang),

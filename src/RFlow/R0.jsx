@@ -5210,8 +5210,8 @@ const R0 = ({
               <Typography
                 sx={{
                   fontFamily: getFontFamily(lang),
-                  fontWeight: 700,
-                  fontSize: "20px",
+                  fontWeight: lang === "te" ? 400 : 700,
+                  fontSize: lang === "te" ? "23px" : "20px",
                   color: "#FF9800",
                   whiteSpace: "nowrap",
                   textAlign: "center",
@@ -5280,7 +5280,7 @@ const R0 = ({
                           style={{
                             fontFamily: getFontFamily(lang),
                             color: "#FFFFFF",
-                            fontSize: "28px",
+                            fontSize: lang === "te" ? "32px" : "28px",
                           }}
                         >
                           {ch}
@@ -5376,7 +5376,7 @@ const R0 = ({
               <span
                 style={{
                   color: "#333F61",
-                  fontWeight: 700,
+                  fontWeight: lang === "te" ? 400 : 700,
                   fontSize: "50px",
                   lineHeight: "1",
                   letterSpacing: "2%",
