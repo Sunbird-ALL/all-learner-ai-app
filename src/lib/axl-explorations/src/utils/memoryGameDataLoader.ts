@@ -1,7 +1,7 @@
 // JSON Data Loader for Memory Game
 import memoryGameData from '../data/memoryGameData.json';
 
-export type Language = 'en' | 'te' | 'mr' | 'kn';
+export type Language = 'en' | 'te' | 'mr' | 'kn' | 'hi';
 
 export interface MemoryGameData {
   languages: {
@@ -137,7 +137,7 @@ class MemoryGameDataLoader {
     
     // For Telugu, Kannada, and Marathi, use exact level mapping
     let letters: string[];
-    if (language === 'te' || language === 'kn' || language === 'mr' || language === 'en') {
+    if (language === 'te' || language === 'kn' || language === 'mr' || language === 'en' || language === 'hi') {
       const levelKey = level.toString();
       letters = this.getLettersByLevel(language, levelKey);
     } else {

@@ -211,13 +211,13 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
       
       // Ensure only supported languages are passed (memoryGameDataLoader doesn't support 'hi')
       // Since selectedLanguage can never be 'hi' (LanguageContext blocks it), this is a safety check
-      const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' = 
-        (language === 'en' || language === 'te' || language === 'mr' || language === 'kn') 
+      const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' | 'hi' = 
+        (language === 'en' || language === 'te' || language === 'mr' || language === 'kn' || language === 'hi') 
           ? language 
           : 'en';
       
       // For Telugu, Kannada, and Marathi, use exact level mapping
-      if (supportedLanguage === 'te' || supportedLanguage === 'kn' || supportedLanguage === 'mr' || supportedLanguage === 'en') {
+      if (supportedLanguage === 'te' || supportedLanguage === 'kn' || supportedLanguage === 'mr' || supportedLanguage === 'en' || supportedLanguage === 'hi') {
         const levelKey = level.toString();
         return memoryGameDataLoader.getLettersByLevel(supportedLanguage, levelKey);
       }

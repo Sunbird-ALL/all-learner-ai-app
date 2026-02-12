@@ -114,6 +114,8 @@ const LetterLauncherMechanicsContent = ({
       ? "kn"
       : lang === "mr"
       ? "mr"
+      : lang === "hi"
+      ? "hi"
       : "en";
   const initialAudioLanguage = initialLanguage;
 
@@ -221,7 +223,8 @@ const LetterLauncherMechanicsContent = ({
     const supportedLanguage =
       initialLanguage === "te" ||
       initialLanguage === "mr" ||
-      initialLanguage === "kn"
+      initialLanguage === "kn" ||
+      initialLanguage === "hi"
         ? initialLanguage
         : "en";
 
@@ -231,7 +234,8 @@ const LetterLauncherMechanicsContent = ({
         supportedLanguage === "te" ||
         supportedLanguage === "kn" ||
         supportedLanguage === "mr" ||
-        supportedLanguage === "en"
+        supportedLanguage === "en" ||
+        supportedLanguage === "hi"
       ) {
         const levelKey = currentGameLevel.toString();
         letters = memoryGameDataLoader.getLettersByLevel(
