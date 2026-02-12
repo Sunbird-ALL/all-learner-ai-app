@@ -3563,25 +3563,29 @@ const Barakhadi = ({
   const tdStyle = {
     padding: "4px",
     border: "1px solid #ccc",
-    fontSize: "23px",
+    fontSize: lang === "te" ? "28px" : "23px",
     textAlign: "center",
     width: "58px",
     cursor: "pointer",
-    fontWeight: 800,
+    fontWeight: lang === "te" ? 400 : 800,
+    fontFamily: getFontFamily(lang),
     transition: "background-color 0.3s ease",
   };
 
   const circleStyle = {
-    width: "22px",
-    height: "22px",
+    width: lang === "te" ? "28px" : "22px",
+    height: lang === "te" ? "28px" : "22px",
     borderRadius: "50%",
     background: "#2c3e50",
     color: "#fff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontWeight: "bold",
-    fontSize: "12px",
+    fontWeight: lang === "te" ? "normal" : "bold",
+    fontSize: lang === "te" ? "16px" : "12px",
+    fontFamily: getFontFamily(lang),
+    lineHeight: "1",
+    textAlign: "center",
     boxShadow: "0px 4px 6px rgba(0,0,0,0.15)",
     margin: "0 auto",
     marginBottom: "4px",
@@ -3589,16 +3593,19 @@ const Barakhadi = ({
 
   const leftCircleStyle = {
     position: "absolute",
-    width: "28px",
-    height: "28px",
+    width: lang === "te" ? "34px" : "28px",
+    height: lang === "te" ? "34px" : "28px",
     borderRadius: "50%",
     background: "#ffeb3b",
     color: "#000",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontWeight: "bold",
-    fontSize: "12px",
+    fontWeight: lang === "te" ? "normal" : "bold",
+    fontSize: lang === "te" ? "18px" : "12px",
+    fontFamily: getFontFamily(lang),
+    lineHeight: "1",
+    textAlign: "center",
     boxShadow: "0px 4px 6px rgba(0,0,0,0.15)",
     border: "1px solid black",
   };
@@ -3821,8 +3828,8 @@ const Barakhadi = ({
                     <div
                       key={i}
                       style={{
-                        width: 50,
-                        height: 50,
+                        width: lang === "te" ? "56px" : "50px",
+                        height: lang === "te" ? "56px" : "50px",
                         borderRadius: "50%",
                         background: "#1a237e",
                         color: "white",
@@ -3835,6 +3842,8 @@ const Barakhadi = ({
                         fontSize: lang === "te" ? "28px" : "18px",
                         flexShrink: 0,
                         fontFamily: getFontFamily(lang),
+                        lineHeight: "1",
+                        textAlign: "center",
                       }}
                     >
                       {v}
@@ -3862,8 +3871,8 @@ const Barakhadi = ({
                         <div
                           key={index}
                           style={{
-                            width: 45,
-                            height: 45,
+                            width: lang === "te" ? "52px" : "45px",
+                            height: lang === "te" ? "52px" : "45px",
                             borderRadius: "50%",
                             background: "#fbc02d",
                             border: "1px solid black",
@@ -3875,6 +3884,8 @@ const Barakhadi = ({
                             fontSize: lang === "te" ? "28px" : "18px",
                             flexShrink: 0,
                             fontFamily: getFontFamily(lang),
+                            lineHeight: "1",
+                            textAlign: "center",
                           }}
                         >
                           {consonant}
