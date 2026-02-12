@@ -39,9 +39,10 @@ interface LetterGameProps {
   apply_level?: string; // Optional: Apply level (e.g., "A1", "A2", "A3")
   sub_apply_level?: number; // Optional: Sub apply level (1, 2, or 3 - the level within the Apply step)
   onA3Pass?: () => void; // Optional: callback when A3 passes and sessionResult is "Pass"
+  skipPreview?: boolean; // Optional: if true, skip the game preview/demo
 }
 
-export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, sub_session_id,sessionId, sub_milestone_level, apply_level, sub_apply_level, onA3Pass }: LetterGameProps) {
+export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, sub_session_id,sessionId, sub_milestone_level, apply_level, sub_apply_level, onA3Pass, skipPreview = false }: LetterGameProps) {
   const navigate = useNavigate();
   const params = useParams<{ level?: string }>();
   const { level: urlLevel } = params || {};
@@ -868,7 +869,8 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
   // Show preview screen first (before level selector)
   // For individual games: Hide preview for level 2+ if level 1 has any progress > 0%
   // Show preview only if: (backend level is 1 AND level 1 has no progress) OR forcePreview is true
-  const shouldShowPreview = showPreview && selectedLanguage && 
+  // skipPreview allows parent to override and skip preview entirely (e.g., for F1 P2+, F2 P2+)
+  const shouldShowPreview = !skipPreview && showPreview && selectedLanguage && 
     ((backendCurrentLevel === 1 && !level1HasProgress) || forcePreview);
   
   if (shouldShowPreview) {
