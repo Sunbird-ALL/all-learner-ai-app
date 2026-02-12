@@ -3858,12 +3858,12 @@ const Barakhadi = ({
                         background: "#1a237e",
                         color: "white",
                         border: "1px solid #999",
-                        fontWeight: "bold",
+                        fontWeight: lang === "te" ? "normal" : "bold",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         margin: "0 2px",
-                        fontSize: lang === "te" ? "20px" : "18px",
+                        fontSize: lang === "te" ? "28px" : "18px",
                         flexShrink: 0,
                         fontFamily: getFontFamily(lang),
                       }}
@@ -3898,12 +3898,12 @@ const Barakhadi = ({
                             borderRadius: "50%",
                             background: "#fbc02d",
                             border: "1px solid black",
-                            fontWeight: "bold",
+                            fontWeight: lang === "te" ? "normal" : "bold",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             margin: "4px 0",
-                            fontSize: lang === "te" ? "20px" : "18px",
+                            fontSize: lang === "te" ? "28px" : "18px",
                             flexShrink: 0,
                             fontFamily: getFontFamily(lang),
                           }}
@@ -3933,8 +3933,9 @@ const Barakhadi = ({
                                     width: 55,
                                     height: 55,
                                     border: "1px solid #ccc",
-                                    fontSize: lang === "te" ? "20px" : "18px",
-                                    fontWeight: "bold",
+                                    fontSize: lang === "te" ? "28px" : "18px",
+                                    fontWeight:
+                                      lang === "te" ? "normal" : "bold",
                                     minWidth: "55px",
                                     fontFamily: getFontFamily(lang),
                                   }}
@@ -3958,8 +3959,8 @@ const Barakhadi = ({
           <div style={titleStyle}>
             <span
               style={{
-                fontSize: lang === "te" ? "25px" : "22px",
-                fontWeight: "700",
+                fontSize: lang === "te" ? "30px" : "22px",
+                fontWeight: lang === "te" ? "400" : "700",
                 color: "#333F61",
                 fontFamily: getFontFamily(lang),
               }}
@@ -4007,12 +4008,16 @@ const Barakhadi = ({
                   style={{
                     background: "rgba(51, 63, 97, 1)",
                     color: "#fff",
-                    padding: "2px 24px",
+                    padding: lang === "te" ? "0px 24px 8px 24px" : "2px 24px",
                     borderRadius: "6px",
                     minWidth: "80px",
                     textAlign: "center",
                     display: "inline-block",
                     fontFamily: getFontFamily(lang),
+                    fontSize: lang === "te" ? "28px" : "20px",
+                    fontWeight: "normal",
+                    lineHeight: lang === "te" ? "1.1" : "normal",
+                    verticalAlign: "middle",
                   }}
                 >
                   {currentWordData?.text || ""}
@@ -4089,7 +4094,7 @@ const Barakhadi = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "flex-start",
-                  fontSize: "22px",
+                  fontSize: lang === "te" ? "26px" : "22px",
                   fontWeight: "bold",
                   color:
                     word === targetWord

@@ -1069,7 +1069,7 @@ const WordsOrImage = ({
                             : isTablet
                             ? "2rem"
                             : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                        fontWeight: 700,
+                        fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         ...(mechanism_id === "mechanic_15"
@@ -1132,7 +1132,7 @@ const WordsOrImage = ({
                             : isTablet
                             ? "2rem"
                             : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                        fontWeight: 700,
+                        fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
@@ -1203,7 +1203,7 @@ const WordsOrImage = ({
                           : isTablet
                           ? "2rem"
                           : "clamp(3rem, 4vw, 5rem)",
-                        fontWeight: 700,
+                        fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         //background: "#FFF0BD",

@@ -6919,7 +6919,7 @@ const LetterTrain = ({
               <span
                 style={{
                   color: "#333F61",
-                  fontWeight: 700,
+                  fontWeight: lang === "te" ? 400 : 700,
                   fontSize: lang === "te" ? "56px" : "50px",
                   lineHeight: "1",
                   letterSpacing: "2%",
