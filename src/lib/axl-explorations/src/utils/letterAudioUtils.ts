@@ -3,6 +3,7 @@ import { englishAudioManager } from './englishAudioManager';
 import { teluguAudioManager } from './teluguAudioManager';
 import { kannadaAudioManager } from './kannadaAudioManager';
 import { marathiAudioManager } from './marathiAudioManager';
+import { hindiAudioManager } from './hindiAudioManager';
 import { attachSlowLoadToast } from './audioUtils';
 
 /**
@@ -27,6 +28,9 @@ export async function playLetterAudio(letter: string, language: Language): Promi
         break;
       case 'mr':
         audioManager = marathiAudioManager;
+        break;
+      case 'hi':
+        audioManager = hindiAudioManager;
         break;
       default:
         audioManager = englishAudioManager;

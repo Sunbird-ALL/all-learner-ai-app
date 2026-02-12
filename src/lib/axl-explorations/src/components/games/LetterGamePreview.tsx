@@ -159,6 +159,21 @@ const gameInstructions = {
       explanation: "आवाज 'अ' अक्षर 'अ'शी जुळतो!",
     },
   },
+  hi: {
+    title: "अक्षर ओळख",
+    description: "अक्षर आवाज ऐकून जुळणारे अक्षर शोधा!",
+    steps: [
+      "🔊 स्पीकरवर क्लिक करून अक्षर आवाज ऐका",
+      "🎯 योग्य अक्षरावर क्लिक करा",
+      "✨ योग्य उत्तरांसाठी गुण मिळवा!",
+    ],
+    demo: {
+      audio: "अ",
+      options: ["अ", "आ", "इ", "ई"],
+      correctAnswer: "अ",
+      explanation: "आवाज 'अ' अक्षर 'अ'शी जुळतो!",
+    },
+  },
 };
 
 export function LetterGamePreview({
