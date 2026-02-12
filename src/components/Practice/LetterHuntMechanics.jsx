@@ -72,6 +72,15 @@ const LetterHuntMechanicsContent = ({
   const a3PassHandledRef = useRef(false);
   const navigate = useNavigate();
 
+  // Calculate skipPreview: show demo only for F1 P1 and F2 P1
+  const skipPreview = React.useMemo(() => {
+    const currentF1Step = getF1FlowStep();
+    const currentF2Step = getF2FlowStep();
+    const isF1P1 = currentF1Step.index === 1; // F1 P1
+    const isF2P1 = currentF2Step.index === 1; // F2 P1
+    return !(isF1P1 || isF2P1); // Skip preview if NOT F1 P1 or F2 P1
+  }, []); // Empty deps - only calculate once on mount
+
   // Handle A3 pass - redirect to discovery start (for F1) or next flow (for F2)
   const handleA3Pass = async () => {
     if (a3PassHandledRef.current) {
@@ -1287,6 +1296,7 @@ const LetterHuntMechanicsContent = ({
                 apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
                 onA3Pass={handleA3Pass} // Callback when A3 passes
                 sessionId={sessionId}
+                skipPreview={skipPreview} // Skip demo for all except F1 P1 and F2 P1
                 // sub_apply_level is calculated dynamically in LetterGame based on currentLevel
               />
             </div>
