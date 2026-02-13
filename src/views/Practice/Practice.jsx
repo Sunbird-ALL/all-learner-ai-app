@@ -4572,9 +4572,15 @@ const Practice = () => {
 
   useEffect(() => {
     // 🎬 Trigger alphabet demo for F1 flow at specific milestones
-    // Milestone indices: L1=0, P1=1, A1=6, P4=10, A2=13, A3=20
-    const immediateMilestones = [0];
-    const deferredMilestones = [6, 13, 20];
+    // Milestone indices: L1=0,A1=6,A2=13,A3=20
+    const immediateMilestones = F1_FLOW.reduce((acc, step, idx) => {
+      if (step.type === "L" && step.step === 1) acc.push(idx);
+      return acc;
+    }, []);
+    const deferredMilestones = F1_FLOW.reduce((acc, step, idx) => {
+      if (step.type === "A") acc.push(idx);
+      return acc;
+    }, []);
 
     const handleTrigger = (index) => {
       const milestoneIndices = [...immediateMilestones, ...deferredMilestones];
