@@ -7,6 +7,7 @@ import {
   useMediaQuery,
   Grid,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import MainLayout from "../components/Layouts.jsx/MainLayout";
 import listenImg from "../assets/listen.svg";
@@ -6072,6 +6073,7 @@ export const dataTe = [
 ];
 
 const LetterTrain = ({
+  isAlphabetDemoActive,
   setVoiceText,
   setRecordedAudio,
   setVoiceAnimate,
@@ -6249,20 +6251,9 @@ const LetterTrain = ({
     const audio = new Audio(src);
     audioRef.current = audio;
 
-    const alphabetDemoStatus = getLocalData("showAlphabetDemo");
-    console.log("alphabetDemoStatus", alphabetDemoStatus);
-
-    audio.onended = () => {
-      if (currentIndex === 0) {
-        // ✅ Set only if key does NOT exist
-        if (alphabetDemoStatus === null) {
-          setLocalData("showAlphabetDemo", "true");
-          window.dispatchEvent(new Event("alphabetDemoComplete"));
-        }
-
-        // ❌ If it's already "false" or "true", do nothing
-      }
-    };
+    // audio.onended = () => {
+    //   // Audio ended
+    // };
 
     audio.play().catch((err) => {
       console.log("Audio play error:", err);
@@ -6270,7 +6261,7 @@ const LetterTrain = ({
   };
 
   useEffect(() => {
-    if (currentAudio) {
+    if (currentAudio && !isAlphabetDemoActive) {
       playAudio(currentAudio);
     }
     return () => {
@@ -6279,7 +6270,7 @@ const LetterTrain = ({
         audioRef.current = null;
       }
     };
-  }, [currentIndex]);
+  }, [currentIndex, isAlphabetDemoActive]);
 
   // const playAudio = (src) => {
   //   if (!src) return;
@@ -7252,7 +7243,18 @@ const LetterTrain = ({
             </div>
           </div>
         )}
-        {renderUI()}
+        {isAlphabetDemoActive ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="40vh"
+          >
+            <CircularProgress size={60} thickness={4.5} />
+          </Box>
+        ) : (
+          renderUI()
+        )}
       </Box>
     </MainLayout>
   );

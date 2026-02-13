@@ -13065,7 +13065,7 @@ export const levelGetContent = {
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         contentCount: 10,
-        customLetters: ["कटोरी", "थाली", "मुझे", "तैरना", "पिताजी"] // Placeholder - adjust based on F2 requirements
+        customLetters: ["कटोरी", "थाली", "मुझे", "तैरना", "पिताजी"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {

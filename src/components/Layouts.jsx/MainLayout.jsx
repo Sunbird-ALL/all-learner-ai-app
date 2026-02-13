@@ -2099,6 +2099,11 @@ const MainLayout = (props) => {
                         }
                         if (isShowCase && !startShowCase && !gameOverData) {
                           setStartShowCase(true);
+                          // 🎬 Trigger alphabet demo for F1 flow milestones (A1, A2, A3)
+                          // Practice.jsx will listen for this event and check if it's a valid milestone
+                          window.dispatchEvent(
+                            new Event("alphabetDemoTriggerRequest")
+                          );
                         }
                         if (gameOverData) {
                           gameOverData.link
