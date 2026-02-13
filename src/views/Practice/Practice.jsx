@@ -4871,27 +4871,27 @@ const Practice = () => {
         setCurrentQuestion(0);
 
         // Update points for F2 flow based on contentCount
+        // Skip for Apply steps - they handle points after all 3 levels complete
         if (
           updatedF2FlowStep.step &&
           !localStorage.getItem("contentSessionId")
         ) {
           try {
-            // Get current content config to get contentCount
             const lang = getLocalData("lang") || "en";
             const f2Config = levelGetContent[lang]?.["F2"];
             const currentStepContent = f2Config?.[currentF2FlowStep.index];
-            const contentCount =
-              currentStepContent?.contentCount || questions.length || 1;
+            const isApplyStep = currentStepContent?.title?.startsWith("A");
 
-            // Points should be based on contentCount
-            const pointsToAdd = contentCount;
-            const milestone = "B"; // F2 flow uses milestone "B"
+            // Only add points for non-Apply steps (L and P steps)
+            // Apply steps add points after all 3 levels are completed
+            if (!isApplyStep) {
+              const contentCount =
+                currentStepContent?.contentCount || questions.length || 1;
+              const result = await addPointer(contentCount, "B");
 
-            const result = await addPointer(pointsToAdd, milestone);
-            const awardedPoints = result?.result?.points;
-
-            if (awardedPoints === pointsToAdd) {
-              setPoints(result?.result?.totalLanguagePoints || 0);
+              if (result?.result?.totalLanguagePoints) {
+                setPoints(result.result.totalLanguagePoints);
+              }
             }
           } catch (error) {
             console.error("Error updating F2 flow points:", error);
@@ -5004,31 +5004,23 @@ const Practice = () => {
       setCurrentQuestion(0);
 
       // Update points for F1 flow Learn step based on contentCount
+      // Skip for Apply steps - they handle points after all 3 levels complete
       if (currentF1FlowStep.step && !localStorage.getItem("contentSessionId")) {
         try {
-          // Get current content config to get contentCount (use the COMPLETED step, not the next one)
           const lang = getLocalData("lang") || "en";
           const f1Config = levelGetContent[lang]?.["F1"];
           const completedStepContent = f1Config?.[currentF1FlowStep.index];
-          const contentCount =
-            completedStepContent?.contentCount || questions.length || 1;
+          const isApplyStep = completedStepContent?.title?.startsWith("A");
 
-          // Points should be based on contentCount
-          const pointsToAdd = contentCount;
-          const milestone = "B"; // F1 flow uses milestone "B"
+          // Only add points for non-Apply steps
+          if (!isApplyStep) {
+            const contentCount =
+              completedStepContent?.contentCount || questions.length || 1;
+            const result = await addPointer(contentCount, "B");
 
-          const result = await addPointer(pointsToAdd, milestone);
-          const awardedPoints = result?.result?.points;
-
-          if (awardedPoints === pointsToAdd) {
-            setPoints(result?.result?.totalLanguagePoints || 0);
-            console.log("F1 Learn step (L1) points updated:", {
-              completedStepIndex: currentF1FlowStep.index,
-              stepType: currentF1FlowStep.step?.type,
-              pointsAdded: pointsToAdd,
-              contentCount,
-              totalPoints: result?.result?.totalLanguagePoints,
-            });
+            if (result?.result?.totalLanguagePoints) {
+              setPoints(result.result.totalLanguagePoints);
+            }
           }
         } catch (error) {
           console.error("Error updating F1 Learn step points:", error);
@@ -5462,35 +5454,28 @@ const Practice = () => {
         setCurrentQuestion(0);
 
         // Update points for F1 flow based on contentCount (use COMPLETED step, not next step)
+        // Skip for Apply steps - they handle points after all 3 levels complete
         if (
           currentF1FlowStepBeforeAdvance.step &&
           !localStorage.getItem("contentSessionId")
         ) {
           try {
-            // Get current content config to get contentCount for the COMPLETED step
             const lang = getLocalData("lang") || "en";
             const f1Config = levelGetContent[lang]?.["F1"];
             const completedStepContent =
               f1Config?.[currentF1FlowStepBeforeAdvance.index];
-            const contentCount =
-              completedStepContent?.contentCount || questions.length || 1;
+            const isApplyStep = completedStepContent?.title?.startsWith("A");
 
-            // Points should be based on contentCount
-            const pointsToAdd = contentCount;
-            const milestone = "B"; // F1 flow uses milestone "B"
+            // Only add points for non-Apply steps (L and P steps)
+            // Apply steps add points after all 3 levels are completed
+            if (!isApplyStep) {
+              const contentCount =
+                completedStepContent?.contentCount || questions.length || 1;
+              const result = await addPointer(contentCount, "B");
 
-            const result = await addPointer(pointsToAdd, milestone);
-            const awardedPoints = result?.result?.points;
-
-            if (awardedPoints === pointsToAdd) {
-              setPoints(result?.result?.totalLanguagePoints || 0);
-              console.log("F1 flow points updated (handleNext):", {
-                completedStepIndex: currentF1FlowStepBeforeAdvance.index,
-                stepType: currentF1FlowStepBeforeAdvance.step?.type,
-                pointsAdded: pointsToAdd,
-                contentCount,
-                totalPoints: result?.result?.totalLanguagePoints,
-              });
+              if (result?.result?.totalLanguagePoints) {
+                setPoints(result.result.totalLanguagePoints);
+              }
             }
           } catch (error) {
             console.error("Error updating F1 flow points:", error);
