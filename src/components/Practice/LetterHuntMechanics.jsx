@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
   getLocalData,
@@ -29,6 +30,7 @@ import {
  * into the Practice.jsx mechanics system
  */
 const LetterHuntMechanicsContent = ({
+  isAlphabetDemoActive,
   page,
   setPage,
   level, // Letter hunt game level (1, 2, 3, etc.) - start level
@@ -1306,37 +1308,48 @@ const LetterHuntMechanicsContent = ({
       >
         <LanguageProvider initialLanguage={initialLanguage}>
           <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
-            <div
-              style={{
-                height: "100%",
-                maxHeight: "100%",
-                width: "100%",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                boxSizing: "border-box",
-                position: "relative",
-              }}
-              className="letter-hunt-wrapper"
-            >
-              <LetterGame
-                onBack={handleGameBack}
-                startLevel={level || 1}
-                endLevel={endLevel}
-                disableNavigation={true}
-                onLevelComplete={handleLevelComplete}
-                isShowcase={isShowCase || false} // Pass isShowCase flag to LetterGame
-                onLevel1Failure={() => handleLevelFailure(1)} // Backward compatibility for level 1 only
-                onLevelFailure={handleLevelFailure} // New callback for any level failure (includes level number)
-                customLetters={customLetters} // Pass customLetters from F1 config
-                sub_session_id={assessmentParams.sub_session_id} // Pass sub session ID from telemetry
-                sub_milestone_level={assessmentParams.sub_milestone_level} // Pass "F1" or "F2" based on active flow
-                apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
-                onA3Pass={handleA3Pass} // Callback when A3 passes
-                sessionId={sessionId}
-                // sub_apply_level is calculated dynamically in LetterGame based on currentLevel
-              />
-            </div>
+            {isAlphabetDemoActive ? (
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height="60vh"
+              >
+                <CircularProgress size={60} thickness={4.5} />
+              </Box>
+            ) : (
+              <div
+                style={{
+                  height: "100%",
+                  maxHeight: "100%",
+                  width: "100%",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  boxSizing: "border-box",
+                  position: "relative",
+                }}
+                className="letter-hunt-wrapper"
+              >
+                <LetterGame
+                  onBack={handleGameBack}
+                  startLevel={level || 1}
+                  endLevel={endLevel}
+                  disableNavigation={true}
+                  onLevelComplete={handleLevelComplete}
+                  isShowcase={isShowCase || false} // Pass isShowCase flag to LetterGame
+                  onLevel1Failure={() => handleLevelFailure(1)} // Backward compatibility for level 1 only
+                  onLevelFailure={handleLevelFailure} // New callback for any level failure (includes level number)
+                  customLetters={customLetters} // Pass customLetters from F1 config
+                  sub_session_id={assessmentParams.sub_session_id} // Pass sub session ID from telemetry
+                  sub_milestone_level={assessmentParams.sub_milestone_level} // Pass "F1" or "F2" based on active flow
+                  apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
+                  onA3Pass={handleA3Pass} // Callback when A3 passes
+                  sessionId={sessionId}
+                  // sub_apply_level is calculated dynamically in LetterGame based on currentLevel
+                />
+              </div>
+            )}
           </AudioLanguageProvider>
         </LanguageProvider>
       </div>
@@ -1345,7 +1358,12 @@ const LetterHuntMechanicsContent = ({
 };
 
 const LetterHuntMechanics = (props) => {
-  return <LetterHuntMechanicsContent {...props} />;
+  return (
+    <LetterHuntMechanicsContent
+      isAlphabetDemoActive={props.isAlphabetDemoActive}
+      {...props}
+    />
+  );
 };
 
 export default LetterHuntMechanics;

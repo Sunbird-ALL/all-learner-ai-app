@@ -132,6 +132,38 @@ const Practice = () => {
   const [rStep, setRStep] = useState(() => {
     return Number(getLocalData("rStep")) || 2;
   });
+  const [isAlphabetDemoActive, setIsAlphabetDemoActive] = useState(false);
+
+  // Sync isAlphabetDemoActive state with localStorage
+  useEffect(() => {
+    const checkAlphabetDemoStatus = () => {
+      const demoState = getLocalData("showAlphabetDemo");
+      const isActive = demoState === "true";
+      if (isActive !== isAlphabetDemoActive) {
+        setIsAlphabetDemoActive(isActive);
+      }
+    };
+
+    // Check immediately
+    checkAlphabetDemoStatus();
+
+    // Listen for storage events
+    const handleStorageChange = (e) => {
+      if (e.key === "showAlphabetDemo") {
+        checkAlphabetDemoStatus();
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    // Poll periodically to catch internal changes (since storage event doesn't fire in the same window)
+    const interval = setInterval(checkAlphabetDemoStatus, 100);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [isAlphabetDemoActive]);
+
   const [rStepZero, setRStepZero] = useState(() => {
     return Number(getLocalData("rStepZero"));
   });
@@ -4537,6 +4569,60 @@ const Practice = () => {
   //     setLocalData("rFlow", false);
   //   }
   // }, [lang]);
+
+  useEffect(() => {
+    // 🎬 Trigger alphabet demo for F1 flow at specific milestones
+    // Milestone indices: L1=0, P1=1, A1=6, P4=10, A2=13, A3=20
+    const immediateMilestones = [0];
+    const deferredMilestones = [6, 13, 20];
+
+    const handleTrigger = (index) => {
+      const milestoneIndices = [...immediateMilestones, ...deferredMilestones];
+      if (isF1FlowActive && milestoneIndices.includes(index)) {
+        const playedIndicesRaw = getLocalData("playedAlphabetDemoIndices");
+        let playedIndices = [];
+        try {
+          playedIndices = playedIndicesRaw ? JSON.parse(playedIndicesRaw) : [];
+        } catch (e) {
+          playedIndices = [];
+        }
+
+        if (!playedIndices.includes(index)) {
+          // console.log(
+          //   "Practice - Triggering Alphabet Demo for F1 milestone:",
+          //   index
+          // );
+          const updatedPlayedIndices = [...playedIndices, index];
+          setLocalData(
+            "playedAlphabetDemoIndices",
+            JSON.stringify(updatedPlayedIndices)
+          );
+          setLocalData("showAlphabetDemo", "true");
+          window.dispatchEvent(new Event("alphabetDemoComplete"));
+        }
+      }
+    };
+
+    // 1. Immediate trigger for non-showcase milestones
+    if (immediateMilestones.includes(f1FlowIndexState)) {
+      handleTrigger(f1FlowIndexState);
+    }
+
+    // 2. Listener for deferred trigger (e.g., from MainLayout "Start Game" button)
+    const handleTriggerRequest = () => {
+      if (deferredMilestones.includes(f1FlowIndexState)) {
+        handleTrigger(f1FlowIndexState);
+      }
+    };
+    window.addEventListener("alphabetDemoTriggerRequest", handleTriggerRequest);
+
+    return () => {
+      window.removeEventListener(
+        "alphabetDemoTriggerRequest",
+        handleTriggerRequest
+      );
+    };
+  }, [f1FlowIndexState, isF1FlowActive]);
 
   // useEffect(() => {
   //   setLocalData("rFlow", true)
@@ -10155,6 +10241,7 @@ const Practice = () => {
               <LetterTrain
                 page={page}
                 setPage={setPage}
+                isAlphabetDemoActive={isAlphabetDemoActive}
                 {...{
                   level: level,
                   header:
@@ -10635,6 +10722,7 @@ const Practice = () => {
             <LetterHuntMechanics
               page={page}
               setPage={setPage}
+              isAlphabetDemoActive={isAlphabetDemoActive}
               {...{
                 level: letterHuntIsShowcase
                   ? letterHuntLevel || 1
@@ -10861,6 +10949,7 @@ const Practice = () => {
             <LetterHuntMechanics
               page={page}
               setPage={setPage}
+              isAlphabetDemoActive={isAlphabetDemoActive}
               {...{
                 level: letterHuntIsShowcase
                   ? letterHuntLevel || 1
@@ -10933,6 +11022,7 @@ const Practice = () => {
           <LetterHuntMechanics
             page={page}
             setPage={setPage}
+            isAlphabetDemoActive={isAlphabetDemoActive}
             {...{
               level: letterHuntIsShowcase
                 ? letterHuntLevel || 1
