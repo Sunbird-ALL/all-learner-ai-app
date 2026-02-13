@@ -2118,10 +2118,16 @@ const MainLayout = (props) => {
                         }
                         if (isShowCase && !startShowCase && !gameOverData) {
                           setStartShowCase(true);
-                          // 🎬 Trigger alphabet demo ONLY for F1 flow deferred milestones (A1=6, A2=13, A3=20)
-                          // Practice.jsx will also validate, but gate here to avoid unnecessary events
+                          // 🎬 Trigger alphabet demo ONLY for F1 flow deferred milestones (A-step indices)
+                          // Derive from F1_FLOW so it stays in sync with Practice.jsx
                           if (isF1FlowActive) {
-                            const deferredMilestones = [6, 13, 20];
+                            const deferredMilestones = F1_FLOW.reduce(
+                              (acc, step, idx) => {
+                                if (step.type === "A") acc.push(idx);
+                                return acc;
+                              },
+                              []
+                            );
                             const currentF1Index = Number(
                               getLocalData("f1FlowIndex") || -1
                             );
