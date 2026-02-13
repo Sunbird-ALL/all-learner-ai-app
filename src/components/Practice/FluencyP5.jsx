@@ -533,8 +533,13 @@ const FluencyP5 = ({
     currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
-  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
   let apiLevel = `M${level}-${currentLevel}`;
+
+  if (level >= 4 && level <= 9) {
+    currentLevel = practiceSteps?.[currentPracticeStep]?.name;
+    apiLevel = `M${level}-${currentLevel}`;
+  }
 
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");
