@@ -4805,15 +4805,15 @@ const SoundHuntS1Combined = ({
             // Calculate progress (S1 is a showcase step)
             const totalSteps = practiceSteps.length;
             const progress = Math.round(
-              ((stepIndex + 1) / (totalSteps * (steps || 1))) * 100
+              (Math.min(stepIndex + 2, totalSteps) / totalSteps) * 100
             );
 
             try {
               await addLesson({
                 sessionId: sessionId,
-                milestone: "showcase", // S1 is a showcase step
+                milestone: "practice", // S1 is a showcase step
                 lesson: stepIndex == 9 ? 0 : stepIndex + 1,
-                progress: Math.min(100, progress),
+                progress: stepIndex == 9 ? 0 : Math.min(100, progress),
                 language: lang,
                 milestoneLevel: milestoneLevel,
               });
@@ -5243,7 +5243,7 @@ const SoundHuntS1Combined = ({
                         <span
                           style={{
                             color: "#FFFFFF",
-                            fontWeight: 600,
+                            fontWeight: language === "te" ? 400 : 600,
                             fontSize:
                               language === "te"
                                 ? isMobile
@@ -5291,7 +5291,7 @@ const SoundHuntS1Combined = ({
                     <span
                       style={{
                         color: "#FFFFFF",
-                        fontWeight: 600,
+                        fontWeight: language === "te" ? 400 : 600,
                         fontSize:
                           language === "te"
                             ? isMobile
@@ -5573,7 +5573,7 @@ const SoundHuntS1Combined = ({
               <span
                 style={{
                   color: "#FFFFFF",
-                  fontWeight: 600,
+                  fontWeight: language === "te" ? 400 : 600,
                   fontSize: language === "te" ? "32px" : "28px",
                   fontFamily: getFontFamily(language),
                   textAlign: "center",
@@ -5625,7 +5625,7 @@ const SoundHuntS1Combined = ({
               <span
                 style={{
                   color: "#FFFFFF",
-                  fontWeight: 600,
+                  fontWeight: language === "te" ? 400 : 600,
                   fontSize: language === "te" ? "32px" : "28px",
                   fontFamily: getFontFamily(language),
                   textAlign: "center",

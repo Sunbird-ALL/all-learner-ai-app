@@ -2101,54 +2101,229 @@ const barakhadiCharts = {
 export const wordData = {
   hi: [
     {
-      text: "भारत",
-      audio: "e0babcda-d6ff-4fed-a36d-5ccdd831b1f2.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.bharataudio),
+      text: "कार",
+      audio: "ed1a6a41-893f-49e6-9e9f-dba1e89f7480.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कारAudio),
     },
     {
-      text: "राजा",
-      audio: "b4edcfa0-91cf-4343-91f9-35fd8c691fcf.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.rajaaudio),
+      text: "रात",
+      audio: "5a49dd77-a776-4862-a38b-dcff186befe3.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रातAudio),
     },
     {
-      text: "जल",
-      audio: "551fee7a-fad6-4c0b-a384-5cee9aa7c7c2.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.jalaudio),
+      text: "पिता",
+      audio: "004dfced-6aa6-47cb-8369-03e8fe9e5762.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.पिताAudio),
     },
     {
-      text: "भालू",
-      audio: "18cf4ec8-4669-49eb-81dc-622196bd226a.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.bhaluaudio),
+      text: "किला",
+      audio: "d8e9b508-93a9-4f27-bece-15935d16fe03.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.किलाAudio),
     },
     {
-      text: "किताब",
-      audio: "42dfd842-8e09-4ab1-b14a-5b2afab33b5c.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.kitabaudio),
+      text: "तीर",
+      audio: "184e3253-8e03-425c-991a-3071943aa704.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.तीरAudio),
     },
     {
-      text: "नदी",
-      audio: "07346231-fd5b-4a41-82e8-c1f0be6a7a85.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.nadiaudio),
+      text: "गीत",
+      audio: "fd38e29a-123a-4c49-9cce-8b51fd1fcd45.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.गीतAudio),
+    },
+    {
+      text: "सुख",
+      audio: "22aa573a-3123-4dba-ba0f-dd285509a8e3.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.सुखAudio),
+    },
+    {
+      text: "रुक",
+      audio: "56ba2119-6d54-403b-b4e9-8ea8d2339917.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रुकAudio),
+    },
+    {
+      text: "मुख",
+      audio: "57b73b9b-ab7e-4cc9-be80-24430a7d0124.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.मुखAudio),
+    },
+    {
+      text: "फूल",
+      audio: "7b1613c9-34c3-4ed8-b365-31fb58ae8ef5.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.फूलAudio),
+    },
+    {
+      text: "रूह",
+      audio: "1cdaf044-2ef5-4f52-b6e9-0fa0b9393492.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रूहAudio),
+    },
+    {
+      text: "गृह",
+      audio: "0d485e95-9904-4236-8624-d8e948380cba.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.गृहAudio),
+    },
+    {
+      text: "कृपा",
+      audio: "88dd1023-c26d-41e8-9fae-65138b6752e8.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कृपाAudio),
+    },
+    {
+      text: "तेल",
+      audio: "cb29f1ee-ccfe-4d41-836a-ad69272fda1d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.तेलAudio),
     },
     {
       text: "केला",
-      audio: "1b1b2c77-88e1-46e0-b8a9-f94561d34d4a.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.kelaaudio),
+      audio: "60458bcf-df7e-4f4d-af23-40c1f5563581.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.केलाAudio),
     },
     {
-      text: "पपीता",
-      audio: "7ffaaae5-31ff-413c-ae1f-eb51780cf4d3.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.papitaaudio),
+      text: "बैठ",
+      audio: "197a75bc-811d-4e6e-8108-f3a2cd3fedbd.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.बैठAudio),
     },
     {
-      text: "पहाड",
-      audio: "97cd336e-0495-4aaa-8f64-6764f2714f6f.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.pahadaudio),
+      text: "कैसे",
+      audio: "c7138dbb-94aa-49a8-b8fb-d4ca41079b58.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कैसेAudio),
     },
     {
-      text: "सेब",
-      audio: "1ce9cb46-6761-4c97-b184-ed123ea49de5.mp3",
-      segmentedAudio: getAssetAudioUrl(s3Assets.sebaudio),
+      text: "शोर",
+      audio: "086593d8-15d2-4c14-a743-38ac7a382bbe.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.शोरAudio),
+    },
+    {
+      text: "मोर",
+      audio: "1f568831-522b-4b82-b4aa-deb7b97f9768.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.मोरAudio),
+    },
+    {
+      text: "कौन",
+      audio: "8d5b767d-acc0-4916-a75b-19eee1269f27.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कौनAudio),
+    },
+    {
+      text: "मौज",
+      audio: "7c1f7f39-b75e-431d-b468-0310c655f2ca.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.मौजAudio),
+    },
+    {
+      text: "हंस",
+      audio: "4c80a8a6-b55a-45a7-b7f6-6bbf18e05561.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.हंसAudio),
+    },
+    {
+      text: "नमः",
+      audio: "dfdc7273-12ae-45e1-81cf-dd3bfe096ff3.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.नमःAudio),
+    },
+    {
+      text: "पानी",
+      audio: "f676c2e5-b49c-451a-b6fa-42bb5d137030.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.पानीAudio),
+    },
+    {
+      text: "रुचि",
+      audio: "07bd5d45-e2fc-442d-b1cc-ff1cd510a710.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रुचिAudio),
+    },
+    {
+      text: "सामने",
+      audio: "7bc800b1-5caa-4df5-9a63-20dc77ba3107.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.सामनेAudio),
+    },
+    {
+      text: "शुरू",
+      audio: "0e11f925-1006-4a7e-ae36-7d103b528b41.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.शुरूAudio),
+    },
+    {
+      text: "होगा",
+      audio: "65535afd-3e4f-40cf-98ff-22bd72e6405a.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.होगाAudio),
+    },
+    {
+      text: "दिशा",
+      audio: "8de794ff-dcb0-483c-991e-f2d09dce8893.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.दिशाAudio),
+    },
+    {
+      text: "कितने",
+      audio: "0ca4f842-0f54-4cf5-a649-ec4b3cf05d7f.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कितनेAudio),
+    },
+    {
+      text: "चिड़िया",
+      audio: "06969b26-1588-4064-aa61-fb8c3a7d665f.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.चिड़ियाAudio),
+    },
+    {
+      text: "सुना",
+      audio: "5ca9dc01-e318-4201-8a97-bce48ec89d22.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.सुनाAudio),
+    },
+    {
+      text: "रुपया",
+      audio: "e2b6df09-04e1-4fbc-b363-796e783169b9.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रुपयाAudio),
+    },
+    {
+      text: "कविता",
+      audio: "21ba9b0b-a4e9-493a-8fa8-72573476724c.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कविताAudio),
+    },
+    {
+      text: "मिला",
+      audio: "a3c77ef0-6998-4568-ac96-8663d37d8e06.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.मिलाAudio),
+    },
+    {
+      text: "सोमारू",
+      audio: "f8ae8f6e-7146-4255-92fc-f855715496c9.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.सोमारूAudio),
+    },
+    {
+      text: "पहेली",
+      audio: "760ed308-04f2-4be6-9e04-767fe5b6503d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.पहेलीAudio),
+    },
+    {
+      text: "कहानी",
+      audio: "3e8c5933-8d58-46b2-81b6-f146d9dc03b2.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कहानीAudio),
+    },
+    {
+      text: "तोसिया",
+      audio: "65f320e0-a177-4278-a4c9-8342c69f64d8.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.तोसियाAudio),
+    },
+    {
+      text: "बारिश",
+      audio: "02907e35-3140-4549-bcd5-0440c5e3f091.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.बारिशAudio),
+    },
+    {
+      text: "कटोरी",
+      audio: "87751809-a287-48f7-ab21-d9927a27b10e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कटोरीAudio),
+    },
+    {
+      text: "थाली",
+      audio: "5e379647-9f49-4c9f-99ce-bb07d13aa5ec.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.थालीAudio),
+    },
+    {
+      text: "मुझे",
+      audio: "e0f54b9e-257c-4412-8f18-3da880f84016.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.मुझेAudio),
+    },
+    {
+      text: "तैरना",
+      audio: "c4a15974-7f17-4cee-99f4-e7d1e8e30aad.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.तैरनाAudio),
+    },
+    {
+      text: "पिताजी",
+      audio: "b9fcd2fe-063d-479e-9bee-87bc27f8ee8d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.पिताजीAudio),
     },
   ],
 
@@ -3076,31 +3251,10 @@ const Barakhadi = ({
   }, [targetWord, lang]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const lang = getLocalData("lang");
-        // Fetch assessment data
-        const resAssessment = await fetchAssessmentData(lang);
-        const sentences = resAssessment?.data?.find(
-          (elem) => elem.category === "Char"
-        );
-
-        if (!sentences?.collectionId) {
-          console.error("No collection ID found for sentences.");
-          return;
-        }
-
-        const resPagination = await fetchPaginatedContent(
-          sentences.collectionId,
-          10
-        );
-
-        setTotalSyllableCount(resPagination?.totalSyllableCount);
-        setCurrentCollectionId(sentences?.collectionId);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    })();
+    // Removed unnecessary getAssessment & Pagination API calls
+    console.log(
+      "Barakhadi component mounted - skipping assessment/pagination API calls"
+    );
   }, []);
 
   const handleCompletion = async () => {
@@ -3131,17 +3285,7 @@ const Barakhadi = ({
       console.error("Error creating learner progress:", error);
     }
 
-    try {
-      const getSetResultRes = await fetchGetSetResult(
-        sub_session_id,
-        currentContentType,
-        currentCollectionId,
-        totalSyllableCount
-      );
-      console.log("GetSet result:", getSetResultRes);
-    } catch (error) {
-      console.error("Error fetching set result:", error);
-    }
+    // Removed fetchGetSetResult call since currentCollectionId and totalSyllableCount
 
     if (!(localStorage.getItem("contentSessionId") !== null)) {
       let point = 1;
@@ -3594,25 +3738,29 @@ const Barakhadi = ({
   const tdStyle = {
     padding: "4px",
     border: "1px solid #ccc",
-    fontSize: "23px",
+    fontSize: lang === "te" ? "28px" : "23px",
     textAlign: "center",
     width: "58px",
     cursor: "pointer",
-    fontWeight: 800,
+    fontWeight: lang === "te" ? 400 : 800,
+    fontFamily: getFontFamily(lang),
     transition: "background-color 0.3s ease",
   };
 
   const circleStyle = {
-    width: "22px",
-    height: "22px",
+    width: lang === "te" ? "28px" : "22px",
+    height: lang === "te" ? "28px" : "22px",
     borderRadius: "50%",
     background: "#2c3e50",
     color: "#fff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontWeight: "bold",
-    fontSize: "12px",
+    fontWeight: lang === "te" ? "normal" : "bold",
+    fontSize: lang === "te" ? "16px" : "12px",
+    fontFamily: getFontFamily(lang),
+    lineHeight: "1",
+    textAlign: "center",
     boxShadow: "0px 4px 6px rgba(0,0,0,0.15)",
     margin: "0 auto",
     marginBottom: "4px",
@@ -3620,16 +3768,19 @@ const Barakhadi = ({
 
   const leftCircleStyle = {
     position: "absolute",
-    width: "28px",
-    height: "28px",
+    width: lang === "te" ? "34px" : "28px",
+    height: lang === "te" ? "34px" : "28px",
     borderRadius: "50%",
     background: "#ffeb3b",
     color: "#000",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontWeight: "bold",
-    fontSize: "12px",
+    fontWeight: lang === "te" ? "normal" : "bold",
+    fontSize: lang === "te" ? "18px" : "12px",
+    fontFamily: getFontFamily(lang),
+    lineHeight: "1",
+    textAlign: "center",
     boxShadow: "0px 4px 6px rgba(0,0,0,0.15)",
     border: "1px solid black",
   };
@@ -3852,20 +4003,22 @@ const Barakhadi = ({
                     <div
                       key={i}
                       style={{
-                        width: 50,
-                        height: 50,
+                        width: lang === "te" ? "56px" : "50px",
+                        height: lang === "te" ? "56px" : "50px",
                         borderRadius: "50%",
                         background: "#1a237e",
                         color: "white",
                         border: "1px solid #999",
-                        fontWeight: "bold",
+                        fontWeight: lang === "te" ? "normal" : "bold",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         margin: "0 2px",
-                        fontSize: lang === "te" ? "20px" : "18px",
+                        fontSize: lang === "te" ? "28px" : "18px",
                         flexShrink: 0,
                         fontFamily: getFontFamily(lang),
+                        lineHeight: "1",
+                        textAlign: "center",
                       }}
                     >
                       {v}
@@ -3893,19 +4046,21 @@ const Barakhadi = ({
                         <div
                           key={index}
                           style={{
-                            width: 45,
-                            height: 45,
+                            width: lang === "te" ? "52px" : "45px",
+                            height: lang === "te" ? "52px" : "45px",
                             borderRadius: "50%",
                             background: "#fbc02d",
                             border: "1px solid black",
-                            fontWeight: "bold",
+                            fontWeight: lang === "te" ? "normal" : "bold",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             margin: "4px 0",
-                            fontSize: lang === "te" ? "20px" : "18px",
+                            fontSize: lang === "te" ? "28px" : "18px",
                             flexShrink: 0,
                             fontFamily: getFontFamily(lang),
+                            lineHeight: "1",
+                            textAlign: "center",
                           }}
                         >
                           {consonant}
@@ -3933,8 +4088,9 @@ const Barakhadi = ({
                                     width: 55,
                                     height: 55,
                                     border: "1px solid #ccc",
-                                    fontSize: lang === "te" ? "20px" : "18px",
-                                    fontWeight: "bold",
+                                    fontSize: lang === "te" ? "28px" : "18px",
+                                    fontWeight:
+                                      lang === "te" ? "normal" : "bold",
                                     minWidth: "55px",
                                     fontFamily: getFontFamily(lang),
                                   }}
@@ -3958,8 +4114,8 @@ const Barakhadi = ({
           <div style={titleStyle}>
             <span
               style={{
-                fontSize: lang === "te" ? "25px" : "22px",
-                fontWeight: "700",
+                fontSize: lang === "te" ? "30px" : "22px",
+                fontWeight: lang === "te" ? "400" : "700",
                 color: "#333F61",
                 fontFamily: getFontFamily(lang),
               }}
@@ -4007,12 +4163,16 @@ const Barakhadi = ({
                   style={{
                     background: "rgba(51, 63, 97, 1)",
                     color: "#fff",
-                    padding: "2px 24px",
+                    padding: lang === "te" ? "0px 24px 8px 24px" : "2px 24px",
                     borderRadius: "6px",
                     minWidth: "80px",
                     textAlign: "center",
                     display: "inline-block",
                     fontFamily: getFontFamily(lang),
+                    fontSize: lang === "te" ? "28px" : "20px",
+                    fontWeight: "normal",
+                    lineHeight: lang === "te" ? "1.1" : "normal",
+                    verticalAlign: "middle",
                   }}
                 >
                   {currentWordData?.text || ""}
@@ -4089,8 +4249,8 @@ const Barakhadi = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "flex-start",
-                  fontSize: "22px",
-                  fontWeight: "bold",
+                  fontSize: lang === "te" ? "26px" : "22px",
+                  fontWeight: lang === "te" ? "normal" : "bold",
                   color:
                     word === targetWord
                       ? "#27ae60"

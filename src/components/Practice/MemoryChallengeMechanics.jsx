@@ -81,6 +81,8 @@ const MemoryChallengeMechanicsContent = ({
       ? "kn"
       : lang === "mr"
       ? "mr"
+      : lang === "hi"
+      ? "hi"
       : "en";
   const initialAudioLanguage = initialLanguage;
 
@@ -146,7 +148,8 @@ const MemoryChallengeMechanicsContent = ({
       initialLanguage === "en" ||
       initialLanguage === "te" ||
       initialLanguage === "kn" ||
-      initialLanguage === "mr"
+      initialLanguage === "mr" ||
+      initialLanguage === "hi"
         ? initialLanguage
         : "en";
 
@@ -721,6 +724,27 @@ const MemoryChallengeMechanicsContent = ({
                     console.log(
                       "Memory Challenge - A2 completed successfully - F3 flow complete, redirecting to discover-start"
                     );
+
+                    const lang = getLocalData("lang") || "en";
+                    const sessionId = getLocalData("sessionId");
+
+                    try {
+                      await addLesson({
+                        sessionId: sessionId,
+                        milestone: "practice",
+                        lesson: "0",
+                        progress: 0,
+                        language: lang,
+                        milestoneLevel: "m1",
+                      });
+                      console.log("F3 A2 completion - M1 lesson added");
+                    } catch (e) {
+                      console.error(
+                        "Error adding M1 lesson after F3 A2 completion:",
+                        e
+                      );
+                    }
+
                     // Clear F3 flow data
                     setLocalData("f3FlowIndex", null);
                     setLocalData("f3FlowComplete", "true");

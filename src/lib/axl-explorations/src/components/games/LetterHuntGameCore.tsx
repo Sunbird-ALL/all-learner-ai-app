@@ -11,6 +11,7 @@ import { marathiAudioManager } from "../../utils/marathiAudioManager";
 import { ContinueButton } from "./ContinueButton";
 import { englishAudioManager } from "../../utils/englishAudioManager";
 import { playSuccessSound, attachSlowLoadToast } from "../../utils/audioUtils";
+import { hindiAudioManager } from "../../utils/hindiAudioManager";
 
 // Core question interface for Letter Hunt
 export interface LetterHuntQuestion {
@@ -234,7 +235,44 @@ export function LetterHuntGameCore({
         };
         return;
       }
-      
+      if (language === 'hi') {
+        const audioUrl = hindiAudioManager.getAudioUrl(text);
+        const audio = new Audio(audioUrl);
+        activeAudioRefs.current.add(audio);
+        attachSlowLoadToast(audio);
+        
+        audio.onloadeddata = () => {
+          if (isAudioStoppedRef.current) {
+            resolve();
+            return;
+          }
+          audio.play().then(() => {
+            audio.onended = () => {
+              activeAudioRefs.current.delete(audio);
+              resolve();
+            };
+          }).catch(() => {
+            activeAudioRefs.current.delete(audio);
+            // Fallback to TTS
+            if (!isAudioStoppedRef.current) {
+              playTTSAudio(text, language).then(() => resolve());
+            } else {
+              resolve();
+            }
+          });
+        };
+        
+        audio.onerror = () => {
+          activeAudioRefs.current.delete(audio);
+          // Fallback to TTS
+          if (!isAudioStoppedRef.current) {
+            playTTSAudio(text, language).then(() => resolve());
+          } else {
+            resolve();
+          }
+        };
+        return;
+      }
       // For Kannada, try to use local audio files first
       if (language === 'kn') {
         const audioUrl = kannadaAudioManager.getAudioUrl(text);

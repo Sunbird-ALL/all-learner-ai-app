@@ -1352,7 +1352,7 @@ const R1 = ({
               />
               <Typography
                 sx={{
-                  fontWeight: 800,
+                  fontWeight: lang === "te" ? 400 : 800,
                   fontSize: { xs: 22, md: 32 },
                   mr: 2,
                   letterSpacing: 0.5,
