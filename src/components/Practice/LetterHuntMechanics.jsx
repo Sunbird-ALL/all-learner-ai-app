@@ -580,6 +580,38 @@ const LetterHuntMechanicsContent = ({
           `Apply step ${applyStep} completed all levels (${completedLevel}/${endLevel}) - will redirect to ${passRedirect} after success screen`
         );
 
+        // Add points for Apply step completion (all 3 levels completed)
+        // This must happen BEFORE redirect logic to ensure points are added for all Apply steps
+        if (!localStorage.getItem("contentSessionId")) {
+          try {
+            const lang = getLocalData("lang") || "en";
+            let pointsToAdd = 30; // Default for Apply steps
+
+            if (isF1FlowActive) {
+              const f1Config = levelGetContent[lang]?.["F1"];
+              const currentF1FlowStep = getF1FlowStep();
+              const completedStepContent = f1Config?.[currentF1FlowStep.index];
+              pointsToAdd = completedStepContent?.contentCount || 30;
+            } else if (isF2FlowActive) {
+              const f2Config = levelGetContent[lang]?.["F2"];
+              const currentF2FlowStep = getF2FlowStep();
+              const completedStepContent = f2Config?.[currentF2FlowStep.index];
+              pointsToAdd = completedStepContent?.contentCount || 30;
+            }
+
+            const result = await addPointer(pointsToAdd, "B");
+
+            if (
+              result?.result?.totalLanguagePoints !== undefined &&
+              setPoints
+            ) {
+              setPoints(result.result.totalLanguagePoints);
+            }
+          } catch (error) {
+            console.error("Error adding Apply step points:", error);
+          }
+        }
+
         // Store redirect info to execute after success screen is shown
         const executeRedirect = async () => {
           if (passRedirect === "F2" || passRedirect === "F3") {
@@ -619,31 +651,6 @@ const LetterHuntMechanicsContent = ({
                 milestoneLevel: milestoneLevel,
                 subMilestoneLevel: "F1",
               });
-
-              // Add points for F1 Apply step completion (all 3 levels completed)
-              if (!localStorage.getItem("contentSessionId")) {
-                try {
-                  const f1Config = levelGetContent[lang]?.["F1"];
-                  const currentF1FlowStep = getF1FlowStep();
-                  const completedStepContent =
-                    f1Config?.[currentF1FlowStep.index];
-                  const pointsPerLevel =
-                    completedStepContent?.letterHuntContentCount || 10;
-                  const numLevels = endLevel || 3;
-                  const pointsToAdd = pointsPerLevel * numLevels;
-
-                  const result = await addPointer(pointsToAdd, "B");
-
-                  if (
-                    result?.result?.totalLanguagePoints !== undefined &&
-                    setPoints
-                  ) {
-                    setPoints(result.result.totalLanguagePoints);
-                  }
-                } catch (error) {
-                  console.error("Error adding F1 Apply step points:", error);
-                }
-              }
 
               const updatedPracticeProgress = {
                 currentQuestion: 0,
@@ -709,37 +716,12 @@ const LetterHuntMechanicsContent = ({
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: (targetStep + 1).toString(), // Convert to 1-indexed for backend
+                lesson: (targetStep + 1).toString(),
                 progress: cappedProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
                 subMilestoneLevel: "F2",
               });
-
-              // Add points for F2 Apply step completion (all 3 levels completed)
-              if (!localStorage.getItem("contentSessionId")) {
-                try {
-                  const f2Config = levelGetContent[lang]?.["F2"];
-                  const currentF2FlowStep = getF2FlowStep();
-                  const completedStepContent =
-                    f2Config?.[currentF2FlowStep.index];
-                  const pointsPerLevel =
-                    completedStepContent?.letterHuntContentCount || 10;
-                  const numLevels = endLevel || 3;
-                  const pointsToAdd = pointsPerLevel * numLevels;
-
-                  const result = await addPointer(pointsToAdd, "B");
-
-                  if (
-                    result?.result?.totalLanguagePoints !== undefined &&
-                    setPoints
-                  ) {
-                    setPoints(result.result.totalLanguagePoints);
-                  }
-                } catch (error) {
-                  console.error("Error adding F2 Apply step points:", error);
-                }
-              }
 
               const updatedPracticeProgress = {
                 currentQuestion: 0,
