@@ -1310,6 +1310,7 @@ const LetterHuntMechanicsContent = ({
                   apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
                   onA3Pass={handleA3Pass} // Callback when A3 passes
                   sessionId={sessionId}
+                  skipPreview={skipPreview}
                   // sub_apply_level is calculated dynamically in LetterGame based on currentLevel
                 />
               </div>
