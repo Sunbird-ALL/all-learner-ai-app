@@ -68,8 +68,8 @@ const UnderlinedSentence = ({
   return (
     <p
       style={{
-        fontSize: "30px",
-        fontWeight: "600",
+        fontSize: lang === "te" ? "34px" : "30px",
+        fontWeight: lang === "te" ? "400" : "600",
         color: "rgba(51, 63, 97, 1)",
         fontFamily: getFontFamily(lang || "en"),
         fontStyle: "bold",
@@ -388,6 +388,11 @@ const FluencyP1 = ({
   let currentLevel = practiceSteps?.[currentPracticeStep]?.title || "L1";
 
   let apiLevel = `M${level}-${currentLevel}`;
+
+  if (level >= 4 && level <= 9) {
+    currentLevel = practiceSteps?.[currentPracticeStep]?.name;
+    apiLevel = `M${level}-${currentLevel}`;
+  }
 
   useEffect(() => {
     handleStart();

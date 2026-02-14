@@ -114,6 +114,8 @@ const LetterLauncherMechanicsContent = ({
       ? "kn"
       : lang === "mr"
       ? "mr"
+      : lang === "hi"
+      ? "hi"
       : "en";
   const initialAudioLanguage = initialLanguage;
 
@@ -221,7 +223,8 @@ const LetterLauncherMechanicsContent = ({
     const supportedLanguage =
       initialLanguage === "te" ||
       initialLanguage === "mr" ||
-      initialLanguage === "kn"
+      initialLanguage === "kn" ||
+      initialLanguage === "hi"
         ? initialLanguage
         : "en";
 
@@ -231,7 +234,8 @@ const LetterLauncherMechanicsContent = ({
         supportedLanguage === "te" ||
         supportedLanguage === "kn" ||
         supportedLanguage === "mr" ||
-        supportedLanguage === "en"
+        supportedLanguage === "en" ||
+        supportedLanguage === "hi"
       ) {
         const levelKey = currentGameLevel.toString();
         letters = memoryGameDataLoader.getLettersByLevel(
@@ -1540,37 +1544,40 @@ const LetterLauncherMechanicsContent = ({
                         const f3Config = levelGetContent[lang]?.["F3"];
                         const completedStepContent =
                           f3Config?.[currentF3FlowStep.index];
-                        // For F3, contentCount might be in sub-steps
-                        const contentCount =
-                          completedStepContent?.letterLauncherContentCount ||
-                          completedStepContent?.memoryChallengeContentCount ||
-                          completedStepContent?.readAloudContentCount ||
-                          completedStepContent?.contentCount ||
-                          1;
+                        const isApplyStep =
+                          completedStepContent?.title?.startsWith("A");
 
-                        const pointsToAdd = contentCount;
-                        const milestone = "B";
+                        let pointsToAdd;
 
-                        const result = await addPointer(pointsToAdd, milestone);
-                        const awardedPoints = result?.result?.points;
-
-                        if (awardedPoints === pointsToAdd) {
-                          console.log(
-                            "F3 flow points updated by LetterLauncherMechanics:",
-                            {
-                              completedStepIndex: currentF3FlowStep.index,
-                              pointsAdded: pointsToAdd,
-                              contentCount,
-                              totalPoints: result?.result?.totalLanguagePoints,
-                            }
-                          );
-                          // Note: setPoints is not available here, parent component will fetch points
+                        if (isApplyStep) {
+                          // For Apply steps: F3 A1 = 20 × 3 levels = 60 points, F3 A2 = contentCount (45)
+                          if (
+                            completedStepContent?.letterLauncherContentCount
+                          ) {
+                            const pointsPerLevel =
+                              completedStepContent.letterLauncherContentCount;
+                            const numLevels =
+                              completedStepContent?.letterLauncherEndLevel -
+                              completedStepContent?.letterLauncherLevel +
+                              1;
+                            pointsToAdd = pointsPerLevel * numLevels;
+                          } else {
+                            pointsToAdd =
+                              completedStepContent?.contentCount || 1;
+                          }
+                        } else {
+                          // For non-Apply steps, use contentCount
+                          pointsToAdd =
+                            completedStepContent?.letterLauncherContentCount ||
+                            completedStepContent?.memoryChallengeContentCount ||
+                            completedStepContent?.readAloudContentCount ||
+                            completedStepContent?.contentCount ||
+                            1;
                         }
+
+                        await addPointer(pointsToAdd, "B");
                       } catch (error) {
-                        console.error(
-                          "Error updating F3 flow points in LetterLauncherMechanics:",
-                          error
-                        );
+                        console.error("Error updating F3 flow points:", error);
                       }
                     }
 

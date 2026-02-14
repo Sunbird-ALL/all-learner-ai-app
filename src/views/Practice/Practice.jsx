@@ -132,6 +132,38 @@ const Practice = () => {
   const [rStep, setRStep] = useState(() => {
     return Number(getLocalData("rStep")) || 2;
   });
+  const [isAlphabetDemoActive, setIsAlphabetDemoActive] = useState(false);
+
+  // Sync isAlphabetDemoActive state with localStorage
+  useEffect(() => {
+    const checkAlphabetDemoStatus = () => {
+      const demoState = getLocalData("showAlphabetDemo");
+      const isActive = demoState === "true";
+      if (isActive !== isAlphabetDemoActive) {
+        setIsAlphabetDemoActive(isActive);
+      }
+    };
+
+    // Check immediately
+    checkAlphabetDemoStatus();
+
+    // Listen for storage events
+    const handleStorageChange = (e) => {
+      if (e.key === "showAlphabetDemo") {
+        checkAlphabetDemoStatus();
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    // Poll periodically to catch internal changes (since storage event doesn't fire in the same window)
+    const interval = setInterval(checkAlphabetDemoStatus, 100);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [isAlphabetDemoActive]);
+
   const [rStepZero, setRStepZero] = useState(() => {
     return Number(getLocalData("rStepZero"));
   });
@@ -4538,6 +4570,81 @@ const Practice = () => {
   //   }
   // }, [lang]);
 
+  useEffect(() => {
+    // 🎬 Trigger alphabet demo for F1 flow at specific milestones
+    // Milestone indices: L1=0,A1=6,A2=13,A3=20
+    const immediateMilestones = F1_FLOW.reduce((acc, step, idx) => {
+      if (step.type === "L" && step.step === 1) acc.push(idx);
+      return acc;
+    }, []);
+    const deferredMilestones = F1_FLOW.reduce((acc, step, idx) => {
+      if (step.type === "A") acc.push(idx);
+      return acc;
+    }, []);
+
+    const milestoneIndices = [...immediateMilestones, ...deferredMilestones];
+
+    // 🛡️ Clear stale showAlphabetDemo if current index is NOT a milestone
+    // This prevents the chart audio from playing after re-login at a non-milestone step (e.g., P1)
+    if (!milestoneIndices.includes(f1FlowIndexState)) {
+      const staleDemo = getLocalData("showAlphabetDemo");
+      if (staleDemo === "true") {
+        setLocalData("showAlphabetDemo", "false");
+        // 🔇 Tell Assesment.jsx to stop any playing chart audio
+        window.dispatchEvent(new Event("alphabetDemoStop"));
+      }
+      return; // Not at a milestone, no need to set up triggers
+    }
+
+    const handleTrigger = (index) => {
+      if (isF1FlowActive && milestoneIndices.includes(index)) {
+        const playedIndicesRaw = getLocalData("playedAlphabetDemoIndices");
+        let playedIndices = [];
+        try {
+          playedIndices = playedIndicesRaw ? JSON.parse(playedIndicesRaw) : [];
+        } catch (e) {
+          playedIndices = [];
+        }
+
+        if (!playedIndices.includes(index)) {
+          // console.log(
+          //   "Practice - Triggering Alphabet Demo for F1 milestone:",
+          //   index
+          // );
+          const updatedPlayedIndices = [...playedIndices, index];
+          setLocalData(
+            "playedAlphabetDemoIndices",
+            JSON.stringify(updatedPlayedIndices)
+          );
+          setLocalData("showAlphabetDemo", "true");
+          window.dispatchEvent(new Event("alphabetDemoComplete"));
+        }
+      }
+    };
+
+    // 1. Immediate trigger for L1 milestone (index 0)
+    // Trigger directly when this useEffect runs, no need for event
+    if (immediateMilestones.includes(f1FlowIndexState)) {
+      handleTrigger(f1FlowIndexState);
+    }
+
+    // 2. Listener for deferred trigger (e.g., from MainLayout "Start Game" button)
+    // Only for showcase milestones A1, A2, A3
+    const handleTriggerRequest = () => {
+      if (deferredMilestones.includes(f1FlowIndexState)) {
+        handleTrigger(f1FlowIndexState);
+      }
+    };
+    window.addEventListener("alphabetDemoTriggerRequest", handleTriggerRequest);
+
+    return () => {
+      window.removeEventListener(
+        "alphabetDemoTriggerRequest",
+        handleTriggerRequest
+      );
+    };
+  }, [f1FlowIndexState, isF1FlowActive]);
+
   // useEffect(() => {
   //   setLocalData("rFlow", true)
   // }, []);
@@ -4764,27 +4871,27 @@ const Practice = () => {
         setCurrentQuestion(0);
 
         // Update points for F2 flow based on contentCount
+        // Skip for Apply steps - they handle points after all 3 levels complete
         if (
           updatedF2FlowStep.step &&
           !localStorage.getItem("contentSessionId")
         ) {
           try {
-            // Get current content config to get contentCount
             const lang = getLocalData("lang") || "en";
             const f2Config = levelGetContent[lang]?.["F2"];
             const currentStepContent = f2Config?.[currentF2FlowStep.index];
-            const contentCount =
-              currentStepContent?.contentCount || questions.length || 1;
+            const isApplyStep = currentStepContent?.title?.startsWith("A");
 
-            // Points should be based on contentCount
-            const pointsToAdd = contentCount;
-            const milestone = "B"; // F2 flow uses milestone "B"
+            // Only add points for non-Apply steps (L and P steps)
+            // Apply steps add points after all 3 levels are completed
+            if (!isApplyStep) {
+              const contentCount =
+                currentStepContent?.contentCount || questions.length || 1;
+              const result = await addPointer(contentCount, "B");
 
-            const result = await addPointer(pointsToAdd, milestone);
-            const awardedPoints = result?.result?.points;
-
-            if (awardedPoints === pointsToAdd) {
-              setPoints(result?.result?.totalLanguagePoints || 0);
+              if (result?.result?.totalLanguagePoints) {
+                setPoints(result.result.totalLanguagePoints);
+              }
             }
           } catch (error) {
             console.error("Error updating F2 flow points:", error);
@@ -4897,31 +5004,23 @@ const Practice = () => {
       setCurrentQuestion(0);
 
       // Update points for F1 flow Learn step based on contentCount
+      // Skip for Apply steps - they handle points after all 3 levels complete
       if (currentF1FlowStep.step && !localStorage.getItem("contentSessionId")) {
         try {
-          // Get current content config to get contentCount (use the COMPLETED step, not the next one)
           const lang = getLocalData("lang") || "en";
           const f1Config = levelGetContent[lang]?.["F1"];
           const completedStepContent = f1Config?.[currentF1FlowStep.index];
-          const contentCount =
-            completedStepContent?.contentCount || questions.length || 1;
+          const isApplyStep = completedStepContent?.title?.startsWith("A");
 
-          // Points should be based on contentCount
-          const pointsToAdd = contentCount;
-          const milestone = "B"; // F1 flow uses milestone "B"
+          // Only add points for non-Apply steps
+          if (!isApplyStep) {
+            const contentCount =
+              completedStepContent?.contentCount || questions.length || 1;
+            const result = await addPointer(contentCount, "B");
 
-          const result = await addPointer(pointsToAdd, milestone);
-          const awardedPoints = result?.result?.points;
-
-          if (awardedPoints === pointsToAdd) {
-            setPoints(result?.result?.totalLanguagePoints || 0);
-            console.log("F1 Learn step (L1) points updated:", {
-              completedStepIndex: currentF1FlowStep.index,
-              stepType: currentF1FlowStep.step?.type,
-              pointsAdded: pointsToAdd,
-              contentCount,
-              totalPoints: result?.result?.totalLanguagePoints,
-            });
+            if (result?.result?.totalLanguagePoints) {
+              setPoints(result.result.totalLanguagePoints);
+            }
           }
         } catch (error) {
           console.error("Error updating F1 Learn step points:", error);
@@ -5355,35 +5454,28 @@ const Practice = () => {
         setCurrentQuestion(0);
 
         // Update points for F1 flow based on contentCount (use COMPLETED step, not next step)
+        // Skip for Apply steps - they handle points after all 3 levels complete
         if (
           currentF1FlowStepBeforeAdvance.step &&
           !localStorage.getItem("contentSessionId")
         ) {
           try {
-            // Get current content config to get contentCount for the COMPLETED step
             const lang = getLocalData("lang") || "en";
             const f1Config = levelGetContent[lang]?.["F1"];
             const completedStepContent =
               f1Config?.[currentF1FlowStepBeforeAdvance.index];
-            const contentCount =
-              completedStepContent?.contentCount || questions.length || 1;
+            const isApplyStep = completedStepContent?.title?.startsWith("A");
 
-            // Points should be based on contentCount
-            const pointsToAdd = contentCount;
-            const milestone = "B"; // F1 flow uses milestone "B"
+            // Only add points for non-Apply steps (L and P steps)
+            // Apply steps add points after all 3 levels are completed
+            if (!isApplyStep) {
+              const contentCount =
+                completedStepContent?.contentCount || questions.length || 1;
+              const result = await addPointer(contentCount, "B");
 
-            const result = await addPointer(pointsToAdd, milestone);
-            const awardedPoints = result?.result?.points;
-
-            if (awardedPoints === pointsToAdd) {
-              setPoints(result?.result?.totalLanguagePoints || 0);
-              console.log("F1 flow points updated (handleNext):", {
-                completedStepIndex: currentF1FlowStepBeforeAdvance.index,
-                stepType: currentF1FlowStepBeforeAdvance.step?.type,
-                pointsAdded: pointsToAdd,
-                contentCount,
-                totalPoints: result?.result?.totalLanguagePoints,
-              });
+              if (result?.result?.totalLanguagePoints) {
+                setPoints(result.result.totalLanguagePoints);
+              }
             }
           } catch (error) {
             console.error("Error updating F1 flow points:", error);
@@ -5452,7 +5544,7 @@ const Practice = () => {
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: targetIndex.toString(),
+                lesson: (targetIndex + 1).toString(), // Convert to 1-indexed for backend (matches F1/F2/F3 pattern)
                 progress: currentPracticeProgress,
                 language: lang,
                 milestoneLevel: "B",
@@ -5460,6 +5552,7 @@ const Practice = () => {
               });
               console.log("F3 flow redirect progress saved:", {
                 index: targetIndex,
+                lessonSaved: (targetIndex + 1).toString(), // 1-indexed
                 progress: currentPracticeProgress,
               });
             } catch (e) {
@@ -5567,47 +5660,8 @@ const Practice = () => {
         setProgressData(practiceProgress);
         setCurrentQuestion(0);
 
-        // Update points for F3 flow based on contentCount
-        if (
-          currentF3FlowStep.step &&
-          !localStorage.getItem("contentSessionId")
-        ) {
-          try {
-            // Get current content config to get contentCount
-            const lang = getLocalData("lang") || "en";
-            const f3Config = levelGetContent[lang]?.["F3"];
-            const currentStepContent = f3Config?.[currentF3FlowStep.index];
-            // For F3, contentCount might be in sub-steps (letterLauncherContentCount, etc.)
-            const contentCount =
-              currentStepContent?.letterLauncherContentCount ||
-              currentStepContent?.soundHuntS1CombinedContentCount ||
-              currentStepContent?.soundHuntContentCount ||
-              currentStepContent?.letterHuntContentCount ||
-              currentStepContent?.memoryChallengeContentCount ||
-              currentStepContent?.readAloudContentCount ||
-              currentStepContent?.contentCount ||
-              questions.length ||
-              1;
-
-            // Points should be based on contentCount
-            const pointsToAdd = contentCount;
-            const milestone = "B"; // F3 flow uses milestone "B"
-
-            const result = await addPointer(pointsToAdd, milestone);
-            const awardedPoints = result?.result?.points;
-
-            if (awardedPoints === pointsToAdd) {
-              setPoints(result?.result?.totalLanguagePoints || 0);
-              console.log("F3 flow points updated:", {
-                pointsAdded: pointsToAdd,
-                contentCount,
-                totalPoints: result?.result?.totalLanguagePoints,
-              });
-            }
-          } catch (error) {
-            console.error("Error updating F3 flow points:", error);
-          }
-        }
+        // F3 flow points are handled entirely by LetterLauncherMechanics component
+        // Do not add points here to avoid duplicates
 
         // Use F3 flow index to get content from F3 config
         const effectiveLang = lang || "en";
@@ -6000,8 +6054,8 @@ const Practice = () => {
         (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
         (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt);
 
-      // Update UI points for F1/F2 flows when they complete via LetterHuntMechanics
-      // LetterHuntMechanics already updated points in backend, we just need to fetch and update UI
+      // Update UI points for F1/F2/F3 flows when they complete via LetterHuntMechanics/LetterLauncherMechanics
+      // LetterHuntMechanics/LetterLauncherMechanics already updated points in backend, we just need to fetch and update UI
       if (
         (currentQuestion === questions.length - 1 || isGameOver) &&
         shouldSkipContentFetch &&
@@ -6027,39 +6081,15 @@ const Practice = () => {
             );
           }
         } else if (isF3FlowByMilestone) {
-          // F3 flow points are handled by LetterLauncherMechanics, but if it didn't update,
-          // we should update here
+          // F3 flow points are handled entirely by LetterLauncherMechanics
+          // Just fetch the updated points from backend to update UI
           try {
-            const lang = getLocalData("lang") || "en";
-            const f3Config = levelGetContent[lang]?.["F3"];
-            const currentF3Step = getF3FlowStep();
-            const currentStepContent = f3Config?.[currentF3Step.index];
-            // For F3, contentCount might be in sub-steps
-            const pointsToAdd =
-              currentStepContent?.letterLauncherContentCount ||
-              currentStepContent?.soundHuntS1CombinedContentCount ||
-              currentStepContent?.soundHuntContentCount ||
-              currentStepContent?.letterHuntContentCount ||
-              currentStepContent?.memoryChallengeContentCount ||
-              currentStepContent?.readAloudContentCount ||
-              currentStepContent?.contentCount ||
-              questions.length ||
-              1;
-
-            const milestone = "B"; // F3 flow uses milestone "B"
-            const result = await addPointer(pointsToAdd, milestone);
-            const awardedPoints = result?.result?.points;
-
-            if (awardedPoints === pointsToAdd) {
-              setPoints(result?.result?.totalLanguagePoints || 0);
-              console.log("F3 flow points updated (shouldSkipContentFetch):", {
-                pointsAdded: pointsToAdd,
-                totalPoints: result?.result?.totalLanguagePoints,
-              });
-            }
+            const userPointsRes = await fetchUserPoints();
+            const totalPoints = userPointsRes?.result?.totalLanguagePoints || 0;
+            setPoints(totalPoints);
           } catch (error) {
             console.error(
-              "Error updating F3 flow points (shouldSkipContentFetch):",
+              "Error fetching F3 flow points (shouldSkipContentFetch):",
               error
             );
           }
@@ -6355,9 +6385,16 @@ const Practice = () => {
           isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
+          // Determine milestone type based on the NEXT step (newPracticeStep), not the current step
+          // This ensures that when P2 completes and next is S1, milestone is "showcase"
+          const nextStepTitle = practiceSteps?.[newPracticeStep]?.title || "";
+          const nextStepMilestoneType = ["S1", "S2"].includes(nextStepTitle)
+            ? "showcase"
+            : "practice";
+
           await addLesson({
             sessionId: sessionId,
-            milestone: milestoneType,
+            milestone: nextStepMilestoneType,
             lesson: newPracticeStep,
             progress: currentPracticeProgress,
             language: lang,
@@ -6534,36 +6571,6 @@ const Practice = () => {
           const currentGetContent = getCurrentContent(newPracticeStep);
           setMechanism(currentGetContent?.mechanism || {});
         }
-
-        // Mechanism is now set immediately above for all flows:
-        // - F1/F2/F3 flows: Set based on flow step type
-        // - Non-F flows (m1, m2, etc.): Set immediately from getCurrentContent
-        // No setTimeout needed - this prevents blank screens and ensures immediate rendering
-
-        // if(virtualId === "6760800019"){
-        //   setLevel(12);
-        //   //setMechanism({ id: "read_aloud", name: "readAloud" });
-        // }
-
-        // if(virtualId === "1621936833"){
-        //   setLevel(13);
-        //   setMechanism({ id: "r3", name: "r3" });
-        // }
-        // if(virtualId === "9526496994"){
-        //   setLevel(14);
-        // }
-        // if(virtualId === "7656513916"){
-        //   setLevel(4);
-        // }
-        // if(virtualId === "3464419415"){
-        //   setLevel(5);
-        // }
-        // if(virtualId === "6131132191"){
-        //   setLevel(6);
-        // }
-        // if(virtualId === "8909322850"){
-        //   setLevel(7);
-        // }
 
         if (levelMapping[virtualId] !== undefined) {
           setLevel(levelMapping[virtualId]);
@@ -7643,8 +7650,11 @@ const Practice = () => {
                   variant="h5"
                   component="h4"
                   sx={{
-                    fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
-                    fontWeight: 700,
+                    fontSize:
+                      lang === "te"
+                        ? "clamp(1.9rem, 2.8vw, 4.1rem)"
+                        : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                    fontWeight: lang === "te" ? 400 : 700,
                     fontFamily: getFontFamily(lang),
                     lineHeight: "50px",
                     background: "#FFF0BD",
@@ -7668,7 +7678,10 @@ const Practice = () => {
                 component="h4"
                 sx={{
                   color: color,
-                  fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                  fontSize:
+                    lang === "te"
+                      ? "clamp(1.9rem, 2.8vw, 4.1rem)"
+                      : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
                   lineHeight: "50px",
@@ -7694,7 +7707,10 @@ const Practice = () => {
                 component="h4"
                 ml={1}
                 sx={{
-                  fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                  fontSize:
+                    lang === "te"
+                      ? "clamp(1.9rem, 2.8vw, 4.1rem)"
+                      : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
                   lineHeight: "50px",
@@ -7713,7 +7729,10 @@ const Practice = () => {
               ml={1}
               sx={{
                 color: color,
-                fontSize: "clamp(1.6rem, 2.5vw, 3.8rem)",
+                fontSize:
+                  lang === "te"
+                    ? "clamp(1.9rem, 2.8vw, 4.1rem)"
+                    : "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
                 fontFamily: getFontFamily(lang),
                 lineHeight: "50px",
@@ -10143,6 +10162,7 @@ const Practice = () => {
               <LetterTrain
                 page={page}
                 setPage={setPage}
+                isAlphabetDemoActive={isAlphabetDemoActive}
                 {...{
                   level: level,
                   header:
@@ -10610,7 +10630,7 @@ const Practice = () => {
           const failRedirect = currentGetContentForF2?.failRedirect;
           const passRedirect = currentGetContentForF2?.passRedirect;
           const customLettersForF2 = currentGetContentForF2?.customLetters; // Extract customLetters from F2 config (can be words/syllables or letters)
-          const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+          const milestoneLevelValue = "B";
           // For Letter Hunt, questions are generated by LetterGame, so use letterHuntContentCount for steps
           const letterHuntSteps =
             questions?.length > 0
@@ -10623,6 +10643,7 @@ const Practice = () => {
             <LetterHuntMechanics
               page={page}
               setPage={setPage}
+              isAlphabetDemoActive={isAlphabetDemoActive}
               {...{
                 level: letterHuntIsShowcase
                   ? letterHuntLevel || 1
@@ -10820,8 +10841,8 @@ const Practice = () => {
           const failRedirect = currentGetContentForF1?.failRedirect; // e.g., "L1", "L4", "L7"
           const passRedirect = currentGetContentForF1?.passRedirect; // e.g., "L4", "L7", "F2"
           const customLettersForF1 = currentGetContentForF1?.customLetters; // Extract customLetters from F1 config (can be words/syllables or letters)
-          // Get milestone level for progress update
-          const milestoneLevelValue = level === "B" ? "B" : `m${level}`;
+          // For F1/F2/F3 flows, always use "B" as milestoneLevel
+          const milestoneLevelValue = "B";
           // For showcase mode (Apply steps), we still need to pass startLevel and endLevel
           // For non-showcase mode, pass level to use default behavior
           // Use isShowcase from config (constants.js) - this is the source of truth
@@ -10849,6 +10870,7 @@ const Practice = () => {
             <LetterHuntMechanics
               page={page}
               setPage={setPage}
+              isAlphabetDemoActive={isAlphabetDemoActive}
               {...{
                 level: letterHuntIsShowcase
                   ? letterHuntLevel || 1
@@ -10921,6 +10943,7 @@ const Practice = () => {
           <LetterHuntMechanics
             page={page}
             setPage={setPage}
+            isAlphabetDemoActive={isAlphabetDemoActive}
             {...{
               level: letterHuntIsShowcase
                 ? letterHuntLevel || 1

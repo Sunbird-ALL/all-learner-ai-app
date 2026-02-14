@@ -2321,7 +2321,14 @@ const TowreFlow = ({
                             style={{
                               position: "absolute",
                               fontWeight: 700,
-                              fontSize: isMobile ? 12 : 20,
+                              fontSize:
+                                lang === "te"
+                                  ? isMobile
+                                    ? 14
+                                    : 24
+                                  : isMobile
+                                  ? 12
+                                  : 20,
                               fontFamily: getFontFamily(lang),
                             }}
                           >
@@ -2487,7 +2494,14 @@ const TowreFlow = ({
                                 position: "absolute",
                                 color: isActive ? "#000" : "#aaa",
                                 fontWeight: 600,
-                                fontSize: isMobile ? 11 : 20,
+                                fontSize:
+                                  lang === "te"
+                                    ? isMobile
+                                      ? 13
+                                      : 24
+                                    : isMobile
+                                    ? 11
+                                    : 20,
                                 fontFamily: getFontFamily(lang),
                               }}
                             >

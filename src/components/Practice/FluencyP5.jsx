@@ -258,6 +258,18 @@ const FluencyP5 = ({
     return matches / total;
   };
 
+  const getBrowserLanguage = (langCode) => {
+    const browserLangMap = {
+      en: "en-US",
+      hi: "hi-IN",
+      te: "te-IN",
+      ka: "kn-IN",
+      kn: "kn-IN",
+      ta: "ta-IN",
+    };
+    return browserLangMap[langCode] || "en-US";
+  };
+
   useEffect(() => {
     transcriptRef.current = transcript;
     const similarity = getSimilarity(transcript, currentSentence.sentence);
@@ -442,8 +454,25 @@ const FluencyP5 = ({
   }, [showContent]);
 
   const handlePauseClick = () => {
+    // Capture transcript BEFORE stopping
+    const currentTranscript = (
+      transcript ||
+      transcriptRef.current ||
+      ""
+    ).trim();
+
+    // Stop listening
     SpeechRecognition.stopListening();
-    setFinalTranscript(transcriptRef.current);
+    const finalSimilarity = getSimilarity(
+      currentTranscript,
+      currentSentence.sentence
+    );
+    const finalIsMatch = finalSimilarity >= 0.6;
+
+    // Update isMatch state with final calculation
+    setIsMatch(finalIsMatch);
+
+    setFinalTranscript(currentTranscript);
     setPaused(true);
     setShowBearDance(true);
     setShowConfetti(true);
@@ -454,7 +483,6 @@ const FluencyP5 = ({
     setTimeout(() => {
       setShowConfetti(false);
       setShowBearDance(false);
-
       setShowFinalState(true);
       setShowResult(true);
     }, 3000);
@@ -470,12 +498,16 @@ const FluencyP5 = ({
   };
 
   const handleSpeakClick = () => {
+    const lang = getLocalData("lang") || "en";
+
     setIsSpeaking(true);
     setShowContent(true);
     resetTranscript();
+
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
+      language: getBrowserLanguage(lang),
     });
   };
 
@@ -501,8 +533,13 @@ const FluencyP5 = ({
     currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
-  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
   let apiLevel = `M${level}-${currentLevel}`;
+
+  if (level >= 4 && level <= 9) {
+    currentLevel = practiceSteps?.[currentPracticeStep]?.name;
+    apiLevel = `M${level}-${currentLevel}`;
+  }
 
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");
@@ -764,7 +801,7 @@ const FluencyP5 = ({
               </span>
             ) : (
               <span style={{ fontWeight: "bold" }}>
-                Please try again, your speech didn’t match enough
+                Please try again, your speech didn't match enough
               </span>
             )}
           </div>

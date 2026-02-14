@@ -118,8 +118,8 @@ const UnderlinedSentence = ({
   return (
     <p
       style={{
-        fontSize: "20px",
-        fontWeight: "600",
+        fontSize: lang === "te" ? "24px" : "20px",
+        fontWeight: lang === "te" ? "400" : "600",
         color: "rgba(51, 63, 97, 1)",
         fontFamily: getFontFamily(lang || "en"),
         fontStyle: "bold",
@@ -482,8 +482,13 @@ const FluencyP4 = ({
     currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
-  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
   let apiLevel = `M${level}-${currentLevel}`;
+
+  if (level >= 4 && level <= 9) {
+    currentLevel = practiceSteps?.[currentPracticeStep]?.name;
+    apiLevel = `M${level}-${currentLevel}`;
+  }
 
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");

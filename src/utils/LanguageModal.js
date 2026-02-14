@@ -161,6 +161,9 @@ const LanguageModalNew = ({ show, word, onClose }) => {
                       entry.text === "te"
                         ? "Sree Krushnadevaraya, Quicksand"
                         : "Quicksand",
+                    // Slightly increase size for Sree Krushnadevaraya
+                    fontSize:
+                      entry.text === "te" ? "42px" : styles.cardIcon.fontSize,
                   }}
                 >
                   {entry.icon}
@@ -174,6 +177,9 @@ const LanguageModalNew = ({ show, word, onClose }) => {
                       entry.text === "te"
                         ? "Sree Krushnadevaraya, Quicksand"
                         : "Quicksand",
+                    // Slightly increase size for Sree Krushnadevaraya
+                    fontSize:
+                      entry.text === "te" ? "22px" : styles.cardText.fontSize,
                   }}
                 >
                   {entry.lang}

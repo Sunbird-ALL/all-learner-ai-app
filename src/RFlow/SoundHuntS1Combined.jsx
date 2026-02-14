@@ -4805,15 +4805,15 @@ const SoundHuntS1Combined = ({
             // Calculate progress (S1 is a showcase step)
             const totalSteps = practiceSteps.length;
             const progress = Math.round(
-              ((stepIndex + 1) / (totalSteps * (steps || 1))) * 100
+              (Math.min(stepIndex + 2, totalSteps) / totalSteps) * 100
             );
 
             try {
               await addLesson({
                 sessionId: sessionId,
-                milestone: "showcase", // S1 is a showcase step
+                milestone: "practice", // S1 is a showcase step
                 lesson: stepIndex == 9 ? 0 : stepIndex + 1,
-                progress: Math.min(100, progress),
+                progress: stepIndex == 9 ? 0 : Math.min(100, progress),
                 language: lang,
                 milestoneLevel: milestoneLevel,
               });
@@ -5243,8 +5243,15 @@ const SoundHuntS1Combined = ({
                         <span
                           style={{
                             color: "#FFFFFF",
-                            fontWeight: 600,
-                            fontSize: isMobile ? "20px" : "28px",
+                            fontWeight: language === "te" ? 400 : 600,
+                            fontSize:
+                              language === "te"
+                                ? isMobile
+                                  ? "24px"
+                                  : "32px"
+                                : isMobile
+                                ? "20px"
+                                : "28px",
                             fontFamily: getFontFamily(language),
                             textAlign: "center",
                           }}
@@ -5284,8 +5291,15 @@ const SoundHuntS1Combined = ({
                     <span
                       style={{
                         color: "#FFFFFF",
-                        fontWeight: 600,
-                        fontSize: isMobile ? "32px" : "48px",
+                        fontWeight: language === "te" ? 400 : 600,
+                        fontSize:
+                          language === "te"
+                            ? isMobile
+                              ? "38px"
+                              : "54px"
+                            : isMobile
+                            ? "32px"
+                            : "48px",
                         fontFamily: getFontFamily(language),
                         textAlign: "center",
                       }}
@@ -5475,7 +5489,14 @@ const SoundHuntS1Combined = ({
                                     : "#C62828"
                                   : "#666666",
                               fontWeight: isSelected ? 600 : 500,
-                              fontSize: isMobile ? "12px" : "14px",
+                              fontSize:
+                                language === "te"
+                                  ? isMobile
+                                    ? "14px"
+                                    : "16px"
+                                  : isMobile
+                                  ? "12px"
+                                  : "14px",
                               fontFamily: getFontFamily(language),
                               textAlign: "center",
                             }}
@@ -5552,8 +5573,8 @@ const SoundHuntS1Combined = ({
               <span
                 style={{
                   color: "#FFFFFF",
-                  fontWeight: 600,
-                  fontSize: "28px",
+                  fontWeight: language === "te" ? 400 : 600,
+                  fontSize: language === "te" ? "32px" : "28px",
                   fontFamily: getFontFamily(language),
                   textAlign: "center",
                 }}
@@ -5604,8 +5625,8 @@ const SoundHuntS1Combined = ({
               <span
                 style={{
                   color: "#FFFFFF",
-                  fontWeight: 600,
-                  fontSize: "28px",
+                  fontWeight: language === "te" ? 400 : 600,
+                  fontSize: language === "te" ? "32px" : "28px",
                   fontFamily: getFontFamily(language),
                   textAlign: "center",
                 }}

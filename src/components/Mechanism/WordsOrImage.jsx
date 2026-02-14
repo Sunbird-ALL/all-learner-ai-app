@@ -709,7 +709,18 @@ const WordsOrImage = ({
           component="h4"
           sx={{
             color: "#333F61",
-            fontSize: isMobile ? "20px" : isTablet ? "25px" : "30px",
+            fontSize:
+              language === "te"
+                ? isMobile
+                  ? "26px"
+                  : isTablet
+                  ? "31px"
+                  : "36px"
+                : isMobile
+                ? "20px"
+                : isTablet
+                ? "25px"
+                : "30px",
             letterSpacing: "1.5px",
             lineHeight: "normal",
             fontWeight: 600,
@@ -1046,12 +1057,19 @@ const WordsOrImage = ({
                       variant="h5"
                       component="h4"
                       sx={{
-                        fontSize: isMobile
-                          ? "1.4rem"
-                          : isTablet
-                          ? "2rem"
-                          : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                        fontWeight: 700,
+                        fontSize:
+                          language === "te"
+                            ? isMobile
+                              ? "1.7rem"
+                              : isTablet
+                              ? "2.3rem"
+                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                            : isMobile
+                            ? "1.4rem"
+                            : isTablet
+                            ? "2rem"
+                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                        fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         ...(mechanism_id === "mechanic_15"
@@ -1102,12 +1120,19 @@ const WordsOrImage = ({
                         backgroundColor: "#D7BDE2",
                         padding: isMobile ? "8px 16px" : "10px 20px",
                         borderRadius: "20px",
-                        fontSize: isMobile
-                          ? "1.4rem"
-                          : isTablet
-                          ? "2rem"
-                          : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                        fontWeight: 700,
+                        fontSize:
+                          language === "te"
+                            ? isMobile
+                              ? "1.7rem"
+                              : isTablet
+                              ? "2.3rem"
+                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                            : isMobile
+                            ? "1.4rem"
+                            : isTablet
+                            ? "2rem"
+                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                        fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
@@ -1178,7 +1203,7 @@ const WordsOrImage = ({
                           : isTablet
                           ? "2rem"
                           : "clamp(3rem, 4vw, 5rem)",
-                        fontWeight: 700,
+                        fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         //background: "#FFF0BD",

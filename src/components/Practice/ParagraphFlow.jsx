@@ -577,8 +577,13 @@ const ParagraphFlow = ({
     currentPracticeStep = progressDatas?.currentPracticeStep;
   }
 
-  const currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
+  let currentLevel = practiceSteps?.[currentPracticeStep]?.titleNew || "L1";
   let apiLevel = `M${level}-${currentLevel}`;
+
+  if (level >= 4 && level <= 9) {
+    currentLevel = practiceSteps?.[currentPracticeStep]?.name;
+    apiLevel = `M${level}-${currentLevel}`;
+  }
 
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");
@@ -1322,7 +1327,8 @@ const ParagraphFlow = ({
               >
                 <p
                   style={{
-                    fontSize: "18px",
+                    fontSize:
+                      (getLocalData("lang") || "en") === "te" ? "20px" : "18px",
                     fontWeight: "500",
                     margin: "0",
                     lineHeight: "1.8",
