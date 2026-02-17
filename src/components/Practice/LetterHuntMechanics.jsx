@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
   getLocalData,
@@ -29,6 +30,7 @@ import {
  * into the Practice.jsx mechanics system
  */
 const LetterHuntMechanicsContent = ({
+  isAlphabetDemoActive,
   page,
   setPage,
   level, // Letter hunt game level (1, 2, 3, etc.) - start level
@@ -580,6 +582,38 @@ const LetterHuntMechanicsContent = ({
           `Apply step ${applyStep} completed all levels (${completedLevel}/${endLevel}) - will redirect to ${passRedirect} after success screen`
         );
 
+        // Add points for Apply step completion (all 3 levels completed)
+        // This must happen BEFORE redirect logic to ensure points are added for all Apply steps
+        if (!localStorage.getItem("contentSessionId")) {
+          try {
+            const lang = getLocalData("lang") || "en";
+            let pointsToAdd = 30; // Default for Apply steps
+
+            if (isF1FlowActive) {
+              const f1Config = levelGetContent[lang]?.["F1"];
+              const currentF1FlowStep = getF1FlowStep();
+              const completedStepContent = f1Config?.[currentF1FlowStep.index];
+              pointsToAdd = completedStepContent?.contentCount || 30;
+            } else if (isF2FlowActive) {
+              const f2Config = levelGetContent[lang]?.["F2"];
+              const currentF2FlowStep = getF2FlowStep();
+              const completedStepContent = f2Config?.[currentF2FlowStep.index];
+              pointsToAdd = completedStepContent?.contentCount || 30;
+            }
+
+            const result = await addPointer(pointsToAdd, "B");
+
+            if (
+              result?.result?.totalLanguagePoints !== undefined &&
+              setPoints
+            ) {
+              setPoints(result.result.totalLanguagePoints);
+            }
+          } catch (error) {
+            console.error("Error adding Apply step points:", error);
+          }
+        }
+
         // Store redirect info to execute after success screen is shown
         const executeRedirect = async () => {
           if (passRedirect === "F2" || passRedirect === "F3") {
@@ -613,7 +647,7 @@ const LetterHuntMechanicsContent = ({
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: (targetStep + 1).toString(), // Convert to 1-indexed for backend
+                lesson: (targetStep + 1).toString(),
                 progress: cappedProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
@@ -684,7 +718,7 @@ const LetterHuntMechanicsContent = ({
               await addLesson({
                 sessionId: sessionId,
                 milestone: "practice",
-                lesson: (targetStep + 1).toString(), // Convert to 1-indexed for backend
+                lesson: (targetStep + 1).toString(),
                 progress: cappedProgress,
                 language: lang,
                 milestoneLevel: milestoneLevel,
@@ -834,55 +868,28 @@ const LetterHuntMechanicsContent = ({
           );
 
           // Update points for F2 flow based on contentCount
+          // For Apply steps (A1, A2, A3), points are added separately after all 3 levels are completed
+          // For other steps (L1-L7, P1-P3), add points here
           if (!localStorage.getItem("contentSessionId")) {
-            try {
-              const f2Config = levelGetContent[lang]?.["F2"];
-              const completedStepContent = f2Config?.[currentF2FlowStep.index];
-              const contentCount = completedStepContent?.contentCount || 1;
+            const f2Config = levelGetContent[lang]?.["F2"];
+            const completedStepContent = f2Config?.[currentF2FlowStep.index];
+            const isApplyStep = completedStepContent?.title?.startsWith("A");
 
-              console.log("F2 flow - Attempting to update points:", {
-                completedStepIndex: currentF2FlowStep.index,
-                contentCount,
-                configExists: !!completedStepContent,
-              });
+            // Skip point addition for Apply steps - they're handled after all 3 levels are complete
+            if (!isApplyStep) {
+              try {
+                const contentCount = completedStepContent?.contentCount || 1;
+                const result = await addPointer(contentCount, "B");
 
-              const pointsToAdd = contentCount;
-              const milestone = "B";
-
-              const result = await addPointer(pointsToAdd, milestone);
-              console.log("F2 flow - addPointer result:", result);
-
-              const awardedPoints = result?.result?.points;
-              const totalPoints = result?.result?.totalLanguagePoints;
-
-              if (result && result.result) {
-                const totalPoints = result?.result?.totalLanguagePoints;
-                console.log("F2 flow points updated by LetterHuntMechanics:", {
-                  completedStepIndex: currentF2FlowStep.index,
-                  pointsAdded: pointsToAdd,
-                  awardedPoints,
-                  contentCount,
-                  totalPoints,
-                });
-                // Update UI points if setPoints is available
-                if (setPoints && totalPoints !== undefined) {
-                  setPoints(totalPoints);
-                  console.log(
-                    "F2 flow points UI updated via setPoints:",
-                    totalPoints
-                  );
+                if (
+                  result?.result?.totalLanguagePoints !== undefined &&
+                  setPoints
+                ) {
+                  setPoints(result.result.totalLanguagePoints);
                 }
-              } else {
-                console.warn(
-                  "F2 flow - Unexpected addPointer response format:",
-                  result
-                );
+              } catch (error) {
+                console.error("Error updating F2 flow points:", error);
               }
-            } catch (error) {
-              console.error(
-                "Error updating F2 flow points in LetterHuntMechanics:",
-                error
-              );
             }
           }
 
@@ -998,57 +1005,28 @@ const LetterHuntMechanicsContent = ({
           );
 
           // Update points for F1 flow based on contentCount
+          // For Apply steps (A1, A2, A3), points are added separately after all 3 levels are completed
+          // For other steps (L1-L7, P1-P3), add points here
           if (!localStorage.getItem("contentSessionId")) {
-            try {
-              const f1Config = levelGetContent[lang]?.["F1"];
-              const completedStepContent = f1Config?.[currentF1FlowStep.index];
-              const contentCount = completedStepContent?.contentCount || 1;
+            const f1Config = levelGetContent[lang]?.["F1"];
+            const completedStepContent = f1Config?.[currentF1FlowStep.index];
+            const isApplyStep = completedStepContent?.title?.startsWith("A");
 
-              console.log("F1 flow - Attempting to update points:", {
-                completedStepIndex: currentF1FlowStep.index,
-                stepType: currentF1FlowStep.step?.type,
-                contentCount,
-                configExists: !!completedStepContent,
-              });
+            // Skip point addition for Apply steps - they're handled after all 3 levels are complete
+            if (!isApplyStep) {
+              try {
+                const contentCount = completedStepContent?.contentCount || 1;
+                const result = await addPointer(contentCount, "B");
 
-              const pointsToAdd = contentCount;
-              const milestone = "B";
-
-              const result = await addPointer(pointsToAdd, milestone);
-              console.log("F1 flow - addPointer result:", result);
-
-              const awardedPoints = result?.result?.points;
-              const totalPoints = result?.result?.totalLanguagePoints;
-
-              if (result && result.result) {
-                const totalPoints = result?.result?.totalLanguagePoints;
-                console.log("F1 flow points updated by LetterHuntMechanics:", {
-                  completedStepIndex: currentF1FlowStep.index,
-                  stepType: currentF1FlowStep.step?.type,
-                  pointsAdded: pointsToAdd,
-                  awardedPoints,
-                  contentCount,
-                  totalPoints,
-                });
-                // Update UI points if setPoints is available
-                if (setPoints && totalPoints !== undefined) {
-                  setPoints(totalPoints);
-                  console.log(
-                    "F1 flow points UI updated via setPoints:",
-                    totalPoints
-                  );
+                if (
+                  result?.result?.totalLanguagePoints !== undefined &&
+                  setPoints
+                ) {
+                  setPoints(result.result.totalLanguagePoints);
                 }
-              } else {
-                console.warn(
-                  "F1 flow - Unexpected addPointer response format:",
-                  result
-                );
+              } catch (error) {
+                console.error("Error updating F1 flow points:", error);
               }
-            } catch (error) {
-              console.error(
-                "Error updating F1 flow points in LetterHuntMechanics:",
-                error
-              );
             }
           }
 
@@ -1202,6 +1180,8 @@ const LetterHuntMechanicsContent = ({
       ? "kn"
       : lang === "mr"
       ? "mr"
+      : lang === "hi"
+      ? "hi"
       : "en";
   const initialAudioLanguage = initialLanguage;
   const sessionId = getLocalData("sessionId");
@@ -1268,38 +1248,49 @@ const LetterHuntMechanicsContent = ({
       >
         <LanguageProvider initialLanguage={initialLanguage}>
           <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
-            <div
-              style={{
-                height: "100%",
-                maxHeight: "100%",
-                width: "100%",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                boxSizing: "border-box",
-                position: "relative",
-              }}
-              className="letter-hunt-wrapper"
-            >
-              <LetterGame
-                onBack={handleGameBack}
-                startLevel={level || 1}
-                endLevel={endLevel}
-                disableNavigation={true}
-                onLevelComplete={handleLevelComplete}
-                isShowcase={isShowCase || false} // Pass isShowCase flag to LetterGame
-                onLevel1Failure={() => handleLevelFailure(1)} // Backward compatibility for level 1 only
-                onLevelFailure={handleLevelFailure} // New callback for any level failure (includes level number)
-                customLetters={customLetters} // Pass customLetters from F1 config
-                sub_session_id={assessmentParams.sub_session_id} // Pass sub session ID from telemetry
-                sub_milestone_level={assessmentParams.sub_milestone_level} // Pass "F1" or "F2" based on active flow
-                apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
-                onA3Pass={handleA3Pass} // Callback when A3 passes
-                sessionId={sessionId}
-                skipPreview={skipPreview} // Skip demo for all except F1 P1 and F2 P1
-                // sub_apply_level is calculated dynamically in LetterGame based on currentLevel
-              />
-            </div>
+            {isAlphabetDemoActive ? (
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height="60vh"
+              >
+                <CircularProgress size={60} thickness={4.5} />
+              </Box>
+            ) : (
+              <div
+                style={{
+                  height: "100%",
+                  maxHeight: "100%",
+                  width: "100%",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  boxSizing: "border-box",
+                  position: "relative",
+                }}
+                className="letter-hunt-wrapper"
+              >
+                <LetterGame
+                  onBack={handleGameBack}
+                  startLevel={level || 1}
+                  endLevel={endLevel}
+                  disableNavigation={true}
+                  onLevelComplete={handleLevelComplete}
+                  isShowcase={isShowCase || false} // Pass isShowCase flag to LetterGame
+                  onLevel1Failure={() => handleLevelFailure(1)} // Backward compatibility for level 1 only
+                  onLevelFailure={handleLevelFailure} // New callback for any level failure (includes level number)
+                  customLetters={customLetters} // Pass customLetters from F1 config
+                  sub_session_id={assessmentParams.sub_session_id} // Pass sub session ID from telemetry
+                  sub_milestone_level={assessmentParams.sub_milestone_level} // Pass "F1" or "F2" based on active flow
+                  apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
+                  onA3Pass={handleA3Pass} // Callback when A3 passes
+                  sessionId={sessionId}
+                  skipPreview={skipPreview}
+                  // sub_apply_level is calculated dynamically in LetterGame based on currentLevel
+                />
+              </div>
+            )}
           </AudioLanguageProvider>
         </LanguageProvider>
       </div>
@@ -1308,7 +1299,12 @@ const LetterHuntMechanicsContent = ({
 };
 
 const LetterHuntMechanics = (props) => {
-  return <LetterHuntMechanicsContent {...props} />;
+  return (
+    <LetterHuntMechanicsContent
+      isAlphabetDemoActive={props.isAlphabetDemoActive}
+      {...props}
+    />
+  );
 };
 
 export default LetterHuntMechanics;

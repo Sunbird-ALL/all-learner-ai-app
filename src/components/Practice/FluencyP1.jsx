@@ -389,6 +389,11 @@ const FluencyP1 = ({
 
   let apiLevel = `M${level}-${currentLevel}`;
 
+  if (level >= 4 && level <= 9) {
+    currentLevel = practiceSteps?.[currentPracticeStep]?.name;
+    apiLevel = `M${level}-${currentLevel}`;
+  }
+
   useEffect(() => {
     handleStart();
   }, [parentWords]);

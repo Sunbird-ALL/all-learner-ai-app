@@ -1213,6 +1213,7 @@ export const ProfileHeader = ({
                               chartAudioRef.current = null;
                             }
                             setIsAudioPlaying(false);
+                            setLocalData("showAlphabetDemo", "false");
                           }}
                         >
                           <CloseIcon fontSize="medium" />

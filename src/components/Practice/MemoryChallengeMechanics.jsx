@@ -81,6 +81,8 @@ const MemoryChallengeMechanicsContent = ({
       ? "kn"
       : lang === "mr"
       ? "mr"
+      : lang === "hi"
+      ? "hi"
       : "en";
   const initialAudioLanguage = initialLanguage;
 
@@ -146,7 +148,8 @@ const MemoryChallengeMechanicsContent = ({
       initialLanguage === "en" ||
       initialLanguage === "te" ||
       initialLanguage === "kn" ||
-      initialLanguage === "mr"
+      initialLanguage === "mr" ||
+      initialLanguage === "hi"
         ? initialLanguage
         : "en";
 
