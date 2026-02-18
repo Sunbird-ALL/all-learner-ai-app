@@ -237,19 +237,18 @@ export const setMilestoneScore = async (
   }
 };
 
-export const predictEngagement = async (payload) => {
-  try {
-    const token = localStorage.getItem("apiToken");
-    const url = process.env.REACT_APP_ENGAGEMENT_PREDICT_URL;
-    const response = await axios.post(url, payload, {
+export const predictEngagement = (payload) => {
+  const token = localStorage.getItem("apiToken");
+  const url = process.env.REACT_APP_ENGAGEMENT_PREDICT_URL;
+
+  axios
+    .post(url, payload, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+    })
+    .catch((error) => {
+      console.error("Error predicting engagement:", error);
     });
-    return response.data;
-  } catch (error) {
-    console.error("Error predicting engagement:", error);
-    throw error;
-  }
 };

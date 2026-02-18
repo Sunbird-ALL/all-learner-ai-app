@@ -218,7 +218,7 @@ const SpeakSentenceComponent = () => {
               interactions: formattedInteractions,
             };
 
-            await predictEngagement(engagementPayload);
+            predictEngagement(engagementPayload);
           } catch (error) {
             console.error("Error calling engagement/predict API:", error);
           }
