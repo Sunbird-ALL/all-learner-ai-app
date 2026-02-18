@@ -114,6 +114,7 @@ const WordsOrImage = ({
   onRetryClick,
   onNextClick,
   isInstructionPlaying,
+  onInteractionComplete,
 }) => {
   const audioRefs = createRef(null);
   const [audioInstance, setAudioInstance] = useState(null);
@@ -1519,6 +1520,7 @@ const WordsOrImage = ({
                 setOpenMessageDialog,
                 isNextButtonCalled,
                 setIsNextButtonCalled,
+                onInteractionComplete,
               }}
             />
           )}
