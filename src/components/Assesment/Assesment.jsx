@@ -516,7 +516,7 @@ export const ProfileHeader = ({
       console.error("Failed to parse milestone data:", e);
       setMilestone(0);
     }
-  }, []);
+  }, [lang]); // Update when language changes to refresh milestone data
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -1447,6 +1447,7 @@ const Assesment = ({ discoverStart }) => {
   const [points, setPoints] = useState(0);
   const [vocabCount, setVocabCount] = useState(0);
   const [wordCount, setWordCount] = useState(0);
+  const [milestoneDataKey, setMilestoneDataKey] = useState(0); // Force re-render when milestone data changes
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [showModal, setShowModal] = useState(false);
   const nativeLangEnable = getLocalData("nativeLangEnable");
@@ -1494,6 +1495,8 @@ const Assesment = ({ discoverStart }) => {
           "getMilestone",
           JSON.stringify({ ...getMilestoneDetails })
         );
+        // Force re-render to update milestone data display
+        setMilestoneDataKey((prev) => prev + 1);
 
         if (
           levelMapping[usernameDetails?.data?.result?.virtualID] !== undefined
@@ -1566,6 +1569,8 @@ const Assesment = ({ discoverStart }) => {
           "getMilestone",
           JSON.stringify({ ...getMilestoneDetails })
         );
+        // Force re-render to update milestone data display
+        setMilestoneDataKey((prev) => prev + 1);
         const level = getMilestoneDetails?.data?.milestone_level;
         setLevel(
           level?.startsWith("m") ? Number(level.replace("m", "")) : level
