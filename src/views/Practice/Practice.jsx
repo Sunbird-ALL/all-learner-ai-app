@@ -4582,8 +4582,21 @@ const Practice = () => {
       return acc;
     }, []);
 
+    const milestoneIndices = [...immediateMilestones, ...deferredMilestones];
+
+    // 🛡️ Clear stale showAlphabetDemo if current index is NOT a milestone
+    // This prevents the chart audio from playing after re-login at a non-milestone step (e.g., P1)
+    if (!milestoneIndices.includes(f1FlowIndexState)) {
+      const staleDemo = getLocalData("showAlphabetDemo");
+      if (staleDemo === "true") {
+        setLocalData("showAlphabetDemo", "false");
+        // 🔇 Tell Assesment.jsx to stop any playing chart audio
+        window.dispatchEvent(new Event("alphabetDemoStop"));
+      }
+      return; // Not at a milestone, no need to set up triggers
+    }
+
     const handleTrigger = (index) => {
-      const milestoneIndices = [...immediateMilestones, ...deferredMilestones];
       if (isF1FlowActive && milestoneIndices.includes(index)) {
         const playedIndicesRaw = getLocalData("playedAlphabetDemoIndices");
         let playedIndices = [];
@@ -4609,12 +4622,14 @@ const Practice = () => {
       }
     };
 
-    // 1. Immediate trigger for non-showcase milestones
+    // 1. Immediate trigger for L1 milestone (index 0)
+    // Trigger directly when this useEffect runs, no need for event
     if (immediateMilestones.includes(f1FlowIndexState)) {
       handleTrigger(f1FlowIndexState);
     }
 
     // 2. Listener for deferred trigger (e.g., from MainLayout "Start Game" button)
+    // Only for showcase milestones A1, A2, A3
     const handleTriggerRequest = () => {
       if (deferredMilestones.includes(f1FlowIndexState)) {
         handleTrigger(f1FlowIndexState);
