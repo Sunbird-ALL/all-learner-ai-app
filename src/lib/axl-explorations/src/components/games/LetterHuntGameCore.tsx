@@ -877,6 +877,8 @@ export function LetterHuntGameCore({
                         ? '🎉 ಸರಿ!'
                         : selectedLanguage === 'mr'
                         ? '🎉 बरोबर!'
+                        : selectedLanguage === 'hi'
+                        ? '🎉 सही है।'
                         : '🎉 Correct!'}
                     </p>
                   </div>
@@ -892,6 +894,8 @@ export function LetterHuntGameCore({
                           ? `${emoji} ಅಯ್ಯೋ! ತಪ್ಪು!`
                           : selectedLanguage === 'mr'
                           ? `${emoji} अरेच्या! चुकीचे!`
+                          : selectedLanguage === 'hi'
+                          ? `${emoji} ओह! गलत!`
                           : `${emoji} Oops! Wrong!`;
                       })()}
                     </p>

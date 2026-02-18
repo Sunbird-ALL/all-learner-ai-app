@@ -1359,6 +1359,9 @@ export const थालीAudio = "acd47ed1-2a06-4ba4-b04d-a4aeaf90a2c6.wav";
 export const मुझेAudio = "6450589a-f5f5-4d81-b2a1-611d77386c01.wav";
 export const तैरनाAudio = "996afa54-a0ea-4b73-86c0-0dc26bce6cdf.wav";
 export const पिताजीAudio = "795180c2-570e-47c1-8ff1-91608045a80e.wav";
+export const ढढक्कनAudio = "f6577818-71f5-4b69-8942-abdff7a655a2.wav";
+export const सफलImg = "f3j5a3kt-08c8-4d51-b0ab-fa3d944093kt.png";
+export const सफलAudio = "f3j5a3kt-08c8-4d51-b0ab-fa3d944093kt.wav";
 
 //telegu
 
