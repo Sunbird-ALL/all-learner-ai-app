@@ -516,7 +516,7 @@ export const ProfileHeader = ({
       console.error("Failed to parse milestone data:", e);
       setMilestone(0);
     }
-  }, []);
+  }, [lang]); // Update when language changes to refresh milestone data
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -572,6 +572,8 @@ export const ProfileHeader = ({
       };
 
       setTimeout(() => {
+        // 🛡️ Guard: if alphabetDemoStop cleared the ref, don't play
+        if (chartAudioRef.current !== audio) return;
         audio.play().catch(() => {
           setShowChartPointer(false);
           setIsAudioPlaying(false);
@@ -580,38 +582,94 @@ export const ProfileHeader = ({
         });
       }, 500);
     };
-
-    const checkDemoCompletion = () => {
+    // 🛡️ Initial mount check: validate F1 flow + milestone before playing
+    // This blocks stale showAlphabetDemo from a previous session
+    const checkDemoOnMount = () => {
       const demoState = getLocalData("showAlphabetDemo");
+      if (demoState !== "true") return;
 
-      // 🔥 Only trigger when demo JUST completed
+      // Check if F1 flow is actually active
+      let isF1Active = false;
+      try {
+        const msStr = getLocalData("getMilestone");
+        if (msStr) {
+          const msData = JSON.parse(msStr);
+          isF1Active =
+            msData?.data?.milestone_level === "B" &&
+            msData?.data?.sub_milestone_level === "F1";
+        }
+      } catch (e) {
+        // ignore parse errors
+      }
+
+      if (isF1Active) {
+        // 🎯 Only auto-play for IMMEDIATE milestones (L1=index 0)
+        // Deferred milestones (A1=6, A2=13, A3=20) should ONLY play
+        // when user clicks "Start Game" → alphabetDemoTriggerRequest event
+        const immediateOnlyMilestones = [0];
+        const rawIndex = getLocalData("f1FlowIndex");
+        const currentF1Index = rawIndex !== null ? Number(rawIndex) : -1;
+
+        // 🔒 Also check if this milestone was already played (prevents replay on re-login)
+        let playedIndices = [];
+        try {
+          const playedRaw = getLocalData("playedAlphabetDemoIndices");
+          playedIndices = playedRaw ? JSON.parse(playedRaw) : [];
+        } catch (e) {
+          playedIndices = [];
+        }
+
+        if (
+          immediateOnlyMilestones.includes(currentF1Index) &&
+          !playedIndices.includes(currentF1Index)
+        ) {
+          playChartAudio();
+          return;
+        }
+      }
+
+      // Not F1 flow or not at an allowed milestone → clear stale flag
+      setLocalData("showAlphabetDemo", "false");
+    };
+
+    // 🎬 Event-based trigger: Practice.jsx already validated the milestone
+    // before dispatching alphabetDemoComplete, so just play
+    const handleDemoEvent = () => {
+      const demoState = getLocalData("showAlphabetDemo");
       if (demoState === "true") {
         playChartAudio();
       }
     };
 
-    // Initial check
-    checkDemoCompletion();
+    // Initial check (validated)
+    checkDemoOnMount();
 
     const handleStorageChange = (e) => {
       if (e.key === "showAlphabetDemo" && e.newValue === "true") {
-        checkDemoCompletion();
+        handleDemoEvent();
       }
     };
 
-    const handleCustomStorageChange = () => {
-      checkDemoCompletion();
-    };
-
     window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("alphabetDemoComplete", handleCustomStorageChange);
+    window.addEventListener("alphabetDemoComplete", handleDemoEvent);
+
+    // 🔇 Listen for stop signal from Practice.jsx (non-milestone cleanup)
+    const handleDemoStop = () => {
+      if (chartAudioRef.current) {
+        chartAudioRef.current.pause();
+        chartAudioRef.current.currentTime = 0;
+        chartAudioRef.current = null;
+      }
+      setShowChartPointer(false);
+      setIsAudioPlaying(false);
+      setLocalData("showAlphabetDemo", "false");
+    };
+    window.addEventListener("alphabetDemoStop", handleDemoStop);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener(
-        "alphabetDemoComplete",
-        handleCustomStorageChange
-      );
+      window.removeEventListener("alphabetDemoComplete", handleDemoEvent);
+      window.removeEventListener("alphabetDemoStop", handleDemoStop);
 
       if (chartAudioRef.current) {
         chartAudioRef.current.pause();
@@ -1389,6 +1447,7 @@ const Assesment = ({ discoverStart }) => {
   const [points, setPoints] = useState(0);
   const [vocabCount, setVocabCount] = useState(0);
   const [wordCount, setWordCount] = useState(0);
+  const [milestoneDataKey, setMilestoneDataKey] = useState(0); // Force re-render when milestone data changes
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [showModal, setShowModal] = useState(false);
   const nativeLangEnable = getLocalData("nativeLangEnable");
@@ -1436,6 +1495,8 @@ const Assesment = ({ discoverStart }) => {
           "getMilestone",
           JSON.stringify({ ...getMilestoneDetails })
         );
+        // Force re-render to update milestone data display
+        setMilestoneDataKey((prev) => prev + 1);
 
         if (
           levelMapping[usernameDetails?.data?.result?.virtualID] !== undefined
@@ -1508,6 +1569,8 @@ const Assesment = ({ discoverStart }) => {
           "getMilestone",
           JSON.stringify({ ...getMilestoneDetails })
         );
+        // Force re-render to update milestone data display
+        setMilestoneDataKey((prev) => prev + 1);
         const level = getMilestoneDetails?.data?.milestone_level;
         setLevel(
           level?.startsWith("m") ? Number(level.replace("m", "")) : level

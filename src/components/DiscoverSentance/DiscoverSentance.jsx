@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../node_modules/axios/index";
 import elephant from "../../assets/images/elephant.svg";
@@ -22,7 +22,10 @@ import {
   fetchUserPoints,
   createLearnerProgress,
 } from "../../services/orchestration/orchestrationService";
-import { fetchGetSetResult } from "../../services/learnerAi/learnerAiService";
+import {
+  fetchGetSetResult,
+  predictEngagement,
+} from "../../services/learnerAi/learnerAiService";
 import {
   fetchAssessmentData,
   fetchPaginatedContent,
@@ -51,6 +54,8 @@ const SpeakSentenceComponent = () => {
   const [openMessageDialog, setOpenMessageDialog] = useState("");
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
+  const [interactions, setInteractions] = useState([]);
+  const interactionsRef = useRef([]);
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
   const sessionId = getLocalData("sessionId");
@@ -99,8 +104,24 @@ const SpeakSentenceComponent = () => {
   useEffect(() => {
     if (questions?.length) {
       setLocalData("sub_session_id", uniqueId());
+      setInteractions([]);
+      interactionsRef.current = [];
     }
   }, [questions]);
+
+  useEffect(() => {
+    interactionsRef.current = interactions;
+  }, [interactions]);
+
+  const handleInteractionComplete = (interactionData) => {
+    if (interactionData) {
+      setInteractions((prev) => {
+        const updated = [...prev, interactionData];
+        interactionsRef.current = updated;
+        return updated;
+      });
+    }
+  };
 
   useEffect(() => {
     if (voiceText === "error") {
@@ -158,6 +179,51 @@ const SpeakSentenceComponent = () => {
           currentCollectionId,
           totalSyllableCount
         );
+
+        if (lang === "en") {
+          try {
+            const token = localStorage.getItem("apiToken");
+            const session_id = getLocalData("sessionId");
+
+            let milestoneLevel = "m0";
+            try {
+              const milestoneData = getLocalData("getMilestone");
+              if (milestoneData) {
+                const parsed = JSON.parse(milestoneData);
+                milestoneLevel = parsed?.data?.milestone_level || "m0";
+              }
+            } catch (e) {
+              console.error("Error parsing milestone data:", e);
+            }
+
+            let lesson = "0";
+
+            const currentInteractions = interactionsRef.current || interactions;
+            const formattedInteractions = currentInteractions.map(
+              (interaction, index) => ({
+                interaction_id: index + 1,
+                original_text: interaction.original_text || "",
+                response_text: interaction.response_text || "",
+                audio_path: interaction.audio_path || "",
+                created_at: interaction.created_at || new Date().toISOString(),
+              })
+            );
+
+            const engagementPayload = {
+              token: token,
+              session_id: session_id,
+              milestone_level: milestoneLevel,
+              lesson: lesson,
+              language: "en",
+              interactions: formattedInteractions,
+            };
+
+            predictEngagement(engagementPayload);
+          } catch (error) {
+            console.error("Error calling engagement/predict API:", error);
+          }
+        }
+
         if (!(localStorage.getItem("contentSessionId") !== null)) {
           let point = 1;
           let milestone = "m0";
@@ -233,6 +299,8 @@ const SpeakSentenceComponent = () => {
           setCurrentQuestion(0);
           setSentencePassedCounter(newSentencePassedCounter);
           setQuestions(quesArr);
+          setInteractions([]);
+          interactionsRef.current = [];
         } else if (
           getSetData.sessionResult === "pass" &&
           currentContentType === "Sentence"
@@ -261,6 +329,8 @@ const SpeakSentenceComponent = () => {
           let quesArr = [...(resWordsPagination?.data || [])];
           setCurrentQuestion(0);
           setQuestions(quesArr);
+          setInteractions([]);
+          interactionsRef.current = [];
         } else if (
           getSetData.sessionResult === "fail" &&
           currentContentType === "Word"
@@ -413,6 +483,7 @@ const SpeakSentenceComponent = () => {
           isNextButtonCalled,
           setIsNextButtonCalled,
           setOpenMessageDialog,
+          onInteractionComplete: handleInteractionComplete,
         }}
       />
     </>

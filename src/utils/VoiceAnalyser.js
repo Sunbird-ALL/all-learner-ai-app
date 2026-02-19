@@ -500,6 +500,20 @@ function VoiceAnalyser(props) {
           ),
           ContentType: "audio/wav",
         });
+        // Call onInteractionComplete callback if provided (for discovery engagement tracking)
+        if (props.onInteractionComplete && callUpdateLearner && originalText) {
+          try {
+            const interactionData = {
+              original_text: originalText,
+              response_text: responseText || "",
+              audio_path: audioFileName,
+              created_at: new Date().toISOString(),
+            };
+            props.onInteractionComplete(interactionData);
+          } catch (err) {
+            console.error("Error calling onInteractionComplete:", err);
+          }
+        }
         try {
           await S3Client.send(command);
         } catch (err) {}
@@ -871,6 +885,7 @@ VoiceAnalyser.propTypes = {
   pageName: PropTypes.string,
   handleStartRecording: PropTypes.func,
   handleStopRecording: PropTypes.func,
+  onInteractionComplete: PropTypes.func,
 };
 
 export default VoiceAnalyser;
