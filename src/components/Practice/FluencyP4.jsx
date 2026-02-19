@@ -464,7 +464,7 @@ const FluencyP4 = ({
   const handleStop = () => {
     if (!startTime) return;
     const duration = (Date.now() - startTime) / 1000;
-    if (duration <= 30) {
+    if (duration <= 60) {
       setSpeed("Fast");
     } else {
       setSpeed("Slow");
@@ -768,7 +768,7 @@ const FluencyP4 = ({
                   marginBottom: "10px",
                 }}
               >
-                <CircularTimer duration={30} isActive={!parentModalOpen} />
+                <CircularTimer duration={60} isActive={!parentModalOpen} />
               </div>
             )}
 
@@ -1056,7 +1056,7 @@ const FluencyP4 = ({
                   alt="book"
                   style={{ width: "30px", height: "25px" }}
                 />
-                <span>You read 5 sentences in 30 seconds</span>
+                <span>You read 10 sentences in 60 seconds</span>
               </div>
 
               <img
