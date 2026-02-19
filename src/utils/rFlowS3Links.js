@@ -2604,6 +2604,8 @@ export const ఱపImg = "3409bc12-d115-4b26-8abc-aaeb61440a40.png";
 export const ఱపAudio = "d3343f4e-aa38-4527-9b27-782646ad76c9.wav";
 export const యమImg = "f424949b-990b-4928-be99-609cc77f690a.png";
 export const యయమAudio = "f424949b-990b-4928-be99-609cc77f690a.wav";
+export const గంపAudio = "2hf3h5t-08c8-4d51-b0ab-fhn2944093f2.wav";
+export const గంపImg = "2hf3h5t-08c8-4d51-b0ab-fhn2944093f2.png";
 //  English Alphabatic chart audio files
 
 // E
