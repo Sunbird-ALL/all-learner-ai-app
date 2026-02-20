@@ -3,6 +3,7 @@ import { Check, X, Fuel, ArrowLeft, ArrowRight } from "lucide-react";
 import { Language } from "../../constants/languages";
 import { FuelCalculationResult, getFuelTierText } from "../../utils/fuelCalculation";
 import { useState, useEffect } from "react";
+import React from "react";
 
 export interface LetterLauncherQuestion {
   audioLetter: string; // The letter sound that plays
@@ -211,14 +212,13 @@ export function LetterLauncherGameCore({
         <div className="min-h-[200px] sm:min-h-[250px] flex items-start justify-center">
           {showFeedback && (
             <div className="animate-fade-in text-center mt-1 w-full">
-              <div className={`${
-                isCorrect ? 'text-success' : 'text-error'
+              <p className={`text-lg sm:text-xl font-bold ${
+                isCorrect 
+                  ?  'text-green-600'
+                  : 'text-red-600'
               }`}>
-                <p className={`text-lg sm:text-xl font-bold ${
-                  isPreview ? '' : 'drop-shadow-[0_0_6px_rgba(0,0,0,0.8)] [text-shadow:_0_0_8px_rgba(255,255,255,0.5)]'
-                }`}>
-                  {isCorrect ? getLocalizedText('correctMessage') : getLocalizedText('wrongMessage')}
-                </p>
+                {isCorrect ? getLocalizedText('correctMessage') : getLocalizedText('wrongMessage')}
+              </p>
               
               {/* Fuel earned display with filling animation */}
               {fuelEarned && isCorrect && (
@@ -307,7 +307,6 @@ export function LetterLauncherGameCore({
                 </div>
               )}
             </div>
-          </div>
           )}
         </div>
       </div>
