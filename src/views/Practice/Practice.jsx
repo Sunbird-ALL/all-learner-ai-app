@@ -6366,9 +6366,7 @@ const Practice = () => {
           milestoneLevel === "B" && subMilestoneLevel === "F3";
 
         const shouldSkipAddLesson =
-          (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
-          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
-          isF3FlowByMilestone; // F3 flow always handles its own progress
+          isF1FlowByMilestone || isF2FlowByMilestone || isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
           // Determine milestone type based on the NEXT step (newPracticeStep), not the current step
@@ -6663,9 +6661,7 @@ const Practice = () => {
           milestoneLevel === "B" && subMilestoneLevel === "F3";
 
         const shouldSkipAddLesson =
-          (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
-          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
-          isF3FlowByMilestone; // F3 flow always handles its own progress
+          isF1FlowByMilestone || isF2FlowByMilestone || isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
           await addLesson({
