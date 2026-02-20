@@ -474,7 +474,7 @@ const LetterHuntMechanicsContent = ({
           : isF2FlowActive
           ? F2_FLOW.length
           : practiceSteps?.length || 21;
-        const calculatedProgress = (targetStep / totalSteps) * 100;
+        const calculatedProgress = (targetStep + 1 / totalSteps) * 100;
         const currentPracticeProgress = Math.min(
           100,
           Math.round(calculatedProgress)
