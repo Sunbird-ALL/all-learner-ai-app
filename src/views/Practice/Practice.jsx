@@ -13,7 +13,7 @@ import LetterTrain from "../../RFlow/LetterTrain";
 import R2 from "../../RFlow/R2";
 import F1, { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import F2, { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
-import F3, { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
+import { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
 import Barakhadi from "../../RFlow/Barakhadi";
 import R3Flow from "../../RFlow/R3";
 import R4 from "../../RFlow/R4";
@@ -6899,23 +6899,23 @@ const Practice = () => {
           // But F3_FLOW array is 0-indexed (0-11), so convert
           const f3FlowIndex = userState > 0 ? userState - 1 : 0;
 
-          if (f3FlowIndex >= 0 && f3FlowIndex < F3_FLOW.length) {
-            console.log(
-              `Restoring F3 flow progress: lesson ${userState} (1-indexed) -> flow index ${f3FlowIndex} (0-indexed) -> ${
-                F3_FLOW[f3FlowIndex]?.type
-              }${F3_FLOW[f3FlowIndex]?.step || ""}`
-            );
-            setLocalData("f3FlowIndex", f3FlowIndex);
-            // IMPORTANT: Update state to trigger re-render with correct flow index
-            setF3FlowIndexState(f3FlowIndex);
-            userState = f3FlowIndex;
-          } else {
-            console.warn(
-              `Invalid F3 flow index ${f3FlowIndex} from lesson ${userState}, starting from beginning`
-            );
-            setLocalData("f3FlowIndex", 0);
-            userState = 0;
-          }
+          // if (f3FlowIndex >= 0 && f3FlowIndex < F3_FLOW.length) {
+          //   console.log(
+          //     `Restoring F3 flow progress: lesson ${userState} (1-indexed) -> flow index ${f3FlowIndex} (0-indexed) -> ${
+          //       F3_FLOW[f3FlowIndex]?.type
+          //     }${F3_FLOW[f3FlowIndex]?.step || ""}`
+          //   );
+          //   setLocalData("f3FlowIndex", f3FlowIndex);
+          //   // IMPORTANT: Update state to trigger re-render with correct flow index
+          //   setF3FlowIndexState(f3FlowIndex);
+          //   userState = f3FlowIndex;
+          // } else {
+          //   console.warn(
+          //     `Invalid F3 flow index ${f3FlowIndex} from lesson ${userState}, starting from beginning`
+          //   );
+          //   setLocalData("f3FlowIndex", 0);
+          //   userState = 0;
+          // }
         }
       }
 
