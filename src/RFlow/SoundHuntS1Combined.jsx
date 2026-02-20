@@ -5072,6 +5072,7 @@ const SoundHuntS1Combined = ({
       });
 
       console.log("S1 result:", result);
+      setLocalData("previous_level", result?.data?.previous_level);
       setLocalData("s1_complete", true);
       setLocalData("s1_result", JSON.stringify(result));
 
