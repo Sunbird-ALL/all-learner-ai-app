@@ -10249,7 +10249,7 @@ export const practiceSteps = [
     name: "P3",
     fullName: "Practice 3",
     fullNameMOne: "Practice 1",
-    fullNameMTwo: "Learn 2",
+    fullNameMTwo: "Practice 1",
     fullNameMThree: "Practice 1", // M3 P2: Correct Image Phrase
     title: "P1",
     titleNew: "P1",
