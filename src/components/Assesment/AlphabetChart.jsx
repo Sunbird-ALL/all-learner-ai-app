@@ -316,6 +316,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
           alaphabetChartAudio: first.alaphabetChartAudio || "",
         };
       })
+      .filter((item) => item.display && item.word && item.audio && item.image)
       .sort((a, b) => {
         if (activeLang === "te") {
           const aIndex = TELUGU_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
@@ -330,13 +331,17 @@ const AlphabetChart = ({ open, onClose, lang }) => {
 
   const wordItems = useMemo(() => {
     if (activeLang !== "en" && wordData[activeLang]) {
-      return wordData[activeLang].map((itm, idx) => ({
-        key: `${activeLang}-${idx}`,
-        display: itm.text,
-        word: itm.text,
-        image: getAssetUrl(itm.image) || "",
-        audio: (itm.audio ? getAssetAudioUrl(itm.audio) : "") || "",
-      }));
+      return wordData[activeLang]
+        .map((itm, idx) => ({
+          key: `${activeLang}-${idx}`,
+          display: itm.text,
+          word: itm.text,
+          image: getAssetUrl(itm.image) || "",
+          audio: (itm.audio ? getAssetAudioUrl(itm.audio) : "") || "",
+        }))
+        .filter(
+          (item) => item.display && item.word && item.audio && item.image
+        );
     }
 
     return rawData
@@ -351,7 +356,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
           image: first.image || "",
           audio: first.audio || first.singleAudio || "",
         };
-      });
+      })
+      .filter((item) => item.display && item.word && item.audio && item.image);
   }, [rawData, activeLang]);
 
   const data = viewMode === "alphabet" ? alphabetItems : wordItems;

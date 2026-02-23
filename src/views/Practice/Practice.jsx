@@ -6255,20 +6255,6 @@ const Practice = () => {
           //setLocalData("previous_level", getSetData.data.previous_level);
           setLocalData("previous_level", getSetData.previous_level);
 
-          try {
-            const lang = getLocalData("lang");
-            const getMilestoneDetails = await getFetchMilestoneDetails(lang);
-            setVocabCount(
-              getMilestoneDetails?.data?.extra?.vocabulary_count || 0
-            );
-            setWordCount(
-              getMilestoneDetails?.data?.extra?.latest_towre_data
-                ?.wordsPerMinute || 0
-            );
-          } catch (e) {
-            // catch error
-          }
-
           if (getSetData.sessionResult === "pass") {
             // Skip this block for F1/F2/F3 flows (milestoneLevel "B")
             // These flows handle their own progress saving
@@ -6380,9 +6366,7 @@ const Practice = () => {
           milestoneLevel === "B" && subMilestoneLevel === "F3";
 
         const shouldSkipAddLesson =
-          (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
-          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
-          isF3FlowByMilestone; // F3 flow always handles its own progress
+          isF1FlowByMilestone || isF2FlowByMilestone || isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
           // Determine milestone type based on the NEXT step (newPracticeStep), not the current step
@@ -6677,9 +6661,7 @@ const Practice = () => {
           milestoneLevel === "B" && subMilestoneLevel === "F3";
 
         const shouldSkipAddLesson =
-          (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
-          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
-          isF3FlowByMilestone; // F3 flow always handles its own progress
+          isF1FlowByMilestone || isF2FlowByMilestone || isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
           await addLesson({

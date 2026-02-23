@@ -136,12 +136,6 @@ export function TryAgain({
                   </span>
                   <Fuel className="h-5 w-5 text-blue-500" />
                 </div>
-                {destination && (
-                  <div className={`mb-3 flex items-center justify-center gap-2 ${useSpaceBackground ? 'text-white/90' : 'text-gray-600'}`}>
-                    <span className="text-xl">🌙</span>
-                    <span className="text-base font-semibold">{destination}</span>
-                  </div>
-                )}
               </>
             )}
             

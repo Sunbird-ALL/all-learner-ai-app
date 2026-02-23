@@ -1675,27 +1675,6 @@ const LetterLauncherMechanicsContent = ({
               <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
                 Letter Launcher
               </h1>
-              <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-[10px] sm:text-xs mt-0.5">
-                <svg
-                  className="h-3 w-3 sm:h-3.5 sm:w-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-                <span>
-                  {effectiveIsShowCase && endLevel
-                    ? `Level ${currentGameLevel} / ${endLevel}`
-                    : `Level ${currentGameLevel}`}{" "}
-                  • Mission: {missionDestination}
-                </span>
-              </div>
             </div>
 
             {/* Spacer to balance layout */}
