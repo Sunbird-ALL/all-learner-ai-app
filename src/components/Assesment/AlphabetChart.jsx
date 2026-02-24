@@ -20,10 +20,81 @@ import {
   dataKn as letterDataKn,
 } from "../../RFlow/LetterTrain";
 
-import { wordData } from "../../RFlow/Barakhadi";
+import { wordData, TeluguGunithas } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
 import { motion, AnimatePresence } from "framer-motion";
 import { getFontFamily } from "../../utils/fontUtils";
+
+const TeluguGunithaCard = ({ item, playAudio, isActive }) => {
+  return (
+    <motion.div
+      animate={
+        isActive ? { scale: [1, 1.12, 1], y: [0, -14, 0] } : { scale: 1, y: 0 }
+      }
+      transition={
+        isActive
+          ? { duration: 0.6, ease: "easeOut" }
+          : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+      }
+      style={{ position: "relative" }}
+    >
+      <Box
+        sx={{
+          bgcolor: "#FFFFFF",
+          borderRadius: "16px",
+          p: 1.5,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "215px",
+          cursor: "pointer",
+          position: "relative",
+          boxShadow: isActive
+            ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
+            : "0 4px 12px rgba(0,0,0,0.1)",
+          transition: "box-shadow 0.3s ease",
+          "&:hover": { transform: "scale(1.02)" },
+        }}
+        onClick={() => playAudio(item)}
+      >
+        <IconButton
+          size="small"
+          sx={{ position: "absolute", top: 8, right: 8, color: "#333F61" }}
+          onClick={(e) => {
+            e.stopPropagation();
+            playAudio(item);
+          }}
+        >
+          <VolumeUpIcon sx={{ fontSize: "1.2rem" }} />
+        </IconButton>
+
+        {item.image && (
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            <img
+              src={item.image}
+              alt=""
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+              }}
+            />
+          </Box>
+        )}
+      </Box>
+    </motion.div>
+  );
+};
 
 const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
   const renderHighlightedWord = () => {
@@ -330,8 +401,20 @@ const AlphabetChart = ({ open, onClose, lang }) => {
   }, [rawData, activeLang]);
 
   const wordItems = useMemo(() => {
+    const gunithaItems =
+      activeLang === "te"
+        ? TeluguGunithas.map((g, idx) => ({
+            key: `te-gunitha-${idx}`,
+            display: "",
+            word: "",
+            image: getAssetUrl(g.image) || "",
+            audio: g.audio ? getAssetAudioUrl(g.audio) : "",
+            isGunitha: true,
+          })).filter((item) => item.image && item.audio)
+        : [];
+
     if (activeLang !== "en" && wordData[activeLang]) {
-      return wordData[activeLang]
+      const syllableItems = wordData[activeLang]
         .map((itm, idx) => ({
           key: `${activeLang}-${idx}`,
           display: itm.text,
@@ -342,9 +425,10 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         .filter(
           (item) => item.display && item.word && item.audio && item.image
         );
+      return [...gunithaItems, ...syllableItems];
     }
 
-    return rawData
+    const syllableItems = rawData
       .filter((group) => "syllable" in group && group.syllable)
       .map((group) => {
         const first = group.items?.[0] || {};
@@ -358,6 +442,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         };
       })
       .filter((item) => item.display && item.word && item.audio && item.image);
+
+    return [...gunithaItems, ...syllableItems];
   }, [rawData, activeLang]);
 
   const data = viewMode === "alphabet" ? alphabetItems : wordItems;
@@ -368,14 +454,27 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     (currentPage + 1) * itemsPerPage
   );
 
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
+    }
+    currentSrcRef.current = null;
+    setPlayingKey(null);
+    setActiveCardKey(null);
+  };
+
   const handleNext = () => {
     if (currentPage < totalPages - 1) {
+      stopAudio();
       setCurrentPage((prev) => prev + 1);
     }
   };
 
   const handlePrev = () => {
     if (currentPage > 0) {
+      stopAudio();
       setCurrentPage((prev) => prev - 1);
     }
   };
@@ -596,14 +695,22 @@ const AlphabetChart = ({ open, onClose, lang }) => {
                     exit={{ opacity: 0, scale: 0.9, y: -20 }}
                     transition={{ duration: 0.25, delay: index * 0.05 }}
                   >
-                    <AlphabetCard
-                      lang={activeLang}
-                      item={item}
-                      playAudio={playAudio}
-                      isAnimating={playingKey === item.key}
-                      isActive={activeCardKey === item.key}
-                      mode={viewMode}
-                    />
+                    {item.isGunitha ? (
+                      <TeluguGunithaCard
+                        item={item}
+                        playAudio={playAudio}
+                        isActive={activeCardKey === item.key}
+                      />
+                    ) : (
+                      <AlphabetCard
+                        lang={activeLang}
+                        item={item}
+                        playAudio={playAudio}
+                        isAnimating={playingKey === item.key}
+                        isActive={activeCardKey === item.key}
+                        mode={viewMode}
+                      />
+                    )}
                   </motion.div>
                 </Grid>
               ))}
