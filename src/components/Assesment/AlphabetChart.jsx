@@ -46,10 +46,9 @@ const TeluguGunithaCard = ({ item, playAudio, isActive }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          height: "215px",
+          justifyContent: "space-between",
+          height: "250px",
           cursor: "pointer",
-          position: "relative",
           boxShadow: isActive
             ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
             : "0 4px 12px rgba(0,0,0,0.1)",
@@ -58,39 +57,44 @@ const TeluguGunithaCard = ({ item, playAudio, isActive }) => {
         }}
         onClick={() => playAudio(item)}
       >
-        <IconButton
-          size="small"
-          sx={{ position: "absolute", top: 8, right: 8, color: "#333F61" }}
-          onClick={(e) => {
-            e.stopPropagation();
-            playAudio(item);
-          }}
+        {/* Top Row — audio icon right-aligned */}
+        <Box
+          sx={{ display: "flex", width: "100%", justifyContent: "flex-end" }}
         >
-          <VolumeUpIcon sx={{ fontSize: "1.2rem" }} />
-        </IconButton>
-
-        {item.image && (
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
+          <IconButton
+            size="small"
+            sx={{ color: "#333F61" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              playAudio(item);
             }}
           >
+            <VolumeUpIcon sx={{ fontSize: "1.2rem" }} />
+          </IconButton>
+        </Box>
+
+        {/* Image — flex:1 fills remaining space, contain shows full image */}
+        <Box
+          sx={{
+            width: "100%",
+            flex: 1,
+            alignSelf: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            transition: "transform 0.2s ease",
+            "&:hover": { transform: "scale(1.05)" },
+          }}
+        >
+          {item.image && (
             <img
               src={item.image}
               alt=""
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                objectFit: "contain",
-              }}
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
             />
-          </Box>
-        )}
+          )}
+        </Box>
       </Box>
     </motion.div>
   );
@@ -127,10 +131,10 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
         {before}
         <span
           style={{
-            borderBottom: "3px solid #ff0000",
-            paddingBottom: "1px",
-            display: "inline-block",
-            lineHeight: "1",
+            fontWeight: "bold",
+            color: "#e53935",
+            textDecoration: "underline",
+            textDecorationColor: "#e53935",
           }}
         >
           {middle}
@@ -164,7 +168,7 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
-          height: "215px",
+          height: "250px",
           cursor: "pointer",
 
           boxShadow: isActive
@@ -197,7 +201,9 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
             variant="h4"
             sx={{
               fontWeight: lang === "te" ? "normal" : "bold",
-              color: "#333F61",
+              color: isActive ? "#e53935" : "#333F61",
+              textDecoration: isActive ? "underline" : "none",
+              textDecorationColor: "#e53935",
               fontSize:
                 lang === "te"
                   ? mode === "alphabet"
@@ -230,36 +236,30 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
         </Box>
 
         {/* Image */}
-        {item.image ? (
-          <Box
-            sx={{
-              flex: 1,
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              my: 0.5,
-              overflow: "hidden",
-              cursor: "pointer",
-              "&:hover": {
-                transform: "scale(1.05)",
-              },
-              transition: "transform 0.2s ease",
-            }}
-          >
+        <Box
+          sx={{
+            width: "130px",
+            height: "130px",
+            flexShrink: 0,
+            alignSelf: "center",
+            borderRadius: "10px",
+            overflow: "hidden",
+            transition: "transform 0.2s ease",
+            "&:hover": { transform: "scale(1.05)" },
+          }}
+        >
+          {item.image && (
             <img
               src={item.image}
               alt={item.word}
               style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                objectFit: "contain",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
               }}
             />
-          </Box>
-        ) : (
-          <Box sx={{ flex: 1 }} />
-        )}
+          )}
+        </Box>
 
         {/* Word */}
         <Typography
@@ -268,9 +268,9 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
             fontWeight: 600,
             color: "#333F61",
             textAlign: "center",
-            fontSize: "1.3rem",
-            mt: 0.5,
+            fontSize: lang === "te" || lang === "hi" ? "1.5rem" : "1.5rem",
             fontFamily: getFontFamily(lang || "en"),
+            lineHeight: 1.3,
           }}
         >
           {renderHighlightedWord()}
