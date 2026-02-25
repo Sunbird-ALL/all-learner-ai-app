@@ -216,7 +216,7 @@ export const updateLearnerProfile = async (lang, requestBody) => {
 
     // Track interaction for engagement prediction
     // Only track if we have original_text and response_text
-    if (requestBody.original_text && response.data?.responseText) {
+    if (requestBody.audio) {
       const subSessionId =
         requestBody.sub_session_id || getLocalData("sub_session_id");
       if (subSessionId) {

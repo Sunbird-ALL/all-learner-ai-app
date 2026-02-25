@@ -502,12 +502,7 @@ function VoiceAnalyser(props) {
           ContentType: "audio/wav",
         });
         // Update interaction with audio_path if available (for engagement tracking)
-        if (
-          callUpdateLearner &&
-          originalText &&
-          responseText &&
-          audioFileName
-        ) {
+        if (callUpdateLearner && originalText && audioFileName) {
           try {
             const sub_session_id = getLocalData("sub_session_id");
             if (sub_session_id) {
