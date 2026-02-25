@@ -50,7 +50,11 @@ import {
   fetchUserPoints,
   createLearnerProgress,
 } from "../../services/orchestration/orchestrationService";
-import { fetchGetSetResult } from "../../services/learnerAi/learnerAiService";
+import {
+  fetchGetSetResult,
+  callEngagementPredictor,
+  clearInteractions,
+} from "../../services/learnerAi/learnerAiService";
 import {
   fetchAssessmentData,
   fetchPaginatedContent,
@@ -241,7 +245,14 @@ const AserFlow = ({
 
   useEffect(() => {
     if (questions?.length) {
-      setLocalData("sub_session_id", uniqueId());
+      const oldSubSessionId = getLocalData("sub_session_id");
+      const newSubSessionId = uniqueId();
+      setLocalData("sub_session_id", newSubSessionId);
+
+      // Clear interactions for old sub session if it exists
+      if (oldSubSessionId) {
+        clearInteractions(oldSubSessionId);
+      }
     }
   }, [questions]);
 
@@ -327,6 +338,11 @@ const AserFlow = ({
         totalSyllableCount
       );
       const { data } = getSetResultRes;
+
+      // Call engagement predictor after getsetresult
+      // Interactions and lesson are automatically retrieved
+      callEngagementPredictor(sub_session_id);
+
       await addLesson({
         sessionId,
         milestone: `practice`,

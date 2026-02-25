@@ -2325,6 +2325,236 @@ export const wordData = {
       audio: "b9fcd2fe-063d-479e-9bee-87bc27f8ee8d.wav",
       segmentedAudio: getAssetAudioUrl(s3Assets.पिताजीAudio),
     },
+    {
+      text: "जाता",
+      audio: "fadeba57-dbe0-4d24-921a-cc540a9844bd.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.जाताAudio),
+    },
+    {
+      text: "खाने",
+      audio: "2098c754-2cef-4103-be9e-6cbdaf0d6775.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.खानेAudio),
+    },
+    {
+      text: "केतकी",
+      audio: "38e26d87-2bba-4c79-9b61-ae16fd687286.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.केतकीAudio),
+    },
+    {
+      text: "सारा",
+      audio: "be5b0350-762a-47a1-88fd-2d99c0e19ec1.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.साराAudio),
+    },
+    {
+      text: "नीमा",
+      audio: "b66da551-e66d-4863-9e31-f2d14f95e165.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.नीमाAudio),
+    },
+    {
+      text: "लिखना",
+      audio: "8315af5d-69dc-43b8-880c-fed23bfbbcca.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.लिखनाAudio),
+    },
+    {
+      text: "लेकिन",
+      audio: "cb3f8cbe-dd90-4110-8fe2-dbb95888e861.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.लेकिनAudio),
+    },
+    {
+      text: "देखा",
+      audio: "057ab9a6-49d4-4c70-877a-b28099266a02.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.देखाAudio),
+    },
+    {
+      text: "सभी",
+      audio: "c938d2d8-84fd-4695-bc38-6ca9f05ddf74.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.सभीAudio),
+    },
+    {
+      text: "गाना",
+      audio: "9e080c4c-0738-4530-ad72-776f84cfe585.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.गानाAudio),
+    },
+    {
+      text: "मेरे",
+      audio: "4fd1a368-7e4a-468c-96c0-81e51f3b51c9.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.मेरेAudio),
+    },
+    {
+      text: "सवारी",
+      audio: "353eeb59-e37a-4683-b19f-ef3f01f0f873.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.सवारीAudio),
+    },
+    {
+      text: "दादाजी",
+      audio: "6f455848-7055-43a5-978a-7d3a022d3921.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.दादाजीAudio),
+    },
+    {
+      text: "खेलने",
+      audio: "4d96893c-74fd-45c7-b899-2037873ca9d6.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.खेलनेAudio),
+    },
+    {
+      text: "भाषा",
+      audio: "81a25aa1-0e26-4f57-832d-62383fff0c7b.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.भाषाAudio),
+    },
+    {
+      text: "चाचाजी",
+      audio: "80ae979e-08ef-4d24-8c12-53b4aa953f9d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.चाचाजीAudio),
+    },
+    {
+      text: "सही",
+      audio: "f092465e-5b7e-4b7a-a672-c84d67995393.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.सहीAudio),
+    },
+    {
+      text: "बिरंगे",
+      audio: "1be5f6b1-eb74-4e29-96f2-bcf76bafe212.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.बिरंगेAudio),
+    },
+    {
+      text: "कुछ",
+      audio: "20565cd7-0306-42ce-b104-c79773604a95.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.कुछAudio),
+    },
+    {
+      text: "दुनिया",
+      audio: "efd155ed-c03e-49ab-8ece-f56a14955e14.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.दुनियाAudio),
+    },
+    {
+      text: "किसी",
+      audio: "2c9b8b15-0665-4196-bd62-472488bac265.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.किसीAudio),
+    },
+    {
+      text: "तुमने",
+      audio: "106ab882-e79b-4784-87fc-9671a7f20210.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.तुमनेAudio),
+    },
+    {
+      text: "चाची",
+      audio: "ba26441e-1fbb-4656-b4fe-ccc0ccb9d7c9.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.चाचीAudio),
+    },
+    {
+      text: "रोटी",
+      audio: "b07a6dc0-7019-4298-a267-174954bd0568.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रोटीAudio),
+    },
+    {
+      text: "छोटी",
+      audio: "dd68999c-c976-4239-8f46-03363901ee00.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.छोटीAudio),
+    },
+    {
+      text: "खिलौने",
+      audio: "30d0f48d-b396-4909-9358-7d8d93a4290e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.खिलौनेAudio),
+    },
+    {
+      text: "गिनो",
+      audio: "8b2dde34-42c5-4ff1-8385-470bb7fcd061.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.गिनोAudio),
+    },
+    {
+      text: "लिखो",
+      audio: "4ceba180-cf06-443f-ac2b-ee035a864340.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.लिखोAudio),
+    },
+    {
+      text: "देखो",
+      audio: "199c5bbd-2038-4a18-b376-62190792ea3f.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.देखोAudio),
+    },
+    {
+      text: "जितनी",
+      audio: "f7dd6e51-c586-45bc-99db-7aff0062e326.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.जितनीAudio),
+    },
+    {
+      text: "निकला",
+      audio: "3ded609f-b566-4cb1-b142-df9af9db4cc9.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.निकलाAudio),
+    },
+    {
+      text: "बोला",
+      audio: "cc9ee737-cb24-4e90-8b40-5e3f04d6ee36.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.बोलाAudio),
+    },
+    {
+      text: "चूजा",
+      audio: "8f3a6733-dab1-4306-97eb-27a6a289a630.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.चूजाAudio),
+    },
+    {
+      text: "घूमने",
+      audio: "6c24884c-1d68-41cf-bf72-b25677932fff.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.घूमनेAudio),
+    },
+    {
+      text: "बोले",
+      audio: "e1657c7d-2dda-4458-9ab5-a65beadcb656.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.बोलेAudio),
+    },
+    {
+      text: "गिलास",
+      audio: "aebc36b5-0383-453b-bcba-e717bf86a793.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.गिलासAudio),
+    },
+    {
+      text: "मिलाना",
+      audio: "42f84f49-85a0-4775-8853-8a4edc8a9659.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.मिलानाAudio),
+    },
+    {
+      text: "रूठा",
+      audio: "fe14271e-ebbc-40f2-9e83-4a2a7dfec66b.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रूठाAudio),
+    },
+    {
+      text: "रुकना",
+      audio: "08f71060-0783-43e0-aca5-6dede7032337.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रुकनाAudio),
+    },
+    {
+      text: "रुकाव",
+      audio: "d79eacc9-99bf-47cf-9de1-3a89f35d1509.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रुकावAudio),
+    },
+    {
+      text: "रूपा",
+      audio: "8f4f937e-4efc-4297-a271-4e9877599667.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.रूपाAudio),
+    },
+    {
+      text: "सिपाही",
+      audio: "03a37f06-546d-4658-8a56-1e604dae63f1.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.सिपाहीAudio),
+    },
+    {
+      text: "तितली",
+      audio: "4f285c9e-17ce-441e-9cc3-0f1bacd8e7be.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.तितलीAudio),
+    },
+    {
+      text: "हाथी",
+      audio: "9fedf55c-5913-4aee-a2a4-4573284519bd.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.हाथी2Audio),
+    },
+    {
+      text: "छाता",
+      audio: "b9bdb287-48ef-49a7-816a-5ef7029dbbc4.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.छाताAudio),
+    },
+    {
+      text: "धनिया",
+      audio: "b796798f-182c-4c47-9489-dc4dca75da10.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.धनियाAudio),
+    },
   ],
 
   ta: [
@@ -2740,6 +2970,206 @@ export const wordData = {
       audio: "a661db28-f049-4268-99a2-6cbf10ba23c0.wav",
       segmentedAudio: getAssetAudioUrl(s3Assets.తోలుAudio),
       image: "53a752bd-4f2b-431a-abad-b16c3adf4878.png",
+    },
+    {
+      text: "పూజారి",
+      audio: "aec1ba7e-4fe4-4ee0-8579-8ef868b10630.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పూజారిAudio),
+    },
+    {
+      text: "జాలరి",
+      audio: "28b14c01-2219-4f36-b7c9-97312bae3e8a.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జాలరిAudio),
+    },
+    {
+      text: "కూజా",
+      audio: "8089314a-507c-481f-9864-b3cf1e85c9d4.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.కూజాAudio),
+    },
+    {
+      text: "దివిటి",
+      audio: "3a63307c-7927-4a42-af7f-eb80653f1a67.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.దివిటిAudio),
+    },
+    {
+      text: "గాలి",
+      audio: "99bf2848-634c-4fe8-846d-8db895137461.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గాలిAudio),
+    },
+    {
+      text: "గోడ",
+      audio: "887c77b8-e4c3-4b1a-925a-d1f7f2801797.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గోడAudio),
+    },
+    {
+      text: "దురద",
+      audio: "4d1acab5-5e40-407d-a577-01bea8a05203.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.దురదAudio),
+    },
+    {
+      text: "చదువు",
+      audio: "104ee587-c591-494d-91da-2973160a72e4.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చదువుAudio),
+    },
+    {
+      text: "చేదు",
+      audio: "aa994426-43e8-42b4-a20e-605bf8eff8e2.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చేదుAudio),
+    },
+    {
+      text: "కూతురు",
+      audio: "926741d2-4784-4613-89d2-8c847c8c7af4.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.కూతురుAudio),
+    },
+    {
+      text: "పెసలు",
+      audio: "8f301de3-f6c5-444f-93d7-d6741a24031d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పెసలుAudio),
+    },
+    {
+      text: "హారం",
+      audio: "cb7d1ec9-d125-4675-99ed-795e40b598c5.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.హారంAudio),
+    },
+    {
+      text: "కిటికి",
+      audio: "ee52f2c6-cbd4-49d2-b11c-dd4b619558cb.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.కిటికిAudio),
+    },
+    {
+      text: "చీకటి",
+      audio: "b8a3ac68-8037-4947-b831-6505c13f4c7e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చీకటిAudio),
+    },
+    {
+      text: "శునకం",
+      audio: "b6ccd267-a185-47b9-89de-77e2a7633b30.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.శునకంAudio),
+    },
+    {
+      text: "గెలుపు",
+      audio: "432b6c3b-69ac-4910-9b07-6f8f028cc60e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గెలుపుAudio),
+    },
+    {
+      text: "మేక",
+      audio: "1daa13cb-4556-4f39-adf7-4f6d603ac1bd.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మేకAudio),
+    },
+    {
+      text: "కోడి",
+      audio: "78f5e8cf-ce12-4ece-8f66-7cb3f127185a.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.కోడిAudio),
+    },
+    {
+      text: "పాలు",
+      audio: "6f4af884-14b5-499a-be8d-98f7360a05ee.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పాలు2Audio),
+    },
+    {
+      text: "నీడ",
+      audio: "7adf2896-aaa5-4c0f-b7d4-708c9549ea5d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.నీడAudio),
+    },
+    {
+      text: "పూవులు",
+      audio: "56674e51-b2d2-4878-a538-6ee62b15d58d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పూవులుAudio),
+    },
+    {
+      text: "గురువు",
+      audio: "94fda31e-3e16-4274-9c9f-d206a89be48d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గురువుAudio),
+    },
+    {
+      text: "జూలు",
+      audio: "6864cfd4-45e0-48be-aa20-055a31b2e8c7.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జూలుAudio),
+    },
+    {
+      text: "దుకాణం",
+      audio: "96633501-7e6d-4c84-a4e2-fac2e2d7ca3d.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.దుకాణంAudio),
+    },
+    {
+      text: "పీట",
+      audio: "afe1b8de-1d0a-45f9-980b-4e3bc35514a9.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.పీటAudio),
+    },
+    {
+      text: "సాగరం",
+      audio: "e51544df-0016-4f94-9411-2344d73b8e9c.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.సాగరంAudio),
+    },
+    {
+      text: "మీసాలు",
+      audio: "936658cf-daa7-4e97-8098-b5bea062feec.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మీసాలుAudio),
+    },
+    {
+      text: "తిలకం",
+      audio: "89762672-d90b-463e-9bcd-5cda1da47deb.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.తిలకంAudio),
+    },
+    {
+      text: "చామంతి",
+      audio: "caa3a4fb-726d-4e07-9e77-707696d8b1ad.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చామంతిAudio),
+    },
+    {
+      text: "గిరి",
+      audio: "808470e2-db4f-4dfe-b15c-1e565c6eb29f.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.గిరిAudio),
+    },
+    {
+      text: "తోక",
+      audio: "f4c70a34-054c-4617-acf6-13fd7a9b9224.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.తోకAudio),
+    },
+    {
+      text: "మామిడి",
+      audio: "d88e6f1f-06ee-448f-8489-9c305cf60d22.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మామిడిAudio),
+    },
+    {
+      text: "మీనం",
+      audio: "946144d3-d395-49ab-85b3-8e0ca89a676e.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మీనంAudio),
+    },
+    {
+      text: "మూతి",
+      audio: "e341db0c-b86e-452c-bced-fb2d170c7da7.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.మూతిAudio),
+    },
+    {
+      text: "రోజా",
+      audio: "f687bf5f-d27a-44e7-80ea-d979f37023e3.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.రోజాAudio),
+    },
+    {
+      text: "బజారు",
+      audio: "bd7ede7f-63b0-4f52-9416-10002d738733.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.బజారుAudio),
+    },
+    {
+      text: "రూపాయి",
+      audio: "91523dff-d547-4490-8a5b-bfa00cd3fc09.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.రూపాయిAudio),
+    },
+    {
+      text: "చపాతీ",
+      audio: "1df86b9a-ec60-44a6-befd-9de0e9f6e467.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.చపాతీAudio),
+    },
+    {
+      text: "జంతువు",
+      audio: "2e5128f6-a445-4ddf-a03c-fb8f2bd16c77.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.జంతువుAudio),
+    },
+    {
+      text: "వేపాకు",
+      audio: "6ce13b8d-fb3f-413a-bf3f-79df9cf2ae81.wav",
+      segmentedAudio: getAssetAudioUrl(s3Assets.వేపాకుAudio),
     },
   ],
 

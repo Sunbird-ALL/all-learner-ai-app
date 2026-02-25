@@ -85,6 +85,8 @@ import {
   getContentNew,
   getFetchMilestoneDetails,
   getSetResultPractice,
+  callEngagementPredictor,
+  clearInteractions,
 } from "../../services/learnerAi/learnerAiService";
 
 const Practice = () => {
@@ -4749,7 +4751,14 @@ const Practice = () => {
 
   useEffect(() => {
     if (isShowCase) {
-      setLocalData("sub_session_id", uniqueId());
+      const oldSubSessionId = getLocalData("sub_session_id");
+      const newSubSessionId = uniqueId();
+      setLocalData("sub_session_id", newSubSessionId);
+
+      // Clear interactions for old sub session if it exists
+      if (oldSubSessionId) {
+        clearInteractions(oldSubSessionId);
+      }
     }
   }, [isShowCase]);
 
@@ -6240,6 +6249,10 @@ const Practice = () => {
             mechanism,
           });
           const { data: getSetData } = getSetResultRes;
+
+          // Call engagement predictor after getsetresult
+          // Interactions and lesson are automatically retrieved
+          callEngagementPredictor(sub_session_id);
 
           const data = JSON.stringify(getSetData);
           Log(data, "practice", "ET");
