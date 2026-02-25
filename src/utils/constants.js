@@ -12843,7 +12843,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L1",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["कार", "रात", "पिता", "किला", "तीर"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["कार", "रात", "पिता", "किला", "तीर", "गीत", "सुख", "रुक", "मुख", "फूल"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -12867,7 +12867,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P1",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["गीत", "सुख", "रुक", "मुख", "फूल"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["रूह", "गृह", "कृपा", "तेल", "केला", "बैठ", "कैसे", "शोर", "मोर", "कौन"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -12891,7 +12891,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L3",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["रूह", "गृह", "कृपा", "तेल", "केला"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["मौज", "हंस", "नमः", "पानी", "रुचि", "सामने", "शुरू", "होगा", "दिशा", "कितने"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -12931,7 +12931,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P4",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["बैठ", "कैसे", "शोर", "मोर", "कौन"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["चिड़िया", "सुना", "रुपया", "कविता", "मिला", "सोमारू", "पहेली", "कहानी", "तोसिया", "बारिश"], // Placeholder - adjust based on F2 requirements
         contentCount: 10,
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
@@ -12956,7 +12956,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P6",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["मौज", "हंस", "नमः", "पानी", "रुचि"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["कटोरी", "थाली", "मुझे", "तैरना", "पिताजी", "जाता", "खाने", "केतकी", "सारा", "नीमा"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -12979,7 +12979,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P8",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["सामने", "शुरू", "होगा", "दिशा", "कितने"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["लिखना", "लेकिन", "देखा", "सभी", "गाना", "मेरे", "सवारी", "दादाजी", "खेलने", "भाषा"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -13018,7 +13018,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P11",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["चिड़िया", "सुना", "रुपया", "कविता", "मिला"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["चाचाजी", "सही", "बिरंगे", "कुछ", "दुनिया", "किसी", "तुमने", "चाची", "रोटी", "छोटी"], // Placeholder - adjust based on F2 requirements
         contentCount: 10,
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
@@ -13042,7 +13042,7 @@ export const levelGetContent = {
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         contentCount: 10,
-        customLetters: ["सोमारू", "पहेली", "कहानी", "तोसिया", "बारिश"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["खिलौने", "गिनो", "लिखो", "देखो", "जितनी", "निकला", "बोला", "चूजा", "घूमने", "बोले"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -13065,7 +13065,7 @@ export const levelGetContent = {
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         contentCount: 10,
-        customLetters: ["कटोरी", "थाली", "मुझे", "तैरना", "पिताजी"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["गिलास", "मिलाना", "रूठा", "रुकना", "रुकाव", "रूपा", "सिपाही", "तितली", "हाथी", "छाता"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
@@ -14279,7 +14279,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L1",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["గది", "చేను", "చీర", "గెల", "సౌధం"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["గది", "చేను", "చీర", "గెల", "సౌధం", "గృహం", "జాతర", "గీరు", "జైలు", "కోకిల"],    // Placeholder - adjust based on F2 requirements
       },
       // Practice 1 - Letter Hunt (1 level, 10 content)
       {
@@ -14303,7 +14303,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P1",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["గృహం", "జాతర", "గీరు", "జైలు", "కోకిల"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["నౌక", "నీకు", "పోరు", "మెడ", "టోపీ", "డైరీ", "రోకలి", "సూది", "జౌళి", "సీసా"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 2 - Letter Hunt (1 level, 10 content)
       {
@@ -14327,7 +14327,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_L3",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["నౌక", "నీకు", "పోరు", "మెడ", "టోపీ"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["బంతి", "టౌను", "బాలిక", "నెమలి", "పశువు", "బూడిద", "నుదురు", "మైదానం", "నొసలు", "పొదుపు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 3 - Letter Hunt (1 level, 10 content)
       {
@@ -14367,7 +14367,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P4",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["డైరీ", "రోకలి", "సూది", "జౌళి", "సీసా"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["జెండా", "పెరుగు", "భూకంపం", "పావురం", "జూకాలు", "పసిడి", "గాజులు", "నృపతి", "పైసలు", "మొదలు"], // Placeholder - adjust based on F2 requirements
         contentCount: 10,
       },
       // Practice 4 - Letter Hunt (1 level, 10 content)
@@ -14392,7 +14392,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P6",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["బంతి", "టౌను", "బాలిక", "నెమలి", "పశువు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["మాటలు", "వివాహం", "మూకుడు", "హృదయం", "బేడీలు", "శైశవం", "గొడుగు", "పొడవైన", "సొరకాయ", "జలపాతం"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 5 - Letter Hunt (1 level, 10 content)
       {
@@ -14415,7 +14415,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P8",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" }, // For English, use LetterTrain; for Indic, will use Barakhadi
-        customLetters: ["బూడిద", "నుదురు", "మైదానం", "నొసలు", "పొదుపు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["గిజిగాడు", "ఊరేగింపు", "చూడలేదు", "గులాబీలు", "మీగడ", "చీపురు", "రెండు", "మేఘం", "నేల", "తోలు"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 6 - Letter Hunt (1 level, 10 content)
       {
@@ -14454,7 +14454,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P11",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["మేఘం", "పెరుగు", "భూకంపం", "పావురం", "జూకాలు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["పూజారి", "జాలరి", "కూజా", "దివిటి", "గాలి", "గోడ", "దురద", "చదువు", "చేదు", "కూతురు"], // Placeholder - adjust based on F2 requirements
         contentCount: 10,
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)
@@ -14478,7 +14478,7 @@ export const levelGetContent = {
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         contentCount: 10,
-        customLetters: ["పసిడి", "గాజులు", "నృపతి", "పైసలు", "మొదలు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["పెసలు", "హారం", "కిటికి", "చీకటి", "శునకం", "గెలుపు", "మేక", "కోడి", "పాలు", "నీడ"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 8 - Letter Hunt (1 level, 10 content)
       {
@@ -14501,7 +14501,7 @@ export const levelGetContent = {
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
         contentCount: 10,
-        customLetters: ["మాటలు", "వివాహం", "మూకుడు", "హృదయం", "బేడీలు"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["పూవులు", "గురువు", "జూలు", "దుకాణం", "పీట", "సాగరం", "మీసాలు", "తిలకం", "చామంతి", "గిరి"], // Placeholder - adjust based on F2 requirements
       },
       // Practice 9 - Letter Hunt (1 level, 10 content)
       {
