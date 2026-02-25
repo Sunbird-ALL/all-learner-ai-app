@@ -772,7 +772,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
           narrationRef.current = null;
           resolve();
         };
-        audio.onerror = (e) => {
+        audio.onerror = () => {
           narrationRef.current = null;
           reject(new Error("Audio file not found"));
         };
@@ -910,15 +910,43 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     // Narration is now handled by the useEffect that tracks instruction changes
   };
 
+  const stopAllLocalAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
+    }
+    if (narrationRef.current) {
+      narrationRef.current.pause();
+      narrationRef.current = null;
+    }
+    speechSynthesis.cancel();
+    setIsPlayingNarration(false);
+    setPlayingKey(null);
+    setActiveCardKey(null);
+    currentSrcRef.current = null;
+    stopAllAudio();
+  };
+
+  const handleClose = () => {
+    stopAllLocalAudio();
+    onClose();
+  };
+
+  const handleStartExploring = () => {
+    stopAllLocalAudio();
+    onStartExploring();
+  };
+
   // Handle skip demo
   const handleSkipDemo = () => {
-    stopAllAudio();
+    stopAllLocalAudio();
     onStartExploring();
   };
 
   // Handle replay demo
   const handleReplayDemo = () => {
-    stopAllAudio();
+    stopAllLocalAudio();
     setPreviewPhase("countdown");
     setViewMode("alphabet");
     setAlphabetClickCount(0);
@@ -1014,7 +1042,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     <Dialog
       fullScreen
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       PaperProps={{
         sx: {
           bgcolor: "#e9eef1",
@@ -1203,7 +1231,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
         {/* Close Button */}
         <Box sx={{ position: "absolute", right: { xs: 16, sm: 24 } }}>
           <IconButton
-            onClick={onClose}
+            onClick={handleClose}
             size="medium"
             aria-label="Close"
             sx={{
@@ -1453,7 +1481,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
         {previewPhase === "completion" && (
           <CompletionScreen
             lang={activeLang}
-            onStartExploring={onStartExploring}
+            onStartExploring={handleStartExploring}
             onReplayDemo={handleReplayDemo}
           />
         )}
@@ -1493,7 +1521,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
           <Button
             variant="contained"
             startIcon={<SportsEsportsIcon />}
-            onClick={onStartExploring}
+            onClick={handleStartExploring}
             sx={{
               px: 4,
               py: 1.5,
