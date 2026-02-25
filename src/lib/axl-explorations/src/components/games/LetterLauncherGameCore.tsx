@@ -3,6 +3,7 @@ import { Check, X, Fuel, ArrowLeft, ArrowRight } from "lucide-react";
 import { Language } from "../../constants/languages";
 import { FuelCalculationResult, getFuelTierText } from "../../utils/fuelCalculation";
 import { useState, useEffect } from "react";
+import React from "react";
 
 export interface LetterLauncherQuestion {
   audioLetter: string; // The letter sound that plays
@@ -77,6 +78,38 @@ export function LetterLauncherGameCore({
       setSliderPosition(0);
     }
   }, [fuelEarned, isCorrect]);
+
+  // Keyboard navigation: Arrow keys to select options
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle arrow keys when buttons are enabled
+      if (disabled || showFeedback) {
+        return;
+      }
+
+      // Prevent default behavior for arrow keys
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+      }
+
+      // Left arrow = Yes (Check) = true
+      if (event.key === 'ArrowLeft') {
+        onAnswerSelect(true);
+      }
+      // Right arrow = No (X) = false
+      else if (event.key === 'ArrowRight') {
+        onAnswerSelect(false);
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [disabled, showFeedback, onAnswerSelect]);
 
   // Get localized text
   const getLocalizedText = (key: string) => {
