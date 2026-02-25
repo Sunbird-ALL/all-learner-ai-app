@@ -90,7 +90,7 @@ const TeluguGunithaCard = ({ item, playAudio, isActive }) => {
           {item.image && (
             <img
               src={item.image}
-              alt=""
+              alt={item.label || ""}
               style={{ width: "100%", height: "100%", objectFit: "contain" }}
             />
           )}
@@ -201,8 +201,9 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
             variant="h4"
             sx={{
               fontWeight: lang === "te" ? "normal" : "bold",
-              color: isActive ? "#e53935" : "#333F61",
-              textDecoration: isActive ? "underline" : "none",
+              color: isActive && mode === "alphabet" ? "#e53935" : "#333F61",
+              textDecoration:
+                isActive && mode === "alphabet" ? "underline" : "none",
               textDecorationColor: "#e53935",
               fontSize:
                 lang === "te"
@@ -294,13 +295,13 @@ const AlphabetChart = ({ open, onClose, lang }) => {
 
   // Stop audio on unmount
   useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
+    return () => stopAudio();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Stop audio when dialog is closed
+  useEffect(() => {
+    if (!open) stopAudio();
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const itemsPerPage = 8;
 
@@ -407,6 +408,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
             key: `te-gunitha-${idx}`,
             display: "",
             word: "",
+            label: g.audio ? g.audio.replace(/\.wav$/i, "") : "",
             image: getAssetUrl(g.image) || "",
             audio: g.audio ? getAssetAudioUrl(g.audio) : "",
             isGunitha: true,
@@ -534,8 +536,9 @@ const AlphabetChart = ({ open, onClose, lang }) => {
   };
 
   useEffect(() => {
+    stopAudio();
     setCurrentPage(0);
-  }, [viewMode, activeLang]);
+  }, [viewMode, activeLang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!open) return null;
 

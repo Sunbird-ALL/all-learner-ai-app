@@ -3305,27 +3305,27 @@ export const wordData = {
 export const TeluguGunithas = [
   {
     audio: "ka.wav",
-    image: "ka 1.png",
+    image: "ka1.png",
   },
   {
     audio: "Kaa.wav",
-    image: "kaa 2.png",
+    image: "kaa2.png",
   },
   {
     audio: "Ke.wav",
-    image: "ki 1.png",
+    image: "ki1.png",
   },
   {
     audio: "Kee.wav",
-    image: "kii 2.png",
+    image: "kii2.png",
   },
   {
     audio: "Ku.wav",
-    image: "ku 1.png",
+    image: "ku1.png",
   },
   {
     audio: "Koo.wav",
-    image: "ku 2.png",
+    image: "ku2.png",
   },
   {
     audio: "Kru.wav",
@@ -3333,11 +3333,11 @@ export const TeluguGunithas = [
   },
   {
     audio: "Kroo.wav",
-    image: "kru 2.png",
+    image: "kru2.png",
   },
   {
     audio: "ke1.wav",
-    image: "ke 1.png",
+    image: "ke1.png",
   },
   {
     audio: "Kee1.wav",
@@ -3349,11 +3349,11 @@ export const TeluguGunithas = [
   },
   {
     audio: "Ko.wav",
-    image: "ko 1.png",
+    image: "ko1.png",
   },
   {
     audio: "Koo1.wav",
-    image: "ko 2.png",
+    image: "ko2.png",
   },
   {
     audio: "Kau.wav",
@@ -3373,59 +3373,59 @@ export const TeluguGunithas = [
   },
   {
     audio: "Joo.wav",
-    image: "joo 2.png",
+    image: "joo2.png",
   },
   {
     audio: "Yaa.wav",
-    image: "yaa second.png",
+    image: "yaa-second.png",
   },
   {
     audio: "yi.wav",
-    image: "yi 1.png",
+    image: "yi1.png",
   },
   {
     audio: "yee.wav",
-    image: "yi second.png",
+    image: "yi-second.png",
   },
   {
     audio: "Paa.wav",
-    image: "paa second.png",
+    image: "paa-second.png",
   },
   {
     audio: "saa.wav",
-    image: "saa second.png",
+    image: "saa-second.png",
   },
   {
     audio: "pu.wav",
-    image: "Pu 1.png",
+    image: "Pu1.png",
   },
   {
     audio: "poo.wav",
-    image: "pu 2.png",
+    image: "pu2.png",
   },
   {
     audio: "vu.wav",
-    image: "vu 1.png",
+    image: "vu1.png",
   },
   {
     audio: "voo.wav",
-    image: "vu 2.png",
+    image: "vu2.png",
   },
   {
     audio: "po.wav",
-    image: "po 1.png",
+    image: "po1.png",
   },
   {
     audio: "poo1.wav",
-    image: "po 2nd.png",
+    image: "po2nd.png",
   },
   {
     audio: "mo.wav",
-    image: "mo 1.png",
+    image: "mo1.png",
   },
   {
     audio: "moo.wav",
-    image: "mo 2nd.png",
+    image: "mo2nd.png",
   },
   {
     audio: "sau.wav",
