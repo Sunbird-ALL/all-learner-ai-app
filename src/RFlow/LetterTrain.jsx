@@ -6107,6 +6107,7 @@ const LetterTrain = ({
   vocabCount,
   wordCount,
   customLetters, // Array of letters to filter (e.g., ["a", "m", "s", "t"])
+  confidentLetters, // Optional: Letters user is confident with (appear less frequently)
   //isNextButtonCalled,
   //setIsNextButtonCalled,
 }) => {
@@ -6163,16 +6164,35 @@ const LetterTrain = ({
     });
   }
 
-  const generatePlaylist = (data) => {
+  const generatePlaylist = (data, confidentLettersList = []) => {
     const playlist = [];
+
+    // Normalize confident letters to uppercase for comparison
+    const normalizedConfident = confidentLettersList
+      .map((letter) =>
+        letter && typeof letter === "string" ? letter.toUpperCase() : ""
+      )
+      .filter(Boolean);
 
     for (let i = 0; i < data.length; i += 5) {
       const block = data.slice(i, i + 5);
 
       block.forEach((letterObj) => {
-        // Check if items exists and is an array
         if (letterObj.items && Array.isArray(letterObj.items)) {
-          letterObj.items.forEach((item) => {
+          const letterKey = (
+            letterObj.letter ||
+            letterObj.syllable ||
+            ""
+          ).toUpperCase();
+          const isConfident = normalizedConfident.includes(letterKey);
+
+          // For confident letters: show only first item (reduced frequency)
+          // For non-confident letters: show all items (full practice)
+          const itemsToShow = isConfident
+            ? letterObj.items.slice(0, 1) // Only first item for confident letters
+            : letterObj.items; // All items for non-confident letters
+
+          itemsToShow.forEach((item) => {
             playlist.push({
               type: "UI1",
               item,
@@ -6202,10 +6222,12 @@ const LetterTrain = ({
     return playlist;
   };
 
-  const playlist = generatePlaylist(data);
+  const playlist = generatePlaylist(data, confidentLetters || []);
   console.log("LetterTrain playlist generated:", {
     playlistLength: playlist.length,
     customLetters,
+    confidentLetters,
+    confidentLettersCount: confidentLetters?.length || 0,
     playlistItems: playlist.map((item, idx) => ({
       index: idx,
       type: item.type,
