@@ -24,7 +24,8 @@ import {
 } from "../../services/orchestration/orchestrationService";
 import {
   fetchGetSetResult,
-  predictEngagement,
+  callEngagementPredictor,
+  clearInteractions,
 } from "../../services/learnerAi/learnerAiService";
 import {
   fetchAssessmentData,
@@ -103,7 +104,15 @@ const SpeakSentenceComponent = () => {
 
   useEffect(() => {
     if (questions?.length) {
-      setLocalData("sub_session_id", uniqueId());
+      const oldSubSessionId = getLocalData("sub_session_id");
+      const newSubSessionId = uniqueId();
+      setLocalData("sub_session_id", newSubSessionId);
+
+      // Clear interactions for old sub session if it exists
+      if (oldSubSessionId) {
+        clearInteractions(oldSubSessionId);
+      }
+
       setInteractions([]);
       interactionsRef.current = [];
     }
@@ -180,49 +189,9 @@ const SpeakSentenceComponent = () => {
           totalSyllableCount
         );
 
-        if (lang === "en") {
-          try {
-            const token = localStorage.getItem("apiToken");
-            const session_id = getLocalData("sessionId");
-
-            let milestoneLevel = "m0";
-            try {
-              const milestoneData = getLocalData("getMilestone");
-              if (milestoneData) {
-                const parsed = JSON.parse(milestoneData);
-                milestoneLevel = parsed?.data?.milestone_level || "m0";
-              }
-            } catch (e) {
-              console.error("Error parsing milestone data:", e);
-            }
-
-            let lesson = "0";
-
-            const currentInteractions = interactionsRef.current || interactions;
-            const formattedInteractions = currentInteractions.map(
-              (interaction, index) => ({
-                interaction_id: index + 1,
-                original_text: interaction.original_text || "",
-                response_text: interaction.response_text || "",
-                audio_path: interaction.audio_path || "",
-                created_at: interaction.created_at || new Date().toISOString(),
-              })
-            );
-
-            const engagementPayload = {
-              token: token,
-              session_id: session_id,
-              milestone_level: milestoneLevel,
-              lesson: lesson,
-              language: "en",
-              interactions: formattedInteractions,
-            };
-
-            predictEngagement(engagementPayload);
-          } catch (error) {
-            console.error("Error calling engagement/predict API:", error);
-          }
-        }
+        // Call engagement predictor after getsetresult
+        // Interactions are automatically retrieved from localStorage
+        callEngagementPredictor(sub_session_id);
 
         if (!(localStorage.getItem("contentSessionId") !== null)) {
           let point = 1;
