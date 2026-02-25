@@ -32,6 +32,11 @@ import {
 } from "../../lib/axl-explorations/src/lib/index";
 import { trackingAssessmentService } from "../../lib/axl-explorations/src/utils/trackingAssessmentService";
 
+// Import preview components directly
+import { CountdownTimer } from "../../lib/axl-explorations/src/components/CountdownTimer";
+import { LetterLauncherGameStoryPreview } from "../../lib/axl-explorations/src/components/games/LetterLauncherGameStoryPreview";
+import { Button } from "../../lib/axl-explorations/src/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 /**
  * Wrapper component that integrates axl-explorations ROARRapidVisualGameCore
  * into the Practice.jsx mechanics system for F3 flow Letter Launcher
@@ -77,12 +82,25 @@ const LetterLauncherMechanicsContent = ({
   const [sessionInitialized, setSessionInitialized] = useState(false);
   const navigate = useNavigate();
 
+  // Preview states - only show preview for level 19
+  const [showPreview, setShowPreview] = useState(true); // Show preview/countdown when first opening game (only for level 19)
+  const [showStoryPreview, setShowStoryPreview] = useState(false); // Show story preview after countdown
+  const [level19HasProgress, setLevel19HasProgress] = useState(false);
+  const [isLoadingLevel, setIsLoadingLevel] = useState(true);
+
   // Reset currentGameLevel when level prop changes (e.g., when step changes)
   useEffect(() => {
     if (level && level !== currentGameLevel) {
       setCurrentGameLevel(level);
+      // Reset preview states when level changes (preview only shows for level 19)
+      if (level !== 19) {
+        setShowPreview(false);
+        setShowStoryPreview(false);
+      } else {
+        setShowPreview(true);
+      }
     }
-  }, [level]);
+  }, [level, currentGameLevel]);
 
   // Ensure isShowCase is a boolean (handle undefined case)
   const effectiveIsShowCase = isShowCase === true;
@@ -363,6 +381,71 @@ const LetterLauncherMechanicsContent = ({
   };
 
   const assessmentParams = getF3AssessmentParams();
+
+  // Check if level 19 has progress (for preview display)
+  useEffect(() => {
+    const checkLevel19Progress = async () => {
+      if (!initialLanguage) {
+        setIsLoadingLevel(false);
+        return;
+      }
+
+      const currentUser = sessionManager.getCurrentUser();
+      if (!currentUser) {
+        setIsLoadingLevel(false);
+        return;
+      }
+
+      try {
+        setIsLoadingLevel(true);
+
+        const gameName = gameKey.split("_")[0];
+        const searchParams = {
+          userId: currentUser.username,
+          courseId: gameName,
+          unitId: initialLanguage,
+        };
+
+        const result = await trackingAssessmentService.searchAssessmentTracking(
+          searchParams
+        );
+
+        if (result.success && result.data && typeof result.data === "object") {
+          const level19Data = result.data["level19"];
+          const level19Percent = level19Data?.metadata?.scorePercentage ?? 0;
+          const level19Completed = level19Data?.metadata?.isCompleted ?? false;
+          const hasLevel19Progress = level19Completed || level19Percent > 0;
+          setLevel19HasProgress(hasLevel19Progress);
+        } else {
+          setLevel19HasProgress(false);
+        }
+      } catch (error) {
+        console.error("Error checking level 19 progress:", error);
+        setLevel19HasProgress(false);
+      } finally {
+        setIsLoadingLevel(false);
+      }
+    };
+
+    checkLevel19Progress();
+  }, [initialLanguage, gameKey]);
+
+  // Preview handlers
+  const handleCountdownComplete = () => {
+    console.log(
+      "[LetterLauncherMechanics] Countdown complete, showing story preview"
+    );
+    // After countdown, show story preview
+    setShowStoryPreview(true);
+    // Also set showPreview to false to prevent countdown from showing again
+    setShowPreview(false);
+  };
+
+  const handleStoryPreviewComplete = () => {
+    setShowStoryPreview(false);
+    // After story preview, start the game
+    setShowPreview(false);
+  };
 
   // Reset completion state when step changes (detected by f3FlowStep change)
   useEffect(() => {
@@ -1226,7 +1309,7 @@ const LetterLauncherMechanicsContent = ({
     }
   };
 
-  if (!sessionInitialized || questions.length === 0) {
+  if (!sessionInitialized || questions.length === 0 || isLoadingLevel) {
     return (
       <MainLayout
         page={header}
@@ -1249,6 +1332,187 @@ const LetterLauncherMechanicsContent = ({
           <p>Loading game...</p>
         </div>
       </MainLayout>
+    );
+  }
+
+  // Show story preview after countdown (check this first)
+  // Only show for level 19
+  if (showStoryPreview && initialLanguage && currentGameLevel === 19) {
+    console.log(
+      "[LetterLauncherMechanics] Rendering story preview, level:",
+      currentGameLevel
+    );
+    return (
+      <LanguageProvider initialLanguage={initialLanguage}>
+        <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
+          <MainLayout
+            page={header}
+            showTimer={false}
+            setPage={setPage}
+            level={milestoneLevel || "B"}
+            flowNames={[]}
+            activeFlow={isF3FlowActive ? `P${f3FlowStep?.step?.step || 1}` : ""}
+            progressData={progressData}
+            showProgress={showProgress}
+            points={points}
+            vocabCount={vocabCount}
+            wordCount={wordCount}
+            handleBack={handleBack}
+            isShowCase={effectiveIsShowCase}
+            startShowCase={effectiveStartShowCase}
+            setStartShowCase={effectiveSetStartShowCase}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: "100%",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+              }}
+            >
+              <style>{`
+                .letter-launcher-story-preview-container > div {
+                  height: 100% !important;
+                  max-height: 100% !important;
+                  overflow: hidden !important;
+                }
+                .letter-launcher-story-preview-container [class*="h-screen"] {
+                  height: 100% !important;
+                  max-height: 100% !important;
+                }
+                .letter-launcher-story-preview-container img,
+                .letter-launcher-story-preview-container [role="img"],
+                .letter-launcher-story-preview-container [class*="planet"],
+                .letter-launcher-story-preview-container [class*="Planet"] {
+                  display: block !important;
+                  visibility: visible !important;
+                  opacity: 1 !important;
+                  position: relative !important;
+                  z-index: 10 !important;
+                }
+                .letter-launcher-story-preview-container [class*="absolute"] {
+                  position: absolute !important;
+                  z-index: 10 !important;
+                }
+              `}</style>
+              <div
+                className="letter-launcher-story-preview-container"
+                style={{ height: "100%", width: "100%", overflow: "hidden" }}
+              >
+                <LetterLauncherGameStoryPreview
+                  onStartGame={handleStoryPreviewComplete}
+                  onBack={() => {
+                    setShowStoryPreview(false);
+                    setShowPreview(false);
+                    handleGameBack();
+                  }}
+                  level={currentGameLevel}
+                  hideHeader={true}
+                />
+              </div>
+            </div>
+          </MainLayout>
+        </AudioLanguageProvider>
+      </LanguageProvider>
+    );
+  }
+
+  // Show countdown when first opening game (before game starts)
+  // Only show if: (currentGameLevel is 19 AND level 19 has no progress)
+  const shouldShowCountdown =
+    showPreview &&
+    initialLanguage &&
+    !showStoryPreview &&
+    currentGameLevel === 19 &&
+    !level19HasProgress;
+
+  if (shouldShowCountdown) {
+    return (
+      <LanguageProvider initialLanguage={initialLanguage}>
+        <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
+          <MainLayout
+            page={header}
+            showTimer={false}
+            setPage={setPage}
+            level={milestoneLevel || "B"}
+            flowNames={[]}
+            activeFlow={isF3FlowActive ? `P${f3FlowStep?.step?.step || 1}` : ""}
+            progressData={progressData}
+            showProgress={showProgress}
+            points={points}
+            vocabCount={vocabCount}
+            wordCount={wordCount}
+            handleBack={handleBack}
+            isShowCase={effectiveIsShowCase}
+            startShowCase={effectiveStartShowCase}
+            setStartShowCase={effectiveSetStartShowCase}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: "100%",
+                background:
+                  "linear-gradient(to bottom, #1e3a8a, #3b82f6, #60a5fa)",
+                padding: "8px",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div
+                style={{
+                  maxWidth: "1280px",
+                  margin: "0 auto",
+                  width: "100%",
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  minHeight: 0,
+                  overflow: "hidden",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "12px",
+                    flexShrink: 0,
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      setShowPreview(false);
+                      handleGameBack();
+                    }}
+                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/20 text-sm px-3 py-2"
+                  >
+                    <ArrowLeft className="h-3 w-3 mr-1" />
+                    Back
+                  </Button>
+                </div>
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 0,
+                  }}
+                >
+                  <CountdownTimer
+                    initialCount={3}
+                    onComplete={handleCountdownComplete}
+                  />
+                </div>
+              </div>
+            </div>
+          </MainLayout>
+        </AudioLanguageProvider>
+      </LanguageProvider>
     );
   }
 

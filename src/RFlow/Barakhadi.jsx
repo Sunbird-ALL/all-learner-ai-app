@@ -2872,6 +2872,137 @@ export const wordData = {
   ],
 };
 
+export const TeluguGunithas = [
+  {
+    audio: "ka.wav",
+    image: "ka1.png",
+  },
+  {
+    audio: "Kaa.wav",
+    image: "kaa2.png",
+  },
+  {
+    audio: "Ke.wav",
+    image: "ki1.png",
+  },
+  {
+    audio: "Kee.wav",
+    image: "kii2.png",
+  },
+  {
+    audio: "Ku.wav",
+    image: "ku1.png",
+  },
+  {
+    audio: "Koo.wav",
+    image: "ku2.png",
+  },
+  {
+    audio: "Kru.wav",
+    image: "kru.png",
+  },
+  {
+    audio: "Kroo.wav",
+    image: "kru2.png",
+  },
+  {
+    audio: "ke1.wav",
+    image: "ke1.png",
+  },
+  {
+    audio: "Kee1.wav",
+    image: "ke2.png",
+  },
+  {
+    audio: "Kai.wav",
+    image: "kai.png",
+  },
+  {
+    audio: "Ko.wav",
+    image: "ko1.png",
+  },
+  {
+    audio: "Koo1.wav",
+    image: "ko2.png",
+  },
+  {
+    audio: "Kau.wav",
+    image: "kau.png",
+  },
+  {
+    audio: "Kam.wav",
+    image: "kam.png",
+  },
+  {
+    audio: "Kaha.wav",
+    image: "kaha.png",
+  },
+  {
+    audio: "Ju.wav",
+    image: "ju.png",
+  },
+  {
+    audio: "Joo.wav",
+    image: "joo2.png",
+  },
+  {
+    audio: "Yaa.wav",
+    image: "yaa-second.png",
+  },
+  {
+    audio: "yi.wav",
+    image: "yi1.png",
+  },
+  {
+    audio: "yee.wav",
+    image: "yi-second.png",
+  },
+  {
+    audio: "Paa.wav",
+    image: "paa-second.png",
+  },
+  {
+    audio: "saa.wav",
+    image: "saa-second.png",
+  },
+  {
+    audio: "pu.wav",
+    image: "Pu1.png",
+  },
+  {
+    audio: "poo.wav",
+    image: "pu2.png",
+  },
+  {
+    audio: "vu.wav",
+    image: "vu1.png",
+  },
+  {
+    audio: "voo.wav",
+    image: "vu2.png",
+  },
+  {
+    audio: "po.wav",
+    image: "po1.png",
+  },
+  {
+    audio: "poo1.wav",
+    image: "po2nd.png",
+  },
+  {
+    audio: "mo.wav",
+    image: "mo1.png",
+  },
+  {
+    audio: "moo.wav",
+    image: "mo2nd.png",
+  },
+  {
+    audio: "sau.wav",
+    image: "Sau.png",
+  },
+];
+
 function getScriptFromLang(lang) {
   const scriptMap = {
     hi: "devanagari",
