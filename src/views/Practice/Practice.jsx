@@ -10079,6 +10079,30 @@ const Practice = () => {
             customLetters = currentGetContentForLetterTrain?.customLetters;
           }
 
+          // Get confidentLetters from API response (stored in localStorage) with fallback to config
+          // This applies to all flows (F1, F2, and non-F1)
+          let confidentLettersForLetterTrain =
+            currentGetContentForLetterTrain?.confidentLetters;
+          try {
+            const storedConfidentLetters =
+              localStorage.getItem("confidentLetters");
+            if (storedConfidentLetters) {
+              const parsed = JSON.parse(storedConfidentLetters);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                confidentLettersForLetterTrain = parsed;
+                console.log(
+                  "✅ LetterTrain - Using confidentLetters from API response:",
+                  confidentLettersForLetterTrain
+                );
+              }
+            }
+          } catch (error) {
+            console.warn(
+              "Error reading confidentLetters from localStorage, using config:",
+              error
+            );
+          }
+
           // Only render LetterTrain if we have customLetters (for F1/F2 Learn steps)
           // If customLetters is undefined, it means we're not in a Learn step, so don't render
           console.log("LetterTrain render - Checking customLetters", {
@@ -10198,6 +10222,7 @@ const Practice = () => {
                   vocabCount,
                   wordCount,
                   customLetters: customLetters,
+                  confidentLetters: confidentLettersForLetterTrain,
                 }}
               />
             );
@@ -10277,6 +10302,42 @@ const Practice = () => {
         const applyStep = currentGetContentForF3?.applyStep;
         const failRedirect = currentGetContentForF3?.failRedirect;
         const passRedirect = currentGetContentForF3?.passRedirect;
+
+        // Get confidentLetters from API response (stored in localStorage) with fallback to config
+        // BUT: Only apply confidentLetters for Practice steps, NOT for Apply steps
+        // Apply steps should use normal level-based letters/syllables
+        let confidentLettersForF3 = undefined;
+        if (f3StepType === "P") {
+          // Only for Practice steps: use confidentLetters
+          const confidentLettersFromConfig =
+            currentGetContentForF3?.confidentLetters;
+          confidentLettersForF3 = confidentLettersFromConfig;
+          try {
+            const storedConfidentLetters =
+              localStorage.getItem("confidentLetters");
+            if (storedConfidentLetters) {
+              const parsed = JSON.parse(storedConfidentLetters);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                confidentLettersForF3 = parsed;
+                console.log(
+                  "✅ Using confidentLetters from API response (F3 Practice):",
+                  confidentLettersForF3
+                );
+              }
+            }
+          } catch (error) {
+            console.warn(
+              "Error reading confidentLetters from localStorage, using config:",
+              error
+            );
+          }
+        } else if (f3StepType === "A") {
+          // For Apply steps: don't use confidentLetters (use normal level-based content)
+          confidentLettersForF3 = undefined;
+          console.log(
+            "✅ F3 Apply step - confidentLetters disabled, using normal level-based letters/syllables"
+          );
+        }
         const memoryChallengeLevel =
           currentGetContentForF3?.memoryChallengeLevel;
         const memoryChallengeEndLevel =
@@ -10416,6 +10477,7 @@ const Practice = () => {
             contentCount={letterLauncherContentCount}
             isShowCase={isShowcase}
             sessionId={sessionId}
+            confidentLetters={confidentLettersForF3}
             handleNext={() => {
               // FIRST: Check if there's a redirect request (e.g., from failed level)
               // This takes priority over moving to Memory Challenge
@@ -10625,6 +10687,43 @@ const Practice = () => {
           const failRedirect = currentGetContentForF2?.failRedirect;
           const passRedirect = currentGetContentForF2?.passRedirect;
           const customLettersForF2 = currentGetContentForF2?.customLetters; // Extract customLetters from F2 config (can be words/syllables or letters)
+          const confidentLettersFromConfigF2 =
+            currentGetContentForF2?.confidentLetters; // Extract confidentLetters from F2 config
+
+          // Get confidentLetters from API response (stored in localStorage) with fallback to config
+          // BUT: Only apply confidentLetters for Practice steps, NOT for Apply steps
+          // Apply steps should use normal level-based letters/syllables
+          let confidentLettersForF2 = undefined;
+          if (f2StepType === "P") {
+            // Only for Practice steps: use confidentLetters
+            confidentLettersForF2 = confidentLettersFromConfigF2;
+            try {
+              const storedConfidentLetters =
+                localStorage.getItem("confidentLetters");
+              if (storedConfidentLetters) {
+                const parsed = JSON.parse(storedConfidentLetters);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  confidentLettersForF2 = parsed;
+                  console.log(
+                    "✅ Using confidentLetters from API response (F2 Practice):",
+                    confidentLettersForF2
+                  );
+                }
+              }
+            } catch (error) {
+              console.warn(
+                "Error reading confidentLetters from localStorage, using config:",
+                error
+              );
+            }
+          } else if (f2StepType === "A") {
+            // For Apply steps: don't use confidentLetters (use normal level-based content)
+            confidentLettersForF2 = undefined;
+            console.log(
+              "✅ F2 Apply step - confidentLetters disabled, using normal level-based letters/syllables"
+            );
+          }
+
           const milestoneLevelValue = "B";
           // For Letter Hunt, questions are generated by LetterGame, so use letterHuntContentCount for steps
           const letterHuntSteps =
@@ -10677,6 +10776,7 @@ const Practice = () => {
                 isF2FlowActive, // Pass F2 flow active flag
                 f2FlowStep, // Pass F2 flow step info
                 customLetters: customLettersForF2, // Pass customLetters from F2 config
+                confidentLetters: confidentLettersForF2, // Pass confidentLetters from F2 config
               }}
             />
           );
@@ -10836,6 +10936,43 @@ const Practice = () => {
           const failRedirect = currentGetContentForF1?.failRedirect; // e.g., "L1", "L4", "L7"
           const passRedirect = currentGetContentForF1?.passRedirect; // e.g., "L4", "L7", "F2"
           const customLettersForF1 = currentGetContentForF1?.customLetters; // Extract customLetters from F1 config (can be words/syllables or letters)
+          const confidentLettersFromConfig =
+            currentGetContentForF1?.confidentLetters; // Extract confidentLetters from F1 config
+
+          // Get confidentLetters from API response (stored in localStorage) with fallback to config
+          // BUT: Only apply confidentLetters for Practice steps, NOT for Apply steps
+          // Apply steps should use normal level-based letters/syllables
+          let confidentLettersForF1 = undefined;
+          if (f1StepType === "P") {
+            // Only for Practice steps: use confidentLetters
+            confidentLettersForF1 = confidentLettersFromConfig;
+            try {
+              const storedConfidentLetters =
+                localStorage.getItem("confidentLetters");
+              if (storedConfidentLetters) {
+                const parsed = JSON.parse(storedConfidentLetters);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  confidentLettersForF1 = parsed;
+                  console.log(
+                    "✅ Using confidentLetters from API response (F1 Practice):",
+                    confidentLettersForF1
+                  );
+                }
+              }
+            } catch (error) {
+              console.warn(
+                "Error reading confidentLetters from localStorage, using config:",
+                error
+              );
+            }
+          } else if (f1StepType === "A") {
+            // For Apply steps: don't use confidentLetters (use normal level-based content)
+            confidentLettersForF1 = undefined;
+            console.log(
+              "✅ F1 Apply step - confidentLetters disabled, using normal level-based letters/syllables"
+            );
+          }
+
           // For F1/F2/F3 flows, always use "B" as milestoneLevel
           const milestoneLevelValue = "B";
           // For showcase mode (Apply steps), we still need to pass startLevel and endLevel
@@ -10905,6 +11042,7 @@ const Practice = () => {
                 isF2FlowActive, // Pass F2 flow active flag
                 f2FlowStep, // Pass F2 flow step info
                 customLetters: customLettersForF1, // Pass customLetters from F1 config
+                confidentLetters: confidentLettersForF1, // Pass confidentLetters from F1 config
               }}
             />
           );

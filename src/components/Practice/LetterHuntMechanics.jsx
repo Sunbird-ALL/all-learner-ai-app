@@ -66,6 +66,7 @@ const LetterHuntMechanicsContent = ({
   isF2FlowActive, // Optional: Whether F2 flow is active
   f2FlowStep, // Optional: Current F2 flow step info
   customLetters, // Optional: Custom letters to use for Letter Hunt (from F1/F2 config)
+  confidentLetters, // Optional: Letters user is confident with (appear less frequently)
 }) => {
   // Store the current level being played for failure handling
   const [currentGameLevel, setCurrentGameLevel] = useState(1);
@@ -1281,6 +1282,7 @@ const LetterHuntMechanicsContent = ({
                   onLevel1Failure={() => handleLevelFailure(1)} // Backward compatibility for level 1 only
                   onLevelFailure={handleLevelFailure} // New callback for any level failure (includes level number)
                   customLetters={customLetters} // Pass customLetters from F1 config
+                  confidentLetters={confidentLetters} // Pass confidentLetters from F1/F2 config
                   sub_session_id={assessmentParams.sub_session_id} // Pass sub session ID from telemetry
                   sub_milestone_level={assessmentParams.sub_milestone_level} // Pass "F1" or "F2" based on active flow
                   apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config

@@ -79,6 +79,38 @@ export function LetterLauncherGameCore({
     }
   }, [fuelEarned, isCorrect]);
 
+  // Keyboard navigation: Arrow keys to select options
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle arrow keys when buttons are enabled
+      if (disabled || showFeedback) {
+        return;
+      }
+
+      // Prevent default behavior for arrow keys
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+      }
+
+      // Left arrow = Yes (Check) = true
+      if (event.key === 'ArrowLeft') {
+        onAnswerSelect(true);
+      }
+      // Right arrow = No (X) = false
+      else if (event.key === 'ArrowRight') {
+        onAnswerSelect(false);
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [disabled, showFeedback, onAnswerSelect]);
+
   // Get localized text
   const getLocalizedText = (key: string) => {
     const texts = {
@@ -157,6 +189,10 @@ export function LetterLauncherGameCore({
                 isPreview 
                   ? 'hover:bg-green-500 hover:text-white hover:border-green-500 shadow-sm hover:shadow-md' 
                   : 'bg-white/95 hover:bg-green-500 hover:text-white border-2 border-white/50 hover:border-green-500 shadow-lg hover:shadow-xl'
+              } ${
+                showFeedback && selectedAnswer === true
+                  ? '!border-green-500 !border-[4px] ring-4 ring-green-500/30'
+                  : ''
               }`}
               onClick={() => !disabled && !showFeedback && onAnswerSelect(true)}
               disabled={disabled || showFeedback}
@@ -188,6 +224,10 @@ export function LetterLauncherGameCore({
                 isPreview 
                   ? 'hover:bg-red-500 hover:text-white hover:border-red-500 shadow-sm hover:shadow-md' 
                   : 'bg-white/95 hover:bg-red-500 hover:text-white border-2 border-white/50 hover:border-red-500 shadow-lg hover:shadow-xl'
+              } ${
+                showFeedback && selectedAnswer === false
+                  ? '!border-red-500 !border-[4px] ring-4 ring-red-500/30'
+                  : ''
               }`}
               onClick={() => !disabled && !showFeedback && onAnswerSelect(false)}
               disabled={disabled || showFeedback}
