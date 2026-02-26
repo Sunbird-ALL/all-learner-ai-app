@@ -1,10 +1,8 @@
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "ai.theall.all_rig.twa",
-      "sha256_cert_fingerprints": ["29:2F:27:E1:3E:09:62:A9:6A:DB:5D:6E:BD:59:D0:66:23:D0:72:04:4D:CE:22:7D:10:BB:AA:7E:2F:19:DD:C2"]
-    }
-  }
-]
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "ai.theall.all_rig.twa",
+        "sha256_cert_fingerprints": ["87:68:5C:FF:BB:7D:A3:6E:EC:E2:C9:09:68:D3:D0:42:4A:35:82:BA:ED:55:26:54:17:AA:43:D5:3B:E6:27:D7"]
+      }
+    }]
