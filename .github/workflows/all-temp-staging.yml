@@ -1,9 +1,9 @@
-name: ALL temp rig staging Deployment
+name: ALL temp rig staging Deployment 
 
 on:
   push:
     branches:
-      - all-1.4.0
+      - all-3.0.1-android-app
 
 jobs:
   deploy:
@@ -76,11 +76,12 @@ jobs:
           REACT_APP_PARENT_ORIGIN_URL: ${{ vars.REACT_APP_PARENT_ORIGIN_URL }}
           REACT_APP_SHOW_HELP_VIDEO_LINK: ${{ vars.REACT_APP_SHOW_HELP_VIDEO_LINK }}
           REACT_APP_LEARNER_AI_BASE_URL: ${{ vars.REACT_APP_LEARNER_AI_BASE_URL }}
+          REACT_APP_MAX_LEVEL: ${{ vars.REACT_APP_MAX_LEVEL }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
       - name: Deploy to S3 Bucket
-        run: aws s3 sync ./build s3://sballappliance/
+        run: aws s3 sync ./build s3://sb-all-rig/
 
       - name: Debug Environment Variables
         run: |
