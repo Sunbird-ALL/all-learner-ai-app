@@ -82,8 +82,12 @@ const LetterLauncherMechanicsContent = ({
   const [sessionInitialized, setSessionInitialized] = useState(false);
   const navigate = useNavigate();
 
-  // Preview states - only show preview for level 19
-  const [showPreview, setShowPreview] = useState(true); // Show preview/countdown when first opening game (only for level 19)
+  // Preview states - only show preview for P1 step
+  const isP1Step =
+    isF3FlowActive &&
+    f3FlowStep?.step?.type === "P" &&
+    f3FlowStep?.step?.step === 1;
+  const [showPreview, setShowPreview] = useState(isP1Step); // Show preview/countdown when first opening game (only for P1)
   const [showStoryPreview, setShowStoryPreview] = useState(false); // Show story preview after countdown
   const [level19HasProgress, setLevel19HasProgress] = useState(false);
   const [isLoadingLevel, setIsLoadingLevel] = useState(true);
@@ -91,16 +95,56 @@ const LetterLauncherMechanicsContent = ({
   // Reset currentGameLevel when level prop changes (e.g., when step changes)
   useEffect(() => {
     if (level && level !== currentGameLevel) {
+      // Don't reset if we're in an Apply step with multiple levels and:
+      // 1. We've completed all levels (currentGameLevel >= endLevel), OR
+      // 2. We're advancing levels (currentGameLevel > level)
+      // This prevents resetting when advancing through levels or when moving to Memory Challenge
+      if (isShowCase === true && endLevel) {
+        if (currentGameLevel >= endLevel) {
+          // All levels complete, don't reset - let handleNext handle the transition
+          return;
+        }
+        if (currentGameLevel > level) {
+          // We're advancing levels (e.g., level 20 > starting level 19), don't reset
+          return;
+        }
+      }
       setCurrentGameLevel(level);
-      // Reset preview states when level changes (preview only shows for level 19)
-      if (level !== 19) {
+      // Reset preview states when level changes (preview only shows for P1)
+      const isCurrentlyP1 =
+        isF3FlowActive &&
+        f3FlowStep?.step?.type === "P" &&
+        f3FlowStep?.step?.step === 1;
+      if (!isCurrentlyP1) {
         setShowPreview(false);
         setShowStoryPreview(false);
       } else {
         setShowPreview(true);
       }
     }
-  }, [level, currentGameLevel]);
+  }, [
+    level,
+    currentGameLevel,
+    isF3FlowActive,
+    f3FlowStep,
+    isShowCase,
+    endLevel,
+  ]);
+
+  // Update preview state when F3 flow step changes
+  useEffect(() => {
+    const isCurrentlyP1 =
+      isF3FlowActive &&
+      f3FlowStep?.step?.type === "P" &&
+      f3FlowStep?.step?.step === 1;
+    if (isCurrentlyP1) {
+      setShowPreview(true);
+      setShowStoryPreview(false);
+    } else {
+      setShowPreview(false);
+      setShowStoryPreview(false);
+    }
+  }, [isF3FlowActive, f3FlowStep]);
 
   // Ensure isShowCase is a boolean (handle undefined case)
   const effectiveIsShowCase = isShowCase === true;
@@ -382,9 +426,9 @@ const LetterLauncherMechanicsContent = ({
 
   const assessmentParams = getF3AssessmentParams();
 
-  // Check if level 19 has progress (for preview display)
+  // Check if P1 step has progress (for preview display)
   useEffect(() => {
-    const checkLevel19Progress = async () => {
+    const checkP1Progress = async () => {
       if (!initialLanguage) {
         setIsLoadingLevel(false);
         return;
@@ -398,37 +442,23 @@ const LetterLauncherMechanicsContent = ({
 
       try {
         setIsLoadingLevel(true);
-
-        const gameName = gameKey.split("_")[0];
-        const searchParams = {
-          userId: currentUser.username,
-          courseId: gameName,
-          unitId: initialLanguage,
-        };
-
-        const result = await trackingAssessmentService.searchAssessmentTracking(
-          searchParams
-        );
-
-        if (result.success && result.data && typeof result.data === "object") {
-          const level19Data = result.data["level19"];
-          const level19Percent = level19Data?.metadata?.scorePercentage ?? 0;
-          const level19Completed = level19Data?.metadata?.isCompleted ?? false;
-          const hasLevel19Progress = level19Completed || level19Percent > 0;
-          setLevel19HasProgress(hasLevel19Progress);
-        } else {
-          setLevel19HasProgress(false);
-        }
+        // For P1 step, we can check progress if needed in the future
+        setLevel19HasProgress(false);
       } catch (error) {
-        console.error("Error checking level 19 progress:", error);
+        console.error("Error checking P1 step progress:", error);
         setLevel19HasProgress(false);
       } finally {
         setIsLoadingLevel(false);
       }
     };
 
-    checkLevel19Progress();
-  }, [initialLanguage, gameKey]);
+    // Only check progress if it's P1 step
+    if (isP1Step) {
+      checkP1Progress();
+    } else {
+      setIsLoadingLevel(false);
+    }
+  }, [initialLanguage, gameKey, isP1Step]);
 
   // Preview handlers
   const handleCountdownComplete = () => {
@@ -1336,8 +1366,12 @@ const LetterLauncherMechanicsContent = ({
   }
 
   // Show story preview after countdown (check this first)
-  // Only show for level 19
-  if (showStoryPreview && initialLanguage && currentGameLevel === 19) {
+  // Only show for P1 step
+  const isP1StepForPreview =
+    isF3FlowActive &&
+    f3FlowStep?.step?.type === "P" &&
+    f3FlowStep?.step?.step === 1;
+  if (showStoryPreview && initialLanguage && isP1StepForPreview) {
     console.log(
       "[LetterLauncherMechanics] Rendering story preview, level:",
       currentGameLevel
@@ -1420,12 +1454,12 @@ const LetterLauncherMechanicsContent = ({
   }
 
   // Show countdown when first opening game (before game starts)
-  // Only show if: (currentGameLevel is 19 AND level 19 has no progress)
+  // Only show for P1 step
   const shouldShowCountdown =
     showPreview &&
     initialLanguage &&
     !showStoryPreview &&
-    currentGameLevel === 19 &&
+    isP1StepForPreview &&
     !level19HasProgress;
 
   if (shouldShowCountdown) {
