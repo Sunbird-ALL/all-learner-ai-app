@@ -480,7 +480,6 @@ const LetterLauncherMechanicsContent = ({
   // Reset completion state when step changes (detected by f3FlowStep change)
   useEffect(() => {
     if (isF3FlowActive && f3FlowStep?.step) {
-      // Reset completion state when step changes
       setIsGameComplete(false);
       setLevelFailed(false);
       setCurrentQuestionIndex(0);
@@ -492,7 +491,10 @@ const LetterLauncherMechanicsContent = ({
       setShowLetter(false);
       setFuelEarned(null);
       setQuestionStartTime(null);
-      // Regenerate questions for new step
+      // Reset to the starting level for the new step
+      if (level) {
+        setCurrentGameLevel(level);
+      }
       if (sessionInitialized) {
         const newQuestions = generateQuestions();
         setQuestions(newQuestions);
@@ -604,17 +606,16 @@ const LetterLauncherMechanicsContent = ({
       !isGameComplete &&
       !isTimerRunning
     ) {
-      // Start the timer for Apply steps when game begins
       setIsTimerRunning(true);
       setTimeRemaining(100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     effectiveIsShowCase,
     effectiveStartShowCase,
     sessionInitialized,
     questions.length,
     isGameComplete,
-    isTimerRunning,
   ]);
 
   // Handle timer expiration - wrapped in useCallback to prevent dependency issues
@@ -999,7 +1000,7 @@ const LetterLauncherMechanicsContent = ({
           gameTitle: "Letter Launcher",
           level: currentGameLevel,
           language: initialLanguage,
-          totalQuestions: questionSummaries.length,
+          totalQuestions: contentCount,
           correctAnswers: actualCorrect,
           totalScore: finalFuel,
           timeSpent: timeSpent,
@@ -1107,7 +1108,7 @@ const LetterLauncherMechanicsContent = ({
           gameTitle: "Letter Launcher",
           level: currentGameLevel,
           language: initialLanguage,
-          totalQuestions: questionSummaries.length,
+          totalQuestions: contentCount,
           correctAnswers: actualCorrect,
           totalScore: finalFuel,
           timeSpent: timeSpent,
@@ -1194,7 +1195,7 @@ const LetterLauncherMechanicsContent = ({
           gameTitle: "Letter Launcher",
           level: currentGameLevel,
           language: initialLanguage,
-          totalQuestions: questionSummaries.length,
+          totalQuestions: contentCount,
           correctAnswers: actualCorrect,
           totalScore: finalFuel,
           timeSpent: timeSpent,
