@@ -2981,3 +2981,6 @@ export const మొదలుAudio = "673c3eb9-d7d2-41bd-a493-dc76d745d7e7.wav";
 export const మాటలుAudio = "d9e87544-c93f-4c00-a6f9-cfe951fa7528.wav";
 export const చూడలేదుAudio = "0456a5d0-e645-4bb7-839a-0c0e01d05ec5.wav";
 export const తోలుAudio = "53a752bd-4f2b-431a-abad-b16c3adf4878.wav";
+
+export const గంపAudio = "2hf3h5t-08c8-4d51-b0ab-fhn2944093f2.wav";
+export const గంపImg = "2hf3h5t-08c8-4d51-b0ab-fhn2944093f2.png";
