@@ -81,6 +81,8 @@ const LetterLauncherMechanicsContent = ({
   const [currentGameLevel, setCurrentGameLevel] = useState(level || 1);
   const [isGameComplete, setIsGameComplete] = useState(false);
   const [sessionInitialized, setSessionInitialized] = useState(false);
+  // Track step start time for duration calculation
+  const [stepStartTime, setStepStartTime] = useState(null);
   const navigate = useNavigate();
 
   // Preview states - only show preview for level 19
@@ -444,6 +446,35 @@ const LetterLauncherMechanicsContent = ({
       apply_level,
       // sub_apply_level will be set dynamically based on currentGameLevel
     };
+  };
+
+  // Reset step start time when F3 step changes
+  useEffect(() => {
+    if (isF3FlowActive && f3FlowStep?.index !== undefined) {
+      setStepStartTime(Date.now());
+    }
+  }, [f3FlowStep?.index, isF3FlowActive]);
+
+  // Helper function to get F3 step title
+  const getF3StepTitle = (flowIndex) => {
+    const lang = getLocalData("lang") || "en";
+    const f3Config = levelGetContent[lang]?.["F3"];
+    const stepConfig = f3Config?.[flowIndex];
+    if (stepConfig?.title) {
+      return stepConfig.title;
+    }
+    // Fallback: construct from F3_FLOW
+    const flowStep = F3_FLOW[flowIndex];
+    if (flowStep) {
+      return `${flowStep.type}${flowStep.step}`;
+    }
+    return undefined;
+  };
+
+  // Helper function to calculate duration in seconds
+  const calculateF3Duration = () => {
+    if (!stepStartTime) return undefined;
+    return Math.round((Date.now() - stepStartTime) / 1000); // Duration in seconds
   };
 
   const assessmentParams = getF3AssessmentParams();
@@ -1900,6 +1931,8 @@ const LetterLauncherMechanicsContent = ({
                         language: lang,
                         milestoneLevel: "B",
                         subMilestoneLevel: "F3",
+                        duration: calculateF3Duration(),
+                        applyLevel: getF3StepTitle(updatedF3FlowStep.index),
                       });
                       console.log(
                         "F3 flow progress saved by LetterLauncherMechanics (after step completion):",

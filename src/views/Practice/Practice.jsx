@@ -4382,6 +4382,58 @@ const Practice = () => {
     return savedIndex !== null ? Number(savedIndex) : 0;
   });
 
+  // Track step start time for duration calculation (for Letter Train)
+  const [letterTrainStepStartTime, setLetterTrainStepStartTime] =
+    useState(null);
+
+  // Helper function to get step title from flow index
+  const getStepTitleFromFlowIndex = (flowIndex, flowType) => {
+    const lang = getLocalData("lang") || "en";
+
+    if (flowType === "F1") {
+      const f1Config = levelGetContent[lang]?.["F1"];
+      const stepConfig = f1Config?.[flowIndex];
+      if (stepConfig?.title) {
+        return stepConfig.title;
+      }
+      // Fallback: construct from F1_FLOW
+      const flowStep = F1_FLOW[flowIndex];
+      if (flowStep) {
+        return `${flowStep.type}${flowStep.step}`;
+      }
+    } else if (flowType === "F2") {
+      const f2Config = levelGetContent[lang]?.["F2"];
+      const stepConfig = f2Config?.[flowIndex];
+      if (stepConfig?.title) {
+        return stepConfig.title;
+      }
+      // Fallback: construct from F2_FLOW
+      const flowStep = F2_FLOW[flowIndex];
+      if (flowStep) {
+        return `${flowStep.type}${flowStep.step}`;
+      }
+    }
+    return undefined;
+  };
+
+  // Helper function to calculate duration in seconds
+  const calculateLetterTrainDuration = () => {
+    if (!letterTrainStepStartTime) return undefined;
+    return Math.round((Date.now() - letterTrainStepStartTime) / 1000); // Duration in seconds
+  };
+
+  // Reset step start time when F1/F2 flow step changes (for Letter Train duration tracking)
+  useEffect(() => {
+    const f1Step = getF1FlowStep();
+    const f2Step = getF2FlowStep();
+    const isF1LearnStep = f1Step.step?.type === "L";
+    const isF2LearnStep = f2Step.step?.type === "L";
+
+    if (isF1LearnStep || isF2LearnStep) {
+      setLetterTrainStepStartTime(Date.now());
+    }
+  }, [f1FlowIndexState, f2FlowIndexState, shouldShowF1, shouldShowF2]);
+
   // Sync F1 state with localStorage when it changes externally
   useEffect(() => {
     const checkF1FlowIndex = () => {
@@ -4858,6 +4910,11 @@ const Practice = () => {
               language: lang,
               milestoneLevel: "B",
               subMilestoneLevel: "F2",
+              duration: calculateLetterTrainDuration(),
+              applyLevel: getStepTitleFromFlowIndex(
+                updatedF2FlowStep.index,
+                "F2"
+              ),
             });
           } catch (e) {
             console.error("Error storing F2 flow progress:", e);
@@ -4987,6 +5044,11 @@ const Practice = () => {
             language: lang,
             milestoneLevel: "B",
             subMilestoneLevel: "F1",
+            duration: calculateLetterTrainDuration(),
+            applyLevel: getStepTitleFromFlowIndex(
+              updatedF1FlowStep.index,
+              "F1"
+            ),
           });
           console.log("F1 Learn step progress saved:", {
             completedStepIndex: currentF1FlowStep.index,
@@ -5436,6 +5498,11 @@ const Practice = () => {
               language: lang,
               milestoneLevel: "B", // F1 flow is for milestone level B
               subMilestoneLevel: "F1",
+              duration: calculateLetterTrainDuration(),
+              applyLevel: getStepTitleFromFlowIndex(
+                updatedF1FlowStep.index,
+                "F1"
+              ),
             });
             console.log("F1 flow progress saved (handleNext):", {
               completedStepIndex: currentF1FlowStepBeforeAdvance.index,
@@ -7396,6 +7463,8 @@ const Practice = () => {
           language: lang,
           milestoneLevel: "B",
           subMilestoneLevel: "F1",
+          duration: calculateLetterTrainDuration(),
+          applyLevel: getStepTitleFromFlowIndex(newF1Index, "F1"),
         });
 
         setProgressData(practiceProgress);
