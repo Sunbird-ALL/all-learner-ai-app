@@ -37,6 +37,7 @@ import { getAssetAudioUrl } from "../utils/rFlowS3Links";
 import { ArrowLeft } from "lucide-react"; // or your icon library
 import hintimg from "../assets/hintsicon.svg";
 import ZoomableImage from "../components/Practice/ZoomableImage";
+import { splitGraphemes } from "split-graphemes";
 
 const theme = createTheme();
 
@@ -4080,10 +4081,10 @@ export const dataHi = [
         id: 47,
         title: "Letter",
         letter: "ढ",
-        word: "ढोल",
-        image: getAssetUrl(s3Assets.ढलImg),
-        audio: getAssetAudioUrl(s3Assets.ढलAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.ढलAudio),
+        word: "ढक्कन",
+        image: getAssetUrl(s3Assets.ढक्कनImg),
+        audio: getAssetAudioUrl(s3Assets.ढढक्कनAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ढढक्कनAudio),
       },
       {
         id: 48,
@@ -4309,10 +4310,10 @@ export const dataHi = [
         id: 68,
         title: "Letter",
         letter: "फ",
-        word: "बर्फ",
-        image: getAssetUrl(s3Assets.बरफImg),
-        audio: getAssetAudioUrl(s3Assets.बरफAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.बरफAudio),
+        word: "सफल",
+        image: getAssetUrl(s3Assets.सफलImg),
+        audio: getAssetAudioUrl(s3Assets.सफलAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.सफलAudio),
       },
     ],
   },
@@ -5109,11 +5110,11 @@ export const dataTe = [
         id: 33,
         title: "Letter",
         letter: "ప",
-        word: "పాప",
-        image: getAssetUrl(s3Assets.పపImg),
-        audio: getAssetAudioUrl(s3Assets.పపAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.పపAudio),
-        alaphabetChartAudio: getAssetAudioUrl(s3Assets.పపాపAudio),
+        word: "గంప",
+        image: getAssetUrl(s3Assets.గంపImg),
+        audio: getAssetAudioUrl(s3Assets.గంపAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.గంపAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.గంపAudio),
       },
     ],
   },
@@ -6106,6 +6107,7 @@ const LetterTrain = ({
   vocabCount,
   wordCount,
   customLetters, // Array of letters to filter (e.g., ["a", "m", "s", "t"])
+  confidentLetters, // Optional: Letters user is confident with (appear less frequently)
   //isNextButtonCalled,
   //setIsNextButtonCalled,
 }) => {
@@ -6162,16 +6164,35 @@ const LetterTrain = ({
     });
   }
 
-  const generatePlaylist = (data) => {
+  const generatePlaylist = (data, confidentLettersList = []) => {
     const playlist = [];
+
+    // Normalize confident letters to uppercase for comparison
+    const normalizedConfident = confidentLettersList
+      .map((letter) =>
+        letter && typeof letter === "string" ? letter.toUpperCase() : ""
+      )
+      .filter(Boolean);
 
     for (let i = 0; i < data.length; i += 5) {
       const block = data.slice(i, i + 5);
 
       block.forEach((letterObj) => {
-        // Check if items exists and is an array
         if (letterObj.items && Array.isArray(letterObj.items)) {
-          letterObj.items.forEach((item) => {
+          const letterKey = (
+            letterObj.letter ||
+            letterObj.syllable ||
+            ""
+          ).toUpperCase();
+          const isConfident = normalizedConfident.includes(letterKey);
+
+          // For confident letters: show only first item (reduced frequency)
+          // For non-confident letters: show all items (full practice)
+          const itemsToShow = isConfident
+            ? letterObj.items.slice(0, 1) // Only first item for confident letters
+            : letterObj.items; // All items for non-confident letters
+
+          itemsToShow.forEach((item) => {
             playlist.push({
               type: "UI1",
               item,
@@ -6201,10 +6222,12 @@ const LetterTrain = ({
     return playlist;
   };
 
-  const playlist = generatePlaylist(data);
+  const playlist = generatePlaylist(data, confidentLetters || []);
   console.log("LetterTrain playlist generated:", {
     playlistLength: playlist.length,
     customLetters,
+    confidentLetters,
+    confidentLettersCount: confidentLetters?.length || 0,
     playlistItems: playlist.map((item, idx) => ({
       index: idx,
       type: item.type,
@@ -6463,6 +6486,27 @@ const LetterTrain = ({
 
       const renderHighlightedWord = (word, targetLetter) => {
         if (!word || !targetLetter) return word;
+        if (lang !== "en") {
+          const graphemes = splitGraphemes(word);
+          const graphemeIndex = graphemes.findIndex((g) =>
+            g.includes(targetLetter)
+          );
+          if (graphemeIndex === -1) {
+            return word;
+          }
+          const before = graphemes.slice(0, graphemeIndex).join("");
+          const letter = graphemes[graphemeIndex];
+          const after = graphemes.slice(graphemeIndex + 1).join("");
+          return (
+            <>
+              {before}
+              <span style={{ color: "#FF0000", fontWeight: "bold" }}>
+                {letter}
+              </span>
+              {after}
+            </>
+          );
+        }
 
         const lowerWord = word.toLowerCase();
         const lowerTarget = targetLetter.toLowerCase();

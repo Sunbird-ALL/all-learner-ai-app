@@ -13,7 +13,7 @@ import LetterTrain from "../../RFlow/LetterTrain";
 import R2 from "../../RFlow/R2";
 import F1, { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import F2, { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
-import F3, { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
+import { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
 import Barakhadi from "../../RFlow/Barakhadi";
 import R3Flow from "../../RFlow/R3";
 import R4 from "../../RFlow/R4";
@@ -85,6 +85,8 @@ import {
   getContentNew,
   getFetchMilestoneDetails,
   getSetResultPractice,
+  callEngagementPredictor,
+  clearInteractions,
 } from "../../services/learnerAi/learnerAiService";
 
 const Practice = () => {
@@ -4380,6 +4382,58 @@ const Practice = () => {
     return savedIndex !== null ? Number(savedIndex) : 0;
   });
 
+  // Track step start time for duration calculation (for Letter Train)
+  const [letterTrainStepStartTime, setLetterTrainStepStartTime] =
+    useState(null);
+
+  // Helper function to get step title from flow index
+  const getStepTitleFromFlowIndex = (flowIndex, flowType) => {
+    const lang = getLocalData("lang") || "en";
+
+    if (flowType === "F1") {
+      const f1Config = levelGetContent[lang]?.["F1"];
+      const stepConfig = f1Config?.[flowIndex];
+      if (stepConfig?.title) {
+        return stepConfig.title;
+      }
+      // Fallback: construct from F1_FLOW
+      const flowStep = F1_FLOW[flowIndex];
+      if (flowStep) {
+        return `${flowStep.type}${flowStep.step}`;
+      }
+    } else if (flowType === "F2") {
+      const f2Config = levelGetContent[lang]?.["F2"];
+      const stepConfig = f2Config?.[flowIndex];
+      if (stepConfig?.title) {
+        return stepConfig.title;
+      }
+      // Fallback: construct from F2_FLOW
+      const flowStep = F2_FLOW[flowIndex];
+      if (flowStep) {
+        return `${flowStep.type}${flowStep.step}`;
+      }
+    }
+    return undefined;
+  };
+
+  // Helper function to calculate duration in seconds
+  const calculateLetterTrainDuration = () => {
+    if (!letterTrainStepStartTime) return undefined;
+    return Math.round((Date.now() - letterTrainStepStartTime) / 1000); // Duration in seconds
+  };
+
+  // Reset step start time when F1/F2 flow step changes (for Letter Train duration tracking)
+  useEffect(() => {
+    const f1Step = getF1FlowStep();
+    const f2Step = getF2FlowStep();
+    const isF1LearnStep = f1Step.step?.type === "L";
+    const isF2LearnStep = f2Step.step?.type === "L";
+
+    if (isF1LearnStep || isF2LearnStep) {
+      setLetterTrainStepStartTime(Date.now());
+    }
+  }, [f1FlowIndexState, f2FlowIndexState, shouldShowF1, shouldShowF2]);
+
   // Sync F1 state with localStorage when it changes externally
   useEffect(() => {
     const checkF1FlowIndex = () => {
@@ -4582,8 +4636,21 @@ const Practice = () => {
       return acc;
     }, []);
 
+    const milestoneIndices = [...immediateMilestones, ...deferredMilestones];
+
+    // 🛡️ Clear stale showAlphabetDemo if current index is NOT a milestone
+    // This prevents the chart audio from playing after re-login at a non-milestone step (e.g., P1)
+    if (!milestoneIndices.includes(f1FlowIndexState)) {
+      const staleDemo = getLocalData("showAlphabetDemo");
+      if (staleDemo === "true") {
+        setLocalData("showAlphabetDemo", "false");
+        // 🔇 Tell Assesment.jsx to stop any playing chart audio
+        window.dispatchEvent(new Event("alphabetDemoStop"));
+      }
+      return; // Not at a milestone, no need to set up triggers
+    }
+
     const handleTrigger = (index) => {
-      const milestoneIndices = [...immediateMilestones, ...deferredMilestones];
       if (isF1FlowActive && milestoneIndices.includes(index)) {
         const playedIndicesRaw = getLocalData("playedAlphabetDemoIndices");
         let playedIndices = [];
@@ -4609,12 +4676,14 @@ const Practice = () => {
       }
     };
 
-    // 1. Immediate trigger for non-showcase milestones
+    // 1. Immediate trigger for L1 milestone (index 0)
+    // Trigger directly when this useEffect runs, no need for event
     if (immediateMilestones.includes(f1FlowIndexState)) {
       handleTrigger(f1FlowIndexState);
     }
 
     // 2. Listener for deferred trigger (e.g., from MainLayout "Start Game" button)
+    // Only for showcase milestones A1, A2, A3
     const handleTriggerRequest = () => {
       if (deferredMilestones.includes(f1FlowIndexState)) {
         handleTrigger(f1FlowIndexState);
@@ -4734,7 +4803,14 @@ const Practice = () => {
 
   useEffect(() => {
     if (isShowCase) {
-      setLocalData("sub_session_id", uniqueId());
+      const oldSubSessionId = getLocalData("sub_session_id");
+      const newSubSessionId = uniqueId();
+      setLocalData("sub_session_id", newSubSessionId);
+
+      // Clear interactions for old sub session if it exists
+      if (oldSubSessionId) {
+        clearInteractions(oldSubSessionId);
+      }
     }
   }, [isShowCase]);
 
@@ -4834,6 +4910,11 @@ const Practice = () => {
               language: lang,
               milestoneLevel: "B",
               subMilestoneLevel: "F2",
+              duration: calculateLetterTrainDuration(),
+              applyLevel: getStepTitleFromFlowIndex(
+                updatedF2FlowStep.index,
+                "F2"
+              ),
             });
           } catch (e) {
             console.error("Error storing F2 flow progress:", e);
@@ -4963,6 +5044,11 @@ const Practice = () => {
             language: lang,
             milestoneLevel: "B",
             subMilestoneLevel: "F1",
+            duration: calculateLetterTrainDuration(),
+            applyLevel: getStepTitleFromFlowIndex(
+              updatedF1FlowStep.index,
+              "F1"
+            ),
           });
           console.log("F1 Learn step progress saved:", {
             completedStepIndex: currentF1FlowStep.index,
@@ -5412,6 +5498,11 @@ const Practice = () => {
               language: lang,
               milestoneLevel: "B", // F1 flow is for milestone level B
               subMilestoneLevel: "F1",
+              duration: calculateLetterTrainDuration(),
+              applyLevel: getStepTitleFromFlowIndex(
+                updatedF1FlowStep.index,
+                "F1"
+              ),
             });
             console.log("F1 flow progress saved (handleNext):", {
               completedStepIndex: currentF1FlowStepBeforeAdvance.index,
@@ -6226,6 +6317,10 @@ const Practice = () => {
           });
           const { data: getSetData } = getSetResultRes;
 
+          // Call engagement predictor after getsetresult
+          // Interactions and lesson are automatically retrieved
+          callEngagementPredictor(sub_session_id);
+
           const data = JSON.stringify(getSetData);
           Log(data, "practice", "ET");
           setPercentage(getSetData?.percentage);
@@ -6239,20 +6334,6 @@ const Practice = () => {
           }
           //setLocalData("previous_level", getSetData.data.previous_level);
           setLocalData("previous_level", getSetData.previous_level);
-
-          try {
-            const lang = getLocalData("lang");
-            const getMilestoneDetails = await getFetchMilestoneDetails(lang);
-            setVocabCount(
-              getMilestoneDetails?.data?.extra?.vocabulary_count || 0
-            );
-            setWordCount(
-              getMilestoneDetails?.data?.extra?.latest_towre_data
-                ?.wordsPerMinute || 0
-            );
-          } catch (e) {
-            // catch error
-          }
 
           if (getSetData.sessionResult === "pass") {
             // Skip this block for F1/F2/F3 flows (milestoneLevel "B")
@@ -6365,9 +6446,7 @@ const Practice = () => {
           milestoneLevel === "B" && subMilestoneLevel === "F3";
 
         const shouldSkipAddLesson =
-          (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
-          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
-          isF3FlowByMilestone; // F3 flow always handles its own progress
+          isF1FlowByMilestone || isF2FlowByMilestone || isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
           // Determine milestone type based on the NEXT step (newPracticeStep), not the current step
@@ -6662,9 +6741,7 @@ const Practice = () => {
           milestoneLevel === "B" && subMilestoneLevel === "F3";
 
         const shouldSkipAddLesson =
-          (isF1FlowByMilestone && f1FlowAdvancedByLetterHunt) ||
-          (isF2FlowByMilestone && f2FlowAdvancedByLetterHunt) ||
-          isF3FlowByMilestone; // F3 flow always handles its own progress
+          isF1FlowByMilestone || isF2FlowByMilestone || isF3FlowByMilestone; // F3 flow always handles its own progress
 
         if (!shouldSkipAddLesson) {
           await addLesson({
@@ -6884,23 +6961,23 @@ const Practice = () => {
           // But F3_FLOW array is 0-indexed (0-11), so convert
           const f3FlowIndex = userState > 0 ? userState - 1 : 0;
 
-          if (f3FlowIndex >= 0 && f3FlowIndex < F3_FLOW.length) {
-            console.log(
-              `Restoring F3 flow progress: lesson ${userState} (1-indexed) -> flow index ${f3FlowIndex} (0-indexed) -> ${
-                F3_FLOW[f3FlowIndex]?.type
-              }${F3_FLOW[f3FlowIndex]?.step || ""}`
-            );
-            setLocalData("f3FlowIndex", f3FlowIndex);
-            // IMPORTANT: Update state to trigger re-render with correct flow index
-            setF3FlowIndexState(f3FlowIndex);
-            userState = f3FlowIndex;
-          } else {
-            console.warn(
-              `Invalid F3 flow index ${f3FlowIndex} from lesson ${userState}, starting from beginning`
-            );
-            setLocalData("f3FlowIndex", 0);
-            userState = 0;
-          }
+          // if (f3FlowIndex >= 0 && f3FlowIndex < F3_FLOW.length) {
+          //   console.log(
+          //     `Restoring F3 flow progress: lesson ${userState} (1-indexed) -> flow index ${f3FlowIndex} (0-indexed) -> ${
+          //       F3_FLOW[f3FlowIndex]?.type
+          //     }${F3_FLOW[f3FlowIndex]?.step || ""}`
+          //   );
+          //   setLocalData("f3FlowIndex", f3FlowIndex);
+          //   // IMPORTANT: Update state to trigger re-render with correct flow index
+          //   setF3FlowIndexState(f3FlowIndex);
+          //   userState = f3FlowIndex;
+          // } else {
+          //   console.warn(
+          //     `Invalid F3 flow index ${f3FlowIndex} from lesson ${userState}, starting from beginning`
+          //   );
+          //   setLocalData("f3FlowIndex", 0);
+          //   userState = 0;
+          // }
         }
       }
 
@@ -7386,6 +7463,8 @@ const Practice = () => {
           language: lang,
           milestoneLevel: "B",
           subMilestoneLevel: "F1",
+          duration: calculateLetterTrainDuration(),
+          applyLevel: getStepTitleFromFlowIndex(newF1Index, "F1"),
         });
 
         setProgressData(practiceProgress);
@@ -10069,6 +10148,30 @@ const Practice = () => {
             customLetters = currentGetContentForLetterTrain?.customLetters;
           }
 
+          // Get confidentLetters from API response (stored in localStorage) with fallback to config
+          // This applies to all flows (F1, F2, and non-F1)
+          let confidentLettersForLetterTrain =
+            currentGetContentForLetterTrain?.confidentLetters;
+          try {
+            const storedConfidentLetters =
+              localStorage.getItem("confidentLetters");
+            if (storedConfidentLetters) {
+              const parsed = JSON.parse(storedConfidentLetters);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                confidentLettersForLetterTrain = parsed;
+                console.log(
+                  "✅ LetterTrain - Using confidentLetters from API response:",
+                  confidentLettersForLetterTrain
+                );
+              }
+            }
+          } catch (error) {
+            console.warn(
+              "Error reading confidentLetters from localStorage, using config:",
+              error
+            );
+          }
+
           // Only render LetterTrain if we have customLetters (for F1/F2 Learn steps)
           // If customLetters is undefined, it means we're not in a Learn step, so don't render
           console.log("LetterTrain render - Checking customLetters", {
@@ -10188,6 +10291,7 @@ const Practice = () => {
                   vocabCount,
                   wordCount,
                   customLetters: customLetters,
+                  confidentLetters: confidentLettersForLetterTrain,
                 }}
               />
             );
@@ -10267,6 +10371,42 @@ const Practice = () => {
         const applyStep = currentGetContentForF3?.applyStep;
         const failRedirect = currentGetContentForF3?.failRedirect;
         const passRedirect = currentGetContentForF3?.passRedirect;
+
+        // Get confidentLetters from API response (stored in localStorage) with fallback to config
+        // BUT: Only apply confidentLetters for Practice steps, NOT for Apply steps
+        // Apply steps should use normal level-based letters/syllables
+        let confidentLettersForF3 = undefined;
+        if (f3StepType === "P") {
+          // Only for Practice steps: use confidentLetters
+          const confidentLettersFromConfig =
+            currentGetContentForF3?.confidentLetters;
+          confidentLettersForF3 = confidentLettersFromConfig;
+          try {
+            const storedConfidentLetters =
+              localStorage.getItem("confidentLetters");
+            if (storedConfidentLetters) {
+              const parsed = JSON.parse(storedConfidentLetters);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                confidentLettersForF3 = parsed;
+                console.log(
+                  "✅ Using confidentLetters from API response (F3 Practice):",
+                  confidentLettersForF3
+                );
+              }
+            }
+          } catch (error) {
+            console.warn(
+              "Error reading confidentLetters from localStorage, using config:",
+              error
+            );
+          }
+        } else if (f3StepType === "A") {
+          // For Apply steps: don't use confidentLetters (use normal level-based content)
+          confidentLettersForF3 = undefined;
+          console.log(
+            "✅ F3 Apply step - confidentLetters disabled, using normal level-based letters/syllables"
+          );
+        }
         const memoryChallengeLevel =
           currentGetContentForF3?.memoryChallengeLevel;
         const memoryChallengeEndLevel =
@@ -10406,6 +10546,7 @@ const Practice = () => {
             contentCount={letterLauncherContentCount}
             isShowCase={isShowcase}
             sessionId={sessionId}
+            confidentLetters={confidentLettersForF3}
             handleNext={() => {
               // FIRST: Check if there's a redirect request (e.g., from failed level)
               // This takes priority over moving to Memory Challenge
@@ -10615,6 +10756,43 @@ const Practice = () => {
           const failRedirect = currentGetContentForF2?.failRedirect;
           const passRedirect = currentGetContentForF2?.passRedirect;
           const customLettersForF2 = currentGetContentForF2?.customLetters; // Extract customLetters from F2 config (can be words/syllables or letters)
+          const confidentLettersFromConfigF2 =
+            currentGetContentForF2?.confidentLetters; // Extract confidentLetters from F2 config
+
+          // Get confidentLetters from API response (stored in localStorage) with fallback to config
+          // BUT: Only apply confidentLetters for Practice steps, NOT for Apply steps
+          // Apply steps should use normal level-based letters/syllables
+          let confidentLettersForF2 = undefined;
+          if (f2StepType === "P") {
+            // Only for Practice steps: use confidentLetters
+            confidentLettersForF2 = confidentLettersFromConfigF2;
+            try {
+              const storedConfidentLetters =
+                localStorage.getItem("confidentLetters");
+              if (storedConfidentLetters) {
+                const parsed = JSON.parse(storedConfidentLetters);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  confidentLettersForF2 = parsed;
+                  console.log(
+                    "✅ Using confidentLetters from API response (F2 Practice):",
+                    confidentLettersForF2
+                  );
+                }
+              }
+            } catch (error) {
+              console.warn(
+                "Error reading confidentLetters from localStorage, using config:",
+                error
+              );
+            }
+          } else if (f2StepType === "A") {
+            // For Apply steps: don't use confidentLetters (use normal level-based content)
+            confidentLettersForF2 = undefined;
+            console.log(
+              "✅ F2 Apply step - confidentLetters disabled, using normal level-based letters/syllables"
+            );
+          }
+
           const milestoneLevelValue = "B";
           // For Letter Hunt, questions are generated by LetterGame, so use letterHuntContentCount for steps
           const letterHuntSteps =
@@ -10667,6 +10845,7 @@ const Practice = () => {
                 isF2FlowActive, // Pass F2 flow active flag
                 f2FlowStep, // Pass F2 flow step info
                 customLetters: customLettersForF2, // Pass customLetters from F2 config
+                confidentLetters: confidentLettersForF2, // Pass confidentLetters from F2 config
               }}
             />
           );
@@ -10826,6 +11005,43 @@ const Practice = () => {
           const failRedirect = currentGetContentForF1?.failRedirect; // e.g., "L1", "L4", "L7"
           const passRedirect = currentGetContentForF1?.passRedirect; // e.g., "L4", "L7", "F2"
           const customLettersForF1 = currentGetContentForF1?.customLetters; // Extract customLetters from F1 config (can be words/syllables or letters)
+          const confidentLettersFromConfig =
+            currentGetContentForF1?.confidentLetters; // Extract confidentLetters from F1 config
+
+          // Get confidentLetters from API response (stored in localStorage) with fallback to config
+          // BUT: Only apply confidentLetters for Practice steps, NOT for Apply steps
+          // Apply steps should use normal level-based letters/syllables
+          let confidentLettersForF1 = undefined;
+          if (f1StepType === "P") {
+            // Only for Practice steps: use confidentLetters
+            confidentLettersForF1 = confidentLettersFromConfig;
+            try {
+              const storedConfidentLetters =
+                localStorage.getItem("confidentLetters");
+              if (storedConfidentLetters) {
+                const parsed = JSON.parse(storedConfidentLetters);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  confidentLettersForF1 = parsed;
+                  console.log(
+                    "✅ Using confidentLetters from API response (F1 Practice):",
+                    confidentLettersForF1
+                  );
+                }
+              }
+            } catch (error) {
+              console.warn(
+                "Error reading confidentLetters from localStorage, using config:",
+                error
+              );
+            }
+          } else if (f1StepType === "A") {
+            // For Apply steps: don't use confidentLetters (use normal level-based content)
+            confidentLettersForF1 = undefined;
+            console.log(
+              "✅ F1 Apply step - confidentLetters disabled, using normal level-based letters/syllables"
+            );
+          }
+
           // For F1/F2/F3 flows, always use "B" as milestoneLevel
           const milestoneLevelValue = "B";
           // For showcase mode (Apply steps), we still need to pass startLevel and endLevel
@@ -10895,6 +11111,7 @@ const Practice = () => {
                 isF2FlowActive, // Pass F2 flow active flag
                 f2FlowStep, // Pass F2 flow step info
                 customLetters: customLettersForF1, // Pass customLetters from F1 config
+                confidentLetters: confidentLettersForF1, // Pass confidentLetters from F1 config
               }}
             />
           );

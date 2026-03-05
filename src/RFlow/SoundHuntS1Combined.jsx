@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import {
   updateLearnerProfile,
   getSetResultPractice,
+  callEngagementPredictor,
 } from "../services/learnerAi/learnerAiService";
 import { addLesson } from "../services/orchestration/orchestrationService";
 
@@ -5072,6 +5073,12 @@ const SoundHuntS1Combined = ({
       });
 
       console.log("S1 result:", result);
+
+      // Call engagement predictor after getsetresult
+      // Interactions and lesson are automatically retrieved
+      callEngagementPredictor(sub_session_id);
+
+      setLocalData("previous_level", result?.data?.previous_level);
       setLocalData("s1_complete", true);
       setLocalData("s1_result", JSON.stringify(result));
 

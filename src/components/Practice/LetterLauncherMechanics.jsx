@@ -31,6 +31,11 @@ import {
   memoryGameDataLoader,
 } from "../../lib/axl-explorations/src/lib/index";
 import { trackingAssessmentService } from "../../lib/axl-explorations/src/utils/trackingAssessmentService";
+// Import preview components directly
+import { CountdownTimer } from "../../lib/axl-explorations/src/components/CountdownTimer";
+import { LetterLauncherGameStoryPreview } from "../../lib/axl-explorations/src/components/games/LetterLauncherGameStoryPreview";
+import { Button } from "../../lib/axl-explorations/src/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 // Import preview components directly
 import { CountdownTimer } from "../../lib/axl-explorations/src/components/CountdownTimer";
@@ -76,10 +81,13 @@ const LetterLauncherMechanicsContent = ({
   contentType = "letter", // "letter" or "syllable"
   contentCount = 10,
   sessionId, // Optional: Session ID from parent
+  confidentLetters, // Optional: Letters user is confident with (appear less frequently)
 }) => {
   const [currentGameLevel, setCurrentGameLevel] = useState(level || 1);
   const [isGameComplete, setIsGameComplete] = useState(false);
   const [sessionInitialized, setSessionInitialized] = useState(false);
+  // Track step start time for duration calculation
+  const [stepStartTime, setStepStartTime] = useState(null);
   const navigate = useNavigate();
 
   // Preview states - only show preview for P1 step
@@ -325,23 +333,88 @@ const LetterLauncherMechanicsContent = ({
           : ["at", "an", "in", "on", "am", "it", "up", "en", "ed", "ot"];
     }
 
+    // Build weighted letter array based on confidentLetters
+    const buildWeightedLetterArray = (letters) => {
+      if (
+        !confidentLetters ||
+        confidentLetters.length === 0 ||
+        letters.length === 0
+      ) {
+        return letters;
+      }
+
+      // Normalize confident letters to uppercase
+      const normalizedConfident = confidentLetters
+        .map((letter) =>
+          typeof letter === "string" ? letter.toUpperCase() : ""
+        )
+        .filter(Boolean);
+
+      // Separate letters into confident and non-confident
+      const confident = [];
+      const nonConfident = [];
+
+      letters.forEach((letter) => {
+        const upperLetter = letter.toUpperCase();
+        if (normalizedConfident.includes(upperLetter)) {
+          confident.push(letter);
+        } else {
+          nonConfident.push(letter);
+        }
+      });
+
+      // Build weighted array:
+      // - Confident letters: appear 1 time (reduced frequency)
+      // - Non-confident letters: appear 3 times (increased frequency for practice)
+      const weightedArray = [];
+
+      // Add confident letters once
+      confident.forEach((letter) => {
+        weightedArray.push(letter);
+      });
+
+      // Add non-confident letters multiple times (3x for more practice)
+      for (let i = 0; i < 3; i++) {
+        nonConfident.forEach((letter) => {
+          weightedArray.push(letter);
+        });
+      }
+
+      console.log("Letter Launcher - Weighted array with confident letters:", {
+        totalLetters: letters.length,
+        confidentLetters: confident,
+        nonConfidentLetters: nonConfident,
+        weightedArrayLength: weightedArray.length,
+        confidentCount: confident.length,
+        nonConfidentCount: nonConfident.length * 3,
+      });
+
+      return weightedArray.length > 0 ? weightedArray : letters;
+    };
+
+    // Apply weighted selection
+    const weightedLetters = buildWeightedLetterArray(letters);
+
     console.log("Letter Launcher - Generating questions:", {
       contentCount,
       contentType,
       language: initialLanguage,
       level: currentGameLevel,
       availableLetters: letters.length,
+      weightedLettersCount: weightedLetters.length,
       expectedQuestions: contentCount,
     });
 
     for (let i = 0; i < contentCount; i++) {
-      const audioLetter = letters[Math.floor(Math.random() * letters.length)];
+      // Select from weighted array instead of original letters array
+      const audioLetter =
+        weightedLetters[Math.floor(Math.random() * weightedLetters.length)];
       // Randomly decide if displayed letter matches audio (70% match, 30% mismatch)
       const isMatch = Math.random() > 0.3;
       const displayedLetter = isMatch
         ? audioLetter
-        : letters.filter((l) => l !== audioLetter)[
-            Math.floor(Math.random() * (letters.length - 1))
+        : weightedLetters.filter((l) => l !== audioLetter)[
+            Math.floor(Math.random() * (weightedLetters.length - 1))
           ];
       questions.push({
         audioLetter,
@@ -422,6 +495,35 @@ const LetterLauncherMechanicsContent = ({
       apply_level,
       // sub_apply_level will be set dynamically based on currentGameLevel
     };
+  };
+
+  // Reset step start time when F3 step changes
+  useEffect(() => {
+    if (isF3FlowActive && f3FlowStep?.index !== undefined) {
+      setStepStartTime(Date.now());
+    }
+  }, [f3FlowStep?.index, isF3FlowActive]);
+
+  // Helper function to get F3 step title
+  const getF3StepTitle = (flowIndex) => {
+    const lang = getLocalData("lang") || "en";
+    const f3Config = levelGetContent[lang]?.["F3"];
+    const stepConfig = f3Config?.[flowIndex];
+    if (stepConfig?.title) {
+      return stepConfig.title;
+    }
+    // Fallback: construct from F3_FLOW
+    const flowStep = F3_FLOW[flowIndex];
+    if (flowStep) {
+      return `${flowStep.type}${flowStep.step}`;
+    }
+    return undefined;
+  };
+
+  // Helper function to calculate duration in seconds
+  const calculateF3Duration = () => {
+    if (!stepStartTime) return undefined;
+    return Math.round((Date.now() - stepStartTime) / 1000); // Duration in seconds
   };
 
   const assessmentParams = getF3AssessmentParams();
@@ -1024,6 +1126,21 @@ const LetterLauncherMechanicsContent = ({
           "Letter Launcher assessment tracking created for level:",
           currentGameLevel
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Pass):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -1132,6 +1249,21 @@ const LetterLauncherMechanicsContent = ({
           "Letter Launcher assessment tracking created for failed level:",
           currentGameLevel
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Fail):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -1217,6 +1349,21 @@ const LetterLauncherMechanicsContent = ({
         console.log(
           "Letter Launcher assessment tracking created for Practice step"
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Practice):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -1299,6 +1446,7 @@ const LetterLauncherMechanicsContent = ({
     setLevelStartTime(now);
     setIsTimerRunning(false);
     setTimeRemaining(100);
+    // Don't reset preview states on retry - preview should only show once
     const newQuestions = generateQuestions();
     setQuestions(newQuestions);
 
@@ -1820,6 +1968,8 @@ const LetterLauncherMechanicsContent = ({
                         language: lang,
                         milestoneLevel: "B",
                         subMilestoneLevel: "F3",
+                        duration: calculateF3Duration(),
+                        applyLevel: getF3StepTitle(updatedF3FlowStep.index),
                       });
                       console.log(
                         "F3 flow progress saved by LetterLauncherMechanics (after step completion):",
@@ -1974,27 +2124,6 @@ const LetterLauncherMechanicsContent = ({
               <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
                 Letter Launcher
               </h1>
-              <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-[10px] sm:text-xs mt-0.5">
-                <svg
-                  className="h-3 w-3 sm:h-3.5 sm:w-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-                <span>
-                  {effectiveIsShowCase && endLevel
-                    ? `Level ${currentGameLevel} / ${endLevel}`
-                    : `Level ${currentGameLevel}`}{" "}
-                  • Mission: {missionDestination}
-                </span>
-              </div>
             </div>
 
             {/* Spacer to balance layout */}

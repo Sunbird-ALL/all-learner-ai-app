@@ -50,7 +50,11 @@ import {
   fetchUserPoints,
   createLearnerProgress,
 } from "../../services/orchestration/orchestrationService";
-import { fetchGetSetResult } from "../../services/learnerAi/learnerAiService";
+import {
+  fetchGetSetResult,
+  callEngagementPredictor,
+  clearInteractions,
+} from "../../services/learnerAi/learnerAiService";
 import {
   fetchAssessmentData,
   fetchPaginatedContent,
@@ -133,6 +137,8 @@ const AserFlow = ({
   const [disableScreen, setDisableScreen] = useState(false);
   // const [play] = useSound(LevelCompleteAudio);
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
+  // Track step start time for duration calculation
+  const [stepStartTime] = useState(Date.now());
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
   const [questions, setQuestions] = useState([]);
   // Track character selections for ansSelectionStatus - now an array of objects
@@ -241,7 +247,14 @@ const AserFlow = ({
 
   useEffect(() => {
     if (questions?.length) {
-      setLocalData("sub_session_id", uniqueId());
+      const oldSubSessionId = getLocalData("sub_session_id");
+      const newSubSessionId = uniqueId();
+      setLocalData("sub_session_id", newSubSessionId);
+
+      // Clear interactions for old sub session if it exists
+      if (oldSubSessionId) {
+        clearInteractions(oldSubSessionId);
+      }
     }
   }, [questions]);
 
@@ -327,6 +340,11 @@ const AserFlow = ({
         totalSyllableCount
       );
       const { data } = getSetResultRes;
+
+      // Call engagement predictor after getsetresult
+      // Interactions and lesson are automatically retrieved
+      callEngagementPredictor(sub_session_id);
+
       await addLesson({
         sessionId,
         milestone: `practice`,
@@ -335,6 +353,8 @@ const AserFlow = ({
         language: lang,
         milestoneLevel: data?.currentLevel || "B",
         ...(data?.currentLevel === "B" && { subMilestoneLevel: "F1" }),
+        duration: Math.round((Date.now() - stepStartTime) / 1000),
+        applyLevel: data?.currentLevel === "B" ? "A1" : undefined,
       });
     } catch (error) {
       console.error("Error fetching set result:", error);

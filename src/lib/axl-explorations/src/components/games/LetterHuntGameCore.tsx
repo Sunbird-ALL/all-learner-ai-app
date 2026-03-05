@@ -12,6 +12,7 @@ import { ContinueButton } from "./ContinueButton";
 import { englishAudioManager } from "../../utils/englishAudioManager";
 import { playSuccessSound, attachSlowLoadToast } from "../../utils/audioUtils";
 import { hindiAudioManager } from "../../utils/hindiAudioManager";
+import { getFontFamilyByLang } from "../../../../../utils/fontUtils";
 
 // Core question interface for Letter Hunt
 export interface LetterHuntQuestion {
@@ -108,6 +109,9 @@ export function LetterHuntGameCore({
   const effectiveLanguage = audioLanguageOverride || selectedLanguage;
   const currentQuestion = questions[currentQuestionIndex];
   const [isFeedbackAudioPlaying, setIsFeedbackAudioPlaying] = useState(false);
+  
+  // Get font family based on current language (for Telugu support)
+  const fontFamily = getFontFamilyByLang(effectiveLanguage || selectedLanguage);
   
   // Track active audio instances for stopping playback when needed
   // This allows us to stop all audio (including feedback audio) when user clicks "Next"
@@ -841,7 +845,7 @@ export function LetterHuntGameCore({
                         : isSelected ? "default" : "outline"
                     }
                     size="lg"
-                    className={`h-10 sm:h-12 md:h-14 lg:h-16 xl:h-20 2xl:h-24 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold transition-all duration-200 shadow-sm ${
+                    className={`h-10 sm:h-12 md:h-14 lg:h-16 xl:h-20 2xl:h-24 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl ${effectiveLanguage !== 'te' ? 'font-bold' : 'font-normal'} transition-all duration-200 shadow-sm ${
                       isGreyedOut 
                         ? 'bg-gray-200 text-gray-400 opacity-60 cursor-not-allowed' 
                         : isSelected && !showFeedback
@@ -852,6 +856,7 @@ export function LetterHuntGameCore({
                     } ${
                       mode === 'preview' && !showFeedback && !disabled && !isGreyedOut ? 'hover:scale-105 cursor-pointer' : ''
                     }`}
+                   style={{ fontFamily }} 
                     onClick={() => handleOptionClick(letter)}
                     disabled={showFeedback || disabled || isGreyedOut}
                   >
@@ -870,19 +875,21 @@ export function LetterHuntGameCore({
               <div className="animate-fade-in">
                 {isCorrect ? (
                   <div className="text-success">
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold">
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
                       {selectedLanguage === 'te'
                         ? '🎉 సరైనది!'
                         : selectedLanguage === 'kn'
                         ? '🎉 ಸರಿ!'
                         : selectedLanguage === 'mr'
                         ? '🎉 बरोबर!'
+                        : selectedLanguage === 'hi'
+                        ? '🎉 सही है।'
                         : '🎉 Correct!'}
                     </p>
                   </div>
                 ) : (
                   <div className="text-error">
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold">
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
                       {(() => {
                         // Use heart break emoji if game uses hearts/lives system
                         const emoji = (maxLives && maxLives > 0) ? '💔' : '😢';
@@ -892,6 +899,8 @@ export function LetterHuntGameCore({
                           ? `${emoji} ಅಯ್ಯೋ! ತಪ್ಪು!`
                           : selectedLanguage === 'mr'
                           ? `${emoji} अरेच्या! चुकीचे!`
+                          : selectedLanguage === 'hi'
+                          ? `${emoji} ओह! गलत!`
                           : `${emoji} Oops! Wrong!`;
                       })()}
                     </p>
