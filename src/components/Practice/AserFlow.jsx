@@ -137,6 +137,8 @@ const AserFlow = ({
   const [disableScreen, setDisableScreen] = useState(false);
   // const [play] = useSound(LevelCompleteAudio);
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
+  // Track step start time for duration calculation
+  const [stepStartTime] = useState(Date.now());
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
   const [questions, setQuestions] = useState([]);
   // Track character selections for ansSelectionStatus - now an array of objects
@@ -351,6 +353,8 @@ const AserFlow = ({
         language: lang,
         milestoneLevel: data?.currentLevel || "B",
         ...(data?.currentLevel === "B" && { subMilestoneLevel: "F1" }),
+        duration: Math.round((Date.now() - stepStartTime) / 1000),
+        applyLevel: data?.currentLevel === "B" ? "A1" : undefined,
       });
     } catch (error) {
       console.error("Error fetching set result:", error);
