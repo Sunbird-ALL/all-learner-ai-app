@@ -1163,13 +1163,13 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
   }
 
   return (
-    <div className="h-screen bg-gradient-cool p-2 sm:p-4 overflow-hidden flex flex-col">
+    <div className="h-screen bg-gradient-cool p-0 sm:p-0.5 md:p-1 lg:p-2 xl:p-4 overflow-hidden flex flex-col">
       <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col min-h-0">
         {/* Header */}
-        <div className="flex flex-row items-center justify-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
+        <div className="flex flex-row items-center justify-center mb-0 gap-0 sm:gap-0.5 md:gap-1 flex-shrink-0">
           {/* Back button removed - using justify-center instead of justify-between */}
           <div className="text-center flex-1">
-            <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
+            <h1 className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg font-bold text-white drop-shadow-lg leading-tight">
               Letter Recognition
             </h1>
             {/* <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-sm sm:text-base md:text-lg mt-0.5">
@@ -1194,7 +1194,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         </div>
 
         {/* Main Content Card */}
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
           {/* Game Core Component */}
           <LetterHuntGameCore
             questions={currentDisplayedQuestion ? [currentDisplayedQuestion] : questions}
