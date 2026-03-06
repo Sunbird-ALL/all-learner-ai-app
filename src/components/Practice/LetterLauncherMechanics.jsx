@@ -1112,7 +1112,11 @@ const LetterLauncherMechanicsContent = ({
           sub_session_id: assessmentParams.sub_session_id,
           sub_milestone_level: assessmentParams.sub_milestone_level,
           apply_level: assessmentParams.apply_level,
-          sub_apply_level: effectiveIsShowCase ? currentGameLevel : undefined,
+          sub_apply_level: isF3FlowActive
+              ? currentGameLevel
+              : effectiveIsShowCase
+              ? currentGameLevel
+              : undefined,
           metadata: {
             difficulty: "simple",
             levelFailed: false,
@@ -1235,7 +1239,11 @@ const LetterLauncherMechanicsContent = ({
           sub_session_id: assessmentParams.sub_session_id,
           sub_milestone_level: assessmentParams.sub_milestone_level,
           apply_level: assessmentParams.apply_level,
-          sub_apply_level: effectiveIsShowCase ? currentGameLevel : undefined,
+          sub_apply_level: isF3FlowActive
+              ? currentGameLevel
+              : effectiveIsShowCase
+              ? currentGameLevel
+              : undefined,
           metadata: {
             difficulty: "simple",
             levelFailed: true,
