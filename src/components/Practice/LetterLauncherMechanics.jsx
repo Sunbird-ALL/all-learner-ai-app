@@ -37,6 +37,11 @@ import { LetterLauncherGameStoryPreview } from "../../lib/axl-explorations/src/c
 import { Button } from "../../lib/axl-explorations/src/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
+// Import preview components directly
+import { CountdownTimer } from "../../lib/axl-explorations/src/components/CountdownTimer";
+import { LetterLauncherGameStoryPreview } from "../../lib/axl-explorations/src/components/games/LetterLauncherGameStoryPreview";
+import { Button } from "../../lib/axl-explorations/src/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 /**
  * Wrapper component that integrates axl-explorations ROARRapidVisualGameCore
  * into the Practice.jsx mechanics system for F3 flow Letter Launcher
@@ -85,8 +90,12 @@ const LetterLauncherMechanicsContent = ({
   const [stepStartTime, setStepStartTime] = useState(null);
   const navigate = useNavigate();
 
-  // Preview states - only show preview for level 19
-  const [showPreview, setShowPreview] = useState(true); // Show preview/countdown when first opening game (only for level 19)
+  // Preview states - only show preview for P1 step
+  const isP1Step =
+    isF3FlowActive &&
+    f3FlowStep?.step?.type === "P" &&
+    f3FlowStep?.step?.step === 1;
+  const [showPreview, setShowPreview] = useState(isP1Step); // Show preview/countdown when first opening game (only for P1)
   const [showStoryPreview, setShowStoryPreview] = useState(false); // Show story preview after countdown
   const [level19HasProgress, setLevel19HasProgress] = useState(false);
   const [isLoadingLevel, setIsLoadingLevel] = useState(true);
@@ -94,16 +103,56 @@ const LetterLauncherMechanicsContent = ({
   // Reset currentGameLevel when level prop changes (e.g., when step changes)
   useEffect(() => {
     if (level && level !== currentGameLevel) {
+      // Don't reset if we're in an Apply step with multiple levels and:
+      // 1. We've completed all levels (currentGameLevel >= endLevel), OR
+      // 2. We're advancing levels (currentGameLevel > level)
+      // This prevents resetting when advancing through levels or when moving to Memory Challenge
+      if (isShowCase === true && endLevel) {
+        if (currentGameLevel >= endLevel) {
+          // All levels complete, don't reset - let handleNext handle the transition
+          return;
+        }
+        if (currentGameLevel > level) {
+          // We're advancing levels (e.g., level 20 > starting level 19), don't reset
+          return;
+        }
+      }
       setCurrentGameLevel(level);
-      // Reset preview states when level changes (preview only shows for level 19)
-      if (level !== 19) {
+      // Reset preview states when level changes (preview only shows for P1)
+      const isCurrentlyP1 =
+        isF3FlowActive &&
+        f3FlowStep?.step?.type === "P" &&
+        f3FlowStep?.step?.step === 1;
+      if (!isCurrentlyP1) {
         setShowPreview(false);
         setShowStoryPreview(false);
       } else {
         setShowPreview(true);
       }
     }
-  }, [level, currentGameLevel]);
+  }, [
+    level,
+    currentGameLevel,
+    isF3FlowActive,
+    f3FlowStep,
+    isShowCase,
+    endLevel,
+  ]);
+
+  // Update preview state when F3 flow step changes
+  useEffect(() => {
+    const isCurrentlyP1 =
+      isF3FlowActive &&
+      f3FlowStep?.step?.type === "P" &&
+      f3FlowStep?.step?.step === 1;
+    if (isCurrentlyP1) {
+      setShowPreview(true);
+      setShowStoryPreview(false);
+    } else {
+      setShowPreview(false);
+      setShowStoryPreview(false);
+    }
+  }, [isF3FlowActive, f3FlowStep]);
 
   // Ensure isShowCase is a boolean (handle undefined case)
   const effectiveIsShowCase = isShowCase === true;
@@ -479,9 +528,9 @@ const LetterLauncherMechanicsContent = ({
 
   const assessmentParams = getF3AssessmentParams();
 
-  // Check if level 19 has progress (for preview display)
+  // Check if P1 step has progress (for preview display)
   useEffect(() => {
-    const checkLevel19Progress = async () => {
+    const checkP1Progress = async () => {
       if (!initialLanguage) {
         setIsLoadingLevel(false);
         return;
@@ -495,37 +544,23 @@ const LetterLauncherMechanicsContent = ({
 
       try {
         setIsLoadingLevel(true);
-
-        const gameName = gameKey.split("_")[0];
-        const searchParams = {
-          userId: currentUser.username,
-          courseId: gameName,
-          unitId: initialLanguage,
-        };
-
-        const result = await trackingAssessmentService.searchAssessmentTracking(
-          searchParams
-        );
-
-        if (result.success && result.data && typeof result.data === "object") {
-          const level19Data = result.data["level19"];
-          const level19Percent = level19Data?.metadata?.scorePercentage ?? 0;
-          const level19Completed = level19Data?.metadata?.isCompleted ?? false;
-          const hasLevel19Progress = level19Completed || level19Percent > 0;
-          setLevel19HasProgress(hasLevel19Progress);
-        } else {
-          setLevel19HasProgress(false);
-        }
+        // For P1 step, we can check progress if needed in the future
+        setLevel19HasProgress(false);
       } catch (error) {
-        console.error("Error checking level 19 progress:", error);
+        console.error("Error checking P1 step progress:", error);
         setLevel19HasProgress(false);
       } finally {
         setIsLoadingLevel(false);
       }
     };
 
-    checkLevel19Progress();
-  }, [initialLanguage, gameKey]);
+    // Only check progress if it's P1 step
+    if (isP1Step) {
+      checkP1Progress();
+    } else {
+      setIsLoadingLevel(false);
+    }
+  }, [initialLanguage, gameKey, isP1Step]);
 
   // Preview handlers
   const handleCountdownComplete = () => {
@@ -547,7 +582,6 @@ const LetterLauncherMechanicsContent = ({
   // Reset completion state when step changes (detected by f3FlowStep change)
   useEffect(() => {
     if (isF3FlowActive && f3FlowStep?.step) {
-      // Reset completion state when step changes
       setIsGameComplete(false);
       setLevelFailed(false);
       setCurrentQuestionIndex(0);
@@ -559,7 +593,10 @@ const LetterLauncherMechanicsContent = ({
       setShowLetter(false);
       setFuelEarned(null);
       setQuestionStartTime(null);
-      // Regenerate questions for new step
+      // Reset to the starting level for the new step
+      if (level) {
+        setCurrentGameLevel(level);
+      }
       if (sessionInitialized) {
         const newQuestions = generateQuestions();
         setQuestions(newQuestions);
@@ -671,17 +708,16 @@ const LetterLauncherMechanicsContent = ({
       !isGameComplete &&
       !isTimerRunning
     ) {
-      // Start the timer for Apply steps when game begins
       setIsTimerRunning(true);
       setTimeRemaining(100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     effectiveIsShowCase,
     effectiveStartShowCase,
     sessionInitialized,
     questions.length,
     isGameComplete,
-    isTimerRunning,
   ]);
 
   // Handle timer expiration - wrapped in useCallback to prevent dependency issues
@@ -1060,37 +1096,36 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        const assessmentResponse =
-          await trackingAssessmentService.createAssessmentTracking({
-            userId: currentUser.username,
-            gameKey: `letterLauncher_${initialLanguage}`,
-            gameTitle: "Letter Launcher",
-            level: currentGameLevel,
-            language: initialLanguage,
-            totalQuestions: questionSummaries.length,
-            correctAnswers: actualCorrect,
-            totalScore: finalFuel,
-            timeSpent: timeSpent,
-            assessmentSummary: questionSummaries,
-            sessionId: effectiveSessionId,
-            subsessionId: subsessionId,
-            sub_session_id: assessmentParams.sub_session_id,
-            sub_milestone_level: assessmentParams.sub_milestone_level,
-            apply_level: assessmentParams.apply_level,
-            sub_apply_level: isF3FlowActive
+        await trackingAssessmentService.createAssessmentTracking({
+          userId: currentUser.username,
+          gameKey: `letterLauncher_${initialLanguage}`,
+          gameTitle: "Letter Launcher",
+          level: currentGameLevel,
+          language: initialLanguage,
+          totalQuestions: contentCount,
+          correctAnswers: actualCorrect,
+          totalScore: finalFuel,
+          timeSpent: timeSpent,
+          assessmentSummary: questionSummaries,
+          sessionId: effectiveSessionId,
+          subsessionId: subsessionId,
+          sub_session_id: assessmentParams.sub_session_id,
+          sub_milestone_level: assessmentParams.sub_milestone_level,
+          apply_level: assessmentParams.apply_level,
+          sub_apply_level: isF3FlowActive
               ? currentGameLevel
               : effectiveIsShowCase
               ? currentGameLevel
               : undefined,
-            metadata: {
-              difficulty: "simple",
-              levelFailed: false,
-              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-              fuelEarned: finalFuel,
-              fuelRequired: requiredFuel,
-              missionDestination: missionDestination,
-            },
-          });
+          metadata: {
+            difficulty: "simple",
+            levelFailed: false,
+            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+            fuelEarned: finalFuel,
+            fuelRequired: requiredFuel,
+            missionDestination: missionDestination,
+          },
+        });
         console.log(
           "Letter Launcher assessment tracking created for level:",
           currentGameLevel
@@ -1188,37 +1223,36 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        const assessmentResponse =
-          await trackingAssessmentService.createAssessmentTracking({
-            userId: currentUser.username,
-            gameKey: `letterLauncher_${initialLanguage}`,
-            gameTitle: "Letter Launcher",
-            level: currentGameLevel,
-            language: initialLanguage,
-            totalQuestions: questionSummaries.length,
-            correctAnswers: actualCorrect,
-            totalScore: finalFuel,
-            timeSpent: timeSpent,
-            assessmentSummary: questionSummaries,
-            sessionId: effectiveSessionId,
-            subsessionId: subsessionId,
-            sub_session_id: assessmentParams.sub_session_id,
-            sub_milestone_level: assessmentParams.sub_milestone_level,
-            apply_level: assessmentParams.apply_level,
-            sub_apply_level: isF3FlowActive
+        await trackingAssessmentService.createAssessmentTracking({
+          userId: currentUser.username,
+          gameKey: `letterLauncher_${initialLanguage}`,
+          gameTitle: "Letter Launcher",
+          level: currentGameLevel,
+          language: initialLanguage,
+          totalQuestions: contentCount,
+          correctAnswers: actualCorrect,
+          totalScore: finalFuel,
+          timeSpent: timeSpent,
+          assessmentSummary: questionSummaries,
+          sessionId: effectiveSessionId,
+          subsessionId: subsessionId,
+          sub_session_id: assessmentParams.sub_session_id,
+          sub_milestone_level: assessmentParams.sub_milestone_level,
+          apply_level: assessmentParams.apply_level,
+          sub_apply_level: isF3FlowActive
               ? currentGameLevel
               : effectiveIsShowCase
               ? currentGameLevel
               : undefined,
-            metadata: {
-              difficulty: "simple",
-              levelFailed: true,
-              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-              fuelEarned: finalFuel,
-              fuelRequired: requiredFuel,
-              missionDestination: missionDestination,
-            },
-          });
+          metadata: {
+            difficulty: "simple",
+            levelFailed: true,
+            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+            fuelEarned: finalFuel,
+            fuelRequired: requiredFuel,
+            missionDestination: missionDestination,
+          },
+        });
         console.log(
           "Letter Launcher assessment tracking created for failed level:",
           currentGameLevel
@@ -1295,32 +1329,31 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        const assessmentResponse =
-          await trackingAssessmentService.createAssessmentTracking({
-            userId: currentUser.username,
-            gameKey: `letterLauncher_${initialLanguage}`,
-            gameTitle: "Letter Launcher",
-            level: currentGameLevel,
-            language: initialLanguage,
-            totalQuestions: questionSummaries.length,
-            correctAnswers: actualCorrect,
-            totalScore: finalFuel,
-            timeSpent: timeSpent,
-            assessmentSummary: questionSummaries,
-            sessionId: effectiveSessionId,
-            subsessionId: subsessionId,
-            sub_session_id: assessmentParams.sub_session_id,
-            sub_milestone_level: assessmentParams.sub_milestone_level,
-            apply_level: assessmentParams.apply_level,
-            metadata: {
-              difficulty: "simple",
-              levelFailed: false,
-              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-              fuelEarned: finalFuel,
-              fuelRequired: requiredFuel,
-              missionDestination: missionDestination,
-            },
-          });
+        await trackingAssessmentService.createAssessmentTracking({
+          userId: currentUser.username,
+          gameKey: `letterLauncher_${initialLanguage}`,
+          gameTitle: "Letter Launcher",
+          level: currentGameLevel,
+          language: initialLanguage,
+          totalQuestions: contentCount,
+          correctAnswers: actualCorrect,
+          totalScore: finalFuel,
+          timeSpent: timeSpent,
+          assessmentSummary: questionSummaries,
+          sessionId: effectiveSessionId,
+          subsessionId: subsessionId,
+          sub_session_id: assessmentParams.sub_session_id,
+          sub_milestone_level: assessmentParams.sub_milestone_level,
+          apply_level: assessmentParams.apply_level,
+          metadata: {
+            difficulty: "simple",
+            levelFailed: false,
+            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+            fuelEarned: finalFuel,
+            fuelRequired: requiredFuel,
+            missionDestination: missionDestination,
+          },
+        });
         console.log(
           "Letter Launcher assessment tracking created for Practice step"
         );
@@ -1490,8 +1523,12 @@ const LetterLauncherMechanicsContent = ({
   }
 
   // Show story preview after countdown (check this first)
-  // Only show for level 19
-  if (showStoryPreview && initialLanguage && currentGameLevel === 19) {
+  // Only show for P1 step
+  const isP1StepForPreview =
+    isF3FlowActive &&
+    f3FlowStep?.step?.type === "P" &&
+    f3FlowStep?.step?.step === 1;
+  if (showStoryPreview && initialLanguage && isP1StepForPreview) {
     console.log(
       "[LetterLauncherMechanics] Rendering story preview, level:",
       currentGameLevel
@@ -1574,12 +1611,12 @@ const LetterLauncherMechanicsContent = ({
   }
 
   // Show countdown when first opening game (before game starts)
-  // Only show if: (currentGameLevel is 19 AND level 19 has no progress)
+  // Only show for P1 step
   const shouldShowCountdown =
     showPreview &&
     initialLanguage &&
     !showStoryPreview &&
-    currentGameLevel === 19 &&
+    isP1StepForPreview &&
     !level19HasProgress;
 
   if (shouldShowCountdown) {
