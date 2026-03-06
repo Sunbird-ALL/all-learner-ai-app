@@ -36,12 +36,6 @@ import { CountdownTimer } from "../../lib/axl-explorations/src/components/Countd
 import { LetterLauncherGameStoryPreview } from "../../lib/axl-explorations/src/components/games/LetterLauncherGameStoryPreview";
 import { Button } from "../../lib/axl-explorations/src/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-
-// Import preview components directly
-import { CountdownTimer } from "../../lib/axl-explorations/src/components/CountdownTimer";
-import { LetterLauncherGameStoryPreview } from "../../lib/axl-explorations/src/components/games/LetterLauncherGameStoryPreview";
-import { Button } from "../../lib/axl-explorations/src/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 /**
  * Wrapper component that integrates axl-explorations ROARRapidVisualGameCore
  * into the Practice.jsx mechanics system for F3 flow Letter Launcher
@@ -1096,36 +1090,37 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: contentCount,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          sub_apply_level: isF3FlowActive
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            sub_apply_level: isF3FlowActive
               ? currentGameLevel
               : effectiveIsShowCase
               ? currentGameLevel
               : undefined,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: false,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+            metadata: {
+              difficulty: "simple",
+              levelFailed: false,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for level:",
           currentGameLevel
@@ -1223,36 +1218,37 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: contentCount,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          sub_apply_level: isF3FlowActive
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            sub_apply_level: isF3FlowActive
               ? currentGameLevel
               : effectiveIsShowCase
               ? currentGameLevel
               : undefined,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: true,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+            metadata: {
+              difficulty: "simple",
+              levelFailed: true,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for failed level:",
           currentGameLevel
@@ -1329,31 +1325,32 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: contentCount,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: false,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            metadata: {
+              difficulty: "simple",
+              levelFailed: false,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for Practice step"
         );
