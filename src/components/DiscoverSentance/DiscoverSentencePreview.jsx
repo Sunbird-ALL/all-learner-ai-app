@@ -617,6 +617,10 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         onRetryClick={handleRetryClick}
         onNextClick={handleContinueClick}
         isInstructionPlaying={isInstructionPlaying}
+        showPointer={
+          showPointer && demoPhase !== "countdown" && !isInstructionPlaying
+        }
+        pointerTarget={pointerTarget}
       />
 
       {/* Countdown Timer Overlay - Only during countdown */}
@@ -637,34 +641,6 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
           }}
         >
           <CountdownTimer onComplete={handleCountdownComplete} />
-        </div>
-      )}
-
-      {/* Hand Pointer - Shows for interactive steps */}
-      {showPointer && demoPhase !== "countdown" && !isInstructionPlaying && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "220px",
-            // Buttons are centered as a group: Play (70px) + margin (16px) + Retry (70px) + margin (16px) + Continue (70px) = 242px total
-            // Group center is at 50%, so individual button centers are calculated from group start
-            left:
-              pointerTarget === "play"
-                ? "calc(50% - 120px)" // First button: center of play button
-                : pointerTarget === "retry"
-                ? "50%" // Middle button: exactly at center
-                : pointerTarget === "continue"
-                ? "calc(50% + 86px)" // Third button: center of continue button
-                : "calc(50% - 35px)", // mic or stop button (single centered button, 70px / 2)
-            zIndex: 10000,
-            fontSize: "64px",
-            animation:
-              "pointToButton 1.5s ease-in-out infinite, bounce 1s ease-in-out infinite",
-            pointerEvents: "none",
-            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-          }}
-        >
-          👇
         </div>
       )}
 
@@ -797,7 +773,7 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         <div
           style={{
             position: "absolute",
-            top: "160px",
+            top: "clamp(80px, 12vh, 130px)",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10000,
@@ -866,24 +842,6 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
 
       <style>
         {`
-          @keyframes pointToButton {
-            0%, 100% {
-              transform: rotate(180deg) translateY(0);
-            }
-            50% {
-              transform: rotate(180deg) translateY(-15px);
-            }
-          }
-          
-          @keyframes bounce {
-            0%, 100% {
-              transform: rotate(180deg) scale(1);
-            }
-            50% {
-              transform: rotate(180deg) scale(1.15);
-            }
-          }
-          
           @keyframes fadeInSlideDown {
             from {
               opacity: 0;
