@@ -6027,7 +6027,18 @@ const LetterTrain = ({
   //setIsNextButtonCalled,
 }) => {
   steps = 1;
-  const lang = getLocalData("lang");
+  let lang = getLocalData("lang");
+  // Normalize Kannada language codes: both "kn" and "ka" should work
+  if (lang === "ka") {
+    lang = "kn"; // Normalize to "kn" for consistency, but getFontFamily handles both
+  }
+  // Debug: Log language and font family
+  console.log(
+    "LetterTrain - Language:",
+    lang,
+    "Font Family:",
+    getFontFamily(lang)
+  );
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   let data;
@@ -6051,7 +6062,7 @@ const LetterTrain = ({
     data = dataHi;
   } else if (lang === "te") {
     data = dataTe;
-  } else if (lang === "kn") {
+  } else if (lang === "kn" || lang === "ka") {
     data = dataKn;
   } else {
     data = dataEn; // fallback (English)
@@ -6468,7 +6479,7 @@ const LetterTrain = ({
           TOTAL_ITEMS = 151;
         } else if (lang === "te") {
           TOTAL_ITEMS = 146;
-        } else if (lang === "kn") {
+        } else if (lang === "kn" || lang === "ka") {
           TOTAL_ITEMS = 142;
         } else {
           TOTAL_ITEMS = 100; // fallback default
@@ -6529,7 +6540,7 @@ const LetterTrain = ({
                   border: "2px solid #1CB0F6",
                   borderRadius: "50%",
                   padding: { xs: "4px 8px", sm: "5px 10px", md: "6px 12px" },
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   fontWeight: 700,
                   fontSize: { xs: "11px", sm: "12px", md: "14px" },
                   color: "#000",
@@ -6583,7 +6594,7 @@ const LetterTrain = ({
             >
               <Typography
                 sx={{
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   fontWeight: 700,
                   fontSize: { xs: "14px", sm: "16px", md: "20px" },
                   color: "#FF9800",
@@ -6696,6 +6707,9 @@ const LetterTrain = ({
             >
               <Typography
                 component="div"
+                className={
+                  lang === "kn" || lang === "ka" ? "kannada-font-override" : ""
+                }
                 sx={{
                   color: red,
                   fontWeight: 500,
@@ -6770,6 +6784,9 @@ const LetterTrain = ({
                   letterSpacing: "2%",
                   fontFamily: getFontFamily(lang),
                 }}
+                className={
+                  lang === "kn" || lang === "ka" ? "kannada-font-override" : ""
+                }
               >
                 {renderHighlightedWord(item.word, item.syllable || item.letter)}
               </span>
@@ -6851,7 +6868,7 @@ const LetterTrain = ({
         TOTAL_ITEMS = playlist.length;
       } else {
         if (lang === "en") TOTAL_ITEMS = 101;
-        else if (lang === "kn") TOTAL_ITEMS = 142;
+        else if (lang === "kn" || lang === "ka") TOTAL_ITEMS = 142;
         else if (lang === "hi") TOTAL_ITEMS = 151;
         else if (lang === "te") TOTAL_ITEMS = 146;
         else TOTAL_ITEMS = 100; // fallback
@@ -6934,7 +6951,7 @@ const LetterTrain = ({
                   border: "2px solid #1CB0F6",
                   borderRadius: "50%",
                   padding: "6px 12px",
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   fontWeight: 700,
                   fontSize: "14px",
                   color: "#000",
@@ -7005,8 +7022,13 @@ const LetterTrain = ({
                     fontSize: "50px",
                     lineHeight: "1",
                     letterSpacing: "2%",
-                    fontFamily: "Quicksand",
+                    fontFamily: getFontFamily(lang),
                   }}
+                  className={
+                    lang === "kn" || lang === "ka"
+                      ? "kannada-font-override"
+                      : ""
+                  }
                 >
                   {renderHighlightedWord(
                     item.word,
