@@ -879,7 +879,7 @@ export function LetterHuntGameCore({
                       {selectedLanguage === 'te'
                         ? '🎉 సరైనది!'
                         : selectedLanguage === 'kn'
-                        ? '🎉 ಸರಿ!'
+                        ? '🎉 ಸರಿಯಿದೆ!'
                         : selectedLanguage === 'mr'
                         ? '🎉 बरोबर!'
                         : selectedLanguage === 'hi'

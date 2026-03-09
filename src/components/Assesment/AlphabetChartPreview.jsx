@@ -99,7 +99,7 @@ const demoInstructions = {
     },
   },
   kn: {
-    title: "ಅಕ್ಷರಮಾಲೆ ಚಾರ್ಟ್",
+    title: "ವರ್ಣಮಾಲೆ ಚಾರ್ಟ್‌",
     description: "ಧ್ವನಿಗಳೊಂದಿಗೆ ಅಕ್ಷರಗಳು ಮತ್ತು ಪದಗಳನ್ನು ಕಲಿಯಿರಿ!",
     howToPlay: "ಹೇಗೆ ಬಳಸುವುದು",
     alphabetLabel: "ಅಕ್ಷರಮಾಲೆ",
