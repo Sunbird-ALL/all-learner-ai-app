@@ -475,9 +475,7 @@ const AserFlow = ({
         callTelemetryDiscovery("Discovery-AserFlow");
       }
 
-      setTimeout(() => {
-        setShowSuccessMessage(true);
-      }, 500);
+      setShowSuccessMessage(true);
 
       return;
     }
