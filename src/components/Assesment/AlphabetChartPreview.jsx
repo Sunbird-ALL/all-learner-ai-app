@@ -722,7 +722,24 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
       });
   }, [rawData, activeLang]);
 
-  const data = viewMode === "alphabet" ? alphabetItems : wordItems;
+  const filteredAlphabetItems = useMemo(
+    () =>
+      alphabetItems.filter(
+        (item) => item.display && item.word && item.audio && item.image
+      ),
+    [alphabetItems]
+  );
+
+  const filteredWordItems = useMemo(
+    () =>
+      wordItems.filter(
+        (item) => item.display && item.word && item.audio && item.image
+      ),
+    [wordItems]
+  );
+
+  const data =
+    viewMode === "alphabet" ? filteredAlphabetItems : filteredWordItems;
   const currentItems = data.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
@@ -898,16 +915,32 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     setHighlightedCardIndex(0);
 
     if (newMode === "word" && waitingForToggle) {
-      // User switched to syllable mode as instructed
       setWaitingForToggle(false);
-      // Narration is handled by useEffect when viewMode changes
+      // If no syllable data, skip syllable phase and go to completion
+      if (filteredWordItems.length === 0) {
+        setTimeout(() => {
+          setPreviewPhase("completion");
+        }, 500);
+      }
     }
   };
 
   // Handle countdown complete
   const handleCountdownComplete = () => {
+    // If no data at all, skip demo entirely
+    if (filteredAlphabetItems.length === 0 && filteredWordItems.length === 0) {
+      stopAllLocalAudio();
+      onStartExploring();
+      return;
+    }
+    // If no alphabet data, jump straight to syllable phase
+    if (filteredAlphabetItems.length === 0) {
+      setAlphabetPhaseComplete(true);
+      setViewMode("word");
+      setCurrentPage(0);
+      setHighlightedCardIndex(0);
+    }
     setPreviewPhase("demo");
-    // Narration is now handled by the useEffect that tracks instruction changes
   };
 
   const stopAllLocalAudio = () => {
@@ -1377,38 +1410,74 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
             </motion.div>
 
             {/* Demo Cards Grid */}
-            <Grid container spacing={2} sx={{ maxWidth: "800px", mx: "auto" }}>
-              <AnimatePresence mode="wait">
-                {currentItems.slice(0, 4).map((item, index) => (
-                  <Grid item xs={6} sm={3} key={item.key}>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9, y: -20 }}
-                      transition={{ duration: 0.25, delay: index * 0.05 }}
-                    >
-                      <DemoAlphabetCard
-                        item={item}
-                        playAudio={playAudio}
-                        isActive={activeCardKey === item.key}
-                        mode={viewMode}
-                        isHighlighted={
-                          index === highlightedCardIndex && !waitingForToggle
-                        }
-                        showHandPointer={
-                          index === highlightedCardIndex &&
-                          !waitingForToggle &&
-                          !isPlayingNarration &&
-                          ((viewMode === "alphabet" &&
-                            alphabetClickCount < 3) ||
-                            (viewMode === "word" && syllableClickCount < 3))
-                        }
-                      />
-                    </motion.div>
-                  </Grid>
-                ))}
-              </AnimatePresence>
-            </Grid>
+            {currentItems.length === 0 ? (
+              <Box
+                sx={{
+                  textAlign: "center",
+                  py: 6,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <Typography sx={{ color: "#64748b", fontSize: "1rem" }}>
+                  No cards available for this section.
+                </Typography>
+                <Button
+                  variant="contained"
+                  startIcon={<SportsEsportsIcon />}
+                  onClick={handleStartExploring}
+                  sx={{
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: "50px",
+                    background:
+                      "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
+                    fontWeight: 600,
+                  }}
+                >
+                  {instructions.startButton}
+                </Button>
+              </Box>
+            ) : (
+              <Grid
+                container
+                spacing={2}
+                sx={{ maxWidth: "800px", mx: "auto" }}
+              >
+                <AnimatePresence mode="wait">
+                  {currentItems.slice(0, 4).map((item, index) => (
+                    <Grid item xs={6} sm={3} key={item.key}>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                        transition={{ duration: 0.25, delay: index * 0.05 }}
+                      >
+                        <DemoAlphabetCard
+                          item={item}
+                          playAudio={playAudio}
+                          isActive={activeCardKey === item.key}
+                          mode={viewMode}
+                          isHighlighted={
+                            index === highlightedCardIndex && !waitingForToggle
+                          }
+                          showHandPointer={
+                            index === highlightedCardIndex &&
+                            !waitingForToggle &&
+                            !isPlayingNarration &&
+                            ((viewMode === "alphabet" &&
+                              alphabetClickCount < 3) ||
+                              (viewMode === "word" && syllableClickCount < 3))
+                          }
+                        />
+                      </motion.div>
+                    </Grid>
+                  ))}
+                </AnimatePresence>
+              </Grid>
+            )}
 
             {/* Click counters */}
             <Box
