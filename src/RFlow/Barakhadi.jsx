@@ -3433,6 +3433,137 @@ export const TeluguGunithas = [
   },
 ];
 
+export const KannadaGunithas = [
+  {
+    audio: "ka-talekattu.wav",
+    image: "ka1.png",
+  },
+  {
+    audio: "kakke-ili-kaa.wav",
+    image: "kaa2.png",
+  },
+  {
+    audio: "ka-kke-gudisu-ki.wav",
+    image: "ki-1.png",
+  },
+  {
+    audio: "ka-kke-gudisina-deergha-kii.wav",
+    image: "KII2.png",
+  },
+  {
+    audio: "ka-kombu-ku.wav",
+    image: "ku1.png",
+  },
+  {
+    audio: "ka-kombinili-kuu-final.wav",
+    image: "ku2.png",
+  },
+  {
+    audio: "kakke-vatrusuli-kru.wav",
+    image: "kru.png",
+  },
+  {
+    audio: "ka-ethva-ke.wav",
+    image: "ke-1.png",
+  },
+  {
+    audio: "k-ethva-deergha-ee.wav",
+    image: "ke2.png",
+  },
+  {
+    audio: "ka-aithva-kai.wav",
+    image: "kai.png",
+  },
+  {
+    audio: "ka-otva-ko-final.wav",
+    image: "ko1.png",
+  },
+  {
+    audio: "ka-otva-deergha-koo-final.wav",
+    image: "ko2.png",
+  },
+  {
+    audio: "ka-autva-kau.wav",
+    image: "kau.png",
+  },
+  {
+    audio: "Ka-anuwvara-kam.wav",
+    image: "kam.png",
+  },
+  {
+    audio: "ka-visarga-kaha.wav",
+    image: "kaha.png",
+  },
+  {
+    audio: "ja-gudisu-ji.wav",
+    image: "ji.png",
+  },
+  {
+    audio: "ja-gudisi-deergha-jii-fibal.wav",
+    image: "ji2.png",
+  },
+  {
+    audio: "ja-etva-je.wav",
+    image: "je1.png",
+  },
+  {
+    audio: "ja-ethva-deergha-jee.wav",
+    image: "je2.png",
+  },
+  {
+    audio: "Ta-gudisu-Ti.wav",
+    image: "TI1.png",
+  },
+  {
+    audio: "Da-gudisu-Di.wav",
+    image: "di1.png",
+  },
+  {
+    audio: "pa-gudisu-pi.wav",
+    image: "pi-1.png",
+  },
+  {
+    audio: "ma-otva-mo.wav",
+    image: "mo1.png",
+  },
+  {
+    audio: "ma-otva-deergha-moo.wav",
+    image: "mo2.png",
+  },
+  {
+    audio: "ma-autva-mau.wav",
+    image: "mau.png",
+  },
+  {
+    audio: "ya-gudisu-yi.wav",
+    image: "yi-1.png",
+  },
+  {
+    audio: "ya-gudisina-deergha-yii.wav",
+    image: "yi2.png",
+  },
+  {
+    audio: "ya-authva-yau.wav",
+    image: "yav.png",
+  },
+  {
+    audio: "va-kke-kombu-vu.wav",
+    image: "vu.png",
+  },
+  {
+    audio: "va-kombiniLi-voo.wav",
+    image: "vu2.png",
+  },
+  {
+    audio: "Va-otva-VO.wav",
+    image: "vo1.png",
+  },
+  {
+    audio: "Va-otva-deergha-Voo.wav",
+    image: "vo2.png",
+  },
+];
+
 function getScriptFromLang(lang) {
   const scriptMap = {
     hi: "devanagari",

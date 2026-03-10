@@ -20,7 +20,11 @@ import {
   dataKn as letterDataKn,
 } from "../../RFlow/LetterTrain";
 
-import { wordData, TeluguGunithas } from "../../RFlow/Barakhadi";
+import {
+  wordData,
+  TeluguGunithas,
+  KannadaGunithas,
+} from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
 import { motion, AnimatePresence } from "framer-motion";
 import { getFontFamily } from "../../utils/fontUtils";
@@ -402,18 +406,26 @@ const AlphabetChart = ({ open, onClose, lang }) => {
   }, [rawData, activeLang]);
 
   const wordItems = useMemo(() => {
-    const gunithaItems =
+    const gunithaSource =
       activeLang === "te"
-        ? TeluguGunithas.map((g, idx) => ({
-            key: `te-gunitha-${idx}`,
+        ? TeluguGunithas
+        : activeLang === "kn"
+        ? KannadaGunithas
+        : null;
+
+    const gunithaItems = gunithaSource
+      ? gunithaSource
+          .map((g, idx) => ({
+            key: `${activeLang}-gunitha-${idx}`,
             display: "",
             word: "",
             label: g.audio ? g.audio.replace(/\.wav$/i, "") : "",
             image: getAssetUrl(g.image) || "",
             audio: g.audio ? getAssetAudioUrl(g.audio) : "",
             isGunitha: true,
-          })).filter((item) => item.image && item.audio)
-        : [];
+          }))
+          .filter((item) => item.image && item.audio)
+      : [];
 
     if (activeLang !== "en" && wordData[activeLang]) {
       const syllableItems = wordData[activeLang]
