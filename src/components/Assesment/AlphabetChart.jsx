@@ -285,6 +285,125 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
   );
 };
 
+const TELUGU_ORDER = [
+  "అ",
+  "ఆ",
+  "ఇ",
+  "ఈ",
+  "ఉ",
+  "ఊ",
+  "ఋ",
+  "ౠ",
+  "ఎ",
+  "ఏ",
+  "ఐ",
+  "ఒ",
+  "ఓ",
+  "ఔ",
+  "అం",
+  "అః",
+  "క",
+  "ఖ",
+  "గ",
+  "ఘ",
+  "ఙ",
+  "చ",
+  "ఛ",
+  "జ",
+  "ఝ",
+  "ఞ",
+  "ట",
+  "ఠ",
+  "డ",
+  "ఢ",
+  "ణ",
+  "త",
+  "థ",
+  "ద",
+  "ధ",
+  "న",
+  "ప",
+  "ఫ",
+  "బ",
+  "భ",
+  "మ",
+  "య",
+  "ర",
+  "ల",
+  "వ",
+  "శ",
+  "ష",
+  "స",
+  "హ",
+  "ళ",
+  "క్ష",
+  "ఱ",
+];
+
+const KANNADA_ORDER = [
+  "ಅ",
+  "ಆ",
+  "ಇ",
+  "ಈ",
+  "ಉ",
+  "ಊ",
+  "ಋ",
+  "ಎ",
+  "ಏ",
+  "ಐ",
+  "ಒ",
+  "ಓ",
+  "ಔ",
+  "ಅಂ",
+  "ಅಃ",
+  "ಕ",
+  "ಖ",
+  "ಗ",
+  "ಘ",
+  "ಙ",
+  "ಚ",
+  "ಛ",
+  "ಜ",
+  "ಝ",
+  "ಞ",
+  "ಟ",
+  "ಠ",
+  "ಡ",
+  "ಢ",
+  "ಣ",
+  "ತ",
+  "ಥ",
+  "ದ",
+  "ಧ",
+  "ನ",
+  "ಪ",
+  "ಫ",
+  "ಬ",
+  "ಭ",
+  "ಮ",
+  "ಯ",
+  "ರ",
+  "ಲ",
+  "ವ",
+  "ಶ",
+  "ಷ",
+  "ಸ",
+  "ಹ",
+  "ಳ",
+  "ಕ್ಷ",
+  "ಜ್ಞ",
+];
+
+const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
+  acc[letter] = index;
+  return acc;
+}, {});
+
+const KANNADA_ORDER_MAP = KANNADA_ORDER.reduce((acc, letter, index) => {
+  acc[letter] = index;
+  return acc;
+}, {});
+
 const AlphabetChart = ({ open, onClose, lang }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [playingKey, setPlayingKey] = useState(null);
@@ -317,66 +436,6 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     return []; // Return empty array for unsupported languages (like "ta")
   }, [lang]);
 
-  const TELUGU_ORDER = [
-    "అ",
-    "ఆ",
-    "ఇ",
-    "ఈ",
-    "ఉ",
-    "ఊ",
-    "ఋ",
-    "ౠ",
-    "ఎ",
-    "ఏ",
-    "ఐ",
-    "ఒ",
-    "ఓ",
-    "ఔ",
-    "అం",
-    "అః",
-    "క",
-    "ఖ",
-    "గ",
-    "ఘ",
-    "ఙ",
-    "చ",
-    "ఛ",
-    "జ",
-    "ఝ",
-    "ఞ",
-    "ట",
-    "ఠ",
-    "డ",
-    "ఢ",
-    "ణ",
-    "త",
-    "థ",
-    "ద",
-    "ధ",
-    "న",
-    "ప",
-    "ఫ",
-    "బ",
-    "భ",
-    "మ",
-    "య",
-    "ర",
-    "ల",
-    "వ",
-    "శ",
-    "ష",
-    "స",
-    "హ",
-    "ళ",
-    "క్ష",
-    "ఱ",
-  ];
-
-  const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
-    acc[letter] = index;
-    return acc;
-  }, {});
-
   const alphabetItems = useMemo(() => {
     return rawData
       .filter((group) => "letter" in group && group.letter)
@@ -397,6 +456,13 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         if (activeLang === "te") {
           const aIndex = TELUGU_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
           const bIndex = TELUGU_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
+          return aIndex - bIndex;
+        }
+        if (activeLang === "kn") {
+          const aIndex =
+            KANNADA_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
+          const bIndex =
+            KANNADA_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
           return aIndex - bIndex;
         }
 

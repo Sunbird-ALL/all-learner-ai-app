@@ -850,7 +850,8 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
         if (viewMode === "alphabet") {
           const newCount = alphabetClickCount + 1;
           setAlphabetClickCount(newCount);
-          setHighlightedCardIndex((prev) => (prev + 1) % 4);
+          const an = currentItems.length;
+          if (an > 0) setHighlightedCardIndex((prev) => (prev + 1) % an);
 
           if (newCount >= 3 && !alphabetPhaseComplete) {
             // Alphabet phase complete, prompt to switch to syllable
@@ -863,7 +864,8 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
           // Syllable mode
           const newCount = syllableClickCount + 1;
           setSyllableClickCount(newCount);
-          setHighlightedCardIndex((prev) => (prev + 1) % 4);
+          const wn = currentItems.length;
+          if (wn > 0) setHighlightedCardIndex((prev) => (prev + 1) % wn);
 
           if (newCount >= 3) {
             // Demo complete!
@@ -1044,6 +1046,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
   // Auto-play TTS when instruction changes during demo phase
   useEffect(() => {
     if (!open || previewPhase !== "demo") {
+      stopAllLocalAudio();
       lastPlayedNarrationRef.current = null;
       return;
     }

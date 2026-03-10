@@ -3457,6 +3457,81 @@ export const dataKn = [
       },
     ],
   },
+  {
+    letter: "ಅಃ",
+    items: [
+      {
+        id: 103,
+        title: "Letter",
+        letter: "ಅಃ",
+        word: "ಅಃ",
+        image: getAssetUrl(s3Assets.ಅImg),
+        audio: getAssetAudioUrl(s3Assets.ಅAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ಅAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ಅAudio),
+      },
+    ],
+  },
+  {
+    letter: "ಙ",
+    items: [
+      {
+        id: 104,
+        title: "Letter",
+        letter: "ಙ",
+        word: "ಙ",
+        image: getAssetUrl(s3Assets.ಙImg),
+        audio: getAssetAudioUrl(s3Assets.ಙAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ಙAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ಙAudio),
+      },
+    ],
+  },
+  {
+    letter: "ಞ",
+    items: [
+      {
+        id: 105,
+        title: "Letter",
+        letter: "ಞ",
+        word: "ಞ",
+        image: getAssetUrl(s3Assets.ಞImg),
+        audio: getAssetAudioUrl(s3Assets.ಞAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ಞAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ಞAudio),
+      },
+    ],
+  },
+  {
+    letter: "ಕ್ಷ",
+    items: [
+      {
+        id: 106,
+        title: "Letter",
+        letter: "ಕ್ಷ",
+        word: "ಕ್ಷ",
+        image: getAssetUrl(s3Assets.ಕಷImg),
+        audio: getAssetAudioUrl(s3Assets.ಕಷAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ಕಷAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ಕಷAudio),
+      },
+    ],
+  },
+  {
+    letter: "ಜ್ಞ",
+    items: [
+      {
+        id: 107,
+        title: "Letter",
+        letter: "ಜ್ಞ",
+        word: "ಜ್ಞ",
+        image: getAssetUrl(s3Assets.ಜಞImg),
+        audio: getAssetAudioUrl(s3Assets.ಜಞAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ಜಞAudio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ಜಞAudio),
+      },
+    ],
+  },
 ];
 
 export const dataHi = [
