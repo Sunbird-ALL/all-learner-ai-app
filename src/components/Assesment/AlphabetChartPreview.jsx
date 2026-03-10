@@ -917,18 +917,23 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     speechSynthesis.cancel();
     setIsPlayingNarration(false);
 
+    if (
+      newMode === "word" &&
+      waitingForToggle &&
+      filteredWordItems.length === 0
+    ) {
+      setWaitingForToggle(false);
+      setCurrentStepIndex(2);
+      setPreviewPhase("completion");
+      return;
+    }
+
     setViewMode(newMode);
     setCurrentPage(0);
     setHighlightedCardIndex(0);
 
     if (newMode === "word" && waitingForToggle) {
       setWaitingForToggle(false);
-      // If no syllable data, skip syllable phase and go to completion
-      if (filteredWordItems.length === 0) {
-        setTimeout(() => {
-          setPreviewPhase("completion");
-        }, 500);
-      }
     }
   };
 
