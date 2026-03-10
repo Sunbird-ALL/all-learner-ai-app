@@ -1037,7 +1037,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
 
   // Auto-play TTS when instruction changes during demo phase
   useEffect(() => {
-    if (previewPhase !== "demo") {
+    if (!open || previewPhase !== "demo") {
       lastPlayedNarrationRef.current = null;
       return;
     }
@@ -1061,12 +1061,12 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    open,
     previewPhase,
     viewMode,
     alphabetClickCount,
     syllableClickCount,
     waitingForToggle,
-    instructions,
   ]);
 
   if (!open) return null;
