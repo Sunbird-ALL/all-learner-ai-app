@@ -236,7 +236,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     // Build weighted letter array based on confidentLetters
     const buildWeightedLetterArray = (letters: string[]): string[] => {
       if (!confidentLetters || confidentLetters.length === 0 || letters.length === 0) {
-        return letters;
+        return [...letters,...letters];
       }
       
       // Normalize confident letters to uppercase
