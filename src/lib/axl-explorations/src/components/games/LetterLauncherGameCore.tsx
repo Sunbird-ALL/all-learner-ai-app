@@ -123,7 +123,7 @@ export function LetterLauncherGameCore({
       correctMessage: {
         en: '🎉 Correct!',
         te: '🎉 సరైనది!',
-        kn: '🎉 ಸರಿ!',
+        kn: '🎉 ಸರಿಯಿದೆ!',
         mr: '🎉 बरोबर!'
       },
       wrongMessage: {
