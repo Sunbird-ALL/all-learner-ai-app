@@ -137,10 +137,13 @@ const AserFlow = ({
   const [disableScreen, setDisableScreen] = useState(false);
   // const [play] = useSound(LevelCompleteAudio);
   const [totalSyllableCount, setTotalSyllableCount] = useState("");
+  // Track step start time for duration calculation
+  const [stepStartTime] = useState(Date.now());
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
   const [questions, setQuestions] = useState([]);
   // Track character selections for ansSelectionStatus - now an array of objects
   const [ansSelectionStatus, setAnsSelectionStatus] = useState([]);
+  const ansSelectionStatusRef = useRef([]);
   const lang = getLocalData("lang");
   const virtualId = getLocalData("virtualId");
   const [clickedIndex, setClickedIndex] = useState(null);
@@ -261,6 +264,15 @@ const AserFlow = ({
 
   const questionLetters = questions.map((q) => q.contentSourceData[0].text);
 
+  const stopCurrentAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
+    }
+    setIsAudioPlaying(false);
+  };
+
   const handlePlayAudio = () => {
     // If in demo mode and custom handler provided, call it (in addition to normal flow)
     if (isDemo && onSpeakerClick) {
@@ -270,32 +282,20 @@ const AserFlow = ({
     // Only play audio if contentId exists and is not a fake item
     if (currentItem?.contentId && !currentItem?.isFake) {
       try {
+        stopCurrentAudio();
         const audio = new Audio(
           `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentItem.contentId}.wav`
         );
+        audioRef.current = audio;
         setIsAudioPlaying(true);
 
-        // Handle audio events
-        audio.onended = () => {
-          setIsAudioPlaying(false);
-        };
-
-        audio.onerror = (error) => {
-          console.error("Error loading audio:", error);
-          setIsAudioPlaying(false);
-        };
-
-        audio.play().catch((error) => {
-          console.error("Error playing audio:", error);
-          setIsAudioPlaying(false);
-        });
+        audio.onended = () => setIsAudioPlaying(false);
+        audio.onerror = () => setIsAudioPlaying(false);
+        audio.play().catch(() => setIsAudioPlaying(false));
       } catch (error) {
-        console.error("Error creating audio:", error);
+        console.error("Error playing audio:", error);
         setIsAudioPlaying(false);
       }
-    } else {
-      // If no valid audio, just set playing to false
-      setIsAudioPlaying(false);
     }
   };
 
@@ -322,7 +322,7 @@ const AserFlow = ({
         contentType: "Char",
         mechanics_id: getLocalData("mechanism_id") || "",
         milestone: milestoneLevel,
-        ansSelectionStatus: ansSelectionStatus,
+        ansSelectionStatus: ansSelectionStatusRef.current,
       };
 
       const result = await updateLearnerProfile(lang, requestBody);
@@ -351,6 +351,8 @@ const AserFlow = ({
         language: lang,
         milestoneLevel: data?.currentLevel || "B",
         ...(data?.currentLevel === "B" && { subMilestoneLevel: "F1" }),
+        duration: Math.round((Date.now() - stepStartTime) / 1000),
+        applyLevel: data?.currentLevel === "B" ? "A1" : undefined,
       });
     } catch (error) {
       console.error("Error fetching set result:", error);
@@ -393,50 +395,34 @@ const AserFlow = ({
   };
 
   const handleBubbleClick = (letter, index) => {
+    stopCurrentAudio();
     setClickedIndex(index);
-    setIsAudioPlaying(false);
-    setTimeout(() => setClickedIndex(null), 1000);
 
     setSelectedLetter(letter);
     const correct = letter === correctLetter;
     setIsCorrect(correct);
     setShowNext(true);
 
-    setAnsSelectionStatus((prev) => {
-      const newEntry = {
-        text: letter,
-        status: correct,
-        gameType: "letter-hunt",
-      };
-      return [...prev, newEntry];
-    });
+    const newEntry = {
+      text: letter,
+      status: correct,
+      gameType: "letter-hunt",
+    };
+    ansSelectionStatusRef.current = [
+      ...ansSelectionStatusRef.current,
+      newEntry,
+    ];
+    setAnsSelectionStatus(ansSelectionStatusRef.current);
 
     if (correct) correctAudio.play();
     else wrongAudio.play();
 
-    // If in demo mode and custom handler provided, call it (in addition to normal flow)
-    // Pass whether the answer was correct
     if (isDemo && onBubbleClick) {
       onBubbleClick(letter, index, correct);
-
-      // In demo mode, if answer is correct, don't proceed to next question
-      // Let the preview component handle the completion screen
-      if (correct) {
-        return; // Stop here, don't call handleNextClick
-      }
+      if (correct) return;
     }
 
-    // Always proceed to next question (unless in blocked demo mode with wrong answer)
-    if (!blockProgression || correct) {
-      setTimeout(() => {
-        handleNextClick(correct);
-      }, 1000);
-    } else {
-      // Even if blocked, we should still allow progression after showing feedback
-      setTimeout(() => {
-        handleNextClick(false);
-      }, 1000);
-    }
+    handleNextClick(correct);
   };
 
   const handleNextClick = async (wasCorrect = false) => {
@@ -465,7 +451,6 @@ const AserFlow = ({
     setSelectedLetter("");
     setIsCorrect(null);
     setShowNext(false);
-    setIsAudioPlaying(false);
 
     // Increment progress for both correct and wrong answers
     const newItemNumber = Math.min(currentItemNumber + 1, TOTAL_ITEMS);
@@ -490,11 +475,7 @@ const AserFlow = ({
         callTelemetryDiscovery("Discovery-AserFlow");
       }
 
-      // Delay showing success message to allow next button to appear first
-      // Show success message after a short delay (optional - user can use next button instead)
-      setTimeout(() => {
-        setShowSuccessMessage(true);
-      }, 1000);
+      setShowSuccessMessage(true);
 
       return;
     }

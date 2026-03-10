@@ -31,7 +31,11 @@ import {
   memoryGameDataLoader,
 } from "../../lib/axl-explorations/src/lib/index";
 import { trackingAssessmentService } from "../../lib/axl-explorations/src/utils/trackingAssessmentService";
-
+// Import preview components directly
+import { CountdownTimer } from "../../lib/axl-explorations/src/components/CountdownTimer";
+import { LetterLauncherGameStoryPreview } from "../../lib/axl-explorations/src/components/games/LetterLauncherGameStoryPreview";
+import { Button } from "../../lib/axl-explorations/src/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 /**
  * Wrapper component that integrates axl-explorations ROARRapidVisualGameCore
  * into the Practice.jsx mechanics system for F3 flow Letter Launcher
@@ -71,18 +75,78 @@ const LetterLauncherMechanicsContent = ({
   contentType = "letter", // "letter" or "syllable"
   contentCount = 10,
   sessionId, // Optional: Session ID from parent
+  confidentLetters, // Optional: Letters user is confident with (appear less frequently)
 }) => {
   const [currentGameLevel, setCurrentGameLevel] = useState(level || 1);
   const [isGameComplete, setIsGameComplete] = useState(false);
   const [sessionInitialized, setSessionInitialized] = useState(false);
+  // Track step start time for duration calculation
+  const [stepStartTime, setStepStartTime] = useState(null);
   const navigate = useNavigate();
+
+  // Preview states - only show preview for P1 step
+  const isP1Step =
+    isF3FlowActive &&
+    f3FlowStep?.step?.type === "P" &&
+    f3FlowStep?.step?.step === 1;
+  const [showPreview, setShowPreview] = useState(isP1Step); // Show preview/countdown when first opening game (only for P1)
+  const [showStoryPreview, setShowStoryPreview] = useState(false); // Show story preview after countdown
+  const [level19HasProgress, setLevel19HasProgress] = useState(false);
+  const [isLoadingLevel, setIsLoadingLevel] = useState(true);
 
   // Reset currentGameLevel when level prop changes (e.g., when step changes)
   useEffect(() => {
     if (level && level !== currentGameLevel) {
+      // Don't reset if we're in an Apply step with multiple levels and:
+      // 1. We've completed all levels (currentGameLevel >= endLevel), OR
+      // 2. We're advancing levels (currentGameLevel > level)
+      // This prevents resetting when advancing through levels or when moving to Memory Challenge
+      if (isShowCase === true && endLevel) {
+        if (currentGameLevel >= endLevel) {
+          // All levels complete, don't reset - let handleNext handle the transition
+          return;
+        }
+        if (currentGameLevel > level) {
+          // We're advancing levels (e.g., level 20 > starting level 19), don't reset
+          return;
+        }
+      }
       setCurrentGameLevel(level);
+      // Reset preview states when level changes (preview only shows for P1)
+      const isCurrentlyP1 =
+        isF3FlowActive &&
+        f3FlowStep?.step?.type === "P" &&
+        f3FlowStep?.step?.step === 1;
+      if (!isCurrentlyP1) {
+        setShowPreview(false);
+        setShowStoryPreview(false);
+      } else {
+        setShowPreview(true);
+      }
     }
-  }, [level]);
+  }, [
+    level,
+    currentGameLevel,
+    isF3FlowActive,
+    f3FlowStep,
+    isShowCase,
+    endLevel,
+  ]);
+
+  // Update preview state when F3 flow step changes
+  useEffect(() => {
+    const isCurrentlyP1 =
+      isF3FlowActive &&
+      f3FlowStep?.step?.type === "P" &&
+      f3FlowStep?.step?.step === 1;
+    if (isCurrentlyP1) {
+      setShowPreview(true);
+      setShowStoryPreview(false);
+    } else {
+      setShowPreview(false);
+      setShowStoryPreview(false);
+    }
+  }, [isF3FlowActive, f3FlowStep]);
 
   // Ensure isShowCase is a boolean (handle undefined case)
   const effectiveIsShowCase = isShowCase === true;
@@ -263,23 +327,88 @@ const LetterLauncherMechanicsContent = ({
           : ["at", "an", "in", "on", "am", "it", "up", "en", "ed", "ot"];
     }
 
+    // Build weighted letter array based on confidentLetters
+    const buildWeightedLetterArray = (letters) => {
+      if (
+        !confidentLetters ||
+        confidentLetters.length === 0 ||
+        letters.length === 0
+      ) {
+        return letters;
+      }
+
+      // Normalize confident letters to uppercase
+      const normalizedConfident = confidentLetters
+        .map((letter) =>
+          typeof letter === "string" ? letter.toUpperCase() : ""
+        )
+        .filter(Boolean);
+
+      // Separate letters into confident and non-confident
+      const confident = [];
+      const nonConfident = [];
+
+      letters.forEach((letter) => {
+        const upperLetter = letter.toUpperCase();
+        if (normalizedConfident.includes(upperLetter)) {
+          confident.push(letter);
+        } else {
+          nonConfident.push(letter);
+        }
+      });
+
+      // Build weighted array:
+      // - Confident letters: appear 1 time (reduced frequency)
+      // - Non-confident letters: appear 3 times (increased frequency for practice)
+      const weightedArray = [];
+
+      // Add confident letters once
+      confident.forEach((letter) => {
+        weightedArray.push(letter);
+      });
+
+      // Add non-confident letters multiple times (3x for more practice)
+      for (let i = 0; i < 3; i++) {
+        nonConfident.forEach((letter) => {
+          weightedArray.push(letter);
+        });
+      }
+
+      console.log("Letter Launcher - Weighted array with confident letters:", {
+        totalLetters: letters.length,
+        confidentLetters: confident,
+        nonConfidentLetters: nonConfident,
+        weightedArrayLength: weightedArray.length,
+        confidentCount: confident.length,
+        nonConfidentCount: nonConfident.length * 3,
+      });
+
+      return weightedArray.length > 0 ? weightedArray : letters;
+    };
+
+    // Apply weighted selection
+    const weightedLetters = buildWeightedLetterArray(letters);
+
     console.log("Letter Launcher - Generating questions:", {
       contentCount,
       contentType,
       language: initialLanguage,
       level: currentGameLevel,
       availableLetters: letters.length,
+      weightedLettersCount: weightedLetters.length,
       expectedQuestions: contentCount,
     });
 
     for (let i = 0; i < contentCount; i++) {
-      const audioLetter = letters[Math.floor(Math.random() * letters.length)];
+      // Select from weighted array instead of original letters array
+      const audioLetter =
+        weightedLetters[Math.floor(Math.random() * weightedLetters.length)];
       // Randomly decide if displayed letter matches audio (70% match, 30% mismatch)
       const isMatch = Math.random() > 0.3;
       const displayedLetter = isMatch
         ? audioLetter
-        : letters.filter((l) => l !== audioLetter)[
-            Math.floor(Math.random() * (letters.length - 1))
+        : weightedLetters.filter((l) => l !== audioLetter)[
+            Math.floor(Math.random() * (weightedLetters.length - 1))
           ];
       questions.push({
         audioLetter,
@@ -362,12 +491,91 @@ const LetterLauncherMechanicsContent = ({
     };
   };
 
+  // Reset step start time when F3 step changes
+  useEffect(() => {
+    if (isF3FlowActive && f3FlowStep?.index !== undefined) {
+      setStepStartTime(Date.now());
+    }
+  }, [f3FlowStep?.index, isF3FlowActive]);
+
+  // Helper function to get F3 step title
+  const getF3StepTitle = (flowIndex) => {
+    const lang = getLocalData("lang") || "en";
+    const f3Config = levelGetContent[lang]?.["F3"];
+    const stepConfig = f3Config?.[flowIndex];
+    if (stepConfig?.title) {
+      return stepConfig.title;
+    }
+    // Fallback: construct from F3_FLOW
+    const flowStep = F3_FLOW[flowIndex];
+    if (flowStep) {
+      return `${flowStep.type}${flowStep.step}`;
+    }
+    return undefined;
+  };
+
+  // Helper function to calculate duration in seconds
+  const calculateF3Duration = () => {
+    if (!stepStartTime) return undefined;
+    return Math.round((Date.now() - stepStartTime) / 1000); // Duration in seconds
+  };
+
   const assessmentParams = getF3AssessmentParams();
+
+  // Check if P1 step has progress (for preview display)
+  useEffect(() => {
+    const checkP1Progress = async () => {
+      if (!initialLanguage) {
+        setIsLoadingLevel(false);
+        return;
+      }
+
+      const currentUser = sessionManager.getCurrentUser();
+      if (!currentUser) {
+        setIsLoadingLevel(false);
+        return;
+      }
+
+      try {
+        setIsLoadingLevel(true);
+        // For P1 step, we can check progress if needed in the future
+        setLevel19HasProgress(false);
+      } catch (error) {
+        console.error("Error checking P1 step progress:", error);
+        setLevel19HasProgress(false);
+      } finally {
+        setIsLoadingLevel(false);
+      }
+    };
+
+    // Only check progress if it's P1 step
+    if (isP1Step) {
+      checkP1Progress();
+    } else {
+      setIsLoadingLevel(false);
+    }
+  }, [initialLanguage, gameKey, isP1Step]);
+
+  // Preview handlers
+  const handleCountdownComplete = () => {
+    console.log(
+      "[LetterLauncherMechanics] Countdown complete, showing story preview"
+    );
+    // After countdown, show story preview
+    setShowStoryPreview(true);
+    // Also set showPreview to false to prevent countdown from showing again
+    setShowPreview(false);
+  };
+
+  const handleStoryPreviewComplete = () => {
+    setShowStoryPreview(false);
+    // After story preview, start the game
+    setShowPreview(false);
+  };
 
   // Reset completion state when step changes (detected by f3FlowStep change)
   useEffect(() => {
     if (isF3FlowActive && f3FlowStep?.step) {
-      // Reset completion state when step changes
       setIsGameComplete(false);
       setLevelFailed(false);
       setCurrentQuestionIndex(0);
@@ -379,7 +587,10 @@ const LetterLauncherMechanicsContent = ({
       setShowLetter(false);
       setFuelEarned(null);
       setQuestionStartTime(null);
-      // Regenerate questions for new step
+      // Reset to the starting level for the new step
+      if (level) {
+        setCurrentGameLevel(level);
+      }
       if (sessionInitialized) {
         const newQuestions = generateQuestions();
         setQuestions(newQuestions);
@@ -491,17 +702,16 @@ const LetterLauncherMechanicsContent = ({
       !isGameComplete &&
       !isTimerRunning
     ) {
-      // Start the timer for Apply steps when game begins
       setIsTimerRunning(true);
       setTimeRemaining(100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     effectiveIsShowCase,
     effectiveStartShowCase,
     sessionInitialized,
     questions.length,
     isGameComplete,
-    isTimerRunning,
   ]);
 
   // Handle timer expiration - wrapped in useCallback to prevent dependency issues
@@ -880,36 +1090,56 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: questionSummaries.length,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          sub_apply_level: effectiveIsShowCase ? currentGameLevel : undefined,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: false,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            sub_apply_level: isF3FlowActive
+              ? currentGameLevel
+              : effectiveIsShowCase
+              ? currentGameLevel
+              : undefined,
+            metadata: {
+              difficulty: "simple",
+              levelFailed: false,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for level:",
           currentGameLevel
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Pass):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -988,36 +1218,56 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: questionSummaries.length,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          sub_apply_level: effectiveIsShowCase ? currentGameLevel : undefined,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: true,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            sub_apply_level: isF3FlowActive
+              ? currentGameLevel
+              : effectiveIsShowCase
+              ? currentGameLevel
+              : undefined,
+            metadata: {
+              difficulty: "simple",
+              levelFailed: true,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for failed level:",
           currentGameLevel
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Fail):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -1075,34 +1325,50 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: questionSummaries.length,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: false,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            metadata: {
+              difficulty: "simple",
+              levelFailed: false,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for Practice step"
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Practice):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -1185,6 +1451,7 @@ const LetterLauncherMechanicsContent = ({
     setLevelStartTime(now);
     setIsTimerRunning(false);
     setTimeRemaining(100);
+    // Don't reset preview states on retry - preview should only show once
     const newQuestions = generateQuestions();
     setQuestions(newQuestions);
 
@@ -1226,7 +1493,7 @@ const LetterLauncherMechanicsContent = ({
     }
   };
 
-  if (!sessionInitialized || questions.length === 0) {
+  if (!sessionInitialized || questions.length === 0 || isLoadingLevel) {
     return (
       <MainLayout
         page={header}
@@ -1249,6 +1516,191 @@ const LetterLauncherMechanicsContent = ({
           <p>Loading game...</p>
         </div>
       </MainLayout>
+    );
+  }
+
+  // Show story preview after countdown (check this first)
+  // Only show for P1 step
+  const isP1StepForPreview =
+    isF3FlowActive &&
+    f3FlowStep?.step?.type === "P" &&
+    f3FlowStep?.step?.step === 1;
+  if (showStoryPreview && initialLanguage && isP1StepForPreview) {
+    console.log(
+      "[LetterLauncherMechanics] Rendering story preview, level:",
+      currentGameLevel
+    );
+    return (
+      <LanguageProvider initialLanguage={initialLanguage}>
+        <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
+          <MainLayout
+            page={header}
+            showTimer={false}
+            setPage={setPage}
+            level={milestoneLevel || "B"}
+            flowNames={[]}
+            activeFlow={isF3FlowActive ? `P${f3FlowStep?.step?.step || 1}` : ""}
+            progressData={progressData}
+            showProgress={showProgress}
+            points={points}
+            vocabCount={vocabCount}
+            wordCount={wordCount}
+            handleBack={handleBack}
+            isShowCase={effectiveIsShowCase}
+            startShowCase={effectiveStartShowCase}
+            setStartShowCase={effectiveSetStartShowCase}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: "100%",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+              }}
+            >
+              <style>{`
+                .letter-launcher-story-preview-container > div {
+                  height: 100% !important;
+                  max-height: 100% !important;
+                  overflow: hidden !important;
+                }
+                .letter-launcher-story-preview-container [class*="h-screen"] {
+                  height: 100% !important;
+                  max-height: 100% !important;
+                }
+                .letter-launcher-story-preview-container img,
+                .letter-launcher-story-preview-container [role="img"],
+                .letter-launcher-story-preview-container [class*="planet"],
+                .letter-launcher-story-preview-container [class*="Planet"] {
+                  display: block !important;
+                  visibility: visible !important;
+                  opacity: 1 !important;
+                  position: relative !important;
+                  z-index: 10 !important;
+                }
+                .letter-launcher-story-preview-container [class*="absolute"] {
+                  position: absolute !important;
+                  z-index: 10 !important;
+                }
+              `}</style>
+              <div
+                className="letter-launcher-story-preview-container"
+                style={{ height: "100%", width: "100%", overflow: "hidden" }}
+              >
+                <LetterLauncherGameStoryPreview
+                  onStartGame={handleStoryPreviewComplete}
+                  onBack={() => {
+                    setShowStoryPreview(false);
+                    setShowPreview(false);
+                    handleGameBack();
+                  }}
+                  level={currentGameLevel}
+                  hideHeader={true}
+                />
+              </div>
+            </div>
+          </MainLayout>
+        </AudioLanguageProvider>
+      </LanguageProvider>
+    );
+  }
+
+  // Show countdown when first opening game (before game starts)
+  // Only show for P1 step
+  const shouldShowCountdown =
+    showPreview &&
+    initialLanguage &&
+    !showStoryPreview &&
+    isP1StepForPreview &&
+    !level19HasProgress;
+
+  if (shouldShowCountdown) {
+    return (
+      <LanguageProvider initialLanguage={initialLanguage}>
+        <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
+          <MainLayout
+            page={header}
+            showTimer={false}
+            setPage={setPage}
+            level={milestoneLevel || "B"}
+            flowNames={[]}
+            activeFlow={isF3FlowActive ? `P${f3FlowStep?.step?.step || 1}` : ""}
+            progressData={progressData}
+            showProgress={showProgress}
+            points={points}
+            vocabCount={vocabCount}
+            wordCount={wordCount}
+            handleBack={handleBack}
+            isShowCase={effectiveIsShowCase}
+            startShowCase={effectiveStartShowCase}
+            setStartShowCase={effectiveSetStartShowCase}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: "100%",
+                background:
+                  "linear-gradient(to bottom, #1e3a8a, #3b82f6, #60a5fa)",
+                padding: "8px",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div
+                style={{
+                  maxWidth: "1280px",
+                  margin: "0 auto",
+                  width: "100%",
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  minHeight: 0,
+                  overflow: "hidden",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "12px",
+                    flexShrink: 0,
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      setShowPreview(false);
+                      handleGameBack();
+                    }}
+                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/20 text-sm px-3 py-2"
+                  >
+                    <ArrowLeft className="h-3 w-3 mr-1" />
+                    Back
+                  </Button>
+                </div>
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 0,
+                  }}
+                >
+                  <CountdownTimer
+                    initialCount={3}
+                    onComplete={handleCountdownComplete}
+                  />
+                </div>
+              </div>
+            </div>
+          </MainLayout>
+        </AudioLanguageProvider>
+      </LanguageProvider>
     );
   }
 
@@ -1521,6 +1973,8 @@ const LetterLauncherMechanicsContent = ({
                         language: lang,
                         milestoneLevel: "B",
                         subMilestoneLevel: "F3",
+                        duration: calculateF3Duration(),
+                        applyLevel: getF3StepTitle(updatedF3FlowStep.index),
                       });
                       console.log(
                         "F3 flow progress saved by LetterLauncherMechanics (after step completion):",
