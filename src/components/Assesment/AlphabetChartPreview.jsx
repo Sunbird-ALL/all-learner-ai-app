@@ -57,6 +57,7 @@ const demoInstructions = {
     syllableNarration2: "Great! Keep clicking on more syllable cards",
     syllableNarration3:
       "Excellent! You've learned how to use the Alphabet Chart!",
+    noCardsMessage: "No cards available for this section.",
     startButton: "Start Exploring",
     skipDemo: "Skip Demo",
     replayDemo: "Replay Demo",
@@ -90,6 +91,7 @@ const demoInstructions = {
     syllableNarration2: "బాగుంది! మరిన్ని గుణింత కార్డ్స్‌పై క్లిక్ చేయండి",
     syllableNarration3:
       "అద్భుతం! అక్షరమాల చార్ట్‌ను ఎలా ఉపయోగించాలో నేర్చుకున్నారు!",
+    noCardsMessage: "ఈ విభాగంలో కార్డ్‌లు అందుబాటులో లేవు.",
     startButton: "అన్వేషించడం ప్రారంభించండి",
     skipDemo: "డెమో స్కిప్ చేయండి",
     replayDemo: "డెమోను మళ్లీ ఆడండి",
@@ -126,6 +128,7 @@ const demoInstructions = {
       "ಅದ್ಭುತ! ಇನ್ನಷ್ಟು ಗುಣಿತಾಕ್ಷರ ಕಾರ್ಡ್‌ಗಳ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿ",
     syllableNarration3:
       "ಅತ್ಯುತ್ತಮ! ಅಕ್ಷರಮಾಲೆ ಚಾರ್ಟ್ ಅನ್ನು ಹೇಗೆ ಬಳಸುವುದು ಎಂದು ಕಲಿತಿದ್ದೀರಿ!",
+    noCardsMessage: "ಈ ವಿಭಾಗದಲ್ಲಿ ಯಾವುದೇ ಕಾರ್ಡ್‌ಗಳು ಲಭ್ಯವಿಲ್ಲ.",
     startButton: "ಅನ್ವೇಷಿಸಲು ಪ್ರಾರಂಭಿಸಿ",
     skipDemo: "ಡೆಮೊ ಸ್ಕಿಪ್ ಮಾಡಿ",
     replayDemo: "ಡೆಮೊ ಮತ್ತೆ ಆಡಿ",
@@ -159,6 +162,7 @@ const demoInstructions = {
       "अब ध्वनि सुनने के लिए किसी भी मात्रा कार्ड पर क्लिक करें",
     syllableNarration2: "बहुत अच्छा! और मात्रा कार्ड्स पर क्लिक करें",
     syllableNarration3: "उत्कृष्ट! आपने वर्णमाला चार्ट का उपयोग करना सीख लिया!",
+    noCardsMessage: "इस अनुभाग में कोई कार्ड उपलब्ध नहीं है।",
     startButton: "खोजना शुरू करें",
     skipDemo: "डेमो छोड़ें",
     replayDemo: "डेमो फिर से चलाएं",
@@ -190,6 +194,7 @@ const demoInstructions = {
       "आता आवाज ऐकण्यासाठी कोणत्याही मात्रा कार्डवर क्लिक करा",
     syllableNarration2: "छान! आणखी मात्रा कार्डांवर क्लिक करा",
     syllableNarration3: "उत्कृष्ट! तुम्ही अक्षर चार्ट कसे वापरायचे ते शिकलात!",
+    noCardsMessage: "या विभागात कोणतेही कार्ड उपलब्ध नाहीत.",
     startButton: "शोधणे सुरू करा",
     skipDemo: "डेमो वगळा",
     replayDemo: "डेमो पुन्हा खेळा",
@@ -939,6 +944,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
       setViewMode("word");
       setCurrentPage(0);
       setHighlightedCardIndex(0);
+      setCurrentStepIndex(1);
     }
     setPreviewPhase("demo");
   };
@@ -1422,7 +1428,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
                 }}
               >
                 <Typography sx={{ color: "#64748b", fontSize: "1rem" }}>
-                  No cards available for this section.
+                  {instructions.noCardsMessage}
                 </Typography>
                 <Button
                   variant="contained"
