@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import {
   Box,
   Typography,
@@ -473,12 +474,12 @@ const AlphabetChart = ({ open, onClose, lang }) => {
   }, [rawData, activeLang]);
 
   const wordItems = useMemo(() => {
-    const gunithaSource =
-      activeLang === "te"
-        ? TeluguGunithas
-        : activeLang === "kn"
-        ? KannadaGunithas
-        : null;
+    let gunithaSource = null;
+    if (activeLang === "te") {
+      gunithaSource = TeluguGunithas;
+    } else if (activeLang === "kn") {
+      gunithaSource = KannadaGunithas;
+    }
 
     const gunithaItems = gunithaSource
       ? gunithaSource
@@ -897,6 +898,12 @@ const AlphabetChart = ({ open, onClose, lang }) => {
       </Box>
     </Dialog>
   );
+};
+
+AlphabetChart.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  lang: PropTypes.string.isRequired,
 };
 
 export default AlphabetChart;

@@ -815,6 +815,35 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     }
   };
 
+  const handleAlphabetModeProgress = () => {
+    const newCount = alphabetClickCount + 1;
+    setAlphabetClickCount(newCount);
+    const an = currentItems.length;
+    if (an > 0) setHighlightedCardIndex((prev) => (prev + 1) % an);
+
+    if (newCount >= 3 && !alphabetPhaseComplete) {
+      // Alphabet phase complete, prompt to switch to syllable
+      setAlphabetPhaseComplete(true);
+      setWaitingForToggle(true);
+      setCurrentStepIndex(1);
+    }
+  };
+
+  const handleSyllableModeProgress = () => {
+    const newCount = syllableClickCount + 1;
+    setSyllableClickCount(newCount);
+    const wn = currentItems.length;
+    if (wn > 0) setHighlightedCardIndex((prev) => (prev + 1) % wn);
+
+    if (newCount >= 3) {
+      // Demo complete — transition to completion after narration
+      setCurrentStepIndex(2);
+      setTimeout(() => {
+        setPreviewPhase("completion");
+      }, 3000);
+    }
+  };
+
   // Play card audio
   const playAudio = (item, specificAudio = null) => {
     const audioSrc = specificAudio || item.audio;
@@ -848,34 +877,9 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
       // Handle demo progression
       if (previewPhase === "demo") {
         if (viewMode === "alphabet") {
-          const newCount = alphabetClickCount + 1;
-          setAlphabetClickCount(newCount);
-          const an = currentItems.length;
-          if (an > 0) setHighlightedCardIndex((prev) => (prev + 1) % an);
-
-          if (newCount >= 3 && !alphabetPhaseComplete) {
-            // Alphabet phase complete, prompt to switch to syllable
-            setAlphabetPhaseComplete(true);
-            setWaitingForToggle(true);
-            setCurrentStepIndex(1);
-            // Narration is handled by useEffect when waitingForToggle changes
-          }
+          handleAlphabetModeProgress();
         } else {
-          // Syllable mode
-          const newCount = syllableClickCount + 1;
-          setSyllableClickCount(newCount);
-          const wn = currentItems.length;
-          if (wn > 0) setHighlightedCardIndex((prev) => (prev + 1) % wn);
-
-          if (newCount >= 3) {
-            // Demo complete!
-            setCurrentStepIndex(2);
-            // Narration is handled by useEffect when syllableClickCount changes
-            // Transition to completion after a delay to allow narration to play
-            setTimeout(() => {
-              setPreviewPhase("completion");
-            }, 3000);
-          }
+          handleSyllableModeProgress();
         }
       }
     };
