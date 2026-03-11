@@ -26,6 +26,7 @@ import {
   KannadaGunithas,
 } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
+import { interact } from "../../services/telementryService";
 import { motion, AnimatePresence } from "framer-motion";
 import { getFontFamily } from "../../utils/fontUtils";
 
@@ -547,6 +548,11 @@ const AlphabetChart = ({ open, onClose, lang }) => {
 
   const handleNext = () => {
     if (currentPage < totalPages - 1) {
+      interact(
+        "ET",
+        `Page Navigate : Next (Page ${currentPage + 2})`,
+        "alphabet-chart"
+      );
       stopAudio();
       setCurrentPage((prev) => prev + 1);
     }
@@ -554,6 +560,11 @@ const AlphabetChart = ({ open, onClose, lang }) => {
 
   const handlePrev = () => {
     if (currentPage > 0) {
+      interact(
+        "ET",
+        `Page Navigate : Previous (Page ${currentPage})`,
+        "alphabet-chart"
+      );
       stopAudio();
       setCurrentPage((prev) => prev - 1);
     }
@@ -567,6 +578,14 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     if (playingKey === item.key && currentSrcRef.current === audioSrc) {
       return;
     }
+
+    interact(
+      "ET",
+      `Card Click : ${viewMode === "alphabet" ? "Alphabet" : "Syllable"} - ${
+        item.display || item.label || ""
+      }`,
+      "alphabet-chart"
+    );
 
     // Stop previous audio
     if (audioRef.current) {
@@ -655,7 +674,18 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         <ToggleButtonGroup
           value={viewMode}
           exclusive
-          onChange={(_, newMode) => newMode && setViewMode(newMode)}
+          onChange={(_, newMode) => {
+            if (newMode) {
+              interact(
+                "ET",
+                `View Toggle : ${
+                  newMode === "alphabet" ? "Alphabet" : "Syllable"
+                }`,
+                "alphabet-chart"
+              );
+              setViewMode(newMode);
+            }
+          }}
           aria-label="view mode"
           sx={{
             "& .MuiToggleButton-root": {
@@ -698,7 +728,10 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         {/* RIGHT — Close */}
         <Box sx={{ position: "absolute", right: { xs: 16, sm: 24 } }}>
           <IconButton
-            onClick={onClose}
+            onClick={() => {
+              interact("ET", "Close Alphabet Chart", "alphabet-chart");
+              onClose();
+            }}
             size="medium"
             aria-label="Close"
             sx={{
