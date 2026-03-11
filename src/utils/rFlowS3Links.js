@@ -1795,9 +1795,9 @@ export const ಘಮಘಮAudio = "3f677863-7946-47fb-8333-fa8ddf88c668.wav";
 export const ಸಂಘImg = "e534c038-60da-44d9-90b6-00ee33e693f4.png";
 export const ಸಂಘSingleAudio = "fcd928f7-8336-4028-903b-773afb8605af.mp3";
 export const ಸಂಘAudio = "cd6e04c0-70bb-4e4a-98f9-8aa0913be852.wav";
-export const ಙImg = "g34c038-60da-44d9-90b6-00ee33e693f4.png";
+// export const ಙImg = "g34c038-60da-44d9-90b6-00ee33e693f4.png";
 export const ಙSingleAudio = "fcd928f7-8336-4028-903b-883afb8605af.mp3";
-export const ಙAudio = "1992777f-1817-4185-bf98-ba5cbfac40d1.wav";
+// export const ಙAudio = "1992777f-1817-4185-bf98-ba5cbfac40d1.wav";
 // export const ಚಮಚImg = "4eeb5ded-7c95-4b98-8541-f11d7185674c.png";
 export const ಚಮಚSingleAudio = "a0ce9f7d-0b6b-43dc-a6c9-d132d169c3f9.mp3";
 // export const ಚಮಚAudio = "ad1b8981-5431-4d85-b0fb-0991b83ec0f5.wav";
@@ -1822,9 +1822,9 @@ export const ಭುಜAudio = "2c7521e9-b1f1-42e9-9cba-6ca7eb8dd2ee.wav";
 export const ಝರಿImg = "h49f4199-e57b-4d7b-afec-8979083484e1.png";
 export const ಝರಿSingleAudio = "gr3f1795-42c5-4e53-8622-a4e710334136.mp3";
 export const ಝರಿAudio = "d3669ec3-de06-4047-8b14-e5c46a0b16c8.wav";
-export const ಞImg = "9ebd3471-7774-46e1-a7d3-61efa82056f4.png";
+// export const ಞImg = "9ebd3471-7774-46e1-a7d3-61efa82056f4.png";
 export const ಞSingleAudio = "r78dbc43-10cb-4f44-94fd-3468474bc007.mp3";
-export const ಞAudio = "6ca9520e-49a4-4fac-ac1d-1ac5060f1b62.wav";
+// export const ಞAudio = "6ca9520e-49a4-4fac-ac1d-1ac5060f1b62.wav";
 export const ಟಗರುImg = "5ebd3471-7774-46e1-a7d3-61efa82056f4.png";
 export const ಟಗರುSingleAudio = "c78dbc43-10cb-4f44-94fd-3468474bc007.mp3";
 export const ಟಗರುAudio = "5ee1f669-cd4e-46bd-9dc2-ed44476687bf.wav";
@@ -3073,7 +3073,6 @@ export const చపాతీAudio = "12f092fc-5db9-40d1-9548-c44b622f1a6a.wav";
 export const జంతువుAudio = "ff5f710b-be16-4855-82fd-16e8d2ac5180.wav";
 export const వేపాకుAudio = "6e079c49-e8af-4e9f-ba59-4b63e12bea1a.wav";
 
-
 //F1 KN
 export const ರಸImg = "9476e42b-4453-4aab-ac42-36ea0871c818.png";
 export const ರಸAudio = "a6305f7f-f919-4ee9-a8ec-eaf3eebb8a64.wav";
@@ -3277,6 +3276,16 @@ export const ವಚನImg = "44e489f0-676a-4e55-a4ad-d3807364dd13.png";
 export const ವಚನAudio = "44e489f0-676a-4e55-a4ad-d3807364dd13.wav";
 export const ಸಧನImg = "66a489f0-676a-4e55-a4ad-d3807364dd13.png";
 export const ಸಧನAudio = "66a489f0-676a-4e55-a4ad-d3807364dd13.wav";
+export const ಅImg = "1476e42b-4453-4aab-ac42-36ea0871c818.png";
+export const ಅAudio = "16305f7f-f919-4ee9-a8ec-eaf3eebb8a64.wav";
+export const ಙImg = "eb0c2a30-fffe-46ce-b247-1a5077275732.png";
+export const ಙAudio = "213fc3f0-0845-4868-907f-0d7b39cec56a.wav";
+export const ಞImg = "96d6e03c-c0a7-4d56-9a7e-84e56c012056.png";
+export const ಞAudio = "31e49d38-110b-4f3c-88ac-76b32b18d7cd.wav";
+export const ಕಷImg = "a7a01039-7e0e-4144-b2c6-5399545344e4.png";
+export const ಕಷAudio = "45f00b7d-cdae-479f-9845-97146a2a2312.wav";
+export const ಜಞImg = "9fb96c70-f34e-4372-9bcb-9404cf5fe9e0.png";
+export const ಜಞAudio = "5918a748-72ef-4ba2-8b4e-76a84e40f3b0.wav";
 
 //F2 KN
 export const ಕಾಗೆAudio = "e0f3a327-0234-4c08-a30c-42a80d0424b1.wav";

@@ -682,7 +682,7 @@ export const ProfileHeader = ({
   const handleAlphabetChartOpen = () => {
     // Check if demo was already completed (returns null first time → falsy)
     const isDemoComplete = getLocalData("AlphabetDemoCompleted") === "true";
-
+    interact("ET", "Open Alphabet Chart", "alphabet-chart");
     if (isDemoComplete) {
       // 📘 User has seen demo before → show normal chart/modal
       setOpenAlphabetModal(true);
