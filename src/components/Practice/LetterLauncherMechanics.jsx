@@ -398,13 +398,24 @@ const LetterLauncherMechanicsContent = ({
       weightedLettersCount: weightedLetters.length,
       expectedQuestions: contentCount,
     });
+    const matchesCount = Math.floor(contentCount / 2);
+    const mismatchesCount = contentCount - matchesCount;
+
+    // Create exact 50:50 match distribution
+    const matchArray = [
+      ...Array(matchesCount).fill(true),
+      ...Array(mismatchesCount).fill(false),
+    ];
+
+    // Shuffle once
+    matchArray.sort(() => Math.random() - 0.5);
 
     for (let i = 0; i < contentCount; i++) {
       // Select from weighted array instead of original letters array
       const audioLetter =
         weightedLetters[Math.floor(Math.random() * weightedLetters.length)];
-      // Randomly decide if displayed letter matches audio (70% match, 30% mismatch)
-      const isMatch = Math.random() > 0.3;
+      // Randomly decide if displayed letter matches audio (50% match, 50% mismatch)
+      const isMatch = matchArray[i];
       const displayedLetter = isMatch
         ? audioLetter
         : weightedLetters.filter((l) => l !== audioLetter)[
@@ -1174,26 +1185,13 @@ const LetterLauncherMechanicsContent = ({
       );
     }
 
-    // For Apply steps with failRedirect, store failure info for redirect
-    // A1: Letter Launcher failure → P1 (failRedirect)
-    // A2: Letter Launcher failure → P1 (different from Memory Challenge which goes to P6)
     if (effectiveIsShowCase && failRedirect && isF3FlowActive) {
-      // Store failure flag in localStorage so it persists across state resets
       setLocalData("letterLauncherLevelFailed", "true");
       setLocalData("letterLauncherFailedLevel", currentGameLevel.toString());
-      const redirectTarget = applyStep === 2 ? "P1" : failRedirect;
       console.log(
-        `Letter Launcher - Level ${currentGameLevel} failed in Apply step (A${
+        `Letter Launcher - Level ${currentGameLevel} failed in A${
           applyStep || 1
-        }), will redirect to ${redirectTarget} when user clicks "Try Again"`,
-        {
-          effectiveIsShowCase,
-          failRedirect,
-          applyStep,
-          redirectTarget,
-          isF3FlowActive,
-          currentGameLevel,
-        }
+        }, will redirect to ${failRedirect}`
       );
     }
 
@@ -1395,25 +1393,10 @@ const LetterLauncherMechanicsContent = ({
       const failedLevel =
         getLocalData("letterLauncherFailedLevel") || currentGameLevel;
 
-      // For A2, Letter Launcher failures should redirect to P1 (not P6)
-      // Memory Challenge failures in A2 will redirect to P6
-      const redirectTarget = applyStep === 2 ? "P1" : failRedirect;
-
       console.log(
         `Letter Launcher - Level ${failedLevel} failed in A${
           applyStep || 1
-        }, redirecting to ${redirectTarget}`,
-        {
-          effectiveIsShowCase,
-          failRedirect,
-          applyStep,
-          redirectTarget,
-          isF3FlowActive,
-          levelFailed,
-          levelFailedFlag,
-          currentGameLevel,
-          failedLevel,
-        }
+        }, redirecting to ${failRedirect}`
       );
       // Clear failure flags
       setLocalData("letterLauncherLevelFailed", null);
@@ -1421,7 +1404,7 @@ const LetterLauncherMechanicsContent = ({
       // Clear any sub-step state (e.g., memoryChallenge) to prevent moving to Memory Challenge
       setLocalData("f3ApplySubStep", null);
       // Store redirect info for Practice.jsx to handle
-      setLocalData("f3FlowRedirect", redirectTarget);
+      setLocalData("f3FlowRedirect", failRedirect);
       // Reset state first
       setIsGameComplete(false);
       setLevelFailed(false);
