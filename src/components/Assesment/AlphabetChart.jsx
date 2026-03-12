@@ -396,12 +396,12 @@ const KANNADA_ORDER = [
   "ಜ್ಞ",
 ];
 
-const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
+export const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
   acc[letter] = index;
   return acc;
 }, {});
 
-const KANNADA_ORDER_MAP = KANNADA_ORDER.reduce((acc, letter, index) => {
+export const KANNADA_ORDER_MAP = KANNADA_ORDER.reduce((acc, letter, index) => {
   acc[letter] = index;
   return acc;
 }, {});
