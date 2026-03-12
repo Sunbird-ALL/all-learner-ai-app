@@ -23,6 +23,7 @@ import {
 } from "../../RFlow/LetterTrain";
 import { wordData } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
+import { TELUGU_ORDER_MAP, KANNADA_ORDER_MAP } from "./AlphabetChart";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   playTTS,
@@ -697,9 +698,21 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
           alaphabetChartAudio: first.alaphabetChartAudio || "",
         };
       })
-      .sort((a, b) =>
-        (a.display || "").localeCompare(b.display || "", activeLang)
-      );
+      .sort((a, b) => {
+        if (activeLang === "te") {
+          const aIndex = TELUGU_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
+          const bIndex = TELUGU_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
+          return aIndex - bIndex;
+        }
+        if (activeLang === "kn") {
+          const aIndex =
+            KANNADA_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
+          const bIndex =
+            KANNADA_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
+          return aIndex - bIndex;
+        }
+        return (a.display || "").localeCompare(b.display || "", activeLang);
+      });
   }, [rawData, activeLang]);
 
   const wordItems = useMemo(() => {
