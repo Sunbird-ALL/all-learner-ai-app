@@ -141,9 +141,9 @@ export function LetterLauncherGameCore({
     <div className={`flex-1 flex flex-col justify-center px-1 sm:px-2 ${className}`}>
       <div className="space-y-4 sm:space-y-6">
         {/* Letter Display - Only show after audio ends */}
-        <div className="text-center min-h-[120px] sm:min-h-[150px] flex items-center justify-center">
+        <div className="text-center min-h-[160px] sm:min-h-[180px] md:min-h-[200px] flex items-center justify-center">
           {currentQuestion.displayedLetter ? (
-            <h2 className={`text-4xl sm:text-5xl md:text-6xl font-bold animate-fade-in ${
+            <h2 className={`text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold animate-fade-in ${
               isPreview 
                 ? 'text-primary' 
                 : 'text-white drop-shadow-[0_0_8px_rgba(0,0,0,0.8)] [text-shadow:_0_0_10px_rgba(255,255,255,0.3),_0_0_20px_rgba(59,130,246,0.2)]'

@@ -6961,23 +6961,23 @@ const Practice = () => {
           // But F3_FLOW array is 0-indexed (0-11), so convert
           const f3FlowIndex = userState > 0 ? userState - 1 : 0;
 
-          // if (f3FlowIndex >= 0 && f3FlowIndex < F3_FLOW.length) {
-          //   console.log(
-          //     `Restoring F3 flow progress: lesson ${userState} (1-indexed) -> flow index ${f3FlowIndex} (0-indexed) -> ${
-          //       F3_FLOW[f3FlowIndex]?.type
-          //     }${F3_FLOW[f3FlowIndex]?.step || ""}`
-          //   );
-          //   setLocalData("f3FlowIndex", f3FlowIndex);
-          //   // IMPORTANT: Update state to trigger re-render with correct flow index
-          //   setF3FlowIndexState(f3FlowIndex);
-          //   userState = f3FlowIndex;
-          // } else {
-          //   console.warn(
-          //     `Invalid F3 flow index ${f3FlowIndex} from lesson ${userState}, starting from beginning`
-          //   );
-          //   setLocalData("f3FlowIndex", 0);
-          //   userState = 0;
-          // }
+          if (f3FlowIndex >= 0 && f3FlowIndex < F3_FLOW.length) {
+            console.log(
+              `Restoring F3 flow progress: lesson ${userState} (1-indexed) -> flow index ${f3FlowIndex} (0-indexed) -> ${
+                F3_FLOW[f3FlowIndex]?.type
+              }${F3_FLOW[f3FlowIndex]?.step || ""}`
+            );
+            setLocalData("f3FlowIndex", f3FlowIndex);
+            // IMPORTANT: Update state to trigger re-render with correct flow index
+            setF3FlowIndexState(f3FlowIndex);
+            userState = f3FlowIndex;
+          } else {
+            console.warn(
+              `Invalid F3 flow index ${f3FlowIndex} from lesson ${userState}, starting from beginning`
+            );
+            setLocalData("f3FlowIndex", 0);
+            userState = 0;
+          }
         }
       }
 
