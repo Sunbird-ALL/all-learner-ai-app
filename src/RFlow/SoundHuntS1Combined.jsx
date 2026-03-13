@@ -3308,7 +3308,7 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ಅದಗಡAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಚದರಬದImg2),
+          img: getAssetUrl(s3Assets.ಚದರಬದImg),
           text: "ಚಂದಿರ ಬಂದ",
           audio: getAssetAudioUrl(s3Assets.ಚದರಬದAudio),
         },
@@ -3336,7 +3336,7 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ಗಳಯರಮತಕತAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಮರಒಣಗದImg2),
+          img: getAssetUrl(s3Assets.ಮರಒಣಗದImg),
           text: "ಮರ ಒಣಗಿದೆ",
           audio: getAssetAudioUrl(s3Assets.ಮರಒಣಗದAudio),
         }
@@ -3349,7 +3349,7 @@ const soundMatchContent = {
       {
         allwords: [
         {
-          img: getAssetUrl(s3Assets.ಅದಗಡImg2),
+          img: getAssetUrl(s3Assets.ಅದಗಡImg),
           text: "ಅದು ಗುಡಿ",
           audio: getAssetAudioUrl(s3Assets.ಅದಗಡAudio),
         },
@@ -3377,7 +3377,7 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ಖಖಆಟAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಚಡಹImg2),
+          img: getAssetUrl(s3Assets.ಚಡಹImg),
           text: "ಚೆಂಡು ಹೂ",
           audio: getAssetAudioUrl(s3Assets.ಚಡಹAudio),
         },
@@ -3400,7 +3400,7 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ಚದರಬದAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಏಳಎಲಗಳImg2),
+          img: getAssetUrl(s3Assets.ಏಳಎಲಗಳImg),
           text: "ಏಳು ಎಲೆಗಳು",
           audio: getAssetAudioUrl(s3Assets.ಏಳಎಲಗಳAudio),
         },
@@ -3515,12 +3515,12 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ರಚಯದಸರAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಬಗಲನತರಣImg2),
+          img: getAssetUrl(s3Assets.ಬಗಲನತರಣImg),
           text: "ಬಾಗಿಲಿನ ತೋರಣ",
           audio: getAssetAudioUrl(s3Assets.ಬಗಲನತರಣAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಆಕಶದತರಗಳImg2),
+          img: getAssetUrl(s3Assets.ಆಕಶದತರಗಳImg),
           text: "ಆಕಾಶದ ತಾರೆಗಳು",
           audio: getAssetAudioUrl(s3Assets.ಆಕಶದತರಗಳAudio),
         }
@@ -3533,7 +3533,7 @@ const soundMatchContent = {
       {
         allwords: [
         {
-          img: getAssetUrl(s3Assets.ಕಡನಪರಣಗಳImg2),
+          img: getAssetUrl(s3Assets.ಕಡನಪರಣಗಳImg),
           text: "ಕಾಡಿನ ಪ್ರಾಣಿಗಳು",
           audio: getAssetAudioUrl(s3Assets.ಕಡನಪರಣಗಳAudio),
         },
@@ -3543,7 +3543,7 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ದಸವಳಗಡಗಳAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ನವಲನನರತನImg2),
+          img: getAssetUrl(s3Assets.ನವಲನನರತನImg),
           text: "ನವಿಲಿನ ನರ್ತನ",
           audio: getAssetAudioUrl(s3Assets.ನವಲನನರತನAudio),
         }
@@ -3556,12 +3556,12 @@ const soundMatchContent = {
       {
         allwords: [
         {
-          img: getAssetUrl(s3Assets.ರಚಯದಸರImg2),
+          img: getAssetUrl(s3Assets.ರಚಯದಸರImg),
           text: "ರುಚಿಯಾದ ಸಾರು",
           audio: getAssetAudioUrl(s3Assets.ರಚಯದಸರAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ದಸವಳಗಡಗಳImg2),
+          img: getAssetUrl(s3Assets.ದಸವಳಗಡಗಳImg),
           text: "ದಾಸವಾಳ ಗಿಡಗಳು",
           audio: getAssetAudioUrl(s3Assets.ದಸವಳಗಡಗಳAudio),
         },
@@ -3589,7 +3589,7 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ನಲಕಎಲಗಳAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಅದದಸರImg2),
+          img: getAssetUrl(s3Assets.ಅದದಸರImg),
           text: "ಅಂದದ ಸರ",
           audio: getAssetAudioUrl(s3Assets.ಅದದಸರAudio),
         }
@@ -3607,7 +3607,7 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ಚದರಬದAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ನಲಕಎಲಗಳImg2),
+          img: getAssetUrl(s3Assets.ನಲಕಎಲಗಳImg),
           text: "ನಾಲ್ಕು ಎಲೆಗಳು",
           audio: getAssetAudioUrl(s3Assets.ನಲಕಎಲಗಳAudio),
         },
@@ -3625,17 +3625,17 @@ const soundMatchContent = {
       {
         allwords: [
         {
-          img: getAssetUrl(s3Assets.ಬಗಲನತರಣImg2),
+          img: getAssetUrl(s3Assets.ಬಗಲನತರಣImg),
           text: "ಬಾಗಿಲಿನ ತೋರಣ",
           audio: getAssetAudioUrl(s3Assets.ಬಗಲನತರಣAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಆಕಶದತರಗಳImg2),
+          img: getAssetUrl(s3Assets.ಆಕಶದತರಗಳImg),
           text: "ಆಕಾಶದ ತಾರೆಗಳು",
           audio: getAssetAudioUrl(s3Assets.ಆಕಶದತರಗಳAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಮವನಮರImg2),
+          img: getAssetUrl(s3Assets.ಮವನಮರImg),
           text: "ಮಾವಿನ ಮರ",
           audio: getAssetAudioUrl(s3Assets.ಮವನಮರAudio),
         }
@@ -3648,17 +3648,17 @@ const soundMatchContent = {
       {
         allwords: [
         {
-          img: getAssetUrl(s3Assets.ಗಳಯರಮತಕತImg2),
+          img: getAssetUrl(s3Assets.ಗಳಯರಮತಕತImg),
           text: "ಗೆಳೆಯರ ಮಾತುಕತೆ",
           audio: getAssetAudioUrl(s3Assets.ಗಳಯರಮತಕತAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಕಡನಪರಣಗಳImg2),
+          img: getAssetUrl(s3Assets.ಕಡನಪರಣಗಳImg),
           text: "ಕಾಡಿನ ಪ್ರಾಣಿಗಳು",
           audio: getAssetAudioUrl(s3Assets.ಕಡನಪರಣಗಳAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ನವಲನನರತನImg2),
+          img: getAssetUrl(s3Assets.ನವಲನನರತನImg),
           text: "ನವಿಲಿನ ನರ್ತನ",
           audio: getAssetAudioUrl(s3Assets.ನವಲನನರತನAudio),
         }
@@ -3671,17 +3671,17 @@ const soundMatchContent = {
       {
         allwords: [
         {
-          img: getAssetUrl(s3Assets.ರಚಯದಸರImg2),
+          img: getAssetUrl(s3Assets.ರಚಯದಸರImg),
           text: "ರುಚಿಯಾದ ಸಾರು",
           audio: getAssetAudioUrl(s3Assets.ರಚಯದಸರAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಇದಮಸದImg2),
+          img: getAssetUrl(s3Assets.ಇದಮಸದImg),
           text: "ಇದು ಮಸೀದಿ",
           audio: getAssetAudioUrl(s3Assets.ಇದಮಸದAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ದಸವಳಗಡಗಳImg2),
+          img: getAssetUrl(s3Assets.ದಸವಳಗಡಗಳImg),
           text: "ದಾಸವಾಳ ಗಿಡಗಳು",
           audio: getAssetAudioUrl(s3Assets.ದಸವಳಗಡಗಳAudio),
         }
@@ -3694,17 +3694,17 @@ const soundMatchContent = {
       {
         allwords: [
         {
-          img: getAssetUrl(s3Assets.ಆಗಸದಚದರImg2),
+          img: getAssetUrl(s3Assets.ಆಗಸದಚದರImg),
           text: "ಆಗಸದ ಚಂದಿರ",
           audio: getAssetAudioUrl(s3Assets.ಆಗಸದಚದರAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಉಯಯಲಆಡವನImg2),
+          img: getAssetUrl(s3Assets.ಉಯಯಲಆಡವನImg),
           text: "ಉಯ್ಯಾಲೆ ಆಡುವೆನು",
           audio: getAssetAudioUrl(s3Assets.ಉಯಯಲಆಡವನAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಉದಯನಮನImg2),
+          img: getAssetUrl(s3Assets.ಉದಯನಮನImg),
           text: "ಉದಯನ ಮನೆ",
           audio: getAssetAudioUrl(s3Assets.ಉದಯನಮನAudio),
         }
@@ -3717,7 +3717,7 @@ const soundMatchContent = {
       {
         allwords: [
         {
-          img: getAssetUrl(s3Assets.ಖಖಆಟImg2),
+          img: getAssetUrl(s3Assets.ಖಖಆಟImg),
           text: "ಖೋ ಖೋ ಆಟ",
           audio: getAssetAudioUrl(s3Assets.ಖಖಆಟAudio),
         },
@@ -3727,7 +3727,7 @@ const soundMatchContent = {
           audio: getAssetAudioUrl(s3Assets.ನಲಕಎಲಗಳAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಅದದಸರImg2),
+          img: getAssetUrl(s3Assets.ಅದದಸರImg),
           text: "ಅಂದದ ಸರ",
           audio: getAssetAudioUrl(s3Assets.ಅದದಸರAudio),
         }
