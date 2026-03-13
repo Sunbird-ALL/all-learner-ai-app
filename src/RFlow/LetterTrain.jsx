@@ -5320,7 +5320,7 @@ export const dataTe = [
         id: 51,
         title: "Letter",
         letter: "చ",
-        word: "చరకా",
+        word: "చరక",
         image: getAssetUrl(s3Assets.చరకImg),
         audio: getAssetAudioUrl(s3Assets.చచరకాAudio),
         singleAudio: getAssetAudioUrl(s3Assets.చచరకాAudio),
