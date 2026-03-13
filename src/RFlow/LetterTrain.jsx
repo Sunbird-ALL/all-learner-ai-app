@@ -5866,16 +5866,6 @@ export const dataTe = [
         alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఫఫలముAudio),
       },
       {
-        id: 94,
-        title: "Letter",
-        letter: "ఫ",
-        word: "టెలిఫోను",
-        image: getAssetUrl(s3Assets.టలఫనImg),
-        audio: getAssetAudioUrl(s3Assets.టలఫనAudio),
-        singleAudio: getAssetAudioUrl(s3Assets.టలఫనAudio),
-        alaphabetChartAudio: getAssetAudioUrl(s3Assets.ఫటెలిఫోనుAudio),
-      },
-      {
         id: 95,
         title: "Letter",
         letter: "ఫ",
