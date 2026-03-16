@@ -108,6 +108,7 @@ const WordsOrImage = ({
   showStopButton: showStopButtonProp,
   showListenRetryButtons: showListenRetryButtonsProp,
   isRecording: isRecordingProp,
+  isAudioPlaying: isAudioPlayingProp,
   onMicClick,
   onStopClick,
   onPlayClick,
@@ -121,7 +122,7 @@ const WordsOrImage = ({
   const audioRefs = createRef(null);
   const [audioInstance, setAudioInstance] = useState(null);
   const [isReady, setIsReady] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlayingState, setIsPlaying] = useState(false);
   const [storedData, setStoredData] = useState([]);
   const [recognition, setRecognition] = useState(null);
   const [isRecordingState, setIsRecording] = useState(false);
@@ -148,6 +149,10 @@ const WordsOrImage = ({
     isDemo && showListenRetryButtonsProp !== undefined
       ? showListenRetryButtonsProp
       : showListenRetryButtonsState;
+  const isPlaying =
+    isDemo && isAudioPlayingProp !== undefined
+      ? isAudioPlayingProp
+      : isPlayingState;
   const [recordedAudioBlob, setRecordedAudioBlob] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -385,8 +390,8 @@ const WordsOrImage = ({
       audioRefNew.current.pause();
       audioRefNew.current.currentTime = 0;
       audioRefNew.current = null;
-      setIsPlaying(false);
     }
+    setIsPlaying(false);
   }, []);
 
   const initializeRecognition = () => {
@@ -1329,7 +1334,7 @@ const WordsOrImage = ({
                       style={{
                         position: "absolute",
                         top: "100%",
-                        left: "50%",
+                        left: "20%",
                         transform: "translateX(-50%)",
                         fontSize: "40px",
                         pointerEvents: "none",
@@ -1375,7 +1380,7 @@ const WordsOrImage = ({
                         style={{
                           position: "absolute",
                           top: "100%",
-                          left: "50%",
+                          left: "20%",
                           transform: "translateX(-50%)",
                           fontSize: "40px",
                           pointerEvents: "none",
@@ -1493,7 +1498,7 @@ const WordsOrImage = ({
                             style={{
                               position: "absolute",
                               top: "100%",
-                              left: "50%",
+                              left: "20%",
                               transform: "translateX(-50%)",
                               fontSize: "40px",
                               pointerEvents: "none",
@@ -1566,7 +1571,7 @@ const WordsOrImage = ({
                         style={{
                           position: "absolute",
                           top: "100%",
-                          left: "50%",
+                          left: "20%",
                           transform: "translateX(-50%)",
                           fontSize: "40px",
                           pointerEvents: "none",

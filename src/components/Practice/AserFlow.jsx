@@ -352,7 +352,7 @@ const AserFlow = ({
         milestoneLevel: data?.currentLevel || "B",
         ...(data?.currentLevel === "B" && { subMilestoneLevel: "F1" }),
         duration: Math.round((Date.now() - stepStartTime) / 1000),
-        applyLevel: data?.currentLevel === "B" ? "A1" : undefined,
+        applyLevel: data?.currentLevel === "B" ? "L1" : undefined,
       });
     } catch (error) {
       console.error("Error fetching set result:", error);

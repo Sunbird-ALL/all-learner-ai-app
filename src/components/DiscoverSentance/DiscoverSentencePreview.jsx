@@ -135,6 +135,9 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
   const [showListenRetryButtons, setShowListenRetryButtons] = useState(false);
   const [isRecordingDemo, setIsRecordingDemo] = useState(false);
 
+  // Audio playback state
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+
   // Audio recording states
   const [recordedAudioBlob, setRecordedAudioBlob] = useState(null);
   const [recordedAudioUrl, setRecordedAudioUrl] = useState(null);
@@ -338,8 +341,10 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
     if (recordedAudioUrl && audioRef.current) {
       audioRef.current.src = recordedAudioUrl;
       audioRef.current.play();
+      setIsAudioPlaying(true);
 
       audioRef.current.onended = async () => {
+        setIsAudioPlaying(false);
         // After playback completes, move to retry/continue phase
         setDemoPhase("retryOrContinue");
         setCurrentDemoStep(4);
@@ -353,6 +358,12 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
           setShowPointer(true);
           setPointerTarget("retry");
         }, 500);
+      };
+
+      audioRef.current.onerror = () => {
+        setIsAudioPlaying(false);
+        setDemoPhase("retryOrContinue");
+        setCurrentDemoStep(4);
       };
     } else {
       // If no recording exists (shouldn't happen), move to next phase
@@ -381,6 +392,7 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
     }
 
     setShowPointer(false);
+    setIsAudioPlaying(false);
     setShowListenRetryButtons(false);
     setShowSpeakButton(true);
     setDemoPhase("showSentence");
@@ -422,6 +434,7 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
       instructionAudioRef.current = null;
     }
     setIsInstructionPlaying(false);
+    setIsAudioPlaying(false);
 
     // Stop recorded audio if it's playing
     if (audioRef.current) {
@@ -468,6 +481,7 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
     setDemoPhase("countdown");
     setShowPointer(false);
     setIsFirstRecording(true);
+    setIsAudioPlaying(false);
   };
 
   // Dummy handleNext for demo
@@ -483,6 +497,7 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
       instructionAudioRef.current = null;
     }
     setIsInstructionPlaying(false);
+    setIsAudioPlaying(false);
 
     // Stop recorded audio if it's playing
     if (audioRef.current) {
@@ -501,6 +516,7 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
       instructionAudioRef.current = null;
     }
     setIsInstructionPlaying(false);
+    setIsAudioPlaying(false);
 
     // Stop recorded audio if it's playing
     if (audioRef.current) {
@@ -611,6 +627,7 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         showStopButton={showStopButton}
         showListenRetryButtons={showListenRetryButtons}
         isRecording={isRecordingDemo}
+        isAudioPlaying={isAudioPlaying}
         onMicClick={handleMicClick}
         onStopClick={handleStopClick}
         onPlayClick={handlePlayClick}
