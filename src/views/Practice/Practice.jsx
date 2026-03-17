@@ -4377,9 +4377,15 @@ const Practice = () => {
   });
 
   // Track F3 flow index in state to trigger re-renders
+  // Initialize from localStorage, defaulting to 0 if missing, and ensure localStorage is set
   const [f3FlowIndexState, setF3FlowIndexState] = useState(() => {
     const savedIndex = getLocalData("f3FlowIndex");
-    return savedIndex !== null ? Number(savedIndex) : 0;
+    const indexToUse = savedIndex !== null ? Number(savedIndex) : 0;
+    // If localStorage is missing, initialize it immediately
+    if (savedIndex === null) {
+      setLocalData("f3FlowIndex", 0);
+    }
+    return indexToUse;
   });
 
   // Track step start time for duration calculation (for Letter Train)
@@ -4571,11 +4577,59 @@ const Practice = () => {
 
   // Check if F3 flow is active
   // Use state to ensure re-renders when flow advances
+  // Ensure f3FlowIndex is initialized in localStorage if missing and sync state
+  useEffect(() => {
+    if (shouldShowF3) {
+      const savedF3Index = getLocalData("f3FlowIndex");
+      const indexToUse = savedF3Index !== null ? Number(savedF3Index) : 0;
+
+      // Always sync localStorage and state - if localStorage is missing, initialize to 0
+      if (savedF3Index === null) {
+        setLocalData("f3FlowIndex", 0);
+        console.log(
+          "F3 flow - Initialized f3FlowIndex to 0 (P1) in localStorage"
+        );
+      }
+
+      // Sync state with localStorage value
+      if (f3FlowIndexState !== indexToUse) {
+        console.log(
+          "F3 flow - Syncing f3FlowIndexState:",
+          f3FlowIndexState,
+          "->",
+          indexToUse,
+          "from localStorage"
+        );
+        setF3FlowIndexState(indexToUse);
+      }
+    }
+  }, [shouldShowF3, f3FlowIndexState]);
+
+  // Get current F3 flow step - always read from localStorage to ensure consistency
+  const currentF3FlowStepFromStorage = getF3FlowStep();
   const f3FlowStep = {
-    index: f3FlowIndexState,
-    step: F3_FLOW[f3FlowIndexState] || null,
-    isLast: f3FlowIndexState === F3_FLOW.length - 1,
+    index: currentF3FlowStepFromStorage.index,
+    step: currentF3FlowStepFromStorage.step,
+    isLast: currentF3FlowStepFromStorage.isLast,
   };
+
+  // Sync state with the step from storage
+  useEffect(() => {
+    if (
+      shouldShowF3 &&
+      f3FlowStep.step &&
+      f3FlowIndexState !== f3FlowStep.index
+    ) {
+      console.log(
+        "F3 flow - Syncing f3FlowIndexState with f3FlowStep.index:",
+        f3FlowIndexState,
+        "->",
+        f3FlowStep.index
+      );
+      setF3FlowIndexState(f3FlowStep.index);
+    }
+  }, [shouldShowF3, f3FlowStep.index, f3FlowIndexState]);
+
   const isF3FlowActive = shouldShowF3 && f3FlowStep.step !== null;
 
   // Helper function to map redirect strings to F3 flow indices
@@ -10301,11 +10355,26 @@ const Practice = () => {
     } else if (mechanism && mechanism.name === "letterLauncher") {
       // F3 flow uses Letter Launcher for Practice and Apply steps
       if (isF3FlowActive && f3FlowStep?.step && milestoneLevel === "B") {
+        // CRITICAL: Always get fresh step from localStorage (getF3FlowStep reads directly)
+        // This ensures we use the correct index even if f3FlowIndex was just removed
         const currentF3Step = getF3FlowStep();
         const f3StepType = currentF3Step.step?.type;
+
+        // Ensure localStorage is in sync with the step we're using
+        // This is critical when f3FlowIndex is removed - we need to initialize it
+        // Note: State sync happens in useEffect to avoid setState during render
+        const savedF3Index = getLocalData("f3FlowIndex");
+        if (
+          savedF3Index === null ||
+          Number(savedF3Index) !== currentF3Step.index
+        ) {
+          setLocalData("f3FlowIndex", currentF3Step.index);
+        }
+
         console.log("LetterLauncher render - F3 flow check:", {
           f3FlowIndexState,
           currentF3StepIndex: currentF3Step.index,
+          savedF3IndexFromStorage: getLocalData("f3FlowIndex"),
           f3StepType,
           mechanism: mechanism?.name,
           step: currentF3Step.step,
@@ -10330,6 +10399,21 @@ const Practice = () => {
         const lang = getLocalData("lang") || "en";
         const f3Config = levelGetContent[lang]?.["F3"];
         const f3IndexToUse = currentF3Step.index;
+
+        // Ensure f3FlowIndexState is in sync with currentF3Step.index
+        // This fixes the issue where removing f3FlowIndex causes mismatch
+        if (f3FlowIndexState !== currentF3Step.index) {
+          console.log(
+            "LetterLauncher render - Syncing f3FlowIndexState:",
+            f3FlowIndexState,
+            "->",
+            currentF3Step.index
+          );
+          setF3FlowIndexState(currentF3Step.index);
+        }
+
+        // Note: localStorage sync already handled above (line 10360-10363)
+
         let currentGetContentForF3;
         if (f3Config && Array.isArray(f3Config) && f3Config[f3IndexToUse]) {
           currentGetContentForF3 = f3Config[f3IndexToUse];
@@ -10342,7 +10426,15 @@ const Practice = () => {
         } else {
           console.error(
             "LetterLauncher render - F3 config not found for index:",
-            f3IndexToUse
+            f3IndexToUse,
+            "f3Config exists:",
+            !!f3Config,
+            "isArray:",
+            Array.isArray(f3Config),
+            "config length:",
+            f3Config?.length,
+            "available indices:",
+            f3Config?.map((_, i) => i)
           );
           return (
             <div style={{ padding: "20px", textAlign: "center" }}>
@@ -10367,6 +10459,7 @@ const Practice = () => {
           currentF3Step.step?.contentType ||
           currentGetContentForF3?.contentType ||
           "letter";
+
         const isShowcase = currentGetContentForF3?.isShowcase || false;
         const applyStep = currentGetContentForF3?.applyStep;
         const failRedirect = currentGetContentForF3?.failRedirect;
@@ -10468,7 +10561,7 @@ const Practice = () => {
                 failRedirect={failRedirect}
                 passRedirect={passRedirect}
                 isF3FlowActive={isF3FlowActive}
-                f3FlowStep={f3FlowStep}
+                f3FlowStep={currentF3Step}
                 isShowCase={isShowcase}
                 header="Memory Challenge"
                 points={points}
@@ -10588,7 +10681,7 @@ const Practice = () => {
             failRedirect={failRedirect}
             passRedirect={passRedirect}
             isF3FlowActive={isF3FlowActive}
-            f3FlowStep={f3FlowStep}
+            f3FlowStep={currentF3Step}
             header={
               f3StepType === "A"
                 ? `Apply ${applyStep} - Letter Speed`
@@ -11256,7 +11349,7 @@ const Practice = () => {
             failRedirect={failRedirect}
             passRedirect={passRedirect}
             isF3FlowActive={isF3FlowActive}
-            f3FlowStep={f3FlowStep}
+            f3FlowStep={currentF3Step}
             isShowCase={isShowcase}
             header="Memory Challenge"
             points={points}
