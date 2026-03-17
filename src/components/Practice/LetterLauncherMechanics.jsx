@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
@@ -220,12 +220,14 @@ const LetterLauncherMechanicsContent = ({
         setSessionInitialized(true);
       } catch (error) {
         console.warn("Failed to initialize telemetry session:", error);
+
         setSessionInitialized(true);
       }
     };
 
     const timeoutId = setTimeout(() => {
       console.warn("Session initialization timeout - proceeding anyway");
+
       setSessionInitialized(true);
     }, 3000);
 
@@ -306,6 +308,7 @@ const LetterLauncherMechanicsContent = ({
           supportedLanguage,
           levelKey
         );
+
         console.log(
           `Letter Launcher - Using ${supportedLanguage} letters for level ${currentGameLevel}:`,
           {
@@ -421,13 +424,20 @@ const LetterLauncherMechanicsContent = ({
         : weightedLetters.filter((l) => l !== audioLetter)[
             Math.floor(Math.random() * (weightedLetters.length - 1))
           ];
-      questions.push({
+      const question = {
         audioLetter,
         displayedLetter,
         isMatch,
         complexity: "simple",
         language: initialLanguage,
-      });
+      };
+      // Verify isMatch is correct
+      const actualMatch = audioLetter === displayedLetter;
+      if (isMatch !== actualMatch) {
+        // Question generation mismatch detected - this should not happen
+      }
+
+      questions.push(question);
     }
 
     console.log("Letter Launcher - Generated questions:", {
@@ -435,17 +445,38 @@ const LetterLauncherMechanicsContent = ({
       expectedCount: contentCount,
       match: questions.length === contentCount,
       language: initialLanguage,
+      contentType,
+      sampleQuestions: questions.slice(0, 3).map((q) => ({
+        audioLetter: q.audioLetter,
+        displayedLetter: q.displayedLetter,
+        isMatch: q.isMatch,
+      })),
     });
 
     return questions;
   };
 
   const [questions, setQuestions] = useState([]);
+  // Ref to track questions array changes
+  const questionsArrayIdRef = useRef(null);
+  // Ref to track when currentQuestion changes
+  const previousQuestionRef = useRef(null);
+  // Ref to track the config that was used to generate current questions
+  const questionsConfigRef = useRef(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(100);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  // Ref to prevent double audio playback (React StrictMode double-invocation)
+  const isPlayingAudioRef = useRef(false);
+  const currentQuestionAudioKeyRef = useRef(null);
+  // Ref to store the exact question that was displayed, for validation
+  const displayedQuestionRef = useRef(null);
+  // Ref to track last logged question to avoid duplicate render logs
+  const lastLoggedQuestionRef = useRef(null);
+  // Ref to lock the question that audio is currently playing for (prevents questions array changes from affecting audio/display)
+  const lockedQuestionForAudioRef = useRef(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -603,8 +634,25 @@ const LetterLauncherMechanicsContent = ({
         setCurrentGameLevel(level);
       }
       if (sessionInitialized) {
-        const newQuestions = generateQuestions();
-        setQuestions(newQuestions);
+        // Check if we need to regenerate questions (config changed or questions don't exist)
+        // Use 'level' prop directly (not currentGameLevel state) since we're about to set it
+        const levelToUse = level || currentGameLevel;
+        const currentConfig = `${f3FlowStep?.step?.step}-${f3FlowStep?.step?.type}-${contentType}-${contentCount}-${levelToUse}`;
+        const configChanged = questionsConfigRef.current !== currentConfig;
+        const questionsEmpty = questions.length === 0;
+
+        // Prevent question regeneration if audio is currently playing (lock protection)
+        if (isPlayingAudioRef.current && lockedQuestionForAudioRef.current) {
+        } else if (configChanged || questionsEmpty) {
+          const newQuestions = generateQuestions();
+          const newArrayId = `${Date.now()}-${newQuestions
+            .map((q, i) => `${i}:${q.audioLetter}-${q.displayedLetter}`)
+            .join("|")}`;
+
+          questionsArrayIdRef.current = newArrayId;
+          questionsConfigRef.current = currentConfig;
+          setQuestions(newQuestions);
+        }
       }
     }
   }, [
@@ -619,9 +667,26 @@ const LetterLauncherMechanicsContent = ({
   useEffect(() => {
     const initializeGameSession = async () => {
       if (sessionInitialized) {
-        const generatedQuestions = generateQuestions();
-        setQuestions(generatedQuestions);
-        // Initialize level start time and reset question summaries
+        // Check if we need to regenerate questions (config changed or questions don't exist)
+        const currentConfig = `${f3FlowStep?.step?.step}-${f3FlowStep?.step?.type}-${contentType}-${contentCount}-${currentGameLevel}`;
+        const configChanged = questionsConfigRef.current !== currentConfig;
+        const questionsEmpty = questions.length === 0;
+
+        // Prevent question regeneration if audio is currently playing (lock protection)
+        if (isPlayingAudioRef.current && lockedQuestionForAudioRef.current) {
+        } else if (configChanged || questionsEmpty) {
+          const generatedQuestions = generateQuestions();
+          const newArrayId = `${Date.now()}-${generatedQuestions
+            .map((q, i) => `${i}:${q.audioLetter}-${q.displayedLetter}`)
+            .join("|")}`;
+
+          questionsArrayIdRef.current = newArrayId;
+          questionsConfigRef.current = currentConfig;
+          setQuestions(generatedQuestions);
+        } else {
+        }
+
+        // Initialize level start time and reset question summaries (always do this)
         const now = Date.now();
         setLevelStartTime(now);
         setQuestionSummaries([]);
@@ -676,22 +741,105 @@ const LetterLauncherMechanicsContent = ({
     }
 
     const currentQuestion = questions[currentQuestionIndex];
-    if (!currentQuestion) return;
+
+    if (!currentQuestion) {
+      return;
+    }
+
+    // Create a unique key for this question's audio
+    const audioKey = `${currentQuestionIndex}-${currentQuestion.audioLetter}-${currentQuestion.displayedLetter}`;
+
+    // Prevent double audio playback: atomic check-and-set pattern
+    // If already playing the same audio, skip immediately
+    if (
+      isPlayingAudioRef.current &&
+      currentQuestionAudioKeyRef.current === audioKey
+    ) {
+      return;
+    }
+
+    // Atomic check-and-set: if ref is already true for a different audio, skip
+    // This handles the case where we're transitioning between questions
+    if (
+      isPlayingAudioRef.current &&
+      currentQuestionAudioKeyRef.current !== audioKey
+    ) {
+      return;
+    }
+
+    // Set refs SYNCHRONOUSLY and IMMEDIATELY before any async operations
+    // This prevents React StrictMode double-invocation from both passing the check
+    isPlayingAudioRef.current = true;
+    currentQuestionAudioKeyRef.current = audioKey;
+    // Lock the question that audio is playing for - prevents questions array changes from affecting this audio/display
+    lockedQuestionForAudioRef.current = {
+      ...currentQuestion,
+      questionIndex: currentQuestionIndex,
+    };
 
     const playQuestionAudio = async () => {
       setShowLetter(false);
       setIsPlayingAudio(true);
 
       // Play audio
-      await playLetterAudio(currentQuestion.audioLetter, initialLanguage);
+
+      try {
+        await playLetterAudio(currentQuestion.audioLetter, initialLanguage);
+      } catch (error) {
+        // If audio fails, reset refs so we don't get stuck
+        isPlayingAudioRef.current = false;
+        currentQuestionAudioKeyRef.current = null;
+        lockedQuestionForAudioRef.current = null;
+        setIsPlayingAudio(false);
+
+        return; // Exit early if audio fails
+      }
 
       // After audio ends, show the letter
       setShowLetter(true);
       setIsPlayingAudio(false);
       setQuestionStartTime(Date.now());
+
+      // CRITICAL: Use the question from the ref (what was actually rendered) instead of re-reading from array
+      // The ref is set during render and represents what's actually displayed on screen
+      const refQuestion = displayedQuestionRef.current;
+      const latestQuestion = questions[currentQuestionIndex];
+
+      // Determine which question to use - prefer ref (what was rendered) over closure or array
+      let questionToUse;
+      if (refQuestion && refQuestion.questionIndex === currentQuestionIndex) {
+        // Use ref question if it exists and matches current index (this is what was actually displayed)
+        questionToUse = refQuestion;
+      } else {
+        // Fallback: use latest from array, or closure question
+        questionToUse = latestQuestion || currentQuestion;
+        // Update ref with the question we're using (for validation)
+        displayedQuestionRef.current = {
+          ...questionToUse,
+          questionIndex: currentQuestionIndex,
+        };
+      }
+
+      // Show what will happen for each option BEFORE user selects
+      const correctAnswer = questionToUse.isMatch; // true = TICK, false = CROSS
+      const ifSelectTick = true === questionToUse.isMatch;
+      const ifSelectCross = false === questionToUse.isMatch;
+
+      // Clear refs after audio completes
+      isPlayingAudioRef.current = false;
+      // Clear the lock after audio finishes and letter is shown
+      lockedQuestionForAudioRef.current = null;
     };
 
     playQuestionAudio();
+
+    // Cleanup function: if component unmounts or effect re-runs before audio completes,
+    // we don't reset refs here (they'll be reset after audio completes or in handleContinue)
+    // This prevents race conditions with React StrictMode double-invocation
+    return () => {
+      // Only cleanup if this is a true unmount (not just a re-run)
+      // We can't easily detect this, so we rely on the ref check at the start of the effect
+    };
   }, [
     sessionInitialized,
     questions,
@@ -702,6 +850,21 @@ const LetterLauncherMechanicsContent = ({
     effectiveStartShowCase,
     initialLanguage,
   ]);
+
+  // Track when currentQuestion changes
+  useEffect(() => {
+    const currentQuestion = questions[currentQuestionIndex];
+    const questionKey = currentQuestion
+      ? `${currentQuestionIndex}-${currentQuestion.audioLetter}-${currentQuestion.displayedLetter}`
+      : null;
+    if (previousQuestionRef.current !== questionKey) {
+      const previousKey = previousQuestionRef.current;
+      previousQuestionRef.current = questionKey;
+    }
+  }, [questions, currentQuestionIndex]);
+
+  // Note: We don't reset refs on currentQuestionIndex change here to avoid race conditions
+  // Refs are reset in handleContinue (when user moves to next question) and after audio completes
 
   // Start timer when start screen is dismissed for Apply steps
   useEffect(() => {
@@ -774,7 +937,28 @@ const LetterLauncherMechanicsContent = ({
   const handleAnswerSelect = async (isMatch) => {
     if (showFeedback || isPlayingAudio || !showLetter) return;
 
-    const currentQuestion = questions[currentQuestionIndex];
+    // CRITICAL: Use the question from the ref (what was actually displayed) instead of reading from array
+    // This ensures we validate against the exact question that was shown, even if questions array changed
+    const displayedQuestion = displayedQuestionRef.current;
+    const arrayQuestion = questions[currentQuestionIndex];
+
+    // Determine which question to use for validation
+    let currentQuestion;
+    if (
+      displayedQuestion &&
+      displayedQuestion.questionIndex === currentQuestionIndex
+    ) {
+      // Use ref question if it exists and matches current index
+      currentQuestion = displayedQuestion;
+    } else {
+      // Fallback to array question
+      currentQuestion = arrayQuestion;
+    }
+
+    if (!currentQuestion) {
+      return;
+    }
+
     const isCorrectAnswer = isMatch === currentQuestion.isMatch;
 
     // Calculate fuel based on response time
@@ -1041,6 +1225,8 @@ const LetterLauncherMechanicsContent = ({
         setSelectedAnswer(null);
         setShowLetter(false);
         setFuelEarned(null);
+        // Clear the displayed question ref when moving to next question
+        displayedQuestionRef.current = null;
       }
     }, 2000);
   };
@@ -1051,6 +1237,12 @@ const LetterLauncherMechanicsContent = ({
       setShowFeedback(false);
       setSelectedAnswer(null);
       setShowLetter(false);
+      // Reset audio refs when moving to next question
+      isPlayingAudioRef.current = false;
+      currentQuestionAudioKeyRef.current = null;
+      lockedQuestionForAudioRef.current = null;
+      // Clear the displayed question ref when moving to next question
+      displayedQuestionRef.current = null;
     }
   };
 
@@ -1687,7 +1879,15 @@ const LetterLauncherMechanicsContent = ({
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // Use locked question if audio is playing, otherwise use questions array
+  // This prevents questions array changes from affecting the question that audio is playing for
+  const usingLockedQuestion =
+    isPlayingAudioRef.current &&
+    lockedQuestionForAudioRef.current &&
+    lockedQuestionForAudioRef.current.questionIndex === currentQuestionIndex;
+  const currentQuestion = usingLockedQuestion
+    ? lockedQuestionForAudioRef.current
+    : questions[currentQuestionIndex];
 
   // Get fuel requirements and mission destination
   const { requiredFuel, maxFuel } = getFuelRequirement(
@@ -2146,25 +2346,50 @@ const LetterLauncherMechanicsContent = ({
               >
                 <LanguageProvider initialLanguage={initialLanguage}>
                   <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
-                    {currentQuestion && (
-                      <LetterLauncherGameCore
-                        currentQuestion={{
+                    {currentQuestion &&
+                      (() => {
+                        const questionToPass = {
                           ...currentQuestion,
                           displayedLetter: showLetter
                             ? currentQuestion.displayedLetter
                             : "",
-                        }}
-                        mode="game"
-                        selectedLanguage={initialLanguage}
-                        showFeedback={showFeedback}
-                        isCorrect={isCorrect}
-                        selectedAnswer={selectedAnswer}
-                        fuelEarned={fuelEarned}
-                        disabled={!showLetter || isPlayingAudio}
-                        onAnswerSelect={handleAnswerSelect}
-                        onContinue={handleContinue}
-                      />
-                    )}
+                        };
+
+                        // CRITICAL: Store the exact question being rendered in the ref
+                        // This ensures validation uses the same question that's displayed on screen
+                        // We do this in render (not in async audio function) to match what's actually shown
+                        if (
+                          showLetter &&
+                          displayedQuestionRef.current?.questionIndex !==
+                            currentQuestionIndex
+                        ) {
+                          displayedQuestionRef.current = {
+                            ...currentQuestion,
+                            questionIndex: currentQuestionIndex,
+                          };
+                        }
+
+                        // Only log when question actually changes (not on every re-render)
+                        const questionKey = `${currentQuestionIndex}-${currentQuestion.audioLetter}-${currentQuestion.displayedLetter}-${showLetter}`;
+                        if (lastLoggedQuestionRef.current !== questionKey) {
+                          lastLoggedQuestionRef.current = questionKey;
+                        }
+                        return (
+                          <LetterLauncherGameCore
+                            key={`question-${currentQuestionIndex}`}
+                            currentQuestion={questionToPass}
+                            mode="game"
+                            selectedLanguage={initialLanguage}
+                            showFeedback={showFeedback}
+                            isCorrect={isCorrect}
+                            selectedAnswer={selectedAnswer}
+                            fuelEarned={fuelEarned}
+                            disabled={!showLetter || isPlayingAudio}
+                            onAnswerSelect={handleAnswerSelect}
+                            onContinue={handleContinue}
+                          />
+                        );
+                      })()}
                   </AudioLanguageProvider>
                 </LanguageProvider>
               </div>
