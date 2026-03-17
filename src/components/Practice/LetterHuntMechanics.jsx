@@ -109,6 +109,17 @@ const LetterHuntMechanicsContent = ({
       if (flowStep) {
         return `${flowStep.type}${flowStep.step}`;
       }
+    } else if (flowType === "F3") {
+      const f3Config = levelGetContent[lang]?.["F3"];
+      const stepConfig = f3Config?.[flowIndex];
+      if (stepConfig?.title) {
+        return stepConfig.title;
+      }
+      // Fallback: construct from F3_FLOW
+      const flowStep = F3_FLOW[flowIndex];
+      if (flowStep) {
+        return `${flowStep.type}${flowStep.step}`;
+      }
     }
     return undefined;
   };
@@ -163,7 +174,7 @@ const LetterHuntMechanicsContent = ({
           milestoneLevel: "B",
           subMilestoneLevel: "F2",
           duration: calculateDuration(),
-          applyLevel: "A3",
+          applyLevel: getStepTitleFromFlowIndex(0, "F2"),
         });
         console.log(
           "F2 flow initialized at lesson 1 (index 0) after F1 completion"
@@ -207,7 +218,7 @@ const LetterHuntMechanicsContent = ({
             milestoneLevel: "B",
             subMilestoneLevel: "F3",
             duration: calculateDuration(),
-            applyLevel: "A3",
+            applyLevel: getStepTitleFromFlowIndex(0, "F3"),
           });
           console.log(
             "F3 flow initialized at lesson 1 (index 0) after F2 completion"

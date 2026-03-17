@@ -4418,6 +4418,17 @@ const Practice = () => {
       if (flowStep) {
         return `${flowStep.type}${flowStep.step}`;
       }
+    } else if (flowType === "F3") {
+      const f3Config = levelGetContent[lang]?.["F3"];
+      const stepConfig = f3Config?.[flowIndex];
+      if (stepConfig?.title) {
+        return stepConfig.title;
+      }
+      // Fallback: construct from F3_FLOW
+      const flowStep = F3_FLOW[flowIndex];
+      if (flowStep) {
+        return `${flowStep.type}${flowStep.step}`;
+      }
     }
     return undefined;
   };
@@ -5679,6 +5690,7 @@ const Practice = () => {
                 language: lang,
                 milestoneLevel: "B",
                 subMilestoneLevel: "F3",
+                applyLevel: getStepTitleFromFlowIndex(targetIndex, "F3"),
               });
               console.log("F3 flow redirect progress saved:", {
                 index: targetIndex,
