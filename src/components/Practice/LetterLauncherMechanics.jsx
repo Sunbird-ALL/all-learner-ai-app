@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../Layouts.jsx/MainLayout";
 import {
@@ -31,7 +31,6 @@ import {
   memoryGameDataLoader,
 } from "../../lib/axl-explorations/src/lib/index";
 import { trackingAssessmentService } from "../../lib/axl-explorations/src/utils/trackingAssessmentService";
-
 // Import preview components directly
 import { CountdownTimer } from "../../lib/axl-explorations/src/components/CountdownTimer";
 import { LetterLauncherGameStoryPreview } from "../../lib/axl-explorations/src/components/games/LetterLauncherGameStoryPreview";
@@ -76,10 +75,13 @@ const LetterLauncherMechanicsContent = ({
   contentType = "letter", // "letter" or "syllable"
   contentCount = 10,
   sessionId, // Optional: Session ID from parent
+  confidentLetters, // Optional: Letters user is confident with (appear less frequently)
 }) => {
   const [currentGameLevel, setCurrentGameLevel] = useState(level || 1);
   const [isGameComplete, setIsGameComplete] = useState(false);
   const [sessionInitialized, setSessionInitialized] = useState(false);
+  // Track step start time for duration calculation
+  const [stepStartTime, setStepStartTime] = useState(null);
   const navigate = useNavigate();
 
   // Preview states - only show preview for P1 step
@@ -218,12 +220,14 @@ const LetterLauncherMechanicsContent = ({
         setSessionInitialized(true);
       } catch (error) {
         console.warn("Failed to initialize telemetry session:", error);
+
         setSessionInitialized(true);
       }
     };
 
     const timeoutId = setTimeout(() => {
       console.warn("Session initialization timeout - proceeding anyway");
+
       setSessionInitialized(true);
     }, 3000);
 
@@ -304,6 +308,7 @@ const LetterLauncherMechanicsContent = ({
           supportedLanguage,
           levelKey
         );
+
         console.log(
           `Letter Launcher - Using ${supportedLanguage} letters for level ${currentGameLevel}:`,
           {
@@ -325,31 +330,114 @@ const LetterLauncherMechanicsContent = ({
           : ["at", "an", "in", "on", "am", "it", "up", "en", "ed", "ot"];
     }
 
+    // Build weighted letter array based on confidentLetters
+    const buildWeightedLetterArray = (letters) => {
+      if (
+        !confidentLetters ||
+        confidentLetters.length === 0 ||
+        letters.length === 0
+      ) {
+        return letters;
+      }
+
+      // Normalize confident letters to uppercase
+      const normalizedConfident = confidentLetters
+        .map((letter) =>
+          typeof letter === "string" ? letter.toUpperCase() : ""
+        )
+        .filter(Boolean);
+
+      // Separate letters into confident and non-confident
+      const confident = [];
+      const nonConfident = [];
+
+      letters.forEach((letter) => {
+        const upperLetter = letter.toUpperCase();
+        if (normalizedConfident.includes(upperLetter)) {
+          confident.push(letter);
+        } else {
+          nonConfident.push(letter);
+        }
+      });
+
+      // Build weighted array:
+      // - Confident letters: appear 1 time (reduced frequency)
+      // - Non-confident letters: appear 3 times (increased frequency for practice)
+      const weightedArray = [];
+
+      // Add confident letters once
+      confident.forEach((letter) => {
+        weightedArray.push(letter);
+      });
+
+      // Add non-confident letters multiple times (3x for more practice)
+      for (let i = 0; i < 3; i++) {
+        nonConfident.forEach((letter) => {
+          weightedArray.push(letter);
+        });
+      }
+
+      console.log("Letter Launcher - Weighted array with confident letters:", {
+        totalLetters: letters.length,
+        confidentLetters: confident,
+        nonConfidentLetters: nonConfident,
+        weightedArrayLength: weightedArray.length,
+        confidentCount: confident.length,
+        nonConfidentCount: nonConfident.length * 3,
+      });
+
+      return weightedArray.length > 0 ? weightedArray : letters;
+    };
+
+    // Apply weighted selection
+    const weightedLetters = buildWeightedLetterArray(letters);
+
     console.log("Letter Launcher - Generating questions:", {
       contentCount,
       contentType,
       language: initialLanguage,
       level: currentGameLevel,
       availableLetters: letters.length,
+      weightedLettersCount: weightedLetters.length,
       expectedQuestions: contentCount,
     });
+    const matchesCount = Math.floor(contentCount / 2);
+    const mismatchesCount = contentCount - matchesCount;
+
+    // Create exact 50:50 match distribution
+    const matchArray = [
+      ...Array(matchesCount).fill(true),
+      ...Array(mismatchesCount).fill(false),
+    ];
+
+    // Shuffle once
+    matchArray.sort(() => Math.random() - 0.5);
 
     for (let i = 0; i < contentCount; i++) {
-      const audioLetter = letters[Math.floor(Math.random() * letters.length)];
-      // Randomly decide if displayed letter matches audio (70% match, 30% mismatch)
-      const isMatch = Math.random() > 0.3;
+      // Select from weighted array instead of original letters array
+      const audioLetter =
+        weightedLetters[Math.floor(Math.random() * weightedLetters.length)];
+      // Randomly decide if displayed letter matches audio (50% match, 50% mismatch)
+      const isMatch = matchArray[i];
       const displayedLetter = isMatch
         ? audioLetter
-        : letters.filter((l) => l !== audioLetter)[
-            Math.floor(Math.random() * (letters.length - 1))
+        : weightedLetters.filter((l) => l !== audioLetter)[
+            Math.floor(Math.random() * (weightedLetters.length - 1))
           ];
-      questions.push({
+      const question = {
         audioLetter,
         displayedLetter,
         isMatch,
         complexity: "simple",
         language: initialLanguage,
-      });
+      };
+      // Verify isMatch is correct
+      const actualMatch = audioLetter === displayedLetter;
+      if (isMatch !== actualMatch) {
+        // Question generation mismatch detected - this should not happen
+      }
+
+      questions.push(question);
     }
 
     console.log("Letter Launcher - Generated questions:", {
@@ -357,17 +445,38 @@ const LetterLauncherMechanicsContent = ({
       expectedCount: contentCount,
       match: questions.length === contentCount,
       language: initialLanguage,
+      contentType,
+      sampleQuestions: questions.slice(0, 3).map((q) => ({
+        audioLetter: q.audioLetter,
+        displayedLetter: q.displayedLetter,
+        isMatch: q.isMatch,
+      })),
     });
 
     return questions;
   };
 
   const [questions, setQuestions] = useState([]);
+  // Ref to track questions array changes
+  const questionsArrayIdRef = useRef(null);
+  // Ref to track when currentQuestion changes
+  const previousQuestionRef = useRef(null);
+  // Ref to track the config that was used to generate current questions
+  const questionsConfigRef = useRef(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(100);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  // Ref to prevent double audio playback (React StrictMode double-invocation)
+  const isPlayingAudioRef = useRef(false);
+  const currentQuestionAudioKeyRef = useRef(null);
+  // Ref to store the exact question that was displayed, for validation
+  const displayedQuestionRef = useRef(null);
+  // Ref to track last logged question to avoid duplicate render logs
+  const lastLoggedQuestionRef = useRef(null);
+  // Ref to lock the question that audio is currently playing for (prevents questions array changes from affecting audio/display)
+  const lockedQuestionForAudioRef = useRef(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -424,6 +533,35 @@ const LetterLauncherMechanicsContent = ({
     };
   };
 
+  // Reset step start time when F3 step changes
+  useEffect(() => {
+    if (isF3FlowActive && f3FlowStep?.index !== undefined) {
+      setStepStartTime(Date.now());
+    }
+  }, [f3FlowStep?.index, isF3FlowActive]);
+
+  // Helper function to get F3 step title
+  const getF3StepTitle = (flowIndex) => {
+    const lang = getLocalData("lang") || "en";
+    const f3Config = levelGetContent[lang]?.["F3"];
+    const stepConfig = f3Config?.[flowIndex];
+    if (stepConfig?.title) {
+      return stepConfig.title;
+    }
+    // Fallback: construct from F3_FLOW
+    const flowStep = F3_FLOW[flowIndex];
+    if (flowStep) {
+      return `${flowStep.type}${flowStep.step}`;
+    }
+    return undefined;
+  };
+
+  // Helper function to calculate duration in seconds
+  const calculateF3Duration = () => {
+    if (!stepStartTime) return undefined;
+    return Math.round((Date.now() - stepStartTime) / 1000); // Duration in seconds
+  };
+
   const assessmentParams = getF3AssessmentParams();
 
   // Check if P1 step has progress (for preview display)
@@ -475,6 +613,10 @@ const LetterLauncherMechanicsContent = ({
     setShowStoryPreview(false);
     // After story preview, start the game
     setShowPreview(false);
+    // Reset audio refs so the first question's audio plays fresh after the demo
+    isPlayingAudioRef.current = false;
+    currentQuestionAudioKeyRef.current = null;
+    lockedQuestionForAudioRef.current = null;
   };
 
   // Reset completion state when step changes (detected by f3FlowStep change)
@@ -496,8 +638,25 @@ const LetterLauncherMechanicsContent = ({
         setCurrentGameLevel(level);
       }
       if (sessionInitialized) {
-        const newQuestions = generateQuestions();
-        setQuestions(newQuestions);
+        // Check if we need to regenerate questions (config changed or questions don't exist)
+        // Use 'level' prop directly (not currentGameLevel state) since we're about to set it
+        const levelToUse = level || currentGameLevel;
+        const currentConfig = `${f3FlowStep?.step?.step}-${f3FlowStep?.step?.type}-${contentType}-${contentCount}-${levelToUse}`;
+        const configChanged = questionsConfigRef.current !== currentConfig;
+        const questionsEmpty = questions.length === 0;
+
+        // Prevent question regeneration if audio is currently playing (lock protection)
+        if (isPlayingAudioRef.current && lockedQuestionForAudioRef.current) {
+        } else if (configChanged || questionsEmpty) {
+          const newQuestions = generateQuestions();
+          const newArrayId = `${Date.now()}-${newQuestions
+            .map((q, i) => `${i}:${q.audioLetter}-${q.displayedLetter}`)
+            .join("|")}`;
+
+          questionsArrayIdRef.current = newArrayId;
+          questionsConfigRef.current = currentConfig;
+          setQuestions(newQuestions);
+        }
       }
     }
   }, [
@@ -512,9 +671,26 @@ const LetterLauncherMechanicsContent = ({
   useEffect(() => {
     const initializeGameSession = async () => {
       if (sessionInitialized) {
-        const generatedQuestions = generateQuestions();
-        setQuestions(generatedQuestions);
-        // Initialize level start time and reset question summaries
+        // Check if we need to regenerate questions (config changed or questions don't exist)
+        const currentConfig = `${f3FlowStep?.step?.step}-${f3FlowStep?.step?.type}-${contentType}-${contentCount}-${currentGameLevel}`;
+        const configChanged = questionsConfigRef.current !== currentConfig;
+        const questionsEmpty = questions.length === 0;
+
+        // Prevent question regeneration if audio is currently playing (lock protection)
+        if (isPlayingAudioRef.current && lockedQuestionForAudioRef.current) {
+        } else if (configChanged || questionsEmpty) {
+          const generatedQuestions = generateQuestions();
+          const newArrayId = `${Date.now()}-${generatedQuestions
+            .map((q, i) => `${i}:${q.audioLetter}-${q.displayedLetter}`)
+            .join("|")}`;
+
+          questionsArrayIdRef.current = newArrayId;
+          questionsConfigRef.current = currentConfig;
+          setQuestions(generatedQuestions);
+        } else {
+        }
+
+        // Initialize level start time and reset question summaries (always do this)
         const now = Date.now();
         setLevelStartTime(now);
         setQuestionSummaries([]);
@@ -563,38 +739,143 @@ const LetterLauncherMechanicsContent = ({
       return;
     }
 
+    // For P1 step: wait for preview/demo (countdown + story preview) to complete before playing audio
+    if (showPreview || showStoryPreview) {
+      return;
+    }
+
     // For Apply steps, wait for start screen to be dismissed
     if (effectiveIsShowCase && !effectiveStartShowCase) {
       return;
     }
 
     const currentQuestion = questions[currentQuestionIndex];
-    if (!currentQuestion) return;
+
+    if (!currentQuestion) {
+      return;
+    }
+
+    // Create a unique key for this question's audio
+    const audioKey = `${currentQuestionIndex}-${currentQuestion.audioLetter}-${currentQuestion.displayedLetter}`;
+
+    // Prevent double audio playback: atomic check-and-set pattern
+    // If already playing the same audio, skip immediately
+    if (
+      isPlayingAudioRef.current &&
+      currentQuestionAudioKeyRef.current === audioKey
+    ) {
+      return;
+    }
+
+    // Atomic check-and-set: if ref is already true for a different audio, skip
+    // This handles the case where we're transitioning between questions
+    if (
+      isPlayingAudioRef.current &&
+      currentQuestionAudioKeyRef.current !== audioKey
+    ) {
+      return;
+    }
+
+    // Set refs SYNCHRONOUSLY and IMMEDIATELY before any async operations
+    // This prevents React StrictMode double-invocation from both passing the check
+    isPlayingAudioRef.current = true;
+    currentQuestionAudioKeyRef.current = audioKey;
+    // Lock the question that audio is playing for - prevents questions array changes from affecting this audio/display
+    lockedQuestionForAudioRef.current = {
+      ...currentQuestion,
+      questionIndex: currentQuestionIndex,
+    };
 
     const playQuestionAudio = async () => {
       setShowLetter(false);
       setIsPlayingAudio(true);
 
       // Play audio
-      await playLetterAudio(currentQuestion.audioLetter, initialLanguage);
+
+      try {
+        await playLetterAudio(currentQuestion.audioLetter, initialLanguage);
+      } catch (error) {
+        // If audio fails, reset refs so we don't get stuck
+        isPlayingAudioRef.current = false;
+        currentQuestionAudioKeyRef.current = null;
+        lockedQuestionForAudioRef.current = null;
+        setIsPlayingAudio(false);
+
+        return; // Exit early if audio fails
+      }
 
       // After audio ends, show the letter
       setShowLetter(true);
       setIsPlayingAudio(false);
       setQuestionStartTime(Date.now());
+
+      // CRITICAL: Use the question from the ref (what was actually rendered) instead of re-reading from array
+      // The ref is set during render and represents what's actually displayed on screen
+      const refQuestion = displayedQuestionRef.current;
+      const latestQuestion = questions[currentQuestionIndex];
+
+      // Determine which question to use - prefer ref (what was rendered) over closure or array
+      let questionToUse;
+      if (refQuestion && refQuestion.questionIndex === currentQuestionIndex) {
+        // Use ref question if it exists and matches current index (this is what was actually displayed)
+        questionToUse = refQuestion;
+      } else {
+        // Fallback: use latest from array, or closure question
+        questionToUse = latestQuestion || currentQuestion;
+        // Update ref with the question we're using (for validation)
+        displayedQuestionRef.current = {
+          ...questionToUse,
+          questionIndex: currentQuestionIndex,
+        };
+      }
+
+      // Show what will happen for each option BEFORE user selects
+      const correctAnswer = questionToUse.isMatch; // true = TICK, false = CROSS
+      const ifSelectTick = true === questionToUse.isMatch;
+      const ifSelectCross = false === questionToUse.isMatch;
+
+      // Clear refs after audio completes
+      isPlayingAudioRef.current = false;
+      // Clear the lock after audio finishes and letter is shown
+      lockedQuestionForAudioRef.current = null;
     };
 
     playQuestionAudio();
+
+    // Cleanup function: if component unmounts or effect re-runs before audio completes,
+    // we don't reset refs here (they'll be reset after audio completes or in handleContinue)
+    // This prevents race conditions with React StrictMode double-invocation
+    return () => {
+      // Only cleanup if this is a true unmount (not just a re-run)
+      // We can't easily detect this, so we rely on the ref check at the start of the effect
+    };
   }, [
     sessionInitialized,
     questions,
     currentQuestionIndex,
     showFeedback,
     isGameComplete,
+    showPreview,
+    showStoryPreview,
     effectiveIsShowCase,
     effectiveStartShowCase,
     initialLanguage,
   ]);
+
+  // Track when currentQuestion changes
+  useEffect(() => {
+    const currentQuestion = questions[currentQuestionIndex];
+    const questionKey = currentQuestion
+      ? `${currentQuestionIndex}-${currentQuestion.audioLetter}-${currentQuestion.displayedLetter}`
+      : null;
+    if (previousQuestionRef.current !== questionKey) {
+      const previousKey = previousQuestionRef.current;
+      previousQuestionRef.current = questionKey;
+    }
+  }, [questions, currentQuestionIndex]);
+
+  // Note: We don't reset refs on currentQuestionIndex change here to avoid race conditions
+  // Refs are reset in handleContinue (when user moves to next question) and after audio completes
 
   // Start timer when start screen is dismissed for Apply steps
   useEffect(() => {
@@ -667,7 +948,28 @@ const LetterLauncherMechanicsContent = ({
   const handleAnswerSelect = async (isMatch) => {
     if (showFeedback || isPlayingAudio || !showLetter) return;
 
-    const currentQuestion = questions[currentQuestionIndex];
+    // CRITICAL: Use the question from the ref (what was actually displayed) instead of reading from array
+    // This ensures we validate against the exact question that was shown, even if questions array changed
+    const displayedQuestion = displayedQuestionRef.current;
+    const arrayQuestion = questions[currentQuestionIndex];
+
+    // Determine which question to use for validation
+    let currentQuestion;
+    if (
+      displayedQuestion &&
+      displayedQuestion.questionIndex === currentQuestionIndex
+    ) {
+      // Use ref question if it exists and matches current index
+      currentQuestion = displayedQuestion;
+    } else {
+      // Fallback to array question
+      currentQuestion = arrayQuestion;
+    }
+
+    if (!currentQuestion) {
+      return;
+    }
+
     const isCorrectAnswer = isMatch === currentQuestion.isMatch;
 
     // Calculate fuel based on response time
@@ -934,6 +1236,8 @@ const LetterLauncherMechanicsContent = ({
         setSelectedAnswer(null);
         setShowLetter(false);
         setFuelEarned(null);
+        // Clear the displayed question ref when moving to next question
+        displayedQuestionRef.current = null;
       }
     }, 2000);
   };
@@ -944,6 +1248,12 @@ const LetterLauncherMechanicsContent = ({
       setShowFeedback(false);
       setSelectedAnswer(null);
       setShowLetter(false);
+      // Reset audio refs when moving to next question
+      isPlayingAudioRef.current = false;
+      currentQuestionAudioKeyRef.current = null;
+      lockedQuestionForAudioRef.current = null;
+      // Clear the displayed question ref when moving to next question
+      displayedQuestionRef.current = null;
     }
   };
 
@@ -994,36 +1304,56 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: contentCount,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          sub_apply_level: effectiveIsShowCase ? currentGameLevel : undefined,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: false,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            sub_apply_level: isF3FlowActive
+              ? currentGameLevel
+              : effectiveIsShowCase
+              ? currentGameLevel
+              : undefined,
+            metadata: {
+              difficulty: "simple",
+              levelFailed: false,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for level:",
           currentGameLevel
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Pass):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -1058,26 +1388,13 @@ const LetterLauncherMechanicsContent = ({
       );
     }
 
-    // For Apply steps with failRedirect, store failure info for redirect
-    // A1: Letter Launcher failure → P1 (failRedirect)
-    // A2: Letter Launcher failure → P1 (different from Memory Challenge which goes to P6)
     if (effectiveIsShowCase && failRedirect && isF3FlowActive) {
-      // Store failure flag in localStorage so it persists across state resets
       setLocalData("letterLauncherLevelFailed", "true");
       setLocalData("letterLauncherFailedLevel", currentGameLevel.toString());
-      const redirectTarget = applyStep === 2 ? "P1" : failRedirect;
       console.log(
-        `Letter Launcher - Level ${currentGameLevel} failed in Apply step (A${
+        `Letter Launcher - Level ${currentGameLevel} failed in A${
           applyStep || 1
-        }), will redirect to ${redirectTarget} when user clicks "Try Again"`,
-        {
-          effectiveIsShowCase,
-          failRedirect,
-          applyStep,
-          redirectTarget,
-          isF3FlowActive,
-          currentGameLevel,
-        }
+        }, will redirect to ${failRedirect}`
       );
     }
 
@@ -1102,36 +1419,56 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: contentCount,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          sub_apply_level: effectiveIsShowCase ? currentGameLevel : undefined,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: true,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            sub_apply_level: isF3FlowActive
+              ? currentGameLevel
+              : effectiveIsShowCase
+              ? currentGameLevel
+              : undefined,
+            metadata: {
+              difficulty: "simple",
+              levelFailed: true,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for failed level:",
           currentGameLevel
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Fail):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -1189,34 +1526,50 @@ const LetterLauncherMechanicsContent = ({
       const missionDestination = getMissionDestination(currentGameLevel);
 
       try {
-        await trackingAssessmentService.createAssessmentTracking({
-          userId: currentUser.username,
-          gameKey: `letterLauncher_${initialLanguage}`,
-          gameTitle: "Letter Launcher",
-          level: currentGameLevel,
-          language: initialLanguage,
-          totalQuestions: contentCount,
-          correctAnswers: actualCorrect,
-          totalScore: finalFuel,
-          timeSpent: timeSpent,
-          assessmentSummary: questionSummaries,
-          sessionId: effectiveSessionId,
-          subsessionId: subsessionId,
-          sub_session_id: assessmentParams.sub_session_id,
-          sub_milestone_level: assessmentParams.sub_milestone_level,
-          apply_level: assessmentParams.apply_level,
-          metadata: {
-            difficulty: "simple",
-            levelFailed: false,
-            scorePercentage: (actualCorrect / questionSummaries.length) * 100,
-            fuelEarned: finalFuel,
-            fuelRequired: requiredFuel,
-            missionDestination: missionDestination,
-          },
-        });
+        const assessmentResponse =
+          await trackingAssessmentService.createAssessmentTracking({
+            userId: currentUser.username,
+            gameKey: `letterLauncher_${initialLanguage}`,
+            gameTitle: "Letter Launcher",
+            level: currentGameLevel,
+            language: initialLanguage,
+            totalQuestions: contentCount,
+            correctAnswers: actualCorrect,
+            totalScore: finalFuel,
+            timeSpent: timeSpent,
+            assessmentSummary: questionSummaries,
+            sessionId: effectiveSessionId,
+            subsessionId: subsessionId,
+            sub_session_id: assessmentParams.sub_session_id,
+            sub_milestone_level: assessmentParams.sub_milestone_level,
+            apply_level: assessmentParams.apply_level,
+            metadata: {
+              difficulty: "simple",
+              levelFailed: false,
+              scorePercentage: (actualCorrect / questionSummaries.length) * 100,
+              fuelEarned: finalFuel,
+              fuelRequired: requiredFuel,
+              missionDestination: missionDestination,
+            },
+          });
         console.log(
           "Letter Launcher assessment tracking created for Practice step"
         );
+
+        // Capture familiarity_syllables from API response and store in localStorage
+        if (
+          assessmentResponse?.data?.familiarity_syllables &&
+          Array.isArray(assessmentResponse.data.familiarity_syllables)
+        ) {
+          setLocalData(
+            "confidentLetters",
+            JSON.stringify(assessmentResponse.data.familiarity_syllables)
+          );
+          console.log(
+            "✅ Stored confidentLetters from API response (LetterLauncher - Practice):",
+            assessmentResponse.data.familiarity_syllables
+          );
+        }
       } catch (error) {
         console.error("Error creating assessment tracking:", error);
       }
@@ -1243,25 +1596,10 @@ const LetterLauncherMechanicsContent = ({
       const failedLevel =
         getLocalData("letterLauncherFailedLevel") || currentGameLevel;
 
-      // For A2, Letter Launcher failures should redirect to P1 (not P6)
-      // Memory Challenge failures in A2 will redirect to P6
-      const redirectTarget = applyStep === 2 ? "P1" : failRedirect;
-
       console.log(
         `Letter Launcher - Level ${failedLevel} failed in A${
           applyStep || 1
-        }, redirecting to ${redirectTarget}`,
-        {
-          effectiveIsShowCase,
-          failRedirect,
-          applyStep,
-          redirectTarget,
-          isF3FlowActive,
-          levelFailed,
-          levelFailedFlag,
-          currentGameLevel,
-          failedLevel,
-        }
+        }, redirecting to ${failRedirect}`
       );
       // Clear failure flags
       setLocalData("letterLauncherLevelFailed", null);
@@ -1269,7 +1607,7 @@ const LetterLauncherMechanicsContent = ({
       // Clear any sub-step state (e.g., memoryChallenge) to prevent moving to Memory Challenge
       setLocalData("f3ApplySubStep", null);
       // Store redirect info for Practice.jsx to handle
-      setLocalData("f3FlowRedirect", redirectTarget);
+      setLocalData("f3FlowRedirect", failRedirect);
       // Reset state first
       setIsGameComplete(false);
       setLevelFailed(false);
@@ -1299,6 +1637,7 @@ const LetterLauncherMechanicsContent = ({
     setLevelStartTime(now);
     setIsTimerRunning(false);
     setTimeRemaining(100);
+    // Don't reset preview states on retry - preview should only show once
     const newQuestions = generateQuestions();
     setQuestions(newQuestions);
 
@@ -1551,7 +1890,15 @@ const LetterLauncherMechanicsContent = ({
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // Use locked question if audio is playing, otherwise use questions array
+  // This prevents questions array changes from affecting the question that audio is playing for
+  const usingLockedQuestion =
+    isPlayingAudioRef.current &&
+    lockedQuestionForAudioRef.current &&
+    lockedQuestionForAudioRef.current.questionIndex === currentQuestionIndex;
+  const currentQuestion = usingLockedQuestion
+    ? lockedQuestionForAudioRef.current
+    : questions[currentQuestionIndex];
 
   // Get fuel requirements and mission destination
   const { requiredFuel, maxFuel } = getFuelRequirement(
@@ -1820,6 +2167,8 @@ const LetterLauncherMechanicsContent = ({
                         language: lang,
                         milestoneLevel: "B",
                         subMilestoneLevel: "F3",
+                        duration: calculateF3Duration(),
+                        applyLevel: getF3StepTitle(updatedF3FlowStep.index),
                       });
                       console.log(
                         "F3 flow progress saved by LetterLauncherMechanics (after step completion):",
@@ -1974,27 +2323,6 @@ const LetterLauncherMechanicsContent = ({
               <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
                 Letter Launcher
               </h1>
-              <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-[10px] sm:text-xs mt-0.5">
-                <svg
-                  className="h-3 w-3 sm:h-3.5 sm:w-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-                <span>
-                  {effectiveIsShowCase && endLevel
-                    ? `Level ${currentGameLevel} / ${endLevel}`
-                    : `Level ${currentGameLevel}`}{" "}
-                  • Mission: {missionDestination}
-                </span>
-              </div>
             </div>
 
             {/* Spacer to balance layout */}
@@ -2029,25 +2357,50 @@ const LetterLauncherMechanicsContent = ({
               >
                 <LanguageProvider initialLanguage={initialLanguage}>
                   <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
-                    {currentQuestion && (
-                      <LetterLauncherGameCore
-                        currentQuestion={{
+                    {currentQuestion &&
+                      (() => {
+                        const questionToPass = {
                           ...currentQuestion,
                           displayedLetter: showLetter
                             ? currentQuestion.displayedLetter
                             : "",
-                        }}
-                        mode="game"
-                        selectedLanguage={initialLanguage}
-                        showFeedback={showFeedback}
-                        isCorrect={isCorrect}
-                        selectedAnswer={selectedAnswer}
-                        fuelEarned={fuelEarned}
-                        disabled={!showLetter || isPlayingAudio}
-                        onAnswerSelect={handleAnswerSelect}
-                        onContinue={handleContinue}
-                      />
-                    )}
+                        };
+
+                        // CRITICAL: Store the exact question being rendered in the ref
+                        // This ensures validation uses the same question that's displayed on screen
+                        // We do this in render (not in async audio function) to match what's actually shown
+                        if (
+                          showLetter &&
+                          displayedQuestionRef.current?.questionIndex !==
+                            currentQuestionIndex
+                        ) {
+                          displayedQuestionRef.current = {
+                            ...currentQuestion,
+                            questionIndex: currentQuestionIndex,
+                          };
+                        }
+
+                        // Only log when question actually changes (not on every re-render)
+                        const questionKey = `${currentQuestionIndex}-${currentQuestion.audioLetter}-${currentQuestion.displayedLetter}-${showLetter}`;
+                        if (lastLoggedQuestionRef.current !== questionKey) {
+                          lastLoggedQuestionRef.current = questionKey;
+                        }
+                        return (
+                          <LetterLauncherGameCore
+                            key={`question-${currentQuestionIndex}`}
+                            currentQuestion={questionToPass}
+                            mode="game"
+                            selectedLanguage={initialLanguage}
+                            showFeedback={showFeedback}
+                            isCorrect={isCorrect}
+                            selectedAnswer={selectedAnswer}
+                            fuelEarned={fuelEarned}
+                            disabled={!showLetter || isPlayingAudio}
+                            onAnswerSelect={handleAnswerSelect}
+                            onContinue={handleContinue}
+                          />
+                        );
+                      })()}
                   </AudioLanguageProvider>
                 </LanguageProvider>
               </div>

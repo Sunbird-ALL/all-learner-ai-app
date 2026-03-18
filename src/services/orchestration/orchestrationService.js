@@ -185,6 +185,8 @@ export const addLesson = async ({
   language,
   milestoneLevel,
   subMilestoneLevel,
+  duration, // Optional: duration in seconds
+  applyLevel, // Optional: step title (e.g., "L1", "P1", "A1")
 }) => {
   // Validate required fields
   if (!sessionId) {
@@ -209,17 +211,27 @@ export const addLesson = async ({
   }
 
   try {
+    const payload = {
+      sessionId: sessionId,
+      milestone: milestone,
+      lesson: lesson,
+      progress: cappedProgress,
+      language: language,
+      milestoneLevel: milestoneLevel,
+      subMilestoneLevel: subMilestoneLevel,
+    };
+
+    // Only add optional fields if they are provided
+    if (duration !== undefined && duration !== null) {
+      payload.duration = duration;
+    }
+    if (applyLevel !== undefined && applyLevel !== null) {
+      payload.applyLevel = applyLevel;
+    }
+
     const response = await axios.post(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.ADD_LESSON}`,
-      {
-        sessionId: sessionId,
-        milestone: milestone,
-        lesson: lesson,
-        progress: cappedProgress,
-        language: language,
-        milestoneLevel: milestoneLevel,
-        subMilestoneLevel: subMilestoneLevel,
-      },
+      payload,
       getHeaders()
     );
     return response.data;

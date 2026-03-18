@@ -1042,6 +1042,7 @@ const MainLayout = (props) => {
                   {props.children}
                 </CardContent>
                 {steps > 0 &&
+                  tFlow !== "true" &&
                   !isF1FlowActive &&
                   !isF2FlowActive &&
                   !isF3FlowActive && (
