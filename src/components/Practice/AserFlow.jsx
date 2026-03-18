@@ -140,6 +140,7 @@ const AserFlow = ({
   // Track step start time for duration calculation
   const [stepStartTime] = useState(Date.now());
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
+  const isCompletionCalledRef = useRef(false);
   const [questions, setQuestions] = useState([]);
   // Track character selections for ansSelectionStatus - now an array of objects
   const [ansSelectionStatus, setAnsSelectionStatus] = useState([]);
@@ -395,6 +396,7 @@ const AserFlow = ({
   };
 
   const handleBubbleClick = (letter, index) => {
+    if (isCompletionCalledRef.current) return;
     stopCurrentAudio();
     setClickedIndex(index);
 
@@ -433,18 +435,7 @@ const AserFlow = ({
 
     // If all items are completed, handle navigation
     if (currentItemNumber >= TOTAL_ITEMS) {
-      await handleCompletion();
-      setLocalData("rFlow", false);
-      // Skip telemetry in preview/demo mode
-      if (!isDemo) {
-        callTelemetryDiscovery("Discovery-AserFlow");
-      }
-      handleNext?.();
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-        navigate("/");
-      } else {
-        navigate("/discover-start");
-      }
+      if (isCompletionCalledRef.current) return;
       return;
     }
 
@@ -465,6 +456,8 @@ const AserFlow = ({
 
     // After completing 10 items (regardless of correct/wrong)
     if (newItemNumber >= TOTAL_ITEMS) {
+      if (isCompletionCalledRef.current) return;
+      isCompletionCalledRef.current = true;
       console.log(
         "AserFlow - All 10 items completed! Next button should appear."
       );
