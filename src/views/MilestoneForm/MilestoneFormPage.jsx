@@ -1,5 +1,5 @@
 import React from "react";
-import MainLayout from "../../components/Layouts.jsx/MainLayout";
+import MainLayout from "../../components/Layout/MainLayout";
 import { Box } from "@mui/material";
 import { MilestoneFormDialog } from "../../components/MilestoneForm";
 import { getLocalData } from "../../utils/constants";

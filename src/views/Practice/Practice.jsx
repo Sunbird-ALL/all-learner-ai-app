@@ -33,11 +33,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   callConfetti,
   getLocalData,
-  levelGetContent,
   practiceSteps,
   sendTestRigScore,
   setLocalData,
 } from "../../utils/constants";
+import { levelGetContent } from "../../data/levelContent";
 import { getFontFamily } from "../../utils/fontUtils";
 import axios from "axios";
 import WordsOrImage from "../../components/Mechanism/WordsOrImage";
@@ -48,7 +48,7 @@ import { Typography, Box, CircularProgress } from "@mui/material";
 import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../../components/Assesment/Assesment";
 import { RetryDialog } from "../../components/Practice/RetryDialog";
-import { Log } from "../../services/telementryService";
+import { Log } from "../../services/telemetryService";
 import Mechanics6 from "../../components/Practice/Mechanics6";
 import Mechanics7 from "../../components/Practice/Mechanics7";
 import FluencyP1 from "../../components/Practice/FluencyP1";

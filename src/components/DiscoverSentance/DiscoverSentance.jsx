@@ -14,7 +14,7 @@ import useSound from "use-sound";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../Assesment/Assesment";
-import { Log } from "../../services/telementryService";
+import { Log } from "../../services/telemetryService";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import {
   addLesson,

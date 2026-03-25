@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import R0 from "./R0";
-import {
-  getLocalData,
-  setLocalData,
-  levelGetContent,
-  practiceSteps,
-} from "../utils/constants";
+import { getLocalData, setLocalData, practiceSteps } from "../utils/constants";
+import { levelGetContent } from "../data/levelContent";
 
 /**
  * F1 Flow sequence:

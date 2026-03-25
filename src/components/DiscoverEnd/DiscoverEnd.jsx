@@ -7,7 +7,8 @@ import back from "../../assets/images/back-arrow.svg";
 import discoverEndLeft from "../../assets/images/discover-end-left.svg";
 import discoverEndRight from "../../assets/images/discover-end-right.svg";
 import textureImage from "../../assets/images/textureImage.png";
-import { LetsStart, getLocalData, setLocalData } from "../../utils/constants";
+import { getLocalData, setLocalData } from "../../utils/constants";
+import { LetsStart } from "../Icons/SvgIcons";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 

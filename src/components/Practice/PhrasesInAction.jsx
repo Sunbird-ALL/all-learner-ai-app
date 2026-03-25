@@ -6,7 +6,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
@@ -40,7 +40,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import AudioTooltipModal from "./AudioTooltipModal";
-import { Log } from "../../services/telementryService";
+import { Log } from "../../services/telemetryService";
 
 const theme = createTheme();
 

@@ -15,7 +15,7 @@ import tortoiseImg from "../../assets/tortoiseImg.svg";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import {
   practiceSteps,
   WordRedCircle,

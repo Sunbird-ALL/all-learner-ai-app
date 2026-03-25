@@ -39,6 +39,7 @@ export interface QuestionSummary {
   isCorrect: boolean;
   responseTime: number;
   complexity: string;
+  points?: number;
 }
 
 export interface CreateAssessmentData {

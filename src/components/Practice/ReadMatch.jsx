@@ -16,7 +16,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
-import { Log } from "../../services/telementryService";
+import { Log } from "../../services/telemetryService";
 import { useNavigate } from "react-router-dom";
 import { getLocalData, setLocalData } from "../../utils/constants";
 import {

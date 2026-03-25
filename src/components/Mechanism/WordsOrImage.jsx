@@ -15,15 +15,15 @@ import {
   PlayAudioButton,
   StopAudioButton,
   ListenButton,
-  RetryIcon,
   StopButton,
   SpeakButton,
   NextButtonRound,
   getLocalData,
   setLocalData,
 } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 import { getFontFamily } from "../../utils/fontUtils";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import PropTypes from "prop-types";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {

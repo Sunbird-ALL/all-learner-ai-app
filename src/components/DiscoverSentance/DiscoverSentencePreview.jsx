@@ -1,14 +1,11 @@
 import { useState, useRef, useCallback } from "react";
-import {
-  getLocalData,
-  RetryIcon,
-  NextButtonRound,
-} from "../../utils/constants";
+import { getLocalData, NextButtonRound } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
 import WordsOrImage from "../Mechanism/WordsOrImage";
 import { Sparkles } from "lucide-react";
 import { Progress } from "../../lib/axl-explorations/src/components/ui/progress";
-import { set } from "lodash";
+// lodash.set import removed — was imported but never used
 
 const demoInstructions = {
   en: {

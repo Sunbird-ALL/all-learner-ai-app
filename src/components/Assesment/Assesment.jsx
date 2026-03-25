@@ -1,4 +1,4 @@
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import assessmentBackground from "../../assets/images/assessmentBackground.png";
 import {
   Box,
@@ -26,9 +26,6 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import LogoutImg from "../../assets/images/logout.svg";
 import { styled } from "@mui/material/styles";
 import {
-  RoundTick,
-  SelectLanguageButton,
-  StartAssessmentButton,
   getLocalData,
   getParameter,
   languages,
@@ -36,6 +33,11 @@ import {
   setLocalData,
   getLanguageOrDefault,
 } from "../../utils/constants";
+import {
+  RoundTick,
+  StartAssessmentButton,
+  SelectLanguageButton,
+} from "../Icons/SvgIcons";
 import practicebg from "../../assets/images/practice-bg.svg";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 import { useEffect, useState } from "react";
@@ -86,7 +88,7 @@ import config from "../../utils/urlConstants.json";
 import panda from "../../assets/images/panda.svg";
 import cryPanda from "../../assets/images/cryPanda.svg";
 import { uniqueId } from "../../services/utilService";
-import { end, interact } from "../../services/telementryService";
+import { end, interact } from "../../services/telemetryService";
 import { levelMapping } from "../../utils/levelData";
 import scoreView from "../../assets/images/scoreView.svg";
 import {

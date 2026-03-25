@@ -8,7 +8,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
-import MainLayout from "../components/Layouts.jsx/MainLayout";
+import MainLayout from "../components/Layout/MainLayout";
 import listenImg from "../assets/listen.svg";
 import correctSound from "../assets/correct.wav";
 import wrongSound from "../assets/audio/wrong.wav";
@@ -23,7 +23,7 @@ import {
 } from "../utils/constants";
 import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
-import { response } from "../services/telementryService";
+import { response } from "../services/telemetryService";
 import { Typography, Stack, IconButton } from "@mui/material";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import trainImg from "../assets/trainImg.svg";

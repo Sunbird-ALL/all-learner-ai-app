@@ -16,7 +16,7 @@ import { jwtDecode } from "jwt-decode";
 import "./LoginPage.css";
 import { setLocalData } from "../../utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
-import { initialize } from "../../services/telementryService";
+import { initialize } from "../../services/telemetryService";
 import { startEvent } from "../../services/callTelemetryIntract";
 import LanguageModalNew from "../../utils/LanguageModal";
 import { AudioDiagnosticModal } from "../../components/AudioDiagnostic";

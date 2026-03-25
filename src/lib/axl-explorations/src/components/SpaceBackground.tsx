@@ -3,6 +3,7 @@ import React from 'react';
 interface SpaceBackgroundProps {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function SpaceBackground({ children, className = '' }: SpaceBackgroundProps) {
