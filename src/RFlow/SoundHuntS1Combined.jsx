@@ -1661,7 +1661,7 @@ const soundMatchContent = {
         allwords: [
           {
             img: getAssetUrl(s3Assets.వదయలImg),
-            text: "వాద్యాల",
+            text: "వాద్యాలు",
             audio: getAssetAudioUrl(s3Assets.వదయలAudio),
           },
           {
@@ -1684,7 +1684,7 @@ const soundMatchContent = {
         allwords: [
           {
             img: getAssetUrl(s3Assets.వదయలImg),
-            text: "వాద్యాల",
+            text: "వాద్యాలు",
             audio: getAssetAudioUrl(s3Assets.వదయలAudio),
           },
           {
@@ -1698,7 +1698,7 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.వననలAudio),
           },
         ],
-        correctWord: "వాద్యాల",
+        correctWord: "వాద్యాలు",
         audio: getAssetAudioUrl(s3Assets.వదయలAudio),
         flowName: "S2",
         type: "soundMatch",
@@ -1712,7 +1712,7 @@ const soundMatchContent = {
           },
           {
             img: getAssetUrl(s3Assets.వదయలImg),
-            text: "వాద్యాల",
+            text: "వాద్యాలు",
             audio: getAssetAudioUrl(s3Assets.వదయలAudio),
           },
           {
@@ -1776,7 +1776,7 @@ const soundMatchContent = {
         allwords: [
           {
             img: getAssetUrl(s3Assets.వదయలImg),
-            text: "వాద్యాల",
+            text: "వాద్యాలు",
             audio: getAssetAudioUrl(s3Assets.వదయలAudio),
           },
           {
@@ -2179,7 +2179,7 @@ const soundMatchContent = {
           },
           {
             img: getAssetUrl(s3Assets.బదలనళలImg),
-            text: "బిందెలో నీళ్లు",
+            text: "పుట్టలో పాము",
             audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
           },
         ],
@@ -2248,7 +2248,7 @@ const soundMatchContent = {
           },
           {
             img: getAssetUrl(s3Assets.బదలనళలImg),
-            text: "బిందెలో నీళ్లు",
+            text: "పుట్టలో పాము",
             audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
           },
         ],
@@ -2271,7 +2271,7 @@ const soundMatchContent = {
           },
           {
             img: getAssetUrl(s3Assets.బదలనళలImg),
-            text: "బిందెలో నీళ్లు",
+            text: "పుట్టలో పాము",
             audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
           },
         ],
@@ -2284,7 +2284,7 @@ const soundMatchContent = {
         allwords: [
           {
             img: getAssetUrl(s3Assets.బదలనళలImg),
-            text: "బిందెలో నీళ్లు",
+            text: "పుట్టలో పాము",
             audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
           },
           {
@@ -2307,7 +2307,7 @@ const soundMatchContent = {
         allwords: [
           {
             img: getAssetUrl(s3Assets.బదలనళలImg),
-            text: "బిందెలో నీళ్లు",
+            text: "పుట్టలో పాము",
             audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
           },
           {
@@ -2321,7 +2321,7 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.పలలపటటAudio),
           },
         ],
-        correctWord: "బిందెలో నీళ్లు",
+        correctWord: "పుట్టలో పాము",
         audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
         flowName: "S2",
         type: "soundMatch",
@@ -5105,7 +5105,7 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "వాద్యాల",
+        word: "వాద్యాలు",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.వదయలAudio),
@@ -5620,7 +5620,7 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "బిందెలో నీళ్లు",
+        word: "పుట్టలో పాము",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.బదలనళలAudio),
