@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import {
   Box,
   Typography,
@@ -20,10 +21,90 @@ import {
   dataKn as letterDataKn,
 } from "../../RFlow/LetterTrain";
 
-import { wordData } from "../../RFlow/Barakhadi";
+import {
+  wordData,
+  TeluguGunithas,
+  KannadaGunithas,
+} from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
+import { interact } from "../../services/telemetryService";
 import { motion, AnimatePresence } from "framer-motion";
 import { getFontFamily } from "../../utils/fontUtils";
+
+const TeluguGunithaCard = ({ item, playAudio, isActive }) => {
+  return (
+    <motion.div
+      animate={
+        isActive ? { scale: [1, 1.12, 1], y: [0, -14, 0] } : { scale: 1, y: 0 }
+      }
+      transition={
+        isActive
+          ? { duration: 0.6, ease: "easeOut" }
+          : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+      }
+      style={{ position: "relative" }}
+    >
+      <Box
+        sx={{
+          bgcolor: "#FFFFFF",
+          borderRadius: "16px",
+          p: 1.5,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+          height: "250px",
+          cursor: "pointer",
+          boxShadow: isActive
+            ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
+            : "0 4px 12px rgba(0,0,0,0.1)",
+          transition: "box-shadow 0.3s ease",
+          "&:hover": { transform: "scale(1.02)" },
+        }}
+        onClick={() => playAudio(item)}
+      >
+        {/* Top Row — audio icon right-aligned */}
+        <Box
+          sx={{ display: "flex", width: "100%", justifyContent: "flex-end" }}
+        >
+          <IconButton
+            size="small"
+            sx={{ color: "#333F61" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              playAudio(item);
+            }}
+          >
+            <VolumeUpIcon sx={{ fontSize: "1.2rem" }} />
+          </IconButton>
+        </Box>
+
+        {/* Image — flex:1 fills remaining space, contain shows full image */}
+        <Box
+          sx={{
+            width: "100%",
+            flex: 1,
+            alignSelf: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            transition: "transform 0.2s ease",
+            "&:hover": { transform: "scale(1.05)" },
+          }}
+        >
+          {item.image && (
+            <img
+              src={item.image}
+              alt={item.label || ""}
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
+          )}
+        </Box>
+      </Box>
+    </motion.div>
+  );
+};
 
 const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
   const renderHighlightedWord = () => {
@@ -56,10 +137,10 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
         {before}
         <span
           style={{
-            borderBottom: "3px solid #ff0000",
-            paddingBottom: "1px",
-            display: "inline-block",
-            lineHeight: "1",
+            fontWeight: "bold",
+            color: "#e53935",
+            textDecoration: "underline",
+            textDecorationColor: "#e53935",
           }}
         >
           {middle}
@@ -93,7 +174,7 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
-          height: "215px",
+          height: "250px",
           cursor: "pointer",
 
           boxShadow: isActive
@@ -126,7 +207,10 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
             variant="h4"
             sx={{
               fontWeight: lang === "te" ? "normal" : "bold",
-              color: "#333F61",
+              color: isActive && mode === "alphabet" ? "#e53935" : "#333F61",
+              textDecoration:
+                isActive && mode === "alphabet" ? "underline" : "none",
+              textDecorationColor: "#e53935",
               fontSize:
                 lang === "te"
                   ? mode === "alphabet"
@@ -159,36 +243,30 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
         </Box>
 
         {/* Image */}
-        {item.image ? (
-          <Box
-            sx={{
-              flex: 1,
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              my: 0.5,
-              overflow: "hidden",
-              cursor: "pointer",
-              "&:hover": {
-                transform: "scale(1.05)",
-              },
-              transition: "transform 0.2s ease",
-            }}
-          >
+        <Box
+          sx={{
+            width: "130px",
+            height: "130px",
+            flexShrink: 0,
+            alignSelf: "center",
+            borderRadius: "10px",
+            overflow: "hidden",
+            transition: "transform 0.2s ease",
+            "&:hover": { transform: "scale(1.05)" },
+          }}
+        >
+          {item.image && (
             <img
               src={item.image}
               alt={item.word}
               style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                objectFit: "contain",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
               }}
             />
-          </Box>
-        ) : (
-          <Box sx={{ flex: 1 }} />
-        )}
+          )}
+        </Box>
 
         {/* Word */}
         <Typography
@@ -197,9 +275,9 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
             fontWeight: 600,
             color: "#333F61",
             textAlign: "center",
-            fontSize: "1.3rem",
-            mt: 0.5,
+            fontSize: lang === "te" || lang === "hi" ? "1.5rem" : "1.5rem",
             fontFamily: getFontFamily(lang || "en"),
+            lineHeight: 1.3,
           }}
         >
           {renderHighlightedWord()}
@@ -208,6 +286,125 @@ const AlphabetCard = ({ item, playAudio, isActive, mode, lang }) => {
     </motion.div>
   );
 };
+
+const TELUGU_ORDER = [
+  "అ",
+  "ఆ",
+  "ఇ",
+  "ఈ",
+  "ఉ",
+  "ఊ",
+  "ఋ",
+  "ౠ",
+  "ఎ",
+  "ఏ",
+  "ఐ",
+  "ఒ",
+  "ఓ",
+  "ఔ",
+  "అం",
+  "అః",
+  "క",
+  "ఖ",
+  "గ",
+  "ఘ",
+  "ఙ",
+  "చ",
+  "ఛ",
+  "జ",
+  "ఝ",
+  "ఞ",
+  "ట",
+  "ఠ",
+  "డ",
+  "ఢ",
+  "ణ",
+  "త",
+  "థ",
+  "ద",
+  "ధ",
+  "న",
+  "ప",
+  "ఫ",
+  "బ",
+  "భ",
+  "మ",
+  "య",
+  "ర",
+  "ల",
+  "వ",
+  "శ",
+  "ష",
+  "స",
+  "హ",
+  "ళ",
+  "క్ష",
+  "ఱ",
+];
+
+const KANNADA_ORDER = [
+  "ಅ",
+  "ಆ",
+  "ಇ",
+  "ಈ",
+  "ಉ",
+  "ಊ",
+  "ಋ",
+  "ಎ",
+  "ಏ",
+  "ಐ",
+  "ಒ",
+  "ಓ",
+  "ಔ",
+  "ಅಂ",
+  "ಅಃ",
+  "ಕ",
+  "ಖ",
+  "ಗ",
+  "ಘ",
+  "ಙ",
+  "ಚ",
+  "ಛ",
+  "ಜ",
+  "ಝ",
+  "ಞ",
+  "ಟ",
+  "ಠ",
+  "ಡ",
+  "ಢ",
+  "ಣ",
+  "ತ",
+  "ಥ",
+  "ದ",
+  "ಧ",
+  "ನ",
+  "ಪ",
+  "ಫ",
+  "ಬ",
+  "ಭ",
+  "ಮ",
+  "ಯ",
+  "ರ",
+  "ಲ",
+  "ವ",
+  "ಶ",
+  "ಷ",
+  "ಸ",
+  "ಹ",
+  "ಳ",
+  "ಕ್ಷ",
+  "ಜ್ಞ",
+];
+
+export const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
+  acc[letter] = index;
+  return acc;
+}, {});
+
+export const KANNADA_ORDER_MAP = KANNADA_ORDER.reduce((acc, letter, index) => {
+  acc[letter] = index;
+  return acc;
+}, {});
 
 const AlphabetChart = ({ open, onClose, lang }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -223,13 +420,13 @@ const AlphabetChart = ({ open, onClose, lang }) => {
 
   // Stop audio on unmount
   useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
+    return () => stopAudio();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Stop audio when dialog is closed
+  useEffect(() => {
+    if (!open) stopAudio();
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const itemsPerPage = 8;
 
@@ -240,66 +437,6 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     if (lang === "en") return letterDataEn;
     return []; // Return empty array for unsupported languages (like "ta")
   }, [lang]);
-
-  const TELUGU_ORDER = [
-    "అ",
-    "ఆ",
-    "ఇ",
-    "ఈ",
-    "ఉ",
-    "ఊ",
-    "ఋ",
-    "ౠ",
-    "ఎ",
-    "ఏ",
-    "ఐ",
-    "ఒ",
-    "ఓ",
-    "ఔ",
-    "అం",
-    "అః",
-    "క",
-    "ఖ",
-    "గ",
-    "ఘ",
-    "ఙ",
-    "చ",
-    "ఛ",
-    "జ",
-    "ఝ",
-    "ఞ",
-    "ట",
-    "ఠ",
-    "డ",
-    "ఢ",
-    "ణ",
-    "త",
-    "థ",
-    "ద",
-    "ధ",
-    "న",
-    "ప",
-    "ఫ",
-    "బ",
-    "భ",
-    "మ",
-    "య",
-    "ర",
-    "ల",
-    "వ",
-    "శ",
-    "ష",
-    "స",
-    "హ",
-    "ళ",
-    "క్ష",
-    "ఱ",
-  ];
-
-  const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
-    acc[letter] = index;
-    return acc;
-  }, {});
 
   const alphabetItems = useMemo(() => {
     return rawData
@@ -323,6 +460,13 @@ const AlphabetChart = ({ open, onClose, lang }) => {
           const bIndex = TELUGU_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
           return aIndex - bIndex;
         }
+        if (activeLang === "kn") {
+          const aIndex =
+            KANNADA_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
+          const bIndex =
+            KANNADA_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
+          return aIndex - bIndex;
+        }
 
         // default for other languages
         return (a.display || "").localeCompare(b.display || "", activeLang);
@@ -330,8 +474,29 @@ const AlphabetChart = ({ open, onClose, lang }) => {
   }, [rawData, activeLang]);
 
   const wordItems = useMemo(() => {
+    let gunithaSource = null;
+    if (activeLang === "te") {
+      gunithaSource = TeluguGunithas;
+    } else if (activeLang === "kn") {
+      gunithaSource = KannadaGunithas;
+    }
+
+    const gunithaItems = gunithaSource
+      ? gunithaSource
+          .map((g, idx) => ({
+            key: `${activeLang}-gunitha-${idx}`,
+            display: "",
+            word: "",
+            label: g.audio ? g.audio.replace(/\.wav$/i, "") : "",
+            image: getAssetUrl(g.image) || "",
+            audio: g.audio ? getAssetAudioUrl(g.audio) : "",
+            isGunitha: true,
+          }))
+          .filter((item) => item.image && item.audio)
+      : [];
+
     if (activeLang !== "en" && wordData[activeLang]) {
-      return wordData[activeLang]
+      const syllableItems = wordData[activeLang]
         .map((itm, idx) => ({
           key: `${activeLang}-${idx}`,
           display: itm.text,
@@ -342,9 +507,10 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         .filter(
           (item) => item.display && item.word && item.audio && item.image
         );
+      return [...gunithaItems, ...syllableItems];
     }
 
-    return rawData
+    const syllableItems = rawData
       .filter((group) => "syllable" in group && group.syllable)
       .map((group) => {
         const first = group.items?.[0] || {};
@@ -358,6 +524,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         };
       })
       .filter((item) => item.display && item.word && item.audio && item.image);
+
+    return [...gunithaItems, ...syllableItems];
   }, [rawData, activeLang]);
 
   const data = viewMode === "alphabet" ? alphabetItems : wordItems;
@@ -368,14 +536,37 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     (currentPage + 1) * itemsPerPage
   );
 
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
+    }
+    currentSrcRef.current = null;
+    setPlayingKey(null);
+    setActiveCardKey(null);
+  };
+
   const handleNext = () => {
     if (currentPage < totalPages - 1) {
+      interact(
+        "ET",
+        `Page Navigate : Next (Page ${currentPage + 2})`,
+        "alphabet-chart"
+      );
+      stopAudio();
       setCurrentPage((prev) => prev + 1);
     }
   };
 
   const handlePrev = () => {
     if (currentPage > 0) {
+      interact(
+        "ET",
+        `Page Navigate : Previous (Page ${currentPage})`,
+        "alphabet-chart"
+      );
+      stopAudio();
       setCurrentPage((prev) => prev - 1);
     }
   };
@@ -388,6 +579,14 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     if (playingKey === item.key && currentSrcRef.current === audioSrc) {
       return;
     }
+
+    interact(
+      "ET",
+      `Card Click : ${viewMode === "alphabet" ? "Alphabet" : "Syllable"} - ${
+        item.display || item.label || ""
+      }`,
+      "alphabet-chart"
+    );
 
     // Stop previous audio
     if (audioRef.current) {
@@ -435,8 +634,9 @@ const AlphabetChart = ({ open, onClose, lang }) => {
   };
 
   useEffect(() => {
+    stopAudio();
     setCurrentPage(0);
-  }, [viewMode, activeLang]);
+  }, [viewMode, activeLang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!open) return null;
 
@@ -475,7 +675,18 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         <ToggleButtonGroup
           value={viewMode}
           exclusive
-          onChange={(_, newMode) => newMode && setViewMode(newMode)}
+          onChange={(_, newMode) => {
+            if (newMode) {
+              interact(
+                "ET",
+                `View Toggle : ${
+                  newMode === "alphabet" ? "Alphabet" : "Syllable"
+                }`,
+                "alphabet-chart"
+              );
+              setViewMode(newMode);
+            }
+          }}
           aria-label="view mode"
           sx={{
             "& .MuiToggleButton-root": {
@@ -518,7 +729,10 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         {/* RIGHT — Close */}
         <Box sx={{ position: "absolute", right: { xs: 16, sm: 24 } }}>
           <IconButton
-            onClick={onClose}
+            onClick={() => {
+              interact("ET", "Close Alphabet Chart", "alphabet-chart");
+              onClose();
+            }}
             size="medium"
             aria-label="Close"
             sx={{
@@ -596,14 +810,22 @@ const AlphabetChart = ({ open, onClose, lang }) => {
                     exit={{ opacity: 0, scale: 0.9, y: -20 }}
                     transition={{ duration: 0.25, delay: index * 0.05 }}
                   >
-                    <AlphabetCard
-                      lang={activeLang}
-                      item={item}
-                      playAudio={playAudio}
-                      isAnimating={playingKey === item.key}
-                      isActive={activeCardKey === item.key}
-                      mode={viewMode}
-                    />
+                    {item.isGunitha ? (
+                      <TeluguGunithaCard
+                        item={item}
+                        playAudio={playAudio}
+                        isActive={activeCardKey === item.key}
+                      />
+                    ) : (
+                      <AlphabetCard
+                        lang={activeLang}
+                        item={item}
+                        playAudio={playAudio}
+                        isAnimating={playingKey === item.key}
+                        isActive={activeCardKey === item.key}
+                        mode={viewMode}
+                      />
+                    )}
                   </motion.div>
                 </Grid>
               ))}
@@ -676,6 +898,12 @@ const AlphabetChart = ({ open, onClose, lang }) => {
       </Box>
     </Dialog>
   );
+};
+
+AlphabetChart.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  lang: PropTypes.string.isRequired,
 };
 
 export default AlphabetChart;

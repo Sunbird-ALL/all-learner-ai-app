@@ -38,6 +38,7 @@ import {
   StartAssessmentButton,
   SelectLanguageButton,
 } from "../Icons/SvgIcons";
+import { getFontFamily } from "../../utils/fontUtils";
 import practicebg from "../../assets/images/practice-bg.svg";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 import { useEffect, useState, useMemo } from "react";
@@ -687,7 +688,7 @@ export const ProfileHeader = ({
   const handleAlphabetChartOpen = () => {
     // Check if demo was already completed (returns null first time → falsy)
     const isDemoComplete = getLocalData("AlphabetDemoCompleted") === "true";
-
+    interact("ET", "Open Alphabet Chart", "alphabet-chart");
     if (isDemoComplete) {
       // 📘 User has seen demo before → show normal chart/modal
       setOpenAlphabetModal(true);
@@ -734,8 +735,8 @@ export const ProfileHeader = ({
         desc: "మీకు ఏదైనా అక్షరం లేదా అక్షర సమూహంతో సహాయం కావాలా? అయితే, ఇక్కడ ఉన్న పట్టికను చూడండి.",
       },
       kn: {
-        title: "📚 ಅಕ್ಷರಮಾಲೆ ಚಾರ್ಟ್",
-        desc: "ನಿಮಗೆ ಅಕ್ಷರಮಾಲೆ ಅಥವಾ ಉಚ್ಚಾರಾಂಶದ ಬಗ್ಗೆ ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿ ಚಾರ್ಟ್ ಪರಿಶೀಲಿಸಿ.",
+        title: "📚 ವರ್ಣಮಾಲೆ ಚಾರ್ಟ್‌",
+        desc: "ನಿಮಗೆ ಅಕ್ಷರಗಳು ಅಥವಾ ಗುಣಿತಾಕ್ಷರಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಲು ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿರುವ ಚಾರ್ಟ್‌ ನೋಡಿ.",
       },
     };
 
@@ -1462,6 +1463,38 @@ const Assesment = ({ discoverStart }) => {
   const rStepNo = getLocalData("rStepZero");
   const rFlows = String(getLocalData("rFlow"));
 
+  const getAssessmentText = () => {
+    const texts = {
+      en: {
+        testSkills: "Let's test your language skills",
+        goodSkills: "You have good language skills",
+        discoverLevel: "Take the assessment to discover your level",
+        completeLevel: (level) =>
+          `Take the assessment to complete Level ${level}.`,
+        startAssessment: "Start Assessment",
+      },
+      te: {
+        testSkills: "మీ భాషా నైపుణ్యాలను పరీక్షించుకుందాం",
+        goodSkills: "మీకు మంచి భాషా నైపుణ్యాలు ఉన్నాయి",
+        discoverLevel: "మీ స్థాయిని తెలుసుకోవడానికి మూల్యాంకనాన్ని చేయండి.",
+        completeLevel: (level) =>
+          `Level ${level} పూర్తి చేయడానికి మూల్యాంకనాన్ని చేయండి.`,
+        startAssessment: "మూల్యాంకనాన్ని ప్రారంభించండి",
+      },
+      kn: {
+        testSkills: "Let's test your language skills",
+        goodSkills: "You have good language skills",
+        discoverLevel: "Take the assessment to discover your level",
+        completeLevel: (level) =>
+          `Take the assessment to complete Level ${level}.`,
+        startAssessment: "Start Assessment",
+      },
+    };
+
+    return texts[lang] || texts.en;
+  };
+  const assessmentText = getAssessmentText();
+
   const handleWordClick = () => {
     setShowModal(true);
   };
@@ -1683,6 +1716,20 @@ const Assesment = ({ discoverStart }) => {
         message: "please add username in query param",
         isError: true,
       });
+      return;
+    }
+    // When milestone_level is "B" and sub_milestone_level is empty (e.g. after discovery fail), route to letter-hunt
+    const milestoneDataForRedirect = getMilestoneData();
+    const milestoneLevelForRedirect =
+      milestoneDataForRedirect?.data?.milestone_level || null;
+    const subMilestoneLevelForRedirect =
+      milestoneDataForRedirect?.data?.sub_milestone_level ?? "";
+    if (
+      (level === "B" || level === "b") &&
+      milestoneLevelForRedirect === "B" &&
+      (!subMilestoneLevelForRedirect || subMilestoneLevelForRedirect === "")
+    ) {
+      navigate("/letter-hunt");
       return;
     }
     if (level === 0) {
@@ -1941,7 +1988,7 @@ const Assesment = ({ discoverStart }) => {
                 color: "#322020",
                 fontWeight: 700,
                 fontSize: { xs: "24px", md: "40px" },
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
                 lineHeight: { xs: "36px", md: "62px" },
                 textAlign: "center",
               }}
@@ -1957,7 +2004,7 @@ const Assesment = ({ discoverStart }) => {
                   color: "#1CB0F6",
                   fontWeight: 600,
                   fontSize: { xs: "20px", md: "30px" },
-                  fontFamily: "Quicksand",
+                  fontFamily: getFontFamily(lang),
                   lineHeight: { xs: "30px", md: "50px" },
                   textAlign: "center",
                 }}
@@ -1993,7 +2040,35 @@ const Assesment = ({ discoverStart }) => {
                 }}
                 onClick={handleRedirect}
               >
-                <StartAssessmentButton />
+                {lang === "te" ? (
+                  <Box
+                    sx={{
+                      background: "#EDB530",
+                      border: "2px solid #322020",
+                      borderRadius: "9px",
+                      padding: "12px 24px",
+                      minWidth: "218px",
+                      height: "60px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: "#322020",
+                        fontWeight: 600,
+                        fontSize: "20px",
+                        fontFamily: getFontFamily(lang),
+                      }}
+                    >
+                      {assessmentText.startAssessment}
+                    </span>
+                  </Box>
+                ) : (
+                  <StartAssessmentButton />
+                )}
               </Box>
             </Box>
           </Box>

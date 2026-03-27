@@ -6,11 +6,44 @@ import routes from "./routes";
 import AppContent from "./views/AppContent/AppContent";
 import theme from "./assets/styles/theme";
 import axios from "axios";
-// @tekdi/all-telemetry-sdk is loaded lazily after mount (192 KB — kept out of initial bundle)
+import { getFontFamily } from "./utils/fontUtils";
+import { getLocalData } from "./utils/constants";
 
 const App = () => {
   const navigate = useNavigate();
   const ranonce = useRef(false);
+
+  // Update CSS variable --theme-font based on language
+  useEffect(() => {
+    const updateThemeFont = () => {
+      const lang = getLocalData("lang");
+      const fontFamily = getFontFamily(lang);
+      document.documentElement.style.setProperty("--theme-font", fontFamily);
+    };
+
+    // Update on mount
+    updateThemeFont();
+
+    // Listen for language changes in localStorage
+    const handleStorageChange = (e) => {
+      if (e.key === "lang") {
+        updateThemeFont();
+      }
+    };
+
+    // Listen for storage events (when language changes in other tabs/windows)
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also check periodically for language changes (for same-tab changes)
+    const interval = setInterval(() => {
+      updateThemeFont();
+    }, 1000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     // Minimal jQuery stub — the telemetry SDK calls jQuery.ajax() for syncEvents.

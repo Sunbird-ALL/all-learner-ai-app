@@ -136,6 +136,9 @@ export function TryAgain({
                   </span>
                   <Fuel className="h-5 w-5 text-blue-500" />
                 </div>
+                <div className={`mb-3 flex items-center justify-center gap-2 ${useSpaceBackground ? 'text-white/90' : 'text-gray-600'}`}>
+                    <span className="text-xl">⏱️ Too slow. Tap faster to fill the 🚀 fuel</span>
+                  </div>
               </>
             )}
             

@@ -15,6 +15,7 @@ import {
 import { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
 import { F3_FLOW } from "../../RFlow/F3";
+import { getStepTitleFromFlowIndex } from "../../utils/flowStepTelemetry";
 
 // Import from library
 import {
@@ -66,6 +67,7 @@ const LetterHuntMechanicsContent = ({
   isF2FlowActive, // Optional: Whether F2 flow is active
   f2FlowStep, // Optional: Current F2 flow step info
   customLetters, // Optional: Custom letters to use for Letter Hunt (from F1/F2 config)
+  confidentLetters, // Optional: Letters user is confident with (appear less frequently)
 }) => {
   // Store the current level being played for failure handling
   const [currentGameLevel, setCurrentGameLevel] = useState(1);
@@ -73,6 +75,20 @@ const LetterHuntMechanicsContent = ({
   const [sessionInitialized, setSessionInitialized] = useState(false);
   const a3PassHandledRef = useRef(false);
   const navigate = useNavigate();
+
+  // Track step start time for duration calculation
+  const [stepStartTime, setStepStartTime] = useState(null);
+
+  // Reset step start time when step changes
+  useEffect(() => {
+    setStepStartTime(Date.now());
+  }, [f1FlowStep?.index, f2FlowStep?.index, isF1FlowActive, isF2FlowActive]);
+
+  // Helper function to calculate duration in seconds
+  const calculateDuration = () => {
+    if (!stepStartTime) return undefined;
+    return Math.round((Date.now() - stepStartTime) / 1000); // Duration in seconds
+  };
 
   // Calculate skipPreview: show demo only for F1 P1 and F2 P1
   const skipPreview = React.useMemo(() => {
@@ -117,6 +133,8 @@ const LetterHuntMechanicsContent = ({
           language: lang,
           milestoneLevel: "B",
           subMilestoneLevel: "F2",
+          duration: calculateDuration(),
+          applyLevel: getStepTitleFromFlowIndex(0, "F2"),
         });
         console.log(
           "F2 flow initialized at lesson 1 (index 0) after F1 completion"
@@ -159,6 +177,8 @@ const LetterHuntMechanicsContent = ({
             language: lang,
             milestoneLevel: "B",
             subMilestoneLevel: "F3",
+            duration: calculateDuration(),
+            applyLevel: getStepTitleFromFlowIndex(0, "F3"),
           });
           console.log(
             "F3 flow initialized at lesson 1 (index 0) after F2 completion"
@@ -494,6 +514,11 @@ const LetterHuntMechanicsContent = ({
             : isF2FlowActive
             ? "F2"
             : undefined,
+          duration: calculateDuration(),
+          applyLevel: getStepTitleFromFlowIndex(
+            targetStep,
+            isF1FlowActive ? "F1" : "F2"
+          ),
         });
 
         // Update local storage
@@ -652,6 +677,8 @@ const LetterHuntMechanicsContent = ({
                 language: lang,
                 milestoneLevel: milestoneLevel,
                 subMilestoneLevel: "F1",
+                duration: calculateDuration(),
+                applyLevel: getStepTitleFromFlowIndex(targetStep, "F1"),
               });
 
               const updatedPracticeProgress = {
@@ -723,6 +750,8 @@ const LetterHuntMechanicsContent = ({
                 language: lang,
                 milestoneLevel: milestoneLevel,
                 subMilestoneLevel: "F2",
+                duration: calculateDuration(),
+                applyLevel: getStepTitleFromFlowIndex(targetStep, "F2"),
               });
 
               const updatedPracticeProgress = {
@@ -856,6 +885,8 @@ const LetterHuntMechanicsContent = ({
             language: lang,
             milestoneLevel: "B",
             subMilestoneLevel: "F2",
+            duration: calculateDuration(),
+            applyLevel: getStepTitleFromFlowIndex(newF2FlowIndex, "F2"),
           });
           console.log(
             "F2 Practice step progress saved by LetterHuntMechanics:",
@@ -993,6 +1024,8 @@ const LetterHuntMechanicsContent = ({
             language: lang,
             milestoneLevel: "B",
             subMilestoneLevel: "F1",
+            duration: calculateDuration(),
+            applyLevel: getStepTitleFromFlowIndex(newF1FlowIndex, "F1"),
           });
           console.log(
             "F1 Practice step progress saved by LetterHuntMechanics:",
@@ -1281,6 +1314,7 @@ const LetterHuntMechanicsContent = ({
                   onLevel1Failure={() => handleLevelFailure(1)} // Backward compatibility for level 1 only
                   onLevelFailure={handleLevelFailure} // New callback for any level failure (includes level number)
                   customLetters={customLetters} // Pass customLetters from F1 config
+                  confidentLetters={confidentLetters} // Pass confidentLetters from F1/F2 config
                   sub_session_id={assessmentParams.sub_session_id} // Pass sub session ID from telemetry
                   sub_milestone_level={assessmentParams.sub_milestone_level} // Pass "F1" or "F2" based on active flow
                   apply_level={assessmentParams.apply_level} // Pass apply level (A1, A2, A3) from config
