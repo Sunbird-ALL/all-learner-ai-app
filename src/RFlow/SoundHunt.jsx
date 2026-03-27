@@ -1124,7 +1124,7 @@ const content = {
       allwords: [
         {
           img: getAssetUrl(s3Assets.ఔషధImg),
-          text: "ఔషధ",
+          text: "ఔషధం",
           audio: getAssetAudioUrl(s3Assets.ఔషధAudio),
         },
         {
@@ -1157,11 +1157,11 @@ const content = {
         },
         {
           img: getAssetUrl(s3Assets.కదImg),
-          text: "కింద",
+          text: "చీర",
           audio: getAssetAudioUrl(s3Assets.కదAudio),
         },
       ],
-      correctWord: "కింద",
+      correctWord: "చీర",
       audio: getAssetAudioUrl(s3Assets.కదAudio),
       flowName: "P3",
       type: "soundMatch",
@@ -1267,7 +1267,7 @@ const content = {
         },
         {
           img: getAssetUrl(s3Assets.కదImg),
-          text: "కింద",
+          text: "చీర",
           audio: getAssetAudioUrl(s3Assets.కదAudio),
         },
         {
@@ -1308,7 +1308,7 @@ const content = {
       allwords: [
         {
           img: getAssetUrl(s3Assets.కదImg),
-          text: "కింద",
+          text: "చీర",
           audio: getAssetAudioUrl(s3Assets.కదAudio),
         },
         {
