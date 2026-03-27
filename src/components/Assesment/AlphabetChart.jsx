@@ -27,7 +27,7 @@ import {
   KannadaGunithas,
 } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
-import { interact } from "../../services/telementryService";
+import { interact } from "../../services/telemetryService";
 import { motion, AnimatePresence } from "framer-motion";
 import { getFontFamily } from "../../utils/fontUtils";
 

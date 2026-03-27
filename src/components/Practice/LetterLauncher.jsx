@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { getLocalData, setLocalData } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";

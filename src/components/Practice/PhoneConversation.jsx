@@ -20,7 +20,7 @@ import {
 } from "../../utils/levelData";
 import listenImg2 from "../../assets/listen.png";
 import spinnerStop from "../../assets/pause.png";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";

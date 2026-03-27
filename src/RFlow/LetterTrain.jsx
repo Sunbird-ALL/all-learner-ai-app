@@ -9,7 +9,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import MainLayout from "../components/Layouts.jsx/MainLayout";
+import MainLayout from "../components/Layout/MainLayout";
 import listenImg from "../assets/listen.svg";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
@@ -25,7 +25,7 @@ import {
 } from "../utils/constants";
 import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
-import { response } from "../services/telementryService";
+import { response } from "../services/telemetryService";
 import { Typography, Stack, IconButton } from "@mui/material";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import trainImg from "../assets/trainImg.svg";

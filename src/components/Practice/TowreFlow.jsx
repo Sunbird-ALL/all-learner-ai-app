@@ -30,7 +30,7 @@ import reportImg from "../../assets/reportImg.svg";
 import { setLocalData, getLocalData } from "../../utils/constants";
 import { getFontFamily } from "../../utils/fontUtils";
 import { useNavigate, useLocation } from "react-router-dom";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 // Using native browser Speech Recognition API instead of library
 import { addTowreRecord } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";

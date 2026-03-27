@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import { Volume2, CheckCircle } from "lucide-react";
 import { Language } from "../../constants/languages";

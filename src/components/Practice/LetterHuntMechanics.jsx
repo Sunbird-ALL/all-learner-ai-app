@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import {
   getLocalData,
   setLocalData,
   practiceSteps,
-  levelGetContent,
 } from "../../utils/constants";
+import { levelGetContent } from "../../data/levelContent";
 import {
   addLesson,
   addPointer,
@@ -15,6 +15,7 @@ import {
 import { getF1FlowStep, advanceF1Flow, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, advanceF2Flow, F2_FLOW } from "../../RFlow/F2";
 import { F3_FLOW } from "../../RFlow/F3";
+import { getStepTitleFromFlowIndex } from "../../utils/flowStepTelemetry";
 
 // Import from library
 import {
@@ -82,47 +83,6 @@ const LetterHuntMechanicsContent = ({
   useEffect(() => {
     setStepStartTime(Date.now());
   }, [f1FlowStep?.index, f2FlowStep?.index, isF1FlowActive, isF2FlowActive]);
-
-  // Helper function to get step title from flow index
-  const getStepTitleFromFlowIndex = (flowIndex, flowType) => {
-    const lang = getLocalData("lang") || "en";
-
-    if (flowType === "F1") {
-      const f1Config = levelGetContent[lang]?.["F1"];
-      const stepConfig = f1Config?.[flowIndex];
-      if (stepConfig?.title) {
-        return stepConfig.title;
-      }
-      // Fallback: construct from F1_FLOW
-      const flowStep = F1_FLOW[flowIndex];
-      if (flowStep) {
-        return `${flowStep.type}${flowStep.step}`;
-      }
-    } else if (flowType === "F2") {
-      const f2Config = levelGetContent[lang]?.["F2"];
-      const stepConfig = f2Config?.[flowIndex];
-      if (stepConfig?.title) {
-        return stepConfig.title;
-      }
-      // Fallback: construct from F2_FLOW
-      const flowStep = F2_FLOW[flowIndex];
-      if (flowStep) {
-        return `${flowStep.type}${flowStep.step}`;
-      }
-    } else if (flowType === "F3") {
-      const f3Config = levelGetContent[lang]?.["F3"];
-      const stepConfig = f3Config?.[flowIndex];
-      if (stepConfig?.title) {
-        return stepConfig.title;
-      }
-      // Fallback: construct from F3_FLOW
-      const flowStep = F3_FLOW[flowIndex];
-      if (flowStep) {
-        return `${flowStep.type}${flowStep.step}`;
-      }
-    }
-    return undefined;
-  };
 
   // Helper function to calculate duration in seconds
   const calculateDuration = () => {

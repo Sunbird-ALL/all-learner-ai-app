@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Grid, Radio } from "@mui/material";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import {
   PlayAudioButton,
   StopAudioButton,

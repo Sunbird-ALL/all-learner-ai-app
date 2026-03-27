@@ -1,13 +1,13 @@
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import { Box } from "@mui/material";
+import { getLocalData, setLocalData } from "../../utils/constants";
 import {
   AssesmentCompletePlane,
   AverageMood,
   BadMood,
   GoodMood,
-  getLocalData,
-  setLocalData,
-} from "../../utils/constants";
+  LevelRight,
+} from "../Icons/SvgIcons";
 import homeBackground from "../../assets/images/homeBackground.png";
 import { Typography } from "../../../node_modules/@mui/material/index";
 import { useNavigate } from "react-router-dom";

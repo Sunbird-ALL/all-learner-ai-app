@@ -20,7 +20,7 @@ import {
   level12,
   level15,
 } from "../../utils/levelData";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";

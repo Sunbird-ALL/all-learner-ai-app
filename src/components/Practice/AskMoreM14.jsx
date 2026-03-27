@@ -8,7 +8,7 @@ import {
   getLocalData,
   setLocalData,
 } from "../../utils/constants";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import {
   level13,
   level14,

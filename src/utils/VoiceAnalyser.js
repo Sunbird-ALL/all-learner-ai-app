@@ -19,7 +19,7 @@ import v7 from "../assets/audio/V7.m4a";
 import v8 from "../assets/audio/V8.m4a";
 import livesAdd from "../assets/audio/livesAdd.wav";
 import livesCut from "../assets/audio/livesCut.wav";
-import { Log, response } from "../services/telementryService";
+import { Log, response } from "../services/telemetryService";
 import AudioCompare from "./AudioCompare";
 import PropTypes from "prop-types";
 import {

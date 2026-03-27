@@ -57,7 +57,7 @@ class MemoryGameDataLoader {
   private data: MemoryGameData;
 
   constructor() {
-    this.data = memoryGameData as MemoryGameData;
+    this.data = memoryGameData as unknown as MemoryGameData;
   }
 
   // Get all available languages

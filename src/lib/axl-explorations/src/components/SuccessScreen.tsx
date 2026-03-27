@@ -24,7 +24,14 @@ interface SuccessScreenProps {
   onBackToHub: () => void;
   onNextLevel?: () => void;
   hasNextLevel?: boolean;
-  continueButtonText?: string; // Optional: custom text for the continue/next level button
+  continueButtonText?: string;
+  // Fuel-mode props (used by LetterLauncherGame)
+  fuelMode?: boolean;
+  fuelCollected?: number;
+  fuelRequired?: number;
+  destination?: string;
+  nextDestination?: string;
+  useSpaceBackground?: boolean;
 }
 
 export function SuccessScreen({

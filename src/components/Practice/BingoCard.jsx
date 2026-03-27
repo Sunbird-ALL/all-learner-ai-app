@@ -27,7 +27,7 @@ import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import {

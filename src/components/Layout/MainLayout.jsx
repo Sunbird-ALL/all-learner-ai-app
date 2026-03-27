@@ -24,33 +24,16 @@ import timer from "../../assets/images/timer.svg";
 import playButton from "../../assets/listen.png";
 import pauseButton from "../../assets/pause.png";
 import {
-  GreenTick,
-  HeartBlack,
-  Diamond,
-  LevelEight,
-  LevelFive,
-  LevelFour,
-  LevelNine,
-  LevelOne,
-  LevelSeven,
-  LevelSix,
-  LevelThree,
-  LevelTwo,
   NextButton,
   callConfettiSnow,
   levelConfig,
   practiceSteps,
-  levelGetContent,
   getLocalData,
-  LevelTen,
-  LevelEleven,
-  LevelTwelve,
-  LevelThirteen,
-  LevelFourteen,
-  LevelFifteen,
-  ROneImg,
   setLocalData,
 } from "../../utils/constants";
+import { lazy, Suspense } from "react";
+import { GreenTick, HeartBlack, Diamond } from "../Icons/SvgIcons";
+import { levelGetContent } from "../../data/levelContent";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { ProfileHeader } from "../Assesment/Assesment";
@@ -71,10 +54,13 @@ import F1Image from "../../assets/F1.png";
 import F2Image from "../../assets/F2.png";
 import F3Image from "../../assets/F3.png";
 import zIndex from "@mui/material/styles/zIndex";
-import { Log } from "../../services/telementryService";
+import { Log } from "../../services/telemetryService";
 import { getF1FlowStep, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, F2_FLOW } from "../../RFlow/F2";
 import { getF3FlowStep, F3_FLOW } from "../../RFlow/F3";
+
+// Level milestone SVGs are lazy-loaded — only downloaded when a level-complete screen renders
+const LevelMilestone = lazy(() => import("../LevelIcons/LevelMilestone"));
 
 const theme = createTheme();
 
@@ -91,88 +77,148 @@ const MainLayout = (props) => {
       backgroundColor: `#FFB31F`,
     },
     1: {
-      milestone: <LevelOne height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={1} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone,
       background: practicebg,
     },
     2: {
-      milestone: <LevelTwo height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={2} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone2,
       background: practicebg2,
     },
     3: {
-      milestone: <LevelThree height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={3} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
     },
     4: {
-      milestone: <LevelFour height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={4} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone,
       background: practicebg3,
       backgroundColor: `${levelConfig[4].color}60`,
     },
     5: {
-      milestone: <LevelFive height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={5} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[5].color}60`,
     },
     6: {
-      milestone: <LevelSix height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={6} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[6].color}60`,
     },
     7: {
-      milestone: <LevelSeven height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={7} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[7].color}60`,
     },
     8: {
-      milestone: <LevelEight height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={8} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[8].color}60`,
     },
     9: {
-      milestone: <LevelNine height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={9} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     10: {
-      milestone: <LevelTen height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={10} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     11: {
-      milestone: <LevelEleven height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={11} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     12: {
-      milestone: <LevelTwelve height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={12} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     13: {
-      milestone: <LevelThirteen height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={13} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     14: {
-      milestone: <LevelFourteen height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={14} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
     },
     15: {
-      milestone: <LevelFifteen height={isMobile ? 120 : 168} />,
+      milestone: (
+        <Suspense fallback={null}>
+          <LevelMilestone level={15} isMobile={isMobile} />
+        </Suspense>
+      ),
       backgroundAddOn: practicebgstone3,
       background: practicebg3,
       backgroundColor: `${levelConfig[9].color}60`,
