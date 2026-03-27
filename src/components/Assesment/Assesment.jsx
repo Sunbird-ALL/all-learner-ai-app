@@ -40,7 +40,7 @@ import {
 } from "../Icons/SvgIcons";
 import practicebg from "../../assets/images/practice-bg.svg";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import HelpLogo from "../../assets/help.png";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -108,11 +108,13 @@ import AlphabetChart from "./AlphabetChart";
 import AlphabetChartPreview from "./AlphabetChartPreview";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import { getUiStrings } from "../../constants/strings";
 
 const theme = createTheme();
 
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
+  const ui = useMemo(() => getUiStrings(lang || "en"), [lang]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box
@@ -155,7 +157,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
               lineHeight: "45px",
             }}
           >
-            {`Select Language`}
+            {ui.ASSESSMENT_SELECT_LANGUAGE}
           </span>
         </Box>
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
@@ -272,7 +274,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                 alignItems: "center",
               }}
             >
-              {"Confirm"}
+              {ui.ASSESSMENT_LANG_CONFIRM}
             </span>
           </Box>
         </Box>
@@ -288,6 +290,7 @@ export const MessageDialog = ({
   dontShowHeader,
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const ui = getUiStrings(getLocalData("lang") || "en");
 
   return (
     <Box
@@ -344,7 +347,7 @@ export const MessageDialog = ({
                 textAlign: "center",
               }}
             >
-              {isError ? "Oops..." : "Hurray!!!"}
+              {isError ? ui.ASSESSMENT_DIALOG_OOPS : ui.HURRAY}
             </Typography>
           )}
         </Box>
@@ -400,7 +403,7 @@ export const MessageDialog = ({
                 fontFamily: "Quicksand",
               }}
             >
-              {"Continue"}
+              {ui.ASSESSMENT_DIALOG_CONTINUE}
             </span>
           </Box>
         </Box>
@@ -446,6 +449,7 @@ export const ProfileHeader = ({
   wordCount = 0,
 }) => {
   const language = lang || getLocalData("lang");
+  const ui = useMemo(() => getUiStrings(language || "en"), [language]);
   let username = profileName || getLocalData("profileName");
 
   // Check if F2 flow is active and update username display
@@ -920,7 +924,7 @@ export const ProfileHeader = ({
                     whiteSpace: "nowrap",
                   }}
                 >
-                  Words Learnt
+                  {ui.ASSESSMENT_WORDS_LEARNT}
                 </Box>
                 <Box
                   component="img"
@@ -1003,7 +1007,7 @@ export const ProfileHeader = ({
                       whiteSpace: "nowrap",
                     }}
                   >
-                    Words per minute
+                    {ui.ASSESSMENT_WORDS_PER_MINUTE}
                   </Box>
                   <Box
                     component="img"
@@ -1070,14 +1074,14 @@ export const ProfileHeader = ({
                       setOpenLangModal
                         ? setOpenLangModal(true)
                         : setOpenMessageDialog({
-                            message: "go to homescreen to change language",
+                            message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
                             dontShowHeader: true,
                           })
                     }
                   >
                     <TranslateIcon sx={{ mr: 1 }} />
                     <ListItemText
-                      primary="Select Language"
+                      primary={ui.ASSESSMENT_SELECT_LANGUAGE}
                       primaryTypographyProps={{
                         fontFamily: "Quicksand",
                         fontWeight: 600,
@@ -1101,7 +1105,7 @@ export const ProfileHeader = ({
                   >
                     <MicIcon sx={{ mr: 1, color: "#6DAF19" }} />
                     <ListItemText
-                      primary="Audio Test"
+                      primary={ui.ASSESSMENT_AUDIO_TEST}
                       primaryTypographyProps={{
                         fontFamily: "Quicksand",
                         fontWeight: 600,
@@ -1116,7 +1120,7 @@ export const ProfileHeader = ({
                       <ListItemButton onClick={handleAlphabetChartOpen}>
                         <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
                         <ListItemText
-                          primary="Alphabet Chart"
+                          primary={ui.ASSESSMENT_ALPHABET_CHART}
                           primaryTypographyProps={{
                             fontFamily: "Quicksand",
                             fontWeight: 600,
@@ -1131,7 +1135,7 @@ export const ProfileHeader = ({
                   <ListItemButton onClick={handleLogout}>
                     <LogoutIcon sx={{ mr: 1 }} />
                     <ListItemText
-                      primary="Logout"
+                      primary={ui.ASSESSMENT_LOGOUT}
                       primaryTypographyProps={{
                         fontFamily: "Quicksand",
                         fontWeight: 600,
@@ -1167,7 +1171,7 @@ export const ProfileHeader = ({
                 />
                 <CustomTooltip
                   interactive
-                  title="Alphabet Chart"
+                  title={ui.ASSESSMENT_ALPHABET_CHART}
                   arrow
                   placement="bottom"
                 >
@@ -1330,7 +1334,7 @@ export const ProfileHeader = ({
                 setOpenLangModal
                   ? setOpenLangModal(true)
                   : setOpenMessageDialog({
-                      message: "go to homescreen to change language",
+                      message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
                       dontShowHeader: true,
                     })
               }
@@ -1354,15 +1358,15 @@ export const ProfileHeader = ({
                     }}
                   >
                     {isMobile
-                      ? "Language"
+                      ? ui.ASSESSMENT_LANGUAGE_SHORT
                       : languages?.find((elem) => elem.lang === language)
-                          ?.name || "Select Language"}
+                          ?.name || ui.ASSESSMENT_SELECT_LANGUAGE}
                   </span>
                 </Box>
               </Box>
             </Box>
             {/* Audio Diagnostic Button - Subtle */}
-            <CustomTooltip title="Audio Test">
+            <CustomTooltip title={ui.ASSESSMENT_AUDIO_TEST}>
               <IconButton
                 onClick={() => {
                   // Telemetry event for header button click
@@ -1387,7 +1391,7 @@ export const ProfileHeader = ({
               </IconButton>
             </CustomTooltip>
             {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
-              <CustomTooltip title="Logout">
+              <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
                 <IconButton
                   onClick={handleLogout}
                   sx={{
@@ -1446,6 +1450,7 @@ const Assesment = ({ discoverStart }) => {
   const dispatch = useDispatch();
   const [openLangModal, setOpenLangModal] = useState(false);
   const [lang, setLang] = useState(getLanguageOrDefault());
+  const ui = useMemo(() => getUiStrings(lang), [lang]);
   const [points, setPoints] = useState(0);
   const [vocabCount, setVocabCount] = useState(0);
   const [wordCount, setWordCount] = useState(0);
@@ -1885,16 +1890,19 @@ const Assesment = ({ discoverStart }) => {
                   }}
                 >
                   {shouldShowF3
-                    ? "Start F3"
+                    ? ui.ASSESSMENT_START_F3
                     : shouldShowF2
-                    ? "Start F2"
+                    ? ui.ASSESSMENT_START_F2
                     : isF1FlowActive
-                    ? "Start F1"
+                    ? ui.ASSESSMENT_START_F1
                     : milestoneLevel === "B" && rFlow === "true"
-                    ? `Learn Letters`
+                    ? ui.ASSESSMENT_LEARN_LETTERS
                     : // Only show "Learn Letters" for milestone level "B" (F1/F2/F3 flows)
                       // For milestone levels "m1", "m2", etc., show "Start Level X"
-                      `Start Level ${level}`}
+                      ui.ASSESSMENT_START_LEVEL.replace(
+                        "{level}",
+                        String(level)
+                      )}
                 </span>
               </Box>
             </Box>
@@ -1940,8 +1948,8 @@ const Assesment = ({ discoverStart }) => {
               fontSize={{ md: "40px", xs: "30px" }}
             >
               {discoverStart
-                ? "Let's test your language skills"
-                : "You have good language skills"}
+                ? ui.ASSESSMENT_TEST_LANGUAGE_SKILLS
+                : ui.ASSESSMENT_GOOD_LANGUAGE_SKILLS}
             </Typography>
             <Box>
               <Typography
@@ -1956,8 +1964,11 @@ const Assesment = ({ discoverStart }) => {
                 fontSize={{ md: "30px", xs: "20px" }}
               >
                 {level > 0
-                  ? `Take the assessment to complete Level ${level}.`
-                  : "Take the assessment to discover your level"}
+                  ? ui.ASSESSMENT_TAKE_COMPLETE_LEVEL.replace(
+                      "{level}",
+                      String(level)
+                    )
+                  : ui.ASSESSMENT_TAKE_DISCOVER_LEVEL}
               </Typography>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
