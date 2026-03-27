@@ -1138,7 +1138,7 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.నడకAudio),
         },
       ],
-      correctWord: "ఔషధ",
+      correctWord: "ఔషధం",
       audio: getAssetAudioUrl(s3Assets.ఔషధAudio),
       flowName: "P1",
       type: "soundMatch",
