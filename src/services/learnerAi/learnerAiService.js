@@ -95,8 +95,7 @@ export const fetchGetSetResult = async (
   currentContentType,
   currentCollectionId,
   totalSyllableCount,
-  setTag,
-  applyDiscoveryMilestone
+  setTag
 ) => {
   const session_id = getLocalData("sessionId");
   const lang = getLocalData("lang");
@@ -113,9 +112,6 @@ export const fetchGetSetResult = async (
     };
     if (setTag) {
       body.setTag = setTag;
-    }
-    if (applyDiscoveryMilestone === true) {
-      body.applyDiscoveryMilestone = true;
     }
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
