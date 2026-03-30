@@ -319,13 +319,20 @@ export const error = (error, data, telemetryMode) => {
         CsTelemetryModule.instance &&
         CsTelemetryModule.instance.telemetryService
       ) {
+        const resolvedPageId = data.pageid || url || "";
+        const stacktrace = JSON.stringify(
+          error?.response?.data || error?.message || {}
+        );
+
         CsTelemetryModule.instance.telemetryService.raiseErrorTelemetry({
           options: getEventOptions(),
           edata: {
-            pageid: url,
-            err: data.err,
-            errtype: data.errtype,
-            stacktrace: error.toString() || "",
+            pageid: resolvedPageId,
+            err: data.err || "API_ERROR",
+            errtype: data.errtype || "SYSTEM",
+            stacktrace: stacktrace || "",
+            ...(data.object ? { object: data.object } : {}),
+            ...(data.plugin ? { plugin: data.plugin } : {}),
           },
         });
       } else {
