@@ -94,23 +94,28 @@ export const fetchGetSetResult = async (
   subSessionId,
   currentContentType,
   currentCollectionId,
-  totalSyllableCount
+  totalSyllableCount,
+  setTag
 ) => {
   const session_id = getLocalData("sessionId");
   const lang = getLocalData("lang");
 
   try {
+    const body = {
+      sub_session_id: subSessionId,
+      contentType: currentContentType,
+      session_id: session_id,
+      collectionId: currentCollectionId,
+      totalSyllableCount: totalSyllableCount,
+      language: lang,
+      is_B_enable: true,
+    };
+    if (setTag) {
+      body.setTag = setTag;
+    }
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
-      {
-        sub_session_id: subSessionId,
-        contentType: currentContentType,
-        session_id: session_id,
-        collectionId: currentCollectionId,
-        totalSyllableCount: totalSyllableCount,
-        language: lang,
-        is_B_enable: true,
-      },
+      body,
       getHeaders()
     );
     return response.data;
