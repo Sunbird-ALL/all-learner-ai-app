@@ -32,6 +32,13 @@ import {
   fetchPaginatedContent,
 } from "../../services/content/contentService";
 import DiscoverSentencePreview from "./DiscoverSentencePreview";
+import {
+  getInitialSetTag,
+  collectionForSet,
+  categoryToContentType,
+  resolveAfterSetComplete,
+  DISCOVERY_SET_FLOW_STORAGE,
+} from "../../utils/discoverSetFlow";
 
 const SpeakSentenceComponent = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -47,7 +54,6 @@ const SpeakSentenceComponent = () => {
   const [points, setPoints] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [enableNext, setEnableNext] = useState(false);
-  const [sentencePassedCounter, setSentencePassedCounter] = useState(0);
   const [assesmentCount, setAssesmentcount] = useState(0);
   const [initialAssesment, setInitialAssesment] = useState(true);
   const [disableScreen, setDisableScreen] = useState(false);
@@ -57,6 +63,9 @@ const SpeakSentenceComponent = () => {
   const [isNextButtonCalled, setIsNextButtonCalled] = useState(false);
   const [interactions, setInteractions] = useState([]);
   const interactionsRef = useRef([]);
+  const [discoveryHistory, setDiscoveryHistory] = useState([]);
+  const [currentSetTag, setCurrentSetTag] = useState("");
+  const discoveryHistoryRef = useRef([]);
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
   const sessionId = getLocalData("sessionId");
@@ -121,6 +130,89 @@ const SpeakSentenceComponent = () => {
   useEffect(() => {
     interactionsRef.current = interactions;
   }, [interactions]);
+
+  useEffect(() => {
+    discoveryHistoryRef.current = discoveryHistory;
+  }, [discoveryHistory]);
+
+  async function loadDiscoveryNextSet(newHistory, assessmentData) {
+    const lang = getLocalData("lang");
+    const resolved = resolveAfterSetComplete(newHistory);
+    if (resolved.type === "invalid") {
+      navigate("/discover-end");
+      return;
+    }
+    if (resolved.type === "terminal") {
+      if (resolved.towre && (lang === "te" || lang === "en")) {
+        navigate("/towre-flow");
+      } else {
+        navigate("/discover-end");
+      }
+      return;
+    }
+    const nextCol = collectionForSet(assessmentData, resolved.setTag);
+    if (!nextCol?.collectionId) {
+      console.error("No collection for set", resolved.setTag);
+      navigate("/discover-end");
+      return;
+    }
+    const ct = categoryToContentType(nextCol.category);
+    if (ct === "Char") {
+      sessionStorage.setItem(
+        DISCOVERY_SET_FLOW_STORAGE.STATE,
+        JSON.stringify({
+          history: newHistory,
+          pendingCharSetTag: resolved.setTag,
+        })
+      );
+      sessionStorage.setItem(
+        DISCOVERY_SET_FLOW_STORAGE.CHAR_SESSION,
+        JSON.stringify({
+          collectionId: nextCol.collectionId,
+          storyTitle: nextCol.name || "",
+        })
+      );
+      navigate("/letter-hunt");
+      return;
+    }
+    const resPagination = await fetchPaginatedContent(nextCol.collectionId, 5);
+    setCurrentContentType(ct);
+    setTotalSyllableCount(resPagination?.totalSyllableCount);
+    setCurrentCollectionId(nextCol.collectionId);
+    setLocalData("storyTitle", nextCol.name);
+    setCurrentQuestion(0);
+    setQuestions([...(resPagination?.data || [])]);
+    setInteractions([]);
+    interactionsRef.current = [];
+    setCurrentSetTag(resolved.setTag);
+    sessionStorage.setItem(
+      DISCOVERY_SET_FLOW_STORAGE.STATE,
+      JSON.stringify({ history: newHistory, pendingCharSetTag: null })
+    );
+  }
+
+  async function initDiscoveryFromSet4(resAssessment) {
+    setAssessmentResponse(resAssessment);
+    const initialTag = getInitialSetTag();
+    const col = collectionForSet(resAssessment, initialTag);
+    if (!col?.collectionId) {
+      console.error("No collection ID found for discovery set4.");
+      return;
+    }
+    const resPagination = await fetchPaginatedContent(col.collectionId, 5);
+    setCurrentContentType(categoryToContentType(col.category));
+    setTotalSyllableCount(resPagination?.totalSyllableCount);
+    setCurrentCollectionId(col.collectionId);
+    setLocalData("storyTitle", col.name);
+    setQuestions([...(resPagination?.data || [])]);
+    setCurrentSetTag(initialTag);
+    setDiscoveryHistory([]);
+    discoveryHistoryRef.current = [];
+    sessionStorage.setItem(
+      DISCOVERY_SET_FLOW_STORAGE.STATE,
+      JSON.stringify({ history: [], pendingCharSetTag: null })
+    );
+  }
 
   const handleInteractionComplete = (interactionData) => {
     if (interactionData) {
@@ -242,76 +334,18 @@ const SpeakSentenceComponent = () => {
             console.error("Error creating learner progress:", error);
           }
         }
-        if (
-          getSetData.sessionResult === "pass" &&
-          currentContentType === "Sentence" &&
-          sentencePassedCounter < 2
-        ) {
-          if (getSetData.currentLevel !== "m0") {
-            navigate("/discover-end");
-            //setLocalData("tFlow", true);
-          }
-          const newSentencePassedCounter = sentencePassedCounter + 1;
-          const sentences = assessmentResponse?.data?.filter(
-            (elem) => elem.category === "Sentence"
-          );
-          const resSentencesPagination = await fetchPaginatedContent(
-            sentences?.[newSentencePassedCounter]?.collectionId,
-            5
-          );
-          setCurrentContentType("Sentence");
-          setTotalSyllableCount(resSentencesPagination?.totalSyllableCount);
-          setCurrentCollectionId(
-            sentences?.[newSentencePassedCounter]?.collectionId
-          );
-          let quesArr = [...(resSentencesPagination?.data || [])];
-          setCurrentQuestion(0);
-          setSentencePassedCounter(newSentencePassedCounter);
-          setQuestions(quesArr);
-          setInteractions([]);
-          interactionsRef.current = [];
-        } else if (
-          getSetData.sessionResult === "pass" &&
-          currentContentType === "Sentence"
-        ) {
-          //navigate("/discover-end");
-          lang === "te" || lang == "en"
-            ? navigate("/towre-flow")
-            : navigate("/discover-end"); // all 3 passed mean sentence all are
-        } else if (
-          getSetData.sessionResult === "fail" &&
-          currentContentType === "Sentence"
-        ) {
-          if (getSetData.currentLevel !== "m0") {
-            navigate("/discover-end");
-          }
-          const words = assessmentResponse?.data?.find(
-            (elem) => elem.category === "Word"
-          );
-          const resWordsPagination = await fetchPaginatedContent(
-            words?.collectionId,
-            5
-          );
-          setCurrentContentType("Word");
-          setTotalSyllableCount(resWordsPagination?.totalSyllableCount);
-          setCurrentCollectionId(words?.collectionId);
-          let quesArr = [...(resWordsPagination?.data || [])];
-          setCurrentQuestion(0);
-          setQuestions(quesArr);
-          setInteractions([]);
-          interactionsRef.current = [];
-        } else if (
-          getSetData.sessionResult === "fail" &&
-          currentContentType === "Word"
-        ) {
-          getSetData.currentLevel === "B"
-            ? navigate("/letter-hunt")
-            : navigate("/discover-end");
-          console.log("fail 2");
-        } else {
-          navigate("/discover-end");
-          console.log("fail 3");
-        }
+
+        const passFail = getSetData.sessionResult === "pass" ? "pass" : "fail";
+        const newHistory = [
+          ...discoveryHistoryRef.current,
+          { setTag: currentSetTag, result: passFail },
+        ];
+        setDiscoveryHistory(newHistory);
+        discoveryHistoryRef.current = newHistory;
+        sessionStorage.setItem(
+          DISCOVERY_SET_FLOW_STORAGE.STATE,
+          JSON.stringify({ history: newHistory, pendingCharSetTag: null })
+        );
         await addLesson({
           sessionId,
           milestone: `showcase`,
@@ -320,6 +354,7 @@ const SpeakSentenceComponent = () => {
           language: lang,
           milestoneLevel: "m0",
         });
+        await loadDiscoveryNextSet(newHistory, assessmentResponse);
       }
     } catch (error) {
       console.error(error);
@@ -327,47 +362,84 @@ const SpeakSentenceComponent = () => {
   };
 
   useEffect(() => {
+    let cancelled = false;
     (async () => {
-      let quesArr = [];
       try {
         const lang = getLocalData("lang");
-        // Fetch assessment data
-        const resAssessment = await fetchAssessmentData(lang);
-        const sentences = resAssessment?.data?.find(
-          (elem) => elem.category === "Sentence"
-        );
 
-        if (!sentences?.collectionId) {
-          console.error("No collection ID found for sentences.");
+        const charRaw = sessionStorage.getItem(
+          DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT
+        );
+        if (charRaw) {
+          let charRes;
+          try {
+            charRes = JSON.parse(charRaw);
+          } catch {
+            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
+            const resAssessment = await fetchAssessmentData(lang);
+            if (cancelled) return;
+            await initDiscoveryFromSet4(resAssessment);
+            return;
+          }
+
+          let mergedHistory;
+          try {
+            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
+            const resAssessment = await fetchAssessmentData(lang);
+            if (cancelled) return;
+            const stateRaw = sessionStorage.getItem(
+              DISCOVERY_SET_FLOW_STORAGE.STATE
+            );
+            if (stateRaw) {
+              try {
+                const state = JSON.parse(stateRaw);
+                const pending = state.pendingCharSetTag;
+                if (pending) {
+                  const passFail =
+                    charRes.sessionResult === "pass" ? "pass" : "fail";
+                  mergedHistory = [
+                    ...(state.history || []),
+                    { setTag: pending, result: passFail },
+                  ];
+                }
+              } catch {
+                /* invalid STATE; fall through to set4 */
+              }
+            }
+            if (!mergedHistory) {
+              await initDiscoveryFromSet4(resAssessment);
+              return;
+            }
+            if (cancelled) return;
+            setAssessmentResponse(resAssessment);
+            setDiscoveryHistory(mergedHistory);
+            discoveryHistoryRef.current = mergedHistory;
+            sessionStorage.setItem(
+              DISCOVERY_SET_FLOW_STORAGE.STATE,
+              JSON.stringify({
+                history: mergedHistory,
+                pendingCharSetTag: null,
+              })
+            );
+            await loadDiscoveryNextSet(mergedHistory, resAssessment);
+          } catch (e) {
+            console.error("Discovery char resume error:", e);
+            const resAssessment = await fetchAssessmentData(lang);
+            if (!cancelled) await initDiscoveryFromSet4(resAssessment);
+          }
           return;
         }
-        // Fetch paginated content
-        const resPagination = await fetchPaginatedContent(
-          sentences.collectionId,
-          5
-        );
 
-        // await addLesson({
-        //   sessionId,
-        //   milestone: `showcase`,
-        //   lesson: "0",
-        //   progress: 0,
-        //   language: lang,
-        //   milestoneLevel: "m1",
-        // });
-
-        // Update state
-        setCurrentContentType("Sentence");
-        setTotalSyllableCount(resPagination?.totalSyllableCount);
-        setCurrentCollectionId(sentences?.collectionId);
-        setAssessmentResponse(resAssessment);
-        setLocalData("storyTitle", sentences?.name);
-        quesArr = [...quesArr, ...(resPagination?.data || [])];
-        setQuestions(quesArr);
+        const resAssessment = await fetchAssessmentData(lang);
+        if (cancelled) return;
+        await initDiscoveryFromSet4(resAssessment);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleBack = () => {
