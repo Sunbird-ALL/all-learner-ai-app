@@ -352,8 +352,7 @@ const AserFlow = ({
         sub_session_id,
         currentContentType,
         currentCollectionId,
-        totalSyllableCount,
-        discoveryCharActive ? "set1" : undefined
+        totalSyllableCount
       );
       const { data } = getSetResultRes;
       getSetResultData = data;
