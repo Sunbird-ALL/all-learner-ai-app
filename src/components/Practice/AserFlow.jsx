@@ -353,7 +353,8 @@ const AserFlow = ({
         currentContentType,
         currentCollectionId,
         totalSyllableCount,
-        discoveryCharActive ? "set1" : undefined
+        discoveryCharActive ? "set1" : undefined,
+        discoveryCharActive ? true : undefined
       );
       const { data } = getSetResultRes;
       getSetResultData = data;
