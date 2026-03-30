@@ -278,8 +278,7 @@ const SpeakSentenceComponent = () => {
           sub_session_id,
           currentContentType,
           currentCollectionId,
-          totalSyllableCount,
-          currentSetTag
+          totalSyllableCount
         );
 
         // Call engagement predictor after getsetresult
