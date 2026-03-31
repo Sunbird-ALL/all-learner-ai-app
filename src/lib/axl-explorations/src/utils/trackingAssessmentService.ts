@@ -21,6 +21,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 
 // UUID v4 generator using uuid library
 function generateUUID(): string {
@@ -167,23 +168,11 @@ class TrackingAssessmentService {
       if (apiToken) {
         headers['Authorization'] = `Bearer ${apiToken}`;
       }
-      
-      const response = await fetch(TRACKING_API_ENDPOINT, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload),
-      });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('❌ Failed to create assessment tracking:', errorData);
-        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-      }
+      const response = await axios.post(TRACKING_API_ENDPOINT, payload, { headers });
+      console.log('✅ Assessment tracking created successfully:', payload);
 
-      const result = await response.json();
-      console.log('✅ Assessment tracking created successfully:',payload );
-
-      return result;
+      return response.data;
     } catch (error) {
       console.error('❌ Error creating assessment tracking:', error);
       // Don't throw error - we don't want to break the game flow if tracking fails
@@ -278,17 +267,8 @@ class TrackingAssessmentService {
         headers['Authorization'] = `Bearer ${apiToken}`;
       }
 
-      const response = await fetch(detailsEndpoint, {
-        method: 'GET',
-        headers,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Get details request failed: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
+      const response = await axios.get(detailsEndpoint, { headers });
+      return response.data;
     } catch (error) {
       console.error('❌ Error getting assessment tracking details:', error);
       return {

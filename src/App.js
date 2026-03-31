@@ -140,10 +140,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (ranonce.current) return;
+    ranonce.current = true;
+
     const RETRY_MAX = 3;
     const RETRY_BASE_DELAY_MS = 1000; // 1s, 2s, 4s (exponential backoff)
 
-    const interceptorId = axios.interceptors.response.use(
+    axios.interceptors.response.use(
       (response) => response,
       (error) => {
         const config = error?.config || {};
@@ -239,16 +242,6 @@ const App = () => {
         return Promise.reject(error);
       }
     );
-
-    // Eject interceptor on unmount to avoid leaks in React 18 StrictMode
-    return () => {
-      try {
-        axios.interceptors.response.eject(interceptorId);
-      } catch (e) {
-        console.error("Error ejecting axios interceptor:", e);
-        // no-op
-      }
-    };
   }, [navigate]);
 
   return (
