@@ -1753,7 +1753,7 @@ const soundMatchContent = {
         allwords: [
           {
             img: getAssetUrl(s3Assets.చననImg),
-            text: "చిన్ని",
+            text: "చిన్న",
             audio: getAssetAudioUrl(s3Assets.చననAudio),
           },
           {
@@ -1786,7 +1786,7 @@ const soundMatchContent = {
           },
           {
             img: getAssetUrl(s3Assets.చననImg),
-            text: "చిన్ని",
+            text: "చిన్న",
             audio: getAssetAudioUrl(s3Assets.చననAudio),
           },
         ],
@@ -1827,7 +1827,7 @@ const soundMatchContent = {
           },
           {
             img: getAssetUrl(s3Assets.చననImg),
-            text: "చిన్ని",
+            text: "చిన్న",
             audio: getAssetAudioUrl(s3Assets.చననAudio),
           },
           {
@@ -1836,7 +1836,7 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.ఇలలAudio),
           },
         ],
-        correctWord: "చిన్ని",
+        correctWord: "చిన్న",
         audio: getAssetAudioUrl(s3Assets.చననAudio),
         flowName: "S2",
         type: "soundMatch",
@@ -1845,7 +1845,7 @@ const soundMatchContent = {
         allwords: [
           {
             img: getAssetUrl(s3Assets.చననImg),
-            text: "చిన్ని",
+            text: "చిన్న",
             audio: getAssetAudioUrl(s3Assets.చననAudio),
           },
           {
@@ -5219,7 +5219,7 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "చిన్ని",
+        word: "చిన్న",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.సరమలలAudio),
