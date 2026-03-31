@@ -274,11 +274,14 @@ const SpeakSentenceComponent = () => {
         setCurrentQuestion(currentQuestion + 1);
       } else if (currentQuestion === questions.length - 1) {
         const sub_session_id = getLocalData("sub_session_id");
+        const isThirdDiscoverySet = discoveryHistoryRef.current.length === 2;
         const getSetResultRes = await fetchGetSetResult(
           sub_session_id,
           currentContentType,
           currentCollectionId,
-          totalSyllableCount
+          totalSyllableCount,
+          currentSetTag || undefined,
+          isThirdDiscoverySet
         );
 
         // Call engagement predictor after getsetresult
