@@ -90,27 +90,45 @@ export const getFetchMilestoneDetails = async (lang) => {
   }
 };
 
+/**
+ * @param {string} [setTag] ASER discovery tag: set1–set6 (sent as setNo + numeric discoverySet)
+ * @param {boolean} [applyDiscoveryMilestone] When true, sends applyDiscoveryMilestone for backend persistence rules
+ */
 export const fetchGetSetResult = async (
   subSessionId,
   currentContentType,
   currentCollectionId,
-  totalSyllableCount
+  totalSyllableCount,
+  setTag,
+  applyDiscoveryMilestone
 ) => {
   const session_id = getLocalData("sessionId");
   const lang = getLocalData("lang");
 
   try {
+    const body = {
+      sub_session_id: subSessionId,
+      contentType: currentContentType,
+      session_id: session_id,
+      collectionId: currentCollectionId,
+      totalSyllableCount: totalSyllableCount,
+      language: lang,
+      is_B_enable: true,
+    };
+    if (setTag && typeof setTag === "string") {
+      const trimmed = setTag.trim();
+      body.setNo = trimmed;
+      const m = /^set([1-6])$/i.exec(trimmed);
+      if (m) {
+        body.discoverySet = Number(m[1]);
+      }
+    }
+    if (applyDiscoveryMilestone === true) {
+      body.applyDiscoveryMilestone = true;
+    }
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
-      {
-        sub_session_id: subSessionId,
-        contentType: currentContentType,
-        session_id: session_id,
-        collectionId: currentCollectionId,
-        totalSyllableCount: totalSyllableCount,
-        language: lang,
-        is_B_enable: true,
-      },
+      body,
       getHeaders()
     );
     return response.data;
