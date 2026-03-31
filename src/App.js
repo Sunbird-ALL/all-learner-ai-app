@@ -8,6 +8,7 @@ import theme from "./assets/styles/theme";
 import axios from "axios";
 import { getFontFamily } from "./utils/fontUtils";
 import { getLocalData } from "./utils/constants";
+import { error as logTelemetryError } from "./services/telemetryService";
 
 const App = () => {
   const navigate = useNavigate();
@@ -138,46 +139,117 @@ const App = () => {
     };
   }, []);
 
-  axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (
-        error.response &&
-        (error.response.status === 401 || error.response.status === 400)
-      ) {
-        const errorMessage = error?.response?.data?.message
-          ?.trim()
-          ?.toLowerCase();
-        if (
-          errorMessage?.includes("unauthorized") ||
-          errorMessage?.includes("token") ||
-          errorMessage?.includes("logged")
-        ) {
-          if (
-            localStorage.getItem("contentSessionId") &&
-            process.env.REACT_APP_IS_APP_IFRAME === "true"
-          ) {
-            window.parent.postMessage(
-              {
-                message: "Logged out!",
-              },
-              window?.location?.ancestorOrigins?.[0] ||
-                window.parent.location.origin
+  useEffect(() => {
+    const RETRY_MAX = 3;
+    const RETRY_BASE_DELAY_MS = 1000; // 1s, 2s, 4s (exponential backoff)
+
+    const interceptorId = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const config = error?.config || {};
+        const statusCode = error?.response?.status;
+
+        // --- Telemetry logging (fires on every failure, including retries) ---
+        const responseData = error?.response?.data;
+        const endpoint = config.url || error?.request?.responseURL || "unknown";
+        const retryAttempt = config.__retryCount || 0;
+        const errCode =
+          responseData?.params?.err ||
+          responseData?.err ||
+          `API_${statusCode || "UNKNOWN"}`;
+        const errType =
+          responseData?.responseCode ||
+          responseData?.errtype ||
+          (statusCode ? `HTTP_${statusCode}` : "SYSTEM");
+
+        logTelemetryError(
+          error,
+          {
+            err: errCode,
+            errtype: errType,
+            pageid: window?.location?.pathname || "",
+            plugin: {
+              id: endpoint,
+              ver: "1.0",
+            },
+            retryAttempt,
+          },
+          "ET"
+        );
+
+        // --- Retry logic: only for 5xx or network errors ---
+        const isServerError = statusCode >= 500;
+        const isNetworkError = !error.response; // no response at all
+        const isRetryable = isServerError || isNetworkError;
+
+        if (isRetryable) {
+          config.__retryCount = retryAttempt || 0;
+
+          if (config.__retryCount < RETRY_MAX) {
+            config.__retryCount += 1;
+            const delay =
+              RETRY_BASE_DELAY_MS * Math.pow(2, config.__retryCount - 1);
+
+            console.warn(
+              `[axios-retry] Attempt ${config.__retryCount}/${RETRY_MAX} for ${config.url} (delay ${delay}ms)`
             );
-            console.log("if logout!");
-            localStorage.clear();
-            sessionStorage.clear();
-          } else {
-            console.log("else logout!");
-            localStorage.clear();
-            sessionStorage.clear();
-            navigate("/login");
+
+            return new Promise((resolve) => setTimeout(resolve, delay)).then(
+              () => axios(config)
+            );
+          }
+          // All retries exhausted — fall through to auth check + reject
+        }
+
+        // --- Auth error handling (401 / 400) ---
+        if (
+          error.response &&
+          (error.response.status === 401 || error.response.status === 400)
+        ) {
+          const errorMessage = error?.response?.data?.message
+            ?.trim()
+            ?.toLowerCase();
+          if (
+            errorMessage?.includes("unauthorized") ||
+            errorMessage?.includes("token") ||
+            errorMessage?.includes("logged")
+          ) {
+            if (
+              localStorage.getItem("contentSessionId") &&
+              process.env.REACT_APP_IS_APP_IFRAME === "true"
+            ) {
+              window.parent.postMessage(
+                {
+                  message: "Logged out!",
+                },
+                window?.location?.ancestorOrigins?.[0] ||
+                  window.parent.location.origin
+              );
+              console.log("if logout!");
+              localStorage.clear();
+              sessionStorage.clear();
+            } else {
+              console.log("else logout!");
+              localStorage.clear();
+              sessionStorage.clear();
+              navigate("/login");
+            }
           }
         }
+        return Promise.reject(error);
       }
-      return Promise.reject(error);
-    }
-  );
+    );
+
+    // Eject interceptor on unmount to avoid leaks in React 18 StrictMode
+    return () => {
+      try {
+        axios.interceptors.response.eject(interceptorId);
+      } catch (e) {
+        console.error("Error ejecting axios interceptor:", e);
+        // no-op
+      }
+    };
+  }, [navigate]);
 
   return (
     <StyledEngineProvider injectFirst>
