@@ -1,17 +1,22 @@
 import React, { useEffect, Fragment, Suspense } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import CustomizedSnackbars from "../../views/Snackbar/CustomSnackbar";
 import LoadingFallback from "../../components/LoadingFallback";
+import { useSessionExpired } from "../../context/SessionExpiredProvider";
 
 const PrivateRoute = (props) => {
   const TOKEN = localStorage.getItem("apiToken");
+  const { notifyMissingToken } = useSessionExpired();
 
-  const navigate = useNavigate();
   useEffect(() => {
     if (!TOKEN && props.requiresAuth) {
-      navigate("/login");
+      notifyMissingToken();
     }
-  }, [TOKEN]);
+  }, [TOKEN, props.requiresAuth, notifyMissingToken]);
+
+  if (!TOKEN && props.requiresAuth) {
+    return null;
+  }
 
   return <>{props.children}</>;
 };

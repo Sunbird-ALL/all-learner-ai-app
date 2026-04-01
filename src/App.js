@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { ThemeProvider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { StyledEngineProvider } from "@mui/material/styles";
 import routes from "./routes";
 import AppContent from "./views/AppContent/AppContent";
+import { SessionExpiredProvider } from "./context/SessionExpiredProvider";
+import { openAuthSessionExpiredModal } from "./context/sessionExpiredBridge";
 import theme from "./assets/styles/theme";
 import axios from "axios";
 import { getFontFamily } from "./utils/fontUtils";
@@ -11,7 +12,6 @@ import { getLocalData } from "./utils/constants";
 import { error as logTelemetryError } from "./services/telemetryService";
 
 const App = () => {
-  const navigate = useNavigate();
   const ranonce = useRef(false);
 
   // Update CSS variable --theme-font based on language
@@ -217,37 +217,32 @@ const App = () => {
             errorMessage?.includes("token") ||
             errorMessage?.includes("logged")
           ) {
-            if (
-              localStorage.getItem("contentSessionId") &&
-              process.env.REACT_APP_IS_APP_IFRAME === "true"
-            ) {
-              window.parent.postMessage(
-                {
-                  message: "Logged out!",
-                },
-                window?.location?.ancestorOrigins?.[0] ||
-                  window.parent.location.origin
-              );
-              console.log("if logout!");
-              localStorage.clear();
-              sessionStorage.clear();
-            } else {
-              console.log("else logout!");
-              localStorage.clear();
-              sessionStorage.clear();
-              navigate("/login");
-            }
+            const raw =
+              error?.response?.data?.message ??
+              error?.response?.data?.error ??
+              error?.response?.data?.msg;
+            const displayMessage =
+              typeof raw === "string" && raw.trim() ? raw.trim() : undefined;
+            const notifyParent =
+              !!localStorage.getItem("contentSessionId") &&
+              process.env.REACT_APP_IS_APP_IFRAME === "true";
+            openAuthSessionExpiredModal({
+              message: displayMessage,
+              notifyParent,
+            });
           }
         }
         return Promise.reject(error);
       }
     );
-  }, [navigate]);
+  }, []);
 
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <AppContent routes={routes} />
+        <SessionExpiredProvider>
+          <AppContent routes={routes} />
+        </SessionExpiredProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );
