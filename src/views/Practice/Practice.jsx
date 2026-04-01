@@ -3273,7 +3273,9 @@ const Practice = () => {
     // Check if F1 flow is active by checking milestone level and F1 flow step
     const currentF1FlowStep = getF1FlowStep();
     const isF1FlowActiveCheck =
-      milestoneLevel === "B" && currentF1FlowStep.step !== null;
+      milestoneLevel === "B" &&
+      subMilestoneLevel === "F1" &&
+      currentF1FlowStep.step !== null;
 
     // Handle F1 flow back navigation
     if (isF1FlowActiveCheck) {
@@ -3315,7 +3317,7 @@ const Practice = () => {
         await addLesson({
           sessionId: sessionId,
           milestone: "practice",
-          lesson: newF1Index.toString(),
+          lesson: (newF1Index + 1).toString(),
           progress: Math.min(
             100,
             Math.round(((newF1Index + 1) / F1_FLOW.length) * 100)
@@ -3336,6 +3338,123 @@ const Practice = () => {
         return;
       } else {
         // Can't go back further in F1 flow
+        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          navigate("/");
+        } else {
+          navigate("/discover-start");
+        }
+        return;
+      }
+    }
+
+    // Handle F2 flow back navigation
+    const currentF2FlowStep = getF2FlowStep();
+    const isF2FlowActiveCheck =
+      milestoneLevel === "B" &&
+      subMilestoneLevel === "F2" &&
+      currentF2FlowStep.step !== null;
+    if (isF2FlowActiveCheck) {
+      const currentF2Index = currentF2FlowStep.index;
+      if (currentF2Index > 0) {
+        const newF2Index = currentF2Index - 1;
+        setLocalData("f2FlowIndex", newF2Index);
+        setF2FlowIndexState(newF2Index);
+
+        // Determine mechanism from F2 flow step type (language-aware)
+        const previousF2FlowStep = F2_FLOW[newF2Index];
+        const isIndicLanguage = (lang || "en") !== "en";
+        let mechanismToSet;
+        if (previousF2FlowStep?.type === "L") {
+          const mechName = isIndicLanguage ? "barakhadi" : "letterTrain";
+          mechanismToSet = { id: mechName, name: mechName };
+        } else if (
+          previousF2FlowStep?.type === "P" ||
+          previousF2FlowStep?.type === "A"
+        ) {
+          mechanismToSet = { id: "letterHunt", name: "letterHunt" };
+        }
+
+        const practiceProgress = {
+          currentQuestion: 0,
+          currentPracticeProgress: ((newF2Index + 1) / F2_FLOW.length) * 100,
+          currentPracticeStep: newF2Index,
+          fromBack: true,
+        };
+
+        await addLesson({
+          sessionId: sessionId,
+          milestone: "practice",
+          lesson: (newF2Index + 1).toString(),
+          progress: Math.min(
+            100,
+            Math.round(((newF2Index + 1) / F2_FLOW.length) * 100)
+          ),
+          language: lang,
+          milestoneLevel: "B",
+          subMilestoneLevel: "F2",
+          duration: calculateLetterTrainDuration(),
+          applyLevel: getStepTitleFromFlowIndex(newF2Index, "F2"),
+        });
+
+        setProgressData(practiceProgress);
+        if (mechanismToSet) setMechanism(mechanismToSet);
+        setCurrentQuestion(0);
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        return;
+      } else {
+        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          navigate("/");
+        } else {
+          navigate("/discover-start");
+        }
+        return;
+      }
+    }
+
+    // Handle F3 flow back navigation
+    const currentF3FlowForBack = getF3FlowStep();
+    const isF3FlowActiveCheck =
+      milestoneLevel === "B" &&
+      subMilestoneLevel === "F3" &&
+      currentF3FlowForBack.step !== null;
+    if (isF3FlowActiveCheck) {
+      const currentF3Index = currentF3FlowForBack.index;
+      if (currentF3Index > 0) {
+        const newF3Index = currentF3Index - 1;
+        setLocalData("f3FlowIndex", newF3Index);
+        setLocalData("f3ApplySubStep", null);
+        setF3FlowIndexState(newF3Index);
+
+        // F3 uses LetterLauncher for both P and A (contentType varies)
+        const mechanismToSet = { id: "letterLauncher", name: "letterLauncher" };
+
+        const practiceProgress = {
+          currentQuestion: 0,
+          currentPracticeProgress: ((newF3Index + 1) / F3_FLOW.length) * 100,
+          currentPracticeStep: newF3Index,
+          fromBack: true,
+        };
+
+        await addLesson({
+          sessionId: sessionId,
+          milestone: "practice",
+          lesson: (newF3Index + 1).toString(),
+          progress: Math.min(
+            100,
+            Math.round(((newF3Index + 1) / F3_FLOW.length) * 100)
+          ),
+          language: lang,
+          milestoneLevel: "B",
+          subMilestoneLevel: "F3",
+          applyLevel: getStepTitleFromFlowIndex(newF3Index, "F3"),
+        });
+
+        setProgressData(practiceProgress);
+        setMechanism(mechanismToSet);
+        setCurrentQuestion(0);
+        setLocalData("practiceProgress", JSON.stringify(practiceProgress));
+        return;
+      } else {
         if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
           navigate("/");
         } else {
