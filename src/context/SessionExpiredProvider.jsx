@@ -1,12 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MessageDialog } from "../components/Assesment/Assesment";
 import {
@@ -14,10 +6,7 @@ import {
   unregisterAuthSessionExpiredHandler,
 } from "./sessionExpiredBridge";
 
-const SessionExpiredContext = createContext(null);
-
 const DEFAULT_AUTH_MESSAGE = "Your session has ended. Please sign in again.";
-const DEFAULT_MISSING_TOKEN_MESSAGE = "You need to sign in to continue.";
 
 export function SessionExpiredProvider({ children }) {
   const navigate = useNavigate();
@@ -50,14 +39,10 @@ export function SessionExpiredProvider({ children }) {
 
   const handleConfirm = useCallback(() => {
     if (!modal) return;
-    const { variant, notifyParent } = modal;
+    const { notifyParent } = modal;
     closeModal();
-    if (variant === "auth") {
-      runAuthLogout(!!notifyParent);
-    } else {
-      navigate("/login");
-    }
-  }, [modal, closeModal, navigate, runAuthLogout]);
+    runAuthLogout(!!notifyParent);
+  }, [modal, closeModal, runAuthLogout]);
 
   useEffect(() => {
     registerAuthSessionExpiredHandler(({ message, notifyParent }) => {
@@ -68,7 +53,6 @@ export function SessionExpiredProvider({ children }) {
           ? message.trim()
           : DEFAULT_AUTH_MESSAGE;
       setModal({
-        variant: "auth",
         message: text,
         notifyParent: !!notifyParent,
       });
@@ -76,20 +60,8 @@ export function SessionExpiredProvider({ children }) {
     return () => unregisterAuthSessionExpiredHandler();
   }, []);
 
-  const notifyMissingToken = useCallback(() => {
-    if (activeRef.current) return;
-    activeRef.current = true;
-    setModal({
-      variant: "missing-token",
-      message: DEFAULT_MISSING_TOKEN_MESSAGE,
-      notifyParent: false,
-    });
-  }, []);
-
-  const value = useMemo(() => ({ notifyMissingToken }), [notifyMissingToken]);
-
   return (
-    <SessionExpiredContext.Provider value={value}>
+    <>
       {children}
       {modal && (
         <MessageDialog
@@ -99,16 +71,6 @@ export function SessionExpiredProvider({ children }) {
           dontShowHeader={false}
         />
       )}
-    </SessionExpiredContext.Provider>
+    </>
   );
-}
-
-export function useSessionExpired() {
-  const ctx = useContext(SessionExpiredContext);
-  if (!ctx) {
-    throw new Error(
-      "useSessionExpired must be used within SessionExpiredProvider"
-    );
-  }
-  return ctx;
 }
