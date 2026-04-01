@@ -3422,6 +3422,7 @@ const Practice = () => {
       if (currentF3Index > 0) {
         const newF3Index = currentF3Index - 1;
         setLocalData("f3FlowIndex", newF3Index);
+        setLocalData("f3ApplySubStep", null);
         setF3FlowIndexState(newF3Index);
 
         // F3 uses LetterLauncher for both P and A (contentType varies)
