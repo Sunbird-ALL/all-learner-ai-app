@@ -1,9 +1,11 @@
 import en from "./en";
 import hi from "./hi";
+import te from "./te";
 
 const UI_STRINGS_BY_LANG = {
   en,
   hi,
+  te,
 };
 
 /**
@@ -16,4 +18,4 @@ export function getUiStrings(lang) {
   return UI_STRINGS_BY_LANG[code] || en;
 }
 
-export { en, hi };
+export { en, hi, te };
