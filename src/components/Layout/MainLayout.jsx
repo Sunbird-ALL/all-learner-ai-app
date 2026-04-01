@@ -961,7 +961,7 @@ const MainLayout = (props) => {
         }}
       />
 
-      {LEVEL && (
+      {!!LEVEL && (
         <Box
           sx={{
             position: "absolute",
@@ -1237,7 +1237,7 @@ const MainLayout = (props) => {
                             />
                           ) : null
                         ) : (
-                          LEVEL && levelsImages?.[LEVEL]?.milestone
+                          !!LEVEL && levelsImages?.[LEVEL]?.milestone
                         ))}
                     </footer>
                   </Box>
