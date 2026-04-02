@@ -697,7 +697,7 @@ function VoiceAnalyser(props) {
         else if (totalSyllables > 600) threshold = 5;
 
         // Calculate lives lost based on percentage.
-        let livesLost = (Math.floor(percentage / (threshold / totalLives))) - 5;
+        let livesLost = Math.max(0, Math.floor(percentage / (threshold / totalLives)) - 5);
 
         console.log("percent", percentage, livesLost);
 
