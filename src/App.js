@@ -10,6 +10,7 @@ import axios from "axios";
 import { getFontFamily } from "./utils/fontUtils";
 import { getLocalData } from "./utils/constants";
 import { error as logTelemetryError } from "./services/telemetryService";
+import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
 
 const App = () => {
   const ranonce = useRef(false);
@@ -241,6 +242,7 @@ const App = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <SessionExpiredProvider>
+          <GetSetResultLoadingOverlay />
           <AppContent routes={routes} />
         </SessionExpiredProvider>
       </ThemeProvider>
