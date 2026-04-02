@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, CircularProgress, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { StyledEngineProvider } from "@mui/material/styles";
 import routes from "./routes";
 import AppContent from "./views/AppContent/AppContent";
@@ -16,10 +16,9 @@ import { error as logTelemetryError } from "./services/telemetryService";
 import { useNavigate } from "react-router-dom";
 
 const App = () => {
-  const navigate = useNavigate();
   const ranonce = useRef(false);
 
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  const navigate = useNavigate();
   const [appInitialized, setAppInitialized] = useState(false);
 
   useEffect(() => {
@@ -230,19 +229,17 @@ const App = () => {
               error?.response?.data?.msg;
             const displayMessage =
               typeof raw === "string" && raw.trim() ? raw.trim() : undefined;
-            const notifyParent =
-              !!localStorage.getItem("contentSessionId") &&
-              process.env.REACT_APP_IS_APP_IFRAME === "true";
-            // the below localStorage flags are used by the parent window to determine if it should show the session expired modal (in case of iframe) or not and also to show the reason for logout in the modal
-            localStorage.setItem(
-              "logout_reason",
-              displayMessage || errorMessage || ""
-            );
-            localStorage.setItem("logout_status", "complete");
-            openAuthSessionExpiredModal({
-              message: displayMessage,
-              notifyParent,
-            });
+
+            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              // Save reason before clearing so parent can read it
+              const logoutReason = displayMessage || errorMessage || "";
+              localStorage.setItem("logout_reason", logoutReason);
+              localStorage.setItem("logout_status", "complete");
+              // localStorage.clear();
+              sessionStorage.clear();
+            } else {
+              openAuthSessionExpiredModal({ message: displayMessage });
+            }
           }
         }
         return Promise.reject(error);
@@ -258,9 +255,13 @@ const App = () => {
     if (token && profileName) {
       setAppInitialized(true);
     } else {
-      navigate("/login");
+      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        localStorage.setItem("logout_reason", "");
+        localStorage.setItem("logout_status", "complete");
+      } else {
+        navigate("/login");
+      }
     }
-    setCheckingAuth(false); // stop loader after check
   }, [navigate]);
 
   // Step 2: Initialize telemetry
@@ -273,7 +274,7 @@ const App = () => {
           mode: process.env.REACT_APP_MODE,
           authToken: localStorage.getItem("apiToken"),
           did: localStorage.getItem("deviceId") || visitorId,
-          uid: "anonymous",
+          uid: getLocalData("profileName") || "anonymous",
           channel: process.env.REACT_APP_CHANNEL,
           env: process.env.REACT_APP_ENV,
           pdata: {
@@ -291,21 +292,18 @@ const App = () => {
         metadata: {},
       });
 
-      if (!ranonce.current) {
-        if (localStorage.getItem("contentSessionId") === null) {
-          startEvent();
-        }
-        ranonce.current = true;
+      if (localStorage.getItem("contentSessionId") === null) {
+        startEvent();
       }
     };
 
     const setFp = async () => {
       const fp = await FingerprintJS.load();
       const { visitorId } = await fp.get();
-      initService(visitorId);
+      await initService(visitorId);
     };
 
-    setFp();
+    setFp().catch((err) => console.error("Telemetry init failed:", err));
   }, [appInitialized]);
 
   // Step 3: Sync telemetry before unload
@@ -319,47 +317,6 @@ const App = () => {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [appInitialized]);
-
-  // Step 4: Axios interceptor for auth errors
-  // axios.interceptors.response.use(
-  //   (response) => response,
-  //   (error) => {
-  //     if (
-  //       error.response &&
-  //       (error.response.status === 401 || error.response.status === 400)
-  //     ) {
-  //       const errorMessage = error?.response?.data?.message
-  //         ?.trim()
-  //         ?.toLowerCase();
-  //       if (
-  //         errorMessage?.includes("unauthorized") ||
-  //         errorMessage?.includes("token") ||
-  //         errorMessage?.includes("logged")
-  //       ) {
-  //         localStorage.setItem("logout_reason", errorMessage);
-  //         localStorage.setItem("logout_status", "complete");
-  //       }
-  //     }
-  //     return Promise.reject(error);
-  //   }
-  // );
-
-  // Show loader during auth check
-  if (checkingAuth) {
-    return (
-      <Box
-        sx={{
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   return (
     <StyledEngineProvider injectFirst>
