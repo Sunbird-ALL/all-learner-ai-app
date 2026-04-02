@@ -11,7 +11,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
-import MainLayout from "../components/Layouts.jsx/MainLayout";
+import MainLayout from "../components/Layout/MainLayout";
 import listenImg from "../assets/listen.png";
 // import Mic from "assets/mikee.svg";
 // import Stop from "assets/pausse.svg";
@@ -59,7 +59,7 @@ import {
   level12,
   level15,
 } from "../utils/levelData";
-import { response } from "../services/telementryService";
+import { response } from "../services/telemetryService";
 
 const theme = createTheme();
 

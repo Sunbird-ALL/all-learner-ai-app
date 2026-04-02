@@ -191,7 +191,7 @@ class SessionTelemetryManager {
   }
 
   // End current subsession
-  public async endSubSession(): Promise<void> {
+  public async endSubSession(finalFuel?: number, requiredFuel?: number): Promise<void> {
     if (!this.currentSubSession) return;
 
     const subSessionDuration = Date.now() - this.currentSubSession.startTime;
@@ -209,7 +209,7 @@ class SessionTelemetryManager {
   }
 
   // End current subsession with back button context
-  public async endSubSessionWithBackButton(): Promise<void> {
+  public async endSubSessionWithBackButton(finalFuel?: number, requiredFuel?: number): Promise<void> {
     if (!this.currentSubSession) return;
 
     const subSessionDuration = Date.now() - this.currentSubSession.startTime;
@@ -263,6 +263,12 @@ class SessionTelemetryManager {
     this.saveSessionData();
   }
 
+  // Update subsession with current fuel level (used by fuel-based games like LetterLauncherGame)
+  public updateSubSessionFuel(fuel: number): void {
+    if (!this.currentSubSession) return;
+    (this.currentSubSession as unknown as Record<string, unknown>).currentFuel = fuel;
+    this.saveSessionData();
+  }
 
   // Send user session START event
   private async sendUserSessionStartEvent(sessionData: SessionData, isRefresh: boolean = false): Promise<void> {
@@ -530,7 +536,7 @@ class SessionTelemetryManager {
   }
 
   // Send ASSESS event for question attempt
-  public async sendAssessEvent(questionId: string, questionType: string, userAnswer: any, correctAnswer: any, isCorrect: boolean, responseTime: number): Promise<void> {
+  public async sendAssessEvent(questionId: string, questionType: string, userAnswer: any, correctAnswer: any, isCorrect: boolean, responseTime: number, score?: number, maxScore?: number): Promise<void> {
     if (!this.currentSubSession || !this.currentSession) return;
 
     try {

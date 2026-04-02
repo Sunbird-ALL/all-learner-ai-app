@@ -3,11 +3,11 @@ import RecordRTC from "recordrtc";
 import { Box, CircularProgress } from "@mui/material";
 import {
   ListenButton,
-  RetryIcon,
   SpeakButton,
   StopButton,
   getLocalData,
 } from "./constants";
+import { RetryIcon } from "../components/Icons/SvgIcons";
 import RecordVoiceVisualizer from "./RecordVoiceVisualizer";
 import playButton from "../../src/assets/listen.png";
 import pauseButton from "../../src/assets/pause.png";

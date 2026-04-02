@@ -11,7 +11,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
-import MainLayout from "../components/Layouts.jsx/MainLayout";
+import MainLayout from "../components/Layout/MainLayout";
 import listenImg from "../assets/listen.png";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
@@ -1124,7 +1124,7 @@ const content = {
       allwords: [
         {
           img: getAssetUrl(s3Assets.ఔషధImg),
-          text: "ఔషధ",
+          text: "ఔషధం",
           audio: getAssetAudioUrl(s3Assets.ఔషధAudio),
         },
         {
@@ -1138,7 +1138,7 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.నడకAudio),
         },
       ],
-      correctWord: "ఔషధ",
+      correctWord: "ఔషధం",
       audio: getAssetAudioUrl(s3Assets.ఔషధAudio),
       flowName: "P1",
       type: "soundMatch",
@@ -1157,11 +1157,11 @@ const content = {
         },
         {
           img: getAssetUrl(s3Assets.కదImg),
-          text: "కింద",
+          text: "చీర",
           audio: getAssetAudioUrl(s3Assets.కదAudio),
         },
       ],
-      correctWord: "కింద",
+      correctWord: "చీర",
       audio: getAssetAudioUrl(s3Assets.కదAudio),
       flowName: "P3",
       type: "soundMatch",
@@ -1267,7 +1267,7 @@ const content = {
         },
         {
           img: getAssetUrl(s3Assets.కదImg),
-          text: "కింద",
+          text: "చీర",
           audio: getAssetAudioUrl(s3Assets.కదAudio),
         },
         {
@@ -1308,7 +1308,7 @@ const content = {
       allwords: [
         {
           img: getAssetUrl(s3Assets.కదImg),
-          text: "కింద",
+          text: "చీర",
           audio: getAssetAudioUrl(s3Assets.కదAudio),
         },
         {

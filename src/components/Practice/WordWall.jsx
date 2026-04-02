@@ -7,7 +7,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import backgroundImg from "../../assets/backgrounds.svg";
 import clickbubbleImg from "../../assets/clickbubble.svg";
 import wrongBoxImg from "../../assets/wrongBox.svg";
@@ -26,8 +26,11 @@ import listenvioletImg from "../../assets/listenviolet.svg";
 import Lottie from "lottie-react";
 import Giftbox from "../../assets/Giftbox.json";
 import { getCorrectPracticeWords } from "../../services/orchestration/orchestrationService";
-import { shuffle } from "lodash";
-import { getLocalData, setLocalData } from "../../utils/constants";
+import {
+  getLocalData,
+  setLocalData,
+  randomizeArray as shuffle,
+} from "../../utils/constants";
 import { getFontFamily } from "../../utils/fontUtils";
 import giftscoreImg from "../../assets/giftscore.svg";
 import redboxImg from "../../assets/redbox.svg";

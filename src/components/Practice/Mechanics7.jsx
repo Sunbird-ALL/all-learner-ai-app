@@ -10,7 +10,7 @@ import React, { useEffect, useState, useRef } from "react";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import listenImg2 from "../../assets/listen.png";
 import spinnerStop from "../../assets/pause.png";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import clapImage from "../../assets/hand-ic.svg";
 // import bulbHint from "../../assets/hint.svg";
 // import bulbHintDisabled from "../../assets/DisabledHint.svg";
@@ -23,15 +23,14 @@ import removeSound from "../../assets/remove.wav";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import {
   practiceSteps,
-  WordRedCircle,
   StopButton,
   SpeakButton,
   ListenButton,
   NextButtonRound,
-  RetryIcon,
   getLocalData,
   setLocalData,
 } from "../../utils/constants";
+import { WordRedCircle, RetryIcon } from "../Icons/SvgIcons";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
   useSpeechRecognition,

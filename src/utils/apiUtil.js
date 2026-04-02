@@ -2,7 +2,7 @@ import axios from "axios";
 import { compareArrays, getLocalData, replaceAll } from "./constants";
 import config from "./urlConstants.json";
 import calcCER from "../../node_modules/character-error-rate/index";
-import { response } from "../services/telementryService";
+import { response } from "../services/telemetryService";
 import S3Client from "../config/awsS3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 

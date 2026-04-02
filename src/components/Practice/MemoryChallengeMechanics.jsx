@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import {
   getLocalData,
   setLocalData,
   practiceSteps,
-  levelGetContent,
 } from "../../utils/constants";
+import { levelGetContent } from "../../data/levelContent";
 import { addLesson } from "../../services/orchestration/orchestrationService";
 import { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
 

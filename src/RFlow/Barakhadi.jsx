@@ -8,7 +8,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
-import MainLayout from "../components/Layouts.jsx/MainLayout";
+import MainLayout from "../components/Layout/MainLayout";
 import listenImg from "../assets/listen.svg";
 import correctSound from "../assets/correct.wav";
 import wrongSound from "../assets/audio/wrong.wav";
@@ -23,7 +23,7 @@ import {
 } from "../utils/constants";
 import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
-import { response } from "../services/telementryService";
+import { response } from "../services/telemetryService";
 import { Typography, Stack, IconButton } from "@mui/material";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import trainImg from "../assets/trainImg.svg";
@@ -5100,7 +5100,7 @@ const Barakhadi = ({
               top: 0,
               left: 0,
               width: "100%",
-              height: "100%",
+              height: "85%",
               backgroundColor: "rgba(0,0,0,0.5)",
               display: "flex",
               justifyContent: "center",
@@ -5155,129 +5155,126 @@ const Barakhadi = ({
 
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
                   width: "100%",
+                  overflowX: "auto",
                 }}
               >
-                {/* Vowels Header */}
-                <div
+                <table
                   style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginBottom: "10px",
-                    width: `${vowels.length * 52}px`,
-                    marginLeft: "142px",
-                    gap: "2px",
+                    borderCollapse: "collapse",
+                    textAlign: "center",
+                    margin: "0 auto",
                   }}
                 >
-                  {vowels.map((v, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        width: lang === "te" ? "56px" : "50px",
-                        height: lang === "te" ? "56px" : "50px",
-                        borderRadius: "50%",
-                        background: "#1a237e",
-                        color: "white",
-                        border: "1px solid #999",
-                        fontWeight: lang === "te" ? "normal" : "bold",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        margin: "0 2px",
-                        fontSize: lang === "te" ? "28px" : "18px",
-                        flexShrink: 0,
-                        fontFamily: getFontFamily(lang),
-                        lineHeight: "1",
-                        textAlign: "center",
-                      }}
-                    >
-                      {v}
-                    </div>
-                  ))}
-                </div>
+                  {/* HEADER */}
+                  <thead>
+                    <tr>
+                      {/* Top-left empty */}
+                      <th
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          position: "sticky",
+                          top: 0,
+                          left: 0,
+                          zIndex: 3,
+                          background: "#fff",
+                        }}
+                      ></th>
 
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      marginRight: "10px",
-                      gap: "3px",
-                    }}
-                  >
-                    {Object.keys(generateFullBarakhadi()).map(
-                      (consonant, index) => (
-                        <div
-                          key={index}
+                      {vowels.map((v, i) => (
+                        <th
+                          key={i}
                           style={{
-                            width: lang === "te" ? "52px" : "45px",
-                            height: lang === "te" ? "52px" : "45px",
-                            borderRadius: "50%",
-                            background: "#fbc02d",
-                            border: "1px solid black",
-                            fontWeight: lang === "te" ? "normal" : "bold",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            margin: "4px 0",
-                            fontSize: lang === "te" ? "28px" : "18px",
-                            flexShrink: 0,
-                            fontFamily: getFontFamily(lang),
-                            lineHeight: "1",
-                            textAlign: "center",
+                            width: "60px",
+                            height: "60px",
+                            border: "none",
+                            position: "sticky",
+                            top: 0,
+                            zIndex: 2,
+                            background: "#fff",
                           }}
                         >
-                          {consonant}
-                        </div>
+                          <div
+                            style={{
+                              width: "clamp(32px, 6vw, 52px)", // 👈 responsive circle
+                              height: "clamp(32px, 6vw, 52px)",
+                              borderRadius: "50%",
+                              background: "#1a237e",
+                              color: "white",
+                              fontWeight: lang === "te" ? "normal" : "bold",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              margin: "auto",
+                              fontSize: lang === "te" ? "28px" : "18px",
+                              fontFamily: getFontFamily(lang),
+                            }}
+                          >
+                            {v}
+                          </div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+
+                  {/* BODY */}
+                  <tbody>
+                    {Object.entries(generateFullBarakhadi()).map(
+                      ([consonant, syllables], rowIdx) => (
+                        <tr key={rowIdx}>
+                          {/* FIRST COLUMN */}
+                          <td
+                            style={{
+                              width: "60px",
+                              height: "60px",
+                              border: "none",
+                              position: "sticky",
+                              left: 0,
+                              zIndex: 1,
+                              background: "#fff",
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: "clamp(32px, 6vw, 52px)",
+                                height: "clamp(32px, 6vw, 52px)",
+                                borderRadius: "50%",
+                                background: "#fbc02d",
+                                fontWeight: lang === "te" ? "normal" : "bold",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                margin: "auto",
+                                fontSize: lang === "te" ? "28px" : "18px",
+                                fontFamily: getFontFamily(lang),
+                              }}
+                            >
+                              {consonant}
+                            </div>
+                          </td>
+
+                          {/* INNER CELLS */}
+                          {syllables.map((syllable, idx) => (
+                            <td
+                              key={idx}
+                              style={{
+                                width: "60px",
+                                height: "60px",
+                                border: "1px solid #ddd",
+                                fontSize: lang === "te" ? "28px" : "18px",
+                                fontWeight: lang === "te" ? "normal" : "bold",
+                                fontFamily: getFontFamily(lang),
+                              }}
+                            >
+                              {syllable}
+                            </td>
+                          ))}
+                        </tr>
                       )
                     )}
-                  </div>
-
-                  <div>
-                    <table
-                      style={{
-                        borderCollapse: "collapse",
-                        textAlign: "center",
-                        border: "1px solid #ddd",
-                      }}
-                    >
-                      <tbody>
-                        {Object.entries(generateFullBarakhadi()).map(
-                          ([consonant, syllables], rowIdx) => (
-                            <tr key={rowIdx}>
-                              {syllables.map((syllable, idx) => (
-                                <td
-                                  key={idx}
-                                  style={{
-                                    width: 55,
-                                    height: 55,
-                                    border: "1px solid #ccc",
-                                    fontSize: lang === "te" ? "28px" : "18px",
-                                    fontWeight:
-                                      lang === "te" ? "normal" : "bold",
-                                    minWidth: "55px",
-                                    fontFamily: getFontFamily(lang),
-                                  }}
-                                >
-                                  {syllable}
-                                </td>
-                              ))}
-                            </tr>
-                          )
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -5658,9 +5655,9 @@ const Barakhadi = ({
             alt="bear"
             style={{
               position: "absolute",
-              bottom: "-40px",
-              right: "-10px",
-              width: "170px",
+              bottom: "-50px",
+              right: "0px",
+              width: "clamp(60px, 5vw, 170px)",
             }}
           />
         </div>

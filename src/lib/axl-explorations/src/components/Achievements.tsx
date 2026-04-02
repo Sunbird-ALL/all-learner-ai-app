@@ -1,3 +1,4 @@
+import React from "react";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { Crown, Zap, BookOpen, Brain, Award, Sparkles } from "lucide-react";

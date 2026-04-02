@@ -150,7 +150,7 @@ export function LetterLauncherGame({ onBack, contentCount = 30 }: LetterLauncher
         allLetters.push(...letters);
       });
       // Remove duplicates
-      return [...new Set(allLetters)];
+      return Array.from(new Set(allLetters));
     }
     
     // For English, map Letter Hunt levels to complexity
@@ -173,7 +173,7 @@ export function LetterLauncherGame({ onBack, contentCount = 30 }: LetterLauncher
       allLetters.push(...letters);
     });
     // Remove duplicates
-    return [...new Set(allLetters)];
+    return Array.from(new Set(allLetters));
   };
 
   // Generate questions (configurable count per level, default: 30)

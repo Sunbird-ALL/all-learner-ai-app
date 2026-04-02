@@ -12,11 +12,11 @@ import raSound from "../../assets/raSound.svg";
 import raMic2 from "../../assets/raMic2.svg";
 import raMonkey from "../../assets/raMonkey.svg";
 import { practiceSteps, getLocalData } from "../../utils/constants";
-import { Log } from "../../services/telementryService";
+import { Log } from "../../services/telemetryService";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 
 const content = {
   L1: [

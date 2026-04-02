@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Grid, Radio } from "@mui/material";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import {
   PlayAudioButton,
   StopAudioButton,
@@ -15,6 +15,7 @@ import {
   useMediaQuery,
   CircularProgress,
 } from "@mui/material";
+import { getFontFamily } from "../../utils/fontUtils";
 const theme = createTheme();
 
 const Mechanics5 = ({
@@ -181,7 +182,7 @@ const Mechanics5 = ({
         style={{
           left: "calc(50% - 258px / 2)",
           top: "calc(50% - 45px / 2 - 235.5px)",
-          fontFamily: "Quicksand",
+          fontFamily: getFontFamily(lang || "en"),
           fontStyle: "normal",
           fontWeight: 600,
           fontSize: isMobile ? "22px" : "36px",
@@ -238,7 +239,7 @@ const Mechanics5 = ({
                 color: "#262649",
                 fontWeight: isMobile ? 600 : 800,
                 fontSize: isMobile ? "20px" : "26px",
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang || "en"),
               }}
             >
               {parentWords}
@@ -310,7 +311,7 @@ const Mechanics5 = ({
                         color: "#262649",
                         fontWeight: 600,
                         fontSize: isMobile ? "17px" : "24px",
-                        fontFamily: "Quicksand",
+                        fontFamily: getFontFamily(lang || "en"),
                         marginLeft: isMobile ? "15px" : "10px",
                       }}
                     >

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 // import useSound from "use-sound";
 // import t from "../../assets/audio/t.mp3";
 // import i from "../../assets/audio/i.mp3";

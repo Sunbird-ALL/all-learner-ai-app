@@ -10,7 +10,7 @@ import {
   getLocalData,
   randomizeArray,
 } from "../../utils/constants";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";

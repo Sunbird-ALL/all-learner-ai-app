@@ -16,7 +16,7 @@ import rocketImg from "../../assets/RocketCircle.gif";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import backimg from "../../assets/bacck.svg";
 import bookImg from "../../assets/bookimg.svg";
 

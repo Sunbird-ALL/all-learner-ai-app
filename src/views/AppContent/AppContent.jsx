@@ -1,45 +1,44 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, Suspense } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import CustomizedSnackbars from "../../views/Snackbar/CustomSnackbar";
-import { jwtDecode } from "jwt-decode";
+import LoadingFallback from "../../components/LoadingFallback";
 
 const PrivateRoute = (props) => {
-  let virtualId;
   const TOKEN = localStorage.getItem("apiToken");
-  // if (TOKEN) {
-  //   const tokenDetails = jwtDecode(TOKEN);
-  //   virtualId = JSON.stringify(tokenDetails?.virtual_id);
-  // }
-
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!TOKEN && props.requiresAuth) {
       navigate("/login");
     }
-  }, [TOKEN]);
+  }, [TOKEN, props.requiresAuth, navigate]);
+
+  if (!TOKEN && props.requiresAuth) {
+    return null;
+  }
 
   return <>{props.children}</>;
 };
-const AppContent = ({ routes }) => {
-  // const navigate = useNavigate();
-  // const location = useLocation();
 
+const AppContent = ({ routes }) => {
   return (
     <Fragment>
       <CustomizedSnackbars />
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.id}
-            path={route.path}
-            element={
-              <PrivateRoute requiresAuth={route.requiresAuth}>
-                <route.component />
-              </PrivateRoute>
-            }
-          />
-        ))}
-      </Routes>
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          {routes.map((route) => (
+            <Route
+              key={route.id}
+              path={route.path}
+              element={
+                <PrivateRoute requiresAuth={route.requiresAuth}>
+                  <route.component />
+                </PrivateRoute>
+              }
+            />
+          ))}
+        </Routes>
+      </Suspense>
     </Fragment>
   );
 };

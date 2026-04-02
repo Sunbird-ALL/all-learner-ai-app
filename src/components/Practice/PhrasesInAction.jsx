@@ -6,7 +6,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
@@ -40,7 +40,8 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import AudioTooltipModal from "./AudioTooltipModal";
-import { Log } from "../../services/telementryService";
+import ZoomableImage from "./ZoomableImage";
+import { Log } from "../../services/telemetryService";
 
 const theme = createTheme();
 
@@ -6302,40 +6303,61 @@ const PhrasesInAction = ({
                       }}
                     >
                       {levelData?.allwords && levelData.allwords.length > 0 ? (
-                        levelData.allwords.map((item) => (
-                          <div
-                            key={item.text}
-                            style={{
-                              width: "180px",
-                              height: "190px",
-                              border: "1px solid #000",
-                              margin: "10px",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              cursor: "pointer",
-                              flexDirection: "column",
-                              marginBottom: "30px",
-                            }}
-                            onClick={() => setSelectedDiv(item.text)}
-                          >
-                            <img
-                              src={
-                                level === 3
-                                  ? item.img
-                                  : getAssetUrl(s3Assets[item.img]) ||
-                                    Assets[item.img]
-                              }
-                              alt={item.text}
+                        levelData.allwords.map((item) => {
+                          const phraseImgSrc =
+                            level === 3
+                              ? item.img
+                              : getAssetUrl(s3Assets[item.img]) ||
+                                Assets[item.img];
+                          return (
+                            <div
+                              key={item.text}
                               style={{
                                 width: "180px",
-                                height: "200px",
-                                objectFit: "contain",
-                                border: "1px solid #00000033",
+                                height: "190px",
+                                border: "1px solid #000",
+                                margin: "10px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                cursor: "pointer",
+                                flexDirection: "column",
+                                marginBottom: "30px",
+                                overflow: "hidden",
+                                boxSizing: "border-box",
                               }}
-                            />
-                          </div>
-                        ))
+                              onClick={() => setSelectedDiv(item.text)}
+                            >
+                              {phraseImgSrc ? (
+                                <ZoomableImage
+                                  src={phraseImgSrc}
+                                  alt={item.text}
+                                  variant="thumbnail"
+                                  showGradientOverlay
+                                  imageStyle={{
+                                    width: "100%",
+                                    height: "100%",
+                                    maxWidth: "100%",
+                                    maxHeight: "100%",
+                                    objectFit: "contain",
+                                    display: "block",
+                                    border: "1px solid #00000033",
+                                    boxSizing: "border-box",
+                                    borderRadius: "8px",
+                                  }}
+                                  containerStyle={{
+                                    width: "100%",
+                                    height: "100%",
+                                    maxWidth: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                />
+                              ) : null}
+                            </div>
+                          );
+                        })
                       ) : (
                         <div
                           style={{
@@ -6515,48 +6537,49 @@ const PhrasesInAction = ({
                               flexDirection: "column",
                               background: "none",
                               border: "none",
+                              overflow: "hidden",
+                              boxSizing: "border-box",
                             }}
                           >
-                            <img
-                              src={
-                                level === 3
-                                  ? levelData?.allwordsTwo.find(
-                                      (item) =>
-                                        item.text === levelData?.correctWordTwo
-                                    ).img
-                                  : getAssetUrl(
-                                      s3Assets[
-                                        levelData?.allwordsTwo.find(
-                                          (item) =>
-                                            item.text ===
-                                            levelData?.correctWordTwo
-                                        ).img
-                                      ]
-                                    ) ||
-                                    Assets[
-                                      levelData?.allwordsTwo.find(
-                                        (item) =>
-                                          item.text ===
-                                          levelData?.correctWordTwo
-                                      ).img
-                                    ]
-                              }
-                              alt={levelData?.correctWordTwo}
-                              style={{
-                                width: isMobile
-                                  ? "110px"
-                                  : isTablet
-                                  ? "150px"
-                                  : "200px",
-                                height: isMobile
-                                  ? "170px"
-                                  : isTablet
-                                  ? "200px"
-                                  : "230px",
-                                objectFit: "contain",
-                                border: "1px solid #00000033",
-                              }}
-                            />
+                            {(() => {
+                              const matchedRow = levelData?.allwordsTwo?.find(
+                                (row) => row.text === levelData?.correctWordTwo
+                              );
+                              const matchedImgSrc =
+                                matchedRow &&
+                                (level === 3
+                                  ? matchedRow.img
+                                  : getAssetUrl(s3Assets[matchedRow.img]) ||
+                                    Assets[matchedRow.img]);
+                              if (!matchedImgSrc) return null;
+                              return (
+                                <ZoomableImage
+                                  src={matchedImgSrc}
+                                  alt={levelData?.correctWordTwo || ""}
+                                  variant="thumbnail"
+                                  showGradientOverlay
+                                  imageStyle={{
+                                    width: "100%",
+                                    height: "100%",
+                                    maxWidth: "100%",
+                                    maxHeight: "100%",
+                                    objectFit: "contain",
+                                    display: "block",
+                                    border: "1px solid #00000033",
+                                    boxSizing: "border-box",
+                                    borderRadius: "8px",
+                                  }}
+                                  containerStyle={{
+                                    width: "100%",
+                                    height: "100%",
+                                    maxWidth: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                />
+                              );
+                            })()}
                           </div>
                         </div>
                       ) : (
@@ -6573,62 +6596,77 @@ const PhrasesInAction = ({
                             paddingLeft: isMobile ? "40px" : "0",
                           }}
                         >
-                          {levelData?.allwordsTwo?.map((item) => (
-                            <Grid item key={item.text} xs={6} sm={4} md={4}>
-                              <div
-                                style={{
-                                  width: isMobile ? "58%" : "95%",
-                                  height: isMobile
-                                    ? "123px"
-                                    : isTablet
-                                    ? "170px"
-                                    : "220px",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  cursor: "pointer",
-                                  flexDirection: "column",
-                                  background:
-                                    selectedDiv === item.text
-                                      ? item.text === levelData?.correctWordTwo
-                                        ? "linear-gradient(90deg, rgba(88, 204, 2, 0.2) 0%, rgba(88, 204, 2, 0) 100%)"
-                                        : "linear-gradient(90deg, rgba(255, 127, 54, 0.2) 0%, rgba(255, 127, 54, 0) 100%)"
-                                      : "none",
-                                  border:
-                                    selectedDiv === item.text
-                                      ? item.text === levelData?.correctWordTwo
-                                        ? "1.3px solid #58CC02"
-                                        : "1.3px solid #FF7F36"
-                                      : "none",
-                                }}
-                                onClick={() => handleDivClick(item.text)}
-                              >
-                                <img
-                                  src={
-                                    level === 3
-                                      ? item.img
-                                      : getAssetUrl(s3Assets[item.img]) ||
-                                        Assets[item.img]
-                                  }
-                                  alt={item.text}
+                          {levelData?.allwordsTwo?.map((item) => {
+                            const gridImgSrc =
+                              level === 3
+                                ? item.img
+                                : getAssetUrl(s3Assets[item.img]) ||
+                                  Assets[item.img];
+                            return (
+                              <Grid item key={item.text} xs={6} sm={4} md={4}>
+                                <div
                                   style={{
-                                    width: isMobile
-                                      ? "110px"
-                                      : isTablet
-                                      ? "150px"
-                                      : "198px",
+                                    width: isMobile ? "58%" : "95%",
                                     height: isMobile
-                                      ? "130px"
+                                      ? "123px"
                                       : isTablet
                                       ? "170px"
-                                      : "230px",
-                                    objectFit: "contain",
-                                    border: "1px solid #00000033",
+                                      : "220px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    cursor: "pointer",
+                                    flexDirection: "column",
+                                    background:
+                                      selectedDiv === item.text
+                                        ? item.text ===
+                                          levelData?.correctWordTwo
+                                          ? "linear-gradient(90deg, rgba(88, 204, 2, 0.2) 0%, rgba(88, 204, 2, 0) 100%)"
+                                          : "linear-gradient(90deg, rgba(255, 127, 54, 0.2) 0%, rgba(255, 127, 54, 0) 100%)"
+                                        : "none",
+                                    border:
+                                      selectedDiv === item.text
+                                        ? item.text ===
+                                          levelData?.correctWordTwo
+                                          ? "1.3px solid #58CC02"
+                                          : "1.3px solid #FF7F36"
+                                        : "none",
+                                    overflow: "hidden",
+                                    boxSizing: "border-box",
                                   }}
-                                />
-                              </div>
-                            </Grid>
-                          ))}
+                                  onClick={() => handleDivClick(item.text)}
+                                >
+                                  {gridImgSrc ? (
+                                    <ZoomableImage
+                                      src={gridImgSrc}
+                                      alt={item.text}
+                                      variant="thumbnail"
+                                      showGradientOverlay
+                                      imageStyle={{
+                                        width: "100%",
+                                        height: "100%",
+                                        maxWidth: "100%",
+                                        maxHeight: "100%",
+                                        objectFit: "contain",
+                                        display: "block",
+                                        border: "1px solid #00000033",
+                                        boxSizing: "border-box",
+                                        borderRadius: "8px",
+                                      }}
+                                      containerStyle={{
+                                        width: "100%",
+                                        height: "100%",
+                                        maxWidth: "100%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                      }}
+                                    />
+                                  ) : null}
+                                </div>
+                              </Grid>
+                            );
+                          })}
                         </Grid>
                       )}
                     </>

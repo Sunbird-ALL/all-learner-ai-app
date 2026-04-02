@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import {
   getLocalData,
   setLocalData,
   practiceSteps,
-  levelGetContent,
 } from "../../utils/constants";
+import { levelGetContent } from "../../data/levelContent";
 import {
   addLesson,
   addPointer,
@@ -2299,26 +2299,6 @@ const LetterLauncherMechanicsContent = ({
         >
           {/* Header */}
           <div className="relative flex flex-row items-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
-            <button
-              onClick={handleGameBack}
-              className="bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30 hover:text-white text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 z-10 rounded-md flex items-center"
-            >
-              <svg
-                className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              <span>Back</span>
-            </button>
-
             <div className="absolute left-1/2 transform -translate-x-1/2 text-center w-full">
               <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
                 Letter Launcher

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box } from "@mui/material";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import Confetti from "react-confetti";
 import speakButton from "../../assets/speakButton.svg";
 import pauseImg from "../../assets/pauseImg.svg";

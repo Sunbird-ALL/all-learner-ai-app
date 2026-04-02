@@ -1,9 +1,6 @@
 import { useState, useRef } from "react";
-import {
-  getLocalData,
-  RetryIcon,
-  NextButtonRound,
-} from "../../utils/constants";
+import { getLocalData, NextButtonRound } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
 import { Sparkles } from "lucide-react";
 import { Progress } from "../../lib/axl-explorations/src/components/ui/progress";

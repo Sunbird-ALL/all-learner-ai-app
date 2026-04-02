@@ -19,7 +19,7 @@ import v7 from "../assets/audio/V7.m4a";
 import v8 from "../assets/audio/V8.m4a";
 import livesAdd from "../assets/audio/livesAdd.wav";
 import livesCut from "../assets/audio/livesCut.wav";
-import { Log, response } from "../services/telementryService";
+import { Log, response } from "../services/telemetryService";
 import AudioCompare from "./AudioCompare";
 import PropTypes from "prop-types";
 import {
@@ -689,15 +689,18 @@ function VoiceAnalyser(props) {
         let threshold = 30; // Default threshold
 
         // Adjust the threshold based on total syllables.
-        if (totalSyllables <= 100) threshold = 30;
-        else if (totalSyllables > 100 && totalSyllables <= 150) threshold = 25;
-        else if (totalSyllables > 150 && totalSyllables <= 175) threshold = 20;
-        else if (totalSyllables > 175 && totalSyllables <= 250) threshold = 15;
-        else if (totalSyllables > 250 && totalSyllables <= 500) threshold = 10;
-        else if (totalSyllables > 500) threshold = 5;
+        if (totalSyllables <= 200) threshold = 30;
+        else if (totalSyllables > 200 && totalSyllables <= 300) threshold = 25;
+        else if (totalSyllables > 300 && totalSyllables <= 400) threshold = 20;
+        else if (totalSyllables > 400 && totalSyllables <= 500) threshold = 15;
+        else if (totalSyllables > 500 && totalSyllables <= 600) threshold = 10;
+        else if (totalSyllables > 600) threshold = 5;
 
         // Calculate lives lost based on percentage.
-        let livesLost = Math.floor(percentage / (threshold / totalLives));
+        let livesLost = Math.max(
+          0,
+          Math.floor(percentage / (threshold / totalLives)) - 5
+        );
 
         console.log("percent", percentage, livesLost);
 

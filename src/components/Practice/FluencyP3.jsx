@@ -7,20 +7,19 @@ import rabbitImg from "../../assets/rabbit.svg";
 import cheetahImg from "../../assets/cheetah.svg";
 import tortoiseImg from "../../assets/tortoise.svg";
 import meterImg from "../../assets/meterimg.svg";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import SpeedSelector from "../../utils/SpeedSelector";
 import { tickImg } from "../../utils/imageAudioLinks";
 import {
   practiceSteps,
-  WordRedCircle,
   StopButton,
   SpeakButton,
   ListenButton,
   NextButtonRound,
-  RetryIcon,
   getLocalData,
   setLocalData,
 } from "../../utils/constants";
+import { WordRedCircle, RetryIcon } from "../Icons/SvgIcons";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -37,7 +36,7 @@ import AudioTooltipModal from "./AudioTooltipModal";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
-import { Log } from "../../services/telementryService";
+import { Log } from "../../services/telemetryService";
 import hintimg from "../../assets/hintsicon.svg";
 import {
   ThemeProvider,

@@ -22,7 +22,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { getLocalData } from "../../utils/constants";
 import textureImage from "../../assets/images/textureImage.png";
 import panda from "../../assets/images/panda.svg";
-import { impression, interact, Log } from "../../services/telementryService";
+import { impression, interact, Log } from "../../services/telemetryService";
 import { getRandomAudioPrompt } from "../../constants/audioDiagnosticPrompts";
 import { getTranslations } from "../../constants/audioDiagnosticTranslations";
 import SpeechRecognition, {

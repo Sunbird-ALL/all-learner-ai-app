@@ -15,7 +15,7 @@ import tortoiseImg from "../../assets/tortoiseImg.svg";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
-import MainLayout from "../Layouts.jsx/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import {
   practiceSteps,
   WordRedCircle,
@@ -68,6 +68,7 @@ import { Box } from "@mui/material";
 import listenBearGif from "../../assets/beardances.gif";
 import hintimg from "../../assets/hintsicon.svg";
 import { MessageDialog } from "../Assesment/Assesment";
+import { DISCOVERY_SET_FLOW_STORAGE } from "../../utils/discoverSetFlow";
 
 const AserFlow = ({
   // setVoiceText,
@@ -168,11 +169,22 @@ const AserFlow = ({
       let quesArr = [];
       try {
         const lang = getLocalData("lang");
-        // Fetch assessment data
-        const resAssessment = await fetchAssessmentData(lang);
-        const sentences = resAssessment?.data?.find(
-          (elem) => elem.category === "Char"
+        const charDiscoveryRaw = sessionStorage.getItem(
+          DISCOVERY_SET_FLOW_STORAGE.CHAR_SESSION
         );
+        let sentences;
+        let resAssessment;
+
+        if (charDiscoveryRaw) {
+          const { collectionId, storyTitle } = JSON.parse(charDiscoveryRaw);
+          sentences = { collectionId, name: storyTitle };
+          resAssessment = { data: [] };
+        } else {
+          resAssessment = await fetchAssessmentData(lang);
+          sentences = resAssessment?.data?.find(
+            (elem) => elem.category === "Char"
+          );
+        }
 
         if (!sentences?.collectionId) {
           console.error("No collection ID found for sentences.");
@@ -203,7 +215,7 @@ const AserFlow = ({
         setTotalSyllableCount(resPagination?.totalSyllableCount);
         setCurrentCollectionId(sentences?.collectionId);
         setAssessmentResponse(resAssessment);
-        setLocalData("storyTitle", sentences?.name);
+        setLocalData("storyTitle", sentences?.name || "");
         quesArr = [...(resPagination?.data || [])];
 
         const existingLetters = quesArr.map(
@@ -307,6 +319,10 @@ const AserFlow = ({
     }
 
     const sub_session_id = getLocalData("sub_session_id");
+    const discoveryCharActive = sessionStorage.getItem(
+      DISCOVERY_SET_FLOW_STORAGE.CHAR_SESSION
+    );
+    let getSetResultData;
 
     try {
       const milestoneLevel = "B";
@@ -336,9 +352,12 @@ const AserFlow = ({
         sub_session_id,
         currentContentType,
         currentCollectionId,
-        totalSyllableCount
+        totalSyllableCount,
+        discoveryCharActive ? "set1" : undefined,
+        discoveryCharActive ? true : undefined
       );
       const { data } = getSetResultRes;
+      getSetResultData = data;
 
       // Call engagement predictor after getsetresult
       // Interactions and lesson are automatically retrieved
@@ -391,6 +410,17 @@ const AserFlow = ({
     } else {
       sendTestRigScore(5);
       // setPoints(localStorage.getItem("currentLessonScoreCount"));
+    }
+    if (discoveryCharActive) {
+      sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_SESSION);
+      sessionStorage.setItem(
+        DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT,
+        JSON.stringify({
+          sessionResult: getSetResultData?.sessionResult ?? "fail",
+        })
+      );
+      navigate("/discover");
+      return;
     }
     navigate("/discover-start");
   };
