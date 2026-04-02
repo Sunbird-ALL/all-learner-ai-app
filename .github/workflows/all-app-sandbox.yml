@@ -38,6 +38,7 @@ jobs:
 
       - name: Build and Package Application
         env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
           SKIP_PREFLIGHT_CHECK: ${{ vars.SKIP_PREFLIGHT_CHECK }}
           REACT_APP_MODE: ${{ vars.REACT_APP_MODE }}
           REACT_APP_authToken: ${{ vars.REACT_APP_authToken }}
@@ -70,6 +71,8 @@ jobs:
           REACT_APP_IS_APP_IFRAME: ${{ vars.REACT_APP_IS_APP_IFRAME }}
           REACT_APP_IS_IN_APP_AUTHORISATION: ${{ vars.REACT_APP_IS_IN_APP_AUTHORISATION }}
           REACT_APP_LANGUAGES: ${{ vars.REACT_APP_LANGUAGES }}
+          REACT_APP_NATIVE_LANGUAGES: ${{ vars.REACT_APP_NATIVE_LANGUAGES }}
+          REACT_APP_DEFAULT_NATIVE_LANGUAGE: ${{ vars.REACT_APP_DEFAULT_NATIVE_LANGUAGE }}
           REACT_APP_AWS_ACCESS_KEY_ID: ${{ secrets.REACT_APP_AWS_ACCESS_KEY_ID }}
           REACT_APP_AWS_SECRET_ACCESS_KEY: ${{ secrets.REACT_APP_AWS_SECRET_ACCESS_KEY }}
           REACT_APP_SHOW_HELP_VIDEO: ${{ vars.REACT_APP_SHOW_HELP_VIDEO }}
@@ -77,6 +80,8 @@ jobs:
           REACT_APP_SHOW_HELP_VIDEO_LINK: ${{ vars.REACT_APP_SHOW_HELP_VIDEO_LINK }}
           REACT_APP_MAX_LEVEL: ${{ vars.REACT_APP_MAX_LEVEL }}
           REACT_APP_LEARNER_AI_BASE_URL: ${{ vars.REACT_APP_LEARNER_AI_BASE_URL }}
+          REACT_APP_USE_RECOMMENDATION_API: ${{ vars.REACT_APP_USE_RECOMMENDATION_API }}
+          REACT_APP_ENGAGEMENT_PREDICT_URL: ${{ vars.REACT_APP_ENGAGEMENT_PREDICT_URL }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
