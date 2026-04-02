@@ -61,6 +61,13 @@ const DiscoverDemo = lazy(() =>
   import("../views/DiscoverDemo").then((m) => ({ default: m.DiscoverDemo }))
 );
 
+const resetMilestoneRoute = {
+  id: "route-016",
+  path: "/Reset",
+  component: MilestoneFormPage,
+  requiresAuth: true,
+};
+
 const routData = [
   {
     id: "route-001",
@@ -134,12 +141,9 @@ const routData = [
     component: TowreFlowPage,
     requiresAuth: true,
   },
-  {
-    id: "route-016",
-    path: "/Reset",
-    component: MilestoneFormPage,
-    requiresAuth: true,
-  },
+  ...(process.env.REACT_APP_ENABLE_RESET_ROUTE === "true"
+    ? [resetMilestoneRoute]
+    : []),
   // ============================================
   // DEMO ROUTE - Letter Hunt Game Standalone Demo
   // TODO: Remove this route after demo is complete
