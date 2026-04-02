@@ -10,7 +10,7 @@ import axios from "axios";
 import { getFontFamily } from "./utils/fontUtils";
 import { getLocalData } from "./utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
-import { initialize } from "./services/telementryService";
+import { initialize } from "./services/telemetryService";
 import { startEvent } from "./services/callTelemetryIntract";
 import { error as logTelemetryError } from "./services/telemetryService";
 import { useNavigate } from "react-router-dom";
