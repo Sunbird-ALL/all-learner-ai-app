@@ -5655,9 +5655,9 @@ const Barakhadi = ({
             alt="bear"
             style={{
               position: "absolute",
-              bottom: "-40px",
-              right: "-10px",
-              width: "170px",
+              bottom: "-50px",
+              right: "0px",
+              width: "clamp(60px, 5vw, 170px)",
             }}
           />
         </div>
