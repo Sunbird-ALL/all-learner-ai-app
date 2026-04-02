@@ -689,12 +689,12 @@ function VoiceAnalyser(props) {
         let threshold = 30; // Default threshold
 
         // Adjust the threshold based on total syllables.
-        if (totalSyllables <= 100) threshold = 30;
-        else if (totalSyllables > 100 && totalSyllables <= 150) threshold = 25;
-        else if (totalSyllables > 150 && totalSyllables <= 175) threshold = 20;
-        else if (totalSyllables > 175 && totalSyllables <= 250) threshold = 15;
-        else if (totalSyllables > 250 && totalSyllables <= 500) threshold = 10;
-        else if (totalSyllables > 500) threshold = 5;
+        if (totalSyllables <= 200) threshold = 30;
+        else if (totalSyllables > 200 && totalSyllables <= 300) threshold = 25;
+        else if (totalSyllables > 300 && totalSyllables <= 400) threshold = 20;
+        else if (totalSyllables > 400 && totalSyllables <= 500) threshold = 15;
+        else if (totalSyllables > 500 && totalSyllables <= 600) threshold = 10;
+        else if (totalSyllables > 600) threshold = 5;
 
         // Calculate lives lost based on percentage.
         let livesLost = Math.floor(percentage / (threshold / totalLives));
