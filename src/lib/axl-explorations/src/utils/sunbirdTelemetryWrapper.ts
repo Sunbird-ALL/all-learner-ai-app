@@ -171,7 +171,7 @@ class SunbirdTelemetryWrapper {
         sid: this.sessionId, // Use the new session ID
         batchsize: 10,
         mode: 'play',
-        host: (process.env.REACT_APP_TELEMETRY_HOST || 'https://telemetry-dev.theall.ai'),
+        host: (process.env.REACT_APP_TELEMETRY_HOST || 'https://telemetry.theall.ai'),
         endpoint: (process.env.REACT_APP_TELEMETRY_ENDPOINT || '') || '/v2/telemetry',
         apislug: '', // Remove /action prefix - set to empty string to use endpoint as-is
         tags: [],
