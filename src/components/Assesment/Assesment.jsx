@@ -154,7 +154,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
               color: "#000000",
               fontWeight: 600,
               fontSize: "36px",
-              fontFamily: "Quicksand",
+              fontFamily: getFontFamily(lang),
               lineHeight: "45px",
             }}
           >
@@ -270,7 +270,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                 color: "#FFFFFF",
                 fontWeight: 600,
                 fontSize: "20px",
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
                 display: "flex",
                 alignItems: "center",
               }}
@@ -921,7 +921,7 @@ export const ProfileHeader = ({
                     fontSize: isMobile ? "8px" : "16px",
                     fontWeight: 600,
                     mr: 2,
-                    fontFamily: "Quicksand",
+                    fontFamily: getFontFamily(lang),
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -1931,7 +1931,7 @@ const Assesment = ({ discoverStart }) => {
                     color: "#F0EEEE",
                     fontWeight: 600,
                     fontSize: "20px",
-                    fontFamily: "Quicksand",
+                    fontFamily: getFontFamily(lang),
                     lineHeight: "25px",
                     textShadow: "#000 1px 0 10px",
                   }}
