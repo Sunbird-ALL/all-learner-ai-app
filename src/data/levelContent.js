@@ -4559,6 +4559,7 @@ export const levelGetContent = {
         criteria: "word",
         template: "simple",
         tags: "CEFR_M2_P4",
+        contentCount: 10,
         multilingual: false,
       },
       {
