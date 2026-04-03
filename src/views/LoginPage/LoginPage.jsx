@@ -30,6 +30,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const loginMode = process.env.REACT_APP_LOGIN_MODE || "product";
+  const isStateLogin = loginMode === "state";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState(0);
@@ -84,7 +86,13 @@ const LoginPage = () => {
     setUsername(value);
   };
 
+  const handleProductUsernameChange = (e) => {
+    clearFormAlert();
+    setUsername(e.target.value);
+  };
+
   const getEffectiveUsername = () => {
+    if (!isStateLogin) return username.trim();
     if (activeTab === 0) return username;
     const suffix = username.trim();
     return suffix ? `GT_${suffix}` : "";
@@ -145,16 +153,20 @@ const LoginPage = () => {
 
       if (message === "Required fields are missing") {
         showFormAlert(
-          activeTab === 0
-            ? "Enter your PEN ID in Username (numbers only), then your password."
-            : "Enter your guest username (starting with GT_) and password.",
+          isStateLogin
+            ? activeTab === 0
+              ? "Enter your PEN ID in Username (numbers only), then your password."
+              : "Enter your guest username (starting with GT_) and password."
+            : "Enter your username and password.",
           "warning"
         );
       } else if (status === 401 && message === "Unauthorized access") {
         showFormAlert(
-          activeTab === 0
-            ? "We could not find this PEN ID. Check the number or register first."
-            : "Guest login failed. Check your username or contact support.",
+          isStateLogin
+            ? activeTab === 0
+              ? "We could not find this PEN ID. Check the number or register first."
+              : "Guest login failed. Check your username or contact support."
+            : "We could not sign you in. Check your username and password.",
           "error"
         );
       } else if (status === 400) {
@@ -185,11 +197,15 @@ const LoginPage = () => {
       showFormAlert("Please enter your password.", "warning");
       return;
     }
-    if (activeTab === 0 && !username) {
+    if (!isStateLogin) {
+      if (!username.trim()) {
+        showFormAlert("Please enter your username.", "warning");
+        return;
+      }
+    } else if (activeTab === 0 && !username) {
       showFormAlert("Please enter your PEN ID.", "warning");
       return;
-    }
-    if (activeTab === 1 && !username.trim()) {
+    } else if (activeTab === 1 && !username.trim()) {
       showFormAlert(
         "Enter your guest ID in the field after GT_, then your password.",
         "warning"
@@ -201,15 +217,17 @@ const LoginPage = () => {
     localStorage.clear();
 
     try {
-      const userCheckDetails = await fetchUserCheck(effectiveUsername);
+      if (isStateLogin) {
+        const userCheckDetails = await fetchUserCheck(effectiveUsername);
 
-      if (!isLoginSuccessful(userCheckDetails)) {
-        showFormAlert(
-          userCheckDetails?.message ||
-            "We could not verify your account. Check your details and try again.",
-          "error"
-        );
-        return;
+        if (!isLoginSuccessful(userCheckDetails)) {
+          showFormAlert(
+            userCheckDetails?.message ||
+              "We could not verify your account. Check your details and try again.",
+            "error"
+          );
+          return;
+        }
       }
 
       const usernameDetails = await fetchVirtualId(effectiveUsername);
@@ -340,27 +358,29 @@ const LoginPage = () => {
             boxShadow: "0 8px 24px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Box
-            sx={{
-              borderBottom: 1,
-              borderColor: "divider",
-              mb: 2,
-              "& .MuiTab-root": { fontFamily: "Quicksand", fontWeight: 600 },
-            }}
-          >
-            <Tabs
-              value={activeTab}
-              onChange={handleTabChange}
-              variant="fullWidth"
+          {isStateLogin ? (
+            <Box
               sx={{
-                "& .Mui-selected": { color: "#5a9a15 !important" },
-                "& .MuiTabs-indicator": { backgroundColor: "#6DAF19" },
+                borderBottom: 1,
+                borderColor: "divider",
+                mb: 2,
+                "& .MuiTab-root": { fontFamily: "Quicksand", fontWeight: 600 },
               }}
             >
-              <Tab label="Student" />
-              <Tab label="Guest" />
-            </Tabs>
-          </Box>
+              <Tabs
+                value={activeTab}
+                onChange={handleTabChange}
+                variant="fullWidth"
+                sx={{
+                  "& .Mui-selected": { color: "#5a9a15 !important" },
+                  "& .MuiTabs-indicator": { backgroundColor: "#6DAF19" },
+                }}
+              >
+                <Tab label="Student" />
+                <Tab label="Guest" />
+              </Tabs>
+            </Box>
+          ) : null}
 
           {formAlert.message ? (
             <Alert
@@ -395,7 +415,18 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                {activeTab === 0 ? (
+                {!isStateLogin ? (
+                  <TextField
+                    label="Username"
+                    variant="outlined"
+                    fullWidth
+                    value={username}
+                    onChange={handleProductUsernameChange}
+                    required
+                    autoComplete="username"
+                    sx={textFieldSx}
+                  />
+                ) : activeTab === 0 ? (
                   <TextField
                     label="Username (PEN ID)"
                     variant="outlined"
@@ -481,7 +512,11 @@ const LoginPage = () => {
                     transition: "all 0.3s",
                   }}
                 >
-                  {activeTab === 0 ? "Login as Student" : "Login as Guest"}
+                  {isStateLogin
+                    ? activeTab === 0
+                      ? "Login as Student"
+                      : "Login as Guest"
+                    : "Login"}
                 </Button>
               </Grid>
             </Grid>

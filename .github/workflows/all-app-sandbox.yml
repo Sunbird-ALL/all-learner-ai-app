@@ -41,6 +41,7 @@ jobs:
           NODE_OPTIONS: "--max_old_space_size=4096"
           SKIP_PREFLIGHT_CHECK: ${{ vars.SKIP_PREFLIGHT_CHECK }}
           REACT_APP_MODE: ${{ vars.REACT_APP_MODE }}
+          REACT_APP_LOGIN_MODE: ${{ vars.REACT_APP_LOGIN_MODE || 'product' }}
           REACT_APP_authToken: ${{ vars.REACT_APP_authToken }}
           REACT_APP_PID: ${{ vars.REACT_APP_PID }}
           REACT_APP_UID: ${{ vars.REACT_APP_UID }}
