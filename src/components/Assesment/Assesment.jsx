@@ -116,7 +116,6 @@ const theme = createTheme();
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
   const ui = useMemo(() => getUiStrings(lang || "en"), [lang]);
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box
       sx={{
@@ -193,38 +192,50 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
             overflow: "hidden",
           }}
         >
-          <Grid
-            container
-            justifyContent="center"
-            alignContent="center"
-            spacing={{ xs: 1, sm: 1.5 }}
+          <Box
             sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "stretch",
+              alignContent: "center",
+              gap: "clamp(12px, 3vw, 20px)",
               width: "100%",
               maxWidth: "540px",
               py: { xs: 0.5, sm: 1 },
+              boxSizing: "border-box",
+              "& > *": {
+                flex: "1 1 140px",
+                maxWidth: { xs: "min(200px, calc(50% - 8px))", sm: "200px" },
+                display: "flex",
+                justifyContent: "center",
+                boxSizing: "border-box",
+              },
+              "&:has(> *:nth-child(2):last-child) > *": {
+                flex: {
+                  xs: "1 1 calc(50% - 10px)",
+                  sm: "1 1 calc(50% - 12px)",
+                },
+                maxWidth: {
+                  xs: "calc(50% - 10px)",
+                  sm: "calc(50% - 12px)",
+                },
+              },
             }}
           >
             {languages.map((elem) => {
               const isSelectedLang = elem.lang === selectedLang;
               return (
-                <Grid
-                  xs={isMobile ? 4 : 3}
-                  item
-                  key={elem.lang}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
+                <Box key={elem.lang}>
                   <Box
                     onClick={() => setSelectedLang(elem.lang)}
                     sx={{
                       cursor: "pointer",
                       width: "100%",
-                      maxWidth: { xs: "104px", sm: "132px" },
+                      maxWidth: "100%",
                       height: {
                         xs: "clamp(88px, 22vw, 118px)",
-                        sm: "clamp(100px, 12vh, 132px)",
+                        sm: "clamp(100px, 12vh, 140px)",
                       },
                       background: isSelectedLang ? "#EE6931" : "#EFEFEF",
                       borderRadius: "10px",
@@ -303,10 +314,10 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                       {elem.name}
                     </Box>
                   </Box>
-                </Grid>
+                </Box>
               );
             })}
-          </Grid>
+          </Box>
         </Box>
         <Box
           sx={{
