@@ -152,9 +152,10 @@ export const getSetResultPractice = async ({
   totalSyllableCount,
   mechanism,
 }) => {
-  try {
-    const maxLevel = getLocalData("max_level");
+  const maxLevel = getLocalData("max_level");
 
+  beginGetSetResultRequest();
+  try {
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
       {
@@ -172,6 +173,8 @@ export const getSetResultPractice = async ({
   } catch (error) {
     console.error("Error fetching set result:", error);
     throw error; // Rethrow the error to handle it in the calling function
+  } finally {
+    endGetSetResultRequest();
   }
 };
 
