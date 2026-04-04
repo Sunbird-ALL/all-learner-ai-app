@@ -1,4 +1,4 @@
-/** Ref-counted loading for fetchGetSetResult (overlapping calls keep overlay until all finish). */
+/** Ref-counted loading for getSetResult API calls via fetchGetSetResult and getSetResultPractice (overlapping calls keep overlay until all finish). */
 let refCount = 0;
 const listeners = new Set();
 
