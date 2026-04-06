@@ -5045,16 +5045,20 @@ const Barakhadi = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/GrPT4e_aTvM?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ borderRadius: "8px", zIndex: 99999 }}
-              ></iframe>
+              {/* Local Tutorial Video */}
+              <video
+                src={"/demoVideos/Barakhadi_Tutorial.mp4"}
+                controls
+                preload="metadata"
+                playsInline
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: "340px",
+                  borderRadius: "8px",
+                  zIndex: 99999,
+                }}
+              />
             </div>
           </div>
         )}

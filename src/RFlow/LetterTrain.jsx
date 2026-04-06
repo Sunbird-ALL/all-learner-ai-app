@@ -7276,16 +7276,19 @@ const LetterTrain = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/gfl-lcNz1QE?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ borderRadius: "8px" }}
-              ></iframe>
+              {/* Local Tutorial Video */}
+              <video
+                src={"/demoVideos/R0_Tutorial.mp4"}
+                controls
+                preload="metadata"
+                playsInline
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: "340px",
+                  borderRadius: "8px",
+                }}
+              />
             </div>
           </div>
         )}
