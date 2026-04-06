@@ -4,6 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { sunbirdTelemetryService } from './sunbirdTelemetryService';
 import { sunbirdTelemetryWrapper } from './sunbirdTelemetryWrapper';
 
+// Align with .env / telemetryService; fallbacks match previous hardcoded values.
+const TELEMETRY_VER = process.env.REACT_APP_VER || '1.0.0';
+const TELEMETRY_CONTEXT_ENV = process.env.REACT_APP_ENV || 'production';
+const TELEMETRY_MODE = process.env.REACT_APP_MODE || 'play';
+const TELEMETRY_APP_ID = process.env.REACT_APP_ID || 'axl-game-demo';
+
 export interface SessionData {
   sessionId: string;
   userId: string;
@@ -74,7 +80,7 @@ class SessionTelemetryManager {
         sid: this.currentSession.sessionId, // Use existing session ID
         cdata: [
           { type: 'User', id: userId },
-          { type: 'Application', id: 'axl-game-demo', ver: '1.0.0' }
+          { type: 'Application', id: TELEMETRY_APP_ID, ver: TELEMETRY_VER }
         ],
         authtoken: authToken
       });
@@ -120,7 +126,7 @@ class SessionTelemetryManager {
       sid: sessionData.sessionId, // Pass the session ID to maintain consistency
       cdata: [
         { type: 'User', id: userId },
-        { type: 'Application', id: 'axl-game-demo', ver: '1.0.0' }
+        { type: 'Application', id: TELEMETRY_APP_ID, ver: TELEMETRY_VER }
       ],
       authtoken: authToken
     });
@@ -274,10 +280,10 @@ class SessionTelemetryManager {
   private async sendUserSessionStartEvent(sessionData: SessionData, isRefresh: boolean = false): Promise<void> {
     try {
       const contentId = `user-session-${sessionData.sessionId}`;
-      const contentVer = '1.0.0';
+      const contentVer = TELEMETRY_VER;
       const startData = {
         type: "session",
-        mode: "play",
+        mode: TELEMETRY_MODE,
         pageid: "login-screen",
         duration: 0
       };
@@ -285,7 +291,7 @@ class SessionTelemetryManager {
       // Build cdata array with refresh flag if applicable
       const cdata: Array<{ type: string; id: string }> = [
         { type: 'User', id: sessionData.userId },
-        { type: 'Application', id: 'axl-game-demo' }
+        { type: 'Application', id: TELEMETRY_APP_ID }
       ];
 
       // Add refresh indicator to help differentiate in analytics
@@ -298,7 +304,7 @@ class SessionTelemetryManager {
       const options = {
         ...startData,
         context: {
-          env: 'production',
+          env: TELEMETRY_CONTEXT_ENV,
           cdata: cdata
         }
       };
@@ -329,10 +335,10 @@ class SessionTelemetryManager {
         object: {
           id: sessionData.userId,
           type: "User",
-          ver: "1.0.0"
+          ver: TELEMETRY_VER
         },
         context: {
-          env: 'production',
+          env: TELEMETRY_CONTEXT_ENV,
           cdata: [
             { type: 'Session', id: sessionData.sessionId }
           ]
@@ -353,17 +359,17 @@ class SessionTelemetryManager {
   private async sendSubSessionStartEvent(subSessionData: SubSessionData): Promise<void> {
     try {
       const contentId = `${subSessionData.gameId}-level${subSessionData.level}`;
-      const contentVer = '1.0.0';
+      const contentVer = TELEMETRY_VER;
       const startData = {
         type: "attempt",
-        mode: "play",
+        mode: TELEMETRY_MODE,
         pageid: `level-${subSessionData.level}-start`,
         duration: 0
       };
 
       // Create context with ONLY the new subsession data - no merging with cached context
       const context = {
-        env: 'production',
+        env: TELEMETRY_CONTEXT_ENV,
         cdata: [
           { id: subSessionData.subSessionId, type: "GameAttempt" },
           { type: "User", id: this.currentSession!.userId },
@@ -430,10 +436,10 @@ class SessionTelemetryManager {
         object: {
           id: `${subSessionData.gameId}-level${subSessionData.level}`,
           type: "GameLevel",
-          ver: "1.0.0"
+          ver: TELEMETRY_VER
         },
         context: {
-          env: 'production',
+          env: TELEMETRY_CONTEXT_ENV,
           cdata: [
             { id: subSessionData.subSessionId, type: "GameAttempt" }
           ]
@@ -473,10 +479,10 @@ class SessionTelemetryManager {
         object: {
           id: `${subSessionData.gameId}-level${subSessionData.level}`,
           type: "GameLevel",
-          ver: "1.0.0"
+          ver: TELEMETRY_VER
         },
         context: {
-          env: 'production',
+          env: TELEMETRY_CONTEXT_ENV,
           cdata: [
             { id: subSessionData.subSessionId, type: "GameAttempt" },
             { id: "back-button", type: "ExitReason" }
@@ -517,10 +523,10 @@ class SessionTelemetryManager {
         object: {
           id: `${subSessionData.gameId}-level${subSessionData.level}`,
           type: "GameLevel",
-          ver: "1.0.0"
+          ver: TELEMETRY_VER
         },
         context: {
-          env: 'production',
+          env: TELEMETRY_CONTEXT_ENV,
           cdata: [
             { id: subSessionData.subSessionId, type: "GameAttempt" },
             { id: "page-refresh", type: "ExitReason" }
@@ -560,10 +566,10 @@ class SessionTelemetryManager {
         object: {
           id: questionId,
           type: "Question",
-          ver: "1.0.0"
+          ver: TELEMETRY_VER
         },
         context: {
-          env: 'production',
+          env: TELEMETRY_CONTEXT_ENV,
           cdata: [
             { id: this.currentSubSession.subSessionId, type: "GameAttempt" },
             { id: this.currentSubSession.language, type: "language" },
@@ -602,10 +608,10 @@ class SessionTelemetryManager {
         object: {
           id: pageId,
           type: "Page",
-          ver: "1.0.0"
+          ver: TELEMETRY_VER
         },
         context: {
-          env: 'production',
+          env: TELEMETRY_CONTEXT_ENV,
           cdata: [
             { type: "Page", id: pageId },
             { type: "User", id: this.currentSession.userId }
