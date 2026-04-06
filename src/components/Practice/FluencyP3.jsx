@@ -38,7 +38,6 @@ import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import { Log } from "../../services/telemetryService";
 import hintimg from "../../assets/hintsicon.svg";
-import p3Tutorial from "../../assets/demoVideos/P3_Tutorial.mp4";
 import {
   ThemeProvider,
   createTheme,
@@ -625,22 +624,16 @@ const FluencyP3 = ({
                 ×
               </button>
 
-              {/* Local Tutorial Video */}
-              <video
-                src={p3Tutorial}
-                controls
-                preload="metadata"
-                playsInline
-                controlsList="nodownload noplaybackrate"
-                disablePictureInPicture
-                onContextMenu={(e) => e.preventDefault()}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  maxHeight: "340px",
-                  borderRadius: "8px",
-                }}
-              />
+              {/* YouTube Video */}
+              <iframe
+                width="100%"
+                height="340"
+                src={`https://www.youtube.com/embed/j7eGsTYG9uM?autoplay=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ borderRadius: "8px" }}
+              ></iframe>
             </div>
           </div>
         )}

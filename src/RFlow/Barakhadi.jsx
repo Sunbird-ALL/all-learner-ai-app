@@ -47,7 +47,6 @@ import closebuttonImg from "../assets/closebtn.svg";
 import { callTelemetryDiscovery } from "../utils/apiUtil";
 import audiowaveImg from "../assets/audiowave.svg";
 import hintimg from "../assets/hintsicon.svg";
-import barakhadiTutorial from "../assets/demoVideos/Barakhadi_Tutorial.mp4";
 
 import {
   addLesson,
@@ -5046,23 +5045,16 @@ const Barakhadi = ({
                 ×
               </button>
 
-              {/* Local Tutorial Video */}
-              <video
-                src={barakhadiTutorial}
-                controls
-                preload="metadata"
-                playsInline
-                controlsList="nodownload noplaybackrate"
-                disablePictureInPicture
-                onContextMenu={(e) => e.preventDefault()}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  maxHeight: "340px",
-                  borderRadius: "8px",
-                  zIndex: 99999,
-                }}
-              />
+              {/* YouTube Video */}
+              <iframe
+                width="100%"
+                height="340"
+                src={`https://www.youtube.com/embed/GrPT4e_aTvM?autoplay=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ borderRadius: "8px", zIndex: 99999 }}
+              ></iframe>
             </div>
           </div>
         )}

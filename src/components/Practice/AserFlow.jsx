@@ -67,7 +67,6 @@ import magnifier from "../../assets/magnifier.png";
 import { Box } from "@mui/material";
 import listenBearGif from "../../assets/beardances.gif";
 import hintimg from "../../assets/hintsicon.svg";
-import discoveryBubbleTutorial from "../../assets/demoVideos/Discovery_Bubble_Tutorial.mp4";
 import { MessageDialog } from "../Assesment/Assesment";
 import { DISCOVERY_SET_FLOW_STORAGE } from "../../utils/discoverSetFlow";
 
@@ -674,23 +673,16 @@ const AserFlow = ({
                 ×
               </button>
 
-              {/* Local Tutorial Video */}
-              <video
-                src={discoveryBubbleTutorial}
-                controls
-                preload="metadata"
-                playsInline
-                controlsList="nodownload noplaybackrate"
-                disablePictureInPicture
-                onContextMenu={(e) => e.preventDefault()}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  maxHeight: "340px",
-                  borderRadius: "8px",
-                  zIndex: 99999,
-                }}
-              />
+              {/* YouTube Video */}
+              <iframe
+                width="100%"
+                height="340"
+                src={`https://www.youtube.com/embed/Itq9s44p2-o?autoplay=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ borderRadius: "8px", zIndex: 99999 }}
+              ></iframe>
             </div>
           </div>
         )}
