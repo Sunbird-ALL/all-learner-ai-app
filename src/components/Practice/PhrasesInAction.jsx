@@ -21,7 +21,6 @@ import wrongSound from "../../assets/audio/wrong.wav";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import hintimg from "../../assets/hintsicon.svg";
-import m3Tutorial from "../../assets/demoVideos/M3_Tutorial.mp4";
 
 import {
   practiceSteps,
@@ -6075,19 +6074,16 @@ const PhrasesInAction = ({
                   ×
                 </button>
 
-                {/* Local Tutorial Video */}
-                <video
-                  src={m3Tutorial}
-                  controls
-                  preload="metadata"
-                  playsInline
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    maxHeight: "340px",
-                    borderRadius: "8px",
-                  }}
-                />
+                {/* YouTube Video */}
+                <iframe
+                  width="100%"
+                  height="340"
+                  src={`https://www.youtube.com/embed/JvVsqNiWnE4?autoplay=1`}
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ borderRadius: "8px" }}
+                ></iframe>
               </div>
             </div>
           )}

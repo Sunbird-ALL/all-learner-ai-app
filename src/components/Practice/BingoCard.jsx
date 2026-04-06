@@ -66,7 +66,6 @@ import bearclapimg from "../../assets/bearclap.svg";
 import starbackgroundimg from "../../assets/starsandclouds.png";
 import bearrdanceimg from "../../assets/bearrdance.svg";
 import hintimg from "../../assets/hintsicon.svg";
-import bingoTutorial from "../../assets/demoVideos/Bingo_Tutorial.mp4";
 
 const isChrome = true;
 const theme = createTheme();
@@ -1517,22 +1516,16 @@ const BingoCard = ({
                   ×
                 </button>
 
-                {/* Local Tutorial Video */}
-                <video
-                  src={bingoTutorial}
-                  controls
-                  preload="metadata"
-                  playsInline
-                  controlsList="nodownload noplaybackrate"
-                  disablePictureInPicture
-                  onContextMenu={(e) => e.preventDefault()}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    maxHeight: "340px",
-                    borderRadius: "8px",
-                  }}
-                />
+                {/* YouTube Video */}
+                <iframe
+                  width="100%"
+                  height="340"
+                  src={`https://www.youtube.com/embed/bS9CFsTP_Sg?autoplay=1`}
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ borderRadius: "8px" }}
+                ></iframe>
               </div>
             </div>
           )}

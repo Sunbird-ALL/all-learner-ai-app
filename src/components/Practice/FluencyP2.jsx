@@ -16,7 +16,6 @@ import tortoiseimage from "../../assets/tortoise.svg";
 import SpeedSelector from "../../utils/SpeedSelector";
 import MainLayout from "../Layout/MainLayout";
 import hintimg from "../../assets/hintsicon.svg";
-import p2Tutorial from "../../assets/demoVideos/P2_Tutorial.mp4";
 
 import {
   practiceSteps,
@@ -522,22 +521,16 @@ const FluencyP2 = ({
               ×
             </button>
 
-            {/* Local Tutorial Video */}
-            <video
-              src={p2Tutorial}
-              controls
-              preload="metadata"
-              playsInline
-              controlsList="nodownload noplaybackrate"
-              disablePictureInPicture
-              onContextMenu={(e) => e.preventDefault()}
-              style={{
-                width: "100%",
-                height: "auto",
-                maxHeight: "340px",
-                borderRadius: "8px",
-              }}
-            />
+            {/* YouTube Video */}
+            <iframe
+              width="100%"
+              height="340"
+              src={`https://www.youtube.com/embed/dl7_WIzMONM?autoplay=1`}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ borderRadius: "8px" }}
+            ></iframe>
           </div>
         </div>
       )}
