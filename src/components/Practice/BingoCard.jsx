@@ -1522,6 +1522,9 @@ const BingoCard = ({
                   controls
                   preload="metadata"
                   playsInline
+                  controlsList="nodownload noplaybackrate"
+                  disablePictureInPicture
+                  onContextMenu={(e) => e.preventDefault()}
                   style={{
                     width: "100%",
                     height: "auto",
