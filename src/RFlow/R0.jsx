@@ -35,6 +35,7 @@ import { getAssetUrl } from "../utils/rFlowS3Links";
 import { getAssetAudioUrl } from "../utils/rFlowS3Links";
 import { ArrowLeft } from "lucide-react"; // or your icon library
 import hintimg from "../assets/hintsicon.svg";
+import r0Tutorial from "../assets/demoVideos/R0_Tutorial.mp4";
 
 const theme = createTheme();
 
@@ -5800,7 +5801,7 @@ const R0 = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/R0_Tutorial.mp4"}
+                src={r0Tutorial}
                 controls
                 preload="metadata"
                 playsInline

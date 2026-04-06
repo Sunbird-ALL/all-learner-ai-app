@@ -29,6 +29,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Modal } from "@mui/material";
 import ZoomableImage from "./ZoomableImage";
+import paragraphFlowRecording from "../../assets/demoVideos/Paragraph_Flow_Recording.mp4";
 
 const paragraphPages = [
   {
@@ -1105,7 +1106,7 @@ const ParagraphFlow = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/Paragraph_Flow_Recording.mp4"}
+                src={paragraphFlowRecording}
                 controls
                 preload="metadata"
                 playsInline

@@ -47,6 +47,7 @@ import closebuttonImg from "../assets/closebtn.svg";
 import { callTelemetryDiscovery } from "../utils/apiUtil";
 import audiowaveImg from "../assets/audiowave.svg";
 import hintimg from "../assets/hintsicon.svg";
+import barakhadiTutorial from "../assets/demoVideos/Barakhadi_Tutorial.mp4";
 
 import {
   addLesson,
@@ -5047,7 +5048,7 @@ const Barakhadi = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/Barakhadi_Tutorial.mp4"}
+                src={barakhadiTutorial}
                 controls
                 preload="metadata"
                 playsInline

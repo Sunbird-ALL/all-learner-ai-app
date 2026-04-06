@@ -67,6 +67,7 @@ import magnifier from "../../assets/magnifier.png";
 import { Box } from "@mui/material";
 import listenBearGif from "../../assets/beardances.gif";
 import hintimg from "../../assets/hintsicon.svg";
+import discoveryBubbleTutorial from "../../assets/demoVideos/Discovery_Bubble_Tutorial.mp4";
 import { MessageDialog } from "../Assesment/Assesment";
 import { DISCOVERY_SET_FLOW_STORAGE } from "../../utils/discoverSetFlow";
 
@@ -675,7 +676,7 @@ const AserFlow = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/Discovery_Bubble_Tutorial.mp4"}
+                src={discoveryBubbleTutorial}
                 controls
                 preload="metadata"
                 playsInline

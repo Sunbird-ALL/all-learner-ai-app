@@ -37,6 +37,7 @@ import { getAssetAudioUrl } from "../utils/rFlowS3Links";
 import { ArrowLeft } from "lucide-react"; // or your icon library
 import hintimg from "../assets/hintsicon.svg";
 import ZoomableImage from "../components/Practice/ZoomableImage";
+import r0Tutorial from "../assets/demoVideos/R0_Tutorial.mp4";
 import { splitGraphemes } from "split-graphemes";
 
 const theme = createTheme();
@@ -7278,7 +7279,7 @@ const LetterTrain = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/R0_Tutorial.mp4"}
+                src={r0Tutorial}
                 controls
                 preload="metadata"
                 playsInline

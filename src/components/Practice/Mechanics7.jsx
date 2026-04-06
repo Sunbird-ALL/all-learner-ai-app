@@ -53,6 +53,7 @@ import {
   compareWords,
 } from "../../utils/textUtils";
 import hintimg from "../../assets/hintsicon.svg";
+import m1Tutorial from "../../assets/demoVideos/M1_Tutorial.mp4";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -910,7 +911,7 @@ const Mechanics7 = ({
 
                 {/* Local Tutorial Video */}
                 <video
-                  src={"/demoVideos/M1_Tutorial.mp4"}
+                  src={m1Tutorial}
                   controls
                   preload="metadata"
                   playsInline

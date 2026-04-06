@@ -21,6 +21,7 @@ import wrongSound from "../../assets/audio/wrong.wav";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import hintimg from "../../assets/hintsicon.svg";
+import m3Tutorial from "../../assets/demoVideos/M3_Tutorial.mp4";
 
 import {
   practiceSteps,
@@ -6076,7 +6077,7 @@ const PhrasesInAction = ({
 
                 {/* Local Tutorial Video */}
                 <video
-                  src={"/demoVideos/M3_Tutorial.mp4"}
+                  src={m3Tutorial}
                   controls
                   preload="metadata"
                   playsInline

@@ -48,6 +48,7 @@ import AudioTooltipModal from "./AudioTooltipModal";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
 import hintimg from "../../assets/hintsicon.svg";
+import p4Tutorial from "../../assets/demoVideos/P4_Tutorial.mp4";
 import {
   ThemeProvider,
   createTheme,
@@ -713,7 +714,7 @@ const FluencyP4 = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/P4_Tutorial.mp4"}
+                src={p4Tutorial}
                 controls
                 preload="metadata"
                 playsInline

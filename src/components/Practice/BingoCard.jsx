@@ -66,6 +66,7 @@ import bearclapimg from "../../assets/bearclap.svg";
 import starbackgroundimg from "../../assets/starsandclouds.png";
 import bearrdanceimg from "../../assets/bearrdance.svg";
 import hintimg from "../../assets/hintsicon.svg";
+import bingoTutorial from "../../assets/demoVideos/Bingo_Tutorial.mp4";
 
 const isChrome = true;
 const theme = createTheme();
@@ -1518,7 +1519,7 @@ const BingoCard = ({
 
                 {/* Local Tutorial Video */}
                 <video
-                  src={"/demoVideos/Bingo_Tutorial.mp4"}
+                  src={bingoTutorial}
                   controls
                   preload="metadata"
                   playsInline

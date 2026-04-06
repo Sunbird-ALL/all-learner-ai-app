@@ -17,6 +17,7 @@ import hintimg from "../../assets/hintsicon.svg";
 import dogImg from "../../assets/dogimg.svg";
 import speakButton from "../../assets/speakButton.svg";
 import bookImg from "../../assets/bookimg.svg";
+import p7Tutorial from "../../assets/demoVideos/P7_Tutorial.mp4";
 import wellImg from "../../assets/wellimage.svg";
 
 import MainLayout from "../Layout/MainLayout";
@@ -913,7 +914,7 @@ const FluencyP5 = ({
               </button>
 
               <video
-                src={"/demoVideos/P7_Tutorial.mp4"}
+                src={p7Tutorial}
                 controls
                 preload="metadata"
                 playsInline

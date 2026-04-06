@@ -50,6 +50,7 @@ import {
   fetchPaginatedContent,
 } from "../services/content/contentService";
 import hintimg from "../assets/hintsicon.svg";
+import r1Tutorial from "../assets/demoVideos/R1_Tutorial.mp4";
 
 const theme = createTheme();
 
@@ -1923,7 +1924,7 @@ const R1 = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/R1_Tutorial.mp4"}
+                src={r1Tutorial}
                 controls
                 preload="metadata"
                 playsInline

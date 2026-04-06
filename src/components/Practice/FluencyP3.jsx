@@ -38,6 +38,7 @@ import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import { Log } from "../../services/telemetryService";
 import hintimg from "../../assets/hintsicon.svg";
+import p3Tutorial from "../../assets/demoVideos/P3_Tutorial.mp4";
 import {
   ThemeProvider,
   createTheme,
@@ -626,7 +627,7 @@ const FluencyP3 = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/P3_Tutorial.mp4"}
+                src={p3Tutorial}
                 controls
                 preload="metadata"
                 playsInline

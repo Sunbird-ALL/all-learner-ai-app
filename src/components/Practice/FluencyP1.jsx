@@ -46,6 +46,7 @@ import tortoiseImg from "../../assets/TurtleCircle.gif";
 import rabbitImg from "../../assets/RabbitCircle.gif";
 import rocketImg from "../../assets/RocketCircle.gif";
 import hintimg from "../../assets/hintsicon.svg";
+import p1Tutorial from "../../assets/demoVideos/P1_Tutorial.mp4";
 import {
   ThemeProvider,
   createTheme,
@@ -664,7 +665,7 @@ const FluencyP1 = ({
 
               {/* Local Tutorial Video */}
               <video
-                src={"/demoVideos/P1_Tutorial.mp4"}
+                src={p1Tutorial}
                 controls
                 preload="metadata"
                 playsInline

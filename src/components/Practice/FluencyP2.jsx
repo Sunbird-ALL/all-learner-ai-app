@@ -16,6 +16,7 @@ import tortoiseimage from "../../assets/tortoise.svg";
 import SpeedSelector from "../../utils/SpeedSelector";
 import MainLayout from "../Layout/MainLayout";
 import hintimg from "../../assets/hintsicon.svg";
+import p2Tutorial from "../../assets/demoVideos/P2_Tutorial.mp4";
 
 import {
   practiceSteps,
@@ -523,7 +524,7 @@ const FluencyP2 = ({
 
             {/* Local Tutorial Video */}
             <video
-              src={"/demoVideos/P2_Tutorial.mp4"}
+              src={p2Tutorial}
               controls
               preload="metadata"
               playsInline
