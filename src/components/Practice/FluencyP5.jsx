@@ -17,6 +17,7 @@ import hintimg from "../../assets/hintsicon.svg";
 import dogImg from "../../assets/dogimg.svg";
 import speakButton from "../../assets/speakButton.svg";
 import bookImg from "../../assets/bookimg.svg";
+import p7Tutorial from "../../assets/demoVideos/P7_Tutorial.mp4";
 import wellImg from "../../assets/wellimage.svg";
 
 import MainLayout from "../Layout/MainLayout";
@@ -912,15 +913,21 @@ const FluencyP5 = ({
                 ×
               </button>
 
-              <iframe
-                width="100%"
-                height="340"
-                src="https://www.youtube.com/embed/a0CqaBnLiro?autoplay=1"
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ borderRadius: "8px" }}
-              ></iframe>
+              <video
+                src={p7Tutorial}
+                controls
+                preload="metadata"
+                playsInline
+                controlsList="nodownload noplaybackrate"
+                disablePictureInPicture
+                onContextMenu={(e) => e.preventDefault()}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: "340px",
+                  borderRadius: "8px",
+                }}
+              />
             </div>
           </div>
         )}

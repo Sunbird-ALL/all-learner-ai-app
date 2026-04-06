@@ -46,6 +46,7 @@ import tortoiseImg from "../../assets/TurtleCircle.gif";
 import rabbitImg from "../../assets/RabbitCircle.gif";
 import rocketImg from "../../assets/RocketCircle.gif";
 import hintimg from "../../assets/hintsicon.svg";
+import p1Tutorial from "../../assets/demoVideos/P1_Tutorial.mp4";
 import {
   ThemeProvider,
   createTheme,
@@ -662,16 +663,22 @@ const FluencyP1 = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/Xk5Fl41ACgc?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ borderRadius: "8px" }}
-              ></iframe>
+              {/* Local Tutorial Video */}
+              <video
+                src={p1Tutorial}
+                controls
+                preload="metadata"
+                playsInline
+                controlsList="nodownload noplaybackrate"
+                disablePictureInPicture
+                onContextMenu={(e) => e.preventDefault()}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: "340px",
+                  borderRadius: "8px",
+                }}
+              />
             </div>
           </div>
         )}
