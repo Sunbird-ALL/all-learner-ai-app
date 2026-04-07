@@ -7,6 +7,7 @@ import {
   Box,
 } from "@mui/material";
 import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
@@ -6039,7 +6040,7 @@ const PhrasesInAction = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                zIndex: 2000,
+                zIndex: 11000,
               }}
             >
               <div
@@ -6049,7 +6050,7 @@ const PhrasesInAction = ({
                   padding: "10px",
                   borderRadius: "12px",
                   maxWidth: "90%",
-                  width: "600px",
+                  width: "900px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -6074,16 +6075,10 @@ const PhrasesInAction = ({
                   ×
                 </button>
 
-                {/* YouTube Video */}
-                <iframe
-                  width="100%"
-                  height="340"
-                  src={`https://www.youtube.com/embed/JvVsqNiWnE4?autoplay=1`}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
+                <SafeYouTubePlayer
+                  videoId="JvVsqNiWnE4"
                   style={{ borderRadius: "8px" }}
-                ></iframe>
+                />
               </div>
             </div>
           )}
