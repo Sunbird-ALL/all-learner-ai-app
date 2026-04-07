@@ -14,6 +14,7 @@ import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
 import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 
 import {
   practiceSteps,
@@ -627,7 +628,7 @@ const FluencyP1 = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              zIndex: 2000,
+              zIndex: 11000,
             }}
           >
             <div
@@ -637,7 +638,7 @@ const FluencyP1 = ({
                 padding: "10px",
                 borderRadius: "12px",
                 maxWidth: "90%",
-                width: "600px",
+                width: "900px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -662,16 +663,10 @@ const FluencyP1 = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/Xk5Fl41ACgc?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <SafeYouTubePlayer
+                videoId="Xk5Fl41ACgc"
                 style={{ borderRadius: "8px" }}
-              ></iframe>
+              />
             </div>
           </div>
         )}

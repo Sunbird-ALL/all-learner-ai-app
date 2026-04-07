@@ -15,6 +15,7 @@ import rabbitImg from "../../assets/rabbit.svg";
 import tortoiseimage from "../../assets/tortoise.svg";
 import SpeedSelector from "../../utils/SpeedSelector";
 import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 import hintimg from "../../assets/hintsicon.svg";
 
 import {
@@ -486,7 +487,7 @@ const FluencyP2 = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 2000,
+            zIndex: 11000,
           }}
         >
           <div
@@ -496,7 +497,7 @@ const FluencyP2 = ({
               padding: "10px",
               borderRadius: "12px",
               maxWidth: "90%",
-              width: "600px",
+              width: "900px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -521,16 +522,10 @@ const FluencyP2 = ({
               ×
             </button>
 
-            {/* YouTube Video */}
-            <iframe
-              width="100%"
-              height="340"
-              src={`https://www.youtube.com/embed/dl7_WIzMONM?autoplay=1`}
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+            <SafeYouTubePlayer
+              videoId="dl7_WIzMONM"
               style={{ borderRadius: "8px" }}
-            ></iframe>
+            />
           </div>
         </div>
       )}
