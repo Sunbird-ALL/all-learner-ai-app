@@ -6076,7 +6076,7 @@ const PhrasesInAction = ({
                 </button>
 
                 <SafeYouTubePlayer
-                  videoId="JvVsqNiWnE4"
+                  videoId="JMtBzbwqziA"
                   style={{ borderRadius: "8px" }}
                 />
               </div>
