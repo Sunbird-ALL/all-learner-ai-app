@@ -2756,6 +2756,468 @@ const content = {
       type: "soundMatch",
     },
   ],
+  hi: [
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.ऐनकImg),
+        text: "ऐनक",
+        audio: getAssetAudioUrl(s3Assets.ऐनकAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.शहदImg),
+        text: "शहद",
+        audio: getAssetAudioUrl(s3Assets.शहदAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.ओखलImg),
+        text: "ओखल",
+        audio: getAssetAudioUrl(s3Assets.ओखलAudio),
+      }
+      ],
+      correctWord: "ऐनक",
+      audio: getAssetAudioUrl(s3Assets.ऐनकAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.ऐनकImg),
+        text: "ऐनक",
+        audio: getAssetAudioUrl(s3Assets.ऐनकAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.कमलImg),
+        text: "कमल",
+        audio: getAssetAudioUrl(s3Assets.कमलAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.ततImg),
+        text: "तोता",
+        audio: getAssetAudioUrl(s3Assets.ततAudio),
+      }
+      ],
+      correctWord: "कमल",
+      audio: getAssetAudioUrl(s3Assets.कमलAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.हजरImg),
+        text: "हजार",
+        audio: getAssetAudioUrl(s3Assets.हजरAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.समयImg),
+        text: "समय",
+        audio: getAssetAudioUrl(s3Assets.समयAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.झलImg),
+        text: "झोला",
+        audio: getAssetAudioUrl(s3Assets.झलAudio),
+      }
+      ],
+      correctWord: "समय",
+      audio: getAssetAudioUrl(s3Assets.समयAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.ततImg),
+        text: "तोता",
+        audio: getAssetAudioUrl(s3Assets.ततAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.ऐनकImg),
+        text: "ऐनक",
+        audio: getAssetAudioUrl(s3Assets.ऐनकAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.नमनImg),
+        text: "नमन",
+        audio: getAssetAudioUrl(s3Assets.नमनAudio),
+      }
+      ],
+      correctWord: "नमन",
+      audio: getAssetAudioUrl(s3Assets.नमनAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.खनImg),
+        text: "खाना",
+        audio: getAssetAudioUrl(s3Assets.खनAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.कमलImg),
+        text: "कमल",
+        audio: getAssetAudioUrl(s3Assets.कमलAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.शहदImg),
+        text: "शहद",
+        audio: getAssetAudioUrl(s3Assets.शहदAudio),
+      }
+      ],
+      correctWord: "शहद",
+      audio: getAssetAudioUrl(s3Assets.शहदAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.झलImg),
+        text: "झोला",
+        audio: getAssetAudioUrl(s3Assets.झलAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.समयImg),
+        text: "समय",
+        audio: getAssetAudioUrl(s3Assets.समयAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.लहरImg),
+        text: "लहर",
+        audio: getAssetAudioUrl(s3Assets.लहरAudio),
+      }
+      ],
+      correctWord: "लहर",
+      audio: getAssetAudioUrl(s3Assets.लहरAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.कलमImg),
+        text: "कलम",
+        audio: getAssetAudioUrl(s3Assets.कलमAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.नमनImg),
+        text: "नमन",
+        audio: getAssetAudioUrl(s3Assets.नमनAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.समयImg),
+        text: "समय",
+        audio: getAssetAudioUrl(s3Assets.समयAudio),
+      }
+      ],
+      correctWord: "कलम",
+      audio: getAssetAudioUrl(s3Assets.कलमAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.ओखलImg),
+        text: "ओखल",
+        audio: getAssetAudioUrl(s3Assets.ओखलAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.मलImg),
+        text: "माला",
+        audio: getAssetAudioUrl(s3Assets.मलAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.चहImg),
+        text: "चूहा",
+        audio: getAssetAudioUrl(s3Assets.चहAudio),
+      }
+      ],
+      correctWord: "ओखल",
+      audio: getAssetAudioUrl(s3Assets.ओखलAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.लहरImg),
+        text: "लहर",
+        audio: getAssetAudioUrl(s3Assets.लहरAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.बगचImg),
+        text: "बगीचे",
+        audio: getAssetAudioUrl(s3Assets.बगचAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.नगरImg),
+        text: "नगर",
+        audio: getAssetAudioUrl(s3Assets.नगरAudio),
+      }
+      ],
+      correctWord: "नगर",
+      audio: getAssetAudioUrl(s3Assets.नगरAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.नमनImg),
+        text: "नमन",
+        audio: getAssetAudioUrl(s3Assets.नमनAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.महलImg),
+        text: "महल",
+        audio: getAssetAudioUrl(s3Assets.महलAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.कलमImg),
+        text: "कलम",
+        audio: getAssetAudioUrl(s3Assets.कलमAudio),
+      }
+      ],
+      correctWord: "महल",
+      audio: getAssetAudioUrl(s3Assets.महलAudio),
+      flowName: "P1",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.रटImg),
+        text: "रोटी",
+        audio: getAssetAudioUrl(s3Assets.रटAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.मतImg),
+        text: "मोती",
+        audio: getAssetAudioUrl(s3Assets.मतAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.झलImg),
+        text: "झोला",
+        audio: getAssetAudioUrl(s3Assets.झलAudio),
+      }
+      ],
+      correctWord: "झोला",
+      audio: getAssetAudioUrl(s3Assets.झलAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.खनImg),
+        text: "खाना",
+        audio: getAssetAudioUrl(s3Assets.खनAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.चहImg),
+        text: "चूहा",
+        audio: getAssetAudioUrl(s3Assets.चहAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.लहरImg),
+        text: "लहर",
+        audio: getAssetAudioUrl(s3Assets.लहरAudio),
+      }
+      ],
+      correctWord: "खाना",
+      audio: getAssetAudioUrl(s3Assets.खनAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.ततImg),
+        text: "तोता",
+        audio: getAssetAudioUrl(s3Assets.ततAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.रटImg),
+        text: "रोटी",
+        audio: getAssetAudioUrl(s3Assets.रटAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.कटरImg),
+        text: "कटोरी",
+        audio: getAssetAudioUrl(s3Assets.कटरAudio),
+      }
+      ],
+      correctWord: "रोटी",
+      audio: getAssetAudioUrl(s3Assets.रटAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.महलImg),
+        text: "महल",
+        audio: getAssetAudioUrl(s3Assets.महलAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.नगरImg),
+        text: "नगर",
+        audio: getAssetAudioUrl(s3Assets.नगरAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.मतImg),
+        text: "मोती",
+        audio: getAssetAudioUrl(s3Assets.मतAudio),
+      }
+      ],
+      correctWord: "मोती",
+      audio: getAssetAudioUrl(s3Assets.मतAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.खनImg),
+        text: "खाना",
+        audio: getAssetAudioUrl(s3Assets.खनAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.ततImg),
+        text: "तोता",
+        audio: getAssetAudioUrl(s3Assets.ततAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.झलImg),
+        text: "झोला",
+        audio: getAssetAudioUrl(s3Assets.झलAudio),
+      }
+      ],
+      correctWord: "तोता",
+      audio: getAssetAudioUrl(s3Assets.ततAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.रटImg),
+        text: "रोटी",
+        audio: getAssetAudioUrl(s3Assets.रटAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.चहImg),
+        text: "चूहा",
+        audio: getAssetAudioUrl(s3Assets.चहAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.मलImg),
+        text: "माला",
+        audio: getAssetAudioUrl(s3Assets.मलAudio),
+      }
+      ],
+      correctWord: "माला",
+      audio: getAssetAudioUrl(s3Assets.मलAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.बगचImg),
+        text: "बगीचे",
+        audio: getAssetAudioUrl(s3Assets.बगचAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.हजरImg),
+        text: "हजार",
+        audio: getAssetAudioUrl(s3Assets.हजरAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.ओखलImg),
+        text: "ओखल",
+        audio: getAssetAudioUrl(s3Assets.ओखलAudio),
+      }
+      ],
+      correctWord: "हजार",
+      audio: getAssetAudioUrl(s3Assets.हजरAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.मतImg),
+        text: "मोती",
+        audio: getAssetAudioUrl(s3Assets.मतAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.बगचImg),
+        text: "बगीचे",
+        audio: getAssetAudioUrl(s3Assets.बगचAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.हजरImg),
+        text: "हजार",
+        audio: getAssetAudioUrl(s3Assets.हजरAudio),
+      }
+      ],
+      correctWord: "बगीचे",
+      audio: getAssetAudioUrl(s3Assets.बगचAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.ओखलImg),
+        text: "ओखल",
+        audio: getAssetAudioUrl(s3Assets.ओखलAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.मतImg),
+        text: "मोती",
+        audio: getAssetAudioUrl(s3Assets.मतAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.चहImg),
+        text: "चूहा",
+        audio: getAssetAudioUrl(s3Assets.चहAudio),
+      }
+      ],
+      correctWord: "चूहा",
+      audio: getAssetAudioUrl(s3Assets.चहAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+    {
+      allwords: [
+      {
+        img: getAssetUrl(s3Assets.ऐनकImg),
+        text: "ऐनक",
+        audio: getAssetAudioUrl(s3Assets.ऐनकAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.ततImg),
+        text: "तोता",
+        audio: getAssetAudioUrl(s3Assets.ततAudio),
+      },
+      {
+        img: getAssetUrl(s3Assets.कटरImg),
+        text: "कटोरी",
+        audio: getAssetAudioUrl(s3Assets.कटरAudio),
+      }
+      ],
+      correctWord: "कटोरी",
+      audio: getAssetAudioUrl(s3Assets.कटरAudio),
+      flowName: "P2",
+      type: "soundMatch",
+    },
+  ]
 };
 
 const SoundHunt = ({
