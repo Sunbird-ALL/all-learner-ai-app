@@ -664,7 +664,7 @@ const FluencyP1 = ({
               </button>
 
               <SafeYouTubePlayer
-                videoId="Xk5Fl41ACgc"
+                videoId="JnSgXPFo11U"
                 style={{ borderRadius: "8px" }}
               />
             </div>

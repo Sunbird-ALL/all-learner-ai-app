@@ -910,7 +910,7 @@ const Mechanics7 = ({
                 </button>
 
                 <SafeYouTubePlayer
-                  videoId="uLG04uE6ZKA"
+                  videoId="sY0ve9rpxbw"
                   style={{ borderRadius: "8px" }}
                 />
               </div>
