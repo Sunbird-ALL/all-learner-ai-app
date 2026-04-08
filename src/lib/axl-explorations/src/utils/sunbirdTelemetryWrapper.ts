@@ -159,21 +159,21 @@ class SunbirdTelemetryWrapper {
       
       this.config = {
         pdata: {
-          id: 'axl-game-frontend',
-          ver: '1.0.0',
-          pid: 'axl-game-demo'
+          id: 'all-axl-game',
+          ver: process.env.REACT_APP_VER,
+          pid: process.env.REACT_APP_PID
         },
-        env: 'production',
-        channel: 'axl-game-demo',
+        env: process.env.REACT_APP_ENV,
+        channel: process.env.REACT_APP_CHANNEL,
         did: this.deviceId,
         authtoken: userConfig.authtoken || '',
         uid: userConfig.uid || 'anonymous',
         sid: this.sessionId, // Use the new session ID
         batchsize: 10,
         mode: 'play',
-        host: (process.env.REACT_APP_TELEMETRY_HOST || 'https://telemetry-dev.theall.ai'),
-        endpoint: (process.env.REACT_APP_TELEMETRY_ENDPOINT || '') || '/v2/telemetry',
-        apislug: '', // Remove /action prefix - set to empty string to use endpoint as-is
+        host: process.env.REACT_APP_HOST,
+        endpoint: process.env.REACT_APP_ENDPOINT,
+        apislug: process.env.REACT_APP_APISLUG, // Remove /action prefix - set to empty string to use endpoint as-is
         tags: [],
         cdata: userConfig.cdata || [],
         ...userConfig

@@ -1,5 +1,7 @@
 {
     "URLS": {
+        "REGISTER": "api/student/register?type=single",
+        "GET_USER_CHECK": "api/student/login",
         "GET_VIRTUAL_ID": "api/virtualId/generateVirtualID",
         "GET_LOGOUT": "api/virtualId/logout",
         "GET_MILESTONE": "scores/getMilestone",

@@ -2,6 +2,10 @@ import axios from "axios";
 import config from "../../utils/urlConstants.json";
 import { getLocalData, setLocalData } from "../../utils/constants";
 import { getVirtualId } from "../userservice/userService";
+import {
+  beginGetSetResultRequest,
+  endGetSetResultRequest,
+} from "./getSetResultLoading";
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
 
@@ -105,6 +109,7 @@ export const fetchGetSetResult = async (
   const session_id = getLocalData("sessionId");
   const lang = getLocalData("lang");
 
+  beginGetSetResultRequest();
   try {
     const body = {
       sub_session_id: subSessionId,
@@ -135,6 +140,8 @@ export const fetchGetSetResult = async (
   } catch (error) {
     console.error("Error in getSetResult:", error);
     throw error;
+  } finally {
+    endGetSetResultRequest();
   }
 };
 
@@ -145,9 +152,10 @@ export const getSetResultPractice = async ({
   totalSyllableCount,
   mechanism,
 }) => {
-  try {
-    const maxLevel = getLocalData("max_level");
+  const maxLevel = getLocalData("max_level");
 
+  beginGetSetResultRequest();
+  try {
     const response = await axios.post(
       `${API_LEARNER_AI_APP_HOST}/${config.URLS.GET_SET_RESULT}`,
       {
@@ -165,6 +173,8 @@ export const getSetResultPractice = async ({
   } catch (error) {
     console.error("Error fetching set result:", error);
     throw error; // Rethrow the error to handle it in the calling function
+  } finally {
+    endGetSetResultRequest();
   }
 };
 

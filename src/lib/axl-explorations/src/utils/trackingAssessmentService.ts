@@ -29,7 +29,7 @@ function generateUUID(): string {
 }
 
 // Backend API configuration
-const TRACKING_API_BASE_URL = (process.env.REACT_APP_TRACKING_API_BASE_URL || 'https://www.learnerai-dev.theall.ai/lais/scores');
+const TRACKING_API_BASE_URL = (process.env.REACT_APP_TRACKING_API_BASE_URL || 'https://www.learnerai.theall.ai/lais/scores');
 const TRACKING_API_ENDPOINT = `${TRACKING_API_BASE_URL}/assessment/create`;
 
 export interface QuestionSummary {

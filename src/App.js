@@ -14,6 +14,7 @@ import { initialize } from "./services/telemetryService";
 import { startEvent } from "./services/callTelemetryIntract";
 import { error as logTelemetryError } from "./services/telemetryService";
 import { useNavigate } from "react-router-dom";
+import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
 
 const App = () => {
   const ranonce = useRef(false);
@@ -322,6 +323,7 @@ const App = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <SessionExpiredProvider>
+          <GetSetResultLoadingOverlay />
           <AppContent routes={routes} />
         </SessionExpiredProvider>
       </ThemeProvider>

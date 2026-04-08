@@ -116,7 +116,6 @@ const theme = createTheme();
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
   const ui = useMemo(() => getUiStrings(lang || "en"), [lang]);
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box
       sx={{
@@ -128,14 +127,15 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
         position: "fixed",
         background: "rgba(0, 0, 0, 0.5)",
         zIndex: 9999,
-        overflowY: "auto",
+        overflow: "hidden",
+        py: { xs: 1, sm: 2 },
+        boxSizing: "border-box",
       }}
     >
       <Box
         sx={{
-          width: "600px",
-          //minHeight: "424px",
-          maxHeight: "90vh",
+          width: "min(600px, calc(100vw - 24px))",
+          maxHeight: "min(90vh, 100%)",
           borderRadius: "20px",
           display: "flex",
           flexDirection: "column",
@@ -145,36 +145,98 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
           backgroundRepeat: "round",
           boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
           backdropFilter: "blur(25px)",
-          overflowY: "auto",
+          overflow: "hidden",
+          flexShrink: 0,
+          px: { xs: 1, sm: 2 },
+          pb: { xs: 1.5, sm: 2 },
+          boxSizing: "border-box",
         }}
       >
-        <Box mt="32px">
-          <span
-            style={{
+        <Box
+          sx={{
+            mt: {
+              xs: "clamp(12px, 2.5vh, 28px)",
+              sm: "clamp(16px, 3vh, 32px)",
+            },
+            mb: { xs: 0.5, sm: 1 },
+            px: 1,
+            textAlign: "center",
+            flexShrink: 0,
+          }}
+        >
+          <Box
+            component="span"
+            sx={{
               color: "#000000",
               fontWeight: 600,
-              fontSize: "36px",
+              fontSize: {
+                xs: "clamp(22px, 5.5vw, 30px)",
+                sm: "clamp(28px, 3.5vw, 36px)",
+              },
               fontFamily: getFontFamily(lang),
-              lineHeight: "45px",
+              lineHeight: 1.2,
             }}
           >
             {ui.ASSESSMENT_SELECT_LANGUAGE}
-          </span>
+          </Box>
         </Box>
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-          <Grid container justifyContent={"space-evenly"} sx={{ width: "80%" }}>
+        <Box
+          sx={{
+            width: "100%",
+            flex: "1 1 auto",
+            minHeight: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            alignContent: "center",
+            overflow: "hidden",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "stretch",
+              alignContent: "center",
+              gap: "clamp(12px, 3vw, 20px)",
+              width: "100%",
+              maxWidth: "540px",
+              py: { xs: 0.5, sm: 1 },
+              boxSizing: "border-box",
+              "& > *": {
+                flex: "1 1 140px",
+                maxWidth: { xs: "min(200px, calc(50% - 8px))", sm: "200px" },
+                display: "flex",
+                justifyContent: "center",
+                boxSizing: "border-box",
+              },
+              "&:has(> *:nth-child(2):last-child) > *": {
+                flex: {
+                  xs: "1 1 calc(50% - 10px)",
+                  sm: "1 1 calc(50% - 12px)",
+                },
+                maxWidth: {
+                  xs: "calc(50% - 10px)",
+                  sm: "calc(50% - 12px)",
+                },
+              },
+            }}
+          >
             {languages.map((elem) => {
               const isSelectedLang = elem.lang === selectedLang;
               return (
-                <Grid xs={isMobile ? 4 : 2} item key={elem.lang}>
+                <Box key={elem.lang}>
                   <Box
                     onClick={() => setSelectedLang(elem.lang)}
                     sx={{
                       cursor: "pointer",
-                      mt: "34px",
-                      ml: "15px",
-                      me: "15px",
-                      height: "140px",
+                      width: "100%",
+                      maxWidth: "100%",
+                      height: {
+                        xs: "clamp(88px, 22vw, 118px)",
+                        sm: "clamp(100px, 12vh, 140px)",
+                      },
                       background: isSelectedLang ? "#EE6931" : "#EFEFEF",
                       borderRadius: "10px",
                       border: `3px solid ${
@@ -184,6 +246,8 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                       justifyContent: "center",
                       flexDirection: "column",
                       alignItems: "center",
+                      boxSizing: "border-box",
+                      flexShrink: 0,
                     }}
                   >
                     <Box
@@ -194,59 +258,76 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                       }}
                     >
                       {isSelectedLang ? (
-                        <Box mt={"-2px"} mr={"15px"}>
+                        <Box
+                          mt={"-2px"}
+                          mr={"8px"}
+                          sx={{ transform: "scale(0.9)" }}
+                        >
                           <RoundTick />
                         </Box>
                       ) : (
                         <Box
                           mt={"-2px"}
-                          mr={"15px"}
+                          mr={"8px"}
                           sx={{
-                            height: "18px",
-                            width: "18px",
+                            height: "16px",
+                            width: "16px",
                             borderRadius: "15px",
                             border: "1.5px solid #999999",
                           }}
                         ></Box>
                       )}
                     </Box>
-                    <Box mt="-2px">
-                      <span
-                        style={{
-                          color: isSelectedLang ? "#FFFFFF" : "#000000",
-                          fontWeight: 600,
-                          fontSize: "50px",
-                          fontFamily: "Quicksand",
-                          lineHeight: "62px",
-                        }}
-                      >
-                        {elem.symbol}
-                      </span>
+                    <Box
+                      mt="-4px"
+                      component="span"
+                      sx={{
+                        color: isSelectedLang ? "#FFFFFF" : "#000000",
+                        fontWeight: 600,
+                        fontSize: {
+                          xs: "clamp(22px, 8vw, 40px)",
+                          sm: "clamp(28px, 4vw, 46px)",
+                        },
+                        fontFamily: "Quicksand",
+                        lineHeight: 1.1,
+                      }}
+                    >
+                      {elem.symbol}
                     </Box>
-                    <Box mt={1}>
-                      <span
-                        style={{
-                          color: isSelectedLang ? "#FFFFFF" : "#000000",
-                          fontWeight: 600,
-                          fontSize: "20px",
-                          fontFamily: "Quicksand",
-                          lineHeight: "25px",
-                        }}
-                      >
-                        {elem.name}
-                      </span>
+                    <Box
+                      mt={0.25}
+                      component="span"
+                      sx={{
+                        color: isSelectedLang ? "#FFFFFF" : "#000000",
+                        fontWeight: 600,
+                        fontSize: {
+                          xs: "clamp(11px, 3vw, 16px)",
+                          sm: "clamp(14px, 1.8vw, 18px)",
+                        },
+                        fontFamily: "Quicksand",
+                        lineHeight: 1.2,
+                        textAlign: "center",
+                        px: 0.25,
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {elem.name}
                     </Box>
                   </Box>
-                </Grid>
+                </Box>
               );
             })}
-          </Grid>
+          </Box>
         </Box>
         <Box
-          sx={{ width: "100%", display: "flex", justifyContent: "center" }}
-          mt={5}
-          mb={1}
-          // mr="110px"
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            flexShrink: 0,
+            mt: { xs: 1.5, sm: 2 },
+            mb: 0.5,
+          }}
         >
           <Box
             onClick={() => {
