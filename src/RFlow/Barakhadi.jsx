@@ -2253,9 +2253,9 @@ export const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.कितनेAudio),
     },
     {
-      text: "चिड़िया",
+      text: "गोभी",
       audio: "06969b26-1588-4064-aa61-fb8c3a7d665f.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.चिड़ियाAudio),
+      segmentedAudio: getAssetAudioUrl(s3Assets.गोभीAudio),
     },
     {
       text: "सुना",

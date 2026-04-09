@@ -4315,7 +4315,7 @@ export const dataHi = [
         id: 69,
         title: "Letter",
         letter: "ब",
-        word: "बतख",
+        word: "बत्तख",
         image: getAssetUrl(s3Assets.बतखImg),
         audio: getAssetAudioUrl(s3Assets.बतखAudio),
         singleAudio: getAssetAudioUrl(s3Assets.बतखAudio),
