@@ -11,6 +11,7 @@ import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import listenImg2 from "../../assets/listen.png";
 import spinnerStop from "../../assets/pause.png";
 import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 import clapImage from "../../assets/hand-ic.svg";
 // import bulbHint from "../../assets/hint.svg";
 // import bulbHintDisabled from "../../assets/DisabledHint.svg";
@@ -873,7 +874,7 @@ const Mechanics7 = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                zIndex: 2000,
+                zIndex: 11000,
               }}
             >
               <div
@@ -883,7 +884,7 @@ const Mechanics7 = ({
                   padding: "10px",
                   borderRadius: "12px",
                   maxWidth: "90%",
-                  width: "600px",
+                  width: "900px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -908,16 +909,10 @@ const Mechanics7 = ({
                   ×
                 </button>
 
-                {/* YouTube Video */}
-                <iframe
-                  width="100%"
-                  height="340"
-                  src={`https://www.youtube.com/embed/uLG04uE6ZKA?autoplay=1`}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
+                <SafeYouTubePlayer
+                  videoId="sY0ve9rpxbw"
                   style={{ borderRadius: "8px" }}
-                ></iframe>
+                />
               </div>
             </div>
           )}

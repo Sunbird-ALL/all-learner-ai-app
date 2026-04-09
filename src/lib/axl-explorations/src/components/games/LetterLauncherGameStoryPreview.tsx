@@ -242,8 +242,8 @@ export function LetterLauncherGameStoryPreview({
 
   // Generate practice questions
   const generatePracticeQuestion = (): LetterLauncherQuestion => {
-    const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' = 
-      (contentLanguage === 'en' || contentLanguage === 'te' || contentLanguage === 'mr' || contentLanguage === 'kn') 
+    const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' | 'hi' = 
+      (contentLanguage === 'en' || contentLanguage === 'te' || contentLanguage === 'mr' || contentLanguage === 'kn' || contentLanguage === 'hi' ) 
         ? contentLanguage 
         : 'en';
     

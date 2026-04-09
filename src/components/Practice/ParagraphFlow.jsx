@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box } from "@mui/material";
 import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 import Confetti from "react-confetti";
 import speakButton from "../../assets/speakButton.svg";
 import pauseImg from "../../assets/pauseImg.svg";
@@ -1068,7 +1069,7 @@ const ParagraphFlow = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              zIndex: 2000,
+              zIndex: 11000,
             }}
           >
             <div
@@ -1078,7 +1079,7 @@ const ParagraphFlow = ({
                 padding: "10px",
                 borderRadius: "12px",
                 maxWidth: "90%",
-                width: "600px",
+                width: "900px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -1103,16 +1104,10 @@ const ParagraphFlow = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/kwJEIqYMKEM?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <SafeYouTubePlayer
+                videoId="kwJEIqYMKEM"
                 style={{ borderRadius: "8px" }}
-              ></iframe>
+              />
             </div>
           </div>
         )}

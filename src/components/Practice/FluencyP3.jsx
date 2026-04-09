@@ -8,6 +8,7 @@ import cheetahImg from "../../assets/cheetah.svg";
 import tortoiseImg from "../../assets/tortoise.svg";
 import meterImg from "../../assets/meterimg.svg";
 import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 import SpeedSelector from "../../utils/SpeedSelector";
 import { tickImg } from "../../utils/imageAudioLinks";
 import {
@@ -589,7 +590,7 @@ const FluencyP3 = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              zIndex: 2000,
+              zIndex: 11000,
             }}
           >
             <div
@@ -599,7 +600,7 @@ const FluencyP3 = ({
                 padding: "10px",
                 borderRadius: "12px",
                 maxWidth: "90%",
-                width: "600px",
+                width: "900px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -624,16 +625,10 @@ const FluencyP3 = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/j7eGsTYG9uM?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <SafeYouTubePlayer
+                videoId="GHwG9fOChYU"
                 style={{ borderRadius: "8px" }}
-              ></iframe>
+              />
             </div>
           </div>
         )}

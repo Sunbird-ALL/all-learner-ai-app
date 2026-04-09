@@ -10,6 +10,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import MainLayout from "../components/Layout/MainLayout";
+import SafeYouTubePlayer from "../components/SafeYouTubePlayer";
 import listenImg from "../assets/listen.svg";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
@@ -4314,7 +4315,7 @@ export const dataHi = [
         id: 69,
         title: "Letter",
         letter: "ब",
-        word: "बतख",
+        word: "बत्तख",
         image: getAssetUrl(s3Assets.बतखImg),
         audio: getAssetAudioUrl(s3Assets.बतखAudio),
         singleAudio: getAssetAudioUrl(s3Assets.बतखAudio),
@@ -7241,7 +7242,7 @@ const LetterTrain = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              zIndex: 2000,
+              zIndex: 11000,
             }}
           >
             <div
@@ -7251,7 +7252,7 @@ const LetterTrain = ({
                 padding: "10px",
                 borderRadius: "12px",
                 maxWidth: "90%",
-                width: "600px",
+                width: "900px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -7276,16 +7277,10 @@ const LetterTrain = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/gfl-lcNz1QE?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <SafeYouTubePlayer
+                videoId="gfl-lcNz1QE"
                 style={{ borderRadius: "8px" }}
-              ></iframe>
+              />
             </div>
           </div>
         )}

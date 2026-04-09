@@ -9,6 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import MainLayout from "../components/Layout/MainLayout";
+import SafeYouTubePlayer from "../components/SafeYouTubePlayer";
 import listenImg from "../assets/listen.svg";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
@@ -5763,7 +5764,7 @@ const R0 = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              zIndex: 2000,
+              zIndex: 11000,
             }}
           >
             <div
@@ -5773,7 +5774,7 @@ const R0 = ({
                 padding: "10px",
                 borderRadius: "12px",
                 maxWidth: "90%",
-                width: "600px",
+                width: "900px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -5798,16 +5799,10 @@ const R0 = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/gfl-lcNz1QE?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <SafeYouTubePlayer
+                videoId="gfl-lcNz1QE"
                 style={{ borderRadius: "8px" }}
-              ></iframe>
+              />
             </div>
           </div>
         )}
