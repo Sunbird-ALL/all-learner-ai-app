@@ -152,6 +152,22 @@ const Mechanics7 = ({
   };
   const multilingualLangCode = getMultilingualLangCode();
 
+  const getNativeLangSymbol = () => {
+    const nativeLang = getLocalData("nativeLang");
+    const langSymbolMap = {
+      ka: "ಕ",
+      kn: "ಕ",
+      tn: "இ",
+      ta: "இ",
+      te: "ఈ",
+      hi: "क",
+      gu: "ક",
+      or: "କ",
+    };
+    return langSymbolMap[nativeLang] || "ಕ";
+  };
+  const nativeLangSymbol = getNativeLangSymbol();
+
   let progressDatas = getLocalData("practiceProgress");
   //const virtualId = String(getLocalData("virtualId"));
 
@@ -1103,7 +1119,7 @@ const Mechanics7 = ({
                         cursor: "pointer",
                       }}
                     >
-                      {/* Kannada Letter Box */}
+                      {/* Native language script (matches multilingual audio) */}
                       <Box
                         sx={{
                           backgroundColor: "#FEBC2F66",
@@ -1124,7 +1140,7 @@ const Mechanics7 = ({
                             fontStyle: "Quicksand",
                           }}
                         >
-                          ಕ
+                          {nativeLangSymbol}
                         </span>
                       </Box>
 
