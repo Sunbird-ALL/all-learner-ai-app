@@ -6480,9 +6480,12 @@ const LetterTrain = ({
         if (!word || !targetLetter) return word;
         if (lang !== "en") {
           const graphemes = splitGraphemes(word);
-          const graphemeIndex = graphemes.findIndex((g) =>
-            g.includes(targetLetter)
-          );
+          let graphemeIndex = graphemes.findIndex((g) => g === targetLetter);
+          if (graphemeIndex === -1) {
+            graphemeIndex = graphemes.findIndex((g) =>
+              g.includes(targetLetter)
+            );
+          }
           if (graphemeIndex === -1) {
             return word;
           }
@@ -6946,6 +6949,31 @@ const LetterTrain = ({
 
       const renderHighlightedWord = (word, targetLetter) => {
         if (!word || !targetLetter) return word;
+
+        if (lang !== "en") {
+          const graphemes = splitGraphemes(word);
+          let graphemeIndex = graphemes.findIndex((g) => g === targetLetter);
+          if (graphemeIndex === -1) {
+            graphemeIndex = graphemes.findIndex((g) =>
+              g.includes(targetLetter)
+            );
+          }
+          if (graphemeIndex === -1) {
+            return word;
+          }
+          const before = graphemes.slice(0, graphemeIndex).join("");
+          const letter = graphemes[graphemeIndex];
+          const after = graphemes.slice(graphemeIndex + 1).join("");
+          return (
+            <>
+              {before}
+              <span style={{ color: "#FF0000", fontWeight: "bold" }}>
+                {letter}
+              </span>
+              {after}
+            </>
+          );
+        }
 
         const lowerWord = word.toLowerCase();
         const lowerTarget = targetLetter.toLowerCase();
