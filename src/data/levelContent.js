@@ -2689,7 +2689,7 @@ export const levelGetContent = {
         tags: "CEFR_GEN_M1_P11",
         multilingual: false,
         mechanism: { id: "barakhadi", name: "barakhadi" },
-        customLetters: ["चिड़िया", "सुना", "रुपया", "कविता", "मिला"], // Placeholder - adjust based on F2 requirements
+        customLetters: ["गोभी", "सुना", "रुपया", "कविता", "मिला"], // Placeholder - adjust based on F2 requirements
         contentCount: 10,
       },
       // Practice 7 - Letter Hunt (1 level, 10 content)

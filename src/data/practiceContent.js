@@ -3548,8 +3548,8 @@ export const levelThree = {
     ],
     P4: [
       {
-        completeWord: "चिड़िया छोटी है",
-        syllable: ["चिड़िया", "छोटी है"],
+        completeWord: "चिडिया छोटी है",
+        syllable: ["चिडिया", "छोटी है"],
         audio: "chidiyachhotihaiM3Hin",
       },
       {
