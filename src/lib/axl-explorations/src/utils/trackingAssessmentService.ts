@@ -44,6 +44,7 @@ export interface QuestionSummary {
 }
 
 export interface CreateAssessmentData {
+  userId: string;
   gameKey: string;
   gameTitle: string;
   level: number;
