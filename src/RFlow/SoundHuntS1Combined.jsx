@@ -46,27 +46,27 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.cookAudio),
           },
           {
-            img: getAssetUrl(s3Assets.godImg2),
-            text: "god",
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            img: getAssetUrl(s3Assets.cotImg),
+            text: "cot",
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
           },
           {
-            img: getAssetUrl(s3Assets.badImg),
-            text: "bad",
-            audio: getAssetAudioUrl(s3Assets.badAudio),
+            img: getAssetUrl(s3Assets.padImg),
+            text: "pad",
+            audio: getAssetAudioUrl(s3Assets.padAudio),
           },
         ],
-        correctWord: "bad",
-        audio: getAssetAudioUrl(s3Assets.badAudio),
+        correctWord: "pad",
+        audio: getAssetAudioUrl(s3Assets.padAudio),
         flowName: "S1",
         type: "soundMatch",
       },
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.godImg2),
-            text: "god",
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            img: getAssetUrl(s3Assets.cotImg),
+            text: "cot",
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
           },
           {
             img: getAssetUrl(s3Assets.momImg),
@@ -92,9 +92,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.hopAudio),
           },
           {
-            img: getAssetUrl(s3Assets.fatImg),
-            text: "fat",
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            img: getAssetUrl(s3Assets.ratImg),
+            text: "rat",
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
           },
           {
             img: getAssetUrl(s3Assets.cookImg),
@@ -110,9 +110,9 @@ const soundMatchContent = {
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.fatImg),
-            text: "fat",
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            img: getAssetUrl(s3Assets.ratImg),
+            text: "rat",
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
           },
           {
             img: getAssetUrl(s3Assets.momImg),
@@ -125,8 +125,8 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.sadAudio),
           },
         ],
-        correctWord: "fat",
-        audio: getAssetAudioUrl(s3Assets.fatAudio),
+        correctWord: "rat",
+        audio: getAssetAudioUrl(s3Assets.ratAudio),
         flowName: "S1",
         type: "soundMatch",
       },
@@ -143,27 +143,27 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.nineAudio),
           },
           {
-            img: getAssetUrl(s3Assets.himImg),
-            text: "him",
-            audio: getAssetAudioUrl(s3Assets.himAudio),
+            img: getAssetUrl(s3Assets.henImg),
+            text: "hen",
+            audio: getAssetAudioUrl(s3Assets.henAudio),
           },
         ],
-        correctWord: "him",
-        audio: getAssetAudioUrl(s3Assets.himAudio),
+        correctWord: "hen",
+        audio: getAssetAudioUrl(s3Assets.henAudio),
         flowName: "S1",
         type: "soundMatch",
       },
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.godImg2),
-            text: "god",
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            img: getAssetUrl(s3Assets.cotImg),
+            text: "cot",
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
           },
           {
-            img: getAssetUrl(s3Assets.fatImg),
-            text: "fat",
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            img: getAssetUrl(s3Assets.ratImg),
+            text: "rat",
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
           },
           {
             img: getAssetUrl(s3Assets.sadImg),
@@ -179,9 +179,9 @@ const soundMatchContent = {
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.godImg2),
-            text: "god",
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            img: getAssetUrl(s3Assets.cotImg),
+            text: "cot",
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
           },
           {
             img: getAssetUrl(s3Assets.cookImg),
@@ -202,9 +202,9 @@ const soundMatchContent = {
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.godImg2),
-            text: "god",
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            img: getAssetUrl(s3Assets.cotImg),
+            text: "cot",
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
           },
           {
             img: getAssetUrl(s3Assets.nineImg),
@@ -212,13 +212,13 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.nineAudio),
           },
           {
-            img: getAssetUrl(s3Assets.fatImg),
-            text: "fat",
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            img: getAssetUrl(s3Assets.ratImg),
+            text: "rat",
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
           },
         ],
-        correctWord: "god",
-        audio: getAssetAudioUrl(s3Assets.godAudio2),
+        correctWord: "cot",
+        audio: getAssetAudioUrl(s3Assets.cotAudio),
         flowName: "S1",
         type: "soundMatch",
       },
@@ -235,9 +235,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.nineAudio),
           },
           {
-            img: getAssetUrl(s3Assets.fatImg),
-            text: "fat",
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            img: getAssetUrl(s3Assets.ratImg),
+            text: "rat",
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
           },
         ],
         correctWord: "nine",
@@ -253,9 +253,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.goatAudio),
           },
           {
-            img: getAssetUrl(s3Assets.badImg),
-            text: "bad",
-            audio: getAssetAudioUrl(s3Assets.badAudio),
+            img: getAssetUrl(s3Assets.padImg),
+            text: "pad",
+            audio: getAssetAudioUrl(s3Assets.padAudio),
           },
           {
             img: getAssetUrl(s3Assets.cookImg),
@@ -304,13 +304,13 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.wideAudio),
           },
           {
-            img: getAssetUrl(s3Assets.fineImg),
-            text: "fine",
-            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            img: getAssetUrl(s3Assets.fireImg),
+            text: "fire",
+            audio: getAssetAudioUrl(s3Assets.fireAudio),
           },
         ],
-        correctWord: "fine",
-        audio: getAssetAudioUrl(s3Assets.fineAudio),
+        correctWord: "fire",
+        audio: getAssetAudioUrl(s3Assets.fireAudio),
         flowName: "S2",
         type: "soundMatch",
       },
@@ -340,9 +340,9 @@ const soundMatchContent = {
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.fineImg),
-            text: "fine",
-            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            img: getAssetUrl(s3Assets.fireImg),
+            text: "fire",
+            audio: getAssetAudioUrl(s3Assets.fireAudio),
           },
           {
             img: getAssetUrl(s3Assets.halfImg),
@@ -391,9 +391,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.halfAudio),
           },
           {
-            img: getAssetUrl(s3Assets.knowImg),
-            text: "know",
-            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            img: getAssetUrl(s3Assets.roadImg),
+            text: "road",
+            audio: getAssetAudioUrl(s3Assets.roadAudio),
           },
           {
             img: getAssetUrl(s3Assets.hideImg),
@@ -401,17 +401,17 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.hideAudio),
           },
         ],
-        correctWord: "know",
-        audio: getAssetAudioUrl(s3Assets.knowAudio),
+        correctWord: "road",
+        audio: getAssetAudioUrl(s3Assets.roadAudio),
         flowName: "S2",
         type: "soundMatch",
       },
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.fineImg),
-            text: "fine",
-            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            img: getAssetUrl(s3Assets.fireImg),
+            text: "fire",
+            audio: getAssetAudioUrl(s3Assets.fireAudio),
           },
           {
             img: getAssetUrl(s3Assets.halfImg),
@@ -455,9 +455,9 @@ const soundMatchContent = {
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.knowImg),
-            text: "know",
-            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            img: getAssetUrl(s3Assets.roadImg),
+            text: "road",
+            audio: getAssetAudioUrl(s3Assets.roadAudio),
           },
           {
             img: getAssetUrl(s3Assets.happy2Img),
@@ -488,9 +488,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.bodyAudio),
           },
           {
-            img: getAssetUrl(s3Assets.knowImg),
-            text: "know",
-            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            img: getAssetUrl(s3Assets.roadImg),
+            text: "road",
+            audio: getAssetAudioUrl(s3Assets.roadAudio),
           },
         ],
         correctWord: "body",
@@ -578,9 +578,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.penAudio),
           },
           {
-            img: getAssetUrl(s3Assets.nowImg),
-            text: "now",
-            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            img: getAssetUrl(s3Assets.loudImg),
+            text: "loud",
+            audio: getAssetAudioUrl(s3Assets.loudAudio),
           },
           {
             img: getAssetUrl(s3Assets.fairImg),
@@ -588,8 +588,8 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.fairAudio),
           },
         ],
-        correctWord: "now",
-        audio: getAssetAudioUrl(s3Assets.nowAudio),
+        correctWord: "loud",
+        audio: getAssetAudioUrl(s3Assets.loudAudio),
         flowName: "S1",
         type: "soundMatch",
       },
@@ -606,9 +606,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.sonAudio),
           },
           {
-            img: getAssetUrl(s3Assets.nowImg),
-            text: "now",
-            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            img: getAssetUrl(s3Assets.loudImg),
+            text: "loud",
+            audio: getAssetAudioUrl(s3Assets.loudAudio),
           },
         ],
         correctWord: "chat",
@@ -642,9 +642,9 @@ const soundMatchContent = {
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.nowImg),
-            text: "now",
-            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            img: getAssetUrl(s3Assets.loudImg),
+            text: "loud",
+            audio: getAssetAudioUrl(s3Assets.loudAudio),
           },
           {
             img: getAssetUrl(s3Assets.birdImg2),
@@ -670,9 +670,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.birdAudio2),
           },
           {
-            img: getAssetUrl(s3Assets.careImg),
-            text: "care",
-            audio: getAssetAudioUrl(s3Assets.careAudio),
+            img: getAssetUrl(s3Assets.hareImg),
+            text: "hare",
+            audio: getAssetAudioUrl(s3Assets.hareAudio),
           },
           {
             img: getAssetUrl(s3Assets.zigImg),
@@ -680,8 +680,8 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.zigAudio),
           },
         ],
-        correctWord: "care",
-        audio: getAssetAudioUrl(s3Assets.careAudio),
+        correctWord: "hare",
+        audio: getAssetAudioUrl(s3Assets.hareAudio),
         flowName: "S1",
         type: "soundMatch",
       },
@@ -711,9 +711,9 @@ const soundMatchContent = {
       {
         allwords: [
           {
-            img: getAssetUrl(s3Assets.careImg),
-            text: "care",
-            audio: getAssetAudioUrl(s3Assets.careAudio),
+            img: getAssetUrl(s3Assets.hareImg),
+            text: "hare",
+            audio: getAssetAudioUrl(s3Assets.hareAudio),
           },
           {
             img: getAssetUrl(s3Assets.logImg),
@@ -4673,18 +4673,18 @@ const pictureWordsContent = {
     1: [
       //S1
       {
-        word: "bad",
+        word: "pad",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.cookAudio),
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.badAudio),
+            audio: getAssetAudioUrl(s3Assets.padAudio),
             isCorrect: true,
           },
         ],
@@ -4695,7 +4695,7 @@ const pictureWordsContent = {
         word: "mom",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
             isCorrect: false,
           },
           {
@@ -4718,7 +4718,7 @@ const pictureWordsContent = {
             isCorrect: true,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
             isCorrect: false,
           },
           {
@@ -4730,10 +4730,10 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "fat",
+        word: "rat",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
             isCorrect: true,
           },
           {
@@ -4749,7 +4749,7 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "him",
+        word: "hen",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.goatAudio),
@@ -4760,7 +4760,7 @@ const pictureWordsContent = {
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.himAudio),
+            audio: getAssetAudioUrl(s3Assets.henAudio),
             isCorrect: true,
           },
         ],
@@ -4771,11 +4771,11 @@ const pictureWordsContent = {
         word: "sad",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
             isCorrect: false,
           },
           {
@@ -4790,7 +4790,7 @@ const pictureWordsContent = {
         word: "cook",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
             isCorrect: false,
           },
           {
@@ -4806,10 +4806,10 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "god",
+        word: "cot",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.godAudio2),
+            audio: getAssetAudioUrl(s3Assets.cotAudio),
             isCorrect: true,
           },
           {
@@ -4817,7 +4817,7 @@ const pictureWordsContent = {
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
             isCorrect: false,
           },
         ],
@@ -4836,7 +4836,7 @@ const pictureWordsContent = {
             isCorrect: true,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.fatAudio),
+            audio: getAssetAudioUrl(s3Assets.ratAudio),
             isCorrect: false,
           },
         ],
@@ -4851,7 +4851,7 @@ const pictureWordsContent = {
             isCorrect: true,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.badAudio),
+            audio: getAssetAudioUrl(s3Assets.padAudio),
             isCorrect: false,
           },
           {
@@ -4883,7 +4883,7 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "fine",
+        word: "fire",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.happyAudio),
@@ -4894,7 +4894,7 @@ const pictureWordsContent = {
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            audio: getAssetAudioUrl(s3Assets.fireAudio),
             isCorrect: true,
           },
         ],
@@ -4924,7 +4924,7 @@ const pictureWordsContent = {
         word: "note",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            audio: getAssetAudioUrl(s3Assets.fireAudio),
             isCorrect: false,
           },
           {
@@ -4959,14 +4959,14 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "know",
+        word: "road",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.halfAudio),
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            audio: getAssetAudioUrl(s3Assets.roadAudio),
             isCorrect: true,
           },
           {
@@ -4981,7 +4981,7 @@ const pictureWordsContent = {
         word: "half",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.fineAudio),
+            audio: getAssetAudioUrl(s3Assets.fireAudio),
             isCorrect: false,
           },
           {
@@ -5019,7 +5019,7 @@ const pictureWordsContent = {
         word: "happy",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            audio: getAssetAudioUrl(s3Assets.roadAudio),
             isCorrect: false,
           },
           {
@@ -5046,7 +5046,7 @@ const pictureWordsContent = {
             isCorrect: true,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.knowAudio),
+            audio: getAssetAudioUrl(s3Assets.roadAudio),
             isCorrect: false,
           },
         ],
@@ -5113,14 +5113,14 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "now",
+        word: "loud",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.penAudio),
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            audio: getAssetAudioUrl(s3Assets.loudAudio),
             isCorrect: true,
           },
           {
@@ -5143,7 +5143,7 @@ const pictureWordsContent = {
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            audio: getAssetAudioUrl(s3Assets.loudAudio),
             isCorrect: false,
           },
         ],
@@ -5173,7 +5173,7 @@ const pictureWordsContent = {
         word: "fair",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.nowAudio),
+            audio: getAssetAudioUrl(s3Assets.loudAudio),
             isCorrect: false,
           },
           {
@@ -5189,14 +5189,14 @@ const pictureWordsContent = {
         type: "pictureWords",
       },
       {
-        word: "care",
+        word: "hare",
         audioOptions: [
           {
             audio: getAssetAudioUrl(s3Assets.birdAudio2),
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.careAudio),
+            audio: getAssetAudioUrl(s3Assets.hareAudio),
             isCorrect: true,
           },
           {
@@ -5230,7 +5230,7 @@ const pictureWordsContent = {
         word: "chair",
         audioOptions: [
           {
-            audio: getAssetAudioUrl(s3Assets.careAudio),
+            audio: getAssetAudioUrl(s3Assets.hareAudio),
             isCorrect: false,
           },
           {

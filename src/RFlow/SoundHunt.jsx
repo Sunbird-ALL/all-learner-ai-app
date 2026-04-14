@@ -127,9 +127,9 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.bikeAudio),
         },
         {
-          img: getAssetUrl(s3Assets.godImg),
-          text: "god",
-          audio: getAssetAudioUrl(s3Assets.godAudio),
+          img: getAssetUrl(s3Assets.cotImg),
+          text: "cot",
+          audio: getAssetAudioUrl(s3Assets.cotAudio),
         },
         {
           img: getAssetUrl(s3Assets.hotImg),
@@ -210,9 +210,9 @@ const content = {
     {
       allwords: [
         {
-          img: getAssetUrl(s3Assets.godImg),
-          text: "god",
-          audio: getAssetAudioUrl(s3Assets.godAudio),
+          img: getAssetUrl(s3Assets.cotImg),
+          text: "cot",
+          audio: getAssetAudioUrl(s3Assets.cotAudio),
         },
         {
           img: getAssetUrl(s3Assets.hotImg),
@@ -237,9 +237,9 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.boatAudio),
         },
         {
-          img: getAssetUrl(s3Assets.godImg),
-          text: "god",
-          audio: getAssetAudioUrl(s3Assets.godAudio),
+          img: getAssetUrl(s3Assets.cotImg),
+          text: "cot",
+          audio: getAssetAudioUrl(s3Assets.cotAudio),
         },
         {
           img: getAssetUrl(s3Assets.coatImg),
@@ -247,8 +247,8 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.coatAudio),
         },
       ],
-      correctWord: "god",
-      audio: getAssetAudioUrl(s3Assets.godAudio),
+      correctWord: "cot",
+      audio: getAssetAudioUrl(s3Assets.cotAudio),
       flowName: "P1",
     },
     {
