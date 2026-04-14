@@ -20,6 +20,7 @@ import "./LoginPage.css";
 import { setLocalData } from "../../utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { initialize } from "../../services/telemetryService";
+import { reportError } from "../../utils/errorReporter";
 import { startEvent } from "../../services/callTelemetryIntract";
 import LanguageModalNew from "../../utils/LanguageModal";
 import { AudioDiagnosticModal } from "../../components/AudioDiagnostic";
@@ -146,6 +147,13 @@ const LoginPage = () => {
 
   const handleLoginError = (error) => {
     console.error("Login Error:", error);
+
+    reportError({
+      type: "login_error",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
 
     if (error.response) {
       const { status, data } = error.response;

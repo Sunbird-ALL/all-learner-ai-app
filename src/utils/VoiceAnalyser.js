@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { reportError } from "./errorReporter";
 import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import calcCER from "../../node_modules/character-error-rate/index";
@@ -131,6 +132,12 @@ function VoiceAnalyser(props) {
       });
     } catch (err) {
       console.error("An error occurred:", err);
+      reportError({
+        type: "audio_error",
+        action: "play_audio",
+        message: err?.message,
+        stack: err?.stack,
+      });
       alert("An unexpected error occurred while trying to play the audio.");
     }
   };
@@ -158,6 +165,12 @@ function VoiceAnalyser(props) {
       });
     } catch (err) {
       console.error(err);
+      reportError({
+        type: "audio_error",
+        action: "play_recorded_audio",
+        message: err?.message,
+        stack: err?.stack,
+      });
     }
   };
 
@@ -527,6 +540,12 @@ function VoiceAnalyser(props) {
             }
           } catch (err) {
             console.error("Error updating interaction with audio_path:", err);
+            reportError({
+              type: "audio_error",
+              action: "update_interaction_audio_path",
+              message: err?.message,
+              stack: err?.stack,
+            });
           }
         }
 
@@ -542,11 +561,24 @@ function VoiceAnalyser(props) {
             props.onInteractionComplete(interactionData);
           } catch (err) {
             console.error("Error calling onInteractionComplete:", err);
+            reportError({
+              type: "audio_error",
+              action: "interaction_complete_callback",
+              message: err?.message,
+              stack: err?.stack,
+            });
           }
         }
         try {
           await S3Client.send(command);
-        } catch (err) {}
+        } catch (err) {
+          reportError({
+            type: "audio_error",
+            action: "s3_upload",
+            message: err?.message,
+            stack: err?.stack,
+          });
+        }
       }
 
       response(
@@ -697,7 +729,10 @@ function VoiceAnalyser(props) {
         else if (totalSyllables > 600) threshold = 5;
 
         // Calculate lives lost based on percentage.
-        let livesLost = Math.max(0, Math.floor(percentage / (threshold / totalLives)) - 5);
+        let livesLost = Math.max(
+          0,
+          Math.floor(percentage / (threshold / totalLives)) - 5
+        );
 
         console.log("percent", percentage, livesLost);
 

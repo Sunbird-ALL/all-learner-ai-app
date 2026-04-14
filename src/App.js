@@ -10,6 +10,8 @@ import axios from "axios";
 import { getFontFamily } from "./utils/fontUtils";
 import { getLocalData } from "./utils/constants";
 import { error as logTelemetryError } from "./services/telemetryService";
+import { reportError } from "./utils/errorReporter";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
 
 const App = () => {
@@ -205,6 +207,18 @@ const App = () => {
           // All retries exhausted — fall through to auth check + reject
         }
 
+        // Report to error system after all retries are exhausted
+        if (isRetryable && config.__retryCount >= RETRY_MAX) {
+          reportError({
+            type: "api_error_exhausted",
+            endpoint: config.url || "unknown",
+            status: statusCode,
+            retryCount: config.__retryCount,
+            message: error?.response?.data?.message || error?.message,
+            stack: error?.stack,
+          });
+        }
+
         // --- Auth error handling (401 / 400) ---
         if (
           error.response &&
@@ -239,14 +253,16 @@ const App = () => {
   }, []);
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <SessionExpiredProvider>
-          <GetSetResultLoadingOverlay />
-          <AppContent routes={routes} />
-        </SessionExpiredProvider>
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <ErrorBoundary>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <SessionExpiredProvider>
+            <GetSetResultLoadingOverlay />
+            <AppContent routes={routes} />
+          </SessionExpiredProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </ErrorBoundary>
   );
 };
 

@@ -4083,9 +4083,9 @@ const Practice = () => {
             currentStep: currentQuestion + 1,
             progressData,
             showProgress: true,
-            background:
-              isShowCase &&
-              "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)",
+            background: isShowCase
+              ? "linear-gradient(281.02deg, #AE92FF 31.45%, #555ADA 100%)"
+              : undefined,
             playTeacherAudio,
             callUpdateLearner: isShowCase,
             disableScreen,

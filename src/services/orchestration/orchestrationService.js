@@ -2,6 +2,7 @@ import axios from "axios";
 import { getLocalData } from "../../utils/constants";
 import config from "../../utils/urlConstants.json";
 import { getVirtualId } from "../userservice/userService";
+import { reportError } from "../../utils/errorReporter";
 
 const API_BASE_URL_ORCHESTRATION =
   process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST;
@@ -27,6 +28,13 @@ export const getLessonProgressByID = async (lang) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching lesson progress by ID:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "getLessonProgressByID",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -43,6 +51,13 @@ export const fetchUserPoints = async () => {
     return response?.data?.result?.totalLanguagePoints || 0;
   } catch (error) {
     console.error("Error fetching user points:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "fetchUserPoints",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     return 0;
   }
 };
@@ -65,6 +80,13 @@ export const addPointer = async (points, milestone) => {
     return response.data;
   } catch (error) {
     console.error("Error adding points:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "addPointer",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -93,6 +115,13 @@ export const addCorrectPracticeWords = async () => {
     return response.data;
   } catch (error) {
     console.error("Error sending correctPracticeWords:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "addCorrectPracticeWords",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -120,6 +149,13 @@ export const updateCorrectPracticeWords = async (updates) => {
     return response.data;
   } catch (error) {
     console.error("Error sending correctPracticeWords:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "updateCorrectPracticeWords",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -141,6 +177,13 @@ export const getCorrectPracticeWords = async (understood) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching correctPracticeWords:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "getCorrectPracticeWords",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -173,6 +216,13 @@ export const createLearnerProgress = async (
     return response.data;
   } catch (error) {
     console.error("Error creating learner progress:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "createLearnerProgress",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -237,6 +287,13 @@ export const addLesson = async ({
     return response.data;
   } catch (error) {
     console.error("Error adding lesson:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "addLesson",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -258,7 +315,14 @@ export const logoutUser = async () => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error adding lesson:", error);
+    console.error("Error logging out user:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "logoutUser",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };

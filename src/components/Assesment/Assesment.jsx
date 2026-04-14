@@ -1252,7 +1252,6 @@ export const ProfileHeader = ({
                   invisible={true}
                 />
                 <CustomTooltip
-                  interactive
                   title={ui.ASSESSMENT_ALPHABET_CHART}
                   arrow
                   placement="bottom"

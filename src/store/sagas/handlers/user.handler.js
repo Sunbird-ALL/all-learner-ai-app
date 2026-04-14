@@ -5,6 +5,7 @@ import {
   generateOtp,
   verifyOtp,
 } from "../requests/user.request";
+import { safeParseJSON } from "../../../utils/errorReporter";
 
 export function* handleSignin(action) {
   try {
@@ -31,9 +32,9 @@ export function* handleSignin(action) {
 export function* fetchOTP(action) {
   try {
     //console.log(action.payload);
-    const accessTokenObj = JSON.parse(localStorage.getItem("accessToken"));
+    const accessTokenObj = safeParseJSON(localStorage.getItem("accessToken"));
     //console.log(accessTokenObj);
-    const response = yield retry(0, 0, generateOtp, accessTokenObj.token);
+    const response = yield retry(0, 0, generateOtp, accessTokenObj?.token);
 
     const { data } = response;
 
@@ -52,10 +53,10 @@ export function* fetchOTP(action) {
 export function* handleVerifyOtp(action) {
   try {
     //console.log(`handleVerifyOtp:: `, action.payload);
-    const accessTokenObj = JSON.parse(localStorage.getItem("accessToken"));
-    const otpTokenObj = JSON.parse(localStorage.getItem("otpToken"));
-    action.payload.accessToken = accessTokenObj.token;
-    action.payload.otpToken = otpTokenObj.token;
+    const accessTokenObj = safeParseJSON(localStorage.getItem("accessToken"));
+    const otpTokenObj = safeParseJSON(localStorage.getItem("otpToken"));
+    action.payload.accessToken = accessTokenObj?.token;
+    action.payload.otpToken = otpTokenObj?.token;
     //console.log('access:', action.payload.accessToken);
     //console.log('otpToken:', action.payload.otpToken);
     yield retry(0, 0, verifyOtp, action.payload);
