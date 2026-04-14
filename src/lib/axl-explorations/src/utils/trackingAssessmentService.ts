@@ -29,7 +29,7 @@ function generateUUID(): string {
 }
 
 // Backend API configuration
-const TRACKING_API_BASE_URL = (process.env.REACT_APP_TRACKING_API_BASE_URL || 'https://www.learnerai.theall.ai/lais/scores');
+const TRACKING_API_BASE_URL = process.env.REACT_APP_TRACKING_API_BASE_URL;
 const TRACKING_API_ENDPOINT = `${TRACKING_API_BASE_URL}/assessment/create`;
 
 export interface QuestionSummary {
@@ -44,7 +44,6 @@ export interface QuestionSummary {
 }
 
 export interface CreateAssessmentData {
-  userId: string;
   gameKey: string;
   gameTitle: string;
   level: number;
@@ -115,7 +114,6 @@ class TrackingAssessmentService {
       
       const payload: any = {
         assessmentTrackingId: assessmentTrackingId, // Required by database
-        userId: data.userId,
         courseId: gameName, // Just game name without language (e.g., "combinedLetter")
         contentId: `level${data.level}`, // Format: level1, level2, level10
         attemptId: attemptId,
@@ -204,79 +202,8 @@ class TrackingAssessmentService {
       highestScore: null,
       recentRecord: null,
     };
-    
-    /* DISABLED - Original API call code
-    try {
-      const searchEndpoint = `${TRACKING_API_BASE_URL}/assessment/search`;
-      
-      // Get API token from localStorage
-      const apiToken = typeof window !== 'undefined' ? localStorage.getItem('apiToken') : null;
-      
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'tenantId': 'default-tenant',
-      };
-      
-      // Add Authorization header if apiToken is available
-      if (apiToken) {
-        headers['Authorization'] = `Bearer ${apiToken}`;
-      }
-      
-      const response = await fetch(searchEndpoint, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(filters),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Search request failed: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('❌ Error searching assessment tracking:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      };
-    }
-    */
   }
 
-  /**
-   * Get assessment tracking details by ID
-   * 
-   * @param assessmentTrackingId - The assessment tracking ID
-   * @returns Assessment tracking details
-   */
-  async getAssessmentTrackingDetails(assessmentTrackingId: string): Promise<any> {
-    try {
-      const detailsEndpoint = `${TRACKING_API_BASE_URL}/assessment/read/${assessmentTrackingId}`;
-
-      // Get API token from localStorage
-      const apiToken = typeof window !== 'undefined' ? localStorage.getItem('apiToken') : null;
-      
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'tenantId': 'default-tenant',
-      };
-      
-      // Add Authorization header if apiToken is available
-      if (apiToken) {
-        headers['Authorization'] = `Bearer ${apiToken}`;
-      }
-
-      const response = await axios.get(detailsEndpoint, { headers });
-      return response.data;
-    } catch (error) {
-      console.error('❌ Error getting assessment tracking details:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      };
-    }
-  }
 }
 
 // Export singleton instance
