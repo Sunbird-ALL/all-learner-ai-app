@@ -1769,7 +1769,7 @@ const MainLayout = (props) => {
                           >
                             <Stack justifyContent="center" alignItems="center">
                               <img
-                                src={`https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.3/src/assets/images/gameLost.svg`}
+                                src={Assets.gameLost}
                                 alt="gameLost"
                                 height={"250px"}
                               />
@@ -1941,7 +1941,7 @@ const MainLayout = (props) => {
                                             <Box sx={{ flexShrink: 0, mr: 1 }}>
                                               {elem?.correctAnswer === false ? (
                                                 <img
-                                                  src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/wrong.svg"
+                                                  src={Assets.wrong}
                                                   alt="wrongImage"
                                                   style={{
                                                     width: "22px",
@@ -1950,7 +1950,7 @@ const MainLayout = (props) => {
                                                 />
                                               ) : (
                                                 <img
-                                                  src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/correct.svg"
+                                                  src={Assets.correct}
                                                   alt="correctImage"
                                                   style={{
                                                     width: "22px",
@@ -2002,7 +2002,7 @@ const MainLayout = (props) => {
                                         spacing={1.5}
                                       >
                                         <img
-                                          src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/turtle.svg"
+                                          src={Assets.turtle}
                                           alt="turtleImage"
                                           style={{
                                             width: "45px",
