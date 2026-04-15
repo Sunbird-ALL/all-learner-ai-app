@@ -179,7 +179,9 @@ export const callTelemetryDiscovery = async (originalText) => {
 export const uploadWavViaPresignedUrl = async (audioFileName, base64Data) => {
   const base = process.env.REACT_APP_PRESIGNED_URL_SERVICE;
   if (!base || !audioFileName || !base64Data) {
-    return;
+    throw new Error(
+      "Missing presigned URL service or required audio data (REACT_APP_PRESIGNED_URL_SERVICE, audioFileName, and base64Data are required)."
+    );
   }
   const trimmed = String(base).replace(/\/$/, "");
   const { data } = await axios.get(`${trimmed}/presignPutAudio`, {
