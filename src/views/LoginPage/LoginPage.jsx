@@ -10,6 +10,7 @@ import {
   Tab,
   Alert,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
 import {
@@ -36,6 +37,7 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formAlert, setFormAlert] = useState({
     message: "",
     severity: "error",
@@ -224,6 +226,7 @@ const LoginPage = () => {
     const effectiveUsername = getEffectiveUsername();
     localStorage.clear();
 
+    setIsSubmitting(true);
     try {
       if (isStateLogin) {
         const userCheckDetails = await fetchUserCheck(effectiveUsername);
@@ -253,6 +256,8 @@ const LoginPage = () => {
       setShowAudioDiagnostic(true);
     } catch (error) {
       handleLoginError(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -500,6 +505,7 @@ const LoginPage = () => {
                   type="submit"
                   variant="contained"
                   fullWidth
+                  disabled={isSubmitting}
                   sx={{
                     background:
                       "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
@@ -517,14 +523,25 @@ const LoginPage = () => {
                       transform: "scale(1.02)",
                       boxShadow: "0 12px 24px rgba(109, 175, 25, 0.5)",
                     },
+                    "&.Mui-disabled": {
+                      background:
+                        "linear-gradient(135deg, #a8d46b 0%, #8ec050 100%)",
+                      color: "rgba(255,255,255,0.85)",
+                    },
                     transition: "all 0.3s",
                   }}
                 >
-                  {isStateLogin
-                    ? activeTab === 0
-                      ? "Login as Student"
-                      : "Login as Guest"
-                    : "Login"}
+                  {isSubmitting ? (
+                    <CircularProgress size={24} sx={{ color: "white" }} />
+                  ) : isStateLogin ? (
+                    activeTab === 0 ? (
+                      "Login as Student"
+                    ) : (
+                      "Login as Guest"
+                    )
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
               </Grid>
             </Grid>

@@ -13,6 +13,7 @@ import { error as logTelemetryError } from "./services/telemetryService";
 import { reportError } from "./utils/errorReporter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
+import { RESILIENCE_CONFIG } from "./config/config";
 
 const App = () => {
   const ranonce = useRef(false);
@@ -146,8 +147,12 @@ const App = () => {
     if (ranonce.current) return;
     ranonce.current = true;
 
-    const RETRY_MAX = 3;
-    const RETRY_BASE_DELAY_MS = 1000; // 1s, 2s, 4s (exponential backoff)
+    // Apply global request timeout so no spinner/overlay hangs indefinitely
+    // when the backend is slow or unreachable. Value is configured in config.js.
+    axios.defaults.timeout = RESILIENCE_CONFIG.API_TIMEOUT_MS;
+
+    const RETRY_MAX = RESILIENCE_CONFIG.RETRY_MAX;
+    const RETRY_BASE_DELAY_MS = RESILIENCE_CONFIG.RETRY_BASE_DELAY_MS;
 
     axios.interceptors.response.use(
       (response) => response,

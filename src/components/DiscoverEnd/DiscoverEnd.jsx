@@ -39,10 +39,20 @@ const SpeakSentenceComponent = () => {
       }
       const virtualId = getLocalData("virtualId");
       const lang = getLocalData("lang");
-      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
-      const { data } = getMilestoneDetails;
-      setLevel(data.milestone_level);
-      setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+      try {
+        const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+        const { data } = getMilestoneDetails;
+        setLevel(data.milestone_level);
+        setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+      } catch (error) {
+        console.error(
+          "Error fetching milestone details on DiscoverEnd:",
+          error
+        );
+        // Fall back to the locally cached value so the screen still renders
+        const cachedLevel = getLocalData("userLevel");
+        if (cachedLevel) setLevel(`m${cachedLevel}`);
+      }
     })();
     setTimeout(() => {
       setShake(false);

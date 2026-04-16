@@ -1538,6 +1538,8 @@ const Assesment = ({ discoverStart }) => {
   const [milestoneDataKey, setMilestoneDataKey] = useState(0); // Force re-render when milestone data changes
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [showModal, setShowModal] = useState(false);
+  const [initError, setInitError] = useState(false);
+  const loadDataRef = React.useRef(null);
   const nativeLangEnable = getLocalData("nativeLangEnable");
   const nativeLang = getLocalData("nativeLang");
   const rStepNo = getLocalData("rStepZero");
@@ -1605,145 +1607,157 @@ const Assesment = ({ discoverStart }) => {
       setLocalData("sessionId", contentSessionId);
     }
 
-    if (discoverStart && username && !TOKEN) {
-      (async () => {
-        setLocalData("profileName", username);
-        const usernameDetails = await fetchVirtualId(username);
-        const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+    const runLoad = async () => {
+      if (discoverStart && username && !TOKEN) {
+        try {
+          setLocalData("profileName", username);
+          const usernameDetails = await fetchVirtualId(username);
+          const getMilestoneDetails = await getFetchMilestoneDetails(lang);
 
-        setLocalData(
-          "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails })
-        );
-        // Force re-render to update milestone data display
-        setMilestoneDataKey((prev) => prev + 1);
+          setLocalData(
+            "getMilestone",
+            JSON.stringify({ ...getMilestoneDetails })
+          );
+          // Force re-render to update milestone data display
+          setMilestoneDataKey((prev) => prev + 1);
 
-        if (
-          levelMapping[usernameDetails?.data?.result?.virtualID] !== undefined
-        ) {
-          setLevel(levelMapping[usernameDetails?.data?.result?.virtualID]);
-        } else {
-          const token = getLocalData("token");
-          if (token) {
-            try {
-              const decoded = jwtDecode(token);
-              const emisUsername = String(decoded.emis_username);
+          if (
+            levelMapping[usernameDetails?.data?.result?.virtualID] !== undefined
+          ) {
+            setLevel(levelMapping[usernameDetails?.data?.result?.virtualID]);
+          } else {
+            const token = getLocalData("token");
+            if (token) {
+              try {
+                const decoded = jwtDecode(token);
+                const emisUsername = String(decoded.emis_username);
 
-              if (levelMapping[emisUsername] !== undefined) {
-                setLevel(levelMapping[emisUsername]);
+                if (levelMapping[emisUsername] !== undefined) {
+                  setLevel(levelMapping[emisUsername]);
+                }
+              } catch (error) {
+                console.error("Error decoding JWT token:", error);
               }
-            } catch (error) {
-              console.error("Error decoding JWT token:", error);
             }
           }
+
+          // console.log("Assigned LEVEL:", level);
+
+          localStorage.setItem(
+            "virtualId",
+            usernameDetails?.data?.result?.virtualID
+          );
+          //let session_id = localStorage.getItem("sessionId");
+          const level = getMilestoneDetails?.data?.milestone_level;
+          setLevel(
+            level?.startsWith("m") ? Number(level.replace("m", "")) : level
+          );
+          setVocabCount(
+            getMilestoneDetails?.data?.extra?.vocabulary_count +
+              getMilestoneDetails?.data?.extra?.learned_voc_count || 0
+          );
+          setWordCount(
+            getMilestoneDetails?.data?.extra?.latest_towre_data
+              ?.wordsPerMinute || 0
+          );
+          let session_id = getLocalData("sessionId");
+
+          if (!session_id) {
+            session_id = uniqueId();
+            setLocalData("sessionId", session_id);
+          }
+
+          setLocalData("lang", lang || "ta");
+          if (
+            process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
+            localStorage.getItem("contentSessionId") !== null
+          ) {
+            fetchUserPoints()
+              .then((points) => {
+                setPoints(points);
+              })
+              .catch((error) => {
+                console.error("Error fetching user points:", error);
+                setPoints(0);
+              });
+          }
+
+          // dispatch(setVirtualId(virtualId));
+        } catch (error) {
+          console.error("Error loading discover-start data:", error);
+          setInitError(true);
         }
+      } else {
+        try {
+          const language = lang;
+          const getMilestoneDetails = await getFetchMilestoneDetails(language);
+          setLocalData(
+            "getMilestone",
+            JSON.stringify({ ...getMilestoneDetails })
+          );
+          // Force re-render to update milestone data display
+          setMilestoneDataKey((prev) => prev + 1);
+          const level = getMilestoneDetails?.data?.milestone_level;
+          setLevel(
+            level?.startsWith("m") ? Number(level.replace("m", "")) : level
+          );
+          setVocabCount(
+            getMilestoneDetails?.data?.extra?.vocabulary_count || 0
+          );
+          setWordCount(
+            getMilestoneDetails?.data?.extra?.latest_towre_data
+              ?.wordsPerMinute || 0
+          );
 
-        // console.log("Assigned LEVEL:", level);
+          if (levelMapping[virtualId] !== undefined) {
+            setLevel(levelMapping[virtualId]);
+          } else {
+            const token = getLocalData("token");
+            if (token) {
+              try {
+                const decoded = jwtDecode(token);
+                const emisUsername = String(decoded.emis_username);
 
-        localStorage.setItem(
-          "virtualId",
-          usernameDetails?.data?.result?.virtualID
-        );
-        //let session_id = localStorage.getItem("sessionId");
-        const level = getMilestoneDetails?.data?.milestone_level;
-        setLevel(
-          level?.startsWith("m") ? Number(level.replace("m", "")) : level
-        );
-        setVocabCount(
-          getMilestoneDetails?.data?.extra?.vocabulary_count +
-            getMilestoneDetails?.data?.extra?.learned_voc_count || 0
-        );
-        setWordCount(
-          getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
-            0
-        );
-        let session_id = getLocalData("sessionId");
-
-        if (!session_id) {
-          session_id = uniqueId();
-          setLocalData("sessionId", session_id);
-        }
-
-        setLocalData("lang", lang || "ta");
-        if (
-          process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
-          localStorage.getItem("contentSessionId") !== null
-        ) {
-          fetchUserPoints()
-            .then((points) => {
-              setPoints(points);
-            })
-            .catch((error) => {
-              console.error("Error fetching user points:", error);
-              setPoints(0);
-            });
-        }
-
-        // dispatch(setVirtualId(virtualId));
-      })();
-    } else {
-      (async () => {
-        const language = lang;
-        const getMilestoneDetails = await getFetchMilestoneDetails(language);
-        setLocalData(
-          "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails })
-        );
-        // Force re-render to update milestone data display
-        setMilestoneDataKey((prev) => prev + 1);
-        const level = getMilestoneDetails?.data?.milestone_level;
-        setLevel(
-          level?.startsWith("m") ? Number(level.replace("m", "")) : level
-        );
-        setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
-        setWordCount(
-          getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
-            0
-        );
-
-        if (levelMapping[virtualId] !== undefined) {
-          setLevel(levelMapping[virtualId]);
-        } else {
-          const token = getLocalData("token");
-          if (token) {
-            try {
-              const decoded = jwtDecode(token);
-              const emisUsername = String(decoded.emis_username);
-
-              if (levelMapping[emisUsername] !== undefined) {
-                setLevel(levelMapping[emisUsername]);
+                if (levelMapping[emisUsername] !== undefined) {
+                  setLevel(levelMapping[emisUsername]);
+                }
+              } catch (error) {
+                console.error("Error decoding JWT token:", error);
               }
-            } catch (error) {
-              console.error("Error decoding JWT token:", error);
             }
           }
+
+          // console.log("Assigned LEVEL:", level);
+
+          let sessionId = getLocalData("sessionId");
+
+          if (!sessionId || sessionId === "null") {
+            sessionId = localStorage.getItem("contentSessionId") || uniqueId();
+            setLocalData("sessionId", sessionId);
+          }
+
+          if (
+            process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
+            TOKEN &&
+            localStorage.getItem("contentSessionId") !== null
+          ) {
+            fetchUserPoints()
+              .then((points) => {
+                setPoints(points);
+              })
+              .catch((error) => {
+                console.error("Error fetching user points:", error);
+                setPoints(0);
+              });
+          }
+        } catch (error) {
+          console.error("Error loading assessment data:", error);
+          setInitError(true);
         }
-
-        // console.log("Assigned LEVEL:", level);
-
-        let sessionId = getLocalData("sessionId");
-
-        if (!sessionId || sessionId === "null") {
-          sessionId = localStorage.getItem("contentSessionId") || uniqueId();
-          setLocalData("sessionId", sessionId);
-        }
-
-        if (
-          process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
-          TOKEN &&
-          localStorage.getItem("contentSessionId") !== null
-        ) {
-          fetchUserPoints()
-            .then((points) => {
-              setPoints(points);
-            })
-            .catch((error) => {
-              console.error("Error fetching user points:", error);
-              setPoints(0);
-            });
-        }
-      })();
-    }
+      }
+    };
+    loadDataRef.current = runLoad;
+    runLoad();
   }, [lang]);
 
   const TOKEN = localStorage.getItem("apiToken");
@@ -1934,6 +1948,58 @@ const Assesment = ({ discoverStart }) => {
     backgroundSize: "auto",
     position: "relative",
   };
+
+  // Show a friendly error card when API calls on mount fail (server down / timeout).
+  if (initError) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          gap: 2,
+          px: 3,
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ fontFamily: "Quicksand", fontWeight: 700, color: "#555" }}
+        >
+          Could not load your session.
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{ fontFamily: "Quicksand", color: "#888", maxWidth: 360 }}
+        >
+          The server is unreachable right now. Check your connection and try
+          again.
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setInitError(false);
+            loadDataRef.current?.();
+          }}
+          sx={{
+            mt: 1,
+            background: "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+            color: "white",
+            fontFamily: "Quicksand",
+            fontWeight: 700,
+            borderRadius: "25px",
+            textTransform: "none",
+            px: 4,
+            py: 1.5,
+          }}
+        >
+          Try Again
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <>

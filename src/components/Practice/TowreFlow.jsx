@@ -1996,6 +1996,9 @@ const TowreFlow = ({
       mediaRecorder.start();
     } catch (error) {
       console.error("🚨 Error starting audio recording:", error);
+      // Ensure loading spinner never freezes if recording fails to start
+      setLoading(false);
+      setCompleted(true);
     }
   };
 

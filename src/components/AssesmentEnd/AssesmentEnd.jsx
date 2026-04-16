@@ -49,12 +49,22 @@ const AssesmentEnd = () => {
       const lang = getLocalData("lang");
       const previous_level = getLocalData("previous_level");
       setPreviousLevel(previous_level?.replace("m", ""));
-      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
-      const { data } = getMilestoneDetails;
-      setLevel(data.milestone_level);
-      setLocalData("userLevel", data.milestone_level?.replace("m", ""));
-      setVocabCount(data?.extra?.vocabulary_count || 0);
-      setWordCount(data?.extra?.latest_towre_data?.wordsPerMinute || 0);
+      try {
+        const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+        const { data } = getMilestoneDetails;
+        setLevel(data.milestone_level);
+        setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+        setVocabCount(data?.extra?.vocabulary_count || 0);
+        setWordCount(data?.extra?.latest_towre_data?.wordsPerMinute || 0);
+      } catch (error) {
+        console.error(
+          "Error fetching milestone details on AssesmentEnd:",
+          error
+        );
+        // Fall back to the locally cached level so the screen still renders
+        const cachedLevel = getLocalData("userLevel");
+        if (cachedLevel) setLevel(`m${cachedLevel}`);
+      }
       let sessionId = getLocalData("sessionId");
       if (!sessionId) {
         sessionId = uniqueId();
