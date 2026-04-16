@@ -12,7 +12,6 @@ import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
-import paraudio from "../../assets/parrotR1KanAudio.wav";
 import MainLayout from "../Layout/MainLayout";
 import SafeYouTubePlayer from "../SafeYouTubePlayer";
 
@@ -44,7 +43,6 @@ import AudioTooltipModal from "./AudioTooltipModal";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
 import tortoiseImg from "../../assets/TurtleCircle.gif";
-import rabbitImg from "../../assets/RabbitCircle.gif";
 import rocketImg from "../../assets/RocketCircle.gif";
 import hintimg from "../../assets/hintsicon.svg";
 import {

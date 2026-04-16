@@ -15,7 +15,6 @@ import { getAssetAudioUrl } from "../../utils/s3Links";
 import Confetti from "react-confetti";
 import listenImg from "../../assets/listen.png";
 import pause from "../../assets/pause.png";
-import Mic from "../../assets/mikee.svg";
 import Stop from "../../assets/pausse.svg";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";

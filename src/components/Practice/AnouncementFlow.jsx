@@ -32,8 +32,8 @@ import {
 } from "../../utils/constants";
 import { RetryIcon } from "../Icons/SvgIcons";
 import spinnerStop from "../../assets/pause.png";
-import raMic from "../../assets/listen.png";
-import raStop from "../../assets/pause.png";
+// import raMic from "../../assets/listen.png";
+// import raStop from "../../assets/pause.png";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import {
   fetchASROutput,

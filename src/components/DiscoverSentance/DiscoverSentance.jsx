@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../node_modules/axios/index";
-import elephant from "../../assets/images/elephant.svg";
+// import elephant from "../../assets/images/elephant.svg";
 import {
   callConfetti,
   getLocalData,

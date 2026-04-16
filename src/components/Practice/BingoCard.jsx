@@ -17,12 +17,7 @@ import {
   RetryIcon,
   setLocalData,
 } from "../../utils/constants";
-import r3WrongTick from "../../assets/r3WrongTick.svg";
-import bingoReset from "../../assets/bingoReset.svg";
-import Mic from "../../assets/mikee.svg";
-import Stop from "../../assets/pausse.svg";
-import Play from "../../assets/playButton.svg";
-import RecordVisualizer from "../../assets/recordVisualizer.svg";
+// import Play from "../../assets/playButton.svg";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -47,7 +42,6 @@ import {
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import AudioTooltipModal from "./AudioTooltipModal";
 import { doubleMetaphone } from "double-metaphone";
-import loadingJson from "../../assets/loadingJson.json";
 import Lottie from "lottie-react";
 import {
   transliterateKannadaToLatin,

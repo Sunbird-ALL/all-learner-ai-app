@@ -18,9 +18,6 @@ import clapImage from "../../assets/hand-ic.svg";
 import * as Assets from "../../utils/imageAudioLinks";
 import frame from "../../assets/frame.svg";
 import correctSound from "../../assets/correct.wav";
-import wrongSound from "../../assets/audio/wrong.wav";
-import addSound from "../../assets/audio/add.mp3";
-import removeSound from "../../assets/remove.wav";
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import {
   practiceSteps,

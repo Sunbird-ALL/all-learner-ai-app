@@ -10,11 +10,8 @@ import {
 } from "@mui/material";
 import MainLayout from "../components/Layout/MainLayout";
 import SafeYouTubePlayer from "../components/SafeYouTubePlayer";
-import listenImg from "../assets/listen.svg";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
-import correctSound from "../assets/correct.wav";
-import wrongSound from "../assets/audio/wrong.wav";
 import RecordVoiceVisualizer from "../utils/RecordVoiceVisualizer";
 import {
   practiceSteps,

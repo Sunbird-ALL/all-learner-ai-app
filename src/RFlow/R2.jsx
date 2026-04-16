@@ -27,27 +27,11 @@ import {
 } from "../utils/constants";
 import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
-import chairImg from "../assets/chair.svg";
 import correctTick from "../assets/correctTick.svg";
-import r3Next from "../assets/r3Next.svg";
 import dogGif from "../assets/dogGif.gif";
 import r3Reset from "../assets/r3Reset.svg";
 import r3WrongTick from "../assets/r3WrongTick.svg";
-import mikeImg from "../assets/mikeee.svg";
-import pauseImg from "../assets/paaauuse.svg";
-import effectImg from "../assets/effects.svg";
-import buttonImg from "../assets/buton.png";
-import coinsImg from "../assets/coiins.svg";
-import headerImg from "../assets/headers.svg";
-import shipImg from "../assets/sheep.svg";
-import shipAudio1 from "../assets/ship1.mp3";
-import shipAudio from "../assets/ship.wav";
-import shipAudio2 from "../assets/ship2.mp3";
-import shipAudio3 from "../assets/ship3.mp3";
-import audioIcon from "../assets/audioIcon.svg";
-import handIconGif from "../assets/handIconGif.gif";
 import musicIcon from "../assets/musicIcon.svg";
-import stepThreeTextR from "../assets/stepThreeTextR.svg";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";

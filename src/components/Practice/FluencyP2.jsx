@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
-import tortoiseImg from "../../assets/tortoiseImg.svg";
 import headerImg from "../../assets/headerImg.svg";
 import pauseImg from "../../assets/pauseImg.svg";
 import graphImg from "../../assets/graphImg.svg";
@@ -9,10 +8,6 @@ import nextImg from "../../assets/nextImg.svg";
 import listenImg from "../../assets/listenImg.svg";
 import LanguageHint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
-import backgroundImg from "../../assets/starsandclouds.png";
-import meterImg from "../../assets/meterimg.svg";
-import rabbitImg from "../../assets/rabbit.svg";
-import tortoiseimage from "../../assets/tortoise.svg";
 import SpeedSelector from "../../utils/SpeedSelector";
 import MainLayout from "../Layout/MainLayout";
 import SafeYouTubePlayer from "../SafeYouTubePlayer";
