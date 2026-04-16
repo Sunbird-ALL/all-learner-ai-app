@@ -4204,6 +4204,7 @@ export const tapImg = "0de61ce1-e518-42b0-9232-3f9310e05778.png";
 export const matImg = "ef8f962b-bf11-4d89-b6a6-24153bb8d68f.png";
 export const potImg = "d8988fb3-d7b0-447a-8b02-0b8c6f66ab4c.png";
 export const godImg = "d342aefc-eeff-40f2-8af0-bfc41cb4995a.png";
+export const cotImg = "a9be785e-29d9-495d-8b73-5b07f00178a8.png";
 export const cookImg = "89b151f8-6259-4051-a464-b6f1b962ef34.png";
 export const godImg2 = "6027bb6f-bc4b-4842-8cf6-3c37192919a6.png";
 export const badImg = "2f6bc668-91bd-465f-ba01-e854d5c4b8c2.png";
@@ -4234,6 +4235,13 @@ export const bodyImg = "e9b350a8-3952-4e0c-a4a1-d45f3aa21aa0.png";
 export const halfImg = "345527ab-3b8c-4b71-9543-24fc3da16eb7.png";
 export const hideImg = "2d18a725-3c93-426b-a4b4-5d51f2a7e072.png";
 export const knowImg = "38b6da3c-4d1f-46a9-babe-75cd84837dca.png";
+export const padImg = "2f502adc-b925-4151-a512-1dc906b21679.png";
+export const ratImg = "a9e9fa21-63a0-4334-8b1d-b1dac59760a0.png";
+export const henImg = "95c1b6eb-96be-414a-aeeb-49a94185c149.png";
+export const fireImg = "3e0b815e-b129-4d27-b585-587ee57dce8e.png";
+export const roadImg = "f2e0d1e0-8853-4468-b4ab-d4f281e70563.png";
+export const loudImg = "65a26c51-9a9f-41b6-9fec-00abb29a488a.png";
+export const hareImg = "8f2ceba3-69c9-4d01-959c-1943d4c7787a.png";
 
 // --- M1 Audio Assets ---
 export const boatAudio = "e0fb7881-3ede-4f97-b45c-7a3ce706c81f.wav";
@@ -4246,6 +4254,7 @@ export const tapAudio = "067ff37a-2d3a-49b7-95c9-0af1b3d041d3.wav";
 export const matAudio = "3b66c4ec-a05b-416f-9da8-579247c18c87.wav";
 export const potAudio = "d207b815-c3d8-4dd8-91d9-7e19a9114855.wav";
 export const godAudio = "4bba6816-1033-435d-b560-43d27932ffb1.wav";
+export const cotAudio = "133d4d71-bfe3-4206-acc9-30e3f07a35b1.wav";
 export const cookAudio = "4e5dceb9-e09a-4ab2-86b3-bca2d56d348d.wav";
 export const godAudio2 = "cbf8a4e1-2bf5-45fb-a8b6-816e3c7355ba.wav";
 export const badAudio = "4b2f1515-4d2f-4058-8e25-7c90b5d662c0.wav";
@@ -4276,6 +4285,13 @@ export const bodyAudio = "aa307a2d-0110-439a-81ff-95d4c9c40bba.wav";
 export const halfAudio = "3858acad-b07b-4d43-950c-5efe51aaaddc.wav";
 export const hideAudio = "966ec4a2-c16b-4072-b2ce-87d53e45bc35.wav";
 export const knowAudio = "26f23831-c18b-495e-9e3e-674833c4eecc.wav";
+export const padAudio = "4d1bbbe0-ac7d-40d3-b948-c4fe45b62c9a.wav";
+export const ratAudio = "21eb7dee-ff21-4c00-a7bd-55cb565d7996.wav";
+export const henAudio = "759d5e6b-548f-48ff-9800-04c2844d2c67.wav";
+export const fireAudio = "c897ac58-1ee5-4c84-98dc-96ab6b420f99.wav";
+export const roadAudio = "f817b9ac-7467-42db-8771-75d0ee6673e5.wav";
+export const loudAudio = "354c5d87-4639-4852-8436-679c22da8d8c.wav";
+export const hareAudio = "30a0d4ba-8fda-4163-80ef-bd9246998c18.wav";
 
 // --- M2 Image Assets ---
 export const mathImg = "f83023b0-7244-489c-9fd7-426aa1f4ce67.png";

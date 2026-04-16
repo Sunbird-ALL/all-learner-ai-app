@@ -34,8 +34,7 @@ import MainLayout from "../Layout/MainLayout";
 // Using native browser Speech Recognition API instead of library
 import { addTowreRecord } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
-import S3Client from "../../config/awsS3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadWavViaPresignedUrl } from "../../utils/apiUtil";
 
 const allEnglishWords = [
   { title: "is", isCorrect: false },
@@ -1963,17 +1962,8 @@ const TowreFlow = ({
               process.env.REACT_APP_CHANNEL
             }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-            const command = new PutObjectCommand({
-              Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-              Key: audioFileName,
-              Body: Uint8Array.from(window.atob(base64Audio), (c) =>
-                c.charCodeAt(0)
-              ),
-              ContentType: "audio/wav",
-            });
-
             try {
-              await S3Client.send(command);
+              await uploadWavViaPresignedUrl(audioFileName, base64Audio);
             } catch (uploadErr) {
               // S3 upload failed (non-critical) - continue
             }

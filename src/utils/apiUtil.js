@@ -1,9 +1,8 @@
+import axios from "axios";
 import { compareArrays, getLocalData, replaceAll } from "./constants";
 import config from "./urlConstants.json";
 import calcCER from "../../node_modules/character-error-rate/index";
 import { response } from "../services/telemetryService";
-import S3Client from "../config/awsS3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { handleTextEvaluation as _handleTextEvaluation } from "../services/evaluation/evaluationService";
 import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
 
@@ -134,14 +133,8 @@ export const callTelemetryApi = async (
       process.env.REACT_APP_CHANNEL
     }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-    const command = new PutObjectCommand({
-      Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-      Key: audioFileName,
-      Body: Uint8Array.from(window.atob(base64Data), (c) => c.charCodeAt(0)),
-      ContentType: "audio/wav",
-    });
     try {
-      await S3Client.send(command);
+      await uploadWavViaPresignedUrl(audioFileName, base64Data);
     } catch (err) {}
   }
 
@@ -181,4 +174,27 @@ export const callTelemetryDiscovery = async (originalText) => {
     },
     "ET"
   );
+};
+
+export const uploadWavViaPresignedUrl = async (audioFileName, base64Data) => {
+  const base = process.env.REACT_APP_PRESIGNED_URL_SERVICE;
+  if (!base || !audioFileName || !base64Data) {
+    throw new Error(
+      "Missing presigned URL service or required audio data (REACT_APP_PRESIGNED_URL_SERVICE, audioFileName, and base64Data are required)."
+    );
+  }
+  const trimmed = String(base).replace(/\/$/, "");
+  const { data } = await axios.get(`${trimmed}/presignPutAudio`, {
+    params: { filename: audioFileName, contentType: "audio/wav" },
+  });
+  const url = data?.uploadUrl;
+  if (!url) {
+    throw new Error("presignPutAudio missing url");
+  }
+  const body = Uint8Array.from(window.atob(base64Data), (c) => c.charCodeAt(0));
+  await axios.put(url, body, {
+    headers: { "Content-Type": "audio/wav" },
+    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
+  });
 };

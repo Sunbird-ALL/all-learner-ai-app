@@ -1,3 +1,4 @@
+import axios from "axios";
 import { reportError } from "../../utils/errorReporter";
 
 const EVAL_URL =
@@ -11,16 +12,17 @@ const EVAL_URL =
  */
 export const evaluateText = async (formData) => {
   try {
-    const response = await fetch(`${EVAL_URL}/api/v1/ocr/gemini/evaluateText`, {
-      method: "POST",
-      body: formData,
-    });
-    return await response.json();
+    const { data } = await axios.post(
+      `${EVAL_URL}/api/v1/ocr/gemini/evaluateText`,
+      formData
+    );
+    return data;
   } catch (error) {
     reportError({
       type: "api_error",
       endpoint: "evaluateText",
-      message: error?.message,
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
       stack: error?.stack,
     });
     throw error;

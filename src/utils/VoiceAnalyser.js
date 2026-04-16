@@ -33,8 +33,7 @@ import {
 } from "./constants";
 import config from "./urlConstants.json";
 import { filterBadWords } from "./Badwords";
-import S3Client from "../config/awsS3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadWavViaPresignedUrl } from "./apiUtil";
 import usePreloadAudio from "../hooks/usePreloadAudio";
 import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
 /* eslint-disable */
@@ -506,14 +505,6 @@ function VoiceAnalyser(props) {
           process.env.REACT_APP_CHANNEL
         }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-        const command = new PutObjectCommand({
-          Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-          Key: audioFileName,
-          Body: Uint8Array.from(window.atob(base64Data), (c) =>
-            c.charCodeAt(0)
-          ),
-          ContentType: "audio/wav",
-        });
         // Update interaction with audio_path if available (for engagement tracking)
         if (callUpdateLearner && originalText && audioFileName) {
           try {
@@ -570,7 +561,7 @@ function VoiceAnalyser(props) {
           }
         }
         try {
-          await S3Client.send(command);
+          await uploadWavViaPresignedUrl(audioFileName, base64Data);
         } catch (err) {
           reportError({
             type: "audio_error",
@@ -656,16 +647,8 @@ function VoiceAnalyser(props) {
             process.env.REACT_APP_CHANNEL
           }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-          const command = new PutObjectCommand({
-            Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-            Key: audioFileName,
-            Body: Uint8Array.from(window.atob(base64Data), (c) =>
-              c.charCodeAt(0)
-            ),
-            ContentType: "audio/wav",
-          });
           try {
-            await S3Client.send(command);
+            await uploadWavViaPresignedUrl(audioFileName, base64Data);
           } catch (err) {}
         }
         response(
