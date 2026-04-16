@@ -2,6 +2,7 @@ import { CsTelemetryModule } from "@project-sunbird/client-services/telemetry";
 import { uniqueId } from "./utilService";
 import { jwtDecode } from "../../node_modules/jwt-decode/build/cjs/index";
 import { getLocalData, setLocalData } from "../utils/constants";
+import { reportError } from "../utils/errorReporter";
 
 let startTime; // Variable to store the timestamp when the start event is raised
 let contentSessionId;
@@ -119,6 +120,11 @@ export const initialize = async ({ context, config, metadata }) => {
       );
     } catch (error) {
       console.error(":e", error);
+      reportError({
+        type: "telemetry_init_failure",
+        message: error?.message,
+        stack: error?.stack,
+      });
     }
   }
 };

@@ -34,6 +34,7 @@ import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import { fetchASROutput, handleTextEvaluation } from "../../utils/apiUtil";
+import { evaluateText } from "../../services/evaluation/evaluationService";
 
 const levelMap = {
   10: level10,
@@ -445,15 +446,7 @@ const ActOutM13 = ({
       formData.append("studentText", studentText);
 
       try {
-        const response = await fetch(
-          "https://dev-ekstep-tell-ocr-service-985885894164.asia-south1.run.app/api/v1/ocr/gemini/evaluateText",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        const result = await response.json();
+        const result = await evaluateText(formData);
         console.log("API Response:", result);
 
         const responseText =

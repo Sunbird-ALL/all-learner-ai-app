@@ -28,6 +28,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";
 import {
@@ -633,6 +634,27 @@ const BingoCard = ({
     నిష్ఠ: ["ని", "ష్ఠ"],
     స్ఫటిక: ["స్ఫ", "టిక"],
     దర్శనం: ["దర్శ", "నం"],
+
+    गुलाबी: ["गु", "लाबी"],
+    तितली: ["तित", "ली"],
+    मैदान: ["मै", "दान"],
+    साइकिल: ["साइ", "किल"],
+    बाज़ार: ["बाज़ा", "र"],
+    मिठाई: ["मि", "ठाई"],
+    खिलौने: ["खिलौ", "ने"],
+    चिड़िया: ["चिड़ि", "या"],
+    चमेली: ["च", "मेली"],
+    परिवार: ["परि", "वार"],
+    दरवाज़ा: ["दर", "वाज़ा"],
+    रेलगाड़ी: ["रेल", "गाड़ी"],
+    लहसुन: ["लह", "सुन"],
+    नारियल: ["नारि", "यल"],
+    गुड़िया: ["गु", "ड़िया"],
+    मछलियाँ: ["मछ", "लियाँ"],
+    आसमान: ["आस", "मान"],
+    केतकी: ["केत", "की"],
+    फिरकनी: ["फिर", "कनी"],
+    बारिश: ["बा", "रिश"],
   };
 
   useEffect(() => {
@@ -1481,7 +1503,7 @@ const BingoCard = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                zIndex: 2000,
+                zIndex: 11000,
               }}
             >
               <div
@@ -1491,7 +1513,7 @@ const BingoCard = ({
                   padding: "10px",
                   borderRadius: "12px",
                   maxWidth: "90%",
-                  width: "600px",
+                  width: "900px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -1516,16 +1538,10 @@ const BingoCard = ({
                   ×
                 </button>
 
-                {/* YouTube Video */}
-                <iframe
-                  width="100%"
-                  height="340"
-                  src={`https://www.youtube.com/embed/bS9CFsTP_Sg?autoplay=1`}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
+                <SafeYouTubePlayer
+                  videoId="_WrOsvEWpbg"
                   style={{ borderRadius: "8px" }}
-                ></iframe>
+                />
               </div>
             </div>
           )}

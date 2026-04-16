@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { reportError } from "./errorReporter";
 import RecordRTC from "recordrtc";
 import { Box, CircularProgress } from "@mui/material";
 import {
@@ -155,6 +156,12 @@ const AudioRecorder = (props) => {
       props.handleStartRecording?.();
     } catch (err) {
       console.error("Failed to start recording:", err);
+      reportError({
+        type: "audio_error",
+        action: "start_recording",
+        message: err?.message,
+        stack: err?.stack,
+      });
     }
   };
 
@@ -223,6 +230,12 @@ const AudioRecorder = (props) => {
                 setStatus("inactive");
               } catch (error) {
                 console.error("Transcription error:", error);
+                reportError({
+                  type: "audio_error",
+                  action: "transcription",
+                  message: error?.message,
+                  stack: error?.stack,
+                });
                 setShowLoader(false);
                 setStatus("inactive");
                 props.setIsCorrect?.(false);

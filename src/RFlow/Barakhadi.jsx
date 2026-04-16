@@ -9,6 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import MainLayout from "../components/Layout/MainLayout";
+import SafeYouTubePlayer from "../components/SafeYouTubePlayer";
 import listenImg from "../assets/listen.svg";
 import correctSound from "../assets/correct.wav";
 import wrongSound from "../assets/audio/wrong.wav";
@@ -2252,9 +2253,9 @@ export const wordData = {
       segmentedAudio: getAssetAudioUrl(s3Assets.कितनेAudio),
     },
     {
-      text: "चिड़िया",
+      text: "गोभी",
       audio: "06969b26-1588-4064-aa61-fb8c3a7d665f.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.चिड़ियाAudio),
+      segmentedAudio: getAssetAudioUrl(s3Assets.गोभीAudio),
     },
     {
       text: "सुना",
@@ -5010,7 +5011,7 @@ const Barakhadi = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              zIndex: 2000,
+              zIndex: 11000,
             }}
           >
             <div
@@ -5020,7 +5021,7 @@ const Barakhadi = ({
                 padding: "10px",
                 borderRadius: "12px",
                 maxWidth: "90%",
-                width: "600px",
+                width: "900px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -5045,16 +5046,10 @@ const Barakhadi = ({
                 ×
               </button>
 
-              {/* YouTube Video */}
-              <iframe
-                width="100%"
-                height="340"
-                src={`https://www.youtube.com/embed/GrPT4e_aTvM?autoplay=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <SafeYouTubePlayer
+                videoId="OGyRSlAEkN4"
                 style={{ borderRadius: "8px", zIndex: 99999 }}
-              ></iframe>
+              />
             </div>
           </div>
         )}

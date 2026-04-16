@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { reportError } from "./errorReporter";
 import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import calcCER from "../../node_modules/character-error-rate/index";
@@ -32,8 +33,7 @@ import {
 } from "./constants";
 import config from "./urlConstants.json";
 import { filterBadWords } from "./Badwords";
-import S3Client from "../config/awsS3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadWavViaPresignedUrl } from "./apiUtil";
 import usePreloadAudio from "../hooks/usePreloadAudio";
 import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
 /* eslint-disable */
@@ -131,6 +131,12 @@ function VoiceAnalyser(props) {
       });
     } catch (err) {
       console.error("An error occurred:", err);
+      reportError({
+        type: "audio_error",
+        action: "play_audio",
+        message: err?.message,
+        stack: err?.stack,
+      });
       alert("An unexpected error occurred while trying to play the audio.");
     }
   };
@@ -158,6 +164,12 @@ function VoiceAnalyser(props) {
       });
     } catch (err) {
       console.error(err);
+      reportError({
+        type: "audio_error",
+        action: "play_recorded_audio",
+        message: err?.message,
+        stack: err?.stack,
+      });
     }
   };
 
@@ -493,14 +505,6 @@ function VoiceAnalyser(props) {
           process.env.REACT_APP_CHANNEL
         }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-        const command = new PutObjectCommand({
-          Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-          Key: audioFileName,
-          Body: Uint8Array.from(window.atob(base64Data), (c) =>
-            c.charCodeAt(0)
-          ),
-          ContentType: "audio/wav",
-        });
         // Update interaction with audio_path if available (for engagement tracking)
         if (callUpdateLearner && originalText && audioFileName) {
           try {
@@ -527,6 +531,12 @@ function VoiceAnalyser(props) {
             }
           } catch (err) {
             console.error("Error updating interaction with audio_path:", err);
+            reportError({
+              type: "audio_error",
+              action: "update_interaction_audio_path",
+              message: err?.message,
+              stack: err?.stack,
+            });
           }
         }
 
@@ -542,11 +552,24 @@ function VoiceAnalyser(props) {
             props.onInteractionComplete(interactionData);
           } catch (err) {
             console.error("Error calling onInteractionComplete:", err);
+            reportError({
+              type: "audio_error",
+              action: "interaction_complete_callback",
+              message: err?.message,
+              stack: err?.stack,
+            });
           }
         }
         try {
-          await S3Client.send(command);
-        } catch (err) {}
+          await uploadWavViaPresignedUrl(audioFileName, base64Data);
+        } catch (err) {
+          reportError({
+            type: "audio_error",
+            action: "s3_upload",
+            message: err?.message,
+            stack: err?.stack,
+          });
+        }
       }
 
       response(
@@ -624,16 +647,8 @@ function VoiceAnalyser(props) {
             process.env.REACT_APP_CHANNEL
           }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-          const command = new PutObjectCommand({
-            Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-            Key: audioFileName,
-            Body: Uint8Array.from(window.atob(base64Data), (c) =>
-              c.charCodeAt(0)
-            ),
-            ContentType: "audio/wav",
-          });
           try {
-            await S3Client.send(command);
+            await uploadWavViaPresignedUrl(audioFileName, base64Data);
           } catch (err) {}
         }
         response(
@@ -697,7 +712,10 @@ function VoiceAnalyser(props) {
         else if (totalSyllables > 600) threshold = 5;
 
         // Calculate lives lost based on percentage.
-        let livesLost = Math.max(0, Math.floor(percentage / (threshold / totalLives)) - 5);
+        let livesLost = Math.max(
+          0,
+          Math.floor(percentage / (threshold / totalLives)) - 5
+        );
 
         console.log("percent", percentage, livesLost);
 

@@ -3504,8 +3504,8 @@ export const levelThree = {
         audio: "brushkarnaM3Hin",
       },
       {
-        completeWord: "माचिस की डिब्बी",
-        syllable: ["माचिस की", "डिब्बी"],
+        completeWord: "माचिस की ड़िब्बी",
+        syllable: ["माचिस की", "ड़िब्बी"],
         audio: "machiskidibbiM3Hin",
       },
       {
