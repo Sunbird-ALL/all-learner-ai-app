@@ -3738,6 +3738,20 @@ export const dataHi = [
     ],
   },
   {
+    letter: "अः",
+    items: [
+      {
+        id: 106,
+        title: "Letter",
+        letter: "अः",
+        word: "अः",
+        image: getAssetUrl(s3Assets.अःImg),
+        audio: getAssetAudioUrl(s3Assets.अःAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.अःAudio),
+      },
+    ],
+  },
+  {
     letter: "क",
     items: [
       {
@@ -3866,6 +3880,20 @@ export const dataHi = [
     ],
   },
   {
+    letter: "ङ",
+    items: [
+      {
+        id: 107,
+        title: "Letter",
+        letter: "ङ",
+        word: "ङ",
+        image: getAssetUrl(s3Assets.ङImg),
+        audio: getAssetAudioUrl(s3Assets.ङAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ङAudio),
+      },
+    ],
+  },
+  {
     letter: "च",
     items: [
       {
@@ -3972,6 +4000,20 @@ export const dataHi = [
         image: getAssetUrl(s3Assets.झरनImg),
         audio: getAssetAudioUrl(s3Assets.झरनAudio),
         singleAudio: getAssetAudioUrl(s3Assets.झरनAudio),
+      },
+    ],
+  },
+  {
+    letter: "ञ",
+    items: [
+      {
+        id: 108,
+        title: "Letter",
+        letter: "ञ",
+        word: "ञ",
+        image: getAssetUrl(s3Assets.ञImg),
+        audio: getAssetAudioUrl(s3Assets.ञAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ञAudio),
       },
     ],
   },
