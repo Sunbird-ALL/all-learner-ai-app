@@ -7,7 +7,7 @@ import graphImg from "../../assets/graphImg.svg";
 import pauseImg from "../../assets/pauseImg.svg";
 import bearImg from "../../assets/bearImg.svg";
 import listenImg from "../../assets/listenImg.svg";
-import nextImg from "../../assets/nextImg.svg";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
 import dogImg from "../../assets/dogimg.svg";

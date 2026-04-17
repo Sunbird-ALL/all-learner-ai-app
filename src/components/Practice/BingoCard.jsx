@@ -55,7 +55,6 @@ import listeenimg from "../../assets/listeen.svg";
 import wordheadingimg from "../../assets/wordhead.svg";
 import emptyimg from "../../assets/Empty.svg";
 import starimg from "../../assets/star.svg";
-import nextimg from "../../assets/nextImg.svg";
 import beariconimg from "../../assets/bearicon.svg";
 import bearclapimg from "../../assets/bearclap.svg";
 import starbackgroundimg from "../../assets/starsandclouds.png";
@@ -435,7 +434,7 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
 
       <div style={{ marginTop: "10px" }}>
         <img
-          src={nextimg}
+          src={Assets.nextimg}
           alt="next"
           style={{
             width: "100px",
@@ -1354,7 +1353,7 @@ const BingoCard = ({
             </>
           ) : (
             <img
-              src={nextimg}
+              src={Assets.nextimg}
               alt="next"
               style={{ width: "100px", height: "45px", cursor: "pointer" }}
               onClick={handleNextClick}

@@ -40,7 +40,6 @@ import eraseImg from "../assets/erase.svg";
 import listenImgBox from "../assets/listenimgbox.svg";
 import boyballonflyImg from "../assets/boyballonfly.svg";
 import dottimg from "../assets/dottimg.svg";
-import nextImg from "../assets/nextImg.svg";
 import closebuttonImg from "../assets/closebtn.svg";
 import { callTelemetryDiscovery } from "../utils/apiUtil";
 import audiowaveImg from "../assets/audiowave.svg";
@@ -5612,7 +5611,7 @@ const Barakhadi = ({
               </div>
 
               <img
-                src={nextImg}
+                src={Assets.nextimg}
                 alt="next"
                 style={{ height: "32px", cursor: "pointer" }}
                 onClick={handleNextWord}

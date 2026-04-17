@@ -3,7 +3,7 @@ import Confetti from "react-confetti";
 import pauseImg from "../../assets/pauseImg.svg";
 import graphImg from "../../assets/graphImg.svg";
 import beardanceImg from "../../assets/beardance.svg";
-import nextImg from "../../assets/nextImg.svg";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import backgroundImg from "../../assets/starsandclouds.png";
 import SpeedSelector from "../../utils/SpeedSelector";
 import hintimg from "../../assets/hintsicon.svg";

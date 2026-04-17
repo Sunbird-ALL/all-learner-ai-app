@@ -4,7 +4,7 @@ import headerImg from "../../assets/headerImg.svg";
 import pauseImg from "../../assets/pauseImg.svg";
 import graphImg from "../../assets/graphImg.svg";
 import beardanceImg from "../../assets/beardance.svg";
-import nextImg from "../../assets/nextImg.svg";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import listenImg from "../../assets/listenImg.svg";
 import LanguageHint from "../../assets/laguagehint.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";

@@ -5,7 +5,7 @@ import speakButton from "../../assets/speakButton.svg";
 import listenBear from "../../assets/bearlisten.svg";
 import graphImg from "../../assets/graphImg.svg";
 import pauseImg from "../../assets/pauseImg.svg";
-import nextImg from "../../assets/nextImg.svg";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
 import tortoiseImg from "../../assets/TurtleCircle.gif";
