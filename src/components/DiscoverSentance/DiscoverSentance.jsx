@@ -1,4 +1,8 @@
 import { useEffect, useState, useRef } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../node_modules/axios/index";
 // import elephant from "../../assets/images/elephant.svg";
@@ -66,6 +70,8 @@ const SpeakSentenceComponent = () => {
   const [discoveryHistory, setDiscoveryHistory] = useState([]);
   const [currentSetTag, setCurrentSetTag] = useState("");
   const discoveryHistoryRef = useRef([]);
+  const [questionsReady, setQuestionsReady] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
   const sessionId = getLocalData("sessionId");
@@ -76,8 +82,6 @@ const SpeakSentenceComponent = () => {
     callConfetti();
     window.telemetry?.syncEvents && window.telemetry.syncEvents();
   };
-
-  console.log("questions", questions);
 
   useEffect(() => {
     if (questions?.length) setAssesmentcount(assesmentCount + 1);
@@ -365,6 +369,7 @@ const SpeakSentenceComponent = () => {
   };
 
   useEffect(() => {
+    if (questionsReady) return;
     let cancelled = false;
     (async () => {
       try {
@@ -436,14 +441,16 @@ const SpeakSentenceComponent = () => {
         const resAssessment = await fetchAssessmentData(lang);
         if (cancelled) return;
         await initDiscoveryFromSet4(resAssessment);
+        if (!cancelled) setQuestionsReady(true);
       } catch (error) {
         console.error("Error fetching data:", error);
+        if (!cancelled) setFetchError(true);
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [fetchError]);
 
   const handleBack = () => {
     const destination =
@@ -474,13 +481,90 @@ const SpeakSentenceComponent = () => {
     navigate(destination);
   };
 
-  // Show demo if first time
   if (showDemo) {
     return (
       <DiscoverSentencePreview
         onStartGame={handleDemoComplete}
         onBack={handleDemoBack}
       />
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          gap: 2,
+          px: 3,
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ fontFamily: "Quicksand", fontWeight: 700, color: "#555" }}
+        >
+          Could not load your session.
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{ fontFamily: "Quicksand", color: "#888", maxWidth: 360 }}
+        >
+          The server is unreachable right now. Check your connection and try
+          again.
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setFetchError(false);
+            setQuestionsReady(false);
+          }}
+          sx={{
+            mt: 1,
+            background: "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+            color: "white",
+            fontFamily: "Quicksand",
+            fontWeight: 700,
+            borderRadius: "25px",
+            textTransform: "none",
+            px: 4,
+            py: 1.5,
+          }}
+        >
+          Try Again
+        </Button>
+      </Box>
+    );
+  }
+
+  if (!questionsReady) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          gap: 2,
+        }}
+      >
+        <CircularProgress size={48} sx={{ color: "#FF730E" }} />
+        <Typography
+          sx={{
+            fontFamily: "Quicksand",
+            fontWeight: 600,
+            color: "#555",
+            fontSize: "18px",
+          }}
+        >
+          Please wait, we are fetching details for you…
+        </Typography>
+      </Box>
     );
   }
 
