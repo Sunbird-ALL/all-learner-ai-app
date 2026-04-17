@@ -85,6 +85,7 @@ jobs:
           REACT_APP_USE_RECOMMENDATION_API: ${{ vars.REACT_APP_USE_RECOMMENDATION_API }}
           REACT_APP_ENGAGEMENT_PREDICT_URL: ${{ vars.REACT_APP_ENGAGEMENT_PREDICT_URL }}
           REACT_APP_TRACKING_API_BASE_URL: ${{ vars.REACT_APP_TRACKING_API_BASE_URL}}
+          REACT_APP_PRESIGNED_URL_SERVICE: ${{ vars.REACT_APP_PRESIGNED_URL_SERVICE }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 

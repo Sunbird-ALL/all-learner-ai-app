@@ -1,0 +1,17 @@
+{
+  "_comment": "Static fallback content used when API is unavailable. Keyed by milestone level tag.",
+  "CEFR_GEN_M1_L1": [
+    { "word": "Cat",  "image": "/offline/cat.png",  "audio": "/offline/cat.mp3" },
+    { "word": "Dog",  "image": "/offline/dog.png",  "audio": "/offline/dog.mp3" },
+    { "word": "Sun",  "image": "/offline/sun.png",  "audio": "/offline/sun.mp3" },
+    { "word": "Cup",  "image": "/offline/cup.png",  "audio": "/offline/cup.mp3" },
+    { "word": "Hat",  "image": "/offline/hat.png",  "audio": "/offline/hat.mp3" }
+  ],
+  "CEFR_GEN_M1_L2": [
+    { "word": "Apple",  "image": "/offline/apple.png",  "audio": "/offline/apple.mp3" },
+    { "word": "Table",  "image": "/offline/table.png",  "audio": "/offline/table.mp3" },
+    { "word": "Water",  "image": "/offline/water.png",  "audio": "/offline/water.mp3" },
+    { "word": "House",  "image": "/offline/house.png",  "audio": "/offline/house.mp3" },
+    { "word": "Chair",  "image": "/offline/chair.png",  "audio": "/offline/chair.mp3" }
+  ]
+}
