@@ -4973,6 +4973,49 @@ export const भलपरAudio = "5d45fc76-6b6c-4b6b-88bf-27e40ce6d429.wav";
 export const तरकणAudio = "b743657a-19e0-4a32-bb22-fb251e598239.wav";
 export const मछलयAudio = "ac1425ce-228e-436a-8fb4-e23f96e3bcf3.wav";
 export const बललAudio = "3998b703-9e69-4024-9d6a-5220af31c8ab.wav";
+
+//M3 Hindi soundhuntcombineds1
+export const खलसडकImg = "e2f03a37-7478-4676-80a4-aae0ed3e2125.png";
+export const छटघरImg = "1dfab42c-3a68-4de6-841d-6024bd802997.png";
+export const खशबचचImg = "9c1a9cc8-0dd0-470f-8df6-01e9fe9cdd32.png";
+export const पनकबतलImg = "187afcfd-496f-4085-916f-645649e2801c.png";
+export const गदपकडनImg = "70f73662-ac9d-45de-8ae0-938d5e685bc9.png";
+export const गरमचयImg = "9226a47d-3dc8-451b-87de-73408ae91c29.png";
+export const बडहथImg = "2b38d043-2ad4-4416-bf14-d718b33dea73.png";
+export const पकडलनImg = "dbcc1263-3985-4b73-8f40-62195bba0f3a.png";
+export const मलकमजImg = "370681a4-4740-4132-a049-d67e47bba9cb.png";
+export const ललगलबImg = "d7845299-78d6-4efc-89c3-afc35e62cdfa.png";
+export const खलमदनImg = "3ee2dd55-676e-4864-b93e-131d73a3a575.png";
+export const फलखनImg = "afe7d8de-edae-4881-bad9-194e52fcabde.png";
+export const हरपधImg = "e39d6e90-a4f8-4cee-ad8b-6cc16e72c669.png";
+export const भगलनImg = "ed014ba5-8d69-48e1-8765-8ebf70772e27.png";
+export const बडघरImg = "6b55656d-d0bc-4b29-9c1b-684e79657446.png";
+export const खनपकनImg = "23f2ff6e-cd96-42d6-a05a-0264801188ec.png";
+export const हरबगImg = "7a21d6e3-842f-4357-b0db-0475234cdf25.png";
+export const कलकततImg = "90789ef2-6b69-4c3c-b32f-f5606f1eacbb.png";
+export const हरघसImg = "f8ef9984-a7f5-4f82-a0ca-0bd8fe7b40cc.png";
+export const खलकसमयImg = "d93dc7f7-a216-423d-8beb-95c6a969c155.png";
+export const खलसडकAudio = "abc84882-fcf5-40ef-945a-a3fa4f67034f.wav";
+export const छटघरAudio = "2a111ffe-48f6-47a0-a566-553cdcf17233.wav";
+export const खशबचचAudio = "9677888e-8dbe-4f66-b840-5a1db9f64ead.wav";
+export const पनकबतलAudio = "f111cfdf-5b93-445c-8ffb-59ae5fa74d1a.wav";
+export const गदपकडनAudio = "26df5483-2b89-41d7-a565-7ab337590dd0.wav";
+export const गरमचयAudio = "6b525cca-f5de-4640-9dca-792be6971237.wav";
+export const बडहथAudio = "6a82cba7-3114-476d-9703-b3c15ae6d797.wav";
+export const पकडलनAudio = "295223c3-bb71-43ac-a709-bff1a0dc2aef.wav";
+export const मलकमजAudio = "2ad5c0ee-4387-448a-80bf-765b9337be6f.wav";
+export const ललगलबAudio = "d7ce01d7-68fe-49e4-9324-c4902fbbc9a1.wav";
+export const खलमदनAudio = "1b473521-0438-489e-b86d-90be4d73e978.wav";
+export const फलखनAudio = "fe7cb941-afde-4ba1-bd1e-04a172f5f3d4.wav";
+export const हरपधAudio = "4a30a738-3f6e-4e13-b895-756bc296b7f0.wav";
+export const भगलनAudio = "335e539d-f55e-4949-9250-1900e8304885.wav";
+export const बडघरAudio = "78f9fdf4-bca0-4ec9-84de-b8020919cda7.wav";
+export const खनपकनAudio = "d8f75de2-7118-43e1-a064-26a67b99c6ac.wav";
+export const हरबगAudio = "39414425-7f16-406c-a176-3103d5f363c5.wav";
+export const कलकततAudio = "ad776d86-602c-4113-acc9-741934e3a2d6.wav";
+export const हरघसAudio = "a4a7d452-9a3a-4873-a2d8-9fdd29d5cd4f.wav";
+export const खलकसमयAudio = "48207a59-2e37-48dd-9e04-dc1d93f03681.wav";
+
 /////////////////////////////////////////////////////////////////
 
 // Temp Fix
