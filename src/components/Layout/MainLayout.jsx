@@ -961,7 +961,7 @@ const MainLayout = (props) => {
         }}
       />
 
-      {!!LEVEL && (
+      {!!LEVEL && !props.loading && (
         <Box
           sx={{
             position: "absolute",

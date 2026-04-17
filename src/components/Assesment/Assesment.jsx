@@ -1539,6 +1539,7 @@ const Assesment = ({ discoverStart }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [showModal, setShowModal] = useState(false);
   const [initError, setInitError] = useState(false);
+  const [loading, setLoading] = useState(true);
   const loadDataRef = React.useRef(null);
   const nativeLangEnable = getLocalData("nativeLangEnable");
   const nativeLang = getLocalData("nativeLang");
@@ -1608,6 +1609,7 @@ const Assesment = ({ discoverStart }) => {
     }
 
     const runLoad = async () => {
+      setLoading(true);
       if (discoverStart && username && !TOKEN) {
         try {
           setLocalData("profileName", username);
@@ -1648,10 +1650,29 @@ const Assesment = ({ discoverStart }) => {
             usernameDetails?.data?.result?.virtualID
           );
           //let session_id = localStorage.getItem("sessionId");
-          const level = getMilestoneDetails?.data?.milestone_level;
-          setLevel(
-            level?.startsWith("m") ? Number(level.replace("m", "")) : level
-          );
+          const milestoneLevel = getMilestoneDetails?.data?.milestone_level;
+          const parsedLevel = milestoneLevel?.startsWith("m")
+            ? Number(milestoneLevel.replace("m", ""))
+            : milestoneLevel;
+
+          // Auto-redirect returning users on discover-start BEFORE setLevel
+          // so we never re-render with their old milestone image
+          if (discoverStart) {
+            const subMilestone =
+              getMilestoneDetails?.data?.sub_milestone_level ?? "";
+            if ((parsedLevel === "B" || parsedLevel === "b") && !subMilestone) {
+              navigate("/letter-hunt");
+              return;
+            }
+            if (parsedLevel && parsedLevel !== 0) {
+              navigate("/practice");
+              return;
+            }
+          }
+
+          // Only set level if we're staying on this page (new user, level === 0)
+          setLevel(parsedLevel);
+
           setVocabCount(
             getMilestoneDetails?.data?.extra?.vocabulary_count +
               getMilestoneDetails?.data?.extra?.learned_voc_count || 0
@@ -1757,7 +1778,7 @@ const Assesment = ({ discoverStart }) => {
       }
     };
     loadDataRef.current = runLoad;
-    runLoad();
+    runLoad().finally(() => setLoading(false));
   }, [lang]);
 
   const TOKEN = localStorage.getItem("apiToken");
@@ -2107,6 +2128,7 @@ const Assesment = ({ discoverStart }) => {
           showTimer={false}
           cardBackground={assessmentBackground}
           backgroundImage={practicebg}
+          loading={loading}
           {...{
             setOpenLangModal,
             lang,
@@ -2116,8 +2138,6 @@ const Assesment = ({ discoverStart }) => {
           <Box
             sx={{
               position: "absolute",
-              //right: { xs: 20, md: 200 },
-              //right: isMobile ? 20 : 200,
               top: "30%",
               left: "50%",
               transform: "translate(-50%, -50%)",
@@ -2129,94 +2149,112 @@ const Assesment = ({ discoverStart }) => {
               textAlign: "center",
             }}
           >
-            <Typography
-              sx={{
-                color: "#322020",
-                fontWeight: 700,
-                fontSize: { xs: "24px", md: "40px" },
-                fontFamily: getFontFamily(lang),
-                lineHeight: { xs: "36px", md: "62px" },
-                textAlign: "center",
-              }}
-              fontSize={{ md: "40px", xs: "30px" }}
-            >
-              {discoverStart
-                ? ui.ASSESSMENT_TEST_LANGUAGE_SKILLS
-                : ui.ASSESSMENT_GOOD_LANGUAGE_SKILLS}
-            </Typography>
-            <Box>
-              <Typography
-                sx={{
-                  color: "#1CB0F6",
-                  fontWeight: 600,
-                  fontSize: { xs: "20px", md: "30px" },
-                  fontFamily: getFontFamily(lang),
-                  lineHeight: { xs: "30px", md: "50px" },
-                  textAlign: "center",
-                }}
-                fontSize={{ md: "30px", xs: "20px" }}
-              >
-                {level > 0
-                  ? ui.ASSESSMENT_TAKE_COMPLETE_LEVEL.replace(
-                      "{level}",
-                      String(level)
-                    )
-                  : ui.ASSESSMENT_TAKE_DISCOVER_LEVEL}
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              {process.env.REACT_APP_SHOW_HELP_VIDEO === "true" && (
-                <Box
-                  onClick={handleOpenVideo}
+            {loading ? (
+              <>
+                <CircularProgress size={44} sx={{ color: "#1CB0F6", mb: 2 }} />
+                <Typography
                   sx={{
-                    mt: { xs: 1, md: 1 },
-                    mr: { xs: 2, md: 2 },
-                    cursor: "pointer",
-                    textAlign: "center",
+                    color: "#322020",
+                    fontWeight: 600,
+                    fontSize: { xs: "15px", md: "18px" },
+                    fontFamily: getFontFamily(lang),
                   }}
                 >
-                  <img src={HelpLogo} alt="help_video_link" />
-                </Box>
-              )}
-              <Box
-                sx={{
-                  cursor: "pointer",
-                  mt: { xs: 1, md: 2 },
-                  zIndex: 9999,
-                }}
-                onClick={handleRedirect}
-              >
-                {lang === "te" ? (
-                  <Box
+                  Please wait, we are fetching details for you…
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Typography
+                  sx={{
+                    color: "#322020",
+                    fontWeight: 700,
+                    fontSize: { xs: "24px", md: "40px" },
+                    fontFamily: getFontFamily(lang),
+                    lineHeight: { xs: "36px", md: "62px" },
+                    textAlign: "center",
+                  }}
+                  fontSize={{ md: "40px", xs: "30px" }}
+                >
+                  {discoverStart
+                    ? ui.ASSESSMENT_TEST_LANGUAGE_SKILLS
+                    : ui.ASSESSMENT_GOOD_LANGUAGE_SKILLS}
+                </Typography>
+                <Box>
+                  <Typography
                     sx={{
-                      background: "#EDB530",
-                      border: "2px solid #322020",
-                      borderRadius: "9px",
-                      padding: "12px 24px",
-                      minWidth: "218px",
-                      height: "60px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                      color: "#1CB0F6",
+                      fontWeight: 600,
+                      fontSize: { xs: "20px", md: "30px" },
+                      fontFamily: getFontFamily(lang),
+                      lineHeight: { xs: "30px", md: "50px" },
+                      textAlign: "center",
                     }}
+                    fontSize={{ md: "30px", xs: "20px" }}
                   >
-                    <span
-                      style={{
-                        color: "#322020",
-                        fontWeight: 600,
-                        fontSize: "20px",
-                        fontFamily: getFontFamily(lang),
+                    {level > 0
+                      ? ui.ASSESSMENT_TAKE_COMPLETE_LEVEL.replace(
+                          "{level}",
+                          String(level)
+                        )
+                      : ui.ASSESSMENT_TAKE_DISCOVER_LEVEL}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  {process.env.REACT_APP_SHOW_HELP_VIDEO === "true" && (
+                    <Box
+                      onClick={handleOpenVideo}
+                      sx={{
+                        mt: { xs: 1, md: 1 },
+                        mr: { xs: 2, md: 2 },
+                        cursor: "pointer",
+                        textAlign: "center",
                       }}
                     >
-                      {assessmentText.startAssessment}
-                    </span>
+                      <img src={HelpLogo} alt="help_video_link" />
+                    </Box>
+                  )}
+                  <Box
+                    sx={{
+                      cursor: "pointer",
+                      mt: { xs: 1, md: 2 },
+                      zIndex: 9999,
+                    }}
+                    onClick={handleRedirect}
+                  >
+                    {lang === "te" ? (
+                      <Box
+                        sx={{
+                          background: "#EDB530",
+                          border: "2px solid #322020",
+                          borderRadius: "9px",
+                          padding: "12px 24px",
+                          minWidth: "218px",
+                          height: "60px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: "#322020",
+                            fontWeight: 600,
+                            fontSize: "20px",
+                            fontFamily: getFontFamily(lang),
+                          }}
+                        >
+                          {assessmentText.startAssessment}
+                        </span>
+                      </Box>
+                    ) : (
+                      <StartAssessmentButton />
+                    )}
                   </Box>
-                ) : (
-                  <StartAssessmentButton />
-                )}
-              </Box>
-            </Box>
+                </Box>
+              </>
+            )}
           </Box>
         </MainLayout>
       )}
