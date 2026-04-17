@@ -889,6 +889,8 @@ const AserFlow = ({
             <img
               src={nextImg}
               alt="next"
+              role="button"
+              tabIndex={0}
               style={{
                 width: "50px",
                 cursor: "pointer",
@@ -908,6 +910,9 @@ const AserFlow = ({
                 } else {
                   navigate("/discover-start");
                 }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
               }}
             />
           )}

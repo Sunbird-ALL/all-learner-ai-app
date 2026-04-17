@@ -811,12 +811,18 @@ const FluencyP3 = ({
               <img
                 src={nextImg}
                 alt="next"
+                role="button"
+                tabIndex={0}
                 onClick={() => {
                   handleNext();
                   callTelemetry();
                   setReadingSpeed("Slow");
                   setStartTime(null);
                   setShowResultScreen(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    e.currentTarget.click();
                 }}
                 style={{
                   marginTop: isMobile ? "5px" : "8px",
@@ -899,6 +905,12 @@ const FluencyP3 = ({
 
                 <div
                   onClick={handleNextWord}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ")
+                      e.currentTarget.click();
+                  }}
                   style={{
                     cursor: "pointer",
                     display: "flex",

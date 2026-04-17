@@ -5615,6 +5615,9 @@ const Barakhadi = ({
                 alt="next"
                 style={{ height: "32px", cursor: "pointer" }}
                 onClick={handleNextWord}
+                onKeyDown={(e) => e.key === "Enter" && handleNextWord()}
+                role="button"
+                tabIndex={0}
               />
             </div>
           </div>

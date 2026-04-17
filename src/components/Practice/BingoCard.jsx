@@ -436,12 +436,17 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
         <img
           src={Assets.nextimg}
           alt="next"
+          role="button"
+          tabIndex={0}
           style={{
             width: "100px",
             height: "45px",
             cursor: "pointer",
           }}
           onClick={onNext}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+          }}
         />
       </div>
 
@@ -1355,8 +1360,13 @@ const BingoCard = ({
             <img
               src={Assets.nextimg}
               alt="next"
+              role="button"
+              tabIndex={0}
               style={{ width: "100px", height: "45px", cursor: "pointer" }}
               onClick={handleNextClick}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
             />
           )}
         </div>

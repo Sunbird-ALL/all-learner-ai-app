@@ -986,8 +986,13 @@ const ParagraphFlow = ({
 
             <img
               src={nextImg}
-              onClick={handleNextWord}
               alt="next"
+              role="button"
+              tabIndex={0}
+              onClick={handleNextWord}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
               style={{
                 marginTop: "20px",
                 width: "45px",

@@ -799,11 +799,17 @@ const FluencyP1 = ({
                 <img
                   src={nextImg}
                   alt="next"
+                  role="button"
+                  tabIndex={0}
                   onClick={
                     currentSentenceIndex === sentencesData.length - 1
                       ? handleNextToFinal
                       : handleNextClick
                   }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ")
+                      e.currentTarget.click();
+                  }}
                   style={{
                     width: "50px",
                     position: "absolute",
@@ -928,10 +934,15 @@ const FluencyP1 = ({
 
             <img
               src={nextImg}
+              alt="next"
+              role="button"
+              tabIndex={0}
               onClick={() => {
                 handleNextWord();
               }}
-              alt="next"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
               style={{
                 marginTop: "20px",
                 width: "45px",

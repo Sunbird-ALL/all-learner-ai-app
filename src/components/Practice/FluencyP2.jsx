@@ -767,8 +767,13 @@ const FluencyP2 = ({
             <img
               src={nextImg}
               alt="next"
+              role="button"
+              tabIndex={0}
               style={{ width: "50px", cursor: "pointer" }}
               onClick={(e) => handleNextClick(e)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
             />
           </div>
         )}

@@ -878,6 +878,8 @@ const FluencyP4 = ({
                   <img
                     src={nextImg}
                     alt="next"
+                    role="button"
+                    tabIndex={0}
                     onClick={() => {
                       callTelemetry();
                       if (currentSentenceIndex > 0) {
@@ -888,6 +890,10 @@ const FluencyP4 = ({
                       } else {
                         handleNextClick();
                       }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        e.currentTarget.click();
                     }}
                     style={{
                       width: "40px",
@@ -1065,10 +1071,16 @@ const FluencyP4 = ({
 
               <img
                 src={nextImg}
+                alt="next"
+                role="button"
+                tabIndex={0}
                 onClick={() => {
                   handleNext();
                 }}
-                alt="next"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    e.currentTarget.click();
+                }}
                 style={{
                   width: "45px",
                   height: "45px",
