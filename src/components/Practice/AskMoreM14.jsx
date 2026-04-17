@@ -27,7 +27,6 @@ import {
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
 import { Box, CircularProgress } from "@mui/material";
 import correctSound from "../../assets/correct.wav";
-import wrongSound from "../../assets/audio/wrong.wav";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import {
   fetchASROutput,

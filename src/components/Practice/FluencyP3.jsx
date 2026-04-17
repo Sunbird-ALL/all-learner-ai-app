@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import headerImg from "../../assets/headerImg.svg";
-import nextImg from "../../assets/nextImg.svg";
 import beardanceImg from "../../assets/beardance.svg";
 import Confetti from "react-confetti";
 import rabbitImg from "../../assets/rabbit.svg";
@@ -10,7 +9,7 @@ import meterImg from "../../assets/meterimg.svg";
 import MainLayout from "../Layout/MainLayout";
 import SafeYouTubePlayer from "../SafeYouTubePlayer";
 import SpeedSelector from "../../utils/SpeedSelector";
-import { tickImg } from "../../utils/imageAudioLinks";
+import { tickImg, nextimg as nextImg } from "../../utils/imageAudioLinks";
 import {
   practiceSteps,
   StopButton,
@@ -812,12 +811,18 @@ const FluencyP3 = ({
               <img
                 src={nextImg}
                 alt="next"
+                role="button"
+                tabIndex={0}
                 onClick={() => {
                   handleNext();
                   callTelemetry();
                   setReadingSpeed("Slow");
                   setStartTime(null);
                   setShowResultScreen(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    e.currentTarget.click();
                 }}
                 style={{
                   marginTop: isMobile ? "5px" : "8px",
@@ -900,6 +905,12 @@ const FluencyP3 = ({
 
                 <div
                   onClick={handleNextWord}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ")
+                      e.currentTarget.click();
+                  }}
                   style={{
                     cursor: "pointer",
                     display: "flex",

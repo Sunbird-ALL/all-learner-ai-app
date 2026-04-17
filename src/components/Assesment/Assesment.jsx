@@ -80,7 +80,6 @@ import rOneImage from "../../assets/R1Back.png";
 import rTwoImage from "../../assets/R2Back.png";
 import rThreeImage from "../../assets/R3Back.png";
 import rFourImage from "../../assets/R4Back.png";
-import Image from "../../assets/images/DeskTopR1Image.png";
 import profilePic from "../../assets/images/profile_url.png";
 import textureImage from "../../assets/images/textureImage.png";
 import back from "../../assets/images/back-arrow.png";

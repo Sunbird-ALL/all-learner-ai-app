@@ -7,7 +7,6 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import listenImg2 from "../../assets/listen.png";
 import Confetti from "react-confetti";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -33,9 +32,6 @@ import {
   RetryIcon,
   setLocalData,
 } from "../../utils/constants";
-import spinnerStop from "../../assets/pause.png";
-import raMic from "../../assets/listen.png";
-import raStop from "../../assets/pause.png";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import correctSound from "../../assets/correct.wav";
 import wrongSound from "../../assets/audio/wrong.wav";

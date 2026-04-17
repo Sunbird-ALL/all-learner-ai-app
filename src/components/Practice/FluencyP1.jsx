@@ -7,12 +7,11 @@ import graphImg from "../../assets/graphImg.svg";
 import pauseImg from "../../assets/pauseImg.svg";
 import bearImg from "../../assets/bearImg.svg";
 import listenImg from "../../assets/listenImg.svg";
-import nextImg from "../../assets/nextImg.svg";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
-import paraudio from "../../assets/parrotR1KanAudio.wav";
 import MainLayout from "../Layout/MainLayout";
 import SafeYouTubePlayer from "../SafeYouTubePlayer";
 
@@ -44,7 +43,6 @@ import AudioTooltipModal from "./AudioTooltipModal";
 import { doubleMetaphone } from "double-metaphone";
 import correctSound from "../../assets/correct.wav";
 import tortoiseImg from "../../assets/TurtleCircle.gif";
-import rabbitImg from "../../assets/RabbitCircle.gif";
 import rocketImg from "../../assets/RocketCircle.gif";
 import hintimg from "../../assets/hintsicon.svg";
 import {
@@ -801,11 +799,17 @@ const FluencyP1 = ({
                 <img
                   src={nextImg}
                   alt="next"
+                  role="button"
+                  tabIndex={0}
                   onClick={
                     currentSentenceIndex === sentencesData.length - 1
                       ? handleNextToFinal
                       : handleNextClick
                   }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ")
+                      e.currentTarget.click();
+                  }}
                   style={{
                     width: "50px",
                     position: "absolute",
@@ -930,10 +934,15 @@ const FluencyP1 = ({
 
             <img
               src={nextImg}
+              alt="next"
+              role="button"
+              tabIndex={0}
               onClick={() => {
                 handleNextWord();
               }}
-              alt="next"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
               style={{
                 marginTop: "20px",
                 width: "45px",

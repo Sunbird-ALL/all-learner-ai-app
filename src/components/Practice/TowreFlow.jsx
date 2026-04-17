@@ -14,7 +14,6 @@ import arrowImg from "../../assets/arrow.svg";
 import pandaImg from "../../assets/panda.svg";
 import nextImg from "../../assets/next.svg";
 import activeboxImg from "../../assets/activeBox.svg";
-import startImg from "../../assets/start.svg";
 import pandaTimerImg from "../../assets/pandaTimer1.svg";
 import timerBoxImg from "../../assets/timerBox.svg";
 import initialMessageBoxImg from "../../assets/initialMessageBox.svg";

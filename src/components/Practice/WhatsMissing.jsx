@@ -12,11 +12,7 @@ import parkImg from "../../assets/park.svg";
 import marketImg from "../../assets/market.svg";
 import hintsImg from "../../assets/hints.svg";
 import profileImg from "../../assets/prfile.svg";
-import micImg from "../../assets/mike1.svg";
-import pauseImg from "../../assets/paus.svg";
-import effectImg from "../../assets/efect.svg";
-import nextImg from "../../assets/nextImg.svg";
-import bandImg from "../../assets/band.svg";
+// import nextImg from "../../assets/nextImg.svg";
 import kiteImg from "../../assets/kiteimage.svg";
 import {
   level13,

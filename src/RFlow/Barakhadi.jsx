@@ -27,23 +27,19 @@ import { useNavigate } from "react-router-dom";
 import { response } from "../services/telemetryService";
 import { Typography, Stack, IconButton } from "@mui/material";
 import { ArrowRight, RotateCcw } from "lucide-react";
-import trainImg from "../assets/trainImg.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import VoiceAnalyser from "../utils/VoiceAnalyser";
 import * as s3Assets from "../utils/rFlowS3Links";
 import { getAssetUrl } from "../utils/rFlowS3Links";
 import { getAssetAudioUrl } from "../utils/rFlowS3Links";
 
-import ballonImg from "../assets/ballon.svg";
 import bearImg from "../assets/bear.svg";
 import boyImg from "../assets/boy.svg";
 import deleteImg from "../assets/delete.svg";
 import eraseImg from "../assets/erase.svg";
 import listenImgBox from "../assets/listenimgbox.svg";
 import boyballonflyImg from "../assets/boyballonfly.svg";
-import wordbanaoImg from "../assets/wordbanao.svg";
 import dottimg from "../assets/dottimg.svg";
-import nextImg from "../assets/nextImg.svg";
 import closebuttonImg from "../assets/closebtn.svg";
 import { callTelemetryDiscovery } from "../utils/apiUtil";
 import audiowaveImg from "../assets/audiowave.svg";
@@ -5615,10 +5611,13 @@ const Barakhadi = ({
               </div>
 
               <img
-                src={nextImg}
+                src={Assets.nextimg}
                 alt="next"
                 style={{ height: "32px", cursor: "pointer" }}
                 onClick={handleNextWord}
+                onKeyDown={(e) => e.key === "Enter" && handleNextWord()}
+                role="button"
+                tabIndex={0}
               />
             </div>
           </div>

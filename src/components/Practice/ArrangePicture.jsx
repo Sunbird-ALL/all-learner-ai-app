@@ -4,10 +4,7 @@ import image2Img from "../../assets/image2.svg";
 import image3Img from "../../assets/image3.svg";
 import image4Img from "../../assets/image4.svg";
 import image5Img from "../../assets/image5.svg";
-import profileImg from "../../assets/prfiile.svg";
 import crossImg from "../../assets/cross.svg";
-import circleImg from "../../assets/circlee.svg";
-import nextImg from "../../assets/nexxt.svg";
 import {
   level13,
   level14,
@@ -28,9 +25,6 @@ import {
   getLocalData,
   NextButtonRound,
 } from "../../utils/constants";
-import correctSound from "../../assets/correct.wav";
-import raMic from "../../assets/listen.png";
-import raStop from "../../assets/pause.png";
 import {
   ThemeProvider,
   createTheme,

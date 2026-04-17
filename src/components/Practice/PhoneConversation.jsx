@@ -42,7 +42,6 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import correctSound from "../../assets/correct.wav";
-import wrongSound from "../../assets/audio/wrong.wav";
 
 const levelMap = {
   10: level10,

@@ -17,12 +17,7 @@ import {
   RetryIcon,
   setLocalData,
 } from "../../utils/constants";
-import r3WrongTick from "../../assets/r3WrongTick.svg";
-import bingoReset from "../../assets/bingoReset.svg";
-import Mic from "../../assets/mikee.svg";
-import Stop from "../../assets/pausse.svg";
-import Play from "../../assets/playButton.svg";
-import RecordVisualizer from "../../assets/recordVisualizer.svg";
+// import Play from "../../assets/playButton.svg";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -47,7 +42,6 @@ import {
 import { filterBadWords } from "@tekdi/multilingual-profanity-filter";
 import AudioTooltipModal from "./AudioTooltipModal";
 import { doubleMetaphone } from "double-metaphone";
-import loadingJson from "../../assets/loadingJson.json";
 import Lottie from "lottie-react";
 import {
   transliterateKannadaToLatin,
@@ -61,7 +55,6 @@ import listeenimg from "../../assets/listeen.svg";
 import wordheadingimg from "../../assets/wordhead.svg";
 import emptyimg from "../../assets/Empty.svg";
 import starimg from "../../assets/star.svg";
-import nextimg from "../../assets/nextImg.svg";
 import beariconimg from "../../assets/bearicon.svg";
 import bearclapimg from "../../assets/bearclap.svg";
 import starbackgroundimg from "../../assets/starsandclouds.png";
@@ -441,14 +434,19 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
 
       <div style={{ marginTop: "10px" }}>
         <img
-          src={nextimg}
+          src={Assets.nextimg}
           alt="next"
+          role="button"
+          tabIndex={0}
           style={{
             width: "100px",
             height: "45px",
             cursor: "pointer",
           }}
           onClick={onNext}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+          }}
         />
       </div>
 
@@ -1360,10 +1358,15 @@ const BingoCard = ({
             </>
           ) : (
             <img
-              src={nextimg}
+              src={Assets.nextimg}
               alt="next"
+              role="button"
+              tabIndex={0}
               style={{ width: "100px", height: "45px", cursor: "pointer" }}
               onClick={handleNextClick}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
             />
           )}
         </div>
