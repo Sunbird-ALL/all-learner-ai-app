@@ -17,7 +17,7 @@ import graphSrc from "../assets/images/graph.svg";
 import hintGifSrc from "../assets/images/hintGif.gif";
 import hintNewSrc from "../assets/images/hintNew.svg";
 import listeningImgSrc from "../assets/images/listeningImg.gif";
-import micSrc from "../assets/images/mic.svg";
+import micSrc from "../assets/mikee.svg";
 import modalImgSrc from "../assets/images/modalImg.svg";
 import musicIconSrc from "../assets/images/musicIcon.svg";
 import nextimgSrc from "../assets/images/nextimg.svg";
