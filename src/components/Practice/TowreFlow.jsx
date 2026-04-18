@@ -1462,7 +1462,9 @@ const TowreFlow = ({
                 `⚠️ Speech recognition stopped unexpectedly. Attempting restart ${attemptNumber}/${maxRetries}...`
               );
               try {
-                resetTranscript();
+                // Do NOT call resetTranscript() here — it wipes all accumulated
+                // words recognized before this restart, causing 0-score results
+                // when Chrome stops due to no-speech, network hiccup, or timeout.
                 if (recognitionRef.current) {
                   recognitionRef.current.lang = getBrowserLanguage(lang);
                   recognitionRef.current.start();
