@@ -34,6 +34,7 @@ import MainLayout from "../Layout/MainLayout";
 import { addTowreRecord } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
 import { uploadWavViaPresignedUrl } from "../../utils/apiUtil";
+import { reportError } from "../../utils/errorReporter";
 
 const allEnglishWords = [
   { title: "is", isCorrect: false },
@@ -1724,6 +1725,11 @@ const TowreFlow = ({
             console.warn(
               "⚠️ Speech recognition not supported in this browser — starting audio recording only"
             );
+            reportError({
+              type: "audio_error",
+              action: "towre_speech_recognition_unsupported",
+              message: `Browser does not support Web Speech API (${navigator.userAgent})`,
+            });
             // Still start audio recording so mediaRecorder.onstop fires when
             // the timer ends, allowing results to render (words will be unscored)
             await startAudioRecording();
@@ -1739,6 +1745,11 @@ const TowreFlow = ({
             console.log("✅ Microphone permission granted");
           } catch (error) {
             console.error("❌ Microphone permission denied or error:", error);
+            reportError({
+              type: "audio_error",
+              action: "towre_mic_permission_denied",
+              message: error?.message || "Microphone permission denied",
+            });
             alert(
               "Microphone access is required for speech recognition. Please allow microphone access and try again."
             );
@@ -1864,6 +1875,11 @@ const TowreFlow = ({
         if (chunksRef.current.length === 0) {
           // No audio captured (unsupported MIME type or MediaRecorder issue) —
           // fall back to whatever speech recognition transcript was captured
+          reportError({
+            type: "audio_error",
+            action: "towre_media_recorder_no_chunks",
+            message: "MediaRecorder stopped with 0 audio chunks",
+          });
           setTranscripts(transcriptRef.current || "");
           const transcriptWords = normalize(transcriptRef.current || "").filter(
             (w) => w && w.trim().length > 0
@@ -2017,12 +2033,22 @@ const TowreFlow = ({
               await uploadWavViaPresignedUrl(audioFileName, base64Audio);
             } catch (uploadErr) {
               // S3 upload failed (non-critical) - continue
+              reportError({
+                type: "api_error",
+                action: "towre_s3_upload_failed",
+                message: uploadErr?.message || "S3 presigned URL upload failed",
+              });
             }
 
             try {
               await addTowreRecord(audioFileName, allWords, lang);
             } catch (apiErr) {
               // Error saving TOWRE record (non-critical) - continue
+              reportError({
+                type: "api_error",
+                endpoint: "addTowreRecord",
+                message: apiErr?.message || "Failed to save TOWRE record",
+              });
             }
           } catch (processErr) {
             // Error processing audio for upload (non-critical) - continue
