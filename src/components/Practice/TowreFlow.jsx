@@ -2631,24 +2631,6 @@ const TowreFlow = ({
                         {message}
                       </div>
 
-                      {browserWarning && (
-                        <div
-                          style={{
-                            backgroundColor: "#fff3cd",
-                            border: "1px solid #ffc107",
-                            borderRadius: 8,
-                            padding: "8px 14px",
-                            marginBottom: 10,
-                            fontSize: isMobile ? "10px" : "12px",
-                            color: "#856404",
-                            textAlign: "center",
-                            fontFamily: "Quicksand",
-                          }}
-                        >
-                          ⚠️ {browserWarning}
-                        </div>
-                      )}
-
                       {message ===
                       "You'll go to the next set of words\nwhen you click the button below." ? (
                         <div
@@ -2820,6 +2802,24 @@ const TowreFlow = ({
                   marginBottom: "10px",
                 }}
               />
+              {browserWarning && (
+                <div
+                  style={{
+                    backgroundColor: "#fff3cd",
+                    border: "1px solid #ffc107",
+                    borderRadius: 10,
+                    padding: "10px 18px",
+                    marginBottom: 16,
+                    fontSize: isMobile ? "11px" : "13px",
+                    color: "#856404",
+                    textAlign: "center",
+                    fontFamily: "Quicksand",
+                    maxWidth: 400,
+                  }}
+                >
+                  ⚠️ {browserWarning}
+                </div>
+              )}
               <img
                 src={Assets.startButtonImg}
                 alt="Start Button"
