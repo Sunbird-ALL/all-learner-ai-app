@@ -5,13 +5,10 @@ import speakButton from "../../assets/speakButton.svg";
 import listenBear from "../../assets/bearlisten.svg";
 import graphImg from "../../assets/graphImg.svg";
 import pauseImg from "../../assets/pauseImg.svg";
-import bearImg from "../../assets/bearImg.svg";
-import listenImg from "../../assets/listenImg.svg";
-import nextImg from "../../assets/nextImg.svg";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
 import tortoiseImg from "../../assets/TurtleCircle.gif";
-import rabbitImg from "../../assets/RabbitCircle.gif";
 import rocketImg from "../../assets/RocketCircle.gif";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
@@ -881,6 +878,8 @@ const FluencyP4 = ({
                   <img
                     src={nextImg}
                     alt="next"
+                    role="button"
+                    tabIndex={0}
                     onClick={() => {
                       callTelemetry();
                       if (currentSentenceIndex > 0) {
@@ -891,6 +890,10 @@ const FluencyP4 = ({
                       } else {
                         handleNextClick();
                       }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        e.currentTarget.click();
                     }}
                     style={{
                       width: "40px",
@@ -1068,10 +1071,16 @@ const FluencyP4 = ({
 
               <img
                 src={nextImg}
+                alt="next"
+                role="button"
+                tabIndex={0}
                 onClick={() => {
                   handleNext();
                 }}
-                alt="next"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    e.currentTarget.click();
+                }}
                 style={{
                   width: "45px",
                   height: "45px",

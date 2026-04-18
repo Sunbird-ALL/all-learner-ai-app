@@ -8,9 +8,6 @@ import boyboxImg from "../../assets/boybox.svg";
 import girlImg from "../../assets/girl.svg";
 import girlboxImg from "../../assets/girlbox.svg";
 import guyImg from "../../assets/guy.svg";
-import mikeImg from "../../assets/mikee.svg";
-import pauseImg from "../../assets/pausse.svg";
-import effectImg from "../../assets/effects.svg";
 import {
   practiceSteps,
   getLocalData,
@@ -30,8 +27,6 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { trainStationImg } from "../../utils/imageAudioLinks";
-import correctSound from "../../assets/correct.wav";
-import wrongSound from "../../assets/audio/wrong.wav";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import { fetchASROutput, handleTextEvaluation } from "../../utils/apiUtil";
 import { evaluateText } from "../../services/evaluation/evaluationService";

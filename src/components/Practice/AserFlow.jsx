@@ -1,20 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Confetti from "react-confetti";
-import headerImg from "../../assets/headerImg.svg";
-import speakButton from "../../assets/speakButton.svg";
-import listenBear from "../../assets/bearlisten.svg";
-import graphImg from "../../assets/graphImg.svg";
-import pauseImg from "../../assets/pauseImg.svg";
-import bearImg from "../../assets/bearImg.svg";
-import listenImg from "../../assets/listenImg.svg";
-import nextImg from "../../assets/nextImg.svg";
-import backgroundImg from "../../assets/starsandclouds.png";
-import meterImg from "../../assets/meterimg.svg";
-import tortoiseImg from "../../assets/tortoiseImg.svg";
-import dogImg from "../../assets/dogimg.svg";
-import langhint from "../../assets/laguagehint.svg";
-import paraudio from "../../assets/parrotR1KanAudio.wav";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import MainLayout from "../Layout/MainLayout";
 import SafeYouTubePlayer from "../SafeYouTubePlayer";
 import {
@@ -64,7 +51,6 @@ import { useNavigate } from "react-router-dom";
 import { uniqueId } from "../../services/utilService";
 import { updateLearnerProfile } from "../../services/learnerAi/learnerAiService";
 import bubbleImg from "../../assets/bubble.png";
-import magnifier from "../../assets/magnifier.png";
 import { Box } from "@mui/material";
 import listenBearGif from "../../assets/beardances.gif";
 import hintimg from "../../assets/hintsicon.svg";
@@ -903,6 +889,8 @@ const AserFlow = ({
             <img
               src={nextImg}
               alt="next"
+              role="button"
+              tabIndex={0}
               style={{
                 width: "50px",
                 cursor: "pointer",
@@ -922,6 +910,9 @@ const AserFlow = ({
                 } else {
                   navigate("/discover-start");
                 }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
               }}
             />
           )}

@@ -8,7 +8,7 @@ import ulineImg from "../../assets/Uline.svg";
 import fireImg from "../../assets/fire.svg";
 import fanImg from "../../assets/fan.svg";
 import tieImg from "../../assets/tie.svg";
-import RememberImg from "../../assets/CanyouremImg.svg";
+// import RememberImg from "../../assets/CanyouremImg.svg";
 import {
   ThemeProvider,
   createTheme,

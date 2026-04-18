@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../node_modules/axios/index";
-import elephant from "../../assets/images/elephant.svg";
+// import elephant from "../../assets/images/elephant.svg";
 import {
   callConfetti,
   getLocalData,

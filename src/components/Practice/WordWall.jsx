@@ -17,8 +17,6 @@ import correctSignImg from "../../assets/correctsign.svg";
 import bubbleDropsImg from "../../assets/bubbleDropImg.svg";
 import giftboxImg from "../../assets/giftbox.svg";
 import giftopenImg from "../../assets/giftopen.svg";
-import modalgiftboxImg from "../../assets/modalgiftImg.png";
-import giftIcon from "../../assets/giftbox.svg";
 import Confetti from "react-confetti";
 import nexttImg from "../../assets/nextt.svg";
 import listenblueImg from "../../assets/listenblue.svg";

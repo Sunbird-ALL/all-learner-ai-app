@@ -12,7 +12,6 @@ import {
   Box,
 } from "@mui/material";
 import MainLayout from "../components/Layout/MainLayout";
-import listenImg from "../assets/listen.png";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
 import correctSound from "../assets/correct.wav";
