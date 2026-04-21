@@ -12,6 +12,7 @@ import { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
 import {
   callConfetti,
   getLocalData,
+  isRecommendationApiEnabledForLang,
   practiceSteps,
   sendTestRigScore,
   setLocalData,
@@ -1145,8 +1146,7 @@ const Practice = () => {
           : nextStepContent?.mechanism ||
             ((level === 1 || level === 2) && lang === "en")
           ? getContent
-          : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-            lang === "en"
+          : isRecommendationApiEnabledForLang(lang)
           ? getContentNew
           : getContent;
 
@@ -1158,8 +1158,7 @@ const Practice = () => {
           usingRecommendationAPI: getContentFn === getContentNew,
           usingGetContent: getContentFn === getContent,
           hasMechanism: !!nextStepContent?.mechanism,
-          recommendationAPIEnabled:
-            process.env.REACT_APP_USE_RECOMMENDATION_API === "true",
+          recommendationAPIEnabled: isRecommendationApiEnabledForLang(lang),
           lang,
         });
 
@@ -1960,8 +1959,7 @@ const Practice = () => {
         : currentGetContent?.mechanism ||
           ((level === 1 || level === 2) && lang === "en")
         ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-          lang === "en"
+        : isRecommendationApiEnabledForLang(lang)
         ? getContentNew
         : getContent;
 
@@ -1973,8 +1971,7 @@ const Practice = () => {
         usingRecommendationAPI: getContentFn === getContentNew,
         usingGetContent: getContentFn === getContent,
         hasMechanism: !!currentGetContent?.mechanism,
-        recommendationAPIEnabled:
-          process.env.REACT_APP_USE_RECOMMENDATION_API === "true",
+        recommendationAPIEnabled: isRecommendationApiEnabledForLang(lang),
         lang,
       });
 
@@ -2361,8 +2358,7 @@ const Practice = () => {
             : currentGetContent?.mechanism ||
               ((level === 1 || level === 2) && lang === "en")
             ? getContent
-            : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-              lang === "en"
+            : isRecommendationApiEnabledForLang(lang)
             ? getContentNew
             : getContent;
 
@@ -2552,8 +2548,7 @@ const Practice = () => {
               : currentGetContent?.mechanism ||
                 ((level === 1 || level === 2) && lang === "en")
               ? getContent
-              : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-                lang === "en"
+              : isRecommendationApiEnabledForLang(lang)
               ? getContentNew
               : getContent;
 
@@ -3047,8 +3042,7 @@ const Practice = () => {
         : currentGetContent?.mechanism ||
           ((levelToCheck === 1 || levelToCheck === 2) && lang === "en")
         ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-          lang === "en"
+        : isRecommendationApiEnabledForLang(lang)
         ? getContentNew
         : getContent;
 
@@ -3062,8 +3056,7 @@ const Practice = () => {
         usingRecommendationAPI: getContentFn === getContentNew,
         usingGetContent: getContentFn === getContent,
         hasMechanism: !!currentGetContent?.mechanism,
-        recommendationAPIEnabled:
-          process.env.REACT_APP_USE_RECOMMENDATION_API === "true",
+        recommendationAPIEnabled: isRecommendationApiEnabledForLang(lang),
         lang,
       });
 
@@ -3514,8 +3507,7 @@ const Practice = () => {
         : currentGetContent?.mechanism ||
           ((level === 1 || level === 2) && lang === "en")
         ? getContent
-        : process.env.REACT_APP_USE_RECOMMENDATION_API === "true" &&
-          lang === "en"
+        : isRecommendationApiEnabledForLang(lang)
         ? getContentNew
         : getContent;
 
@@ -3527,8 +3519,7 @@ const Practice = () => {
         usingRecommendationAPI: getContentFn === getContentNew,
         usingGetContent: getContentFn === getContent,
         hasMechanism: !!currentGetContent?.mechanism,
-        recommendationAPIEnabled:
-          process.env.REACT_APP_USE_RECOMMENDATION_API === "true",
+        recommendationAPIEnabled: isRecommendationApiEnabledForLang(lang),
         lang,
       });
 
