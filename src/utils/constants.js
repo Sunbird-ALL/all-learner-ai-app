@@ -940,7 +940,7 @@ export function isRecommendationApiEnabledForLang(lang) {
     .trim()
     .toLowerCase();
   if (!code) return false;
-  const raw = process.env.REACT_APP_RECOMMENDATION_API_LANGS;
+  const raw = JSON.parse(process.env.REACT_APP_RECOMMENDATION_API_LANGUAGES);
   const allowed =
     raw == null || String(raw).trim() === ""
       ? ["en"]

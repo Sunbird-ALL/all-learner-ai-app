@@ -88,7 +88,7 @@ jobs:
           REACT_APP_LEARNER_AI_BASE_URL: ${{ vars.REACT_APP_LEARNER_AI_BASE_URL }}
           REACT_APP_TRACKING_API_BASE_URL: ${{ vars.REACT_APP_TRACKING_API_BASE_URL}}
           REACT_APP_PRESIGNED_URL_SERVICE: ${{ vars.REACT_APP_PRESIGNED_URL_SERVICE }}
-          CI: false # Disabling CI to not treat warnings as errors
+          REACT_APP_RECOMMENDATION_API_LANGUAGESeat warningREACT_APP_RECOMMENDATION_API_LANGUAGES
         run: npm run build
 
       - name: Deploy to S3 Bucket
