@@ -39,15 +39,23 @@ const TeluguGunithaCard = ({
   compact,
   veryCompact,
 }) => {
+  const activeAnimation =
+    compact || veryCompact
+      ? { scale: [1, 1.04, 1], y: 0 }
+      : { scale: [1, 1.12, 1], y: [0, -14, 0] };
+
+  let cardHeight;
+  if (veryCompact) {
+    cardHeight = "200px";
+  } else if (compact) {
+    cardHeight = "230px";
+  } else {
+    cardHeight = "270px";
+  }
+
   return (
     <motion.div
-      animate={
-        isActive
-          ? compact || veryCompact
-            ? { scale: [1, 1.04, 1], y: 0 }
-            : { scale: [1, 1.12, 1], y: [0, -14, 0] }
-          : { scale: 1, y: 0 }
-      }
+      animate={isActive ? activeAnimation : { scale: 1, y: 0 }}
       transition={
         isActive
           ? { duration: 0.6, ease: "easeOut" }
@@ -64,7 +72,7 @@ const TeluguGunithaCard = ({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
-          height: veryCompact ? "200px" : compact ? "230px" : "270px",
+          height: cardHeight,
           cursor: "pointer",
           boxShadow: isActive
             ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
@@ -117,6 +125,65 @@ const TeluguGunithaCard = ({
   );
 };
 
+TeluguGunithaCard.propTypes = {
+  item: PropTypes.shape({
+    key: PropTypes.string,
+    image: PropTypes.string,
+    label: PropTypes.string,
+  }).isRequired,
+  playAudio: PropTypes.func.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  compact: PropTypes.bool,
+  veryCompact: PropTypes.bool,
+};
+
+const renderHighlightedWord = (item, isActive) => {
+  const originalWord = item.word || "";
+  const displayVal = item.display || "";
+
+  if (!isActive || !displayVal || !originalWord) {
+    return (
+      originalWord.charAt(0).toUpperCase() + originalWord.slice(1).toLowerCase()
+    );
+  }
+
+  const capitalizedWord =
+    originalWord.charAt(0).toUpperCase() + originalWord.slice(1).toLowerCase();
+  const lowerWord = capitalizedWord.toLowerCase();
+  const lowerHighlight = displayVal.toLowerCase();
+
+  const index = lowerWord.indexOf(lowerHighlight);
+  if (index === -1) return capitalizedWord;
+
+  const before = capitalizedWord.substring(0, index);
+  const middle = capitalizedWord.substring(index, index + displayVal.length);
+  const after = capitalizedWord.substring(index + displayVal.length);
+
+  return (
+    <>
+      {before}
+      <span
+        style={{
+          fontWeight: "bold",
+          color: "#e53935",
+          textDecoration: "underline",
+          textDecorationColor: "#e53935",
+        }}
+      >
+        {middle}
+      </span>
+      {after}
+    </>
+  );
+};
+
+const getLetterFontSize = (lang, mode) => {
+  if (lang === "te") {
+    return mode === "alphabet" ? "3.1rem" : "2.5rem";
+  }
+  return mode === "alphabet" ? "2.8rem" : "2.2rem";
+};
+
 const AlphabetCard = ({
   item,
   playAudio,
@@ -126,65 +193,49 @@ const AlphabetCard = ({
   compact,
   veryCompact,
 }) => {
-  const renderHighlightedWord = () => {
-    const originalWord = item.word || "";
-    const displayVal = item.display || "";
+  const activeAnimation =
+    compact || veryCompact
+      ? { scale: [1, 1.04, 1], y: 0 }
+      : { scale: [1, 1.12, 1], y: [0, -14, 0] };
 
-    if (!isActive || !displayVal || !originalWord) {
-      return (
-        originalWord.charAt(0).toUpperCase() +
-        originalWord.slice(1).toLowerCase()
-      );
+  let cardHeight;
+  if (veryCompact) {
+    cardHeight = "200px";
+  } else if (compact) {
+    cardHeight = "230px";
+  } else {
+    cardHeight = "270px";
+  }
+
+  let imageSize;
+  if (veryCompact) {
+    imageSize = "100px";
+  } else if (compact) {
+    imageSize = "120px";
+  } else {
+    imageSize = "145px";
+  }
+
+  const handleCardClick = () => {
+    if (mode === "alphabet" && item.alaphabetChartAudio) {
+      playAudio(item, item.alaphabetChartAudio);
+    } else {
+      playAudio(item);
     }
+  };
 
-    // Manual capitalization for the whole word first
-    const capitalizedWord =
-      originalWord.charAt(0).toUpperCase() +
-      originalWord.slice(1).toLowerCase();
-    const lowerWord = capitalizedWord.toLowerCase();
-    const lowerHighlight = displayVal.toLowerCase();
-
-    const index = lowerWord.indexOf(lowerHighlight);
-    if (index === -1) return capitalizedWord;
-
-    const before = capitalizedWord.substring(0, index);
-    const middle = capitalizedWord.substring(index, index + displayVal.length);
-    const after = capitalizedWord.substring(index + displayVal.length);
-
-    return (
-      <>
-        {before}
-        <span
-          style={{
-            fontWeight: "bold",
-            color: "#e53935",
-            textDecoration: "underline",
-            textDecorationColor: "#e53935",
-          }}
-        >
-          {middle}
-        </span>
-        {after}
-      </>
-    );
+  const handleIconClick = (e) => {
+    e.stopPropagation();
+    handleCardClick();
   };
 
   return (
     <motion.div
-      animate={
-        isActive
-          ? compact || veryCompact
-            ? { scale: [1, 1.04, 1], y: 0 }
-            : { scale: [1, 1.12, 1], y: [0, -14, 0] }
-          : { scale: 1, y: 0 }
-      }
+      animate={isActive ? activeAnimation : { scale: 1, y: 0 }}
       transition={
         isActive
           ? { duration: 0.6, ease: "easeOut" }
-          : {
-              duration: 0.7,
-              ease: [0.22, 1, 0.36, 1],
-            }
+          : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
       }
       style={{ position: "relative" }}
     >
@@ -197,25 +248,15 @@ const AlphabetCard = ({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
-          height: veryCompact ? "200px" : compact ? "230px" : "270px",
+          height: cardHeight,
           cursor: "pointer",
-
           boxShadow: isActive
             ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
             : "0 4px 12px rgba(0,0,0,0.1)",
-
           transition: "box-shadow 0.3s ease",
-          "&:hover": {
-            transform: "scale(1.02)",
-          },
+          "&:hover": { transform: "scale(1.02)" },
         }}
-        onClick={() => {
-          if (mode === "alphabet" && item.alaphabetChartAudio) {
-            playAudio(item, item.alaphabetChartAudio);
-          } else {
-            playAudio(item);
-          }
-        }}
+        onClick={handleCardClick}
       >
         {/* Top Row */}
         <Box
@@ -234,14 +275,7 @@ const AlphabetCard = ({
               textDecoration:
                 isActive && mode === "alphabet" ? "underline" : "none",
               textDecorationColor: "#e53935",
-              fontSize:
-                lang === "te"
-                  ? mode === "alphabet"
-                    ? "3.1rem"
-                    : "2.5rem"
-                  : mode === "alphabet"
-                  ? "2.8rem"
-                  : "2.2rem",
+              fontSize: getLetterFontSize(lang, mode),
               width: "100%",
               fontFamily: getFontFamily(lang || "en"),
             }}
@@ -252,14 +286,7 @@ const AlphabetCard = ({
           <IconButton
             size="small"
             sx={{ color: "#333F61" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (mode === "alphabet" && item.alaphabetChartAudio) {
-                playAudio(item, item.alaphabetChartAudio);
-              } else {
-                playAudio(item);
-              }
-            }}
+            onClick={handleIconClick}
           >
             <VolumeUpIcon sx={{ fontSize: "1.2rem" }} />
           </IconButton>
@@ -268,8 +295,8 @@ const AlphabetCard = ({
         {/* Image */}
         <Box
           sx={{
-            width: veryCompact ? "100px" : compact ? "120px" : "145px",
-            height: veryCompact ? "100px" : compact ? "120px" : "145px",
+            width: imageSize,
+            height: imageSize,
             flexShrink: 0,
             alignSelf: "center",
             borderRadius: "10px",
@@ -282,11 +309,7 @@ const AlphabetCard = ({
             <img
               src={item.image}
               alt={item.word}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
             />
           )}
         </Box>
@@ -298,16 +321,33 @@ const AlphabetCard = ({
             fontWeight: 600,
             color: "#333F61",
             textAlign: "center",
-            fontSize: lang === "te" || lang === "hi" ? "1.5rem" : "1.5rem",
+            fontSize: "1.5rem",
             fontFamily: getFontFamily(lang || "en"),
             lineHeight: 1.3,
           }}
         >
-          {renderHighlightedWord()}
+          {renderHighlightedWord(item, isActive)}
         </Typography>
       </Box>
     </motion.div>
   );
+};
+
+AlphabetCard.propTypes = {
+  item: PropTypes.shape({
+    key: PropTypes.string,
+    display: PropTypes.string,
+    word: PropTypes.string,
+    image: PropTypes.string,
+    audio: PropTypes.string,
+    alaphabetChartAudio: PropTypes.string,
+  }).isRequired,
+  playAudio: PropTypes.func.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  mode: PropTypes.string.isRequired,
+  lang: PropTypes.string.isRequired,
+  compact: PropTypes.bool,
+  veryCompact: PropTypes.bool,
 };
 
 const TELUGU_ORDER = [
