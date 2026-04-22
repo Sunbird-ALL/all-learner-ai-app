@@ -32,6 +32,17 @@ import { interact } from "../../services/telemetryService";
 import { motion, AnimatePresence } from "framer-motion";
 import { getFontFamily } from "../../utils/fontUtils";
 
+const getCardAnimation = (compact, veryCompact) =>
+  compact || veryCompact
+    ? { scale: [1, 1.04, 1], y: 0 }
+    : { scale: [1, 1.12, 1], y: [0, -14, 0] };
+
+const getCardHeight = (veryCompact, compact) => {
+  if (veryCompact) return "200px";
+  if (compact) return "230px";
+  return "270px";
+};
+
 const TeluguGunithaCard = ({
   item,
   playAudio,
@@ -39,19 +50,8 @@ const TeluguGunithaCard = ({
   compact,
   veryCompact,
 }) => {
-  const activeAnimation =
-    compact || veryCompact
-      ? { scale: [1, 1.04, 1], y: 0 }
-      : { scale: [1, 1.12, 1], y: [0, -14, 0] };
-
-  let cardHeight;
-  if (veryCompact) {
-    cardHeight = "200px";
-  } else if (compact) {
-    cardHeight = "230px";
-  } else {
-    cardHeight = "270px";
-  }
+  const activeAnimation = getCardAnimation(compact, veryCompact);
+  const cardHeight = getCardHeight(veryCompact, compact);
 
   return (
     <motion.div
@@ -193,19 +193,8 @@ const AlphabetCard = ({
   compact,
   veryCompact,
 }) => {
-  const activeAnimation =
-    compact || veryCompact
-      ? { scale: [1, 1.04, 1], y: 0 }
-      : { scale: [1, 1.12, 1], y: [0, -14, 0] };
-
-  let cardHeight;
-  if (veryCompact) {
-    cardHeight = "200px";
-  } else if (compact) {
-    cardHeight = "230px";
-  } else {
-    cardHeight = "270px";
-  }
+  const activeAnimation = getCardAnimation(compact, veryCompact);
+  const cardHeight = getCardHeight(veryCompact, compact);
 
   let imageSize;
   if (veryCompact) {
@@ -469,6 +458,21 @@ export const KANNADA_ORDER_MAP = KANNADA_ORDER.reduce((acc, letter, index) => {
   return acc;
 }, {});
 
+const navButtonSx = {
+  bgcolor: "#FFFFFF",
+  color: "#333F61",
+  fontWeight: "bold",
+  px: 4,
+  py: 1,
+  borderRadius: "50px",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+  "&:hover": { bgcolor: "#f0f0f0" },
+  "&.Mui-disabled": {
+    bgcolor: "rgba(0,0,0,0.1)",
+    color: "rgba(0,0,0,0.3)",
+  },
+};
+
 const AlphabetChart = ({ open, onClose, lang }) => {
   const isCompact = useMediaQuery("(max-height: 900px) and (min-width: 960px)");
   const isVeryCompact = useMediaQuery(
@@ -668,24 +672,15 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     const audio = new Audio(audioSrc);
     audioRef.current = audio;
 
-    audio.onended = () => {
+    const resetAudio = () => {
       setPlayingKey(null);
       setActiveCardKey(null);
       currentSrcRef.current = null;
       audioRef.current = null;
     };
-    audio.onerror = () => {
-      setPlayingKey(null);
-      setActiveCardKey(null);
-      currentSrcRef.current = null;
-      audioRef.current = null;
-    };
-    audio.play().catch(() => {
-      setPlayingKey(null);
-      setActiveCardKey(null);
-      currentSrcRef.current = null;
-      audioRef.current = null;
-    });
+    audio.onended = resetAudio;
+    audio.onerror = resetAudio;
+    audio.play().catch(resetAudio);
   };
 
   const getToggleLabel = (type) => {
@@ -928,20 +923,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
           startIcon={<ArrowBackIosIcon />}
           onClick={handlePrev}
           disabled={currentPage === 0}
-          sx={{
-            bgcolor: "#FFFFFF",
-            color: "#333F61",
-            fontWeight: "bold",
-            px: 4,
-            py: 1,
-            borderRadius: "50px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-            "&:hover": { bgcolor: "#f0f0f0" },
-            "&.Mui-disabled": {
-              bgcolor: "rgba(0,0,0,0.1)",
-              color: "rgba(0,0,0,0.3)",
-            },
-          }}
+          sx={navButtonSx}
         >
           Previous
         </Button>
@@ -955,20 +937,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
           endIcon={<ArrowForwardIosIcon />}
           onClick={handleNext}
           disabled={currentPage >= totalPages - 1}
-          sx={{
-            bgcolor: "#FFFFFF",
-            color: "#333F61",
-            fontWeight: "bold",
-            px: 4,
-            py: 1,
-            borderRadius: "50px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-            "&:hover": { bgcolor: "#f0f0f0" },
-            "&.Mui-disabled": {
-              bgcolor: "rgba(0,0,0,0.1)",
-              color: "rgba(0,0,0,0.3)",
-            },
-          }}
+          sx={navButtonSx}
         >
           Next
         </Button>
