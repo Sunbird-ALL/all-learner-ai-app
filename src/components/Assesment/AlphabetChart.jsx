@@ -43,6 +43,23 @@ const getCardHeight = (veryCompact, compact) => {
   return "270px";
 };
 
+const getCardBoxSx = (isActive, cardHeight) => ({
+  bgcolor: "#FFFFFF",
+  borderRadius: "16px",
+  p: 1.5,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "space-between",
+  height: cardHeight,
+  cursor: "pointer",
+  boxShadow: isActive
+    ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
+    : "0 4px 12px rgba(0,0,0,0.1)",
+  transition: "box-shadow 0.3s ease",
+  "&:hover": { transform: "scale(1.02)" },
+});
+
 const TeluguGunithaCard = ({
   item,
   playAudio,
@@ -64,22 +81,7 @@ const TeluguGunithaCard = ({
       style={{ position: "relative" }}
     >
       <Box
-        sx={{
-          bgcolor: "#FFFFFF",
-          borderRadius: "16px",
-          p: 1.5,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: cardHeight,
-          cursor: "pointer",
-          boxShadow: isActive
-            ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
-            : "0 4px 12px rgba(0,0,0,0.1)",
-          transition: "box-shadow 0.3s ease",
-          "&:hover": { transform: "scale(1.02)" },
-        }}
+        sx={getCardBoxSx(isActive, cardHeight)}
         onClick={() => playAudio(item)}
       >
         {/* Top Row — audio icon right-aligned */}
@@ -228,25 +230,7 @@ const AlphabetCard = ({
       }
       style={{ position: "relative" }}
     >
-      <Box
-        sx={{
-          bgcolor: "#FFFFFF",
-          borderRadius: "16px",
-          p: 1.5,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: cardHeight,
-          cursor: "pointer",
-          boxShadow: isActive
-            ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
-            : "0 4px 12px rgba(0,0,0,0.1)",
-          transition: "box-shadow 0.3s ease",
-          "&:hover": { transform: "scale(1.02)" },
-        }}
-        onClick={handleCardClick}
-      >
+      <Box sx={getCardBoxSx(isActive, cardHeight)} onClick={handleCardClick}>
         {/* Top Row */}
         <Box
           sx={{
@@ -448,15 +432,14 @@ const KANNADA_ORDER = [
   "ಜ್ಞ",
 ];
 
-export const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
-  acc[letter] = index;
-  return acc;
-}, {});
+const buildOrderMap = (order) =>
+  order.reduce((acc, letter, index) => {
+    acc[letter] = index;
+    return acc;
+  }, {});
 
-export const KANNADA_ORDER_MAP = KANNADA_ORDER.reduce((acc, letter, index) => {
-  acc[letter] = index;
-  return acc;
-}, {});
+export const TELUGU_ORDER_MAP = buildOrderMap(TELUGU_ORDER);
+export const KANNADA_ORDER_MAP = buildOrderMap(KANNADA_ORDER);
 
 const navButtonSx = {
   bgcolor: "#FFFFFF",
