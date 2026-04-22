@@ -449,20 +449,31 @@ const KANNADA_ORDER = [
   "ಜ್ಞ",
 ];
 
-export const HINDI_ORDER_MAP = HINDI_ORDER.reduce((acc, letter, index) => {
-  acc[letter] = index;
-  return acc;
-}, {});
+const buildOrderMap = (order) =>
+  order.reduce((acc, letter, index) => {
+    acc[letter] = index;
+    return acc;
+  }, {});
 
-export const TELUGU_ORDER_MAP = TELUGU_ORDER.reduce((acc, letter, index) => {
-  acc[letter] = index;
-  return acc;
-}, {});
+export const HINDI_ORDER_MAP = buildOrderMap(HINDI_ORDER);
+export const TELUGU_ORDER_MAP = buildOrderMap(TELUGU_ORDER);
+export const KANNADA_ORDER_MAP = buildOrderMap(KANNADA_ORDER);
 
-export const KANNADA_ORDER_MAP = KANNADA_ORDER.reduce((acc, letter, index) => {
-  acc[letter] = index;
-  return acc;
-}, {});
+const ORDER_MAPS = {
+  hi: HINDI_ORDER_MAP,
+  te: TELUGU_ORDER_MAP,
+  kn: KANNADA_ORDER_MAP,
+};
+
+export const sortByLangOrder = (a, b, activeLang) => {
+  const map = ORDER_MAPS[activeLang];
+  if (map) {
+    const aIndex = map[a.display] ?? Number.MAX_SAFE_INTEGER;
+    const bIndex = map[b.display] ?? Number.MAX_SAFE_INTEGER;
+    return aIndex - bIndex;
+  }
+  return (a.display || "").localeCompare(b.display || "", activeLang);
+};
 
 const AlphabetChart = ({ open, onClose, lang }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -512,28 +523,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         };
       })
       .filter((item) => item.display && item.word && item.audio && item.image)
-      .sort((a, b) => {
-        if (activeLang === "hi") {
-          const aIndex = HINDI_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
-          const bIndex = HINDI_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
-          return aIndex - bIndex;
-        }
-        if (activeLang === "te") {
-          const aIndex = TELUGU_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
-          const bIndex = TELUGU_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
-          return aIndex - bIndex;
-        }
-        if (activeLang === "kn") {
-          const aIndex =
-            KANNADA_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
-          const bIndex =
-            KANNADA_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
-          return aIndex - bIndex;
-        }
-
-        // default for other languages
-        return (a.display || "").localeCompare(b.display || "", activeLang);
-      });
+      .sort((a, b) => sortByLangOrder(a, b, activeLang));
   }, [rawData, activeLang]);
 
   const wordItems = useMemo(() => {
