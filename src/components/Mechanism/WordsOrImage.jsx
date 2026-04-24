@@ -214,6 +214,7 @@ const WordsOrImage = ({
 
   const handleNextWrapped = () => {
     setIsTranscriptCorrect(null);
+    setAnswer(null);
     handleNext();
   };
 
@@ -258,6 +259,8 @@ const WordsOrImage = ({
     //   //alert("Speech recognition is not supported in your browser.");
     //   return;
     // }
+    setAnswer(null);
+    setIsTranscriptCorrect(null);
     setRecAudio(null);
     resetTranscript();
     setIsRecording(true);
@@ -676,7 +679,8 @@ const WordsOrImage = ({
     return "#333F61";
   };
 
-  const resolvedAnswer = isTranscriptCorrect ?? answer;
+  const isUsingInlineSpeechFlow = (level === 15 && !isShowCase) || isDemo;
+  const resolvedAnswer = isUsingInlineSpeechFlow ? answer : isTranscriptCorrect;
 
   //console.log("wds", words, matchedChar, answer);
 
