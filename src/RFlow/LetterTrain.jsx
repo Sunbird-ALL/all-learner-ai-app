@@ -7345,7 +7345,7 @@ const LetterTrain = ({
               </button>
 
               <SafeYouTubePlayer
-                videoId="gfl-lcNz1QE"
+                videoId="LuWttky0kL0"
                 style={{ borderRadius: "8px" }}
               />
             </div>

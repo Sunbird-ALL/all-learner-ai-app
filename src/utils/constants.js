@@ -933,3 +933,20 @@ export const sendTestRigScore = (score) => {
     );
   }
 };
+
+export function isRecommendationApiEnabledForLang(lang) {
+  if (process.env.REACT_APP_USE_RECOMMENDATION_API !== "true") return false;
+  const code = String(lang ?? "")
+    .trim()
+    .toLowerCase();
+  if (!code) return false;
+  const raw = JSON.parse(process.env.REACT_APP_RECOMMENDATION_API_LANGUAGES);
+  const allowed =
+    raw == null || String(raw).trim() === ""
+      ? ["en"]
+      : String(raw)
+          .split(",")
+          .map((s) => s.trim().toLowerCase())
+          .filter(Boolean);
+  return allowed.includes(code);
+}

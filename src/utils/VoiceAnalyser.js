@@ -65,6 +65,7 @@ function VoiceAnalyser(props) {
   const [loader, setLoader] = useState(false);
   const [pauseAudio, setPauseAudio] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState("");
+  const [offlineResponseText, setOfflineResponseText] = useState("");
   const [recordedAudioBase64, setRecordedAudioBase64] = useState("");
   const [enableAfterLoad, setEnableAfterLoad] = useState(false);
   const [audioPermission, setAudioPermission] = useState(null);
@@ -378,6 +379,7 @@ function VoiceAnalyser(props) {
       const { originalText, contentType, contentId, currentLine } = props;
       const responseStartTime = new Date().getTime();
       let responseText = "";
+      let isOfflineAsrResponse = false;
       let profanityWord = "";
       let newThresholdPercentage = 0;
       let data = {};
@@ -425,6 +427,13 @@ function VoiceAnalyser(props) {
             lang
           );
         }
+      }
+
+      // Browser speech-to-text fallback: when learner API responseText is empty,
+      // use transcript captured in offline flow so telemetry response_text is not blank.
+      if (!responseText || responseText.trim().length === 0) {
+        responseText = (offlineResponseText || "").trim();
+        isOfflineAsrResponse = responseText.length > 0;
       }
 
       if (responseText.toLowerCase() === originalText.toLowerCase()) {
@@ -584,6 +593,12 @@ function VoiceAnalyser(props) {
           values: [
             { original_text: originalText },
             { response_text: responseText },
+            { is_offline_asr_response: isOfflineAsrResponse },
+            {
+              stt_source: isOfflineAsrResponse
+                ? "browser_speech_recognition"
+                : "learner_ai_asr",
+            },
             { response_correct_words_array: student_correct_words_result },
             { response_incorrect_words_array: student_incorrect_words_result },
             { response_word_array_result: word_result_array },
@@ -847,6 +862,7 @@ function VoiceAnalyser(props) {
                     handleStartRecording={props.handleStartRecording}
                     handleStopRecording={props.handleStopRecording}
                     setIsCorrect={props.setIsCorrect}
+                    setOfflineResponseText={setOfflineResponseText}
                     noOffline={props.noOffline}
                   />
                   {/* <RecordVoiceVisualizer /> */}

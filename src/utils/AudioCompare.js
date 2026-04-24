@@ -112,6 +112,7 @@ const AudioRecorder = (props) => {
 
       // Reset transcript
       transcriptRef.current = "";
+      props.setOfflineResponseText?.("");
 
       // Start browser speech recognition
       try {
@@ -129,6 +130,7 @@ const AudioRecorder = (props) => {
               .map((result) => result[0].transcript)
               .join(" ");
             transcriptRef.current = transcript;
+            props.setOfflineResponseText?.(transcript);
           };
 
           recognition.onerror = (event) => {
@@ -191,32 +193,17 @@ const AudioRecorder = (props) => {
                 const transcripts = sanitize(rawTranscript);
                 const rawTarget = props.originalText || "";
                 const target = sanitize(rawTarget);
+                props.setOfflineResponseText?.(rawTranscript);
+                console.log("[Offline ASR] original_text:", rawTarget);
+                console.log("[Offline ASR] response_text:", rawTranscript);
 
                 // Only check correctness if transcript is not empty
                 // If user didn't speak, transcript will be empty and should be marked as incorrect
                 if (!transcripts || transcripts.trim().length === 0) {
                   props.setIsCorrect?.(false);
                 } else {
-                  // Check for exact match first (most strict)
-                  const exactMatch = transcripts === target;
-
-                  // Calculate similarity percentage
-                  const similarity = calculateSimilarity(transcripts, target);
-
-                  // Check if target is contained in transcript as a complete phrase
-                  // Only allow this if similarity is already high (>= 70%)
-                  const transcriptContainsTarget = transcripts.includes(target);
-                  const targetContainsTranscript = target.includes(transcripts);
-
-                  // Require at least 80% similarity for correctness
-                  // OR exact match
-                  // OR if transcript contains target AND similarity is >= 70% (user said more than expected but correctly)
-                  // OR if target contains transcript AND similarity is >= 70% (user said less but correctly)
-                  const isCorrect =
-                    exactMatch ||
-                    similarity >= 80 ||
-                    (transcriptContainsTarget && similarity >= 70) ||
-                    (targetContainsTranscript && similarity >= 70);
+                  // Keep UI feedback strict: only normalized exact match is correct.
+                  const isCorrect = transcripts === target;
 
                   if (language === "kn") {
                     const knLatin = transliterateKannadaToLatin(target);
