@@ -2635,9 +2635,9 @@ const soundMatchContent = {
             audio: getAssetAudioUrl(s3Assets.ಕವರAudio),
           },
           {
-            img: getAssetUrl(s3Assets.ನರImg),
+            img: getAssetUrl(s3Assets.ನೂರುAImage),
             text: "ನೂರು",
-            audio: getAssetAudioUrl(s3Assets.ನರAudio),
+            audio: getAssetAudioUrl(s3Assets.ನೂರುAudio),
           },
           {
             img: getAssetUrl(s3Assets.ಬಯImg),
@@ -2646,7 +2646,7 @@ const soundMatchContent = {
           },
         ],
         correctWord: "ನೂರು",
-        audio: getAssetAudioUrl(s3Assets.ನರAudio),
+        audio: getAssetAudioUrl(s3Assets.ನೂರುAudio),
         flowName: "S2",
         type: "soundMatch",
       },
@@ -7283,7 +7283,7 @@ const pictureWordsContent = {
             isCorrect: false,
           },
           {
-            audio: getAssetAudioUrl(s3Assets.ನರAudio),
+            audio: getAssetAudioUrl(s3Assets.ನೂರುAudio),
             isCorrect: true,
           },
           {
