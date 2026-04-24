@@ -4691,6 +4691,8 @@ export const ಅವವAudio = "ceda831c-6c75-4963-991a-d3b9f855cc91.wav";
 export const ಉಯಯಲAudio = "29fb933d-90d7-4376-a971-b8e1fa8fcd87.wav";
 export const ಚದರAudio = "bf76e9c7-f317-4413-8685-fe6b89cb91c9.wav";
 export const ಬಸಸAudio = "95f9f69a-b4e1-4bd9-bb43-fe761356808c.wav";
+export const ನೂರುAudio = "be175e39-4c57-470a-8b10-05ed45f055fe.wav";
+export const ನೂರುAImage = "dbad5181-b4b3-424a-96a0-39d9b63bc479.png";
 
 // Kannada SoundHuntS1Combined Assets
 export const ಔಡಲImg = "bda01036-a759-464f-8dbc-f7bf5a186de0.png";
@@ -4824,6 +4826,9 @@ export const ಪಕಷAudio = "0bd2c9c6-bd11-4e15-8c62-18d9a33136b7.wav";
 export const ಸನಹತAudio = "6f7da8eb-fcfc-499a-a14a-a11a611b70cd.wav";
 export const ಗದದಲAudio = "45556673-42bd-4b8f-b368-ea5735d5fe4b.wav";
 export const ಹಳಳAudio = "261d5365-a829-4772-981c-8c60ae3c80f5.wav";
+export const ಹಳ್ಳAudio = "2df3ec7b-e598-4bb7-bd61-87431c1a2aa7.wav";
+export const ಹಳ್ಳImage = "6efe5825-9e84-411a-9836-8960868252d0.png";
+
 //Hindi M1 Assets
 export const ऐनकImg = "49c0950d-c2d1-4bcd-9ff2-44d64f66ee30.png";
 export const शहदImg = "b0058fa6-ec9e-4eb6-bea0-c217503c8aa2.png";
