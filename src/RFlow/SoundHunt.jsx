@@ -2463,9 +2463,9 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.ಅವವAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಹಳಳImg),
+          img: getAssetUrl(s3Assets.ಹಳ್ಳImage),
           text: "ಹಳ್ಳ",
-          audio: getAssetAudioUrl(s3Assets.ಹಳಳAudio),
+          audio: getAssetAudioUrl(s3Assets.ಹಳ್ಳAudio),
         },
         {
           img: getAssetUrl(s3Assets.ಬಸಸImg),
@@ -2486,9 +2486,9 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.ಉಯಯಲAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಹಳಳImg),
+          img: getAssetUrl(s3Assets.ಹಳ್ಳImage),
           text: "ಹಳ್ಳ",
-          audio: getAssetAudioUrl(s3Assets.ಹಳಳAudio),
+          audio: getAssetAudioUrl(s3Assets.ಹಳ್ಳAudio),
         },
         {
           img: getAssetUrl(s3Assets.ಚದರImg),
@@ -2497,7 +2497,7 @@ const content = {
         },
       ],
       correctWord: "ಹಳ್ಳ",
-      audio: getAssetAudioUrl(s3Assets.ಹಳಳAudio),
+      audio: getAssetAudioUrl(s3Assets.ಹಳ್ಳAudio),
       flowName: "P2",
       type: "soundMatch",
     },
@@ -2514,9 +2514,9 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.ಪರಕತAudio),
         },
         {
-          img: getAssetUrl(s3Assets.ಹಳಳImg),
+          img: getAssetUrl(s3Assets.ಹಳ್ಳImage),
           text: "ಹಳ್ಳ",
-          audio: getAssetAudioUrl(s3Assets.ಹಳಳAudio),
+          audio: getAssetAudioUrl(s3Assets.ಹಳ್ಳAudio),
         },
       ],
       correctWord: "ಪ್ರಕೃತಿ",
