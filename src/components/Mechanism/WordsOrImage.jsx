@@ -676,6 +676,8 @@ const WordsOrImage = ({
     return "#333F61";
   };
 
+  const resolvedAnswer = isTranscriptCorrect ?? answer;
+
   //console.log("wds", words, matchedChar, answer);
 
   return (
@@ -1102,7 +1104,7 @@ const WordsOrImage = ({
                             }
                           : {
                               mb: isMobile ? 2 : 4,
-                              color: getAnswerColor(answer),
+                              color: getAnswerColor(resolvedAnswer),
                               textAlign: "center",
                             }),
                       }}
@@ -1293,7 +1295,7 @@ const WordsOrImage = ({
                       {highlightWords(
                         words,
                         matchedChar,
-                        getAnswerColor(isTranscriptCorrect)
+                        getAnswerColor(resolvedAnswer)
                       )}
                     </Box>
                   ))}
