@@ -9,7 +9,6 @@ import {
   Dialog,
   ToggleButton,
   ToggleButtonGroup,
-  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -38,15 +37,17 @@ const getCardAnimation = (compact, veryCompact) =>
     : { scale: [1, 1.12, 1], y: [0, -14, 0] };
 
 const getCardHeight = (veryCompact, compact) => {
-  if (veryCompact) return "200px";
-  if (compact) return "230px";
+  if (veryCompact) return "175px";
+  if (compact) return "240px";
   return "270px";
 };
 
 const getCardBoxSx = (isActive, cardHeight) => ({
   bgcolor: "#FFFFFF",
   borderRadius: "16px",
-  p: 1.5,
+  pt: 2.5,
+  px: 1.5,
+  pb: 1.5,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -198,15 +199,6 @@ const AlphabetCard = ({
   const activeAnimation = getCardAnimation(compact, veryCompact);
   const cardHeight = getCardHeight(veryCompact, compact);
 
-  let imageSize;
-  if (veryCompact) {
-    imageSize = "100px";
-  } else if (compact) {
-    imageSize = "120px";
-  } else {
-    imageSize = "145px";
-  }
-
   const handleCardClick = () => {
     if (mode === "alphabet" && item.alaphabetChartAudio) {
       playAudio(item, item.alaphabetChartAudio);
@@ -268,11 +260,11 @@ const AlphabetCard = ({
         {/* Image */}
         <Box
           sx={{
-            width: imageSize,
-            height: imageSize,
-            flexShrink: 0,
-            alignSelf: "center",
-            borderRadius: "10px",
+            width: "100%",
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             overflow: "hidden",
             transition: "transform 0.2s ease",
             "&:hover": { transform: "scale(1.05)" },
@@ -282,7 +274,11 @@ const AlphabetCard = ({
             <img
               src={item.image}
               alt={item.word}
-              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+              }}
             />
           )}
         </Box>
@@ -445,8 +441,8 @@ const navButtonSx = {
   bgcolor: "#FFFFFF",
   color: "#333F61",
   fontWeight: "bold",
-  px: 4,
-  py: 1,
+  px: 3,
+  py: 0.6,
   borderRadius: "50px",
   boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
   "&:hover": { bgcolor: "#f0f0f0" },
@@ -457,10 +453,20 @@ const navButtonSx = {
 };
 
 const AlphabetChart = ({ open, onClose, lang }) => {
-  const isCompact = useMediaQuery("(max-height: 900px) and (min-width: 960px)");
-  const isVeryCompact = useMediaQuery(
-    "(max-height: 768px) and (min-width: 960px)"
-  );
+  const [winSize, setWinSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () =>
+      setWinSize({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isCompact = winSize.height <= 900 && winSize.width >= 900;
+  const isVeryCompact = winSize.height <= 820 && winSize.width >= 900;
   const [currentPage, setCurrentPage] = useState(0);
   const [playingKey, setPlayingKey] = useState(null);
   const [viewMode, setViewMode] = useState("alphabet"); // "alphabet" | "word"
@@ -482,7 +488,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     if (!open) stopAudio();
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const itemsPerPage = 8;
+  const itemsPerPage = 6;
 
   const rawData = useMemo(() => {
     if (lang === "hi") return letterDataHi;
@@ -706,7 +712,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
       {/* Header */}
       <Box
         sx={{
-          p: isVeryCompact ? { xs: 1, sm: 1 } : { xs: 2, sm: 2.5 },
+          py: isVeryCompact ? { xs: 1.5, sm: 1.5 } : { xs: 2, sm: 2.5 },
+          px: isVeryCompact ? { xs: 2, sm: 2 } : { xs: 2, sm: 2.5 },
           mt: 9,
           display: "flex",
           justifyContent: "center",
@@ -798,7 +805,12 @@ const AlphabetChart = ({ open, onClose, lang }) => {
       <Box
         sx={{
           flex: 1,
-          p: isVeryCompact
+          py: isVeryCompact
+            ? { xs: 0.5, md: 0.5 }
+            : isCompact
+            ? { xs: 0.75, md: 1 }
+            : { xs: 2, md: 4 },
+          px: isVeryCompact
             ? { xs: 1, md: 1 }
             : isCompact
             ? { xs: 1, md: 1.5 }
@@ -849,11 +861,17 @@ const AlphabetChart = ({ open, onClose, lang }) => {
             </Box>
           </motion.div>
         ) : (
-          <Box sx={{ my: "auto", width: "100%", maxWidth: "1200px" }}>
+          <Box
+            sx={{
+              my: "auto",
+              width: "100%",
+              maxWidth: isVeryCompact ? "900px" : "1080px",
+            }}
+          >
             <Grid container spacing={isCompact ? 2 : 3}>
               <AnimatePresence mode="wait">
                 {currentItems.map((item, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={item.key}>
+                  <Grid item xs={12} sm={6} md={4} key={item.key}>
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9, y: 20 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -893,7 +911,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
 
       <Box
         sx={{
-          p: isVeryCompact ? 1.5 : 3,
+          py: isVeryCompact ? 1.5 : isCompact ? 2 : 3,
+          px: isVeryCompact ? 2 : isCompact ? 3 : 4,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
