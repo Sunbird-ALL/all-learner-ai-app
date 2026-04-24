@@ -465,8 +465,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isCompact = winSize.height <= 900 && winSize.width >= 960;
-  const isVeryCompact = winSize.height <= 820 && winSize.width >= 960;
+  const isCompact = winSize.height <= 900 && winSize.width >= 900;
+  const isVeryCompact = winSize.height <= 820 && winSize.width >= 900;
   const [currentPage, setCurrentPage] = useState(0);
   const [playingKey, setPlayingKey] = useState(null);
   const [viewMode, setViewMode] = useState("alphabet"); // "alphabet" | "word"
