@@ -25,6 +25,7 @@ import {
   wordData,
   TeluguGunithas,
   KannadaGunithas,
+  HindiGunithas,
 } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
 import { interact } from "../../services/telemetryService";
@@ -319,6 +320,58 @@ AlphabetCard.propTypes = {
   veryCompact: PropTypes.bool,
 };
 
+const HINDI_ORDER = [
+  "अ",
+  "आ",
+  "इ",
+  "ई",
+  "उ",
+  "ऊ",
+  "ऋ",
+  "ए",
+  "ऐ",
+  "ओ",
+  "औ",
+  "अं",
+  "अः",
+  "क",
+  "ख",
+  "ग",
+  "घ",
+  "ङ",
+  "च",
+  "छ",
+  "ज",
+  "झ",
+  "ञ",
+  "ट",
+  "ठ",
+  "ड",
+  "ढ",
+  "ण",
+  "त",
+  "थ",
+  "द",
+  "ध",
+  "न",
+  "प",
+  "फ",
+  "ब",
+  "भ",
+  "म",
+  "य",
+  "र",
+  "ल",
+  "व",
+  "श",
+  "ष",
+  "स",
+  "ह",
+  "क्ष",
+  "त्र",
+  "ज्ञ",
+];
+
 const TELUGU_ORDER = [
   "అ",
   "ఆ",
@@ -434,22 +487,24 @@ const buildOrderMap = (order) =>
     return acc;
   }, {});
 
+export const HINDI_ORDER_MAP = buildOrderMap(HINDI_ORDER);
 export const TELUGU_ORDER_MAP = buildOrderMap(TELUGU_ORDER);
 export const KANNADA_ORDER_MAP = buildOrderMap(KANNADA_ORDER);
 
-const navButtonSx = {
-  bgcolor: "#FFFFFF",
-  color: "#333F61",
-  fontWeight: "bold",
-  px: 3,
-  py: 0.6,
-  borderRadius: "50px",
-  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-  "&:hover": { bgcolor: "#f0f0f0" },
-  "&.Mui-disabled": {
-    bgcolor: "rgba(0,0,0,0.1)",
-    color: "rgba(0,0,0,0.3)",
-  },
+const ORDER_MAPS = {
+  hi: HINDI_ORDER_MAP,
+  te: TELUGU_ORDER_MAP,
+  kn: KANNADA_ORDER_MAP,
+};
+
+export const sortByLangOrder = (a, b, activeLang) => {
+  const map = ORDER_MAPS[activeLang];
+  if (map) {
+    const aIndex = map[a.display] ?? Number.MAX_SAFE_INTEGER;
+    const bIndex = map[b.display] ?? Number.MAX_SAFE_INTEGER;
+    return aIndex - bIndex;
+  }
+  return (a.display || "").localeCompare(b.display || "", activeLang);
 };
 
 const AlphabetChart = ({ open, onClose, lang }) => {
@@ -514,23 +569,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
         };
       })
       .filter((item) => item.display && item.word && item.audio && item.image)
-      .sort((a, b) => {
-        if (activeLang === "te") {
-          const aIndex = TELUGU_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
-          const bIndex = TELUGU_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
-          return aIndex - bIndex;
-        }
-        if (activeLang === "kn") {
-          const aIndex =
-            KANNADA_ORDER_MAP[a.display] ?? Number.MAX_SAFE_INTEGER;
-          const bIndex =
-            KANNADA_ORDER_MAP[b.display] ?? Number.MAX_SAFE_INTEGER;
-          return aIndex - bIndex;
-        }
-
-        // default for other languages
-        return (a.display || "").localeCompare(b.display || "", activeLang);
-      });
+      .sort((a, b) => sortByLangOrder(a, b, activeLang));
   }, [rawData, activeLang]);
 
   const wordItems = useMemo(() => {
@@ -539,6 +578,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
       gunithaSource = TeluguGunithas;
     } else if (activeLang === "kn") {
       gunithaSource = KannadaGunithas;
+    } else if (activeLang === "hi") {
+      gunithaSource = HindiGunithas;
     }
 
     const gunithaItems = gunithaSource
@@ -688,6 +729,21 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     stopAudio();
     setCurrentPage(0);
   }, [viewMode, activeLang]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const navButtonSx = {
+    bgcolor: "#FFFFFF",
+    color: "#333F61",
+    fontWeight: "bold",
+    px: 4,
+    py: 1,
+    borderRadius: "50px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+    "&:hover": { bgcolor: "#f0f0f0" },
+    "&.Mui-disabled": {
+      bgcolor: "rgba(0,0,0,0.1)",
+      color: "rgba(0,0,0,0.3)",
+    },
+  };
 
   if (!open) return null;
 
