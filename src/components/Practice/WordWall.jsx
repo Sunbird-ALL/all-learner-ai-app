@@ -458,7 +458,10 @@ const WordWall = ({
   const handleReviewComplete = () => {
     setShowReview(false);
 
-    if (currentReviewIndex === wrongAnswersAllQuestions.length - 1) {
+    const allGiftsReviewed =
+      openedGifts.length >= wrongAnswersAllQuestions.length;
+
+    if (allGiftsReviewed) {
       //setShowResults(true);
       setLocalData("wordWall", false);
       navigate("/practice");
