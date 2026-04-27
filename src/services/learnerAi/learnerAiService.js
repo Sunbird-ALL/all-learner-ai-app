@@ -79,6 +79,17 @@ export const getContentNew = async (
       content_type: criteria,
     };
     const response = await axios.post(url, data, getHeaders());
+    if (response?.data?.content?.length === 0) {
+      console.error(
+        "No content found from recommendation API, falling back to getContent"
+      );
+      try {
+        return await getContent(criteria, lang, limit, options, level);
+      } catch (fallbackError) {
+        console.error("Fallback getContent also failed", fallbackError);
+        throw fallbackError;
+      }
+    }
     return response.data;
   } catch (error) {
     console.error("Error fetching content:", error);
@@ -89,7 +100,13 @@ export const getContentNew = async (
       message: error?.response?.data?.message || error?.message,
       stack: error?.stack,
     });
-    throw error;
+    try {
+      console.error("Recommendation API failed, falling back to getContent");
+      return await getContent(criteria, lang, limit, options, level);
+    } catch (fallbackError) {
+      console.error("Fallback getContent also failed", fallbackError);
+      throw fallbackError;
+    }
   }
 };
 
