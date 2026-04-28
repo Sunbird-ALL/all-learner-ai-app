@@ -202,8 +202,26 @@ const AudioRecorder = (props) => {
                 if (!transcripts || transcripts.trim().length === 0) {
                   props.setIsCorrect?.(false);
                 } else {
-                  // Keep UI feedback strict: only normalized exact match is correct.
-                  const isCorrect = transcripts === target;
+                  // Check for exact match first (most strict)
+                  const exactMatch = transcripts === target;
+
+                  // Calculate similarity percentage
+                  const similarity = calculateSimilarity(transcripts, target);
+
+                  // Check if target is contained in transcript as a complete phrase
+                  // Only allow this if similarity is already high (>= 70%)
+                  const transcriptContainsTarget = transcripts.includes(target);
+                  const targetContainsTranscript = target.includes(transcripts);
+
+                  // Require at least 80% similarity for correctness
+                  // OR exact match
+                  // OR if transcript contains target AND similarity is >= 70% (user said more than expected but correctly)
+                  // OR if target contains transcript AND similarity is >= 70% (user said less but correctly)
+                  const isCorrect =
+                    exactMatch ||
+                    similarity >= 80 ||
+                    (transcriptContainsTarget && similarity >= 70) ||
+                    (targetContainsTranscript && similarity >= 70);
 
                   if (language === "kn") {
                     const knLatin = transliterateKannadaToLatin(target);
