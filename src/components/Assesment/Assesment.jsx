@@ -645,9 +645,9 @@ export const ProfileHeader = ({
         setShowChartPointer(false); // 👈 demo finished
         setIsAudioPlaying(false);
         chartAudioRef.current = null;
-
-        // ✅ Audio done → now wait for user click
         setLocalData("showAlphabetDemo", "false");
+        // Notify Practice.jsx so LetterGame can start after chart audio finishes
+        window.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
       audio.onerror = () => {
@@ -656,6 +656,7 @@ export const ProfileHeader = ({
         setIsAudioPlaying(false);
         setLocalData("showAlphabetDemo", "false");
         chartAudioRef.current = null;
+        window.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
       setTimeout(() => {
@@ -666,6 +667,7 @@ export const ProfileHeader = ({
           setIsAudioPlaying(false);
           setLocalData("showAlphabetDemo", "false");
           chartAudioRef.current = null;
+          window.dispatchEvent(new Event("alphabetDemoStop"));
         });
       }, 500);
     };

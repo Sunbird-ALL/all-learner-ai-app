@@ -181,9 +181,16 @@ const Practice = () => {
     const current = getLocalData("showAlphabetDemo");
     setIsAlphabetDemoActive(current === "true");
     // Subscribe to future changes via custom event (no polling needed)
-    return onLocalData("showAlphabetDemo", (v) =>
+    const unsubscribe = onLocalData("showAlphabetDemo", (v) =>
       setIsAlphabetDemoActive(v === "true")
     );
+    // Reset flag when chart narration audio ends or is stopped
+    const handleDemoStop = () => setIsAlphabetDemoActive(false);
+    window.addEventListener("alphabetDemoStop", handleDemoStop);
+    return () => {
+      unsubscribe();
+      window.removeEventListener("alphabetDemoStop", handleDemoStop);
+    };
   }, []);
 
   const [rStepZero, setRStepZero] = useState(() => {
@@ -532,6 +539,7 @@ const Practice = () => {
             JSON.stringify(updatedPlayedIndices)
           );
           setLocalData("showAlphabetDemo", "true");
+          setIsAlphabetDemoActive(true);
           window.dispatchEvent(new Event("alphabetDemoComplete"));
         }
       }
