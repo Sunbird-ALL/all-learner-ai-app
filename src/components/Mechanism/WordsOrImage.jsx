@@ -680,7 +680,12 @@ const WordsOrImage = ({
   };
 
   const isUsingInlineSpeechFlow = (level === 15 && !isShowCase) || isDemo;
-  const resolvedAnswer = isUsingInlineSpeechFlow ? answer : isTranscriptCorrect;
+  const resolvedAnswer =
+    isShowCase || isDiscover
+      ? null
+      : isUsingInlineSpeechFlow
+      ? answer
+      : isTranscriptCorrect;
 
   //console.log("wds", words, matchedChar, answer);
 
