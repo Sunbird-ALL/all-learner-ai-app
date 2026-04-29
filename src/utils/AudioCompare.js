@@ -17,6 +17,70 @@ import SpeechRecognition from "react-speech-recognition";
 import { doubleMetaphone } from "double-metaphone";
 import { transliterateKannadaToLatin, compareWords } from "../utils/textUtils";
 
+function sanitize(text) {
+  return text
+    .toLowerCase()
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"\[\]'’]/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function phoneticMatch(a, b) {
+  const [a1, a2] = doubleMetaphone(a);
+  const [b1, b2] = doubleMetaphone(b);
+  return a1 === b1 || a1 === b2 || a2 === b1 || a2 === b2;
+}
+
+function calculateSimilarity(str1, str2) {
+  if (!str1 || !str2) return 0;
+  if (str1 === str2) return 100;
+
+  const words1 = str1.trim().split(/\s+/);
+  const words2 = str2.trim().split(/\s+/);
+
+  if (words1.length === 1 && words2.length === 1) {
+    return phoneticMatch(words1[0], words2[0]) ? 85 : 0;
+  }
+
+  let matchedWords = 0;
+  const minLength = Math.min(words1.length, words2.length);
+  const maxLength = Math.max(words1.length, words2.length);
+
+  for (let i = 0; i < minLength; i++) {
+    if (words1[i] === words2[i] || phoneticMatch(words1[i], words2[i])) {
+      matchedWords++;
+    }
+  }
+
+  return (matchedWords / maxLength) * 100;
+}
+
+/** Offline transcript vs target correctness (browser ASR path). */
+function getOfflineCorrectnessResult(rawTranscript, rawTarget, language) {
+  const transcripts = sanitize(rawTranscript);
+  const target = sanitize(rawTarget);
+  if (!transcripts || transcripts.trim().length === 0) {
+    return false;
+  }
+
+  const exactMatch = transcripts === target;
+  const similarity = calculateSimilarity(transcripts, target);
+  const transcriptContainsTarget = transcripts.includes(target);
+  const targetContainsTranscript = target.includes(transcripts);
+  const isCorrect =
+    exactMatch ||
+    similarity >= 80 ||
+    (transcriptContainsTarget && similarity >= 70) ||
+    (targetContainsTranscript && similarity >= 70);
+
+  if (language === "kn") {
+    const knLatin = transliterateKannadaToLatin(target);
+    const comparison = compareWords(transcripts, knLatin);
+    return comparison?.isFine;
+  }
+  return isCorrect;
+}
+
 const AudioRecorder = (props) => {
   const [isRecording, setIsRecording] = useState(false);
   const [status, setStatus] = useState("");
@@ -38,54 +102,6 @@ const AudioRecorder = (props) => {
     };
     return browserLangMap[langCode] || "en-US";
   };
-
-  function sanitize(text) {
-    return text
-      .toLowerCase()
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"\[\]'’]/g, "")
-      .replace(/\s{2,}/g, " ")
-      .trim();
-  }
-
-  function phoneticMatch(a, b) {
-    const [a1, a2] = doubleMetaphone(a);
-    const [b1, b2] = doubleMetaphone(b);
-    return a1 === b1 || a1 === b2 || a2 === b1 || a2 === b2;
-  }
-
-  // Calculate similarity percentage between two strings
-  function calculateSimilarity(str1, str2) {
-    if (!str1 || !str2) return 0;
-
-    // Exact match
-    if (str1 === str2) return 100;
-
-    // Split into words for sentence comparison
-    const words1 = str1.trim().split(/\s+/);
-    const words2 = str2.trim().split(/\s+/);
-
-    // If single words, use phonetic matching
-    if (words1.length === 1 && words2.length === 1) {
-      const isPhoneticMatch = phoneticMatch(words1[0], words2[0]);
-      return isPhoneticMatch ? 85 : 0; // Give 85% for phonetic match of single words
-    }
-
-    // For sentences, calculate word-by-word similarity
-    let matchedWords = 0;
-    const minLength = Math.min(words1.length, words2.length);
-    const maxLength = Math.max(words1.length, words2.length);
-
-    // Check each word in the shorter sentence
-    for (let i = 0; i < minLength; i++) {
-      if (words1[i] === words2[i] || phoneticMatch(words1[i], words2[i])) {
-        matchedWords++;
-      }
-    }
-
-    // Calculate percentage: matched words / total words in target
-    const similarity = (matchedWords / maxLength) * 100;
-    return similarity;
-  }
 
   //console.log("pageName", props.pageName);
 
@@ -173,90 +189,64 @@ const AudioRecorder = (props) => {
       // setShowLoader(false);
       // setStatus("inactive");
       if (recorderRef.current) {
-        recorderRef.current.stopRecording(async () => {
+        recorderRef.current.stopRecording(() => {
           const blob = recorderRef.current.getBlob();
-          if (blob) {
-            setAudioBlob(blob);
-            saveBlob(blob);
+          const finalizeRecordingUi = () => {
+            setShowLoader(false);
+            setStatus("inactive");
+          };
 
-            // Stop speech recognition
+          if (!blob) {
+            console.error("Failed to retrieve audio blob.");
+            finalizeRecordingUi();
+            props.setIsCorrect?.(false);
+            if (mediaStreamRef.current) {
+              mediaStreamRef.current
+                .getTracks()
+                .forEach((track) => track.stop());
+            }
+            setIsRecording(false);
+            props.setEnableNext?.(true);
+            props.handleStopRecording?.();
+            return;
+          }
+
+          setAudioBlob(blob);
+          saveBlob(blob);
+
+          try {
+            SpeechRecognition.stopListening();
+          } catch {
+            // Non-critical
+          }
+
+          const useOfflineAsr = props.noOffline !== true && !props.isShowCase;
+          if (useOfflineAsr) {
             try {
-              SpeechRecognition.stopListening();
-            } catch (srError) {
-              // Error stopping speech recognition - non-critical
-            }
-
-            if (props.noOffline !== true && !props.isShowCase) {
-              try {
-                // Use browser speech recognition transcript (captured during recording)
-                const rawTranscript = transcriptRef.current || "";
-                const transcripts = sanitize(rawTranscript);
-                const rawTarget = props.originalText || "";
-                const target = sanitize(rawTarget);
-                props.setOfflineResponseText?.(rawTranscript);
-                console.log("[Offline ASR] original_text:", rawTarget);
-                console.log("[Offline ASR] response_text:", rawTranscript);
-
-                // Only check correctness if transcript is not empty
-                // If user didn't speak, transcript will be empty and should be marked as incorrect
-                if (!transcripts || transcripts.trim().length === 0) {
-                  props.setIsCorrect?.(false);
-                } else {
-                  // Check for exact match first (most strict)
-                  const exactMatch = transcripts === target;
-
-                  // Calculate similarity percentage
-                  const similarity = calculateSimilarity(transcripts, target);
-
-                  // Check if target is contained in transcript as a complete phrase
-                  // Only allow this if similarity is already high (>= 70%)
-                  const transcriptContainsTarget = transcripts.includes(target);
-                  const targetContainsTranscript = target.includes(transcripts);
-
-                  // Require at least 80% similarity for correctness
-                  // OR exact match
-                  // OR if transcript contains target AND similarity is >= 70% (user said more than expected but correctly)
-                  // OR if target contains transcript AND similarity is >= 70% (user said less but correctly)
-                  const isCorrect =
-                    exactMatch ||
-                    similarity >= 80 ||
-                    (transcriptContainsTarget && similarity >= 70) ||
-                    (targetContainsTranscript && similarity >= 70);
-
-                  if (language === "kn") {
-                    const knLatin = transliterateKannadaToLatin(target);
-                    const comparison = compareWords(transcripts, knLatin);
-                    props.setIsCorrect?.(comparison?.isFine);
-                  } else {
-                    props.setIsCorrect?.(isCorrect);
-                  }
-                }
-                setShowLoader(false);
-                setStatus("inactive");
-              } catch (error) {
-                console.error("Transcription error:", error);
-                reportError({
-                  type: "audio_error",
-                  action: "transcription",
-                  message: error?.message,
-                  stack: error?.stack,
-                });
-                setShowLoader(false);
-                setStatus("inactive");
-                props.setIsCorrect?.(false);
-              }
-            }
-            if (props.noOffline === true || props.isShowCase) {
-              setShowLoader(false);
-              setStatus("inactive");
+              const rawTranscript = transcriptRef.current || "";
+              const rawTarget = props.originalText || "";
+              props.setOfflineResponseText?.(rawTranscript);
+              console.log("[Offline ASR] original_text:", rawTarget);
+              console.log("[Offline ASR] response_text:", rawTranscript);
+              props.setIsCorrect?.(
+                getOfflineCorrectnessResult(rawTranscript, rawTarget, language)
+              );
+            } catch (error) {
+              console.error("Transcription error:", error);
+              reportError({
+                type: "audio_error",
+                action: "transcription",
+                message: error?.message,
+                stack: error?.stack,
+              });
               props.setIsCorrect?.(false);
             }
           } else {
-            console.error("Failed to retrieve audio blob.");
-            setShowLoader(false);
-            setStatus("inactive");
             props.setIsCorrect?.(false);
           }
+
+          finalizeRecordingUi();
+
           if (mediaStreamRef.current) {
             mediaStreamRef.current.getTracks().forEach((track) => track.stop());
           }
