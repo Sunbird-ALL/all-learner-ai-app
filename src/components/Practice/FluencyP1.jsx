@@ -157,8 +157,9 @@ const LanguageHint = ({ hint }) => {
 };
 
 function CircularTimer({ duration = 10, isActive = true }) {
-  const [timeLeft, setTimeLeft] = React.useState(duration);
-  const [elapsed, setElapsed] = React.useState(0);
+  /** Single clock: elapsed seconds [0, duration]. Ring + number both derive from this (fixes desync + stray RAF loops). */
+  const [elapsedSec, setElapsedSec] = React.useState(0);
+  const startMsRef = React.useRef(null);
 
   const radius = 30;
   const cx = 40;
@@ -166,29 +167,29 @@ function CircularTimer({ duration = 10, isActive = true }) {
   const circumference = 2 * Math.PI * radius;
 
   React.useEffect(() => {
-    if (timeLeft <= 0 || !isActive) return;
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
+    if (!isActive || duration <= 0) return;
 
-    return () => clearInterval(interval);
-  }, [timeLeft, isActive]);
+    startMsRef.current = performance.now();
+    setElapsedSec(0);
 
-  React.useEffect(() => {
-    if (!isActive) return;
-    let start = performance.now();
-
+    let rafId = 0;
     const tick = (now) => {
-      const diff = now - start;
-      setElapsed(diff / 1000);
-      if (timeLeft > 0) requestAnimationFrame(tick);
+      const elapsed = Math.min(duration, (now - startMsRef.current) / 1000);
+      setElapsedSec(elapsed);
+      if (elapsed < duration) {
+        rafId = requestAnimationFrame(tick);
+      }
     };
+    rafId = requestAnimationFrame(tick);
 
-    requestAnimationFrame(tick);
-  }, [timeLeft, isActive]);
+    return () => cancelAnimationFrame(rafId);
+  }, [duration, isActive]);
 
-  const totalElapsed = duration - timeLeft + elapsed;
-  const progress = Math.max(0, (1 - totalElapsed / duration) * 100);
+  const progress =
+    duration > 0
+      ? Math.max(0, Math.min(100, (1 - elapsedSec / duration) * 100))
+      : 0;
+  const timeLeft = Math.max(0, duration - Math.floor(elapsedSec));
 
   return (
     <div
@@ -201,7 +202,8 @@ function CircularTimer({ duration = 10, isActive = true }) {
         alignItems: "center",
       }}
     >
-      <svg width="80" height="80">
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        {/* Unfilled arc reads as light / white vs orange */}
         <circle
           cx={cx}
           cy={cy}
@@ -221,11 +223,7 @@ function CircularTimer({ duration = 10, isActive = true }) {
           strokeDasharray={`${circumference} ${circumference}`}
           strokeDashoffset={circumference * (1 - progress / 100)}
           strokeLinecap="round"
-          style={{
-            transform: "rotate(-90deg)",
-            transformOrigin: "50% 50%",
-            transition: "stroke-dashoffset 0.1s linear",
-          }}
+          transform={`rotate(-90 ${cx} ${cy})`}
         />
       </svg>
 
