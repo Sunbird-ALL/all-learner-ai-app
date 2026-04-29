@@ -72,7 +72,8 @@ const AssesmentEnd = () => {
       }
       if (
         process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
-        localStorage.getItem("contentSessionId") !== null
+        (localStorage.getItem("contentSessionId") !== null ||
+          process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
       ) {
         fetchUserPoints()
           .then((points) => {
