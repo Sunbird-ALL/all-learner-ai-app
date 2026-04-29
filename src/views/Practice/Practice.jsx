@@ -1,3 +1,4 @@
+/* global globalThis */
 // ─── Static imports (must all come before any declarations) ─────────────────
 import React, { useEffect, useState, useMemo, lazy, Suspense } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -506,7 +507,7 @@ const Practice = () => {
       if (staleDemo === "true") {
         setLocalData("showAlphabetDemo", "false");
         // 🔇 Tell Assesment.jsx to stop any playing chart audio
-        window.dispatchEvent(new Event("alphabetDemoStop"));
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       }
       return; // Not at a milestone, no need to set up triggers
     }
@@ -532,7 +533,8 @@ const Practice = () => {
             JSON.stringify(updatedPlayedIndices)
           );
           setLocalData("showAlphabetDemo", "true");
-          window.dispatchEvent(new Event("alphabetDemoComplete"));
+          setIsAlphabetDemoActive(true);
+          globalThis.dispatchEvent(new Event("alphabetDemoComplete"));
         }
       }
     };

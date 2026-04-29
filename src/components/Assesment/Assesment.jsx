@@ -1,3 +1,4 @@
+/* global globalThis */
 import MainLayout from "../Layout/MainLayout";
 import assessmentBackground from "../../assets/images/assessmentBackground.png";
 import {
@@ -33,6 +34,7 @@ import {
   setLocalData,
   getLanguageOrDefault,
 } from "../../utils/constants";
+import { setLocalDataAndNotify } from "../../utils/localStorageEvents";
 import {
   RoundTick,
   StartAssessmentButton,
@@ -645,17 +647,18 @@ export const ProfileHeader = ({
         setShowChartPointer(false); // 👈 demo finished
         setIsAudioPlaying(false);
         chartAudioRef.current = null;
-
-        // ✅ Audio done → now wait for user click
-        setLocalData("showAlphabetDemo", "false");
+        // setLocalDataAndNotify triggers onLocalData in Practice.jsx to reset isAlphabetDemoActive
+        setLocalDataAndNotify("showAlphabetDemo", "false");
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
       audio.onerror = () => {
         console.warn("Chart audio missing, showing pointer only");
         setShowChartPointer(false);
         setIsAudioPlaying(false);
-        setLocalData("showAlphabetDemo", "false");
         chartAudioRef.current = null;
+        setLocalDataAndNotify("showAlphabetDemo", "false");
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
       setTimeout(() => {
@@ -664,8 +667,9 @@ export const ProfileHeader = ({
         audio.play().catch(() => {
           setShowChartPointer(false);
           setIsAudioPlaying(false);
-          setLocalData("showAlphabetDemo", "false");
           chartAudioRef.current = null;
+          setLocalDataAndNotify("showAlphabetDemo", "false");
+          globalThis.dispatchEvent(new Event("alphabetDemoStop"));
         });
       }, 500);
     };
@@ -817,6 +821,10 @@ export const ProfileHeader = ({
       kn: {
         title: "📚 ವರ್ಣಮಾಲೆ ಚಾರ್ಟ್‌",
         desc: "ನಿಮಗೆ ಅಕ್ಷರಗಳು ಅಥವಾ ಗುಣಿತಾಕ್ಷರಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಲು ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿರುವ ಚಾರ್ಟ್‌ ನೋಡಿ.",
+      },
+      hi: {
+        title: "📚 वर्णमाला चार्ट",
+        desc: "यदि आपको किसी वर्णमाला या सिलेबल के लिए सहायता चाहिए, तो यहाँ चार्ट देखें।",
       },
     };
 
