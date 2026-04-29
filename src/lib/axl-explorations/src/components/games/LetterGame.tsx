@@ -285,6 +285,17 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
       
       return weightedArray.length > 0 ? weightedArray : letters;
     };
+
+    const shuffleArray = (array: string[]): string[] => {
+      const arr = [...array];
+    
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    
+      return arr;
+    };
     
     const weightedLetters = buildWeightedLetterArray(lettersToUse);
     const questions: MultilingualLetterQuestion[] = [];
@@ -295,8 +306,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     const remainingCount = count - availableCount;
     
     // First phase: Select from weighted array (shuffled)
-    const shuffledWeighted = [...weightedLetters].sort(() => Math.random() - 0.5);
-    const selectedTargets = shuffledWeighted.slice(0, availableCount);
+    const selectedTargets = weightedLetters.slice(0, availableCount);
     
     // Second phase: For remaining questions, select from weighted array
     const remainingTargets: string[] = [];
@@ -309,13 +319,10 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     const allTargets = [...selectedTargets, ...remainingTargets];
     
     // Shuffle all targets to randomize order
-    for (let i = allTargets.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [allTargets[i], allTargets[j]] = [allTargets[j], allTargets[i]];
-    }
+    const shuffledAllTargets = shuffleArray(allTargets);
     
     for (let i = 0; i < count; i++) {
-      const target = allTargets[i];
+      const target = shuffledAllTargets[i];
       
       // Get corresponding vowel to exclude (for Indic languages)
       const correspondingVowel = getCorrespondingVowel(language, target);

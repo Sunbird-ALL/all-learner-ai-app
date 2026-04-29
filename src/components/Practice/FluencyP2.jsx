@@ -441,7 +441,8 @@ const FluencyP2 = ({
       className="whiteContainer"
       style={{
         width: "90%",
-        height: "400px",
+        minHeight: "400px",
+        height: "auto",
         maxWidth: "1200px",
         background: "#fff",
         borderRadius: "12px",
@@ -451,7 +452,7 @@ const FluencyP2 = ({
         alignItems: "center",
         padding: "0px 20px 20px 20px",
         position: "relative",
-        overflow: "hidden",
+        overflow: "visible",
       }}
     >
       <img
@@ -538,18 +539,20 @@ const FluencyP2 = ({
         style={{
           width: "80%",
           maxWidth: "600px",
-          height: "100px",
+          minHeight: "112px",
+          height: "auto",
           border: "2px dashed #FF6600",
           borderRadius: "18px",
           background: "rgba(255, 102, 0, 0.05)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          padding: "20px",
+          padding: "18px 20px",
           position: "relative",
           overflow: "hidden",
-          marginTop: "40px",
+          marginTop: "48px",
           marginBottom: "20px",
+          zIndex: 1,
         }}
       >
         {!showContent ? (
@@ -565,7 +568,7 @@ const FluencyP2 = ({
           <div
             style={{
               width: "100%",
-              minHeight: "100%",
+              minHeight: "72px",
               display: "flex",
               justifyContent: "flex-start",
               alignItems: showFinalState || showBearDance ? "center" : "center",
@@ -580,6 +583,7 @@ const FluencyP2 = ({
               style={{
                 fontWeight: "700",
                 fontSize: showFinalState || showBearDance ? "26px" : "30px",
+                lineHeight: 1.45,
                 color: "rgba(51, 63, 97, 1)",
                 textAlign: "left",
                 display: "flex",
