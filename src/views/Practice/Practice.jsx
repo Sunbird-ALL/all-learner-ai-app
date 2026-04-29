@@ -1,3 +1,4 @@
+/* global globalThis */
 // ─── Static imports (must all come before any declarations) ─────────────────
 import React, { useEffect, useState, useMemo, lazy, Suspense } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -181,16 +182,9 @@ const Practice = () => {
     const current = getLocalData("showAlphabetDemo");
     setIsAlphabetDemoActive(current === "true");
     // Subscribe to future changes via custom event (no polling needed)
-    const unsubscribe = onLocalData("showAlphabetDemo", (v) =>
+    return onLocalData("showAlphabetDemo", (v) =>
       setIsAlphabetDemoActive(v === "true")
     );
-    // Reset flag when chart narration audio ends or is stopped
-    const handleDemoStop = () => setIsAlphabetDemoActive(false);
-    window.addEventListener("alphabetDemoStop", handleDemoStop);
-    return () => {
-      unsubscribe();
-      window.removeEventListener("alphabetDemoStop", handleDemoStop);
-    };
   }, []);
 
   const [rStepZero, setRStepZero] = useState(() => {
@@ -513,7 +507,7 @@ const Practice = () => {
       if (staleDemo === "true") {
         setLocalData("showAlphabetDemo", "false");
         // 🔇 Tell Assesment.jsx to stop any playing chart audio
-        window.dispatchEvent(new Event("alphabetDemoStop"));
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       }
       return; // Not at a milestone, no need to set up triggers
     }
@@ -540,7 +534,7 @@ const Practice = () => {
           );
           setLocalData("showAlphabetDemo", "true");
           setIsAlphabetDemoActive(true);
-          window.dispatchEvent(new Event("alphabetDemoComplete"));
+          globalThis.dispatchEvent(new Event("alphabetDemoComplete"));
         }
       }
     };

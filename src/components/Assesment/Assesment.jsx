@@ -1,3 +1,4 @@
+/* global globalThis */
 import MainLayout from "../Layout/MainLayout";
 import assessmentBackground from "../../assets/images/assessmentBackground.png";
 import {
@@ -33,6 +34,7 @@ import {
   setLocalData,
   getLanguageOrDefault,
 } from "../../utils/constants";
+import { setLocalDataAndNotify } from "../../utils/localStorageEvents";
 import {
   RoundTick,
   StartAssessmentButton,
@@ -645,18 +647,18 @@ export const ProfileHeader = ({
         setShowChartPointer(false); // 👈 demo finished
         setIsAudioPlaying(false);
         chartAudioRef.current = null;
-        setLocalData("showAlphabetDemo", "false");
-        // Notify Practice.jsx so LetterGame can start after chart audio finishes
-        window.dispatchEvent(new Event("alphabetDemoStop"));
+        // setLocalDataAndNotify triggers onLocalData in Practice.jsx to reset isAlphabetDemoActive
+        setLocalDataAndNotify("showAlphabetDemo", "false");
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
       audio.onerror = () => {
         console.warn("Chart audio missing, showing pointer only");
         setShowChartPointer(false);
         setIsAudioPlaying(false);
-        setLocalData("showAlphabetDemo", "false");
         chartAudioRef.current = null;
-        window.dispatchEvent(new Event("alphabetDemoStop"));
+        setLocalDataAndNotify("showAlphabetDemo", "false");
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
       setTimeout(() => {
@@ -665,9 +667,9 @@ export const ProfileHeader = ({
         audio.play().catch(() => {
           setShowChartPointer(false);
           setIsAudioPlaying(false);
-          setLocalData("showAlphabetDemo", "false");
           chartAudioRef.current = null;
-          window.dispatchEvent(new Event("alphabetDemoStop"));
+          setLocalDataAndNotify("showAlphabetDemo", "false");
+          globalThis.dispatchEvent(new Event("alphabetDemoStop"));
         });
       }, 500);
     };
