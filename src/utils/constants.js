@@ -896,6 +896,7 @@ export const randomizeArray = (arr) => {
 
 export function handleEncrypt(value) {
   const API_SECRET_KEY = localStorage.getItem("apiToken");
+  if (!API_SECRET_KEY) return null;
   try {
     var ciphertext = CryptoJS.AES.encrypt(
       JSON.stringify(value),
@@ -910,6 +911,7 @@ export function handleEncrypt(value) {
 
 export function handleDecrypt(value) {
   const API_SECRET_KEY = localStorage.getItem("apiToken");
+  if (!API_SECRET_KEY) return null;
   try {
     var bytes = CryptoJS.AES.decrypt(value, API_SECRET_KEY);
     var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
@@ -931,3 +933,26 @@ export const sendTestRigScore = (score) => {
     );
   }
 };
+
+export function isRecommendationApiEnabledForLang(lang) {
+  if (process.env.REACT_APP_USE_RECOMMENDATION_API !== "true") return false;
+  const languages = process.env.REACT_APP_RECOMMENDATION_API_LANGUAGES;
+
+  if (!languages || languages === "null") {
+    console.error("Recommendation language list missing, using default flow");
+    return false;
+  }
+  const code = String(lang ?? "")
+    .trim()
+    .toLowerCase();
+  if (!code) return false;
+  const raw = JSON.parse(languages);
+  const allowed =
+    raw == null || String(raw).trim() === ""
+      ? ["en"]
+      : String(raw)
+          .split(",")
+          .map((s) => s.trim().toLowerCase())
+          .filter(Boolean);
+  return allowed.includes(code);
+}

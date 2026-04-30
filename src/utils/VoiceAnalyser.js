@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { reportError } from "./errorReporter";
 import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import calcCER from "../../node_modules/character-error-rate/index";
@@ -32,8 +33,7 @@ import {
 } from "./constants";
 import config from "./urlConstants.json";
 import { filterBadWords } from "./Badwords";
-import S3Client from "../config/awsS3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadWavViaPresignedUrl } from "./apiUtil";
 import usePreloadAudio from "../hooks/usePreloadAudio";
 import { updateLearnerProfile } from "../services/learnerAi/learnerAiService";
 /* eslint-disable */
@@ -65,6 +65,7 @@ function VoiceAnalyser(props) {
   const [loader, setLoader] = useState(false);
   const [pauseAudio, setPauseAudio] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState("");
+  const [offlineResponseText, setOfflineResponseText] = useState("");
   const [recordedAudioBase64, setRecordedAudioBase64] = useState("");
   const [enableAfterLoad, setEnableAfterLoad] = useState(false);
   const [audioPermission, setAudioPermission] = useState(null);
@@ -131,6 +132,12 @@ function VoiceAnalyser(props) {
       });
     } catch (err) {
       console.error("An error occurred:", err);
+      reportError({
+        type: "audio_error",
+        action: "play_audio",
+        message: err?.message,
+        stack: err?.stack,
+      });
       alert("An unexpected error occurred while trying to play the audio.");
     }
   };
@@ -158,6 +165,12 @@ function VoiceAnalyser(props) {
       });
     } catch (err) {
       console.error(err);
+      reportError({
+        type: "audio_error",
+        action: "play_recorded_audio",
+        message: err?.message,
+        stack: err?.stack,
+      });
     }
   };
 
@@ -366,6 +379,7 @@ function VoiceAnalyser(props) {
       const { originalText, contentType, contentId, currentLine } = props;
       const responseStartTime = new Date().getTime();
       let responseText = "";
+      let isOfflineAsrResponse = false;
       let profanityWord = "";
       let newThresholdPercentage = 0;
       let data = {};
@@ -413,6 +427,13 @@ function VoiceAnalyser(props) {
             lang
           );
         }
+      }
+
+      // Browser speech-to-text fallback: when learner API responseText is empty,
+      // use transcript captured in offline flow so telemetry response_text is not blank.
+      if (!responseText || responseText.trim().length === 0) {
+        responseText = (offlineResponseText || "").trim();
+        isOfflineAsrResponse = responseText.length > 0;
       }
 
       if (responseText.toLowerCase() === originalText.toLowerCase()) {
@@ -493,14 +514,6 @@ function VoiceAnalyser(props) {
           process.env.REACT_APP_CHANNEL
         }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-        const command = new PutObjectCommand({
-          Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-          Key: audioFileName,
-          Body: Uint8Array.from(window.atob(base64Data), (c) =>
-            c.charCodeAt(0)
-          ),
-          ContentType: "audio/wav",
-        });
         // Update interaction with audio_path if available (for engagement tracking)
         if (callUpdateLearner && originalText && audioFileName) {
           try {
@@ -527,6 +540,12 @@ function VoiceAnalyser(props) {
             }
           } catch (err) {
             console.error("Error updating interaction with audio_path:", err);
+            reportError({
+              type: "audio_error",
+              action: "update_interaction_audio_path",
+              message: err?.message,
+              stack: err?.stack,
+            });
           }
         }
 
@@ -542,11 +561,24 @@ function VoiceAnalyser(props) {
             props.onInteractionComplete(interactionData);
           } catch (err) {
             console.error("Error calling onInteractionComplete:", err);
+            reportError({
+              type: "audio_error",
+              action: "interaction_complete_callback",
+              message: err?.message,
+              stack: err?.stack,
+            });
           }
         }
         try {
-          await S3Client.send(command);
-        } catch (err) {}
+          await uploadWavViaPresignedUrl(audioFileName, base64Data);
+        } catch (err) {
+          reportError({
+            type: "audio_error",
+            action: "s3_upload",
+            message: err?.message,
+            stack: err?.stack,
+          });
+        }
       }
 
       response(
@@ -561,6 +593,12 @@ function VoiceAnalyser(props) {
           values: [
             { original_text: originalText },
             { response_text: responseText },
+            { is_offline_asr_response: isOfflineAsrResponse },
+            {
+              stt_source: isOfflineAsrResponse
+                ? "browser_speech_recognition"
+                : "learner_ai_asr",
+            },
             { response_correct_words_array: student_correct_words_result },
             { response_incorrect_words_array: student_incorrect_words_result },
             { response_word_array_result: word_result_array },
@@ -624,16 +662,8 @@ function VoiceAnalyser(props) {
             process.env.REACT_APP_CHANNEL
           }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-          const command = new PutObjectCommand({
-            Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-            Key: audioFileName,
-            Body: Uint8Array.from(window.atob(base64Data), (c) =>
-              c.charCodeAt(0)
-            ),
-            ContentType: "audio/wav",
-          });
           try {
-            await S3Client.send(command);
+            await uploadWavViaPresignedUrl(audioFileName, base64Data);
           } catch (err) {}
         }
         response(
@@ -832,6 +862,7 @@ function VoiceAnalyser(props) {
                     handleStartRecording={props.handleStartRecording}
                     handleStopRecording={props.handleStopRecording}
                     setIsCorrect={props.setIsCorrect}
+                    setOfflineResponseText={setOfflineResponseText}
                     noOffline={props.noOffline}
                   />
                   {/* <RecordVoiceVisualizer /> */}

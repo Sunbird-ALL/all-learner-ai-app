@@ -21,6 +21,7 @@ import "./LoginPage.css";
 import { setLocalData } from "../../utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { initialize } from "../../services/telemetryService";
+import { reportError } from "../../utils/errorReporter";
 import { startEvent } from "../../services/callTelemetryIntract";
 import LanguageModalNew from "../../utils/LanguageModal";
 import { AudioDiagnosticModal } from "../../components/AudioDiagnostic";
@@ -36,6 +37,7 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formAlert, setFormAlert] = useState({
     message: "",
     severity: "error",
@@ -149,6 +151,13 @@ const LoginPage = () => {
   const handleLoginError = (error) => {
     console.error("Login Error:", error);
 
+    reportError({
+      type: "login_error",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
+
     if (error.response) {
       const { status, data } = error.response;
       const message = data?.message;
@@ -219,6 +228,7 @@ const LoginPage = () => {
     localStorage.clear();
     setLoading(true);
 
+    setIsSubmitting(true);
     try {
       if (isStateLogin) {
         const userCheckDetails = await fetchUserCheck(effectiveUsername);
@@ -519,6 +529,7 @@ const LoginPage = () => {
                   type="submit"
                   variant="contained"
                   fullWidth
+                  disabled={isSubmitting}
                   sx={{
                     background:
                       "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
@@ -536,14 +547,25 @@ const LoginPage = () => {
                       transform: "scale(1.02)",
                       boxShadow: "0 12px 24px rgba(109, 175, 25, 0.5)",
                     },
+                    "&.Mui-disabled": {
+                      background:
+                        "linear-gradient(135deg, #a8d46b 0%, #8ec050 100%)",
+                      color: "rgba(255,255,255,0.85)",
+                    },
                     transition: "all 0.3s",
                   }}
                 >
-                  {isStateLogin
-                    ? activeTab === 0
-                      ? "Login as Student"
-                      : "Login as Guest"
-                    : "Login"}
+                  {isSubmitting ? (
+                    <CircularProgress size={24} sx={{ color: "white" }} />
+                  ) : isStateLogin ? (
+                    activeTab === 0 ? (
+                      "Login as Student"
+                    ) : (
+                      "Login as Guest"
+                    )
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
               </Grid>
             </Grid>

@@ -27,23 +27,19 @@ import { useNavigate } from "react-router-dom";
 import { response } from "../services/telemetryService";
 import { Typography, Stack, IconButton } from "@mui/material";
 import { ArrowRight, RotateCcw } from "lucide-react";
-import trainImg from "../assets/trainImg.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import VoiceAnalyser from "../utils/VoiceAnalyser";
 import * as s3Assets from "../utils/rFlowS3Links";
 import { getAssetUrl } from "../utils/rFlowS3Links";
 import { getAssetAudioUrl } from "../utils/rFlowS3Links";
 
-import ballonImg from "../assets/ballon.svg";
 import bearImg from "../assets/bear.svg";
 import boyImg from "../assets/boy.svg";
 import deleteImg from "../assets/delete.svg";
 import eraseImg from "../assets/erase.svg";
 import listenImgBox from "../assets/listenimgbox.svg";
 import boyballonflyImg from "../assets/boyballonfly.svg";
-import wordbanaoImg from "../assets/wordbanao.svg";
 import dottimg from "../assets/dottimg.svg";
-import nextImg from "../assets/nextImg.svg";
 import closebuttonImg from "../assets/closebtn.svg";
 import { callTelemetryDiscovery } from "../utils/apiUtil";
 import audiowaveImg from "../assets/audiowave.svg";
@@ -4033,6 +4029,65 @@ export const KannadaGunithas = [
   },
 ];
 
+const hiGunithasData = [
+  [
+    "b97601ed-f3c9-4e14-aba2-6111fb50ef97",
+    "d25d0564-4600-43f6-aecf-22e47bc2e8ea",
+  ],
+  [
+    "56a5ee11-6ea9-4f25-97c0-c86a3a112f8a",
+    "67f596fd-41a3-4a52-9e84-217403a51405",
+  ],
+  [
+    "f381bdc5-b123-4f37-a642-e935563d66c1",
+    "21abd708-67a7-4ea0-ac33-008e8c11b4e3",
+  ],
+  [
+    "c170474a-03e5-48be-a6aa-b8221f15d416",
+    "188a1a01-6276-4766-beaa-af8106429194",
+  ],
+  [
+    "55bdbd35-e49f-4bfb-be4e-9fd8e5d3ad99",
+    "f9fb6dbf-0e2f-4d46-a72d-2e1149b5e39e",
+  ],
+  [
+    "1c14c46a-18a3-405f-bc49-66b408654a61",
+    "94bb18cd-f831-4b3b-957d-79370f360868",
+  ],
+  [
+    "fc0202ba-b95c-44c4-8a4d-11cd5e1e21c8",
+    "a6437b62-fe2e-496b-abdb-0025fcdf431e",
+  ],
+  [
+    "6c713899-af8b-4137-82cf-03668b2500f5",
+    "5aeeaf34-5753-44cb-a96e-039e17265f60",
+  ],
+  [
+    "d34511a9-42d3-49e1-b900-91ae48c6c4db",
+    "0bb11734-632f-4f7a-994d-fb328302ca25",
+  ],
+  [
+    "28f589e1-c2ac-47a5-8a7c-fd0d9c8f0446",
+    "0be39b00-8fd1-4786-bda1-0763a4db9681",
+  ],
+  [
+    "9c03c953-08f8-4a8b-a832-89e27f02a942",
+    "a8ba18e2-1b33-4bd8-bafe-f485a429c457",
+  ],
+  [
+    "2d6bbc66-3a02-4e75-9b1c-4a3a05e8478b",
+    "76435667-9511-4c4f-a7fa-0441824cdb01",
+  ],
+  [
+    "3e54fe8a-331b-4f3c-b802-5ed832a03b9d",
+    "0957b704-322e-44f8-9b2e-ac12d4f44940",
+  ],
+];
+export const HindiGunithas = hiGunithasData.map(([audioId, imageId]) => ({
+  audio: `${audioId}.wav`,
+  image: `${imageId}.png`,
+}));
+
 function getScriptFromLang(lang) {
   const scriptMap = {
     hi: "devanagari",
@@ -5615,10 +5670,13 @@ const Barakhadi = ({
               </div>
 
               <img
-                src={nextImg}
+                src={Assets.nextimg}
                 alt="next"
                 style={{ height: "32px", cursor: "pointer" }}
                 onClick={handleNextWord}
+                onKeyDown={(e) => e.key === "Enter" && handleNextWord()}
+                role="button"
+                tabIndex={0}
               />
             </div>
           </div>

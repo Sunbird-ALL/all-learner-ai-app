@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
-import back from "../../assets/images/back-arrow.svg";
 import discoverEndLeft from "../../assets/images/discover-end-left.svg";
 import discoverEndRight from "../../assets/images/discover-end-right.svg";
 import textureImage from "../../assets/images/textureImage.png";
@@ -39,10 +38,20 @@ const SpeakSentenceComponent = () => {
       }
       const virtualId = getLocalData("virtualId");
       const lang = getLocalData("lang");
-      const getMilestoneDetails = await getFetchMilestoneDetails(lang);
-      const { data } = getMilestoneDetails;
-      setLevel(data.milestone_level);
-      setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+      try {
+        const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+        const { data } = getMilestoneDetails;
+        setLevel(data.milestone_level);
+        setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+      } catch (error) {
+        console.error(
+          "Error fetching milestone details on DiscoverEnd:",
+          error
+        );
+        // Fall back to the locally cached value so the screen still renders
+        const cachedLevel = getLocalData("userLevel");
+        if (cachedLevel) setLevel(`m${cachedLevel}`);
+      }
     })();
     setTimeout(() => {
       setShake(false);

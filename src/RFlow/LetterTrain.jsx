@@ -11,11 +11,8 @@ import {
 } from "@mui/material";
 import MainLayout from "../components/Layout/MainLayout";
 import SafeYouTubePlayer from "../components/SafeYouTubePlayer";
-import listenImg from "../assets/listen.svg";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
-import correctSound from "../assets/correct.wav";
-import wrongSound from "../assets/audio/wrong.wav";
 import RecordVoiceVisualizer from "../utils/RecordVoiceVisualizer";
 import {
   practiceSteps,
@@ -3741,6 +3738,20 @@ export const dataHi = [
     ],
   },
   {
+    letter: "अः",
+    items: [
+      {
+        id: 106,
+        title: "Letter",
+        letter: "अः",
+        word: "अः",
+        image: getAssetUrl(s3Assets.अःImg),
+        audio: getAssetAudioUrl(s3Assets.अःAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.अःAudio),
+      },
+    ],
+  },
+  {
     letter: "क",
     items: [
       {
@@ -3869,6 +3880,20 @@ export const dataHi = [
     ],
   },
   {
+    letter: "ङ",
+    items: [
+      {
+        id: 107,
+        title: "Letter",
+        letter: "ङ",
+        word: "ङ",
+        image: getAssetUrl(s3Assets.ङImg),
+        audio: getAssetAudioUrl(s3Assets.ङAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ङAudio),
+      },
+    ],
+  },
+  {
     letter: "च",
     items: [
       {
@@ -3975,6 +4000,20 @@ export const dataHi = [
         image: getAssetUrl(s3Assets.झरनImg),
         audio: getAssetAudioUrl(s3Assets.झरनAudio),
         singleAudio: getAssetAudioUrl(s3Assets.झरनAudio),
+      },
+    ],
+  },
+  {
+    letter: "ञ",
+    items: [
+      {
+        id: 108,
+        title: "Letter",
+        letter: "ञ",
+        word: "ञ",
+        image: getAssetUrl(s3Assets.ञImg),
+        audio: getAssetAudioUrl(s3Assets.ञAudio),
+        singleAudio: getAssetAudioUrl(s3Assets.ञAudio),
       },
     ],
   },
@@ -7306,7 +7345,7 @@ const LetterTrain = ({
               </button>
 
               <SafeYouTubePlayer
-                videoId="gfl-lcNz1QE"
+                videoId="LuWttky0kL0"
                 style={{ borderRadius: "8px" }}
               />
             </div>

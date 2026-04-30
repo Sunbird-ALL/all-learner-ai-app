@@ -6,6 +6,7 @@ import {
   beginGetSetResultRequest,
   endGetSetResultRequest,
 } from "./getSetResultLoading";
+import { reportError } from "../../utils/errorReporter";
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
 
@@ -47,6 +48,13 @@ export const getContent = async (
     return response.data;
   } catch (error) {
     console.error("Error fetching content:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "getContent",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -71,10 +79,34 @@ export const getContentNew = async (
       content_type: criteria,
     };
     const response = await axios.post(url, data, getHeaders());
+    if (response?.data?.content?.length === 0) {
+      console.error(
+        "No content found from recommendation API, falling back to getContent"
+      );
+      try {
+        return await getContent(criteria, lang, limit, options, level);
+      } catch (fallbackError) {
+        console.error("Fallback getContent also failed", fallbackError);
+        throw fallbackError;
+      }
+    }
     return response.data;
   } catch (error) {
     console.error("Error fetching content:", error);
-    throw error;
+    reportError({
+      type: "api_error",
+      endpoint: "getContentNew",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
+    try {
+      console.error("Recommendation API failed, falling back to getContent");
+      return await getContent(criteria, lang, limit, options, level);
+    } catch (fallbackError) {
+      console.error("Fallback getContent also failed", fallbackError);
+      throw fallbackError;
+    }
   }
 };
 
@@ -88,6 +120,13 @@ export const getFetchMilestoneDetails = async (lang) => {
       return response.data;
     } catch (error) {
       console.error("Error fetching milestone details:", error);
+      reportError({
+        type: "api_error",
+        endpoint: "getFetchMilestoneDetails",
+        status: error?.response?.status,
+        message: error?.response?.data?.message || error?.message,
+        stack: error?.stack,
+      });
       throw error;
     }
   }
@@ -138,6 +177,13 @@ export const fetchGetSetResult = async (
     return response.data;
   } catch (error) {
     console.error("Error in getSetResult:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "fetchGetSetResult",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   } finally {
     endGetSetResultRequest();
@@ -171,6 +217,13 @@ export const getSetResultPractice = async ({
     return response.data;
   } catch (error) {
     console.error("Error fetching set result:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "getSetResultPractice",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error; // Rethrow the error to handle it in the calling function
   } finally {
     endGetSetResultRequest();
@@ -197,6 +250,12 @@ export const addInteraction = (subSessionId, interaction) => {
     setLocalData(storageKey, interactions);
   } catch (error) {
     console.error("Error adding interaction:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "addInteraction",
+      message: error?.message,
+      stack: error?.stack,
+    });
   }
 };
 
@@ -264,6 +323,13 @@ export const updateLearnerProfile = async (lang, requestBody) => {
     return response.data;
   } catch (error) {
     console.error("Error updating learner profile:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "updateLearnerProfile",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -291,6 +357,13 @@ export const addTowreRecord = async (
     return response.data;
   } catch (error) {
     console.error("Error adding TOWRE record:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "addTowreRecord",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
@@ -328,6 +401,13 @@ export const setMilestoneScore = async (
     return response.data;
   } catch (error) {
     console.error("Error setting milestone score:", error);
+    reportError({
+      type: "api_error",
+      endpoint: "setMilestoneScore",
+      status: error?.response?.status,
+      message: error?.response?.data?.message || error?.message,
+      stack: error?.stack,
+    });
     throw error;
   }
 };

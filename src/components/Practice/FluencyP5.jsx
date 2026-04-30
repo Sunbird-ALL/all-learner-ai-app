@@ -1,17 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
-import tortoiseImg from "../../assets/tortoiseImg.svg";
-import headerImg from "../../assets/headerImg.svg";
 import pauseImg from "../../assets/pauseImg.svg";
 import graphImg from "../../assets/graphImg.svg";
 import beardanceImg from "../../assets/beardance.svg";
-import nextImg from "../../assets/nextImg.svg";
-import listenImg from "../../assets/listenImg.svg";
-import LanguageHint from "../../assets/laguagehint.svg";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import backgroundImg from "../../assets/starsandclouds.png";
-import meterImg from "../../assets/meterimg.svg";
-import rabbitImg from "../../assets/rabbit.svg";
-import tortoiseimage from "../../assets/tortoise.svg";
 import SpeedSelector from "../../utils/SpeedSelector";
 import hintimg from "../../assets/hintsicon.svg";
 import dogImg from "../../assets/dogimg.svg";
@@ -822,8 +815,13 @@ const FluencyP5 = ({
             <img
               src={nextImg}
               alt="next"
+              role="button"
+              tabIndex={0}
               style={{ width: "50px", cursor: "pointer" }}
               onClick={(e) => handleNextClick(e)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
             />
           </div>
         </div>
@@ -914,7 +912,7 @@ const FluencyP5 = ({
               </button>
 
               <SafeYouTubePlayer
-                videoId="a0CqaBnLiro"
+                videoId="Wdg-v_oXy6U"
                 style={{ borderRadius: "8px" }}
               />
             </div>

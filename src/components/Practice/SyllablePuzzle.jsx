@@ -5,7 +5,6 @@ import janwarImg from "../../assets/Janwar.svg";
 import hintImg from "../../assets/hintNew.svg";
 import hintbackImg from "../../assets/hintbackground.png";
 import audioImg from "../../assets/audio.svg";
-import clockImg from "../../assets/clock.svg";
 import logoImg from "../../assets/logo.svg";
 import appleeeeImg from "../../assets/appleimg.svg";
 import candleImg from "../../assets/Candle.png";
@@ -54,7 +53,6 @@ import sunAudio from "../../assets/Sun.wav";
 import { practiceSteps, getLocalData } from "../../utils/constants";
 import Mic from "../../assets/mic.svg";
 import Stop from "../../assets/stop.svg";
-import Play from "../../assets/playButton.svg";
 import RecordVisualizer from "../../assets/recordVisualizer.svg";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {

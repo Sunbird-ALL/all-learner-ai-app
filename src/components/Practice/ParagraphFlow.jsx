@@ -8,7 +8,7 @@ import pauseImg from "../../assets/pauseImg.svg";
 import graphImg from "../../assets/graphImg.svg";
 import beardanceImg from "../../assets/beardances.gif";
 import hintimg from "../../assets/hintsicon.svg";
-import nextImg from "../../assets/nextImg.svg";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import listenImg from "../../assets/listenImg.svg";
 import listenbear from "../../assets/listenbear.gif";
 import bookpageImg from "../../assets/bookimageone.svg";
@@ -986,8 +986,13 @@ const ParagraphFlow = ({
 
             <img
               src={nextImg}
-              onClick={handleNextWord}
               alt="next"
+              role="button"
+              tabIndex={0}
+              onClick={handleNextWord}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
               style={{
                 marginTop: "20px",
                 width: "45px",
@@ -1064,7 +1069,8 @@ const ParagraphFlow = ({
               top: 0,
               left: 0,
               width: "100%",
-              height: "90vh",
+              minHeight: "60vh",
+              height: "auto",
               backgroundColor: "rgba(0,0,0,0.7)",
               display: "flex",
               alignItems: "center",
@@ -1105,7 +1111,7 @@ const ParagraphFlow = ({
               </button>
 
               <SafeYouTubePlayer
-                videoId="kwJEIqYMKEM"
+                videoId="Sb3iY7yqB4Q"
                 style={{ borderRadius: "8px" }}
               />
             </div>

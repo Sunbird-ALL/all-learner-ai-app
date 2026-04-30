@@ -17,8 +17,6 @@ import correctSignImg from "../../assets/correctsign.svg";
 import bubbleDropsImg from "../../assets/bubbleDropImg.svg";
 import giftboxImg from "../../assets/giftbox.svg";
 import giftopenImg from "../../assets/giftopen.svg";
-import modalgiftboxImg from "../../assets/modalgiftImg.png";
-import giftIcon from "../../assets/giftbox.svg";
 import Confetti from "react-confetti";
 import nexttImg from "../../assets/nextt.svg";
 import listenblueImg from "../../assets/listenblue.svg";
@@ -39,94 +37,6 @@ import nextimg from "../../assets/nxxt.svg";
 import redsmileImg from "../../assets/redsmile.svg";
 import greenstarImg from "../../assets/greenstar.svg";
 import { useNavigate } from "react-router-dom";
-
-const gameData = [
-  {
-    images: [
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/f9089145-068a-41bd-be3b-dfb60e9c970e.png",
-        text: "Apple",
-        audio_en:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_audios/b2a39def-9a1e-4ec3-9793-03d79e3d3d52.mp3",
-        audio_hi: "https://example.com/audio1a_hi.mp3",
-        isCorrect: true,
-      },
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/6e72fd11-0923-4b65-b468-a7b40d7b9f0b.png",
-        text: "Boy",
-        audio_en: "https://example.com/audio1b_en.mp3",
-        audio_hi: "https://example.com/audio1b_hi.mp3",
-        isCorrect: false,
-      },
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/a505128b-ba14-4fb5-bd73-d4e236a9152c.png",
-        text: "Family",
-        audio_en: "https://example.com/audio1c_en.mp3",
-        audio_hi: "https://example.com/audio1c_hi.mp3",
-        isCorrect: false,
-      },
-    ],
-  },
-  {
-    images: [
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/93463bfd-83e2-4ff1-a572-4a6618ae5fcf.png",
-        text: "Singer",
-        audio_en: "https://example.com/audio2a_en.mp3",
-        audio_hi: "https://example.com/audio2a_hi.mp3",
-        isCorrect: false,
-      },
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/6c7e4122-3704-436c-82bb-6195b61cf8da.png",
-        text: "Ship",
-        audio_en: "https://example.com/audio2b_en.mp3",
-        audio_hi: "https://example.com/audio2b_hi.mp3",
-        isCorrect: true,
-      },
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/5733edee-1aff-43d4-bb6a-a1a0217f5094.png",
-        text: "Lotus",
-        audio_en: "https://example.com/audio2c_en.mp3",
-        audio_hi: "https://example.com/audio2c_hi.mp3",
-        isCorrect: false,
-      },
-    ],
-  },
-  {
-    images: [
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/ab05f9ae-f242-4852-9266-1ecd1395af85.png",
-        text: "Tabala",
-        audio_en: "https://example.com/audio3a_en.mp3",
-        audio_hi: "https://example.com/audio3a_hi.mp3",
-        isCorrect: false,
-      },
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/a696c167-772d-4e63-90c5-fa0481fe2057.png",
-        text: "Spoon",
-        audio_en: "https://example.com/audio3b_en.mp3",
-        audio_hi: "https://example.com/audio3b_hi.mp3",
-        isCorrect: false,
-      },
-      {
-        image_url:
-          "https://all-dev-content-service.s3.ap-south-1.amazonaws.com/mechanics_images/814ff70a-4661-4e77-aa3e-ea721e2bedfd.png",
-        text: "Jar",
-        audio_en: "https://example.com/audio3c_en.mp3",
-        audio_hi: "https://example.com/audio3c_hi.mp3",
-        isCorrect: true,
-      },
-    ],
-  },
-];
 
 const GiftBox = () => {
   return (
@@ -260,7 +170,7 @@ const WordWall = ({
 
         const shuffledItems = shuffle([...formattedItems]);
 
-        const correctItems = shuffledItems.slice(0, 3);
+        const correctItems = shuffledItems;
 
         const finalGameData = correctItems.map((correctItem) => {
           let pool = shuffledItems.filter(
@@ -548,7 +458,10 @@ const WordWall = ({
   const handleReviewComplete = () => {
     setShowReview(false);
 
-    if (currentReviewIndex === wrongAnswersAllQuestions.length - 1) {
+    const allGiftsReviewed =
+      openedGifts.length >= wrongAnswersAllQuestions.length;
+
+    if (allGiftsReviewed) {
       //setShowResults(true);
       setLocalData("wordWall", false);
       navigate("/practice");
@@ -638,7 +551,10 @@ const WordWall = ({
               marginBottom: "6px",
             }}
           >
-            {3 - wrongAnswersAllQuestions?.length}
+            {Math.max(
+              0,
+              (gameData?.length || 0) - wrongAnswersAllQuestions?.length
+            )}
           </div>
           <div
             style={{

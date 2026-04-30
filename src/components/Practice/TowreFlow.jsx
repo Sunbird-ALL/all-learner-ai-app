@@ -14,7 +14,6 @@ import arrowImg from "../../assets/arrow.svg";
 import pandaImg from "../../assets/panda.svg";
 import nextImg from "../../assets/next.svg";
 import activeboxImg from "../../assets/activeBox.svg";
-import startImg from "../../assets/start.svg";
 import pandaTimerImg from "../../assets/pandaTimer1.svg";
 import timerBoxImg from "../../assets/timerBox.svg";
 import initialMessageBoxImg from "../../assets/initialMessageBox.svg";
@@ -34,8 +33,8 @@ import MainLayout from "../Layout/MainLayout";
 // Using native browser Speech Recognition API instead of library
 import { addTowreRecord } from "../../services/learnerAi/learnerAiService";
 import * as Assets from "../../utils/imageAudioLinks";
-import S3Client from "../../config/awsS3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadWavViaPresignedUrl } from "../../utils/apiUtil";
+import { reportError } from "../../utils/errorReporter";
 
 const allEnglishWords = [
   { title: "is", isCorrect: false },
@@ -611,6 +610,7 @@ const CombinedReportPage = ({
   transcript,
   totalSec,
   wpm,
+  browserUnsupported,
 }) => {
   const [showWordList, setShowWordList] = useState(false);
   const theme = createTheme();
@@ -677,6 +677,27 @@ const CombinedReportPage = ({
       >
         You're reading faster.
       </p>
+
+      {browserUnsupported && (
+        <div
+          style={{
+            backgroundColor: "#fff3cd",
+            border: "1px solid #ffc107",
+            borderRadius: 8,
+            padding: "8px 16px",
+            marginBottom: 16,
+            fontSize: isMobile ? "11px" : "13px",
+            color: "#856404",
+            textAlign: "center",
+            fontFamily: "Quicksand",
+            width: "100%",
+          }}
+        >
+          ⚠️ Speech recognition is not supported in your browser, so words could
+          not be scored automatically. Please use Google Chrome or Microsoft
+          Edge for accurate results.
+        </div>
+      )}
 
       <div
         style={{
@@ -1080,6 +1101,7 @@ const TowreFlow = ({
   const [loading, setLoading] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [browserWarning, setBrowserWarning] = useState("");
   const [recordedAudioBlob, setRecordedAudioBlob] = useState(null);
   const [transcripts, setTranscripts] = useState("");
   const [startTime, setStartTime] = useState(null);
@@ -1440,7 +1462,9 @@ const TowreFlow = ({
                 `⚠️ Speech recognition stopped unexpectedly. Attempting restart ${attemptNumber}/${maxRetries}...`
               );
               try {
-                resetTranscript();
+                // Do NOT call resetTranscript() here — it wipes all accumulated
+                // words recognized before this restart, causing 0-score results
+                // when Chrome stops due to no-speech, network hiccup, or timeout.
                 if (recognitionRef.current) {
                   recognitionRef.current.lang = getBrowserLanguage(lang);
                   recognitionRef.current.start();
@@ -1580,6 +1604,9 @@ const TowreFlow = ({
     );
     if (!browserSupportsSpeechRecognition) {
       console.error("❌ Speech recognition is not supported in this browser!");
+      setBrowserWarning(
+        "Your browser may not support speech recognition. For best results, please use Google Chrome or Microsoft Edge."
+      );
     }
   }, [browserSupportsSpeechRecognition]);
 
@@ -1697,9 +1724,17 @@ const TowreFlow = ({
           // Start speech recognition after countdown completes
           // Check browser support before starting
           if (!browserSupportsSpeechRecognition) {
-            console.error(
-              "❌ Cannot start speech recognition: Browser does not support it"
+            console.warn(
+              "⚠️ Speech recognition not supported in this browser — starting audio recording only"
             );
+            reportError({
+              type: "audio_error",
+              action: "towre_speech_recognition_unsupported",
+              message: `Browser does not support Web Speech API (${navigator.userAgent})`,
+            });
+            // Still start audio recording so mediaRecorder.onstop fires when
+            // the timer ends, allowing results to render (words will be unscored)
+            await startAudioRecording();
             return;
           }
 
@@ -1712,6 +1747,11 @@ const TowreFlow = ({
             console.log("✅ Microphone permission granted");
           } catch (error) {
             console.error("❌ Microphone permission denied or error:", error);
+            reportError({
+              type: "audio_error",
+              action: "towre_mic_permission_denied",
+              message: error?.message || "Microphone permission denied",
+            });
             alert(
               "Microphone access is required for speech recognition. Please allow microphone access and try again."
             );
@@ -1835,6 +1875,34 @@ const TowreFlow = ({
 
       mediaRecorder.onstop = async () => {
         if (chunksRef.current.length === 0) {
+          // No audio captured (unsupported MIME type or MediaRecorder issue) —
+          // fall back to whatever speech recognition transcript was captured
+          reportError({
+            type: "audio_error",
+            action: "towre_media_recorder_no_chunks",
+            message: "MediaRecorder stopped with 0 audio chunks",
+          });
+          setTranscripts(transcriptRef.current || "");
+          const transcriptWords = normalize(transcriptRef.current || "").filter(
+            (w) => w && w.trim().length > 0
+          );
+          const transcriptPhonetics = new Set(
+            transcriptWords.map(getPhonetic).filter((ph) => ph && ph.length > 0)
+          );
+          allWords.forEach((word) => {
+            const lower = word?.title?.toLowerCase()?.trim();
+            if (!lower || lower.length === 0) {
+              word.isCorrect = false;
+              return;
+            }
+            const wordPhonetic = getPhonetic(lower);
+            const hasValidPhonetic = wordPhonetic && wordPhonetic.length > 0;
+            word.isCorrect =
+              transcriptWords.includes(lower) ||
+              (hasValidPhonetic && transcriptPhonetics.has(wordPhonetic));
+          });
+          setLoading(false);
+          setCompleted(true);
           return;
         }
 
@@ -1963,25 +2031,26 @@ const TowreFlow = ({
               process.env.REACT_APP_CHANNEL
             }/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
-            const command = new PutObjectCommand({
-              Bucket: process.env.REACT_APP_AWS_S3_BUCKET_NAME,
-              Key: audioFileName,
-              Body: Uint8Array.from(window.atob(base64Audio), (c) =>
-                c.charCodeAt(0)
-              ),
-              ContentType: "audio/wav",
-            });
-
             try {
-              await S3Client.send(command);
+              await uploadWavViaPresignedUrl(audioFileName, base64Audio);
             } catch (uploadErr) {
               // S3 upload failed (non-critical) - continue
+              reportError({
+                type: "api_error",
+                action: "towre_s3_upload_failed",
+                message: uploadErr?.message || "S3 presigned URL upload failed",
+              });
             }
 
             try {
               await addTowreRecord(audioFileName, allWords, lang);
             } catch (apiErr) {
               // Error saving TOWRE record (non-critical) - continue
+              reportError({
+                type: "api_error",
+                endpoint: "addTowreRecord",
+                message: apiErr?.message || "Failed to save TOWRE record",
+              });
             }
           } catch (processErr) {
             // Error processing audio for upload (non-critical) - continue
@@ -1996,6 +2065,9 @@ const TowreFlow = ({
       mediaRecorder.start();
     } catch (error) {
       console.error("🚨 Error starting audio recording:", error);
+      // Ensure loading spinner never freezes if recording fails to start
+      setLoading(false);
+      setCompleted(true);
     }
   };
 
@@ -2042,6 +2114,7 @@ const TowreFlow = ({
         transcript={transcripts}
         totalSec={totalSec}
         wpm={vocabCount}
+        browserUnsupported={!browserSupportsSpeechRecognition}
       />
     );
   }
@@ -2757,6 +2830,24 @@ const TowreFlow = ({
                   marginBottom: "10px",
                 }}
               />
+              {browserWarning && (
+                <div
+                  style={{
+                    backgroundColor: "#fff3cd",
+                    border: "1px solid #ffc107",
+                    borderRadius: 10,
+                    padding: "10px 18px",
+                    marginBottom: 16,
+                    fontSize: isMobile ? "11px" : "13px",
+                    color: "#856404",
+                    textAlign: "center",
+                    fontFamily: "Quicksand",
+                    maxWidth: 400,
+                  }}
+                >
+                  ⚠️ {browserWarning}
+                </div>
+              )}
               <img
                 src={Assets.startButtonImg}
                 alt="Start Button"

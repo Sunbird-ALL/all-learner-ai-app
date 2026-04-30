@@ -10,11 +10,16 @@ import axios from "axios";
 import { getFontFamily } from "./utils/fontUtils";
 import { getLocalData } from "./utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
-import { initialize } from "./services/telemetryService";
 import { startEvent } from "./services/callTelemetryIntract";
-import { error as logTelemetryError } from "./services/telemetryService";
+import {
+  error as logTelemetryError,
+  initialize,
+} from "./services/telemetryService";
 import { useNavigate } from "react-router-dom";
+import { reportError } from "./utils/errorReporter";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
+import { RESILIENCE_CONFIG } from "./config/config";
 
 const App = () => {
   const ranonce = useRef(false);
@@ -146,12 +151,50 @@ const App = () => {
     };
   }, []);
 
+  // Re-initialize telemetry on page refresh: if a session exists in localStorage,
+  // initialize() must be called on every mount — not just after login — otherwise
+  // telemetry events (e.g. response() in VoiceAnalyser) crash with
+  // "Cannot read properties of undefined (reading 'get')".
+  // initialize() is idempotent (guarded by CsTelemetryModule.instance.isInitialised),
+  // so calling it here is a no-op when the user just logged in normally.
+  useEffect(() => {
+    const apiToken = localStorage.getItem("apiToken");
+    if (!apiToken) return;
+
+    initialize({
+      context: {
+        mode: process.env.REACT_APP_MODE,
+        authToken: apiToken,
+        did: localStorage.getItem("deviceId") || "",
+        uid: localStorage.getItem("virtualId") || apiToken || "anonymous",
+        channel: process.env.REACT_APP_CHANNEL,
+        env: process.env.REACT_APP_ENV,
+        pdata: {
+          id: process.env.REACT_APP_ID,
+          ver: process.env.REACT_APP_VER,
+          pid: process.env.REACT_APP_PID,
+        },
+        tags: [""],
+        timeDiff: 0,
+        host: process.env.REACT_APP_HOST,
+        endpoint: process.env.REACT_APP_ENDPOINT,
+        apislug: process.env.REACT_APP_APISLUG,
+      },
+      config: {},
+      metadata: {},
+    });
+  }, []);
+
   useEffect(() => {
     if (ranonce.current) return;
     ranonce.current = true;
 
-    const RETRY_MAX = 3;
-    const RETRY_BASE_DELAY_MS = 1000; // 1s, 2s, 4s (exponential backoff)
+    // Apply global request timeout so no spinner/overlay hangs indefinitely
+    // when the backend is slow or unreachable. Value is configured in config.js.
+    axios.defaults.timeout = RESILIENCE_CONFIG.API_TIMEOUT_MS;
+
+    const RETRY_MAX = RESILIENCE_CONFIG.RETRY_MAX;
+    const RETRY_BASE_DELAY_MS = RESILIENCE_CONFIG.RETRY_BASE_DELAY_MS;
 
     axios.interceptors.response.use(
       (response) => response,
@@ -209,6 +252,18 @@ const App = () => {
             );
           }
           // All retries exhausted — fall through to auth check + reject
+        }
+
+        // Report to error system after all retries are exhausted
+        if (isRetryable && config.__retryCount >= RETRY_MAX) {
+          reportError({
+            type: "api_error_exhausted",
+            endpoint: config.url || "unknown",
+            status: statusCode,
+            retryCount: config.__retryCount,
+            message: error?.response?.data?.message || error?.message,
+            stack: error?.stack,
+          });
         }
 
         // --- Auth error handling (401 / 400) ---
@@ -320,14 +375,16 @@ const App = () => {
   }, [appInitialized]);
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <SessionExpiredProvider>
-          <GetSetResultLoadingOverlay />
-          <AppContent routes={routes} />
-        </SessionExpiredProvider>
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <ErrorBoundary>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <SessionExpiredProvider>
+            <GetSetResultLoadingOverlay />
+            <AppContent routes={routes} />
+          </SessionExpiredProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </ErrorBoundary>
   );
 };
 

@@ -2,6 +2,7 @@ import { CsTelemetryModule } from "@project-sunbird/client-services/telemetry";
 import { uniqueId } from "./utilService";
 import { jwtDecode } from "../../node_modules/jwt-decode/build/cjs/index";
 import { getLocalData, setLocalData } from "../utils/constants";
+import { reportError } from "../utils/errorReporter";
 
 let startTime; // Variable to store the timestamp when the start event is raised
 let contentSessionId;
@@ -51,6 +52,7 @@ export const initialize = async ({ context, config, metadata }) => {
       users: [],
     })
   );
+  // One-time SDK setup: only run init() and collect device info once per page load.
   if (!CsTelemetryModule.instance.isInitialised) {
     await CsTelemetryModule.instance.init({});
 
@@ -84,42 +86,48 @@ export const initialize = async ({ context, config, metadata }) => {
 
     // Store device cdata globally so it can be reused in getEventOptions
     globalDeviceCdata = deviceCdata;
+  }
 
-    const telemetryConfig = {
-      config: {
-        pdata: context.pdata,
-        env: "",
-        channel: context.channel,
-        did: context.did,
-        authtoken: context.authToken || "",
-        uid:
-          getLocalData("virtualId") ||
-          localStorage.getItem("apiToken") ||
-          "anonymous",
-        sid: context.sid,
-        batchsize: process.env.REACT_APP_BATCHSIZE,
-        mode: context.mode,
-        host: context.host,
-        apislug: context.apislug,
-        endpoint: context.endpoint,
-        tags: context.tags,
-        // Device info set once in config - will be included in all events
-        cdata: [
-          { id: contentSessionId, type: "ContentSession" },
-          { id: playSessionId, type: "PlaySession" },
-          ...deviceCdata, // Spread all device info into config cdata
-        ],
-      },
-      userOrgDetails: {},
-    };
+  // Always call initTelemetry so credentials (authToken, endpoint, uid) are
+  // refreshed on every initialize() call — including page refresh and re-login.
+  const telemetryConfig = {
+    config: {
+      pdata: context.pdata,
+      env: "",
+      channel: context.channel,
+      did: context.did,
+      authtoken: context.authToken || "",
+      uid:
+        getLocalData("virtualId") ||
+        localStorage.getItem("apiToken") ||
+        "anonymous",
+      sid: context.sid,
+      batchsize: process.env.REACT_APP_BATCHSIZE,
+      mode: context.mode,
+      host: context.host,
+      apislug: context.apislug,
+      endpoint: context.endpoint,
+      tags: context.tags,
+      cdata: [
+        { id: contentSessionId, type: "ContentSession" },
+        { id: playSessionId, type: "PlaySession" },
+        ...globalDeviceCdata,
+      ],
+    },
+    userOrgDetails: {},
+  };
 
-    try {
-      await CsTelemetryModule.instance.telemetryService.initTelemetry(
-        telemetryConfig
-      );
-    } catch (error) {
-      console.error(":e", error);
-    }
+  try {
+    await CsTelemetryModule.instance.telemetryService.initTelemetry(
+      telemetryConfig
+    );
+  } catch (error) {
+    console.error(":e", error);
+    reportError({
+      type: "telemetry_init_failure",
+      message: error?.message,
+      stack: error?.stack,
+    });
   }
 };
 

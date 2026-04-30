@@ -45,11 +45,6 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { levelMapping } from "../../utils/levelData";
 import { jwtDecode } from "jwt-decode";
-import r0 from "../../assets/R0m.png";
-import rOneImg from "../../assets/R1.png";
-import rTwoMileImage from "../../assets/r2mile.png";
-import rThreeMileImage from "../../assets/r3mile.png";
-import rFourMileImage from "../../assets/r4mile.png";
 import F1Image from "../../assets/F1.png";
 import F2Image from "../../assets/F2.png";
 import F3Image from "../../assets/F3.png";
@@ -961,7 +956,7 @@ const MainLayout = (props) => {
         }}
       />
 
-      {!!LEVEL && (
+      {!!LEVEL && !props.loading && (
         <Box
           sx={{
             position: "absolute",
@@ -1769,7 +1764,7 @@ const MainLayout = (props) => {
                           >
                             <Stack justifyContent="center" alignItems="center">
                               <img
-                                src={`https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.3/src/assets/images/gameLost.svg`}
+                                src={Assets.gameLost}
                                 alt="gameLost"
                                 height={"250px"}
                               />
@@ -1941,7 +1936,7 @@ const MainLayout = (props) => {
                                             <Box sx={{ flexShrink: 0, mr: 1 }}>
                                               {elem?.correctAnswer === false ? (
                                                 <img
-                                                  src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/wrong.svg"
+                                                  src={Assets.wrong}
                                                   alt="wrongImage"
                                                   style={{
                                                     width: "22px",
@@ -1950,7 +1945,7 @@ const MainLayout = (props) => {
                                                 />
                                               ) : (
                                                 <img
-                                                  src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/correct.svg"
+                                                  src={Assets.correct}
                                                   alt="correctImage"
                                                   style={{
                                                     width: "22px",
@@ -2002,7 +1997,7 @@ const MainLayout = (props) => {
                                         spacing={1.5}
                                       >
                                         <img
-                                          src="https://raw.githubusercontent.com/Sunbird-ALL/all-learner-ai-app/refs/heads/all-1.2-tn-dev/src/assets/turtle.svg"
+                                          src={Assets.turtle}
                                           alt="turtleImage"
                                           style={{
                                             width: "45px",

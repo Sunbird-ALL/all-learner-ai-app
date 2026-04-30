@@ -214,6 +214,7 @@ const WordsOrImage = ({
 
   const handleNextWrapped = () => {
     setIsTranscriptCorrect(null);
+    setAnswer(null);
     handleNext();
   };
 
@@ -258,6 +259,8 @@ const WordsOrImage = ({
     //   //alert("Speech recognition is not supported in your browser.");
     //   return;
     // }
+    setAnswer(null);
+    setIsTranscriptCorrect(null);
     setRecAudio(null);
     resetTranscript();
     setIsRecording(true);
@@ -675,6 +678,14 @@ const WordsOrImage = ({
     if (answer === false) return "red";
     return "#333F61";
   };
+
+  const isUsingInlineSpeechFlow = (level === 15 && !isShowCase) || isDemo;
+  const resolvedAnswer =
+    isShowCase || isDiscover
+      ? null
+      : isUsingInlineSpeechFlow
+      ? answer
+      : isTranscriptCorrect;
 
   //console.log("wds", words, matchedChar, answer);
 
@@ -1102,7 +1113,7 @@ const WordsOrImage = ({
                             }
                           : {
                               mb: isMobile ? 2 : 4,
-                              color: getAnswerColor(answer),
+                              color: getAnswerColor(resolvedAnswer),
                               textAlign: "center",
                             }),
                       }}
@@ -1293,7 +1304,7 @@ const WordsOrImage = ({
                       {highlightWords(
                         words,
                         matchedChar,
-                        getAnswerColor(isTranscriptCorrect)
+                        getAnswerColor(resolvedAnswer)
                       )}
                     </Box>
                   ))}

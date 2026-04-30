@@ -1,3 +1,4 @@
+/* global globalThis */
 import MainLayout from "../Layout/MainLayout";
 import assessmentBackground from "../../assets/images/assessmentBackground.png";
 import {
@@ -33,6 +34,7 @@ import {
   setLocalData,
   getLanguageOrDefault,
 } from "../../utils/constants";
+import { setLocalDataAndNotify } from "../../utils/localStorageEvents";
 import {
   RoundTick,
   StartAssessmentButton,
@@ -80,7 +82,6 @@ import rOneImage from "../../assets/R1Back.png";
 import rTwoImage from "../../assets/R2Back.png";
 import rThreeImage from "../../assets/R3Back.png";
 import rFourImage from "../../assets/R4Back.png";
-import Image from "../../assets/images/DeskTopR1Image.png";
 import profilePic from "../../assets/images/profile_url.png";
 import textureImage from "../../assets/images/textureImage.png";
 import back from "../../assets/images/back-arrow.png";
@@ -646,17 +647,18 @@ export const ProfileHeader = ({
         setShowChartPointer(false); // 👈 demo finished
         setIsAudioPlaying(false);
         chartAudioRef.current = null;
-
-        // ✅ Audio done → now wait for user click
-        setLocalData("showAlphabetDemo", "false");
+        // setLocalDataAndNotify triggers onLocalData in Practice.jsx to reset isAlphabetDemoActive
+        setLocalDataAndNotify("showAlphabetDemo", "false");
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
       audio.onerror = () => {
         console.warn("Chart audio missing, showing pointer only");
         setShowChartPointer(false);
         setIsAudioPlaying(false);
-        setLocalData("showAlphabetDemo", "false");
         chartAudioRef.current = null;
+        setLocalDataAndNotify("showAlphabetDemo", "false");
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
       setTimeout(() => {
@@ -665,8 +667,9 @@ export const ProfileHeader = ({
         audio.play().catch(() => {
           setShowChartPointer(false);
           setIsAudioPlaying(false);
-          setLocalData("showAlphabetDemo", "false");
           chartAudioRef.current = null;
+          setLocalDataAndNotify("showAlphabetDemo", "false");
+          globalThis.dispatchEvent(new Event("alphabetDemoStop"));
         });
       }, 500);
     };
@@ -818,6 +821,10 @@ export const ProfileHeader = ({
       kn: {
         title: "📚 ವರ್ಣಮಾಲೆ ಚಾರ್ಟ್‌",
         desc: "ನಿಮಗೆ ಅಕ್ಷರಗಳು ಅಥವಾ ಗುಣಿತಾಕ್ಷರಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಲು ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿರುವ ಚಾರ್ಟ್‌ ನೋಡಿ.",
+      },
+      hi: {
+        title: "📚 वर्णमाला चार्ट",
+        desc: "यदि आपको किसी वर्णमाला या सिलेबल के लिए सहायता चाहिए, तो यहाँ चार्ट देखें।",
       },
     };
 
@@ -1274,7 +1281,6 @@ export const ProfileHeader = ({
                   invisible={true}
                 />
                 <CustomTooltip
-                  interactive
                   title={ui.ASSESSMENT_ALPHABET_CHART}
                   arrow
                   placement="bottom"
@@ -1561,6 +1567,9 @@ const Assesment = ({ discoverStart }) => {
   const [milestoneDataKey, setMilestoneDataKey] = useState(0); // Force re-render when milestone data changes
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [showModal, setShowModal] = useState(false);
+  const [initError, setInitError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const loadDataRef = React.useRef(null);
   const nativeLangEnable = getLocalData("nativeLangEnable");
   const nativeLang = getLocalData("nativeLang");
   const rStepNo = getLocalData("rStepZero");
@@ -1628,145 +1637,179 @@ const Assesment = ({ discoverStart }) => {
       setLocalData("sessionId", contentSessionId);
     }
 
-    if (discoverStart && username && !TOKEN) {
-      (async () => {
-        setLocalData("profileName", username);
-        const usernameDetails = await fetchVirtualId(username);
-        const getMilestoneDetails = await getFetchMilestoneDetails(lang);
+    const runLoad = async () => {
+      setLoading(true);
+      if (discoverStart && username && !TOKEN) {
+        try {
+          setLocalData("profileName", username);
+          const usernameDetails = await fetchVirtualId(username);
+          const getMilestoneDetails = await getFetchMilestoneDetails(lang);
 
-        setLocalData(
-          "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails })
-        );
-        // Force re-render to update milestone data display
-        setMilestoneDataKey((prev) => prev + 1);
+          setLocalData(
+            "getMilestone",
+            JSON.stringify({ ...getMilestoneDetails })
+          );
+          // Force re-render to update milestone data display
+          setMilestoneDataKey((prev) => prev + 1);
 
-        if (
-          levelMapping[usernameDetails?.data?.result?.virtualID] !== undefined
-        ) {
-          setLevel(levelMapping[usernameDetails?.data?.result?.virtualID]);
-        } else {
-          const token = getLocalData("token");
-          if (token) {
-            try {
-              const decoded = jwtDecode(token);
-              const emisUsername = String(decoded.emis_username);
+          if (
+            levelMapping[usernameDetails?.data?.result?.virtualID] !== undefined
+          ) {
+            setLevel(levelMapping[usernameDetails?.data?.result?.virtualID]);
+          } else {
+            const token = getLocalData("token");
+            if (token) {
+              try {
+                const decoded = jwtDecode(token);
+                const emisUsername = String(decoded.emis_username);
 
-              if (levelMapping[emisUsername] !== undefined) {
-                setLevel(levelMapping[emisUsername]);
+                if (levelMapping[emisUsername] !== undefined) {
+                  setLevel(levelMapping[emisUsername]);
+                }
+              } catch (error) {
+                console.error("Error decoding JWT token:", error);
               }
-            } catch (error) {
-              console.error("Error decoding JWT token:", error);
             }
           }
-        }
 
-        // console.log("Assigned LEVEL:", level);
+          // console.log("Assigned LEVEL:", level);
 
-        localStorage.setItem(
-          "virtualId",
-          usernameDetails?.data?.result?.virtualID
-        );
-        //let session_id = localStorage.getItem("sessionId");
-        const level = getMilestoneDetails?.data?.milestone_level;
-        setLevel(
-          level?.startsWith("m") ? Number(level.replace("m", "")) : level
-        );
-        setVocabCount(
-          getMilestoneDetails?.data?.extra?.vocabulary_count +
-            getMilestoneDetails?.data?.extra?.learned_voc_count || 0
-        );
-        setWordCount(
-          getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
-            0
-        );
-        let session_id = getLocalData("sessionId");
+          localStorage.setItem(
+            "virtualId",
+            usernameDetails?.data?.result?.virtualID
+          );
+          //let session_id = localStorage.getItem("sessionId");
+          const milestoneLevel = getMilestoneDetails?.data?.milestone_level;
+          const parsedLevel = milestoneLevel?.startsWith("m")
+            ? Number(milestoneLevel.replace("m", ""))
+            : milestoneLevel;
 
-        if (!session_id) {
-          session_id = uniqueId();
-          setLocalData("sessionId", session_id);
-        }
-
-        setLocalData("lang", lang || "ta");
-        if (
-          process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
-          localStorage.getItem("contentSessionId") !== null
-        ) {
-          fetchUserPoints()
-            .then((points) => {
-              setPoints(points);
-            })
-            .catch((error) => {
-              console.error("Error fetching user points:", error);
-              setPoints(0);
-            });
-        }
-
-        // dispatch(setVirtualId(virtualId));
-      })();
-    } else {
-      (async () => {
-        const language = lang;
-        const getMilestoneDetails = await getFetchMilestoneDetails(language);
-        setLocalData(
-          "getMilestone",
-          JSON.stringify({ ...getMilestoneDetails })
-        );
-        // Force re-render to update milestone data display
-        setMilestoneDataKey((prev) => prev + 1);
-        const level = getMilestoneDetails?.data?.milestone_level;
-        setLevel(
-          level?.startsWith("m") ? Number(level.replace("m", "")) : level
-        );
-        setVocabCount(getMilestoneDetails?.data?.extra?.vocabulary_count || 0);
-        setWordCount(
-          getMilestoneDetails?.data?.extra?.latest_towre_data?.wordsPerMinute ||
-            0
-        );
-
-        if (levelMapping[virtualId] !== undefined) {
-          setLevel(levelMapping[virtualId]);
-        } else {
-          const token = getLocalData("token");
-          if (token) {
-            try {
-              const decoded = jwtDecode(token);
-              const emisUsername = String(decoded.emis_username);
-
-              if (levelMapping[emisUsername] !== undefined) {
-                setLevel(levelMapping[emisUsername]);
-              }
-            } catch (error) {
-              console.error("Error decoding JWT token:", error);
+          // Auto-redirect returning users on discover-start BEFORE setLevel
+          // so we never re-render with their old milestone image
+          if (discoverStart) {
+            const subMilestone =
+              getMilestoneDetails?.data?.sub_milestone_level ?? "";
+            if ((parsedLevel === "B" || parsedLevel === "b") && !subMilestone) {
+              navigate("/letter-hunt");
+              return;
+            }
+            if (parsedLevel && parsedLevel !== 0) {
+              navigate("/practice");
+              return;
             }
           }
+
+          // Only set level if we're staying on this page (new user, level === 0)
+          setLevel(parsedLevel);
+
+          setVocabCount(
+            getMilestoneDetails?.data?.extra?.vocabulary_count +
+              getMilestoneDetails?.data?.extra?.learned_voc_count || 0
+          );
+          setWordCount(
+            getMilestoneDetails?.data?.extra?.latest_towre_data
+              ?.wordsPerMinute || 0
+          );
+          let session_id = getLocalData("sessionId");
+
+          if (!session_id) {
+            session_id = uniqueId();
+            setLocalData("sessionId", session_id);
+          }
+
+          setLocalData("lang", lang || "ta");
+          if (
+            process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
+            (localStorage.getItem("contentSessionId") !== null ||
+              process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+          ) {
+            fetchUserPoints()
+              .then((points) => {
+                setPoints(points);
+              })
+              .catch((error) => {
+                console.error("Error fetching user points:", error);
+                setPoints(0);
+              });
+          }
+
+          // dispatch(setVirtualId(virtualId));
+        } catch (error) {
+          console.error("Error loading discover-start data:", error);
+          setInitError(true);
         }
+      } else {
+        try {
+          const language = lang;
+          const getMilestoneDetails = await getFetchMilestoneDetails(language);
+          setLocalData(
+            "getMilestone",
+            JSON.stringify({ ...getMilestoneDetails })
+          );
+          // Force re-render to update milestone data display
+          setMilestoneDataKey((prev) => prev + 1);
+          const level = getMilestoneDetails?.data?.milestone_level;
+          setLevel(
+            level?.startsWith("m") ? Number(level.replace("m", "")) : level
+          );
+          setVocabCount(
+            getMilestoneDetails?.data?.extra?.vocabulary_count || 0
+          );
+          setWordCount(
+            getMilestoneDetails?.data?.extra?.latest_towre_data
+              ?.wordsPerMinute || 0
+          );
 
-        // console.log("Assigned LEVEL:", level);
+          if (levelMapping[virtualId] !== undefined) {
+            setLevel(levelMapping[virtualId]);
+          } else {
+            const token = getLocalData("token");
+            if (token) {
+              try {
+                const decoded = jwtDecode(token);
+                const emisUsername = String(decoded.emis_username);
 
-        let sessionId = getLocalData("sessionId");
+                if (levelMapping[emisUsername] !== undefined) {
+                  setLevel(levelMapping[emisUsername]);
+                }
+              } catch (error) {
+                console.error("Error decoding JWT token:", error);
+              }
+            }
+          }
 
-        if (!sessionId || sessionId === "null") {
-          sessionId = localStorage.getItem("contentSessionId") || uniqueId();
-          setLocalData("sessionId", sessionId);
+          // console.log("Assigned LEVEL:", level);
+
+          let sessionId = getLocalData("sessionId");
+
+          if (!sessionId || sessionId === "null") {
+            sessionId = localStorage.getItem("contentSessionId") || uniqueId();
+            setLocalData("sessionId", sessionId);
+          }
+
+          if (
+            process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
+            TOKEN &&
+            (localStorage.getItem("contentSessionId") !== null ||
+              process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+          ) {
+            fetchUserPoints()
+              .then((points) => {
+                setPoints(points);
+              })
+              .catch((error) => {
+                console.error("Error fetching user points:", error);
+                setPoints(0);
+              });
+          }
+        } catch (error) {
+          console.error("Error loading assessment data:", error);
+          setInitError(true);
         }
-
-        if (
-          process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
-          TOKEN &&
-          localStorage.getItem("contentSessionId") !== null
-        ) {
-          fetchUserPoints()
-            .then((points) => {
-              setPoints(points);
-            })
-            .catch((error) => {
-              console.error("Error fetching user points:", error);
-              setPoints(0);
-            });
-        }
-      })();
-    }
+      }
+    };
+    loadDataRef.current = runLoad;
+    runLoad().finally(() => setLoading(false));
   }, [lang]);
 
   const TOKEN = localStorage.getItem("apiToken");
@@ -1958,6 +2001,58 @@ const Assesment = ({ discoverStart }) => {
     position: "relative",
   };
 
+  // Show a friendly error card when API calls on mount fail (server down / timeout).
+  if (initError) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          gap: 2,
+          px: 3,
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ fontFamily: "Quicksand", fontWeight: 700, color: "#555" }}
+        >
+          Could not load your session.
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{ fontFamily: "Quicksand", color: "#888", maxWidth: 360 }}
+        >
+          The server is unreachable right now. Check your connection and try
+          again.
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setInitError(false);
+            loadDataRef.current?.();
+          }}
+          sx={{
+            mt: 1,
+            background: "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+            color: "white",
+            fontFamily: "Quicksand",
+            fontWeight: 700,
+            borderRadius: "25px",
+            textTransform: "none",
+            px: 4,
+            py: 1.5,
+          }}
+        >
+          Try Again
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <>
       {!!openMessageDialog && (
@@ -2064,6 +2159,7 @@ const Assesment = ({ discoverStart }) => {
           showTimer={false}
           cardBackground={assessmentBackground}
           backgroundImage={practicebg}
+          loading={loading}
           {...{
             setOpenLangModal,
             lang,
@@ -2073,8 +2169,6 @@ const Assesment = ({ discoverStart }) => {
           <Box
             sx={{
               position: "absolute",
-              //right: { xs: 20, md: 200 },
-              //right: isMobile ? 20 : 200,
               top: "30%",
               left: "50%",
               transform: "translate(-50%, -50%)",
@@ -2086,94 +2180,112 @@ const Assesment = ({ discoverStart }) => {
               textAlign: "center",
             }}
           >
-            <Typography
-              sx={{
-                color: "#322020",
-                fontWeight: 700,
-                fontSize: { xs: "24px", md: "40px" },
-                fontFamily: getFontFamily(lang),
-                lineHeight: { xs: "36px", md: "62px" },
-                textAlign: "center",
-              }}
-              fontSize={{ md: "40px", xs: "30px" }}
-            >
-              {discoverStart
-                ? ui.ASSESSMENT_TEST_LANGUAGE_SKILLS
-                : ui.ASSESSMENT_GOOD_LANGUAGE_SKILLS}
-            </Typography>
-            <Box>
-              <Typography
-                sx={{
-                  color: "#1CB0F6",
-                  fontWeight: 600,
-                  fontSize: { xs: "20px", md: "30px" },
-                  fontFamily: getFontFamily(lang),
-                  lineHeight: { xs: "30px", md: "50px" },
-                  textAlign: "center",
-                }}
-                fontSize={{ md: "30px", xs: "20px" }}
-              >
-                {level > 0
-                  ? ui.ASSESSMENT_TAKE_COMPLETE_LEVEL.replace(
-                      "{level}",
-                      String(level)
-                    )
-                  : ui.ASSESSMENT_TAKE_DISCOVER_LEVEL}
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              {process.env.REACT_APP_SHOW_HELP_VIDEO === "true" && (
-                <Box
-                  onClick={handleOpenVideo}
+            {loading ? (
+              <>
+                <CircularProgress size={44} sx={{ color: "#1CB0F6", mb: 2 }} />
+                <Typography
                   sx={{
-                    mt: { xs: 1, md: 1 },
-                    mr: { xs: 2, md: 2 },
-                    cursor: "pointer",
-                    textAlign: "center",
+                    color: "#322020",
+                    fontWeight: 600,
+                    fontSize: { xs: "15px", md: "18px" },
+                    fontFamily: getFontFamily(lang),
                   }}
                 >
-                  <img src={HelpLogo} alt="help_video_link" />
-                </Box>
-              )}
-              <Box
-                sx={{
-                  cursor: "pointer",
-                  mt: { xs: 1, md: 2 },
-                  zIndex: 9999,
-                }}
-                onClick={handleRedirect}
-              >
-                {lang === "te" ? (
-                  <Box
+                  Please wait, we are fetching details for you…
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Typography
+                  sx={{
+                    color: "#322020",
+                    fontWeight: 700,
+                    fontSize: { xs: "24px", md: "40px" },
+                    fontFamily: getFontFamily(lang),
+                    lineHeight: { xs: "36px", md: "62px" },
+                    textAlign: "center",
+                  }}
+                  fontSize={{ md: "40px", xs: "30px" }}
+                >
+                  {discoverStart
+                    ? ui.ASSESSMENT_TEST_LANGUAGE_SKILLS
+                    : ui.ASSESSMENT_GOOD_LANGUAGE_SKILLS}
+                </Typography>
+                <Box>
+                  <Typography
                     sx={{
-                      background: "#EDB530",
-                      border: "2px solid #322020",
-                      borderRadius: "9px",
-                      padding: "12px 24px",
-                      minWidth: "218px",
-                      height: "60px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                      color: "#1CB0F6",
+                      fontWeight: 600,
+                      fontSize: { xs: "20px", md: "30px" },
+                      fontFamily: getFontFamily(lang),
+                      lineHeight: { xs: "30px", md: "50px" },
+                      textAlign: "center",
                     }}
+                    fontSize={{ md: "30px", xs: "20px" }}
                   >
-                    <span
-                      style={{
-                        color: "#322020",
-                        fontWeight: 600,
-                        fontSize: "20px",
-                        fontFamily: getFontFamily(lang),
+                    {level > 0
+                      ? ui.ASSESSMENT_TAKE_COMPLETE_LEVEL.replace(
+                          "{level}",
+                          String(level)
+                        )
+                      : ui.ASSESSMENT_TAKE_DISCOVER_LEVEL}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  {process.env.REACT_APP_SHOW_HELP_VIDEO === "true" && (
+                    <Box
+                      onClick={handleOpenVideo}
+                      sx={{
+                        mt: { xs: 1, md: 1 },
+                        mr: { xs: 2, md: 2 },
+                        cursor: "pointer",
+                        textAlign: "center",
                       }}
                     >
-                      {assessmentText.startAssessment}
-                    </span>
+                      <img src={HelpLogo} alt="help_video_link" />
+                    </Box>
+                  )}
+                  <Box
+                    sx={{
+                      cursor: "pointer",
+                      mt: { xs: 1, md: 2 },
+                      zIndex: 9999,
+                    }}
+                    onClick={handleRedirect}
+                  >
+                    {lang === "te" ? (
+                      <Box
+                        sx={{
+                          background: "#EDB530",
+                          border: "2px solid #322020",
+                          borderRadius: "9px",
+                          padding: "12px 24px",
+                          minWidth: "218px",
+                          height: "60px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: "#322020",
+                            fontWeight: 600,
+                            fontSize: "20px",
+                            fontFamily: getFontFamily(lang),
+                          }}
+                        >
+                          {assessmentText.startAssessment}
+                        </span>
+                      </Box>
+                    ) : (
+                      <StartAssessmentButton />
+                    )}
                   </Box>
-                ) : (
-                  <StartAssessmentButton />
-                )}
-              </Box>
-            </Box>
+                </Box>
+              </>
+            )}
           </Box>
         </MainLayout>
       )}

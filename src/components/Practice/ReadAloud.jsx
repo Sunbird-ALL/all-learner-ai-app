@@ -12,6 +12,7 @@ import raSound from "../../assets/raSound.svg";
 import raMic2 from "../../assets/raMic2.svg";
 import raMonkey from "../../assets/raMonkey.svg";
 import { practiceSteps, getLocalData } from "../../utils/constants";
+import { evaluateText } from "../../services/evaluation/evaluationService";
 import { Log } from "../../services/telemetryService";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -944,15 +945,7 @@ const ReadAloud = ({
       formData.append("studentText", studentText);
 
       try {
-        const response = await fetch(
-          "https://dev-ekstep-tell-ocr-service-985885894164.asia-south1.run.app/api/v1/ocr/gemini/evaluateText",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        const result = await response.json();
+        const result = await evaluateText(formData);
         console.log("API Response:", result);
         const responseText =
           result?.responseObj?.responseDataParams?.data || "";
