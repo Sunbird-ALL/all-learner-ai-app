@@ -12,6 +12,35 @@ import { getLocalData } from "./utils/constants";
 import { error as logTelemetryError } from "./services/telemetryService";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
 
+function isEnvTruthyTrue(value) {
+  return (
+    String(value ?? "")
+      .trim()
+      .toLowerCase() === "true"
+  );
+}
+
+function parseAxiosRetryDelaysSecToMs(raw) {
+  if (raw == null || String(raw).trim() === "") {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(String(raw));
+
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed
+      .map((n) => Number.parseFloat(n))
+      .filter((n) => Number.isFinite(n) && n >= 0)
+      .map((sec) => Math.round(sec * 1000));
+  } catch {
+    return [];
+  }
+}
+
 const App = () => {
   const ranonce = useRef(false);
 
@@ -144,8 +173,20 @@ const App = () => {
     if (ranonce.current) return;
     ranonce.current = true;
 
-    const RETRY_MAX = 3;
-    const RETRY_BASE_DELAY_MS = 1000; // 1s, 2s, 4s (exponential backoff)
+    const axiosRetryEnabled = isEnvTruthyTrue(
+      process.env.REACT_APP_AXIOS_RETRY_ENABLED
+    );
+    let retryDelaysMs = [];
+    if (axiosRetryEnabled) {
+      retryDelaysMs = parseAxiosRetryDelaysSecToMs(
+        process.env.REACT_APP_AXIOS_RETRY_DELAYS_SEC
+      );
+
+      if (retryDelaysMs.length === 0) {
+        console.warn("[axios-retry] Retries are off.");
+      }
+    }
+    const retryMax = retryDelaysMs.length;
 
     axios.interceptors.response.use(
       (response) => response,
@@ -186,16 +227,17 @@ const App = () => {
         const isNetworkError = !error.response; // no response at all
         const isRetryable = isServerError || isNetworkError;
 
-        if (isRetryable) {
+        if (isRetryable && retryMax > 0) {
           config.__retryCount = retryAttempt || 0;
 
-          if (config.__retryCount < RETRY_MAX) {
+          if (config.__retryCount < retryMax) {
             config.__retryCount += 1;
-            const delay =
-              RETRY_BASE_DELAY_MS * Math.pow(2, config.__retryCount - 1);
+            const delay = retryDelaysMs[config.__retryCount - 1];
 
             console.warn(
-              `[axios-retry] Attempt ${config.__retryCount}/${RETRY_MAX} for ${config.url} (delay ${delay}ms)`
+              `[axios-retry] Attempt ${config.__retryCount}/${retryMax} for ${
+                config.url
+              } (delay ${delay / 1000}s)`
             );
 
             return new Promise((resolve) => setTimeout(resolve, delay)).then(
