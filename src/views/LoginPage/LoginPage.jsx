@@ -260,6 +260,7 @@ const LoginPage = () => {
       handleLoginError(error);
     } finally {
       setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
