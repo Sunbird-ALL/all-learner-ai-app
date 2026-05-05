@@ -1120,6 +1120,7 @@ const TowreFlow = ({
       hi: "hi-IN",
       te: "te-IN",
       ka: "kn-IN", // Kannada
+      kn: "kn-IN",
       ta: "ta-IN",
     };
     return browserLangMap[langCode] || "en-US";
@@ -1244,6 +1245,7 @@ const TowreFlow = ({
       hi: allHindiWords,
       te: allTeluguWords,
       ka: allKannadaWords,
+      kn: allKannadaWords,
       ta: allTamilWords,
     };
     return wordsByLang[lang] || allEnglishWords;
