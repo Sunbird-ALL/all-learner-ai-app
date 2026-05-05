@@ -21,6 +21,35 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
 import { RESILIENCE_CONFIG } from "./config/config";
 
+function isEnvTruthyTrue(value) {
+  return (
+    String(value ?? "")
+      .trim()
+      .toLowerCase() === "true"
+  );
+}
+
+function parseAxiosRetryDelaysSecToMs(raw) {
+  if (raw == null || String(raw).trim() === "") {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(String(raw));
+
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed
+      .map((n) => Number.parseFloat(n))
+      .filter((n) => Number.isFinite(n) && n >= 0)
+      .map((sec) => Math.round(sec * 1000));
+  } catch {
+    return [];
+  }
+}
+
 const App = () => {
   const ranonce = useRef(false);
 
@@ -193,8 +222,20 @@ const App = () => {
     // when the backend is slow or unreachable. Value is configured in config.js.
     axios.defaults.timeout = RESILIENCE_CONFIG.API_TIMEOUT_MS;
 
-    const RETRY_MAX = RESILIENCE_CONFIG.RETRY_MAX;
-    const RETRY_BASE_DELAY_MS = RESILIENCE_CONFIG.RETRY_BASE_DELAY_MS;
+    const axiosRetryEnabled = isEnvTruthyTrue(
+      process.env.REACT_APP_AXIOS_RETRY_ENABLED
+    );
+    let retryDelaysMs = [];
+    if (axiosRetryEnabled) {
+      retryDelaysMs = parseAxiosRetryDelaysSecToMs(
+        process.env.REACT_APP_AXIOS_RETRY_DELAYS_SEC
+      );
+
+      if (retryDelaysMs.length === 0) {
+        console.warn("[axios-retry] Retries are off.");
+      }
+    }
+    const retryMax = retryDelaysMs.length;
 
     axios.interceptors.response.use(
       (response) => response,
@@ -235,27 +276,26 @@ const App = () => {
         const isNetworkError = !error.response; // no response at all
         const isRetryable = isServerError || isNetworkError;
 
-        if (isRetryable) {
+        if (isRetryable && retryMax > 0) {
           config.__retryCount = retryAttempt || 0;
 
-          if (config.__retryCount < RETRY_MAX) {
+          if (config.__retryCount < retryMax) {
             config.__retryCount += 1;
-            const delay =
-              RETRY_BASE_DELAY_MS * Math.pow(2, config.__retryCount - 1);
+            const delay = retryDelaysMs[config.__retryCount - 1];
 
             console.warn(
-              `[axios-retry] Attempt ${config.__retryCount}/${RETRY_MAX} for ${config.url} (delay ${delay}ms)`
+              `[axios-retry] Attempt ${config.__retryCount}/${retryMax} for ${
+                config.url
+              } (delay ${delay / 1000}s)`
             );
-
             return new Promise((resolve) => setTimeout(resolve, delay)).then(
               () => axios(config)
             );
           }
-          // All retries exhausted — fall through to auth check + reject
         }
 
         // Report to error system after all retries are exhausted
-        if (isRetryable && config.__retryCount >= RETRY_MAX) {
+        if (isRetryable && config.__retryCount >= retryMax) {
           reportError({
             type: "api_error_exhausted",
             endpoint: config.url || "unknown",

@@ -121,7 +121,7 @@ const Mechanics7 = ({
       );
       setCompleteAudio(currentImg?.audioUrl);
     }
-  }, [words]);
+  }, [words, currentImg]);
 
   const {
     transcript,
@@ -1598,12 +1598,7 @@ const Mechanics7 = ({
                   </Box>
                 </Box>
               ))}
-            <audio
-              ref={audioRef}
-              onEnded={handleAudioEnd}
-              src={completeAudio}
-              hidden
-            />
+            <audio ref={audioRef} onEnded={handleAudioEnd} hidden />
           </Box>
           <LanguageModalNew
             show={showModal}

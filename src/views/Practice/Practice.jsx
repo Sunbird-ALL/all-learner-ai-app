@@ -1,6 +1,13 @@
 /* global globalThis */
 // ─── Static imports (must all come before any declarations) ─────────────────
-import React, { useEffect, useState, useMemo, lazy, Suspense } from "react";
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+  lazy,
+  Suspense,
+} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Typography, Box, CircularProgress, Button } from "@mui/material";
 import axios from "axios";
@@ -143,6 +150,7 @@ const Practice = () => {
   const [questions, setQuestions] = useState([]);
   const [enableNext, setEnableNext] = useState(false);
   const [progressData, setProgressData] = useState({});
+  const justCompletedStepRef = useRef(null);
   const [currentImage, setCurrentImage] = useState({});
   const [parentWords, setParentWords] = useState({});
   const [levelOneWord, setLevelOneWord] = useState("");
@@ -639,13 +647,18 @@ const Practice = () => {
       questions?.length &&
       Number(currentPracticeStep + 1) > 0 &&
       currentQuestion === 0 &&
-      !fromBack
+      !fromBack &&
+      justCompletedStepRef.current !== null
     ) {
       setDisableScreen(true);
       callConfettiAndPlay();
 
       setTimeout(() => {
-        const step = practiceSteps[currentPracticeStep];
+        // Read the step index captured in handleNext *before* state advanced to the next step.
+        const completedStepIndex = justCompletedStepRef.current;
+        justCompletedStepRef.current = null;
+        const step = practiceSteps[completedStepIndex];
+        if (!step) return;
         let stepName;
 
         if (level === 1) {
@@ -2441,6 +2454,8 @@ const Practice = () => {
           // TODO: not required - not using this anywhere
           setAssessmentResponse(resGetContent);
 
+          // Capture completed step before state advances so the success toast names it correctly.
+          justCompletedStepRef.current = currentPracticeStep;
           setCurrentQuestion(0);
           // TODO: not required - we are geting this data from API
           practiceProgress = {
@@ -2474,6 +2489,9 @@ const Practice = () => {
           let showcaseLevel =
             currentPracticeStep === 3 || currentPracticeStep === 8;
           setIsShowCase(showcaseLevel);
+
+          // Capture completed step before state advances so the success toast names it correctly.
+          justCompletedStepRef.current = currentPracticeStep;
           setCurrentQuestion(0);
 
           practiceProgress = {
