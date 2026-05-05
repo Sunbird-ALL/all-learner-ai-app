@@ -82,6 +82,9 @@ jobs:
           REACT_APP_SHOW_HELP_VIDEO_LINK: ${{ vars.REACT_APP_SHOW_HELP_VIDEO_LINK }}
           REACT_APP_MAX_LEVEL: ${{ vars.REACT_APP_MAX_LEVEL }}
           REACT_APP_LEARNER_AI_BASE_URL: ${{ vars.REACT_APP_LEARNER_AI_BASE_URL }}
+          REACT_APP_TRACKING_API_BASE_URL: ${{ vars.REACT_APP_TRACKING_API_BASE_URL }}
+          REACT_APP_AXIOS_RETRY_ENABLED: ${{ vars.REACT_APP_AXIOS_RETRY_ENABLED }}
+          REACT_APP_AXIOS_RETRY_DELAYS_SEC: ${{ vars.REACT_APP_AXIOS_RETRY_DELAYS_SEC }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
