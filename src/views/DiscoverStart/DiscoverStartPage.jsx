@@ -1,25 +1,8 @@
-import React, { useState } from "react";
-import Assesment from "../../components/Assesment/Assesment";
-import { AudioDiagnosticModal } from "../../components/AudioDiagnostic";
-import { getLocalData, setLocalData } from "../../utils/constants";
+import React from 'react';
+import Assesment from '../../components/Assesment/Assesment';
 
 const DiscoverStart = () => {
-  const [showDiagnostic, setShowDiagnostic] = useState(
-    process.env.REACT_APP_IS_APP_IFRAME === "true" &&
-      !getLocalData("audioDiagnosticShown")
-  );
-
-  return (
-    <>
-      <Assesment discoverStart />
-      <AudioDiagnosticModal
-        show={showDiagnostic}
-        onClose={() => {
-          setShowDiagnostic(false);
-          setLocalData("audioDiagnosticShown", "true");
-        }}
-      />
-    </>
-  );
+   return <Assesment discoverStart />;
 };
+
 export default DiscoverStart;

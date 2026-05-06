@@ -1,7 +1,9 @@
-import React, { useEffect, Fragment, Suspense } from "react";
+import React, { useEffect, Fragment, Suspense, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import CustomizedSnackbars from "../../views/Snackbar/CustomSnackbar";
 import LoadingFallback from "../../components/LoadingFallback";
+import { AudioDiagnosticModal } from "../../components/AudioDiagnostic";
+import { getLocalData, setLocalData } from "../../utils/constants";
 
 const PrivateRoute = (props) => {
   const TOKEN = localStorage.getItem("apiToken");
@@ -21,9 +23,22 @@ const PrivateRoute = (props) => {
 };
 
 const AppContent = ({ routes }) => {
+  const [showDiagnostic, setShowDiagnostic] = useState(
+    process.env.REACT_APP_IS_APP_IFRAME === "true" &&
+      !!localStorage.getItem("apiToken") &&
+      !getLocalData("audioDiagnosticShown")
+  );
+
   return (
     <Fragment>
       <CustomizedSnackbars />
+      <AudioDiagnosticModal
+        show={showDiagnostic}
+        onClose={() => {
+          setShowDiagnostic(false);
+          setLocalData("audioDiagnosticShown", "true");
+        }}
+      />
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {routes.map((route) => (
