@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Assesment from "../../components/Assesment/Assesment";
 import { AudioDiagnosticModal } from "../../components/AudioDiagnostic";
+import { getLocalData, setLocalData } from "../../utils/constants";
 
 const DiscoverStart = () => {
-  const [showDiagnostic, setShowDiagnostic] = useState(false);
-
-  useEffect(() => {
-    if (process.env.REACT_APP_IS_APP_IFRAME !== "true") return;
-    if (!localStorage.getItem("audioDiagnosticShown")) {
-      setShowDiagnostic(true);
-    }
-  }, []);
+  const [showDiagnostic, setShowDiagnostic] = useState(
+    process.env.REACT_APP_IS_APP_IFRAME === "true" &&
+      !getLocalData("audioDiagnosticShown")
+  );
 
   return (
     <>
@@ -19,11 +16,10 @@ const DiscoverStart = () => {
         show={showDiagnostic}
         onClose={() => {
           setShowDiagnostic(false);
-          localStorage.setItem("audioDiagnosticShown", "true");
+          setLocalData("audioDiagnosticShown", "true");
         }}
       />
     </>
   );
 };
-
 export default DiscoverStart;

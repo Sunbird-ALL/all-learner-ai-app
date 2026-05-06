@@ -557,7 +557,7 @@ const LoginPage = () => {
         onClose={() => {
           setShowAudioDiagnostic(false);
           if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-            localStorage.setItem("audioDiagnosticShown", "true");
+            setLocalData("audioDiagnosticShown", "true");
           }
           handleWordClick();
           navigate("/discover-start");
