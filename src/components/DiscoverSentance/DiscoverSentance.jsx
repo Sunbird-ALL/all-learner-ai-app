@@ -147,7 +147,10 @@ const SpeakSentenceComponent = () => {
       return;
     }
     if (resolved.type === "terminal") {
-      if (resolved.towre && (lang === "te" || lang === "en")) {
+      if (
+        resolved.towre &&
+        (lang === "te" || lang === "en" || lang === "kn" || lang === "hi")
+      ) {
         navigate("/towre-flow");
       } else {
         navigate("/discover-end");
