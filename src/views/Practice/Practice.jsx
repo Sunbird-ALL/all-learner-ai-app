@@ -2236,7 +2236,10 @@ const Practice = () => {
                 return;
               }
               if (
-                (lang === "en" || lang === "te") &&
+                (lang === "en" ||
+                  lang === "te" ||
+                  lang === "kn" ||
+                  lang === "hi") &&
                 (level === 3 || level === 6 || level === 9)
               ) {
                 try {
