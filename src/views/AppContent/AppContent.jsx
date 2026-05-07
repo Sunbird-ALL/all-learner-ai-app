@@ -32,28 +32,31 @@ const AppContent = ({ routes }) => {
   return (
     <Fragment>
       <CustomizedSnackbars />
-      <AudioDiagnosticModal
-        show={showDiagnostic}
-        onClose={() => {
-          setShowDiagnostic(false);
-          setLocalData("audioDiagnosticShown", "true");
-        }}
-      />
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          {routes.map((route) => (
-            <Route
-              key={route.id}
-              path={route.path}
-              element={
-                <PrivateRoute requiresAuth={route.requiresAuth}>
-                  <route.component />
-                </PrivateRoute>
-              }
-            />
-          ))}
-        </Routes>
-      </Suspense>
+      {showDiagnostic ? (
+        <AudioDiagnosticModal
+          show={showDiagnostic}
+          onClose={() => {
+            setShowDiagnostic(false);
+            setLocalData("audioDiagnosticShown", "true");
+          }}
+        />
+      ) : (
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            {routes.map((route) => (
+              <Route
+                key={route.id}
+                path={route.path}
+                element={
+                  <PrivateRoute requiresAuth={route.requiresAuth}>
+                    <route.component />
+                  </PrivateRoute>
+                }
+              />
+            ))}
+          </Routes>
+        </Suspense>
+      )}
     </Fragment>
   );
 };
