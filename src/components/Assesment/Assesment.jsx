@@ -1365,7 +1365,10 @@ export const ProfileHeader = ({
                               chartAudioRef.current = null;
                             }
                             setIsAudioPlaying(false);
-                            setLocalData("showAlphabetDemo", "false");
+                            setLocalDataAndNotify("showAlphabetDemo", "false");
+                            globalThis.dispatchEvent(
+                              new Event("alphabetDemoStop")
+                            );
                           }}
                         >
                           <CloseIcon fontSize="medium" />
