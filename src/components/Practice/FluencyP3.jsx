@@ -706,105 +706,68 @@ const FluencyP3 = ({
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  alignItems: "center",
+                  alignItems: "stretch",
                   gap: isMobile ? "8px" : "15px",
                   flexWrap: isMobile ? "wrap" : "nowrap",
                   marginBottom: isMobile ? "5px" : "8px",
                 }}
               >
-                {/* Slow */}
-                <div
-                  style={{
-                    padding: isMobile ? "6px" : "10px",
-                    borderRadius: "10px",
-                    background: readingSpeed === "Slow" ? "#fff7e6" : "#f9f9f9",
-                    border:
-                      readingSpeed === "Slow"
-                        ? "1px solid #ff9900"
-                        : "1px solid #ddd",
-                    opacity: readingSpeed === "Slow" ? 1 : 0.5,
-                    width: isMobile ? "80px" : "auto",
-                    textAlign: "center",
-                  }}
-                >
-                  <img
-                    src={tortoiseImg}
-                    alt="tortoise"
-                    height={isMobile ? 28 : 35}
-                  />
+                {[
+                  { label: "Slow", img: tortoiseImg, alt: "tortoise" },
+                  { label: "Medium", img: rabbitImg, alt: "rabbit" },
+                  { label: "Fast", img: cheetahImg, alt: "cheetah" },
+                ].map((item) => (
                   <div
+                    key={item.label}
                     style={{
-                      marginTop: "3px",
-                      fontWeight: "600",
-                      fontSize: isMobile ? "13px" : "14px",
+                      padding: isMobile ? "6px" : "10px",
+                      borderRadius: "10px",
+                      background:
+                        readingSpeed === item.label ? "#fff7e6" : "#f9f9f9",
+                      border:
+                        readingSpeed === item.label
+                          ? "1px solid #ff9900"
+                          : "1px solid #ddd",
+                      opacity: readingSpeed === item.label ? 1 : 0.5,
+                      width: isMobile ? "115px" : "150px",
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    Slow
+                    <div
+                      style={{
+                        width: isMobile ? "90px" : "120px",
+                        height: isMobile ? "70px" : "95px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        src={item.img}
+                        alt={item.alt}
+                        style={{
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          objectFit: "contain",
+                          display: "block",
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "4px",
+                        fontWeight: "600",
+                        fontSize: isMobile ? "13px" : "14px",
+                      }}
+                    >
+                      {item.label}
+                    </div>
                   </div>
-                </div>
-
-                {/* Medium */}
-                <div
-                  style={{
-                    padding: isMobile ? "6px" : "10px",
-                    borderRadius: "10px",
-                    background:
-                      readingSpeed === "Medium" ? "#fff7e6" : "#f9f9f9",
-                    border:
-                      readingSpeed === "Medium"
-                        ? "1px solid #ff9900"
-                        : "1px solid #ddd",
-                    opacity: readingSpeed === "Medium" ? 1 : 0.5,
-                    width: isMobile ? "80px" : "auto",
-                    textAlign: "center",
-                  }}
-                >
-                  <img
-                    src={rabbitImg}
-                    alt="rabbit"
-                    height={isMobile ? 28 : 35}
-                  />
-                  <div
-                    style={{
-                      marginTop: "3px",
-                      fontWeight: "600",
-                      fontSize: isMobile ? "13px" : "14px",
-                    }}
-                  >
-                    Medium
-                  </div>
-                </div>
-
-                {/* Fast */}
-                <div
-                  style={{
-                    padding: isMobile ? "6px" : "10px",
-                    borderRadius: "10px",
-                    background: readingSpeed === "Fast" ? "#fff7e6" : "#f9f9f9",
-                    border:
-                      readingSpeed === "Fast"
-                        ? "1px solid #ff9900"
-                        : "1px solid #ddd",
-                    opacity: readingSpeed === "Fast" ? 1 : 0.5,
-                    width: isMobile ? "80px" : "auto",
-                    textAlign: "center",
-                  }}
-                >
-                  <img
-                    src={cheetahImg}
-                    alt="cheetah"
-                    height={isMobile ? 28 : 35}
-                  />
-                  <div
-                    style={{
-                      marginTop: "3px",
-                      fontWeight: "600",
-                      fontSize: isMobile ? "13px" : "14px",
-                    }}
-                  >
-                    Fast
-                  </div>
-                </div>
+                ))}
               </div>
 
               {/* Next Button */}
