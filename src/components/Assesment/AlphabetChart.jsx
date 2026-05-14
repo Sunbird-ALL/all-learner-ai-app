@@ -38,9 +38,15 @@ const getCardAnimation = (compact, veryCompact) =>
     : { scale: [1, 1.12, 1], y: [0, -14, 0] };
 
 const getCardHeight = (veryCompact, compact) => {
-  if (veryCompact) return "175px";
-  if (compact) return "240px";
+  if (veryCompact) return "200px";
+  if (compact) return "290px";
   return "270px";
+};
+
+const getImageMaxHeight = (veryCompact, compact) => {
+  if (veryCompact) return "80px";
+  if (compact) return "140px";
+  return "140px";
 };
 
 const getCardBoxSx = (isActive, cardHeight) => ({
@@ -54,6 +60,7 @@ const getCardBoxSx = (isActive, cardHeight) => ({
   alignItems: "center",
   justifyContent: "space-between",
   height: cardHeight,
+  overflow: "hidden",
   cursor: "pointer",
   boxShadow: isActive
     ? "0 0 0 3px #6366f1, 0 14px 30px rgba(0,0,0,0.25)"
@@ -80,7 +87,7 @@ const TeluguGunithaCard = ({
           ? { duration: 0.6, ease: "easeOut" }
           : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
       }
-      style={{ position: "relative" }}
+      style={{ position: "relative", zIndex: isActive ? 1 : 0 }}
     >
       <Box
         sx={getCardBoxSx(isActive, cardHeight)}
@@ -107,7 +114,7 @@ const TeluguGunithaCard = ({
           sx={{
             width: "100%",
             flex: 1,
-            alignSelf: "center",
+            minHeight: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -120,7 +127,11 @@ const TeluguGunithaCard = ({
             <img
               src={item.image}
               alt={item.label || ""}
-              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              style={{
+                maxWidth: "100%",
+                maxHeight: getImageMaxHeight(veryCompact, compact),
+                objectFit: "contain",
+              }}
             />
           )}
         </Box>
@@ -221,7 +232,7 @@ const AlphabetCard = ({
           ? { duration: 0.6, ease: "easeOut" }
           : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
       }
-      style={{ position: "relative" }}
+      style={{ position: "relative", zIndex: isActive ? 1 : 0 }}
     >
       <Box sx={getCardBoxSx(isActive, cardHeight)} onClick={handleCardClick}>
         {/* Top Row */}
@@ -263,6 +274,7 @@ const AlphabetCard = ({
           sx={{
             width: "100%",
             flex: 1,
+            minHeight: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -277,7 +289,7 @@ const AlphabetCard = ({
               alt={item.word}
               style={{
                 maxWidth: "100%",
-                maxHeight: "100%",
+                maxHeight: getImageMaxHeight(veryCompact, compact),
                 objectFit: "contain",
               }}
             />
@@ -933,6 +945,10 @@ const AlphabetChart = ({ open, onClose, lang }) => {
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.9, y: -20 }}
                       transition={{ duration: 0.25, delay: index * 0.05 }}
+                      style={{
+                        position: "relative",
+                        zIndex: activeCardKey === item.key ? 1 : 0,
+                      }}
                     >
                       {item.isGunitha ? (
                         <TeluguGunithaCard
