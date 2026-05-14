@@ -34,7 +34,7 @@ import {
   setLocalData,
   getLanguageOrDefault,
 } from "../../utils/constants";
-import { setLocalDataAndNotify } from "../../utils/localStorageEvents";
+import { useAlphabetDemo } from "../../context/AlphabetDemoContext";
 import {
   RoundTick,
   StartAssessmentButton,
@@ -531,6 +531,7 @@ export const ProfileHeader = ({
   vocabCount = 0,
   wordCount = 0,
 }) => {
+  const { setIsAlphabetDemoActive } = useAlphabetDemo();
   const language = lang || getLocalData("lang");
   const ui = useMemo(() => getUiStrings(language || "en"), [language]);
   let username = profileName || getLocalData("profileName");
@@ -647,8 +648,7 @@ export const ProfileHeader = ({
         setShowChartPointer(false); // 👈 demo finished
         setIsAudioPlaying(false);
         chartAudioRef.current = null;
-        // setLocalDataAndNotify triggers onLocalData in Practice.jsx to reset isAlphabetDemoActive
-        setLocalDataAndNotify("showAlphabetDemo", "false");
+        setIsAlphabetDemoActive(false);
         globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
@@ -657,7 +657,7 @@ export const ProfileHeader = ({
         setShowChartPointer(false);
         setIsAudioPlaying(false);
         chartAudioRef.current = null;
-        setLocalDataAndNotify("showAlphabetDemo", "false");
+        setIsAlphabetDemoActive(false);
         globalThis.dispatchEvent(new Event("alphabetDemoStop"));
       };
 
@@ -668,7 +668,7 @@ export const ProfileHeader = ({
           setShowChartPointer(false);
           setIsAudioPlaying(false);
           chartAudioRef.current = null;
-          setLocalDataAndNotify("showAlphabetDemo", "false");
+          setIsAlphabetDemoActive(false);
           globalThis.dispatchEvent(new Event("alphabetDemoStop"));
         });
       }, 500);
@@ -721,6 +721,7 @@ export const ProfileHeader = ({
 
       // Not F1 flow or not at an allowed milestone → clear stale flag
       setLocalData("showAlphabetDemo", "false");
+      setIsAlphabetDemoActive(false);
     };
 
     // 🎬 Event-based trigger: Practice.jsx already validated the milestone
@@ -754,6 +755,7 @@ export const ProfileHeader = ({
       setShowChartPointer(false);
       setIsAudioPlaying(false);
       setLocalData("showAlphabetDemo", "false");
+      setIsAlphabetDemoActive(false);
     };
     window.addEventListener("alphabetDemoStop", handleDemoStop);
 
@@ -1365,7 +1367,10 @@ export const ProfileHeader = ({
                               chartAudioRef.current = null;
                             }
                             setIsAudioPlaying(false);
-                            setLocalData("showAlphabetDemo", "false");
+                            setIsAlphabetDemoActive(false);
+                            globalThis.dispatchEvent(
+                              new Event("alphabetDemoStop")
+                            );
                           }}
                         >
                           <CloseIcon fontSize="medium" />

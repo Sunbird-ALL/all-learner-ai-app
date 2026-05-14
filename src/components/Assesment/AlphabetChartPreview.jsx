@@ -1307,12 +1307,13 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
         }}
       >
         {/* Countdown Phase */}
         {previewPhase === "countdown" && (
-          <CountdownDisplay count={3} onComplete={handleCountdownComplete} />
+          <Box sx={{ my: "auto", width: "100%" }}>
+            <CountdownDisplay count={3} onComplete={handleCountdownComplete} />
+          </Box>
         )}
 
         {/* Demo Phase */}
@@ -1324,6 +1325,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
               display: "flex",
               flexDirection: "column",
               gap: 3,
+              my: "auto",
             }}
           >
             {/* Progress Steps */}
@@ -1565,11 +1567,13 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
 
         {/* Completion Phase */}
         {previewPhase === "completion" && (
-          <CompletionScreen
-            lang={activeLang}
-            onStartExploring={handleStartExploring}
-            onReplayDemo={handleReplayDemo}
-          />
+          <Box sx={{ my: "auto", width: "100%" }}>
+            <CompletionScreen
+              lang={activeLang}
+              onStartExploring={handleStartExploring}
+              onReplayDemo={handleReplayDemo}
+            />
+          </Box>
         )}
       </Box>
 
