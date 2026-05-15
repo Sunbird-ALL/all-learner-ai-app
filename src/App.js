@@ -349,7 +349,15 @@ const App = () => {
     if (token && profileName) {
       setAppInitialized(true);
     } else if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-      window.parent?.postMessage({ type: "LOGOUT" }, "*");
+      try {
+        window.parent?.postMessage(
+          { type: "LOGOUT" },
+          window?.location?.ancestorOrigins?.[0] ||
+            window.parent.location.origin
+        );
+      } catch (error) {
+        console.error("Parent LOGOUT postMessage failed:", error);
+      }
     } else {
       navigate("/login");
     }
@@ -398,18 +406,6 @@ const App = () => {
     setFp().catch((err) => console.error("Telemetry init failed:", err));
   }, [appInitialized]);
 
-  // Step 3: Sync telemetry before unload
-  useEffect(() => {
-    if (!appInitialized) return;
-
-    const handleBeforeUnload = () => {
-      window.telemetry?.syncEvents?.();
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [appInitialized]);
-
   // AXL appbar logout: invalidate the token and flush telemetry here,
   // then ack so the parent can safely unmount this iframe.
   useEffect(() => {
@@ -437,7 +433,11 @@ const App = () => {
         console.error("sessionStorage clear failed:", error);
       }
       try {
-        window.parent?.postMessage({ type: "LOGOUT_COMPLETE" }, "*");
+        window.parent?.postMessage(
+          { type: "LOGOUT_COMPLETE" },
+          window?.location?.ancestorOrigins?.[0] ||
+            window.parent.location.origin
+        );
       } catch (error) {
         console.error("LOGOUT_COMPLETE postMessage failed:", error);
       }

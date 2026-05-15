@@ -22,7 +22,11 @@ export function SessionExpiredProvider({ children }) {
   const runAuthLogout = useCallback(
     (notifyParent) => {
       if (notifyParent) {
-        window.parent.postMessage({ type: "LOGOUT" }, "*");
+        window.parent.postMessage(
+          { type: "LOGOUT" },
+          window?.location?.ancestorOrigins?.[0] ||
+            window.parent.location.origin
+        );
       }
       localStorage.clear();
       sessionStorage.clear();
