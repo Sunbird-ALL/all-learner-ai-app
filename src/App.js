@@ -309,14 +309,16 @@ const App = () => {
     if (token && profileName) {
       setAppInitialized(true);
     } else if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-      try {
-        globalThis.parent?.postMessage(
-          { type: "SESSION_EXPIRED" },
-          globalThis?.location?.ancestorOrigins?.[0] ||
-            globalThis.parent.location.origin
-        );
-      } catch (error) {
-        console.error("Parent SESSION_EXPIRED postMessage failed:", error);
+      const trustedParentOrigin = process.env.REACT_APP_AXL_HOST;
+      if (trustedParentOrigin) {
+        try {
+          globalThis.parent?.postMessage(
+            { type: "SESSION_EXPIRED" },
+            trustedParentOrigin
+          );
+        } catch (error) {
+          console.error("Parent SESSION_EXPIRED postMessage failed:", error);
+        }
       }
     } else {
       navigate("/login");
@@ -387,18 +389,20 @@ const App = () => {
         console.error("Logout API failed:", error);
       }
       try {
-        end({});
-        // Flush the SDK queue and wait ~1s so the XHR lands before
-        // AXL unmounts this iframe (which would cancel it).
-        globalThis.telemetry?.syncEvents?.();
+        // Fire END telemetry; the SDK flushes the queued event via XHR.
+        // Wait ~1s so the request lands before AXL unmounts this iframe.
+        end({ summary: { reason: "user_initiated_logout" } });
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (error) {
         console.error("Telemetry end event failed:", error);
       }
+      // Clear local + session storage BEFORE acking — prevents the iframe
+      // from re-authenticating with stale token if AXL remounts it.
       try {
+        localStorage.clear();
         sessionStorage.clear();
       } catch (error) {
-        console.error("sessionStorage clear failed:", error);
+        console.error("Storage clear failed:", error);
       }
       try {
         replyPort?.postMessage({ type: "LOGOUT_COMPLETE" });

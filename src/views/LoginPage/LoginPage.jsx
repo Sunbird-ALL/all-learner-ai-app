@@ -1,6 +1,5 @@
-/* global globalThis */
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Typography,
   TextField,
@@ -19,7 +18,7 @@ import {
   fetchVirtualId,
 } from "../../services/userservice/userService";
 import "./LoginPage.css";
-import { setLocalData } from "../../utils/constants";
+import { getLocalData, setLocalData } from "../../utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { initialize } from "../../services/telemetryService";
 import { reportError } from "../../utils/errorReporter";
@@ -31,6 +30,7 @@ import textureImage from "../../assets/images/textureImage.png";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const loginMode = process.env.REACT_APP_LOGIN_MODE || "product";
@@ -266,16 +266,22 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("apiToken") === null) return;
+    // Match the session contract in App.js Step 1 — both apiToken AND
+    // profileName must exist before treating the user as authenticated.
+    const token = localStorage.getItem("apiToken");
+    const profileName = getLocalData("profileName");
+    if (!token || !profileName) return;
 
-    // If the user came from somewhere inside the app (e.g., back-button from
-    // /practice), return them there. Otherwise default to /discover-start.
-    if (globalThis.history.length > 1) {
+    // location.key === "default" means fresh entry; anything else = in-app history.
+    const from = location.state?.from;
+    if (from) {
+      navigate(from, { replace: true });
+    } else if (location.key !== "default") {
       navigate(-1);
     } else {
       navigate("/discover-start", { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, location]);
 
   if (loading) {
     return (

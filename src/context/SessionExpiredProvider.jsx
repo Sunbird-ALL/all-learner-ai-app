@@ -23,11 +23,13 @@ export function SessionExpiredProvider({ children }) {
   const runAuthLogout = useCallback(
     (notifyParent) => {
       if (notifyParent) {
-        globalThis.parent.postMessage(
-          { type: "SESSION_EXPIRED" },
-          globalThis?.location?.ancestorOrigins?.[0] ||
-            globalThis.parent.location.origin
-        );
+        const trustedParentOrigin = process.env.REACT_APP_AXL_HOST;
+        if (trustedParentOrigin) {
+          globalThis.parent.postMessage(
+            { type: "SESSION_EXPIRED" },
+            trustedParentOrigin
+          );
+        }
       }
       localStorage.clear();
       sessionStorage.clear();
