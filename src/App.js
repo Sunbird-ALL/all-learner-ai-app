@@ -413,11 +413,9 @@ const App = () => {
     if (process.env.REACT_APP_IS_APP_IFRAME !== "true") return;
 
     const handleParentMessage = async (event) => {
-      // Only accept LOGOUT from the AXL parent — reject spoofed messages.
-      const parentOrigin =
-        globalThis?.location?.ancestorOrigins?.[0] ||
-        globalThis.location.origin;
-      if (event.origin !== parentOrigin) return;
+      // Only accept LOGOUT from the trusted AXL parent origin.
+      const trustedParentOrigin = process.env.REACT_APP_AXL_HOST;
+      if (!trustedParentOrigin || event.origin !== trustedParentOrigin) return;
       if (event?.data?.type !== "LOGOUT") return;
       // Reply on the parent's MessagePort instead of window.parent.postMessage.
       const replyPort = event.ports?.[0];
