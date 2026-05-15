@@ -423,7 +423,7 @@ const App = () => {
         end({});
         // Flush the SDK queue and wait ~1s so the XHR lands before
         // AXL unmounts this iframe (which would cancel it).
-        window.telemetry?.syncEvents?.();
+        globalThis.telemetry?.syncEvents?.();
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (error) {
         console.error("Telemetry end event failed:", error);
