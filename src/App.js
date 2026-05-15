@@ -352,12 +352,12 @@ const App = () => {
     } else if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
       try {
         globalThis.parent?.postMessage(
-          { type: "LOGOUT" },
+          { type: "SESSION_EXPIRED" },
           globalThis?.location?.ancestorOrigins?.[0] ||
             globalThis.parent.location.origin
         );
       } catch (error) {
-        console.error("Parent LOGOUT postMessage failed:", error);
+        console.error("Parent SESSION_EXPIRED postMessage failed:", error);
       }
     } else {
       navigate("/login");
@@ -413,7 +413,17 @@ const App = () => {
     if (process.env.REACT_APP_IS_APP_IFRAME !== "true") return;
 
     const handleParentMessage = async (event) => {
+      // Only accept LOGOUT from the AXL parent — reject spoofed messages.
+      const parentOrigin =
+        globalThis?.location?.ancestorOrigins?.[0] ||
+        globalThis.location.origin;
+      if (event.origin !== parentOrigin) return;
       if (event?.data?.type !== "LOGOUT") return;
+      // Reply on the parent's MessagePort instead of window.parent.postMessage.
+      const replyPort = event.ports?.[0];
+      if (!replyPort) {
+        console.warn("LOGOUT received without reply port; ack will be skipped");
+      }
       try {
         await logoutUser();
       } catch (error) {
@@ -434,13 +444,10 @@ const App = () => {
         console.error("sessionStorage clear failed:", error);
       }
       try {
-        globalThis.parent?.postMessage(
-          { type: "LOGOUT_COMPLETE" },
-          globalThis?.location?.ancestorOrigins?.[0] ||
-            globalThis.parent.location.origin
-        );
+        replyPort?.postMessage({ type: "LOGOUT_COMPLETE" });
+        replyPort?.close();
       } catch (error) {
-        console.error("LOGOUT_COMPLETE postMessage failed:", error);
+        console.error("LOGOUT_COMPLETE port message failed:", error);
       }
     };
 

@@ -24,7 +24,7 @@ export function SessionExpiredProvider({ children }) {
     (notifyParent) => {
       if (notifyParent) {
         globalThis.parent.postMessage(
-          { type: "LOGOUT" },
+          { type: "SESSION_EXPIRED" },
           globalThis?.location?.ancestorOrigins?.[0] ||
             globalThis.parent.location.origin
         );
