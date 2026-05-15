@@ -13,9 +13,11 @@ import { getLocalData } from "./utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { startEvent } from "./services/callTelemetryIntract";
 import {
+  end,
   error as logTelemetryError,
   initialize,
 } from "./services/telemetryService";
+import { logoutUser } from "./services/orchestration/orchestrationService";
 import { reportError } from "./utils/errorReporter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { useNavigate } from "react-router-dom";
@@ -327,17 +329,11 @@ const App = () => {
               error?.response?.data?.msg;
             const displayMessage =
               typeof raw === "string" && raw.trim() ? raw.trim() : undefined;
-
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-              // Save reason before clearing so parent can read it
-              const logoutReason = displayMessage || errorMessage || "";
-              localStorage.setItem("logout_reason", logoutReason);
-              localStorage.setItem("logout_status", "complete");
-              // localStorage.clear();
-              sessionStorage.clear();
-            } else {
-              openAuthSessionExpiredModal({ message: displayMessage });
-            }
+            const notifyParent = process.env.REACT_APP_IS_APP_IFRAME === "true";
+            openAuthSessionExpiredModal({
+              message: displayMessage,
+              notifyParent,
+            });
           }
         }
         return Promise.reject(error);
@@ -352,13 +348,10 @@ const App = () => {
 
     if (token && profileName) {
       setAppInitialized(true);
+    } else if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+      window.parent?.postMessage({ type: "LOGOUT" }, "*");
     } else {
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-        localStorage.setItem("logout_reason", "");
-        localStorage.setItem("logout_status", "complete");
-      } else {
-        navigate("/login");
-      }
+      navigate("/login");
     }
   }, [navigate]);
 
@@ -416,6 +409,43 @@ const App = () => {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [appInitialized]);
+
+  // AXL appbar logout: invalidate the token and flush telemetry here,
+  // then ack so the parent can safely unmount this iframe.
+  useEffect(() => {
+    if (process.env.REACT_APP_IS_APP_IFRAME !== "true") return;
+
+    const handleParentMessage = async (event) => {
+      if (event?.data?.type !== "LOGOUT") return;
+      try {
+        await logoutUser();
+      } catch (error) {
+        console.error("Logout API failed:", error);
+      }
+      try {
+        end({});
+        // Flush the SDK queue and wait ~1s so the XHR lands before
+        // AXL unmounts this iframe (which would cancel it).
+        window.telemetry?.syncEvents?.();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (error) {
+        console.error("Telemetry end event failed:", error);
+      }
+      try {
+        sessionStorage.clear();
+      } catch (error) {
+        console.error("sessionStorage clear failed:", error);
+      }
+      try {
+        window.parent?.postMessage({ type: "LOGOUT_COMPLETE" }, "*");
+      } catch (error) {
+        console.error("LOGOUT_COMPLETE postMessage failed:", error);
+      }
+    };
+
+    window.addEventListener("message", handleParentMessage);
+    return () => window.removeEventListener("message", handleParentMessage);
+  }, []);
 
   return (
     <ErrorBoundary>
