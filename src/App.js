@@ -1,3 +1,4 @@
+/* global globalThis */
 import React, { useEffect, useRef, useState } from "react";
 import { ThemeProvider } from "@mui/material";
 import { StyledEngineProvider } from "@mui/material/styles";
@@ -350,10 +351,10 @@ const App = () => {
       setAppInitialized(true);
     } else if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
       try {
-        window.parent?.postMessage(
+        globalThis.parent?.postMessage(
           { type: "LOGOUT" },
-          window?.location?.ancestorOrigins?.[0] ||
-            window.parent.location.origin
+          globalThis?.location?.ancestorOrigins?.[0] ||
+            globalThis.parent.location.origin
         );
       } catch (error) {
         console.error("Parent LOGOUT postMessage failed:", error);
@@ -433,10 +434,10 @@ const App = () => {
         console.error("sessionStorage clear failed:", error);
       }
       try {
-        window.parent?.postMessage(
+        globalThis.parent?.postMessage(
           { type: "LOGOUT_COMPLETE" },
-          window?.location?.ancestorOrigins?.[0] ||
-            window.parent.location.origin
+          globalThis?.location?.ancestorOrigins?.[0] ||
+            globalThis.parent.location.origin
         );
       } catch (error) {
         console.error("LOGOUT_COMPLETE postMessage failed:", error);

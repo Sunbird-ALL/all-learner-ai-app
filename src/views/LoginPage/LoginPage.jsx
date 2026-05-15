@@ -1,3 +1,4 @@
+/* global globalThis */
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -265,10 +266,16 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("apiToken") !== null) {
-      navigate("/discover-start");
+    if (localStorage.getItem("apiToken") === null) return;
+
+    // If the user came from somewhere inside the app (e.g., back-button from
+    // /practice), return them there. Otherwise default to /discover-start.
+    if (globalThis.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/discover-start", { replace: true });
     }
-  }, []);
+  }, [navigate]);
 
   if (loading) {
     return (
