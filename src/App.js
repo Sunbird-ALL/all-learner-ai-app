@@ -4,6 +4,7 @@ import { StyledEngineProvider } from "@mui/material/styles";
 import routes from "./routes";
 import AppContent from "./views/AppContent/AppContent";
 import { SessionExpiredProvider } from "./context/SessionExpiredProvider";
+import { AlphabetDemoProvider } from "./context/AlphabetDemoContext";
 import { openAuthSessionExpiredModal } from "./context/sessionExpiredBridge";
 import theme from "./assets/styles/theme";
 import axios from "axios";
@@ -418,10 +419,12 @@ const App = () => {
     <ErrorBoundary>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <SessionExpiredProvider>
-            <GetSetResultLoadingOverlay />
-            <AppContent routes={routes} />
-          </SessionExpiredProvider>
+          <AlphabetDemoProvider>
+            <SessionExpiredProvider>
+              <GetSetResultLoadingOverlay />
+              <AppContent routes={routes} />
+            </SessionExpiredProvider>
+          </AlphabetDemoProvider>
         </ThemeProvider>
       </StyledEngineProvider>
     </ErrorBoundary>

@@ -63,6 +63,7 @@ import {
 } from "../../services/learnerAi/learnerAiService";
 import { levels, levelTwo, levelThree } from "../../data/practiceContent";
 import { onLocalData } from "../../utils/localStorageEvents";
+import { useAlphabetDemo } from "../../context/AlphabetDemoContext";
 
 // ─── Lazy-loaded activity components (one chunk each) ────────────────────────
 const Mechanics2 = lazy(() => import("../../components/Practice/Mechanics2"));
@@ -182,18 +183,7 @@ const Practice = () => {
   const [rStep, setRStep] = useState(() => {
     return Number(getLocalData("rStep")) || 2;
   });
-  const [isAlphabetDemoActive, setIsAlphabetDemoActive] = useState(false);
-
-  // Sync isAlphabetDemoActive state with localStorage
-  useEffect(() => {
-    // Read current value immediately on mount
-    const current = getLocalData("showAlphabetDemo");
-    setIsAlphabetDemoActive(current === "true");
-    // Subscribe to future changes via custom event (no polling needed)
-    return onLocalData("showAlphabetDemo", (v) =>
-      setIsAlphabetDemoActive(v === "true")
-    );
-  }, []);
+  const { isAlphabetDemoActive, setIsAlphabetDemoActive } = useAlphabetDemo();
 
   const [rStepZero, setRStepZero] = useState(() => {
     return Number(getLocalData("rStepZero"));
@@ -2236,7 +2226,10 @@ const Practice = () => {
                 return;
               }
               if (
-                (lang === "en" || lang === "te") &&
+                (lang === "en" ||
+                  lang === "te" ||
+                  lang === "kn" ||
+                  lang === "hi") &&
                 (level === 3 || level === 6 || level === 9)
               ) {
                 try {
