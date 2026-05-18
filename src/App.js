@@ -109,6 +109,9 @@ const App = () => {
                   ? data
                   : JSON.stringify(data)
                 : undefined,
+            // keepalive lets the request survive iframe unmount / tab close
+            // so logout telemetry isn't canceled when AXL navigates away.
+            keepalive: true,
           })
             .then((r) => {
               if (r.ok) return r.json();
@@ -384,17 +387,18 @@ const App = () => {
         console.warn("LOGOUT received without reply port; ack will be skipped");
       }
       try {
-        await logoutUser();
-      } catch (error) {
-        console.error("Logout API failed:", error);
-      }
-      try {
-        // Fire END telemetry; the SDK flushes the queued event via XHR.
-        // Wait ~1s so the request lands before AXL unmounts this iframe.
+        // Queue END + force SDK flush while the token is still valid; wait
+        // gives the XHR time to start before logoutUser() invalidates it.
         end({ summary: { reason: "user_initiated_logout" } });
+        globalThis.telemetry?.syncEvents?.();
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (error) {
         console.error("Telemetry end event failed:", error);
+      }
+      try {
+        await logoutUser();
+      } catch (error) {
+        console.error("Logout API failed:", error);
       }
       // Clear local + session storage BEFORE acking — prevents the iframe
       // from re-authenticating with stale token if AXL remounts it.
