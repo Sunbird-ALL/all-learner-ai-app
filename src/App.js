@@ -17,6 +17,7 @@ import {
 import { reportError } from "./utils/errorReporter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
+import SystemBanners from "./components/SystemBanners/SystemBanners";
 import { RESILIENCE_CONFIG } from "./config/config";
 
 function isEnvTruthyTrue(value) {
@@ -341,6 +342,7 @@ const App = () => {
         <ThemeProvider theme={theme}>
           <AlphabetDemoProvider>
             <SessionExpiredProvider>
+              <SystemBanners />
               <GetSetResultLoadingOverlay />
               <AppContent routes={routes} />
             </SessionExpiredProvider>
