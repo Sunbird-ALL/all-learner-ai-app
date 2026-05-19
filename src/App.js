@@ -344,9 +344,7 @@ const App = () => {
             <SessionExpiredProvider>
               <SystemBanners />
               <GetSetResultLoadingOverlay />
-              <div style={{ paddingTop: "var(--system-banner-height, 0px)" }}>
-                <AppContent routes={routes} />
-              </div>
+              <AppContent routes={routes} />
             </SessionExpiredProvider>
           </AlphabetDemoProvider>
         </ThemeProvider>

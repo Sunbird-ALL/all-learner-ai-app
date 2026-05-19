@@ -1,6 +1,5 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Alert, Box, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { useEffect, useState } from "react";
+import { Alert, Box } from "@mui/material";
 
 const DOWNTIME_START = parseInt(
   process.env.REACT_APP_DOWNTIME_START_HOUR ?? "20",
@@ -61,7 +60,6 @@ const IS_MOBILE = detectMobile();
 const IS_CHROME = detectChrome();
 
 const SystemBanners = () => {
-  const bannerRef = useRef(null);
   const [downtimeDismissed, setDowntimeDismissed] = useState(false);
   const [showDowntime, setShowDowntime] = useState(isDowntime);
 
@@ -95,115 +93,64 @@ const SystemBanners = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Keep --system-banner-height CSS variable in sync with the rendered banner height.
-  // AppContent uses this to push its content down so nothing hides behind the banners.
-  useLayoutEffect(() => {
-    const el = bannerRef.current;
-    if (!el) return;
-    const update = () =>
-      document.documentElement.style.setProperty(
-        "--system-banner-height",
-        `${el.offsetHeight}px`
-      );
-    update();
-    const observer = new ResizeObserver(update);
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      document.documentElement.style.removeProperty("--system-banner-height");
-    };
-  }, []);
+  const popupSx = {
+    borderRadius: 0,
+    boxShadow: 3,
+    fontWeight: 500,
+    justifyContent: "center",
+  };
 
   return (
     <Box
-      ref={bannerRef}
       sx={{
         position: "fixed",
         top: 0,
         left: 0,
         width: "100%",
-        zIndex: 1400,
+        zIndex: 99999,
       }}
     >
       {showDowntime && !downtimeDismissed && (
         <Alert
           severity="warning"
-          icon={false}
-          sx={{ borderRadius: 0, justifyContent: "center", fontWeight: 500 }}
-          action={
-            <IconButton
-              size="small"
-              aria-label="close downtime banner"
-              onClick={() => setDowntimeDismissed(true)}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          }
+          sx={popupSx}
+          onClose={() => setDowntimeDismissed(true)}
         >
           The server is offline from {DOWNTIME_START}:00 – {DOWNTIME_END}:00 IST
-          for scheduled maintenance. Please come back after {DOWNTIME_END}
-          :00.
+          for scheduled maintenance. Please come back after {DOWNTIME_END}:00.
         </Alert>
       )}
 
       {showBrowserWarning && (
         <Alert
           severity="error"
-          icon={false}
-          sx={{ borderRadius: 0, justifyContent: "center", fontWeight: 500 }}
-          action={
-            <IconButton
-              size="small"
-              aria-label="close browser banner"
-              onClick={() => setBrowserDismissed(true)}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          }
+          sx={popupSx}
+          onClose={() => setBrowserDismissed(true)}
         >
-          This app is supported on Google Chrome only. Please open it in{" "}
-          <strong>Chrome</strong> for the best experience.
+          This app is supported on <strong>Google Chrome</strong> only. Please
+          switch to Chrome for the best experience.
         </Alert>
       )}
 
       {showMobileBanner && (
         <Alert
           severity="error"
-          icon={false}
-          sx={{ borderRadius: 0, justifyContent: "center", fontWeight: 500 }}
-          action={
-            <IconButton
-              size="small"
-              aria-label="close mobile banner"
-              onClick={() => setMobileDismissed(true)}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          }
+          sx={popupSx}
+          onClose={() => setMobileDismissed(true)}
         >
           This app is designed for desktop use. Please open it on a laptop or
-          desktop computer with a screen of at least {MIN_WIDTH}×{MIN_HEIGHT}.
+          desktop with a screen of at least {MIN_WIDTH}×{MIN_HEIGHT}.
         </Alert>
       )}
 
       {showViewportWarning && (
         <Alert
           severity="info"
-          icon={false}
-          sx={{ borderRadius: 0, justifyContent: "center", fontWeight: 500 }}
-          action={
-            <IconButton
-              size="small"
-              aria-label="close viewport banner"
-              onClick={() => setViewportDismissed(true)}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          }
+          sx={popupSx}
+          onClose={() => setViewportDismissed(true)}
         >
-          The UI may be cropped. Please zoom out your browser (
-          <strong>Ctrl&nbsp;−</strong> on Windows / <strong>Cmd&nbsp;−</strong>{" "}
-          on Mac) or maximise the window.
+          The UI may be cropped. Zoom out (<strong>Ctrl&nbsp;−</strong> Windows
+          / <strong>Cmd&nbsp;−</strong> Mac) or maximise the window.
         </Alert>
       )}
     </Box>
