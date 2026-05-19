@@ -100,11 +100,14 @@ const SystemBanners = () => {
   useLayoutEffect(() => {
     const el = bannerRef.current;
     if (!el) return;
-    const update = () =>
-      document.documentElement.style.setProperty(
-        "--system-banner-height",
-        `${el.offsetHeight}px`
-      );
+    const update = () => {
+      requestAnimationFrame(() => {
+        document.documentElement.style.setProperty(
+          "--system-banner-height",
+          `${el.offsetHeight}px`
+        );
+      });
+    };
     update();
     const observer = new ResizeObserver(update);
     observer.observe(el);
