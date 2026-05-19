@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Alert, Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -47,13 +47,27 @@ function detectMobile() {
   );
 }
 
+// Edge and Opera both include "Chrome/" in their UA, so exclude them explicitly.
+function detectChrome() {
+  const ua = navigator.userAgent;
+  return (
+    /Chrome\//.test(ua) &&
+    !/Edg\//.test(ua) && // Microsoft Edge
+    !/OPR\//.test(ua) // Opera
+  );
+}
+
 const IS_MOBILE = detectMobile();
+const IS_CHROME = detectChrome();
 
 const SystemBanners = () => {
+  const bannerRef = useRef(null);
   const [downtimeDismissed, setDowntimeDismissed] = useState(false);
   const [showDowntime, setShowDowntime] = useState(isDowntime);
 
   const [mobileDismissed, setMobileDismissed] = useState(false);
+  const [browserDismissed, setBrowserDismissed] = useState(false);
+  const showBrowserWarning = !IS_CHROME && !browserDismissed;
 
   // window.innerWidth reflects the true usable space — it shrinks when the user zooms
   // in OR when the physical screen is small. Both cases have the same fix: zoom out.
@@ -81,15 +95,28 @@ const SystemBanners = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (
-    (!showDowntime || downtimeDismissed) &&
-    !showMobileBanner &&
-    !showViewportWarning
-  )
-    return null;
+  // Keep --system-banner-height CSS variable in sync with the rendered banner height.
+  // AppContent uses this to push its content down so nothing hides behind the banners.
+  useLayoutEffect(() => {
+    const el = bannerRef.current;
+    if (!el) return;
+    const update = () =>
+      document.documentElement.style.setProperty(
+        "--system-banner-height",
+        `${el.offsetHeight}px`
+      );
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty("--system-banner-height");
+    };
+  }, []);
 
   return (
     <Box
+      ref={bannerRef}
       sx={{
         position: "fixed",
         top: 0,
@@ -116,6 +143,26 @@ const SystemBanners = () => {
           The server is offline from {DOWNTIME_START}:00 – {DOWNTIME_END}:00 IST
           for scheduled maintenance. Please come back after {DOWNTIME_END}
           :00.
+        </Alert>
+      )}
+
+      {showBrowserWarning && (
+        <Alert
+          severity="error"
+          icon={false}
+          sx={{ borderRadius: 0, justifyContent: "center", fontWeight: 500 }}
+          action={
+            <IconButton
+              size="small"
+              aria-label="close browser banner"
+              onClick={() => setBrowserDismissed(true)}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          }
+        >
+          This app is supported on Google Chrome only. Please open it in{" "}
+          <strong>Chrome</strong> for the best experience.
         </Alert>
       )}
 
