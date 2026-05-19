@@ -6284,6 +6284,20 @@ const Practice = () => {
         }
       }
     } else if (mechanism && mechanism.name === "letterLauncher") {
+      if (loading) {
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        );
+      }
       // F3 flow uses Letter Launcher for Practice and Apply steps
       if (isF3FlowActive && f3FlowStep?.step && milestoneLevel === "B") {
         // CRITICAL: Always get fresh step from localStorage (getF3FlowStep reads directly)
@@ -6571,6 +6585,7 @@ const Practice = () => {
             isShowCase={isShowcase}
             sessionId={sessionId}
             confidentLetters={confidentLettersForF3}
+            handleBack={!isShowcase && handleBack}
             handleNext={() => {
               // FIRST: Check if there's a redirect request (e.g., from failed level)
               // This takes priority over moving to Memory Challenge
@@ -6607,7 +6622,6 @@ const Practice = () => {
                 }
               }
             }}
-            handleBack={handleBack}
             applyStep={applyStep}
             failRedirect={failRedirect}
             passRedirect={passRedirect}
