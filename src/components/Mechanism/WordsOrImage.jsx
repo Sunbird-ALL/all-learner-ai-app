@@ -505,19 +505,19 @@ const WordsOrImage = ({
         return;
       }
 
-      const cleanOriginal = currentWordRef.current
-        ?.toLowerCase()
-        ?.trim();
+    const cleanOriginal = currentWordRef.current
+      ?.toLowerCase()
+      ?.trim();
 
-      const cleanTranscript = finalTranscript
-        ?.toLowerCase()
-        ?.trim();
+    const cleanTranscript = finalTranscript
+      ?.toLowerCase()
+      ?.trim();
 
-      const similarity =
-        getTextSimilarity(cleanOriginal, cleanTranscript) * 100;
+    const similarity =
+      getTextSimilarity(cleanOriginal, cleanTranscript) * 100;
 
-      if (similarity >= 80) {
-        setAnswer(true);
+    if (similarity >= 80) {
+      setAnswer(true);
 
       const audio = new Audio(correctSound);
       audio.play();
