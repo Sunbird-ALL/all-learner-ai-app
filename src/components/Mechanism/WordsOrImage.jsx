@@ -516,10 +516,6 @@ const cleanTranscript = finalTranscript
 const similarity =
   getTextSimilarity(cleanOriginal, cleanTranscript) * 100;
 
-console.log("Original:", cleanOriginal);
-console.log("Transcript:", cleanTranscript);
-console.log("Similarity:", similarity);
-
 if (similarity >= 80) {
   setAnswer(true);
 
