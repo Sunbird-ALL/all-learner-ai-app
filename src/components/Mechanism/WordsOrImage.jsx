@@ -505,30 +505,32 @@ const WordsOrImage = ({
         return;
       }
 
-      const matchPercentage = phoneticMatch(
-        currentWordRef.current,
-        finalTranscript
-      );
+      const cleanOriginal = currentWordRef.current
+  ?.toLowerCase()
+  ?.trim();
 
-      const isFirefox =
-        typeof navigator !== "undefined" &&
-        navigator.userAgent.toLowerCase().includes("firefox");
+const cleanTranscript = finalTranscript
+  ?.toLowerCase()
+  ?.trim();
 
-      if (isFirefox) {
-        setAnswer(true);
-        const audio = new Audio(correctSound);
-        audio.play();
-      } else {
-        if (matchPercentage < 80) {
-          setAnswer(false);
-          const audio = new Audio(wrongSound);
-          audio.play();
-        } else {
-          setAnswer(true);
-          const audio = new Audio(correctSound);
-          audio.play();
-        }
-      }
+const similarity =
+  getTextSimilarity(cleanOriginal, cleanTranscript) * 100;
+
+console.log("Original:", cleanOriginal);
+console.log("Transcript:", cleanTranscript);
+console.log("Similarity:", similarity);
+
+if (similarity >= 80) {
+  setAnswer(true);
+
+  const audio = new Audio(correctSound);
+  audio.play();
+} else {
+  setAnswer(false);
+
+  const audio = new Audio(wrongSound);
+  audio.play();
+}
       setIsRecording(false);
       setShowStopButton(false);
       setShowListenRetryButtons(true);
