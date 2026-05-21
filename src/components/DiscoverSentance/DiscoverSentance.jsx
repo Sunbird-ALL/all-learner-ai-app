@@ -1,3 +1,4 @@
+/* global globalThis */
 import { useEffect, useState, useRef } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -80,7 +81,7 @@ const SpeakSentenceComponent = () => {
     let audio = new Audio(levelCompleteAudioSrc);
     audio.play();
     callConfetti();
-    window.telemetry?.syncEvents?.();
+    globalThis.telemetry?.syncEvents?.();
   };
 
   const dispatchCompletionDialog = (setNumber, resolve) => {
