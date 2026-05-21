@@ -197,7 +197,13 @@ const App = () => {
         env: process.env.REACT_APP_ENV,
         pdata: {
           id: process.env.REACT_APP_ID,
-          ver: process.env.REACT_APP_VER,
+          ver: [
+            process.env.REACT_APP_VER,
+            process.env.REACT_APP_BUILD_NUMBER,
+            process.env.REACT_APP_COMMIT_ID?.substring(0, 7),
+          ]
+            .filter(Boolean)
+            .join("-"),
           pid: process.env.REACT_APP_PID,
         },
         tags: [""],
@@ -349,6 +355,25 @@ const App = () => {
           </AlphabetDemoProvider>
         </ThemeProvider>
       </StyledEngineProvider>
+      {process.env.REACT_APP_BUILD_NUMBER && (
+        <span
+          style={{
+            position: "fixed",
+            bottom: "6px",
+            right: "10px",
+            fontSize: "10px",
+            color: "rgba(255,255,255,0.6)",
+            fontFamily: "monospace",
+            zIndex: 99999,
+            pointerEvents: "none",
+            userSelect: "none",
+            textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+          }}
+        >
+          Build #{process.env.REACT_APP_BUILD_NUMBER} &middot;{" "}
+          {process.env.REACT_APP_COMMIT_ID?.substring(0, 7) || "dev"}
+        </span>
+      )}
     </ErrorBoundary>
   );
 };
