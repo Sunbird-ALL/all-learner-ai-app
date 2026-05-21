@@ -1,5 +1,6 @@
 /* global globalThis */
 import MainLayout from "../Layout/MainLayout";
+import ServerErrorScreen from "../ServerErrorScreen/ServerErrorScreen";
 import assessmentBackground from "../../assets/images/assessmentBackground.png";
 import {
   Box,
@@ -1999,39 +2000,12 @@ const Assesment = ({ discoverStart }) => {
           textAlign: "center",
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ fontFamily: "Quicksand", fontWeight: 700, color: "#555" }}
-        >
-          Could not load your session.
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontFamily: "Quicksand", color: "#888", maxWidth: 360 }}
-        >
-          The server is unreachable right now. Check your connection and try
-          again.
-        </Typography>
-        <Button
-          variant="contained"
-          onClick={() => {
+        <ServerErrorScreen
+          onRetry={() => {
             setInitError(false);
             loadDataRef.current?.();
           }}
-          sx={{
-            mt: 1,
-            background: "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
-            color: "white",
-            fontFamily: "Quicksand",
-            fontWeight: 700,
-            borderRadius: "25px",
-            textTransform: "none",
-            px: 4,
-            py: 1.5,
-          }}
-        >
-          Try Again
-        </Button>
+        />
       </Box>
     );
   }
