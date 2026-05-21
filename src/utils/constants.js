@@ -956,3 +956,18 @@ export function isRecommendationApiEnabledForLang(lang) {
           .filter(Boolean);
   return allowed.includes(code);
 }
+
+const BROWSER_LANGUAGE_MAP = {
+  en: "en-US",
+  hi: "hi-IN",
+  te: "te-IN",
+  ka: "kn-IN",
+  kn: "kn-IN",
+  ta: "ta-IN",
+  gu: "gu-IN",
+  or: "or-IN",
+};
+
+export const getBrowserLanguage = (langCode) => {
+  return BROWSER_LANGUAGE_MAP[langCode] || "en-US";
+};
