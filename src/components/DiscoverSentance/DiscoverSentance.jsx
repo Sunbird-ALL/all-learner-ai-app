@@ -80,22 +80,25 @@ const SpeakSentenceComponent = () => {
     let audio = new Audio(levelCompleteAudioSrc);
     audio.play();
     callConfetti();
-    window.telemetry?.syncEvents && window.telemetry.syncEvents();
+    window.telemetry?.syncEvents?.();
+  };
+
+  const dispatchCompletionDialog = (setNumber, resolve) => {
+    const handleDialogClose = () => {
+      setDisableScreen(false);
+      resolve();
+    };
+    setOpenMessageDialog({
+      message: "You have successfully completed assessment " + setNumber,
+      __onClose: handleDialogClose,
+    });
   };
 
   const showCompletionPopup = (setNumber) =>
     new Promise((resolve) => {
       setDisableScreen(true);
       callConfettiAndPlay();
-      setTimeout(() => {
-        setOpenMessageDialog({
-          message: "You have successfully completed assessment " + setNumber,
-          __onClose: () => {
-            setDisableScreen(false);
-            resolve();
-          },
-        });
-      }, 1200);
+      setTimeout(() => dispatchCompletionDialog(setNumber, resolve), 1200);
     });
 
   useEffect(() => {
@@ -590,7 +593,7 @@ const SpeakSentenceComponent = () => {
         <MessageDialog
           message={openMessageDialog.message}
           closeDialog={() => {
-            const cb = openMessageDialog && openMessageDialog.__onClose;
+            const cb = openMessageDialog?.__onClose;
             setOpenMessageDialog("");
             setDisableScreen(false);
             if (cb) cb();
