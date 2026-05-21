@@ -362,12 +362,14 @@ const App = () => {
             bottom: "6px",
             right: "10px",
             fontSize: "10px",
-            color: "rgba(255,255,255,0.6)",
+            color: "rgba(255,255,255,0.85)",
+            background: "rgba(0,0,0,0.45)",
             fontFamily: "monospace",
             zIndex: 99999,
             pointerEvents: "none",
             userSelect: "none",
-            textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+            borderRadius: "4px",
+            padding: "2px 6px",
           }}
         >
           Build #{process.env.REACT_APP_BUILD_NUMBER} &middot;{" "}
