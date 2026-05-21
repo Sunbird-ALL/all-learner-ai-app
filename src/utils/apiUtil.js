@@ -157,6 +157,7 @@ export const callTelemetryApi = async (
         { accuracy_percentage: finalScore },
         { duration: responseDuration },
         ...(level ? [{ level }] : []),
+        { mechanics_id: getLocalData("mechanism_id") || "" },
       ],
     },
     "ET"

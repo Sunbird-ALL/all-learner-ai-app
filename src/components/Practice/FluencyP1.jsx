@@ -25,6 +25,7 @@ import {
   RetryIcon,
   getLocalData,
   setLocalData,
+  getBrowserLanguage,
 } from "../../utils/constants";
 import { getFontFamily } from "../../utils/fontUtils";
 import { phoneticMatch } from "../../utils/phoneticUtils";
@@ -320,8 +321,14 @@ const FluencyP1 = ({
   const lang = getLocalData("lang");
   const [open, setOpen] = useState(false);
   const [parentModalOpen, setParentModalOpen] = useState(false);
+  const { transcript, resetTranscript } = useSpeechRecognition();
+  const transcriptRef = useRef("");
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  useEffect(() => {
+    transcriptRef.current = transcript;
+  }, [transcript]);
+
   const handleStart = () => {
     setStartTime(Date.now());
     setSpeed(null);
@@ -378,7 +385,7 @@ const FluencyP1 = ({
       currentStep - 1,
       base64Data,
       responseStartTime,
-      currentSentence?.sentence,
+      transcriptRef.current || "",
       apiLevel
     );
   };
@@ -526,10 +533,17 @@ const FluencyP1 = ({
   };
 
   const handleSpeakClick = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({
+      continuous: true,
+      interimResults: true,
+      language: getBrowserLanguage(lang),
+    });
     setIsSpeaking(true);
   };
 
   const handlePauseClick = () => {
+    SpeechRecognition.stopListening();
     handleStop();
     setShowTimers(false);
     setShowResult(true);
