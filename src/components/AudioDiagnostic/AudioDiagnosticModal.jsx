@@ -784,6 +784,13 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         setMicError(getTranslations(lang).micErrorGeneric);
         setIsRecording(false);
         setRecordingProgress(0);
+        Log(
+          `Microphone test - FAILED. Reason: MediaRecorder error, Error: ${
+            event?.error?.name || "UnknownError"
+          }, Message: ${event?.error?.message || "no message"}`,
+          "audio-diagnostics",
+          "ET"
+        );
         audioContext.close();
       };
 
@@ -819,6 +826,13 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       setMicError(getTranslations(lang).micErrorPermission);
       setIsRecording(false);
       setRecordingProgress(0);
+      Log(
+        `Microphone test - FAILED. Reason: Exception, Error: ${
+          error?.name || "UnknownError"
+        }, Message: ${error?.message || "no message"}`,
+        "audio-diagnostics",
+        "ET"
+      );
     }
   };
 
