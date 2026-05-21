@@ -67,7 +67,7 @@ function getOfflineCorrectnessResult(rawTranscript, rawTarget, language) {
 
   const exactMatch = transcripts === target;
   const similarity = getTextSimilarity(transcripts, target);
-  const isCorrect = exactMatch || similarity >= 80;
+  const isCorrect = exactMatch || similarity >= 0.8;
 
   console.log("final answer", similarity, isCorrect);
   return isCorrect;
