@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Box } from "@mui/material";
+import { Box } from "@mui/material";
+import serverDowntimeImg from "../../assets/server-downtime.png";
 
 const DOWNTIME_START = parseInt(
   process.env.REACT_APP_DOWNTIME_START_HOUR ?? "20",
@@ -59,12 +60,150 @@ function detectChrome() {
 const IS_MOBILE = detectMobile();
 const IS_CHROME = detectChrome();
 
-const SystemBanners = () => {
-  const [downtimeDismissed, setDowntimeDismissed] = useState(false);
-  const [showDowntime, setShowDowntime] = useState(isDowntime);
+// --- Icons ---
 
-  const [mobileDismissed, setMobileDismissed] = useState(false);
+const ChromeIcon = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    style={{ flexShrink: 0 }}
+  >
+    <circle cx="12" cy="12" r="12" fill="#fff" />
+    <path
+      d="M12 4a8 8 0 0 1 6.928 4H12a4 4 0 0 0-3.464 6l-3.464 6A12 12 0 0 1 12 0a12 12 0 0 1 6.928 4Z"
+      fill="#EA4335"
+    />
+    <path
+      d="M4.072 14A12 12 0 0 0 12 24a12 12 0 0 0 10.392-6l-3.464-6A4 4 0 0 1 12 16a4 4 0 0 1-3.464-2Z"
+      fill="#34A853"
+    />
+    <path d="M8 12a4 4 0 0 1 4-4h6.928A8 8 0 0 1 4 12Z" fill="#FBBC05" />
+    <circle cx="12" cy="12" r="4" fill="#4285F4" />
+  </svg>
+);
+
+const MonitorIcon = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#92400E"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ flexShrink: 0 }}
+  >
+    <rect x="2" y="3" width="20" height="14" rx="2" />
+    <path d="M8 21h8M12 17v4" />
+  </svg>
+);
+
+const MobileIcon = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#92400E"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ flexShrink: 0 }}
+  >
+    <rect x="7" y="2" width="10" height="20" rx="2" />
+    <circle cx="12" cy="18" r="1" fill="#92400E" stroke="none" />
+  </svg>
+);
+
+// --- Shared card style (Figma tokens) ---
+const CARD_SX = {
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+  padding: "16px 20px",
+  background: "#FFF8E0",
+  border: "0.8px solid #FBBC05",
+  borderRadius: "16px",
+  fontSize: "14px",
+  lineHeight: 1.5,
+  color: "#1A1A1A",
+  width: "100%",
+  boxSizing: "border-box",
+};
+
+// Wraps each banner with slide-down entry and slide-up exit animations.
+// onDismiss is called after the exit animation completes.
+const BannerWrapper = ({ children, onDismiss }) => {
+  const [exiting, setExiting] = useState(false);
+
+  const handleClose = () => {
+    setExiting(true);
+    setTimeout(onDismiss, 220);
+  };
+
+  return (
+    <Box
+      sx={{
+        animation: exiting
+          ? "bannerExit 0.22s ease forwards"
+          : "bannerEnter 0.25s ease",
+        "@keyframes bannerEnter": {
+          from: { opacity: 0, transform: "translateY(-10px)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
+        "@keyframes bannerExit": {
+          from: { opacity: 1, transform: "translateY(0)" },
+          to: { opacity: 0, transform: "translateY(-10px)" },
+        },
+      }}
+    >
+      {children(handleClose)}
+    </Box>
+  );
+};
+
+const CloseButton = ({ onClick }) => (
+  <Box
+    component="button"
+    onClick={onClick}
+    sx={{
+      marginLeft: "auto",
+      flexShrink: 0,
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: "2px",
+      display: "flex",
+      alignItems: "center",
+      color: "#92400E",
+      opacity: 0.6,
+      "&:hover": { opacity: 1 },
+    }}
+    aria-label="Close"
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    >
+      <path d="M3 3l10 10M13 3L3 13" />
+    </svg>
+  </Box>
+);
+
+const SystemBanners = () => {
+  const [showDowntime, setShowDowntime] = useState(isDowntime);
   const [browserDismissed, setBrowserDismissed] = useState(false);
+  const [mobileDismissed, setMobileDismissed] = useState(false);
+  const [viewportDismissed, setViewportDismissed] = useState(false);
+
   const showBrowserWarning = !IS_CHROME && !browserDismissed;
 
   // window.innerWidth reflects the true usable space — it shrinks when the user zooms
@@ -72,7 +211,6 @@ const SystemBanners = () => {
   // We only check width; height would false-trigger because browser chrome (tabs,
   // address bar) consumes ~130–150 px even on a fully maximised window.
   const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
-  const [viewportDismissed, setViewportDismissed] = useState(false);
 
   const showMobileBanner = IS_MOBILE && !mobileDismissed;
   // Covers both "small screen" and "zoomed in" — solution is the same: zoom out.
@@ -88,70 +226,155 @@ const SystemBanners = () => {
   // Track viewport width changes: zoom in/out, window resize, monitor change
   useEffect(() => {
     if (IS_MOBILE) return;
-    const handleResize = () => setViewportWidth(window.innerWidth);
+    const handleResize = () =>
+      requestAnimationFrame(() => setViewportWidth(window.innerWidth));
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const popupSx = {
-    borderRadius: 0,
-    boxShadow: 3,
-    fontWeight: 500,
-    justifyContent: "center",
-  };
+  // Full-page downtime screen takes priority — renders instead of (not alongside) other banners
+  if (showDowntime) {
+    return (
+      <Box
+        sx={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 99999,
+          background: "#ffffff",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "16px",
+          padding: "24px",
+          textAlign: "center",
+        }}
+      >
+        <Box
+          component="h2"
+          sx={{
+            margin: 0,
+            fontSize: "24px",
+            fontWeight: 600,
+            color: "#1a1a2e",
+          }}
+        >
+          Available during school hours
+        </Box>
+        <Box
+          component="p"
+          sx={{
+            margin: 0,
+            fontSize: "15px",
+            color: "#6b7280",
+            maxWidth: "400px",
+            lineHeight: 1.6,
+          }}
+        >
+          This system is up and running when schools are operational (
+          {DOWNTIME_END}:00 AM – {DOWNTIME_START}:00 PM IST). Please come back
+          during school hours.
+        </Box>
+        <img
+          src={serverDowntimeImg}
+          alt="Server resting"
+          style={{ width: "min(400px, 80vw)", margin: "8px 0" }}
+        />
+        <Box
+          component="button"
+          onClick={() => window.location.reload()}
+          sx={{
+            background: "#3AB44A",
+            color: "#fff",
+            border: "none",
+            borderRadius: "24px",
+            padding: "12px 40px",
+            fontSize: "15px",
+            fontWeight: 600,
+            cursor: "pointer",
+            "&:hover": { background: "#2e9e3c" },
+          }}
+        >
+          Try Again
+        </Box>
+      </Box>
+    );
+  }
+
+  const hasAny = showBrowserWarning || showMobileBanner || showViewportWarning;
+  if (!hasAny) return null;
 
   return (
     <Box
       sx={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
+        top: 16,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "min(884px, calc(100vw - 32px))",
         zIndex: 99999,
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
       }}
     >
-      {showDowntime && !downtimeDismissed && (
-        <Alert
-          severity="warning"
-          sx={popupSx}
-          onClose={() => setDowntimeDismissed(true)}
-        >
-          The server is offline from {DOWNTIME_START}:00 – {DOWNTIME_END}:00 IST
-          for scheduled maintenance. Please come back after {DOWNTIME_END}:00.
-        </Alert>
-      )}
-
       {showBrowserWarning && (
-        <Alert
-          severity="error"
-          sx={popupSx}
-          onClose={() => setBrowserDismissed(true)}
-        >
-          This app is supported on <strong>Google Chrome</strong> only. Please
-          switch to Chrome for the best experience.
-        </Alert>
+        <BannerWrapper onDismiss={() => setBrowserDismissed(true)}>
+          {(handleClose) => (
+            <Box sx={CARD_SX}>
+              <span
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  flexWrap: "wrap",
+                }}
+              >
+                This app is supported on&nbsp;
+                <ChromeIcon />
+                &nbsp;<strong>Google Chrome</strong> only. Please switch your
+                browser for the best experience.
+              </span>
+              <CloseButton onClick={handleClose} />
+            </Box>
+          )}
+        </BannerWrapper>
       )}
 
       {showMobileBanner && (
-        <Alert
-          severity="error"
-          sx={popupSx}
-          onClose={() => setMobileDismissed(true)}
-        >
-          This app is designed for desktop use. Please open it on a laptop or
-          desktop with a screen of at least {MIN_WIDTH}×{MIN_HEIGHT}.
-        </Alert>
+        <BannerWrapper onDismiss={() => setMobileDismissed(true)}>
+          {(handleClose) => (
+            <Box sx={CARD_SX}>
+              <MobileIcon />
+              <span>
+                This app is designed for desktop use. Please open it on a laptop
+                or desktop with a screen of at least{" "}
+                <strong>
+                  {MIN_WIDTH}×{MIN_HEIGHT}
+                </strong>
+                .
+              </span>
+              <CloseButton onClick={handleClose} />
+            </Box>
+          )}
+        </BannerWrapper>
       )}
 
       {showViewportWarning && (
-        <Alert
-          severity="info"
-          sx={popupSx}
-          onClose={() => setViewportDismissed(true)}
-        >
-          The UI may be cropped. Zoom out (<strong>Ctrl&nbsp;−</strong> Windows
-          / <strong>Cmd&nbsp;−</strong> Mac) or maximise the window.
-        </Alert>
+        <BannerWrapper onDismiss={() => setViewportDismissed(true)}>
+          {(handleClose) => (
+            <Box sx={CARD_SX}>
+              <MonitorIcon />
+              <span>
+                The UI may be cropped. <strong>Zoom Out</strong> (
+                <strong>Ctrl&nbsp;−</strong> Windows /{" "}
+                <strong>Cmd&nbsp;−</strong> Mac) or <strong>Maximise</strong>{" "}
+                the window.
+              </span>
+              <CloseButton onClick={handleClose} />
+            </Box>
+          )}
+        </BannerWrapper>
       )}
     </Box>
   );
