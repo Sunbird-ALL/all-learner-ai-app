@@ -488,22 +488,26 @@ const WordsOrImage = ({
     currentIsSelected.current = isSelected;
   };
 
-  const stopRecording = (word) => {
-    if (isChrome) {
-      SpeechRecognition.stopListening();
-      stopAudioRecording();
-      const finalTranscript = transcriptRef.current;
+ const stopRecording = (word) => {
+  if (isChrome) {
+    SpeechRecognition.stopListening();
+    stopAudioRecording();
 
-      // Check if transcript is empty - if user didn't speak, mark as incorrect
-      if (!finalTranscript || finalTranscript.trim().length === 0) {
-        setAnswer(false);
-        const audio = new Audio(wrongSound);
-        audio.play();
-        setIsRecording(false);
-        setShowStopButton(false);
-        setShowListenRetryButtons(true);
-        return;
-      }
+    const finalTranscript = transcriptRef.current;
+
+    // Check if transcript is empty
+    if (!finalTranscript || finalTranscript.trim().length === 0) {
+      setAnswer(false);
+
+      const audio = new Audio(wrongSound);
+      audio.play();
+
+      setIsRecording(false);
+      setShowStopButton(false);
+      setShowListenRetryButtons(true);
+
+      return;
+    }
 
     const cleanOriginal = currentWordRef.current
       ?.toLowerCase()
@@ -516,29 +520,42 @@ const WordsOrImage = ({
     const similarity =
       getTextSimilarity(cleanOriginal, cleanTranscript) * 100;
 
-    if (similarity >= 80) {
+    const isFirefox =
+      typeof navigator !== "undefined" &&
+      navigator.userAgent.toLowerCase().includes("firefox");
+
+    if (isFirefox) {
       setAnswer(true);
 
       const audio = new Audio(correctSound);
       audio.play();
     } else {
-      setAnswer(false);
+      if (similarity >= 80) {
+        setAnswer(true);
 
-      const audio = new Audio(wrongSound);
-      audio.play();
-    }
-      setIsRecording(false);
-      setShowStopButton(false);
-      setShowListenRetryButtons(true);
-    } else {
-      setIsRecording(false);
-      setShowStopButton(false);
-      setShowListenRetryButtons(true);
-      if (recognition) {
-        recognition.stop();
+        const audio = new Audio(correctSound);
+        audio.play();
+      } else {
+        setAnswer(false);
+
+        const audio = new Audio(wrongSound);
+        audio.play();
       }
     }
-  };
+
+    setIsRecording(false);
+    setShowStopButton(false);
+    setShowListenRetryButtons(true);
+  } else {
+    setIsRecording(false);
+    setShowStopButton(false);
+    setShowListenRetryButtons(true);
+
+    if (recognition) {
+      recognition.stop();
+    }
+  }
+};
 
   const blobToBase64 = (blob) => {
     return new Promise((resolve, reject) => {
