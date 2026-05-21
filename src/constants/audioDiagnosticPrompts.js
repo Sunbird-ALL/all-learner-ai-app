@@ -5,7 +5,7 @@
 
 export const AUDIO_DIAGNOSTIC_PROMPTS = {
   en: ["This is a cat", "It is a table"],
-  hi: ["यह एक बिल्ली है", "यह एक मेज है"],
+  hi: ["यह एक बिल्ली है", "लड़की खेल रही है"],
   ta: ["இது ஒரு பூனை", "இது ஒரு மேசை"],
   tn: ["இது ஒரு பூனை", "இது ஒரு மேசை"], // Tamil alternative code
   te: ["ఇది ఒక పిల్లి", "ఇది ఒక మేజ్"],

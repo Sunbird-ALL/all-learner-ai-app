@@ -62,7 +62,7 @@ const AudioPath = {
 const currentIndex = localStorage.getItem("index") || 1;
 
 // Levenshtein-based similarity matching backend logic (0.0 – 1.0)
-function getTextSimilarity(s1, s2) {
+export function getTextSimilarity(s1, s2) {
   let longer = s1;
   let shorter = s2;
   if (s1.length < s2.length) {
