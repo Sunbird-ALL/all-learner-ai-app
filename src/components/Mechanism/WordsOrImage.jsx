@@ -81,7 +81,7 @@ const WordsOrImage = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => {},
+  playTeacherAudio = () => { },
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -506,27 +506,27 @@ const WordsOrImage = ({
       }
 
       const cleanOriginal = currentWordRef.current
-  ?.toLowerCase()
-  ?.trim();
+        ?.toLowerCase()
+        ?.trim();
 
-const cleanTranscript = finalTranscript
-  ?.toLowerCase()
-  ?.trim();
+      const cleanTranscript = finalTranscript
+        ?.toLowerCase()
+        ?.trim();
 
-const similarity =
-  getTextSimilarity(cleanOriginal, cleanTranscript) * 100;
+      const similarity =
+        getTextSimilarity(cleanOriginal, cleanTranscript) * 100;
 
-if (similarity >= 80) {
-  setAnswer(true);
+      if (similarity >= 80) {
+        setAnswer(true);
 
-  const audio = new Audio(correctSound);
-  audio.play();
-} else {
-  setAnswer(false);
+        const audio = new Audio(correctSound);
+        audio.play();
+      } else {
+        setAnswer(false);
 
-  const audio = new Audio(wrongSound);
-  audio.play();
-}
+        const audio = new Audio(wrongSound);
+        audio.play();
+      }
       setIsRecording(false);
       setShowStopButton(false);
       setShowListenRetryButtons(true);
@@ -682,8 +682,8 @@ if (similarity >= 80) {
     isShowCase || isDiscover
       ? null
       : isUsingInlineSpeechFlow
-      ? answer
-      : isTranscriptCorrect;
+        ? answer
+        : isTranscriptCorrect;
 
   //console.log("wds", words, matchedChar, answer);
 
@@ -731,13 +731,13 @@ if (similarity >= 80) {
                 ? isMobile
                   ? "26px"
                   : isTablet
-                  ? "31px"
-                  : "36px"
+                    ? "31px"
+                    : "36px"
                 : isMobile
-                ? "20px"
-                : isTablet
-                ? "25px"
-                : "30px",
+                  ? "20px"
+                  : isTablet
+                    ? "25px"
+                    : "30px",
             letterSpacing: "1.5px",
             lineHeight: "normal",
             fontWeight: 600,
@@ -882,15 +882,15 @@ if (similarity >= 80) {
                         maxWidth: isMobile
                           ? "150px"
                           : isTablet
-                          ? "350px"
-                          : "400px",
+                            ? "350px"
+                            : "400px",
                         marginBottom: isMobile ? "10px" : "40px",
                         height: "auto",
                         maxHeight: isMobile
                           ? "200px"
                           : isTablet
-                          ? "280px"
-                          : "340px",
+                            ? "280px"
+                            : "340px",
                         objectFit: "contain",
                         marginRight: isMobile ? "30px" : "0px",
                       }}
@@ -924,13 +924,13 @@ if (similarity >= 80) {
                               borderRadius: isMobile
                                 ? "7px"
                                 : isTablet
-                                ? "10px"
-                                : "20px",
+                                  ? "10px"
+                                  : "20px",
                               fontSize: isMobile
                                 ? "10px"
                                 : isTablet
-                                ? "8px"
-                                : "16px",
+                                  ? "8px"
+                                  : "16px",
                               color: "#333F61",
                               fontWeight: isMobile ? 500 : isTablet ? 200 : 600,
                               fontFamily:
@@ -964,8 +964,8 @@ if (similarity >= 80) {
                             marginLeft: isMobile
                               ? "auto"
                               : isTablet
-                              ? "18px"
-                              : "0",
+                                ? "18px"
+                                : "0",
                             marginRight: isMobile ? "auto" : "0",
                             display: "block",
                             zIndex: 9999,
@@ -983,8 +983,8 @@ if (similarity >= 80) {
                               width: isMobile
                                 ? "60px"
                                 : isTablet
-                                ? "70px"
-                                : "150px",
+                                  ? "70px"
+                                  : "150px",
                               backgroundColor: "#ffff12",
                               padding: "10px 15px",
                               borderRadius: "20px",
@@ -1045,11 +1045,11 @@ if (similarity >= 80) {
                     sx={{
                       ...(mechanism_id === "mechanic_15"
                         ? {
-                            display: "flex",
-                            alignItems: "center",
-                            gap: isMobile ? 1 : 2,
-                            mb: isMobile ? 4 : 8,
-                          }
+                          display: "flex",
+                          alignItems: "center",
+                          gap: isMobile ? 1 : 2,
+                          mb: isMobile ? 4 : 8,
+                        }
                         : ""),
                     }}
                   >
@@ -1061,8 +1061,8 @@ if (similarity >= 80) {
                           height: isMobile
                             ? "40px"
                             : isTablet
-                            ? "50px"
-                            : "60px",
+                              ? "50px"
+                              : "60px",
                           width: isMobile ? "40px" : isTablet ? "50px" : "60px",
                         }}
                       >
@@ -1079,41 +1079,41 @@ if (similarity >= 80) {
                             ? isMobile
                               ? "1.7rem"
                               : isTablet
-                              ? "2.3rem"
-                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                                ? "2.3rem"
+                                : "clamp(1.9rem, 2.8vw, 4.1rem)"
                             : isMobile
-                            ? "1.4rem"
-                            : isTablet
-                            ? "2rem"
-                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                              ? "1.4rem"
+                              : isTablet
+                                ? "2rem"
+                                : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
                         ...(mechanism_id === "mechanic_15"
                           ? {
-                              position: "relative",
-                              backgroundColor: "#FAD7A0",
-                              padding: isMobile ? "8px 16px" : "10px 20px",
-                              borderRadius: "20px",
-                              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                              "&::before": {
-                                content: '""',
-                                position: "absolute",
-                                top: "50%",
-                                left: "-10px",
-                                transform: "translateY(-50%)",
-                                width: 0,
-                                height: 0,
-                                borderTop: "10px solid transparent",
-                                borderBottom: "10px solid transparent",
-                                borderRight: "10px solid #d8d8d8",
-                              },
-                            }
+                            position: "relative",
+                            backgroundColor: "#FAD7A0",
+                            padding: isMobile ? "8px 16px" : "10px 20px",
+                            borderRadius: "20px",
+                            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                            "&::before": {
+                              content: '""',
+                              position: "absolute",
+                              top: "50%",
+                              left: "-10px",
+                              transform: "translateY(-50%)",
+                              width: 0,
+                              height: 0,
+                              borderTop: "10px solid transparent",
+                              borderBottom: "10px solid transparent",
+                              borderRight: "10px solid #d8d8d8",
+                            },
+                          }
                           : {
-                              mb: isMobile ? 2 : 4,
-                              color: getAnswerColor(resolvedAnswer),
-                              textAlign: "center",
-                            }),
+                            mb: isMobile ? 2 : 4,
+                            color: getAnswerColor(resolvedAnswer),
+                            textAlign: "center",
+                          }),
                       }}
                       fontSize={{ md: "40px", xs: "25px" }}
                     >
@@ -1142,13 +1142,13 @@ if (similarity >= 80) {
                             ? isMobile
                               ? "1.7rem"
                               : isTablet
-                              ? "2.3rem"
-                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                                ? "2.3rem"
+                                : "clamp(1.9rem, 2.8vw, 4.1rem)"
                             : isMobile
-                            ? "1.4rem"
-                            : isTablet
-                            ? "2rem"
-                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                              ? "1.4rem"
+                              : isTablet
+                                ? "2rem"
+                                : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
@@ -1218,8 +1218,8 @@ if (similarity >= 80) {
                         fontSize: isMobile
                           ? "1.4rem"
                           : isTablet
-                          ? "2rem"
-                          : "clamp(3rem, 4vw, 5rem)",
+                            ? "2rem"
+                            : "clamp(3rem, 4vw, 5rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
@@ -1228,8 +1228,8 @@ if (similarity >= 80) {
                           isTranscriptCorrect === true
                             ? "green"
                             : isTranscriptCorrect === false
-                            ? "red" // todo: need to change to red
-                            : "#333F61",
+                              ? "red" // todo: need to change to red
+                              : "#333F61",
                       }}
                     >
                       {words}
@@ -1488,7 +1488,7 @@ if (similarity >= 80) {
                           }
                           //setIsPlaying(true);
                         }}
-                        //disabled={!recordedAudioBlob}
+                      //disabled={!recordedAudioBlob}
                       >
                         <img
                           src={listenImg2}
