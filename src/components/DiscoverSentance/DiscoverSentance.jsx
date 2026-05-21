@@ -83,24 +83,24 @@ const SpeakSentenceComponent = () => {
     window.telemetry?.syncEvents && window.telemetry.syncEvents();
   };
 
-  useEffect(() => {
-    if (questions?.length) setAssesmentcount(assesmentCount + 1);
-  }, [questions]);
-
-  useEffect(() => {
-    if (questions?.length && !initialAssesment && currentQuestion === 0) {
+  const showCompletionPopup = (setNumber) =>
+    new Promise((resolve) => {
       setDisableScreen(true);
       callConfettiAndPlay();
       setTimeout(() => {
-        // alert();
         setOpenMessageDialog({
-          message:
-            "You have successfully completed assessment " + assesmentCount,
+          message: "You have successfully completed assessment " + setNumber,
+          __onClose: () => {
+            setDisableScreen(false);
+            resolve();
+          },
         });
-        // setDisableScreen(false);
       }, 1200);
-    }
-  }, [currentQuestion]);
+    });
+
+  useEffect(() => {
+    if (questions?.length) setAssesmentcount(assesmentCount + 1);
+  }, [questions]);
 
   useEffect(() => {
     if (!localStorage.getItem("contentSessionId")) {
@@ -364,6 +364,9 @@ const SpeakSentenceComponent = () => {
           language: lang,
           milestoneLevel: "m0",
         });
+        if (newHistory.length < 3) {
+          await showCompletionPopup(newHistory.length);
+        }
         await loadDiscoveryNextSet(newHistory, assessmentResponse);
       }
     } catch (error) {
@@ -386,8 +389,8 @@ const SpeakSentenceComponent = () => {
           try {
             charRes = JSON.parse(charRaw);
           } catch {
-            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
             const resAssessment = await fetchAssessmentData(lang);
+            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
             if (cancelled) return;
             await initDiscoveryFromSet4(resAssessment);
             return;
@@ -395,8 +398,8 @@ const SpeakSentenceComponent = () => {
 
           let mergedHistory;
           try {
-            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
             const resAssessment = await fetchAssessmentData(lang);
+            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
             if (cancelled) return;
             const stateRaw = sessionStorage.getItem(
               DISCOVERY_SET_FLOW_STORAGE.STATE
@@ -432,6 +435,12 @@ const SpeakSentenceComponent = () => {
                 pendingCharSetTag: null,
               })
             );
+            setInitialAssesment(false);
+            setQuestionsReady(true);
+            if (mergedHistory.length < 3) {
+              await showCompletionPopup(mergedHistory.length);
+            }
+            if (cancelled) return;
             await loadDiscoveryNextSet(mergedHistory, resAssessment);
           } catch (e) {
             console.error("Discovery char resume error:", e);
@@ -469,8 +478,12 @@ const SpeakSentenceComponent = () => {
   useEffect(() => {
     localStorage.setItem("mechanism_id", "");
 
-    // Always show demo when entering discovery page
-    setShowDemo(true);
+    const isCharResume = !!sessionStorage.getItem(
+      DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT
+    );
+    if (!isCharResume) {
+      setShowDemo(true);
+    }
   }, []);
 
   const handleDemoComplete = () => {
@@ -577,8 +590,10 @@ const SpeakSentenceComponent = () => {
         <MessageDialog
           message={openMessageDialog.message}
           closeDialog={() => {
+            const cb = openMessageDialog && openMessageDialog.__onClose;
             setOpenMessageDialog("");
             setDisableScreen(false);
+            if (cb) cb();
           }}
           isError={openMessageDialog.isError}
           dontShowHeader={openMessageDialog.dontShowHeader}
