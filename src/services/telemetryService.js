@@ -520,7 +520,13 @@ export const getEventOptions = () => {
       pdata: {
         // optional
         id: process.env.REACT_APP_ID, // Producer ID. For ex: For sunbird it would be "portal" or "genie"
-        ver: process.env.REACT_APP_VER, // Version of the App
+        ver: [
+          process.env.REACT_APP_VER,
+          process.env.REACT_APP_BUILD_NUMBER,
+          process.env.REACT_APP_COMMIT_ID?.substring(0, 7),
+        ]
+          .filter(Boolean)
+          .join("-"), // Version of the App
         pid: process.env.REACT_APP_PID, // Optional. In case the component is distributed, then which instance of that component
       },
       env: process.env.REACT_APP_ENV,
