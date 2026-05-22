@@ -1044,7 +1044,7 @@ const BingoCard = ({
 
         const isCorrectPair =
           newSelected.length === requiredParts.length &&
-          requiredParts.every((part) => newSelected.includes(part));
+          requiredParts.every((part, index) => newSelected[index] === part);
 
         if (isCorrectPair) {
           setMatchedPair({ fullWord: currentWord, parts: requiredParts });

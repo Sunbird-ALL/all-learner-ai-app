@@ -1,5 +1,6 @@
 /* global globalThis */
 // ─── Static imports (must all come before any declarations) ─────────────────
+import ServerErrorScreen from "../../components/ServerErrorScreen/ServerErrorScreen";
 import React, {
   useEffect,
   useState,
@@ -7625,40 +7626,13 @@ const Practice = () => {
           textAlign: "center",
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ fontFamily: "Quicksand", fontWeight: 700, color: "#555" }}
-        >
-          Could not load your practice session.
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontFamily: "Quicksand", color: "#888", maxWidth: 360 }}
-        >
-          The server is unreachable right now. Check your connection and try
-          again.
-        </Typography>
-        <Button
-          variant="contained"
-          onClick={() => {
+        <ServerErrorScreen
+          onRetry={() => {
             setFetchError(false);
             setLoading(true);
             fetchDetails();
           }}
-          sx={{
-            mt: 1,
-            background: "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
-            color: "white",
-            fontFamily: "Quicksand",
-            fontWeight: 700,
-            borderRadius: "25px",
-            textTransform: "none",
-            px: 4,
-            py: 1.5,
-          }}
-        >
-          Try Again
-        </Button>
+        />
       </Box>
     );
   }

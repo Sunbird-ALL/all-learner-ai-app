@@ -7,6 +7,7 @@ import {
   SpeakButton,
   StopButton,
   getLocalData,
+  getBrowserLanguage,
 } from "./constants";
 import { RetryIcon } from "../components/Icons/SvgIcons";
 import RecordVoiceVisualizer from "./RecordVoiceVisualizer";
@@ -16,6 +17,7 @@ import PropTypes from "prop-types";
 import SpeechRecognition from "react-speech-recognition";
 import { doubleMetaphone } from "double-metaphone";
 import { transliterateKannadaToLatin, compareWords } from "../utils/textUtils";
+import { getTextSimilarity } from "./VoiceAnalyser";
 
 function sanitize(text) {
   return text
@@ -64,20 +66,10 @@ function getOfflineCorrectnessResult(rawTranscript, rawTarget, language) {
   }
 
   const exactMatch = transcripts === target;
-  const similarity = calculateSimilarity(transcripts, target);
-  const transcriptContainsTarget = transcripts.includes(target);
-  const targetContainsTranscript = target.includes(transcripts);
-  const isCorrect =
-    exactMatch ||
-    similarity >= 80 ||
-    (transcriptContainsTarget && similarity >= 70) ||
-    (targetContainsTranscript && similarity >= 70);
+  const similarity = getTextSimilarity(transcripts, target);
+  const isCorrect = exactMatch || similarity >= 0.8;
 
-  if (language === "kn") {
-    const knLatin = transliterateKannadaToLatin(target);
-    const comparison = compareWords(transcripts, knLatin);
-    return comparison?.isFine;
-  }
+  console.log("final answer", similarity, isCorrect);
   return isCorrect;
 }
 
@@ -92,16 +84,6 @@ const AudioRecorder = (props) => {
   const transcriptRef = useRef("");
 
   // Map language codes to browser speech recognition format
-  const getBrowserLanguage = (langCode) => {
-    const browserLangMap = {
-      en: "en-US",
-      hi: "hi-IN",
-      te: "te-IN",
-      ka: "kn-IN",
-      ta: "ta-IN",
-    };
-    return browserLangMap[langCode] || "en-US";
-  };
 
   //console.log("pageName", props.pageName);
 
