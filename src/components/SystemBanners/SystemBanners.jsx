@@ -277,7 +277,10 @@ const SystemBanners = () => {
         </Box>
         <img
           src={serverDowntimeImg}
-          alt="Server resting"
+          alt="Illustration of a sleepy dog resting on a laptop"
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
           style={{ width: "min(400px, 80vw)", margin: "8px 0" }}
         />
         <Box
