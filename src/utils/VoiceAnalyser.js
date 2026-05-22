@@ -60,6 +60,38 @@ const AudioPath = {
   },
 };
 const currentIndex = localStorage.getItem("index") || 1;
+
+// Levenshtein-based similarity matching backend logic (0.0 – 1.0)
+export function getTextSimilarity(s1, s2) {
+  let longer = s1;
+  let shorter = s2;
+  if (s1.length < s2.length) {
+    longer = s2;
+    shorter = s1;
+  }
+  const longerLength = longer.length;
+  if (longerLength === 0) return 1.0;
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+  const costs = [];
+  for (let i = 0; i <= s1.length; i++) {
+    let lastValue = i;
+    for (let j = 0; j <= s2.length; j++) {
+      if (i === 0) {
+        costs[j] = j;
+      } else if (j > 0) {
+        let newValue = costs[j - 1];
+        if (s1.charAt(i - 1) !== s2.charAt(j - 1))
+          newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+        costs[j - 1] = lastValue;
+        lastValue = newValue;
+      }
+    }
+    if (i > 0) costs[s2.length] = lastValue;
+  }
+  return (longerLength - costs[s2.length]) / parseFloat(longerLength);
+}
+
 function VoiceAnalyser(props) {
   const [loadCnt, setLoadCnt] = useState(0);
   const [loader, setLoader] = useState(false);
@@ -616,9 +648,8 @@ function VoiceAnalyser(props) {
         callUpdateLearner &&
         (props.pageName === "wordsorimage" || props.pageName === "m5")
       ) {
-        const isMatching =
-          data?.createScoreData?.session?.error_rate?.character === 0 ||
-          (data?.createScoreData === undefined && texttemp === tempteacherText);
+        const similarity = getTextSimilarity(texttemp, tempteacherText);
+        const isMatching = similarity >= 0.8;
         if (typeof props.updateStoredData === "function") {
           props.updateStoredData(recordedAudio, isMatching);
         }

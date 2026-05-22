@@ -127,7 +127,13 @@ const LoginPage = () => {
         env: process.env.REACT_APP_ENV,
         pdata: {
           id: process.env.REACT_APP_ID,
-          ver: process.env.REACT_APP_VER,
+          ver: [
+            process.env.REACT_APP_VER,
+            process.env.REACT_APP_BUILD_NUMBER,
+            process.env.REACT_APP_COMMIT_ID?.substring(0, 7),
+          ]
+            .filter(Boolean)
+            .join("-"),
           pid: process.env.REACT_APP_PID,
         },
         tags: [""],
