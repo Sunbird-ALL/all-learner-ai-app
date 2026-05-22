@@ -477,6 +477,7 @@ const LetterLauncherMechanicsContent = ({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(100);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const isTimerRunningRef = useRef(false); // mirrors isTimerRunning for safe reads inside setTimeout closures
   const [showLetter, setShowLetter] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   // Ref to prevent double audio playback (React StrictMode double-invocation)
@@ -707,12 +708,12 @@ const LetterLauncherMechanicsContent = ({
           }
           await sessionTelemetryManager.startSubSession(
             gameKey,
-            currentGameLevel,
+            effectiveLevel,
             initialLanguage
           );
           console.log("✅ Letter Launcher telemetry subsession started:", {
             gameKey,
-            level: currentGameLevel,
+            level: effectiveLevel,
             language: initialLanguage,
           });
         } catch (error) {
@@ -807,7 +808,15 @@ const LetterLauncherMechanicsContent = ({
         setIsPlayingAudio(false);
 
         setShowLetter(true);
-        return; // Exit early if audio fails
+        // Still start the timer so fuel can be earned on the answer even without audio
+        setQuestionStartTime(Date.now());
+        return;
+      }
+
+      // Guard: if the F3 step changed while audio was playing, the reset effect will have
+      // set isPlayingAudioRef to false. Bail out to avoid updating stale step's display.
+      if (!isPlayingAudioRef.current) {
+        return;
       }
 
       // After audio ends, show the letter
@@ -917,6 +926,11 @@ const LetterLauncherMechanicsContent = ({
     );
   }, [currentQuestionIndex, questions.length, contentCount]);
 
+  // Keep ref in sync so setTimeout closures can read the latest timer state
+  useEffect(() => {
+    isTimerRunningRef.current = isTimerRunning;
+  }, [isTimerRunning]);
+
   // Timer countdown for Apply steps
   useEffect(() => {
     if (
@@ -977,6 +991,7 @@ const LetterLauncherMechanicsContent = ({
     // Calculate fuel based on response time
     let fuelResult = null;
     let updatedFuel = currentFuel; // Track updated fuel to pass to handlers
+    let updatedCorrectCount = correctCount; // Track locally to avoid stale state in setTimeout closure
     if (questionStartTime) {
       const responseTime = Date.now() - questionStartTime;
       fuelResult = calculateFuel(responseTime, isCorrectAnswer);
@@ -1051,6 +1066,7 @@ const LetterLauncherMechanicsContent = ({
     });
 
     if (isCorrectAnswer) {
+      updatedCorrectCount = correctCount + 1;
       setCorrectCount((prev) => prev + 1);
     } else {
       setWrongCount((prev) => prev + 1);
@@ -1060,8 +1076,9 @@ const LetterLauncherMechanicsContent = ({
     // DO NOT update progress here - only update when ALL questions are complete
     // FIX: Using the ref to track the timeout
     answerTimeoutRef.current = setTimeout(() => {
-      // Check if timer expired and we should stop showing new questions
-      const timerExpired = !isTimerRunning && effectiveIsShowCase;
+      // Check if timer expired and we should stop showing new questions.
+      // Read from ref, not closure state, so we see expiry that happened during the 2s feedback window.
+      const timerExpired = !isTimerRunningRef.current && effectiveIsShowCase;
 
       // Check if all questions have been answered
       // When we answer question at index N, we've answered N+1 questions total
@@ -1113,11 +1130,11 @@ const LetterLauncherMechanicsContent = ({
         );
         const hasEnoughFuel = updatedFuel >= requiredFuel;
         const minCorrectThreshold = Math.max(7, Math.floor(contentCount * 0.7));
-        const hasEnoughCorrect = correctCount >= minCorrectThreshold;
+        const hasEnoughCorrect = updatedCorrectCount >= minCorrectThreshold;
 
         // Debug logging
         console.log("Letter Launcher - Pass/Fail Check:", {
-          correctCount,
+          correctCount: updatedCorrectCount,
           contentCount,
           minCorrectThreshold,
           hasEnoughCorrect,
@@ -1189,11 +1206,11 @@ const LetterLauncherMechanicsContent = ({
         );
         const hasEnoughFuel = updatedFuel >= requiredFuel;
         const minCorrectThreshold = Math.max(7, Math.floor(contentCount * 0.7));
-        const hasEnoughCorrect = correctCount >= minCorrectThreshold;
+        const hasEnoughCorrect = updatedCorrectCount >= minCorrectThreshold;
 
         // Debug logging
         console.log("Letter Launcher - Pass/Fail Check (Timer Expired):", {
-          correctCount,
+          correctCount: updatedCorrectCount,
           contentCount,
           minCorrectThreshold,
           hasEnoughCorrect,
