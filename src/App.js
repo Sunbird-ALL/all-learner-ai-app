@@ -21,6 +21,7 @@ import { reportError } from "./utils/errorReporter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
 import SystemBanners from "./components/SystemBanners/SystemBanners";
+import ServerErrorScreen from "./components/ServerErrorScreen/ServerErrorScreen";
 import { RESILIENCE_CONFIG } from "./config/config";
 
 function isEnvTruthyTrue(value) {
@@ -54,6 +55,10 @@ function parseAxiosRetryDelaysSecToMs(raw) {
 
 const App = () => {
   const ranonce = useRef(false);
+  const [showNetworkError, setShowNetworkError] = useState(false);
+  // Ref so the axios interceptor (set up once) can always access the latest setter
+  const networkErrorRef = useRef(null);
+  networkErrorRef.current = setShowNetworkError;
 
   const navigate = useNavigate();
   const [appInitialized, setAppInitialized] = useState(false);
@@ -314,6 +319,14 @@ const App = () => {
           });
         }
 
+        // --- Global network error screen ---
+        // Fires after all retries are exhausted (or if retries are disabled).
+        // error.request confirms a request was sent but received no response
+        // (i.e. truly offline / server unreachable, not a 4xx/5xx response).
+        if (isNetworkError && error.request) {
+          networkErrorRef.current?.(true);
+        }
+
         // --- Auth error handling (401 / 400) ---
         if (
           error.response &&
@@ -429,6 +442,9 @@ const App = () => {
           <AlphabetDemoProvider>
             <SessionExpiredProvider>
               <SystemBanners />
+              {showNetworkError && (
+                <ServerErrorScreen onRetry={() => setShowNetworkError(false)} />
+              )}
               <GetSetResultLoadingOverlay />
               <AppContent routes={routes} />
             </SessionExpiredProvider>

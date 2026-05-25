@@ -25,6 +25,7 @@ import { reportError } from "../../utils/errorReporter";
 import { startEvent } from "../../services/callTelemetryIntract";
 import LanguageModalNew from "../../utils/LanguageModal";
 import { AudioDiagnosticModal } from "../../components/AudioDiagnostic";
+import ServerErrorScreen from "../../components/ServerErrorScreen/ServerErrorScreen";
 import panda from "../../assets/images/panda.svg";
 import textureImage from "../../assets/images/textureImage.png";
 
@@ -38,6 +39,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
   const [formAlert, setFormAlert] = useState({
     message: "",
     severity: "error",
@@ -195,10 +197,7 @@ const LoginPage = () => {
         showFormAlert(message || "Login failed. Please try again.", "error");
       }
     } else if (error.request) {
-      showFormAlert(
-        "Cannot reach the server. Check your connection and try again.",
-        "error"
-      );
+      setNetworkError(true);
     } else {
       showFormAlert(
         "Something went wrong. Please try again in a moment.",
@@ -274,6 +273,10 @@ const LoginPage = () => {
       navigate("/discover-start");
     }
   }, []);
+
+  if (networkError) {
+    return <ServerErrorScreen onRetry={() => setNetworkError(false)} />;
+  }
 
   if (loading) {
     return (

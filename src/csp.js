@@ -31,7 +31,7 @@ export const getCSP = (envVariables) => {
     "font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com",
     `img-src 'self' data: https://raw.githubusercontent.com https://cdn.jsdelivr.net https://github.com https://images.squarespace-cdn.com ${s3Content} ${s3Url}`.trim(),
     `media-src 'self' blob: https://*.amazonaws.com ${s3Url} ${s3Content} ${presignedUrlService} https://raw.githubusercontent.com https://github.com`.trim(),
-    `connect-src 'self' https://*.amazonaws.com https://*.theall.ai https://telemetry.theall.ai https://telemetry-dev.theall.ai ${telemetry} ${host} ${aiBase} ${orchestHost} ${s3Url} ${s3Content} ${presignedUrlService} blob: https://huggingface.co https://cas-bridge.xethub.hf.co https://cdn.jsdelivr.net`.trim(),
+    `connect-src 'self' https://*.amazonaws.com https://*.theall.ai https://*.the-axl.ai https://telemetry.theall.ai https://telemetry-dev.theall.ai ${telemetry} ${host} ${aiBase} ${orchestHost} ${s3Url} ${s3Content} ${presignedUrlService} ${cspAppHost} blob: https://huggingface.co https://cas-bridge.xethub.hf.co https://cdn.jsdelivr.net`.trim(),
     "form-action 'self'",
     "frame-src 'self' https://www.google.com https://www.gstatic.com https://www.youtube.com https://www.youtube-nocookie.com",
     "object-src 'none'",
