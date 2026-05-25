@@ -3386,7 +3386,7 @@ const content = {
         },
         {
           img: getAssetUrl(s3Assets.बलटImg),
-          text: "बाल्टि",
+          text: "बाल्टी",
           audio: getAssetAudioUrl(s3Assets.बलटAudio),
         },
         {
@@ -3395,7 +3395,7 @@ const content = {
           audio: getAssetAudioUrl(s3Assets.कततAudio),
         },
       ],
-      correctWord: "बाल्टि",
+      correctWord: "बाल्टी",
       audio: getAssetAudioUrl(s3Assets.बलटAudio),
       flowName: "P2",
       type: "soundMatch",
