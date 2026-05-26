@@ -113,7 +113,7 @@ jobs:
           echo "secrate": ${{ vars.REACT_APP_AWS_S3_BUCKET_NAME }}
 
       - name: Cloudfront Invalidation
-        uses: chetan/invalidate-cloudfront-action@master
+        uses: chetan/invalidate-cloudfront-action@fce6f6f546fae2e9fe55f3bd1411063a908f2557 # master @ 2021-12-10
         env:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
           PATHS: "/*"
