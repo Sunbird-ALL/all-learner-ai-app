@@ -22,6 +22,7 @@ import {
   NextButtonRound,
   getLocalData,
   setLocalData,
+  getBrowserLanguage,
 } from "../../utils/constants";
 import { WordRedCircle, RetryIcon } from "../Icons/SvgIcons";
 import { phoneticMatch } from "../../utils/phoneticUtils";
@@ -249,18 +250,6 @@ const FluencyP5 = ({
     const matches = a.filter((word) => b.includes(word)).length;
     const total = Math.max(a.length, b.length);
     return matches / total;
-  };
-
-  const getBrowserLanguage = (langCode) => {
-    const browserLangMap = {
-      en: "en-US",
-      hi: "hi-IN",
-      te: "te-IN",
-      ka: "kn-IN",
-      kn: "kn-IN",
-      ta: "ta-IN",
-    };
-    return browserLangMap[langCode] || "en-US";
   };
 
   useEffect(() => {
@@ -545,7 +534,7 @@ const FluencyP5 = ({
       currentStep - 1,
       base64Data,
       responseStartTime,
-      currentSentence?.sentence,
+      finalTranscript || "",
       apiLevel
     );
   };

@@ -402,14 +402,13 @@ const Mechanics7 = ({
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");
     const responseStartTime = new Date().getTime();
-    let responseText = "";
     await callTelemetryApi(
       currentText,
       sessionId,
       currentStep - 1,
       recAudio,
       responseStartTime,
-      currentText,
+      transcriptRef.current || "",
       apiLevel
     );
   };
