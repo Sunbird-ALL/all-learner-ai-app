@@ -1,4 +1,4 @@
-name: ALL Test Dev Deployment
+name: ALL test-dev Deployment
 
 on:
   push:
@@ -8,31 +8,23 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: axl-test-dev
-
-    env:
-      S3_TARGET_PATH: dist/client/public/all-app
+    environment: all-test-dev
 
     steps:
-      # 1. Checkout ALL repo
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
-      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
 
-      # 3. Configure AWS credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set default.region ${{ secrets.AWS_REGION }}
 
-      # 4. Clean Install
       - name: Clean up node_modules and package-lock.json
         run: |
           rm -rf node_modules
@@ -44,7 +36,6 @@ jobs:
       - name: Run Husky Install
         run: npm run prepare
 
-      # 5. Build the ALL app
       - name: Build and Package Application
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
@@ -79,6 +70,7 @@ jobs:
           REACT_APP_IS_AUDIOPREPROCESSING: ${{ vars.REACT_APP_IS_AUDIOPREPROCESSING }}
           REACT_APP_POST_LEARNER_PROGRESS: ${{ vars.REACT_APP_POST_LEARNER_PROGRESS }}
           REACT_APP_IS_APP_IFRAME: ${{ vars.REACT_APP_IS_APP_IFRAME }}
+          REACT_APP_AXL_HOST: ${{ vars.REACT_APP_AXL_HOST }}
           REACT_APP_IS_IN_APP_AUTHORISATION: ${{ vars.REACT_APP_IS_IN_APP_AUTHORISATION }}
           REACT_APP_ENABLE_RESET_ROUTE: ${{ vars.REACT_APP_ENABLE_RESET_ROUTE }}
           REACT_APP_LANGUAGES: ${{ vars.REACT_APP_LANGUAGES }}
@@ -93,7 +85,7 @@ jobs:
           REACT_APP_LEARNER_AI_BASE_URL: ${{ vars.REACT_APP_LEARNER_AI_BASE_URL }}
           REACT_APP_USE_RECOMMENDATION_API: ${{ vars.REACT_APP_USE_RECOMMENDATION_API }}
           REACT_APP_ENGAGEMENT_PREDICT_URL: ${{ vars.REACT_APP_ENGAGEMENT_PREDICT_URL }}
-          REACT_APP_TRACKING_API_BASE_URL: ${{ vars.REACT_APP_TRACKING_API_BASE_URL }}
+          REACT_APP_TRACKING_API_BASE_URL: ${{ vars.REACT_APP_TRACKING_API_BASE_URL}}
           REACT_APP_PRESIGNED_URL_SERVICE: ${{ vars.REACT_APP_PRESIGNED_URL_SERVICE }}
           REACT_APP_RECOMMENDATION_API_LANGUAGES: ${{ vars.REACT_APP_RECOMMENDATION_API_LANGUAGES }}
           REACT_APP_AXIOS_RETRY_ENABLED: ${{ vars.REACT_APP_AXIOS_RETRY_ENABLED }}
@@ -104,42 +96,23 @@ jobs:
           REACT_APP_MIN_SCREEN_HEIGHT: ${{ vars.REACT_APP_MIN_SCREEN_HEIGHT }}
           REACT_APP_BUILD_NUMBER: ${{ github.run_number }}
           REACT_APP_COMMIT_ID: ${{ github.sha }}
-          CI: false
+          CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
-      # 6. Verify Build Output
-      - name: Verify Build Output
+      - name: Deploy to S3 Bucket
+        run: aws s3 sync ./build s3://axl-test-dev/all-app/
+
+      - name: Debug Environment Variables
         run: |
-          if [ ! -d "build" ]; then
-            echo "ERROR: build directory not found!"
-            exit 1
-          fi
-          if [ ! -f "build/index.html" ]; then
-            echo "ERROR: build/index.html not found!"
-            exit 1
-          fi
-          echo "=== build contents ==="
-          ls -la build
+          echo "REACT_APP_AWS_S3_BUCKET_NAME: $REACT_APP_AWS_S3_BUCKET_NAME"
+          echo "AWS_REGION: $AWS_REGION"
+          echo "secrate": ${{ vars.REACT_APP_AWS_S3_BUCKET_NAME }}
 
-      # 7. Deploy ALL build into AXL's all-app folder on S3
-      - name: Deploy to S3 Bucket (all-app folder)
-        run: |
-          echo "Syncing static assets with long cache..."
-          aws s3 sync ./build s3://axl-test-dev/${S3_TARGET_PATH}/ \
-            --delete \
-            --exclude "index.html" \
-            --cache-control "max-age=31536000,public"
-
-          echo "Uploading index.html with no-cache..."
-          aws s3 cp ./build/index.html s3://axl-test-dev/${S3_TARGET_PATH}/index.html \
-            --cache-control "no-cache"
-
-      # 8. Invalidate only the all-app path on CloudFront
-      - name: Cloudfront Invalidation (all-app paths)
+      - name: Cloudfront Invalidation
         uses: chetan/invalidate-cloudfront-action@master
         env:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
-          PATHS: "/client/public/all-app/*"
+          PATHS: "/*"
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
