@@ -23,7 +23,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AXL_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AXL_AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AXL_AWS_REGION }}
+          AWS_REGION: ap-south-1
         run: |
           aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
           aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
@@ -104,7 +104,7 @@ jobs:
         run: npm run build
 
       - name: Deploy to S3 Bucket
-        run: aws s3 sync ./build s3://axl-dev-test/all-app/
+        run: aws s3 sync ./build s3://axl-dev-test/all-app/ --region ap-south-1
 
       - name: Debug Environment Variables
         env:
