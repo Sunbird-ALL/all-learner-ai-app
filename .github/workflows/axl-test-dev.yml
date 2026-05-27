@@ -107,10 +107,12 @@ jobs:
         run: aws s3 sync ./build s3://axl-test-dev/all-app/
 
       - name: Debug Environment Variables
+        env:
+          BUCKET_NAME: ${{ secrets.AXL_S3_BUCKET_NAME }}
         run: |
           echo "REACT_APP_AWS_S3_BUCKET_NAME: $REACT_APP_AWS_S3_BUCKET_NAME"
           echo "AWS_REGION: $AWS_REGION"
-          echo "secrate": ${{ secrets.AXL_S3_BUCKET_NAME }}
+          echo "secrate: $BUCKET_NAME"
 
       - name: Cloudfront Invalidation
         uses: chetan/invalidate-cloudfront-action@fce6f6f546fae2e9fe55f3bd1411063a908f2557 # master @ 2021-12-10
