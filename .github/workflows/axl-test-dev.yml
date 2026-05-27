@@ -1,4 +1,4 @@
-name: ALL test-dev Deployment
+name: AXL test-dev Deployment
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: all-test-dev
+    environment: axl-test-dev
 
     steps:
       - name: Checkout code
@@ -21,9 +21,9 @@ jobs:
 
       - name: Configure AWS credentials
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AXL_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AXL_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AXL_AWS_REGION }}
         run: |
           aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
           aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
@@ -110,13 +110,13 @@ jobs:
         run: |
           echo "REACT_APP_AWS_S3_BUCKET_NAME: $REACT_APP_AWS_S3_BUCKET_NAME"
           echo "AWS_REGION: $AWS_REGION"
-          echo "secrate": ${{ vars.REACT_APP_AWS_S3_BUCKET_NAME }}
+          echo "secrate": ${{ secrets.AXL_S3_BUCKET_NAME }}
 
       - name: Cloudfront Invalidation
         uses: chetan/invalidate-cloudfront-action@fce6f6f546fae2e9fe55f3bd1411063a908f2557 # master @ 2021-12-10
         env:
-          DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
+          DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV_TEST }}
           PATHS: "/*"
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AXL_AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AXL_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AXL_AWS_SECRET_ACCESS_KEY }}
