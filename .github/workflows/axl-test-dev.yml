@@ -103,7 +103,7 @@ jobs:
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
-      -  name: Deploy audio to S3 root
+      - name: Deploy audio to S3 root
         run: |
           aws s3 sync ./build/audio s3://axl-dev-test/audio/ \
             --delete \
