@@ -105,10 +105,10 @@ jobs:
         run: npm run build
 
       - name: Deploy audio to S3 root
-        run: aws s3 sync ./build/audio s3://axl-dev-test/audio/ --region ap-south-1
+        run: aws s3 sync ./build/audio s3://axl-dev-test/audio/ --delete --region ap-south-1
 
       - name: Deploy app bundle (excluding audio)
-        run: aws s3 sync ./build s3://axl-dev-test/all-app/ --exclude "audio/*" --region ap-south-1
+        run: aws s3 sync ./build s3://axl-dev-test/all-app/ --exclude "audio/*" --delete --region ap-south-1
 
       - name: Remove stale audio from /all-app
         run: aws s3 rm s3://axl-dev-test/all-app/audio/ --recursive --region ap-south-1
