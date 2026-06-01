@@ -19,7 +19,7 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { getLocalData } from "../../utils/constants";
+import { getLocalData, getBrowserLanguage } from "../../utils/constants";
 import textureImage from "../../assets/images/textureImage.png";
 import panda from "../../assets/images/panda.svg";
 import { impression, interact, Log } from "../../services/telemetryService";
@@ -78,19 +78,6 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
   // Get translations based on current language
   const translations = getTranslations(lang);
-
-  // Map language codes to browser speech recognition format
-  const getBrowserLanguage = (langCode) => {
-    const browserLangMap = {
-      en: "en-US",
-      hi: "hi-IN",
-      te: "te-IN",
-      ka: "kn-IN",
-      kn: "kn-IN",
-      ta: "ta-IN",
-    };
-    return browserLangMap[langCode] || "en-US";
-  };
 
   // Reset all state to initial values
   const resetDiagnostic = () => {

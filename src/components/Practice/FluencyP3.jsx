@@ -209,6 +209,8 @@ const FluencyP3 = ({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [readingSpeed, setReadingSpeed] = useState("Slow");
   const [startTime, setStartTime] = useState(null);
+  const userResponsesRef = React.useRef({ q1: null, q2: null });
+  const currentSentenceTextRef = React.useRef("");
 
   const allSentences = contentSourceData?.map((item) => {
     const sentence = item?.contentSourceData[0]?.text || "";
@@ -255,8 +257,15 @@ const FluencyP3 = ({
     const sessionId = getLocalData("sessionId");
     const responseStartTime = new Date().getTime();
     const base64Data = "";
-    const sentenceText =
-      currentSentence?.map((wordObj) => wordObj.word).join(" ") || "";
+    const sentenceText = currentSentenceTextRef.current;
+
+    const { q1, q2 } = userResponsesRef.current;
+    const responseText = [
+      q1 ? `${q1.word}:${q1.answer}` : "",
+      q2 ? `${q2.word}:${q2.answer}` : "",
+    ]
+      .filter(Boolean)
+      .join("|");
 
     await callTelemetryApi(
       sentenceText,
@@ -264,12 +273,10 @@ const FluencyP3 = ({
       currentStep - 1,
       base64Data,
       responseStartTime,
-      sentenceText,
+      responseText,
       apiLevel
     );
   };
-  console.log("cur", currentSentence.sentence);
-
   const startReadingFlow = () => {
     setShowContent(false);
     setCurrentWordIndex(0);
@@ -384,6 +391,18 @@ const FluencyP3 = ({
     setNoClicked(false);
 
     if (questionStage === 0) {
+      userResponsesRef.current.q1 = {
+        word: currentQuestionWord,
+        answer: "yes",
+      };
+    } else {
+      userResponsesRef.current.q2 = {
+        word: currentQuestionWord,
+        answer: "yes",
+      };
+    }
+
+    if (questionStage === 0) {
       // ✅ First question YES = Correct
       const audio = new Audio(correctSound);
       audio.play();
@@ -411,6 +430,12 @@ const FluencyP3 = ({
   const handleNoClick = () => {
     setNoClicked(true);
     setYesClicked(false);
+
+    if (questionStage === 0) {
+      userResponsesRef.current.q1 = { word: currentQuestionWord, answer: "no" };
+    } else {
+      userResponsesRef.current.q2 = { word: currentQuestionWord, answer: "no" };
+    }
 
     if (questionStage === 0) {
       // ❌ First question NO = Wrong
@@ -448,6 +473,8 @@ const FluencyP3 = ({
       setCurrentQuestionWord(wordList[wordIndex]);
     } else {
       // Move to next sentence or show results
+      currentSentenceTextRef.current =
+        currentSentence?.map((wordObj) => wordObj.word).join(" ") || "";
       setShowFinalScreen(false);
       setShowWordAfterYes(false);
       setIsTransitioning(true);
@@ -463,6 +490,8 @@ const FluencyP3 = ({
           setIsTransitioning(false);
         }, 800);
       } else {
+        currentSentenceTextRef.current =
+          currentSentence?.map((wordObj) => wordObj.word).join(" ") || "";
         setShowResultScreen(true);
         setIsTransitioning(false);
       }
@@ -777,8 +806,8 @@ const FluencyP3 = ({
                 role="button"
                 tabIndex={0}
                 onClick={() => {
-                  handleNext();
                   callTelemetry();
+                  handleNext();
                   setReadingSpeed("Slow");
                   setStartTime(null);
                   setShowResultScreen(false);
@@ -917,6 +946,7 @@ const FluencyP3 = ({
                 paused={parentModalOpen}
                 onComplete={() => {
                   if (parentModalOpen) return;
+                  userResponsesRef.current = { q1: null, q2: null };
                   setReadingSpeed("Slow");
                   setStartTime(Date.now());
                   setShowContent(true);

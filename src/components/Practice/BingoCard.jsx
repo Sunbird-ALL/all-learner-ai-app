@@ -16,6 +16,7 @@ import {
   NextButtonRound,
   RetryIcon,
   setLocalData,
+  getBrowserLanguage,
 } from "../../utils/constants";
 // import Play from "../../assets/playButton.svg";
 import { phoneticMatch } from "../../utils/phoneticUtils";
@@ -844,7 +845,7 @@ const BingoCard = ({
       currentStep - 1,
       base64Data,
       responseStartTime,
-      transformed?.arrM?.[currentWordIndex],
+      transcriptRef.current || "",
       apiLevel
     );
   };
@@ -878,7 +879,7 @@ const BingoCard = ({
       SpeechRecognition.startListening({
         continuous: true,
         interimResults: true,
-        language: language || "en-US",
+        language: getBrowserLanguage(language),
       });
     }
     setIsRecording(true);
