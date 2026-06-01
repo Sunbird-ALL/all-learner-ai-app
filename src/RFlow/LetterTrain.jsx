@@ -6606,7 +6606,7 @@ const LetterTrain = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            overflow: { xs: "visible", sm: "hidden" },
+            overflow: { sm: "hidden", xs: "visible" },
             height: { xs: "auto", sm: "60vh" },
             minHeight: { xs: "50vh", sm: "60vh" },
           }}
@@ -6620,7 +6620,7 @@ const LetterTrain = ({
               backgroundImage:
                 "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
               backgroundColor: "#fff",
-              overflow: { xs: "visible", sm: "hidden" },
+              overflow: { sm: "hidden", xs: "visible" },
               boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
               display: "flex",
               flexDirection: "column",
@@ -6633,13 +6633,13 @@ const LetterTrain = ({
             {/* Progress container - right side */}
             <Box
               sx={{
+                alignItems: "center",
+                flexDirection: "column",
+                display: "flex",
+                width: { xs: "80px", sm: "100px", md: "120px" },
                 position: "absolute",
                 top: { xs: "-30px", sm: 10 },
                 right: { xs: "10px", sm: 20 },
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: { xs: "80px", sm: "100px", md: "120px" },
                 zIndex: { xs: 9999, sm: 1 },
               }}
             >
@@ -7049,7 +7049,7 @@ const LetterTrain = ({
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            overflow: { xs: "visible", sm: "hidden" },
+            overflow: { sm: "hidden", xs: "visible" },
             height: "70vh",
           }}
         >
@@ -7060,7 +7060,7 @@ const LetterTrain = ({
               width: "min(100%, 1024px)",
               borderRadius: 2,
               backgroundColor: "#fff",
-              overflow: { xs: "visible", sm: "hidden" },
+              overflow: { sm: "hidden", xs: "visible" },
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -7070,13 +7070,13 @@ const LetterTrain = ({
           >
             <Box
               sx={{
+                alignItems: "center",
+                flexDirection: "column",
+                display: "flex",
+                width: { xs: "80px", sm: "100px", md: "120px" },
                 position: "absolute",
                 top: { xs: "-30px", sm: 10 },
                 right: { xs: "10px", sm: 20 },
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: { xs: "80px", sm: "100px", md: "120px" },
                 zIndex: { xs: 9999, sm: 1 },
               }}
             >
@@ -7278,7 +7278,7 @@ const LetterTrain = ({
     >
       <Box
         sx={{
-          overflow: { xs: "visible", sm: "hidden" },
+          overflow: { sm: "hidden", xs: "visible" },
           display: "flex",
           flexDirection: "column",
         }}

@@ -666,7 +666,7 @@ const R1 = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -1099,7 +1099,7 @@ const R1 = ({
     }
   };
 
-  const updateStoredData = (audio, isCorrect) => { };
+  const updateStoredData = (audio, isCorrect) => {};
 
   const handleRecordingComplete = (base64Data) => {
     if (base64Data) {
@@ -1148,7 +1148,7 @@ const R1 = ({
             backgroundImage:
               "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
             backgroundColor: "#fff",
-            overflow: { xs: "visible", sm: "hidden" },
+            overflow: { sm: "hidden", xs: "visible" },
             boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
             display: "flex",
             flexDirection: "column",
@@ -1160,13 +1160,13 @@ const R1 = ({
         >
           <Box
             sx={{
-              position: "absolute",
-              top: { xs: "-30px", sm: 10 },
-              right: { xs: "10px", sm: 20 },
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              position: "absolute",
               width: { xs: "80px", sm: "100px", md: "120px" },
+              top: { xs: "-30px", sm: 10 },
+              right: { xs: "10px", sm: 20 },
               zIndex: { xs: 9999, sm: 1 },
             }}
           >
@@ -1497,7 +1497,7 @@ const R1 = ({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          overflow: { xs: "visible", sm: "hidden" },
+          overflow: { sm: "hidden", xs: "visible" },
           height: "70vh",
         }}
       >
@@ -1508,7 +1508,7 @@ const R1 = ({
             width: "min(100%, 1024px)",
             borderRadius: 2,
             backgroundColor: "#fff",
-            overflow: { xs: "visible", sm: "hidden" },
+            overflow: { sm: "hidden", xs: "visible" },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -1518,13 +1518,13 @@ const R1 = ({
         >
           <Box
             sx={{
-              position: "absolute",
-              top: { xs: "-30px", sm: 10 },
-              right: { xs: "10px", sm: 20 },
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              position: "absolute",
               width: { xs: "80px", sm: "100px", md: "120px" },
+              top: { xs: "-30px", sm: 10 },
+              right: { xs: "10px", sm: 20 },
               zIndex: { xs: 9999, sm: 1 },
             }}
           >
@@ -1853,7 +1853,7 @@ const R1 = ({
     >
       <Box
         sx={{
-          overflow: { xs: "visible", sm: "hidden" },
+          overflow: { sm: "hidden", xs: "visible" },
           display: "flex",
           flexDirection: "column",
         }}

@@ -3699,7 +3699,7 @@ const SoundHunt = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -3885,11 +3885,11 @@ const SoundHunt = ({
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            position: isMobile ? "absolute" : "relative",
-            top: isMobile ? "5px" : "auto",
             bottom: isMobile ? "5px" : "auto",
             left: isMobile ? "5px" : "auto",
+            position: isMobile ? "absolute" : "relative",
             right: isMobile ? "5px" : "auto",
+            top: isMobile ? "5px" : "auto",
             height: isMobile ? "calc(100% - 10px)" : "70vh",
             width: isMobile ? "calc(100% - 10px)" : "auto",
             borderRadius: isMobile ? "15px" : "0px",
@@ -4001,13 +4001,15 @@ const SoundHunt = ({
                 </button>
               )}
 
-              <div style={{
-                display: "flex",
-                gap: isMobile ? "18px" : "24px",
-                marginTop: isMobile ? "32px" : "24px",
-                justifyContent: "center",
-                alignItems: "center"
-              }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: isMobile ? "18px" : "24px",
+                  marginTop: isMobile ? "32px" : "24px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 {currentQuestion?.allwords.map((item, index) => {
                   const isCorrect =
                     selectedWord === currentQuestion?.correctWord &&
@@ -4020,8 +4022,8 @@ const SoundHunt = ({
                         backgroundColor: isCorrect
                           ? "rgba(117, 209, 0, 0.6)"
                           : isWrong
-                            ? "rgba(255, 127, 54, 0.8)"
-                            : "#FFFFFF",
+                          ? "rgba(255, 127, 54, 0.8)"
+                          : "#FFFFFF",
                         padding: "8px",
                         borderRadius: "24px",
                         boxShadow: isMobile
@@ -4037,21 +4039,30 @@ const SoundHunt = ({
                         WebkitBackdropFilter: "blur(56px)",
                         cursor: isAudioPlayedOnce ? "pointer" : "not-allowed",
                         opacity: isAudioPlayedOnce ? 1 : 0.7,
-                        transform: selectedWord === item.text
-                          ? "scale(1.12)"
-                          : wrongWord === item.text
+                        transform:
+                          selectedWord === item.text
+                            ? "scale(1.12)"
+                            : wrongWord === item.text
                             ? "scale(0.9)"
                             : "scale(1)",
-                        transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                        "&:hover": isAudioPlayedOnce ? {
-                          transform: selectedWord === item.text ? "scale(1.12)" : "scale(1.06)",
-                          boxShadow: isMobile
-                            ? "0px 10px 24px rgba(0, 0, 0, 0.16)"
-                            : "0px 8px 16px rgba(0, 0, 0, 0.15)",
-                        } : {},
-                        "&:active": isAudioPlayedOnce ? {
-                          transform: "scale(0.95)",
-                        } : {},
+                        transition:
+                          "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                        "&:hover": isAudioPlayedOnce
+                          ? {
+                              transform:
+                                selectedWord === item.text
+                                  ? "scale(1.12)"
+                                  : "scale(1.06)",
+                              boxShadow: isMobile
+                                ? "0px 10px 24px rgba(0, 0, 0, 0.16)"
+                                : "0px 8px 16px rgba(0, 0, 0, 0.15)",
+                            }
+                          : {},
+                        "&:active": isAudioPlayedOnce
+                          ? {
+                              transform: "scale(0.95)",
+                            }
+                          : {},
                       }}
                       onClick={() => {
                         if (isAudioPlayedOnce) {
@@ -4091,7 +4102,9 @@ const SoundHunt = ({
                   padding: "8px",
                   borderRadius: isMobile ? "26px" : "24px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                  border: isMobile ? "5px solid rgba(255, 255, 255, 0.8)" : "2px solid rgba(255, 255, 255, 0.5)",
+                  border: isMobile
+                    ? "5px solid rgba(255, 255, 255, 0.8)"
+                    : "2px solid rgba(255, 255, 255, 0.5)",
                   width: isMobile ? "100px" : "128px",
                   height: isMobile ? "120px" : "128px",
                   display: "flex",
@@ -4102,7 +4115,7 @@ const SoundHunt = ({
                   cursor: "pointer",
                   transition: "background-color 0.3s ease-in-out",
                 }}
-              //onClick={() => handleWordClick(currentQuestion.correctWord)}
+                //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
                 <img
                   src={correctImage}
@@ -4111,7 +4124,7 @@ const SoundHunt = ({
                     width: isMobile ? "100px" : "110px",
                     height: isMobile ? "100px" : "110px",
                     borderRadius: isMobile ? "22px" : "20px",
-                    objectFit: "contain"
+                    objectFit: "contain",
                   }}
                 />
               </div>
@@ -4141,7 +4154,9 @@ const SoundHunt = ({
                   padding: "8px",
                   borderRadius: isMobile ? "32px" : "24px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                  border: isMobile ? "5px solid rgba(255, 255, 255, 0.8)" : "2px solid rgba(255, 255, 255, 0.5)",
+                  border: isMobile
+                    ? "5px solid rgba(255, 255, 255, 0.8)"
+                    : "2px solid rgba(255, 255, 255, 0.5)",
                   width: isMobile ? "100px" : "128px",
                   height: isMobile ? "100px" : "128px",
                   display: "flex",
@@ -4152,7 +4167,7 @@ const SoundHunt = ({
                   cursor: "pointer",
                   transition: "background-color 0.3s ease-in-out",
                 }}
-              //onClick={() => handleWordClick(currentQuestion.correctWord)}
+                //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
                 <img
                   src={correctImage}
@@ -4161,7 +4176,7 @@ const SoundHunt = ({
                     width: isMobile ? "74px" : "110px",
                     height: isMobile ? "74px" : "110px",
                     borderRadius: isMobile ? "24px" : "20px",
-                    objectFit: "contain"
+                    objectFit: "contain",
                   }}
                 />
               </div>

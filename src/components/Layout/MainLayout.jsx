@@ -333,10 +333,10 @@ const MainLayout = (props) => {
   let flowNames = isF3FlowActive
     ? getF3FlowNames() || props?.flowNames
     : isF2FlowActive
-      ? getF2FlowNames() || props?.flowNames
-      : isF1FlowActive
-        ? getF1FlowNames() || props?.flowNames
-        : props?.flowNames;
+    ? getF2FlowNames() || props?.flowNames
+    : isF1FlowActive
+    ? getF1FlowNames() || props?.flowNames
+    : props?.flowNames;
 
   // For F3 flow, set activeFlow based on current F3 step
   // For F2 flow, set activeFlow based on current F2 step
@@ -643,7 +643,9 @@ const MainLayout = (props) => {
 
     // Be more generous - if we have space, use it!
     // Minimum 5 steps, maximum 25 steps (very wide screens)
-    const calculatedSteps = isMobile ? 5 : Math.max(5, Math.min(stepsThatFit, 25));
+    const calculatedSteps = isMobile
+      ? 5
+      : Math.max(5, Math.min(stepsThatFit, 25));
 
     return calculatedSteps;
   }, [containerWidth, isMobile, isTablet]);
@@ -719,10 +721,10 @@ const MainLayout = (props) => {
   const displayPracticeSteps = isF3FlowActive
     ? getF3PracticeSteps() || practiceSteps
     : isF2FlowActive
-      ? getF2PracticeSteps() || practiceSteps
-      : isF1FlowActive
-        ? getF1PracticeSteps() || practiceSteps
-        : practiceSteps;
+    ? getF2PracticeSteps() || practiceSteps
+    : isF1FlowActive
+    ? getF1PracticeSteps() || practiceSteps
+    : practiceSteps;
 
   // Calculate visible steps range (show dynamic steps based on width, ensure current step is visible)
   const totalSteps = displayPracticeSteps?.length || 0;
@@ -899,8 +901,9 @@ const MainLayout = (props) => {
   };
   const sectionStyle = {
     width: "100%",
-    backgroundImage: `url(${backgroundImage ? backgroundImage : levelsImages?.[LEVEL]?.background
-      })`,
+    backgroundImage: `url(${
+      backgroundImage ? backgroundImage : levelsImages?.[LEVEL]?.background
+    })`,
     backgroundSize: "cover",
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
@@ -916,9 +919,12 @@ const MainLayout = (props) => {
     background: props?.background || levelsImages?.[LEVEL]?.backgroundColor,
     position: "relative",
     "& > div:first-of-type": {
-      background: { xs: "transparent!important", sm: "rgba(255, 255, 255, 0.2)!important" },
+      background: {
+        xs: "transparent!important",
+        sm: "rgba(255, 255, 255, 0.2)!important",
+      },
       backdropFilter: { xs: "none!important", sm: "blur(3px)!important" },
-    }
+    },
   };
 
   const steps = props.steps;
@@ -964,10 +970,10 @@ const MainLayout = (props) => {
               LEVEL === 1
                 ? "3px"
                 : LEVEL === 2
-                  ? "40px"
-                  : LEVEL === 3
-                    ? "78px"
-                    : "78px",
+                ? "40px"
+                : LEVEL === 3
+                ? "78px"
+                : "78px",
           }}
         >
           <img
@@ -1050,7 +1056,7 @@ const MainLayout = (props) => {
                   backdropFilter: "blur(25px)",
                   mt: { xs: "0px", md: "75px" },
                   mb: { xs: "20px", md: "0px" },
-                  overflow: { xs: "visible", sm: "hidden" },
+                  overflow: { sm: "hidden", xs: "visible" },
                 }}
               >
                 <Box>
@@ -1074,11 +1080,21 @@ const MainLayout = (props) => {
                   }}
                 >
                   {showTimer && (
-                    <Box sx={{ position: "absolute", top: { xs: "8px", sm: "16px" }, left: { xs: "8px", sm: "16px" }, zIndex: 10 }}>
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: { xs: "8px", sm: "16px" },
+                        left: { xs: "8px", sm: "16px" },
+                        zIndex: 10,
+                      }}
+                    >
                       <img
                         src={timer}
                         alt="timer"
-                        style={{ height: isMobile ? "36px" : "58px", width: isMobile ? "36px" : "58px" }}
+                        style={{
+                          height: isMobile ? "36px" : "58px",
+                          width: isMobile ? "36px" : "58px",
+                        }}
                       />
                     </Box>
                   )}
@@ -1152,7 +1168,12 @@ const MainLayout = (props) => {
                       )}
                     </Box>
                   )}
-                <Box sx={{ height: isMobile ? "0px" : "110px", position: "relative" }}>
+                <Box
+                  sx={{
+                    height: isMobile ? "0px" : "110px",
+                    position: "relative",
+                  }}
+                >
                   <Box
                     sx={{
                       position: "absolute",
@@ -1225,10 +1246,10 @@ const MainLayout = (props) => {
                                 props.rStep === 2
                                   ? Assets.r2MileImg
                                   : props.rStep === 3
-                                    ? Assets.r3MileImg
-                                    : props.rStep === 4
-                                      ? Assets.r4MileImg
-                                      : null
+                                  ? Assets.r3MileImg
+                                  : props.rStep === 4
+                                  ? Assets.r4MileImg
+                                  : null
                               }
                               alt={`R Step ${props.rStep}`}
                               height={isMobile ? "130px" : "200px"}
@@ -1387,8 +1408,8 @@ const MainLayout = (props) => {
                                         currentPracticeStep > actualIndex
                                           ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
                                           : currentPracticeStep === actualIndex
-                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                            : "rgba(0, 0, 0, 0.04)",
+                                          ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
+                                          : "rgba(0, 0, 0, 0.04)",
                                       ml:
                                         visibleIndex > 0
                                           ? { xs: 0.5, sm: 1, md: 1.5 }
@@ -1401,7 +1422,13 @@ const MainLayout = (props) => {
                                     }}
                                   >
                                     {currentPracticeStep > actualIndex ? (
-                                      <GreenTick style={{ transform: isMobile ? "scale(0.8)" : "none" }} />
+                                      <GreenTick
+                                        style={{
+                                          transform: isMobile
+                                            ? "scale(0.8)"
+                                            : "none",
+                                        }}
+                                      />
                                     ) : (
                                       <span
                                         style={{
@@ -1414,18 +1441,18 @@ const MainLayout = (props) => {
                                           fontSize: isMobile
                                             ? "9px"
                                             : isTablet
-                                              ? "12px"
-                                              : "14px",
+                                            ? "12px"
+                                            : "14px",
                                           fontFamily: "Quicksand",
                                         }}
                                       >
                                         {LEVEL === 1
                                           ? elem.title
                                           : LEVEL === 2
-                                            ? elem.titleNew
-                                            : LEVEL === 3
-                                              ? elem.titleNew
-                                              : elem.name}
+                                          ? elem.titleNew
+                                          : LEVEL === 3
+                                          ? elem.titleNew
+                                          : elem.name}
                                       </span>
                                     )}
                                   </Box>
@@ -1553,8 +1580,8 @@ const MainLayout = (props) => {
                                                 ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
                                                 : flowNames?.indexOf(flow) <
                                                   flowNames?.indexOf(activeFlow)
-                                                  ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
-                                                  : "rgba(0, 0, 0, 0.04)",
+                                                ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
+                                                : "rgba(0, 0, 0, 0.04)",
                                             ml: {
                                               xs: 0.5,
                                               sm: 0.5,
@@ -1570,7 +1597,7 @@ const MainLayout = (props) => {
                                           }}
                                         >
                                           {flowNames?.indexOf(flow) <
-                                            flowNames?.indexOf(activeFlow) ? (
+                                          flowNames?.indexOf(activeFlow) ? (
                                             <GreenTick />
                                           ) : (
                                             <span
@@ -1600,7 +1627,7 @@ const MainLayout = (props) => {
                                       ml: 1,
                                       visibility:
                                         currentPageStart + 10 >=
-                                          flowNames?.length
+                                        flowNames?.length
                                           ? "hidden"
                                           : "visible",
                                     }}
@@ -1706,7 +1733,7 @@ const MainLayout = (props) => {
                   "& img[alt='Star']": {
                     width: { xs: "50px!important", md: "100px!important" },
                     height: { xs: "50px!important", md: "100px!important" },
-                  }
+                  },
                 }}
               >
                 <Box>
@@ -1970,8 +1997,8 @@ const MainLayout = (props) => {
                                               )}
                                               <audio
                                                 ref={(el) =>
-                                                (audioRefs.current[index] =
-                                                  el)
+                                                  (audioRefs.current[index] =
+                                                    el)
                                                 }
                                                 src={elem?.audioUrl}
                                               />
@@ -2025,43 +2052,43 @@ const MainLayout = (props) => {
                                       [10, 11, 12, 13, 14, 15].includes(
                                         LEVEL
                                       )) && (
-                                        <Stack
-                                          sx={{
-                                            mt: 2,
-                                            pt: 2,
-                                            borderTop: "1px dashed #e0e0e0",
-                                            backgroundColor:
-                                              "rgba(255, 152, 0, 0.08)",
-                                            borderRadius: "10px",
-                                            padding: "12px",
-                                            marginTop: "16px",
+                                      <Stack
+                                        sx={{
+                                          mt: 2,
+                                          pt: 2,
+                                          borderTop: "1px dashed #e0e0e0",
+                                          backgroundColor:
+                                            "rgba(255, 152, 0, 0.08)",
+                                          borderRadius: "10px",
+                                          padding: "12px",
+                                          marginTop: "16px",
+                                        }}
+                                        justifyContent={"center"}
+                                        alignItems={"center"}
+                                        direction={"row"}
+                                        spacing={1.5}
+                                      >
+                                        <img
+                                          src={Assets.turtle}
+                                          alt="turtleImage"
+                                          style={{
+                                            width: "45px",
+                                            height: "45px",
                                           }}
-                                          justifyContent={"center"}
-                                          alignItems={"center"}
-                                          direction={"row"}
-                                          spacing={1.5}
+                                        />
+                                        <span
+                                          style={{
+                                            color: "#E65100",
+                                            fontWeight: 700,
+                                            lineHeight: "22px",
+                                            fontSize: "15px",
+                                            fontFamily: "Quicksand",
+                                          }}
                                         >
-                                          <img
-                                            src={Assets.turtle}
-                                            alt="turtleImage"
-                                            style={{
-                                              width: "45px",
-                                              height: "45px",
-                                            }}
-                                          />
-                                          <span
-                                            style={{
-                                              color: "#E65100",
-                                              fontWeight: 700,
-                                              lineHeight: "22px",
-                                              fontSize: "15px",
-                                              fontFamily: "Quicksand",
-                                            }}
-                                          >
-                                            {"Oops, a bit slow!"}
-                                          </span>
-                                        </Stack>
-                                      )}
+                                          {"Oops, a bit slow!"}
+                                        </span>
+                                      </Stack>
+                                    )}
                                   </Box>
                                 )}
                             </Stack>
@@ -2148,7 +2175,12 @@ const MainLayout = (props) => {
                     </>
                   )}
                 </CardContent>
-                <Box sx={{ height: { xs: "80px", md: "120px" }, position: "relative" }}>
+                <Box
+                  sx={{
+                    height: { xs: "80px", md: "120px" },
+                    position: "relative",
+                  }}
+                >
                   <Box
                     sx={{
                       borderBottom: "1.5px solid rgba(51, 63, 97, 0.15)",
