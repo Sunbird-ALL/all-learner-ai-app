@@ -36,6 +36,11 @@ jobs:
       - name: Run Husky Install
         run: npm run prepare
 
+      - name: Run Tests
+        run: npm test -- --watchAll=false
+        env:
+          CI: true
+
       - name: Build and Package Application
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
