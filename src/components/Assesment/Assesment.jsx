@@ -1401,7 +1401,7 @@ export const ProfileHeader = ({
                       <MenuBookIcon
                         sx={{
                           color: "#EE6931",
-                          fontSize: isMobile ? "24px" : "24px",
+                          fontSize: "24px",
                         }}
                       />
                     </IconButton>

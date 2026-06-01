@@ -1075,9 +1075,7 @@ const Mechanics7 = ({
                     style={{
                       color: !isRecorded
                         ? "#333F61"
-                        : isIncorrectWord
-                          ? "#58CC02"
-                          : "#58CC02",
+                        : "#58CC02",
                       fontWeight: 700,
                       fontSize: isMobile ? "30px" : "50px",
                       lineHeight: isMobile ? "60px" : "70px",
@@ -1093,11 +1091,9 @@ const Mechanics7 = ({
                     style={{
                       color: !isRecorded
                         ? "#333F61"
-                        : isIncorrectWord
-                          ? "#58CC02"
-                          : "#58CC02",
+                        : "#58CC02",
                       fontWeight: 700,
-                      fontSize: isMobile ? "50px" : "50px",
+                      fontSize: "50px",
                       lineHeight: isMobile ? "60px" : "70px",
                       letterSpacing: isMobile ? "1%" : "2%",
                       fontFamily: "Quicksand",
