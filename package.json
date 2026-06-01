@@ -119,7 +119,7 @@
       "react-router-dom/dist/index$": "<rootDir>/node_modules/react-router-dom/dist/main.js",
       "^number-flow/lite$": "<rootDir>/node_modules/number-flow/dist/lite.js",
       "^number-flow/plugins$": "<rootDir>/node_modules/number-flow/dist/plugins.js",
-      "^@number-flow/react$": "<rootDir>/node_modules/@number-flow/react/dist/index.js",
+      "^@number-flow/react$": "<rootDir>/src/__jest_mocks__/number-flow-react.js",
       "^number-flow/csp$": "<rootDir>/src/__jest_mocks__/number-flow-csp.js",
       "^esm-env/(.*)$": "<rootDir>/src/__jest_mocks__/esm-env-browser.js",
       "^esm-env$": "<rootDir>/src/__jest_mocks__/esm-env.js"
