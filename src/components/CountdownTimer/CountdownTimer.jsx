@@ -434,6 +434,7 @@ const CountdownTimer = ({ initialCount = 3, onComplete }) => {
           return (
             <div
               key={index}
+              data-testid="progress-dot"
               className={`rounded-full transition-all duration-500 transform ${
                 count <= index + 1
                   ? `w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r ${colors[index]} scale-125 shadow-2xl animate-bounce`
