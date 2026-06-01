@@ -1036,7 +1036,7 @@ export const ProfileHeader = ({
                 display: "flex",
                 justifyContent: "center",
                 gap: isMobile ? 0.5 : 4,
-                mt: isMobile ? 0 : 0,
+                mt: 0,
                 ml: isMobile ? 1 : 2,
                 flexDirection: "row",
                 alignItems: "center",

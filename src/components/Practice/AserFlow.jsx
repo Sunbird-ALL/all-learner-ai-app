@@ -742,6 +742,13 @@ const AserFlow = ({
             return (
               <div
                 key={index}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    if (!disableBubbles) handleBubbleClick(char, index);
+                  }
+                }}
                 onClick={() => {
                   if (!disableBubbles) {
                     handleBubbleClick(char, index);
@@ -771,13 +778,13 @@ const AserFlow = ({
                     src={bubbleImg}
                     alt="bubble"
                     style={{
-                      width: bubbleSize,
-                      height: bubbleSize,
-                      minWidth: bubbleSize,
-                      minHeight: bubbleSize,
                       aspectRatio: "1/1",
-                      borderRadius: "50%",
                       objectFit: "contain",
+                      minHeight: bubbleSize,
+                      minWidth: bubbleSize,
+                      borderRadius: "50%",
+                      height: bubbleSize,
+                      width: bubbleSize,
                       filter: ansSelectionStatus.some(
                         (item) => item.text === char && item.status === true
                       )
@@ -965,14 +972,14 @@ const AserFlow = ({
             style={{
               position: "absolute",
               zIndex: "9999",
+              objectFit: "contain",
+              width: isMobile ? "120px" : "230px",
+              maxHeight: "none",
               bottom: isMobile ? "-15px" : "40px",
+              maxWidth: "none",
+              height: isMobile ? "110px" : "auto",
               left: isMobile ? "auto" : "-20px",
               right: isMobile ? "calc(50% + 45px)" : "auto",
-              width: isMobile ? "120px" : "230px",
-              height: isMobile ? "110px" : "auto",
-              maxHeight: "none",
-              maxWidth: "none",
-              objectFit: "contain",
               opacity: hideContentDuringDemo ? 0 : 1,
               visibility: hideContentDuringDemo ? "hidden" : "visible",
               transition: "opacity 0.3s ease",

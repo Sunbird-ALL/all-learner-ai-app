@@ -225,6 +225,13 @@ const LanguageModalNew = ({ show, word, onClose }) => {
               <div
                 key={index}
                 style={cardStyle}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setSelectedLang(entry.text);
+                  }
+                }}
                 onClick={() => setSelectedLang(entry.text)}
               >
                 <div style={cardIconStyle}>
