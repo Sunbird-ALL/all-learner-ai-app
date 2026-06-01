@@ -4019,6 +4019,9 @@ const SoundHunt = ({
                     <Box
                       key={index}
                       sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                         backgroundColor: isCorrect
                           ? "rgba(117, 209, 0, 0.6)"
                           : isWrong
@@ -4032,9 +4035,6 @@ const SoundHunt = ({
                         border: "2px solid rgba(255, 255, 255, 0.7)",
                         width: isMobile ? "79px" : "128px",
                         height: isMobile ? "79px" : "128px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
                         backdropFilter: "blur(56px)",
                         WebkitBackdropFilter: "blur(56px)",
                         cursor: isAudioPlayedOnce ? "pointer" : "not-allowed",
@@ -4150,6 +4150,9 @@ const SoundHunt = ({
             >
               <div
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   backgroundColor: "#FFFFFF",
                   padding: "8px",
                   borderRadius: isMobile ? "32px" : "24px",
@@ -4159,9 +4162,6 @@ const SoundHunt = ({
                     : "2px solid rgba(255, 255, 255, 0.5)",
                   width: isMobile ? "100px" : "128px",
                   height: isMobile ? "100px" : "128px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   backdropFilter: "blur(56px)",
                   WebkitBackdropFilter: "blur(56px)",
                   cursor: "pointer",
@@ -4173,10 +4173,10 @@ const SoundHunt = ({
                   src={correctImage}
                   alt={currentQuestion.correctWord}
                   style={{
+                    objectFit: "contain",
                     width: isMobile ? "74px" : "110px",
                     height: isMobile ? "74px" : "110px",
                     borderRadius: isMobile ? "24px" : "20px",
-                    objectFit: "contain",
                   }}
                 />
               </div>
