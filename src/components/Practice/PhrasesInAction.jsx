@@ -30,6 +30,7 @@ import {
   ListenButton,
   StopButton,
   setLocalData,
+  getBrowserLanguage,
 } from "../../utils/constants";
 import {
   fetchASROutput,
@@ -259,7 +260,7 @@ const PhrasesInAction = ({
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
-      language: language || "en-US",
+      language: getBrowserLanguage(language) || "en-US",
     });
     recordedChunksRef.current = [];
 
@@ -5692,7 +5693,6 @@ const PhrasesInAction = ({
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");
     const responseStartTime = new Date().getTime();
-    let responseText = "";
     const base64Data = await blobToBase64(recordedBlob);
     //console.log("bvlobss", recordedBlob);
 
@@ -5704,9 +5704,7 @@ const PhrasesInAction = ({
       currentStep - 1,
       base64Data,
       responseStartTime,
-      currentSteps === "step1"
-        ? levelData?.allwords[0]?.text
-        : levelData?.correctWordTwo,
+      finalTranscript || "",
       apiLevel
     );
   };

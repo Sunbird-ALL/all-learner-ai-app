@@ -598,7 +598,7 @@ const ParagraphFlow = ({
       currentStep - 1,
       base64Data,
       responseStartTime,
-      sentenceText,
+      transcriptRef.current || "",
       apiLevel
     );
   };

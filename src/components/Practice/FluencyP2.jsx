@@ -21,6 +21,7 @@ import {
   NextButtonRound,
   getLocalData,
   setLocalData,
+  getBrowserLanguage,
 } from "../../utils/constants";
 import { WordRedCircle, RetryIcon } from "../Icons/SvgIcons";
 import { phoneticMatch } from "../../utils/phoneticUtils";
@@ -150,6 +151,23 @@ const FluencyP2 = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
+  const { transcript, listening, resetTranscript } = useSpeechRecognition();
+  const transcriptRef = useRef("");
+  const recordingStartTimeRef = useRef(null);
+  useEffect(() => {
+    transcriptRef.current = transcript;
+  }, [transcript]);
+
+  const startRecording = () => {
+    resetTranscript();
+    recordingStartTimeRef.current = new Date().getTime();
+    SpeechRecognition.startListening({
+      continuous: true,
+      interimResults: true,
+      language: getBrowserLanguage(lang),
+    });
+  };
+
   // Debug log to check data structure
   console.log("FluencyP2 - contentSourceData:", contentSourceData);
 
@@ -218,6 +236,7 @@ const FluencyP2 = ({
   }, [showContent]);
 
   const handleAnimationComplete = () => {
+    SpeechRecognition.stopListening();
     setAnimationCompleted(true);
     setShowBearDance(true);
     setShowConfetti(false);
@@ -230,6 +249,7 @@ const FluencyP2 = ({
   };
 
   const handlePauseClick = () => {
+    SpeechRecognition.stopListening();
     setPaused(true);
     setAnimationCompleted(true);
     setShowBearDance(true);
@@ -251,6 +271,8 @@ const FluencyP2 = ({
 
   const handleRetryClick = (e) => {
     e.stopPropagation();
+    SpeechRecognition.stopListening();
+    resetTranscript();
     startReadingFlow();
   };
 
@@ -297,7 +319,8 @@ const FluencyP2 = ({
 
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");
-    const responseStartTime = new Date().getTime();
+    const responseStartTime =
+      recordingStartTimeRef.current || new Date().getTime();
     const base64Data = "";
 
     await callTelemetryApi(
@@ -306,7 +329,7 @@ const FluencyP2 = ({
       currentStep - 1,
       base64Data,
       responseStartTime,
-      currentSentence?.sentence,
+      transcriptRef.current || "",
       apiLevel
     );
   };
@@ -320,9 +343,9 @@ const FluencyP2 = ({
 
   const handleReadingSpeedNext = () => {
     setLocalData("speed", selected);
-
-    handleNext();
+    SpeechRecognition.stopListening();
     callTelemetry();
+    handleNext();
     setShowReadingSpeed(false);
     setShowContent(false);
     setShowSentence(false);
@@ -562,6 +585,7 @@ const FluencyP2 = ({
             onComplete={() => {
               setShowContent(true);
               setResetTimer(false);
+              startRecording();
             }}
           />
         ) : (
