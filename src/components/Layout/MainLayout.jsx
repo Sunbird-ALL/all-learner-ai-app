@@ -333,10 +333,10 @@ const MainLayout = (props) => {
   let flowNames = isF3FlowActive
     ? getF3FlowNames() || props?.flowNames
     : isF2FlowActive
-    ? getF2FlowNames() || props?.flowNames
-    : isF1FlowActive
-    ? getF1FlowNames() || props?.flowNames
-    : props?.flowNames;
+      ? getF2FlowNames() || props?.flowNames
+      : isF1FlowActive
+        ? getF1FlowNames() || props?.flowNames
+        : props?.flowNames;
 
   // For F3 flow, set activeFlow based on current F3 step
   // For F2 flow, set activeFlow based on current F2 step
@@ -605,6 +605,7 @@ const MainLayout = (props) => {
 
   // State for progress bar pagination (dynamic steps based on width)
   const [progressBarStartIndex, setProgressBarStartIndex] = useState(0);
+  const lastPracticeStepRef = useRef(null);
   const progressBarContainerRef = useRef(null);
   const progressBarParentRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -615,10 +616,10 @@ const MainLayout = (props) => {
     if (containerWidth === 0) return 5; // Default to 5 if width not measured yet
 
     // Step dimensions based on screen size
-    const stepWidth = isMobile ? 28 : isTablet ? 32 : 36; // xs: 28px, sm: 32px, md: 36px, lg: 40px
+    const stepWidth = isMobile ? 22 : isTablet ? 32 : 36; // xs: 22px, sm: 32px, md: 36px, lg: 40px
     const stepMargin = isMobile ? 4 : isTablet ? 8 : 12; // xs: 0.5 * 8px, sm: 1 * 8px, md: 1.5 * 8px
     const containerPadding = isMobile ? 16 : isTablet ? 24 : 32; // xs: 8px*2, sm: 12px*2, md: 16px*2
-    const buttonWidth = isMobile ? 40 : isTablet ? 48 : 56; // Button width
+    const buttonWidth = isMobile ? 24 : isTablet ? 48 : 56; // Button width
     const buttonGap = isMobile ? 8 : 12; // Gap between button and container
 
     // Account for left and right margins (180px mobile, 200px tablet, 220px desktop)
@@ -642,7 +643,7 @@ const MainLayout = (props) => {
 
     // Be more generous - if we have space, use it!
     // Minimum 5 steps, maximum 25 steps (very wide screens)
-    const calculatedSteps = Math.max(5, Math.min(stepsThatFit, 25));
+    const calculatedSteps = isMobile ? 5 : Math.max(5, Math.min(stepsThatFit, 25));
 
     return calculatedSteps;
   }, [containerWidth, isMobile, isTablet]);
@@ -718,10 +719,10 @@ const MainLayout = (props) => {
   const displayPracticeSteps = isF3FlowActive
     ? getF3PracticeSteps() || practiceSteps
     : isF2FlowActive
-    ? getF2PracticeSteps() || practiceSteps
-    : isF1FlowActive
-    ? getF1PracticeSteps() || practiceSteps
-    : practiceSteps;
+      ? getF2PracticeSteps() || practiceSteps
+      : isF1FlowActive
+        ? getF1PracticeSteps() || practiceSteps
+        : practiceSteps;
 
   // Calculate visible steps range (show dynamic steps based on width, ensure current step is visible)
   const totalSteps = displayPracticeSteps?.length || 0;
@@ -729,22 +730,12 @@ const MainLayout = (props) => {
   // Calculate visible range ensuring current step is always visible
   const calculateVisibleRange = () => {
     if (totalSteps <= VISIBLE_STEPS) {
-      // If total steps <= 5, show all
+      // If total steps <= VISIBLE_STEPS, show all
       return { start: 0, end: totalSteps };
     }
 
-    // Ensure current step is always visible
-    let start = progressBarStartIndex;
-    let end = Math.min(start + VISIBLE_STEPS, totalSteps);
-
-    // If current step is not in visible range, adjust to include it
-    if (currentPracticeStep < start) {
-      start = Math.max(0, currentPracticeStep - 2); // Show 2 steps before current
-      end = Math.min(start + VISIBLE_STEPS, totalSteps);
-    } else if (currentPracticeStep >= end) {
-      end = Math.min(currentPracticeStep + 3, totalSteps); // Show 2 steps after current
-      start = Math.max(0, end - VISIBLE_STEPS);
-    }
+    const start = progressBarStartIndex;
+    const end = Math.min(start + VISIBLE_STEPS, totalSteps);
 
     return { start, end };
   };
@@ -835,30 +826,35 @@ const MainLayout = (props) => {
 
   // Update progress bar start index when current step changes to keep it visible
   useEffect(() => {
+    const stepChanged = lastPracticeStepRef.current !== currentPracticeStep;
+    lastPracticeStepRef.current = currentPracticeStep;
+
     if (totalSteps <= VISIBLE_STEPS) {
       setProgressBarStartIndex(0);
       return;
     }
 
-    // Calculate if current step is in the current visible range
-    const currentStart = progressBarStartIndex;
-    const currentEnd = Math.min(currentStart + VISIBLE_STEPS, totalSteps);
+    if (stepChanged) {
+      // Calculate if current step is in the current visible range
+      const currentStart = progressBarStartIndex;
+      const currentEnd = Math.min(currentStart + VISIBLE_STEPS, totalSteps);
 
-    // If current step is outside visible range, adjust to center it
-    if (
-      currentPracticeStep < currentStart ||
-      currentPracticeStep >= currentEnd
-    ) {
-      // Center current step: show 2 before and 2 after (or adjust if near edges)
-      let newStart;
-      if (currentPracticeStep < 2) {
-        newStart = 0;
-      } else if (currentPracticeStep >= totalSteps - 2) {
-        newStart = Math.max(0, totalSteps - VISIBLE_STEPS);
-      } else {
-        newStart = Math.max(0, currentPracticeStep - 2);
+      // If current step is outside visible range, adjust to center it
+      if (
+        currentPracticeStep < currentStart ||
+        currentPracticeStep >= currentEnd
+      ) {
+        // Center current step: show 2 before and 2 after (or adjust if near edges)
+        let newStart;
+        if (currentPracticeStep < 2) {
+          newStart = 0;
+        } else if (currentPracticeStep >= totalSteps - 2) {
+          newStart = Math.max(0, totalSteps - VISIBLE_STEPS);
+        } else {
+          newStart = Math.max(0, currentPracticeStep - 2);
+        }
+        setProgressBarStartIndex(newStart);
       }
-      setProgressBarStartIndex(newStart);
     }
   }, [currentPracticeStep, totalSteps, VISIBLE_STEPS]);
 
@@ -903,23 +899,26 @@ const MainLayout = (props) => {
   };
   const sectionStyle = {
     width: "100%",
-    backgroundImage: `url(${
-      backgroundImage ? backgroundImage : levelsImages?.[LEVEL]?.background
-    })`,
+    backgroundImage: `url(${backgroundImage ? backgroundImage : levelsImages?.[LEVEL]?.background
+      })`,
     backgroundSize: "cover",
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
-    minHeight: "100vh",
-    // height: "100vh",
-    // maxHeight: "100vh",
-    // overflow: "hidden",
+    minHeight: { xs: "100dvh", md: "100vh" },
+    height: { xs: "100dvh", md: "auto" },
+    maxHeight: { xs: "100dvh", md: "none" },
+    overflow: { xs: "hidden", md: "visible" },
     display: "flex",
-    paddingTop: { md: "0px", xs: "20px" },
+    paddingTop: { md: "0px", xs: "60px" },
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: { xs: "flex-start", md: "center" },
     boxSizing: "border-box",
     background: props?.background || levelsImages?.[LEVEL]?.backgroundColor,
     position: "relative",
+    "& > div:first-of-type": {
+      background: { xs: "transparent!important", sm: "rgba(255, 255, 255, 0.2)!important" },
+      backdropFilter: { xs: "none!important", sm: "blur(3px)!important" },
+    }
   };
 
   const steps = props.steps;
@@ -965,10 +964,10 @@ const MainLayout = (props) => {
               LEVEL === 1
                 ? "3px"
                 : LEVEL === 2
-                ? "40px"
-                : LEVEL === 3
-                ? "78px"
-                : "78px",
+                  ? "40px"
+                  : LEVEL === 3
+                    ? "78px"
+                    : "78px",
           }}
         >
           <img
@@ -1035,10 +1034,11 @@ const MainLayout = (props) => {
                 sx={{
                   position: "relative",
                   left: { xs: "auto", md: "auto" },
-                  width: { xs: "100%", md: "85vw" },
-                  minHeight: "80vh",
-                  // maxHeight: "calc(100vh - 150px)",
-                  // height: "calc(100vh - 150px)",
+                  width: { xs: "calc(100% - 20px)", md: "85vw" },
+                  mx: { xs: "auto", md: "auto" },
+                  minHeight: { xs: "unset", md: "80vh" },
+                  height: { xs: "calc(100dvh - 80px)", md: "auto" },
+                  maxHeight: { xs: "none", md: "calc(100vh - 150px)" },
                   borderRadius: "20px",
                   display: "flex",
                   flexDirection: "column",
@@ -1048,8 +1048,9 @@ const MainLayout = (props) => {
                   backgroundSize: "cover",
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
                   backdropFilter: "blur(25px)",
-                  mt: "75px",
-                  // overflow: "hidden",
+                  mt: { xs: "0px", md: "75px" },
+                  mb: { xs: "20px", md: "0px" },
+                  overflow: { xs: "visible", sm: "hidden" },
                 }}
               >
                 <Box>
@@ -1060,23 +1061,24 @@ const MainLayout = (props) => {
                 <CardContent
                   sx={{
                     minHeight: "100%",
-                    // height: "100%",
-                    // maxHeight: "100%",
-                    // overflow: "hidden",
-                    // display: "flex",
-                    // flexDirection: "column",
+                    height: { xs: "100%", md: "auto" },
+                    display: { xs: "flex", md: "block" },
+                    flexDirection: { xs: "column", md: "initial" },
+                    justifyContent: { xs: "center", md: "initial" },
+                    alignItems: { xs: "center", md: "initial" },
+                    flexGrow: { xs: 1, md: "initial" },
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
-                    // padding: "16px !important",
-                    // boxSizing: "border-box",
+                    padding: { xs: "16px !important", md: "24px !important" },
+                    boxSizing: "border-box",
                   }}
                 >
                   {showTimer && (
-                    <Box sx={{ position: "absolute" }}>
+                    <Box sx={{ position: "absolute", top: { xs: "8px", sm: "16px" }, left: { xs: "8px", sm: "16px" }, zIndex: 10 }}>
                       <img
                         src={timer}
                         alt="timer"
-                        style={{ height: "58px", width: "58px" }}
+                        style={{ height: isMobile ? "36px" : "58px", width: isMobile ? "36px" : "58px" }}
                       />
                     </Box>
                   )}
@@ -1150,13 +1152,14 @@ const MainLayout = (props) => {
                       )}
                     </Box>
                   )}
-                <Box sx={{ height: "110px", position: "relative" }}>
+                <Box sx={{ height: isMobile ? "0px" : "110px", position: "relative" }}>
                   <Box
                     sx={{
                       position: "absolute",
-                      left: 0,
-                      bottom: "-2px",
+                      left: isMobile ? "-25px" : 0,
+                      bottom: isMobile ? "2px" : "-2px",
                       zIndex: "9999",
+                      pointerEvents: "none",
                     }}
                   >
                     <footer>
@@ -1222,10 +1225,10 @@ const MainLayout = (props) => {
                                 props.rStep === 2
                                   ? Assets.r2MileImg
                                   : props.rStep === 3
-                                  ? Assets.r3MileImg
-                                  : props.rStep === 4
-                                  ? Assets.r4MileImg
-                                  : null
+                                    ? Assets.r3MileImg
+                                    : props.rStep === 4
+                                      ? Assets.r4MileImg
+                                      : null
                               }
                               alt={`R Step ${props.rStep}`}
                               height={isMobile ? "130px" : "200px"}
@@ -1240,6 +1243,7 @@ const MainLayout = (props) => {
                     sx={{
                       borderBottom: "1.5px solid rgba(51, 63, 97, 0.15)",
                       width: "100%",
+                      display: isMobile ? "none" : "block",
                     }}
                   ></Box>
                   {/* Show displayPracticeSteps progress bar - hide when flowNames progress bar is showing */}
@@ -1262,8 +1266,11 @@ const MainLayout = (props) => {
                             : "right",
                           alignItems: "center",
                           width: "100%",
-                          height: "100%",
-                          position: "relative",
+                          height: { xs: "55px", sm: "100%" },
+                          position: { xs: "absolute", sm: "relative" },
+                          bottom: { xs: "10px", sm: "auto" },
+                          left: 0,
+                          right: 0,
                           zIndex: 10001,
                         }}
                       >
@@ -1277,22 +1284,23 @@ const MainLayout = (props) => {
                               justifyContent: "center",
                               alignItems: "center",
                               width: {
-                                xs: "calc(100% - 180px - 180px)",
+                                xs: "calc(100% - 16px)",
                                 sm: "calc(100% - 200px - 200px)",
                                 md: "calc(100% - 220px - 220px)",
                               },
                               gap: { xs: 1, sm: 2 },
                               marginLeft: {
-                                xs: "180px",
+                                xs: "8px",
                                 sm: "200px",
                                 md: "220px",
                               },
                               marginRight: {
-                                xs: "180px",
+                                xs: "8px",
                                 sm: "200px",
                                 md: "220px",
                               },
                               position: "relative",
+                              left: { xs: "20px", sm: "auto" },
                               zIndex: 10000,
                             }}
                           >
@@ -1302,9 +1310,9 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarPrev}
                                 disabled={!canGoPrev}
                                 sx={{
-                                  width: { xs: "32px", sm: "40px", md: "48px" },
+                                  width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
-                                    xs: "32px",
+                                    xs: "24px",
                                     sm: "40px",
                                     md: "48px",
                                   },
@@ -1322,7 +1330,7 @@ const MainLayout = (props) => {
                                 <ChevronLeft
                                   sx={{
                                     fontSize: {
-                                      xs: "20px",
+                                      xs: "14px",
                                       sm: "24px",
                                       md: "28px",
                                     },
@@ -1348,11 +1356,11 @@ const MainLayout = (props) => {
                                   md: "4px 16px",
                                 },
                                 minWidth: {
-                                  xs: "200px",
+                                  xs: "auto",
                                   sm: "280px",
                                   md: "320px",
                                 },
-                                flex: 1,
+                                flex: { xs: "none", sm: 1 },
                                 maxWidth: "100%",
                               }}
                             >
@@ -1370,7 +1378,7 @@ const MainLayout = (props) => {
                                         lg: "40px",
                                       },
                                       height: {
-                                        xs: "28px",
+                                        xs: "22px",
                                         sm: "32px",
                                         md: "36px",
                                         lg: "40px",
@@ -1379,8 +1387,8 @@ const MainLayout = (props) => {
                                         currentPracticeStep > actualIndex
                                           ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
                                           : currentPracticeStep === actualIndex
-                                          ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                          : "rgba(0, 0, 0, 0.04)",
+                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
+                                            : "rgba(0, 0, 0, 0.04)",
                                       ml:
                                         visibleIndex > 0
                                           ? { xs: 0.5, sm: 1, md: 1.5 }
@@ -1393,7 +1401,7 @@ const MainLayout = (props) => {
                                     }}
                                   >
                                     {currentPracticeStep > actualIndex ? (
-                                      <GreenTick />
+                                      <GreenTick style={{ transform: isMobile ? "scale(0.8)" : "none" }} />
                                     ) : (
                                       <span
                                         style={{
@@ -1404,20 +1412,20 @@ const MainLayout = (props) => {
                                           fontWeight: 600,
                                           lineHeight: "20px",
                                           fontSize: isMobile
-                                            ? "11px"
+                                            ? "9px"
                                             : isTablet
-                                            ? "12px"
-                                            : "14px",
+                                              ? "12px"
+                                              : "14px",
                                           fontFamily: "Quicksand",
                                         }}
                                       >
                                         {LEVEL === 1
                                           ? elem.title
                                           : LEVEL === 2
-                                          ? elem.titleNew
-                                          : LEVEL === 3
-                                          ? elem.titleNew
-                                          : elem.name}
+                                            ? elem.titleNew
+                                            : LEVEL === 3
+                                              ? elem.titleNew
+                                              : elem.name}
                                       </span>
                                     )}
                                   </Box>
@@ -1431,9 +1439,9 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarNext}
                                 disabled={!canGoNext}
                                 sx={{
-                                  width: { xs: "32px", sm: "40px", md: "48px" },
+                                  width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
-                                    xs: "32px",
+                                    xs: "24px",
                                     sm: "40px",
                                     md: "48px",
                                   },
@@ -1451,7 +1459,7 @@ const MainLayout = (props) => {
                                 <ChevronRight
                                   sx={{
                                     fontSize: {
-                                      xs: "20px",
+                                      xs: "14px",
                                       sm: "24px",
                                       md: "28px",
                                     },
@@ -1545,8 +1553,8 @@ const MainLayout = (props) => {
                                                 ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
                                                 : flowNames?.indexOf(flow) <
                                                   flowNames?.indexOf(activeFlow)
-                                                ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
-                                                : "rgba(0, 0, 0, 0.04)",
+                                                  ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
+                                                  : "rgba(0, 0, 0, 0.04)",
                                             ml: {
                                               xs: 0.5,
                                               sm: 0.5,
@@ -1562,7 +1570,7 @@ const MainLayout = (props) => {
                                           }}
                                         >
                                           {flowNames?.indexOf(flow) <
-                                          flowNames?.indexOf(activeFlow) ? (
+                                            flowNames?.indexOf(activeFlow) ? (
                                             <GreenTick />
                                           ) : (
                                             <span
@@ -1592,7 +1600,7 @@ const MainLayout = (props) => {
                                       ml: 1,
                                       visibility:
                                         currentPageStart + 10 >=
-                                        flowNames?.length
+                                          flowNames?.length
                                           ? "hidden"
                                           : "visible",
                                     }}
@@ -1662,8 +1670,15 @@ const MainLayout = (props) => {
             !allCompleted && (
               <Card
                 sx={{
-                  width: "85vw",
-                  minHeight: "80vh",
+                  position: { xs: "absolute", md: "relative" },
+                  top: { xs: "85px", md: "auto" },
+                  bottom: { xs: "10px", md: "auto" },
+                  left: { xs: "10px", md: "auto" },
+                  right: { xs: "10px", md: "auto" },
+                  width: { xs: "auto", md: "85vw" },
+                  mx: { xs: "auto", md: "auto" },
+                  minHeight: { xs: "unset", md: "80vh" },
+                  height: { xs: "auto", md: "auto" },
                   borderRadius: "20px",
                   display: "flex",
                   flexDirection: "column",
@@ -1673,7 +1688,25 @@ const MainLayout = (props) => {
                   backgroundRepeat: "round",
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
                   backdropFilter: "blur(25px)",
-                  mt: "50px",
+                  mt: { xs: "0px", md: "50px" },
+                  mb: { xs: "0px", md: "0px" },
+                  "& .MuiCardContent-root": {
+                    width: { xs: "100%", md: "82vw" },
+                    minHeight: { xs: "unset", md: "100%" },
+                    boxSizing: "border-box",
+                    padding: { xs: "16px", md: "24px" },
+                  },
+                  "& img[alt='gameLost']": {
+                    height: { xs: "180px!important", md: "250px!important" },
+                  },
+                  "& img[alt='Words Learnt']": {
+                    width: { xs: "70px!important", md: "100px!important" },
+                    height: { xs: "70px!important", md: "100px!important" },
+                  },
+                  "& img[alt='Star']": {
+                    width: { xs: "50px!important", md: "100px!important" },
+                    height: { xs: "50px!important", md: "100px!important" },
+                  }
                 }}
               >
                 <Box>
@@ -1681,10 +1714,22 @@ const MainLayout = (props) => {
                 </Box>
                 <CardContent
                   sx={{
-                    width: "82vw",
-                    minHeight: "100%",
+                    width: { xs: "100%", md: "82vw" },
+                    minHeight: { xs: "unset", md: "100%" },
+                    flex: { xs: 1, md: "unset" },
+                    overflowY: { xs: "auto", md: "unset" },
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
+                    "&::-webkit-scrollbar": {
+                      width: "4px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "rgba(0,0,0,0.15)",
+                      borderRadius: "4px",
+                    },
                   }}
                 >
                   {isShowCase && !startShowCase && !gameOverData && (
@@ -1925,8 +1970,8 @@ const MainLayout = (props) => {
                                               )}
                                               <audio
                                                 ref={(el) =>
-                                                  (audioRefs.current[index] =
-                                                    el)
+                                                (audioRefs.current[index] =
+                                                  el)
                                                 }
                                                 src={elem?.audioUrl}
                                               />
@@ -1980,43 +2025,43 @@ const MainLayout = (props) => {
                                       [10, 11, 12, 13, 14, 15].includes(
                                         LEVEL
                                       )) && (
-                                      <Stack
-                                        sx={{
-                                          mt: 2,
-                                          pt: 2,
-                                          borderTop: "1px dashed #e0e0e0",
-                                          backgroundColor:
-                                            "rgba(255, 152, 0, 0.08)",
-                                          borderRadius: "10px",
-                                          padding: "12px",
-                                          marginTop: "16px",
-                                        }}
-                                        justifyContent={"center"}
-                                        alignItems={"center"}
-                                        direction={"row"}
-                                        spacing={1.5}
-                                      >
-                                        <img
-                                          src={Assets.turtle}
-                                          alt="turtleImage"
-                                          style={{
-                                            width: "45px",
-                                            height: "45px",
+                                        <Stack
+                                          sx={{
+                                            mt: 2,
+                                            pt: 2,
+                                            borderTop: "1px dashed #e0e0e0",
+                                            backgroundColor:
+                                              "rgba(255, 152, 0, 0.08)",
+                                            borderRadius: "10px",
+                                            padding: "12px",
+                                            marginTop: "16px",
                                           }}
-                                        />
-                                        <span
-                                          style={{
-                                            color: "#E65100",
-                                            fontWeight: 700,
-                                            lineHeight: "22px",
-                                            fontSize: "15px",
-                                            fontFamily: "Quicksand",
-                                          }}
+                                          justifyContent={"center"}
+                                          alignItems={"center"}
+                                          direction={"row"}
+                                          spacing={1.5}
                                         >
-                                          {"Oops, a bit slow!"}
-                                        </span>
-                                      </Stack>
-                                    )}
+                                          <img
+                                            src={Assets.turtle}
+                                            alt="turtleImage"
+                                            style={{
+                                              width: "45px",
+                                              height: "45px",
+                                            }}
+                                          />
+                                          <span
+                                            style={{
+                                              color: "#E65100",
+                                              fontWeight: 700,
+                                              lineHeight: "22px",
+                                              fontSize: "15px",
+                                              fontFamily: "Quicksand",
+                                            }}
+                                          >
+                                            {"Oops, a bit slow!"}
+                                          </span>
+                                        </Stack>
+                                      )}
                                   </Box>
                                 )}
                             </Stack>
@@ -2103,20 +2148,23 @@ const MainLayout = (props) => {
                     </>
                   )}
                 </CardContent>
-                <Box sx={{ height: "120px", position: "relative" }}>
+                <Box sx={{ height: { xs: "80px", md: "120px" }, position: "relative" }}>
                   <Box
                     sx={{
                       borderBottom: "1.5px solid rgba(51, 63, 97, 0.15)",
                       width: "100%",
+                      display: isMobile ? "none" : "block",
                     }}
                   ></Box>
                   {/* Progress bar removed from second Card - using the one in first Card instead */}
                   <Box
                     sx={{
                       display: "flex",
-                      justifyContent: "right",
-                      mr: 4,
-                      mt: 4,
+                      justifyContent: { xs: "center", md: "flex-end" },
+                      alignItems: "center",
+                      mr: { xs: 0, md: 4 },
+                      mt: { xs: 0, md: 4 },
+                      height: "100%",
                     }}
                   >
                     <Box

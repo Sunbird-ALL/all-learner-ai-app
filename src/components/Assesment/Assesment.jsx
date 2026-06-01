@@ -1,6 +1,5 @@
 /* global globalThis */
 import MainLayout from "../Layout/MainLayout";
-import ServerErrorScreen from "../ServerErrorScreen/ServerErrorScreen";
 import assessmentBackground from "../../assets/images/assessmentBackground.png";
 import {
   Box,
@@ -241,9 +240,8 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                       },
                       background: isSelectedLang ? "#EE6931" : "#EFEFEF",
                       borderRadius: "10px",
-                      border: `3px solid ${
-                        isSelectedLang ? "#A03D13" : "#DADADA"
-                      }`,
+                      border: `3px solid ${isSelectedLang ? "#A03D13" : "#DADADA"
+                        }`,
                       display: "flex",
                       justifyContent: "center",
                       flexDirection: "column",
@@ -335,6 +333,9 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
             onClick={() => {
               setLang(selectedLang);
               setOpenLangModal(false);
+              sessionStorage.removeItem("discovery_set_flow_char_session");
+              sessionStorage.removeItem("discovery_set_flow_state");
+              sessionStorage.removeItem("discovery_set_flow_char_result");
             }}
             sx={{
               cursor: "pointer",
@@ -389,46 +390,91 @@ export const MessageDialog = ({
         left: 0,
         background: "rgba(0, 0, 0, 0.5)",
         zIndex: 999999,
+        "@keyframes fadeIn": {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 }
+        },
+        animation: "fadeIn 0.25s ease-out forwards",
       }}
     >
       <Box
         sx={{
-          width: "600px",
-          minHeight: "424px",
+          width: isMobile ? "80%" : "600px",
+          maxWidth: isMobile ? "380px" : "600px",
+          minHeight: isMobile ? "auto" : "424px",
           borderRadius: "20px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           backgroundImage: `url(${textureImage})`,
-          backgroundSize: "contain",
-          backgroundRepeat: "round",
-          boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
+          backgroundSize: isMobile ? "cover" : "contain",
+          backgroundRepeat: isMobile ? "no-repeat" : "round",
+          boxShadow: isMobile ? "0px 10px 30px rgba(0, 0, 0, 0.15)" : "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
           backdropFilter: "blur(25px)",
           position: "relative",
+          padding: isMobile ? "20px 16px" : "0px",
+          boxSizing: "border-box",
+          "@keyframes premiumModalEntrance": {
+            "0%": { transform: "scale(0.8) translateY(50px) rotate(-1deg)", opacity: 0 },
+            "60%": { transform: "scale(1.02) translateY(-5px) rotate(0.5deg)", opacity: 0.9 },
+            "80%": { transform: "scale(0.99) translateY(2px) rotate(-0.2deg)", opacity: 0.95 },
+            "100%": { transform: "scale(1) translateY(0) rotate(0)", opacity: 1 }
+          },
+          animation: "premiumModalEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
         }}
       >
         <Box
           sx={{
-            position: "absolute",
-            left: 10,
+            position: isMobile ? "relative" : "absolute",
+            left: isMobile ? "auto" : 10,
             bottom: 0,
             pointerEvents: "none",
+            display: "flex",
+            justifyContent: "center",
+            mt: isMobile ? "16px" : 0,
+            mb: isMobile ? "8px" : 0,
+            order: isMobile ? 3 : "unset",
+            "@keyframes happyPandaBounce": {
+              "0%, 100%": { transform: "translateY(0) scale(1)" },
+              "50%": { transform: "translateY(-6px) scale(1.02)" }
+            },
+            animation: "happyPandaBounce 2.5s infinite ease-in-out",
           }}
         >
           {isError ? (
-            <img src={cryPanda} alt="cryPanda" />
+            <img
+              src={cryPanda}
+              alt="cryPanda"
+              style={{
+                width: isMobile ? "90px" : "auto",
+                height: "auto",
+              }}
+            />
           ) : (
-            <img src={panda} alt="panda" />
+            <img
+              src={panda}
+              alt="panda"
+              style={{
+                width: isMobile ? "90px" : "auto",
+                height: "auto",
+              }}
+            />
           )}
         </Box>
 
-        <Box mt="32px">
+        <Box mt={isMobile ? "12px" : "32px"} sx={{ order: isMobile ? 0 : "unset" }}>
           {!dontShowHeader && (
             <Typography
               className={isError ? "failureHeader" : "successHeader"}
               sx={{
-                mt: 3,
+                mt: isMobile ? 1 : 3,
                 textAlign: "center",
+                fontSize: isMobile ? "28px" : "inherit",
+                "@keyframes titleSparkle": {
+                  "0%, 100%": { transform: "scale(1)", filter: "drop-shadow(0 0 0px rgba(109,175,25,0))" },
+                  "50%": { transform: "scale(1.04)", filter: "drop-shadow(0 0 6px rgba(109,175,25,0.3))" }
+                },
+                animation: isError ? "none" : "titleSparkle 2s infinite ease-in-out",
               }}
             >
               {isError ? ui.ASSESSMENT_DIALOG_OOPS : ui.HURRAY}
@@ -437,19 +483,20 @@ export const MessageDialog = ({
         </Box>
 
         <Box
-          mt="28px"
+          mt={isMobile ? "16px" : "28px"}
           display={"flex"}
           flexWrap={"wrap"}
           padding={"0px 10px 0px 10px"}
           width={"80%"}
+          sx={{ order: isMobile ? 1 : "unset", justifyContent: "center" }}
         >
           <span
             style={{
               color: "#000000",
               fontWeight: 700,
-              fontSize: isMobile ? " 20px" : "40px",
+              fontSize: isMobile ? "16px" : "40px",
               fontFamily: "Quicksand",
-              lineHeight: isMobile ? "35px" : "62px",
+              lineHeight: isMobile ? "24px" : "62px",
               textAlign: "center",
             }}
           >
@@ -457,10 +504,15 @@ export const MessageDialog = ({
           </span>
         </Box>
         <Box
-          sx={{ width: "100%", display: "flex", justifyContent: "center" }}
-          mt={isMobile ? "15px" : "60px"}
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            order: isMobile ? 2 : "unset",
+          }}
+          mt={isMobile ? "20px" : "60px"}
           // mr="110px"
-          mb={2}
+          mb={isMobile ? 0 : 2}
         >
           <Box
             onClick={() => {
@@ -477,6 +529,23 @@ export const MessageDialog = ({
               alignItems: "center",
               padding: "0px 24px 0px 20px",
               zIndex: "9999",
+              "@keyframes btnPulse": {
+                "0%, 100%": { transform: "scale(1)", boxShadow: "0px 4px 10px rgba(109, 175, 25, 0.2)" },
+                "50%": { transform: "scale(1.03)", boxShadow: "0px 6px 16px rgba(109, 175, 25, 0.4)" }
+              },
+              animation: "btnPulse 2s infinite ease-in-out",
+              transition: "transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
+              boxShadow: "0px 4px 10px rgba(109, 175, 25, 0.2)",
+              "&:hover": {
+                animation: "none",
+                transform: "scale(1.05)",
+                background: "#5b9514",
+                boxShadow: "0px 6px 14px rgba(109, 175, 25, 0.4)",
+              },
+              "&:active": {
+                animation: "none",
+                transform: "scale(0.98)",
+              }
             }}
           >
             <span
@@ -841,7 +910,7 @@ export const ProfileHeader = ({
         window.parent.postMessage(
           { type: "restore-iframe-content" },
           window?.location?.ancestorOrigins?.[0] ||
-            window.parent.location.origin
+          window.parent.location.origin
         );
         navigate("/");
       } else {
@@ -901,9 +970,10 @@ export const ProfileHeader = ({
             width: { xs: "100%", sm: "50%" },
           }}
         >
+          {/* header back button */}
           {handleBack && (
-            <Box sx={{ ml: { xs: "10px", sm: "24px" } }}>
-              <IconButton onClick={handleBack}>
+            <Box sx={{ ml: { xs: "2px", sm: "24px" } }}>
+              <IconButton onClick={handleBack} sx={{ p: isMobile ? "4px" : "8px" }}>
                 <img
                   src={back}
                   alt="back"
@@ -912,31 +982,47 @@ export const ProfileHeader = ({
               </IconButton>
             </Box>
           )}
+          {/* header profile pic and username */}
           {username && (
             <>
               <Box
                 ml={
                   handleBack
-                    ? { xs: "10px", sm: "8px" }
+                    ? { xs: "4px", sm: "8px" }
                     : { xs: "10px", sm: "94px" }
                 }
-                sx={{ cursor: "pointer" }}
+                sx={{
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  flexShrink: 0,
+                }}
                 onClick={handleProfileBack}
               >
                 <img
                   src={profilePic}
                   alt="profile-pic"
-                  style={{ height: isMobile ? "25px" : "30px" }}
+                  style={{
+                    height: isMobile ? "25px" : "30px",
+                    width: isMobile ? "25px" : "30px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
                 />
               </Box>
-              <Box ml={isMobile ? "5px" : "12px"}>
+              <Box ml={isMobile ? "4px" : "12px"} sx={{ minWidth: 0 }}>
                 <span
                   style={{
                     color: "#000000",
                     fontWeight: 700,
-                    fontSize: { xs: "10px", sm: "16px" },
+                    fontSize: isMobile ? "12px" : "16px",
                     fontFamily: "Quicksand",
-                    lineHeight: "25px",
+                    lineHeight: isMobile ? "18px" : "25px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    maxWidth: isMobile ? "65px" : "180px",
+                    display: "block",
                   }}
                 >
                   {username || ""}
@@ -949,18 +1035,12 @@ export const ProfileHeader = ({
               sx={{
                 display: "flex",
                 justifyContent: "center",
-                gap: isMobile ? 1 : 4,
-                mt: isMobile ? 1 : 0,
-                ml: isMobile ? 5 : 2,
-                flexDirection: {
-                  xs: "column",
-                  sm: "row",
-                },
-                alignItems: {
-                  xs: "center",
-                  sm: "initial",
-                },
-                width: isMobile ? "35%" : "auto",
+                gap: isMobile ? 0.5 : 4,
+                mt: isMobile ? 0 : 0,
+                ml: isMobile ? 1 : 2,
+                flexDirection: "row",
+                alignItems: "center",
+                width: "auto",
               }}
             >
               {/* Words Learnt */}
@@ -971,24 +1051,27 @@ export const ProfileHeader = ({
                     "linear-gradient(90deg, #7B2CBF 0%, #9D4EDD 100%)",
                   border: "1px solid white",
                   color: "#fff",
-                  borderRadius: "12px",
-                  px: 3,
-                  py: "4px",
+                  borderRadius: isMobile ? "8px" : "12px",
+                  px: isMobile ? 1 : 3,
+                  py: isMobile ? "3px" : "4px",
                   display: "flex",
                   alignItems: "center",
                   width: {
-                    xs: "100%",
+                    xs: "95px",
                     sm: "auto",
                   },
+                  minWidth: isMobile ? "95px" : "auto",
                   boxShadow: 2,
+                  mr: isMobile ? "8px" : "0px",
                 }}
               >
                 <Box
                   sx={{
-                    fontSize: isMobile ? "10px" : "20px",
+                    fontSize: isMobile ? "12px" : "20px",
                     fontWeight: "bold",
-                    mr: 1,
+                    mr: isMobile ? 0.5 : 1,
                     fontFamily: "Quicksand",
+                    flexShrink: 0,
                   }}
                 >
                   {vocabCount > 0 ? (
@@ -997,7 +1080,7 @@ export const ProfileHeader = ({
                       decimals={0}
                       duration={4000}
                       style={{
-                        fontSize: isMobile ? "10px" : "18px",
+                        fontSize: isMobile ? "12px" : "18px",
                         fontWeight: "bold",
                         fontFamily: "Quicksand",
                         color: "white",
@@ -1009,11 +1092,14 @@ export const ProfileHeader = ({
                 </Box>
                 <Box
                   sx={{
-                    fontSize: isMobile ? "8px" : "16px",
+                    fontSize: isMobile ? "9px" : "16px",
                     fontWeight: 600,
-                    mr: 2,
+                    mr: isMobile ? 0.8 : 2,
                     fontFamily: getFontFamily(lang),
                     whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    maxWidth: isMobile ? "52px" : "unset",
                   }}
                 >
                   {ui.ASSESSMENT_WORDS_LEARNT}
@@ -1025,20 +1111,14 @@ export const ProfileHeader = ({
                   sx={{
                     position: "absolute",
                     right: {
-                      xs: "8px",
+                      xs: "-8px",
                       sm: "-20px",
                     },
-                    top: {
-                      xs: "50%",
-                      sm: "auto",
-                    },
-                    transform: {
-                      xs: "translateY(-50%)",
-                      sm: "none",
-                    },
-                    width: isMobile ? "17px" : "40px",
-                    height: isMobile ? "17px" : "40px",
-                    border: "4px solid white",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    width: isMobile ? "16px" : "40px",
+                    height: isMobile ? "16px" : "40px",
+                    border: isMobile ? "2px solid white" : "4px solid white",
                     borderRadius: "50%",
                     backgroundColor: "#fff",
                   }}
@@ -1054,24 +1134,27 @@ export const ProfileHeader = ({
                       "linear-gradient(90deg, #00C6FF 0%, #0072FF 100%)",
                     border: "1px solid white",
                     color: "#fff",
-                    borderRadius: "12px",
-                    px: 3,
-                    py: "4px",
+                    borderRadius: isMobile ? "8px" : "12px",
+                    px: isMobile ? 1 : 3,
+                    py: isMobile ? "3px" : "4px",
                     display: "flex",
                     alignItems: "center",
                     width: {
-                      xs: "100%",
+                      xs: "95px",
                       sm: "auto",
                     },
+                    minWidth: isMobile ? "95px" : "auto",
                     boxShadow: 2,
+                    mr: isMobile ? "8px" : "0px",
                   }}
                 >
                   <Box
                     sx={{
-                      fontSize: isMobile ? "10px" : "20px",
+                      fontSize: isMobile ? "12px" : "20px",
                       fontWeight: "bold",
-                      mr: 1,
+                      mr: isMobile ? 0.5 : 1,
                       fontFamily: "Quicksand",
+                      flexShrink: 0,
                     }}
                   >
                     {wordCount > 0 ? (
@@ -1080,7 +1163,7 @@ export const ProfileHeader = ({
                         decimals={0}
                         duration={1000}
                         style={{
-                          fontSize: isMobile ? "10px" : "18px",
+                          fontSize: isMobile ? "12px" : "18px",
                           fontWeight: "bold",
                           fontFamily: "Quicksand",
                           color: "white",
@@ -1092,11 +1175,14 @@ export const ProfileHeader = ({
                   </Box>
                   <Box
                     sx={{
-                      fontSize: isMobile ? "8px" : "16px",
+                      fontSize: isMobile ? "9px" : "16px",
                       fontWeight: 600,
-                      mr: 2,
+                      mr: isMobile ? 0.8 : 2,
                       fontFamily: "Quicksand",
                       whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: isMobile ? "102px" : "unset",
                     }}
                   >
                     {ui.ASSESSMENT_WORDS_PER_MINUTE}
@@ -1108,20 +1194,14 @@ export const ProfileHeader = ({
                     sx={{
                       position: "absolute",
                       right: {
-                        xs: "8px",
+                        xs: "-8px",
                         sm: "-20px",
                       },
-                      top: {
-                        xs: "50%",
-                        sm: "auto",
-                      },
-                      transform: {
-                        xs: "translateY(-50%)",
-                        sm: "none",
-                      },
-                      width: isMobile ? "17px" : "40px",
-                      height: isMobile ? "17px" : "40px",
-                      border: "4px solid white",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: isMobile ? "16px" : "40px",
+                      height: isMobile ? "16px" : "40px",
+                      border: isMobile ? "2px solid white" : "4px solid white",
                       borderRadius: "50%",
                       backgroundColor: "#fff",
                     }}
@@ -1133,18 +1213,49 @@ export const ProfileHeader = ({
         </Box>
 
         {isMobile && (
-          <Box sx={{ position: "relative", zIndex: 10, mr: 3 }}>
-            <IconButton
+          <Box sx={{ position: "relative", zIndex: 10, mr: isMobile ? 1 : 3 }}>
+            <Box
               onClick={toggleMenu}
               sx={{
-                backgroundColor: "#fff",
-                border: "2px solid #ccc",
-                borderRadius: "8px",
-                ml: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                width: "22px",
+                height: "16px",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                p: 0,
+                ml: 1.5,
+                position: "relative",
+                "& div": {
+                  width: "22px",
+                  height: "2px",
+                  backgroundColor: "#333F61",
+                  borderRadius: "10px",
+                  transition: "all 0.25s ease-in-out",
+                  position: "absolute",
+                  left: 0,
+                },
+                "& .line-1": {
+                  top: menuOpen ? "7px" : "0px",
+                  transform: menuOpen ? "rotate(45deg)" : "rotate(0)",
+                },
+                "& .line-2": {
+                  top: "7px",
+                  opacity: menuOpen ? 0 : 1,
+                  transform: menuOpen ? "scale(0)" : "scale(1)",
+                },
+                "& .line-3": {
+                  top: menuOpen ? "7px" : "14px",
+                  transform: menuOpen ? "rotate(-45deg)" : "rotate(0)",
+                },
               }}
             >
-              <MenuIcon />
-            </IconButton>
+              <div className="line-1" />
+              <div className="line-2" />
+              <div className="line-3" />
+            </Box>
 
             <Collapse in={menuOpen}>
               <Box
@@ -1156,7 +1267,7 @@ export const ProfileHeader = ({
                   bgcolor: "#fff",
                   borderRadius: "12px",
                   boxShadow: 3,
-                  width: "200px",
+                  width: isMobile ? "160px" : "200px",
                   overflow: "hidden",
                 }}
               >
@@ -1166,9 +1277,9 @@ export const ProfileHeader = ({
                       setOpenLangModal
                         ? setOpenLangModal(true)
                         : setOpenMessageDialog({
-                            message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
-                            dontShowHeader: true,
-                          })
+                          message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
+                          dontShowHeader: true,
+                        })
                     }
                   >
                     <TranslateIcon sx={{ mr: 1 }} />
@@ -1428,9 +1539,9 @@ export const ProfileHeader = ({
                 setOpenLangModal
                   ? setOpenLangModal(true)
                   : setOpenMessageDialog({
-                      message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
-                      dontShowHeader: true,
-                    })
+                    message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
+                    dontShowHeader: true,
+                  })
               }
             >
               <Box sx={{ position: "relative", cursor: "pointer" }}>
@@ -1454,7 +1565,7 @@ export const ProfileHeader = ({
                     {isMobile
                       ? ui.ASSESSMENT_LANGUAGE_SHORT
                       : languages?.find((elem) => elem.lang === language)
-                          ?.name || ui.ASSESSMENT_SELECT_LANGUAGE}
+                        ?.name || ui.ASSESSMENT_SELECT_LANGUAGE}
                   </span>
                 </Box>
               </Box>
@@ -1688,7 +1799,7 @@ const Assesment = ({ discoverStart }) => {
 
           setVocabCount(
             getMilestoneDetails?.data?.extra?.vocabulary_count +
-              getMilestoneDetails?.data?.extra?.learned_voc_count || 0
+            getMilestoneDetails?.data?.extra?.learned_voc_count || 0
           );
           setWordCount(
             getMilestoneDetails?.data?.extra?.latest_towre_data
@@ -1967,19 +2078,18 @@ const Assesment = ({ discoverStart }) => {
     // backgroundImage: `url(${
     //   rFlow === "true" ? rOneImage : images?.[`desktopLevel${level || 1}`]
     // })`,
-    backgroundImage: `url(${
-      rFlow === "true"
-        ? level == 1
-          ? rOneImage
-          : level == 2 && rStep === 2
+    backgroundImage: `url(${rFlow === "true"
+      ? level == 1
+        ? rOneImage
+        : level == 2 && rStep === 2
           ? rTwoImage
           : level == 2 && rStep === 3
-          ? rThreeImage
-          : level == 2 && rStep === 4
-          ? rFourImage
-          : images?.[imageKey]
-        : images?.[imageKey]
-    })`,
+            ? rThreeImage
+            : level == 2 && rStep === 4
+              ? rFourImage
+              : images?.[imageKey]
+      : images?.[imageKey]
+      })`,
     backgroundRepeat: "round",
     backgroundSize: "auto",
     position: "relative",
@@ -2000,12 +2110,39 @@ const Assesment = ({ discoverStart }) => {
           textAlign: "center",
         }}
       >
-        <ServerErrorScreen
-          onRetry={() => {
+        <Typography
+          variant="h6"
+          sx={{ fontFamily: "Quicksand", fontWeight: 700, color: "#555" }}
+        >
+          Could not load your session.
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{ fontFamily: "Quicksand", color: "#888", maxWidth: 360 }}
+        >
+          The server is unreachable right now. Check your connection and try
+          again.
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => {
             setInitError(false);
             loadDataRef.current?.();
           }}
-        />
+          sx={{
+            mt: 1,
+            background: "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+            color: "white",
+            fontFamily: "Quicksand",
+            fontWeight: 700,
+            borderRadius: "25px",
+            textTransform: "none",
+            px: 4,
+            py: 1.5,
+          }}
+        >
+          Try Again
+        </Button>
       </Box>
     );
   }
@@ -2094,17 +2231,17 @@ const Assesment = ({ discoverStart }) => {
                   {shouldShowF3
                     ? ui.ASSESSMENT_START_F3
                     : shouldShowF2
-                    ? ui.ASSESSMENT_START_F2
-                    : isF1FlowActive
-                    ? ui.ASSESSMENT_START_F1
-                    : milestoneLevel === "B" && rFlow === "true"
-                    ? ui.ASSESSMENT_LEARN_LETTERS
-                    : // Only show "Learn Letters" for milestone level "B" (F1/F2/F3 flows)
-                      // For milestone levels "m1", "m2", etc., show "Start Level X"
-                      ui.ASSESSMENT_START_LEVEL.replace(
-                        "{level}",
-                        String(level)
-                      )}
+                      ? ui.ASSESSMENT_START_F2
+                      : isF1FlowActive
+                        ? ui.ASSESSMENT_START_F1
+                        : milestoneLevel === "B" && rFlow === "true"
+                          ? ui.ASSESSMENT_LEARN_LETTERS
+                          : // Only show "Learn Letters" for milestone level "B" (F1/F2/F3 flows)
+                          // For milestone levels "m1", "m2", etc., show "Start Level X"
+                          ui.ASSESSMENT_START_LEVEL.replace(
+                            "{level}",
+                            String(level)
+                          )}
                 </span>
               </Box>
             </Box>
@@ -2126,15 +2263,16 @@ const Assesment = ({ discoverStart }) => {
           <Box
             sx={{
               position: "absolute",
-              top: "30%",
+              top: { xs: "20px", md: "35%" },
               left: "50%",
-              transform: "translate(-50%, -50%)",
+              transform: { xs: "translate(-50%, 0)", md: "translate(-50%, -50%)" },
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              mt: { xs: 2, md: 5 },
+              mt: { xs: 10, md: 5 },
               textAlign: "center",
+              width: { xs: "90%", md: "auto" },
             }}
           >
             {loading ? (
@@ -2182,9 +2320,9 @@ const Assesment = ({ discoverStart }) => {
                   >
                     {level > 0
                       ? ui.ASSESSMENT_TAKE_COMPLETE_LEVEL.replace(
-                          "{level}",
-                          String(level)
-                        )
+                        "{level}",
+                        String(level)
+                      )
                       : ui.ASSESSMENT_TAKE_DISCOVER_LEVEL}
                   </Typography>
                 </Box>

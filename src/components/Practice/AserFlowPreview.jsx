@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { getLocalData, NextButtonRound } from "../../utils/constants";
 import { RetryIcon } from "../Icons/SvgIcons";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
@@ -103,6 +103,16 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
   const [disableSpeaker, setDisableSpeaker] = useState(true); // Disable speaker initially
   const [disableBubbles, setDisableBubbles] = useState(true); // Disable bubbles initially
   const instructionAudioRef = useRef(null); // Ref to store current instruction audio
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const language = getLocalData("lang") || "en";
   const instructions = demoInstructions[language] || demoInstructions.en;
@@ -329,28 +339,29 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
         <div
           style={{
             position: "absolute",
-            top: "160px",
+            top: isMobile ? "80px" : "160px",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10000,
             backgroundColor: "white",
             borderRadius: "12px",
-            padding: "16px 24px",
+            padding: isMobile ? "6px 10px" : "16px 24px",
             boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            width: isMobile ? "180px" : "auto",
           }}
         >
-          <div className="flex flex-col items-center mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white" />
+          <div className={`flex flex-col items-center ${isMobile ? "mb-1" : "mb-4"}`}>
+            <div className={`flex items-center gap-2 ${isMobile ? "mb-1.5" : "mb-3"}`}>
+              <div className={`${isMobile ? "w-6 h-6" : "w-8 h-8"} bg-blue-500 rounded-full flex items-center justify-center`}>
+                <Sparkles className={`${isMobile ? "h-3 w-3" : "h-4 w-4"} text-white`} />
               </div>
-              <h2 className="text-base font-bold text-gray-800">
+              <h2 className={`font-bold text-gray-800 ${isMobile ? "text-xs" : "text-base"}`}>
                 {instructions.howToPlay}
               </h2>
             </div>
             <Progress
               value={(currentDemoStep / 3) * 100}
-              className="h-1.5 w-64"
+              className={`h-1.5 ${isMobile ? "w-36" : "w-64"}`}
             />
           </div>
         </div>
@@ -382,21 +393,22 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
         <div
           style={{
             position: "absolute",
-            bottom: "80px",
+            bottom: isMobile ? "40px" : "80px",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10000,
             display: "flex",
             justifyContent: "space-between",
-            width: "calc(100% - 280px)", // Account for sidebar
+            width: isMobile ? "calc(100% - 48px)" : "calc(100% - 280px)", // Account for sidebar
             maxWidth: "1200px",
-            padding: "0 40px",
+            padding: isMobile ? "0 10px" : "0 40px",
           }}
         >
           {/* Skip Demo Button */}
           <button
             onClick={handleSkipDemo}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform"
+            className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform ${isMobile ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
+              }`}
           >
             {instructions.skipDemo}
           </button>
@@ -404,7 +416,8 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
           {/* Start Game Button */}
           <button
             onClick={handleStartGameClick}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform"
+            className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform ${isMobile ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
+              }`}
           >
             {instructions.startGame}
           </button>
@@ -419,10 +432,10 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
           <div
             style={{
               position: "absolute",
-              bottom: "130px",
-              left: "calc(50% - 35px)",
+              bottom: isMobile ? "80px" : "130px",
+              left: isMobile ? "calc(50% - 20px)" : "calc(50% - 35px)",
               zIndex: 10000,
-              fontSize: "64px",
+              fontSize: isMobile ? "40px" : "64px",
               animation:
                 "pointToButton 1.5s ease-in-out infinite, bounce 1s ease-in-out infinite",
               pointerEvents: "none",

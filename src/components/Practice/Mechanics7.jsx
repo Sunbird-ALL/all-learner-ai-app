@@ -81,7 +81,7 @@ const Mechanics7 = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => {},
+  playTeacherAudio = () => { },
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -465,7 +465,7 @@ const Mechanics7 = ({
       recognitionInstance.lang = "en-US";
       recognitionInstance.maxAlternatives = 1;
 
-      recognitionInstance.onstart = () => {};
+      recognitionInstance.onstart = () => { };
 
       recognitionInstance.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
@@ -703,8 +703,8 @@ const Mechanics7 = ({
     selectedWordsRef.current?.length !== wordsAfterSplit?.length
       ? ""
       : selectedWordsRef.current?.join(" ") === parentWords
-      ? "correct"
-      : "wrong";
+        ? "correct"
+        : "wrong";
 
   // useEffect(() => {
   //   const isWrong =
@@ -865,8 +865,8 @@ const Mechanics7 = ({
               width: "50px",
               height: "50px",
               position: "absolute",
-              top: "20px",
-              left: "20px",
+              top: isMobile ? "0px" : "20px",
+              left: isMobile ? "0px" : "20px",
               cursor: "pointer",
               zIndex: 1000,
             }}
@@ -969,23 +969,28 @@ const Mechanics7 = ({
               height: "200px",
             }}
           >
-            <span
-              style={{
-                fontWeight: 700,
-                fontSize: isMobile ? "30px" : "50px",
-                lineHeight: isMobile ? "60px" : "87px",
-                letterSpacing: isMobile ? "1%" : "2%",
-                fontFamily: "Quicksand",
-                textTransform: "uppercase",
-              }}
-            >
-              {before && <span style={{ color: "grey" }}>{before}</span>}
-              {match && <span style={{ color: "#333F61" }}>{match}</span>}
-              {after && <span style={{ color: "grey" }}>{after}</span>}
-            </span>
+            {!isMobile && (
+              <span
+                style={{
+                  fontWeight: 700,
+                  fontSize: isMobile ? "30px" : "50px",
+                  lineHeight: isMobile ? "60px" : "87px",
+                  letterSpacing: isMobile ? "1%" : "2%",
+                  fontFamily: "Quicksand",
+                  textTransform: "uppercase",
+                }}
+              >
+                {before && <span style={{ color: "grey" }}>{before}</span>}
+                {match && <span style={{ color: "#333F61" }}>{match}</span>}
+                {after && <span style={{ color: "grey" }}>{after}</span>}
+              </span>
+            )}
             <ZoomableImage
               src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${parentWords?.image_url}`}
               alt="pencil"
+              containerStyle={{
+                marginTop: isMobile ? "1px" : "0px",
+              }}
               imageStyle={{
                 height: "150px",
                 width: "150px",
@@ -995,11 +1000,11 @@ const Mechanics7 = ({
           </Box>
           <Box
             sx={{
-              width: isMobile ? "50vh" : "1px",
-              backgroundColor: "#E0E2E7",
-              height: isMobile ? "1px" : "50vh",
-              border: "1px solid #E0E2E7",
-              margin: isMobile ? "40px 0px" : "0px 0px",
+              width: isMobile ? "0vh" : "1px",
+              backgroundColor: isMobile ? "transparent" : "#E0E2E7",
+              height: isMobile ? "0px" : "50vh",
+              border: isMobile ? "none" : "1px solid #E0E2E7",
+              margin: isMobile ? "0px 0px 0px 0px" : "0px 0px",
               alignSelf: "center",
             }}
           />
@@ -1020,13 +1025,13 @@ const Mechanics7 = ({
                 backgroundColor: !isRecorded
                   ? "#1CB0F60F" // default background
                   : isIncorrectWord
-                  ? "#58CC020F" // red FF7F360F
-                  : "#58CC020F", // green background
+                    ? "#58CC020F" // red FF7F360F
+                    : "#58CC020F", // green background
                 border: !isRecorded
-                  ? "2px solid #1CB0F633" // default border
+                  ? "2px solid #00000033" // default border
                   : isIncorrectWord
-                  ? "2px solid #58CC02" // red FF7F36
-                  : "2px solid #58CC02", // green border
+                    ? "2px solid #58CC02" // red FF7F36
+                    : "2px solid #58CC02", // green border
                 borderRadius: "16px",
                 display: "flex",
                 flexDirection: "column",
@@ -1034,7 +1039,7 @@ const Mechanics7 = ({
                 alignItems: "center",
                 padding: isMobile ? "10px 20px" : "10px 70px",
                 marginBottom: "16px",
-                width: isMobile ? "300px" : "400px",
+                width: isMobile ? "250px" : "400px",
                 height: "150px",
               }}
             >
@@ -1064,8 +1069,8 @@ const Mechanics7 = ({
                       color: !isRecorded
                         ? "#333F61"
                         : isIncorrectWord
-                        ? "#58CC02"
-                        : "#58CC02",
+                          ? "#58CC02"
+                          : "#58CC02",
                       fontWeight: 700,
                       fontSize: isMobile ? "30px" : "50px",
                       lineHeight: isMobile ? "60px" : "70px",
@@ -1082,8 +1087,8 @@ const Mechanics7 = ({
                       color: !isRecorded
                         ? "#333F61"
                         : isIncorrectWord
-                        ? "#58CC02"
-                        : "#58CC02",
+                          ? "#58CC02"
+                          : "#58CC02",
                       fontWeight: 700,
                       fontSize: isMobile ? "50px" : "50px",
                       lineHeight: isMobile ? "60px" : "70px",
@@ -1170,7 +1175,7 @@ const Mechanics7 = ({
                   justifyContent: "center",
                   alignItems: "flex-end",
                   gap: "40px",
-                  marginTop: "30px",
+                  marginTop: isMobile ? "10px" : "30px",
                 }}
               >
                 <Box
@@ -1231,8 +1236,8 @@ const Mechanics7 = ({
                     justifyContent: "center",
                     alignItems: "center",
                     maskBorderWidth: 6,
-                    gap: 5,
-                    height: "250px",
+                    gap: isMobile ? 2 : 5,
+                    height: isMobile ? "160px" : "250px",
                   }}
                 >
                   {isPlaying ? (
@@ -1339,7 +1344,7 @@ const Mechanics7 = ({
                   justifyContent: "center",
                   alignItems: "center",
                   maskBorderWidth: 6,
-                  height: "250px",
+                  height: isMobile ? "160px" : "250px",
                 }}
               >
                 <Box style={{ marginTop: "10px", marginBottom: "50px" }}>
@@ -1351,7 +1356,7 @@ const Mechanics7 = ({
                     marginTop: "7px",
                     position: "relative",
                     display: "flex",
-                    gap: "50px",
+                    gap: isMobile ? "20px" : "50px",
                     justifyContent: "center",
                     alignItems: "center",
                     //height: { xs: "30px", sm: "40px", md: "50px" },
@@ -1442,7 +1447,7 @@ const Mechanics7 = ({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    height: "250px",
+                    height: isMobile ? "160px" : "250px",
                   }}
                 >
                   <Loader />
@@ -1454,9 +1459,9 @@ const Mechanics7 = ({
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    marginTop: "30px",
-                    gap: "10px",
-                    height: "250px",
+                    marginTop: isMobile ? "10px" : "30px",
+                    gap: isMobile ? "5px" : "10px",
+                    height: isMobile ? "160px" : "250px",
                     //maskBorderWidth: 6,
                   }}
                 >
@@ -1588,7 +1593,7 @@ const Mechanics7 = ({
                       }
                     }}
                     sx={{
-                      marginTop: "30px",
+                      marginTop: isMobile ? "10px" : "30px",
                       cursor: "pointer",
                       //marginLeft: "30px",
                     }}

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { getLocalData, NextButtonRound } from "../../utils/constants";
 import { RetryIcon } from "../Icons/SvgIcons";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
@@ -117,6 +117,17 @@ const demoInstructions = {
 };
 
 const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Demo states: countdown, showSentence, recording, playAudio, retryOrContinue, completion
   const [demoPhase, setDemoPhase] = useState("countdown");
   const [currentDemoStep, setCurrentDemoStep] = useState(1); // Track demo step progress (1-5)
@@ -599,9 +610,9 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         words={demoPhase === "countdown" ? "" : instructions.demoSentence}
         contentType="Sentence"
         contentId="demo-sentence"
-        setVoiceText={() => {}}
-        setRecordedAudio={() => {}}
-        setVoiceAnimate={() => {}}
+        setVoiceText={() => { }}
+        setRecordedAudio={() => { }}
+        setVoiceAnimate={() => { }}
         storyLine={0}
         handleNext={handleNext}
         type="text"
@@ -614,10 +625,10 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         callUpdateLearner={false}
         disableScreen={demoPhase === "countdown"}
         handleBack={handleBackClick}
-        setEnableNext={() => {}}
+        setEnableNext={() => { }}
         isNextButtonCalled={isNextButtonCalled}
         setIsNextButtonCalled={setIsNextButtonCalled}
-        setOpenMessageDialog={() => {}}
+        setOpenMessageDialog={() => { }}
         startShowCase={true}
         isDemo={true}
         showSpeakButton={showSpeakButton}
@@ -784,72 +795,76 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         demoPhase === "recording" ||
         demoPhase === "playAudio" ||
         demoPhase === "retryOrContinue") && (
-        <div
-          style={{
-            position: "absolute",
-            top: "clamp(80px, 12vh, 130px)",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10000,
-            backgroundColor: "white",
-            borderRadius: "12px",
-            padding: "16px 24px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          }}
-        >
-          <div className="flex flex-col items-center mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white" />
+          <div
+            style={{
+              position: "absolute",
+              top: isMobile ? "136px" : "clamp(120px, 15vh, 150px)",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 10000,
+              backgroundColor: "white",
+              borderRadius: "12px",
+              padding: isMobile ? "8px 12px" : "16px 24px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              width: isMobile ? "190px" : "auto",
+            }}
+          >
+            <div className={`flex flex-col items-center ${isMobile ? "mb-1" : "mb-4"}`}>
+              <div className={`flex items-center gap-2 ${isMobile ? "mb-1.5" : "mb-3"}`}>
+                <div className={`${isMobile ? "w-6 h-6" : "w-8 h-8"} bg-blue-500 rounded-full flex items-center justify-center`}>
+                  <Sparkles className={`${isMobile ? "h-3.5 w-3.5" : "h-4 w-4"} text-white`} />
+                </div>
+                <h2 className={`font-bold text-gray-800 ${isMobile ? "text-xs" : "text-base"}`}>
+                  {instructions.howToPlay}
+                </h2>
               </div>
-              <h2 className="text-base font-bold text-gray-800">
-                {instructions.howToPlay}
-              </h2>
+              <Progress
+                value={(currentDemoStep / 4) * 100}
+                className={`${isMobile ? "h-1 w-36" : "h-1.5 w-64"}`}
+              />
             </div>
-            <Progress
-              value={(currentDemoStep / 4) * 100}
-              className="h-1.5 w-64"
-            />
           </div>
-        </div>
-      )}
+        )}
 
       {/* Demo Control Buttons - Inside White Container */}
       {(demoPhase === "showSentence" ||
         demoPhase === "recording" ||
         demoPhase === "playAudio" ||
         demoPhase === "retryOrContinue") && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "80px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10000,
-            display: "flex",
-            justifyContent: "space-between",
-            width: "calc(100% - 280px)",
-            maxWidth: "1200px",
-            padding: "0 40px",
-          }}
-        >
-          {/* Skip Demo Button */}
-          <button
-            onClick={handleSkipDemo}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform"
+          <div
+            style={{
+              position: "absolute",
+              bottom: isMobile ? "calc(100vh - (75px + 76vh))" : "80px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 10000,
+              display: "flex",
+              justifyContent: "space-between",
+              width: isMobile ? "calc(100% - 48px)" : "calc(100% - 280px)",
+              maxWidth: "1200px",
+              padding: isMobile ? "0 10px" : "0 40px",
+              gap: isMobile ? "20px" : "0px",
+            }}
           >
-            {instructions.skipDemo}
-          </button>
+            {/* Skip Demo Button */}
+            <button
+              onClick={handleSkipDemo}
+              className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform ${isMobile ? "px-5 py-2.5 text-xs flex-1 text-center" : "px-6 py-3 text-sm"
+                }`}
+            >
+              {instructions.skipDemo}
+            </button>
 
-          {/* Start Game Button */}
-          <button
-            onClick={handleStartGameClick}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform"
-          >
-            {instructions.startGame}
-          </button>
-        </div>
-      )}
+            {/* Start Game Button */}
+            <button
+              onClick={handleStartGameClick}
+              className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform ${isMobile ? "px-5 py-2.5 text-xs flex-1 text-center" : "px-6 py-2 text-sm"
+                }`}
+            >
+              {instructions.startGame}
+            </button>
+          </div>
+        )}
 
       {/* Hidden audio element for playback */}
       <audio ref={audioRef} style={{ display: "none" }} />
