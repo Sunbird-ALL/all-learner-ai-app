@@ -1160,14 +1160,14 @@ const R1 = ({
         >
           <Box
             sx={{
+              right: { xs: "10px", sm: 20 },
+              top: { xs: "-30px", sm: 10 },
+              zIndex: { xs: 9999, sm: 1 },
+              position: "absolute",
+              width: { xs: "80px", sm: "100px", md: "120px" },
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              position: "absolute",
-              width: { xs: "80px", sm: "100px", md: "120px" },
-              top: { xs: "-30px", sm: 10 },
-              right: { xs: "10px", sm: 20 },
-              zIndex: { xs: 9999, sm: 1 },
             }}
           >
             <Box
@@ -1504,28 +1504,28 @@ const R1 = ({
         <Box
           sx={{
             position: "relative",
-            mx: "auto",
             width: "min(100%, 1024px)",
-            borderRadius: 2,
+            mx: "auto",
             backgroundColor: "#fff",
+            borderRadius: 2,
             overflow: { sm: "hidden", xs: "visible" },
-            display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            display: "flex",
             justifyContent: "center",
+            alignItems: "center",
             padding: "20px 0px",
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
               position: "absolute",
               width: { xs: "80px", sm: "100px", md: "120px" },
               top: { xs: "-30px", sm: 10 },
               right: { xs: "10px", sm: 20 },
               zIndex: { xs: 9999, sm: 1 },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
             <Box

@@ -5138,14 +5138,14 @@ const R0 = ({
             {/* Progress container - right side */}
             <Box
               sx={{
-                alignItems: "center",
+                top: { xs: "-30px", sm: 10 },
+                right: { xs: "10px", sm: 20 },
+                zIndex: { xs: 9999, sm: 1 },
+                position: "absolute",
+                width: { xs: "80px", sm: "100px", md: "120px" },
                 display: "flex",
                 flexDirection: "column",
-                width: { xs: "80px", sm: "100px", md: "120px" },
-                position: "absolute",
-                right: { xs: "10px", sm: 20 },
-                top: { xs: "-30px", sm: 10 },
-                zIndex: { xs: 9999, sm: 1 },
+                alignItems: "center",
               }}
             >
               <Box
@@ -5530,14 +5530,14 @@ const R0 = ({
           >
             <Box
               sx={{
-                alignItems: "center",
-                display: "flex",
-                flexDirection: "column",
-                width: { xs: "80px", sm: "100px", md: "120px" },
-                position: "absolute",
-                right: { xs: "10px", sm: 20 },
-                top: { xs: "-30px", sm: 10 },
                 zIndex: { xs: 9999, sm: 1 },
+                top: { xs: "-30px", sm: 10 },
+                right: { xs: "10px", sm: 20 },
+                position: "absolute",
+                width: { xs: "80px", sm: "100px", md: "120px" },
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
               }}
             >
               <Box
