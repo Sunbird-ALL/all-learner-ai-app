@@ -135,22 +135,22 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
     >
       <Box
         sx={{
-          width: "min(600px, calc(100vw - 24px))",
-          maxHeight: "min(90vh, 100%)",
-          borderRadius: "20px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundImage: `url(${textureImage})`,
-          backgroundSize: "contain",
-          backgroundRepeat: "round",
-          boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
           backdropFilter: "blur(25px)",
-          overflow: "hidden",
-          flexShrink: 0,
-          px: { xs: 1, sm: 2 },
-          pb: { xs: 1.5, sm: 2 },
+          boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
+          backgroundRepeat: "round",
+          backgroundSize: "contain",
+          backgroundImage: `url(${textureImage})`,
+          alignItems: "center",
+          flexDirection: "column",
+          display: "flex",
+          borderRadius: "20px",
+          maxHeight: "min(90vh, 100%)",
+          width: "min(600px, calc(100vw - 24px))",
           boxSizing: "border-box",
+          pb: { xs: 1.5, sm: 2 },
+          px: { xs: 1, sm: 2 },
+          flexShrink: 0,
+          overflow: "hidden",
         }}
       >
         <Box
@@ -231,23 +231,23 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                   <Box
                     onClick={() => setSelectedLang(elem.lang)}
                     sx={{
-                      cursor: "pointer",
-                      width: "100%",
-                      maxWidth: "100%",
+                      flexShrink: 0,
+                      boxSizing: "border-box",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      display: "flex",
+                      border: `3px solid ${isSelectedLang ? "#A03D13" : "#DADADA"
+                        }`,
+                      borderRadius: "10px",
+                      background: isSelectedLang ? "#EE6931" : "#EFEFEF",
                       height: {
                         xs: "clamp(88px, 22vw, 118px)",
                         sm: "clamp(100px, 12vh, 140px)",
                       },
-                      background: isSelectedLang ? "#EE6931" : "#EFEFEF",
-                      borderRadius: "10px",
-                      border: `3px solid ${isSelectedLang ? "#A03D13" : "#DADADA"
-                        }`,
-                      display: "flex",
-                      justifyContent: "center",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      boxSizing: "border-box",
-                      flexShrink: 0,
+                      maxWidth: "100%",
+                      width: "100%",
+                      cursor: "pointer",
                     }}
                   >
                     <Box
@@ -338,15 +338,15 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
               sessionStorage.removeItem("discovery_set_flow_char_result");
             }}
             sx={{
-              cursor: "pointer",
-              background: "#6DAF19",
-              minWidth: "173px",
-              height: "55px",
-              borderRadius: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
               padding: "0px 24px 0px 20px",
+              alignItems: "center",
+              justifyContent: "center",
+              display: "flex",
+              borderRadius: "10px",
+              height: "55px",
+              minWidth: "173px",
+              background: "#6DAF19",
+              cursor: "pointer",
             }}
           >
             <span
@@ -388,31 +388,31 @@ export const MessageDialog = ({
         position: "fixed",
         top: 0,
         left: 0,
-        background: "rgba(0, 0, 0, 0.5)",
         zIndex: 999999,
+        background: "rgba(0, 0, 0, 0.5)",
+        animation: "fadeIn 0.25s ease-out forwards",
         "@keyframes fadeIn": {
           "0%": { opacity: 0 },
           "100%": { opacity: 1 }
         },
-        animation: "fadeIn 0.25s ease-out forwards",
       }}
     >
       <Box
         sx={{
-          width: isMobile ? "80%" : "600px",
-          maxWidth: isMobile ? "380px" : "600px",
-          minHeight: isMobile ? "auto" : "424px",
-          borderRadius: "20px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundImage: `url(${textureImage})`,
-          backgroundSize: isMobile ? "cover" : "contain",
-          backgroundRepeat: isMobile ? "no-repeat" : "round",
           boxShadow: isMobile ? "0px 10px 30px rgba(0, 0, 0, 0.15)" : "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
-          backdropFilter: "blur(25px)",
-          position: "relative",
+          minHeight: isMobile ? "auto" : "424px",
+          maxWidth: isMobile ? "380px" : "600px",
+          width: isMobile ? "80%" : "600px",
+          borderRadius: "20px",
+          alignItems: "center",
+          flexDirection: "column",
+          display: "flex",
+          backgroundRepeat: isMobile ? "no-repeat" : "round",
+          backgroundSize: isMobile ? "cover" : "contain",
+          backgroundImage: `url(${textureImage})`,
           padding: isMobile ? "20px 16px" : "0px",
+          position: "relative",
+          backdropFilter: "blur(25px)",
           boxSizing: "border-box",
           "@keyframes premiumModalEntrance": {
             "0%": { transform: "scale(0.8) translateY(50px) rotate(-1deg)", opacity: 0 },
@@ -425,15 +425,15 @@ export const MessageDialog = ({
       >
         <Box
           sx={{
-            position: isMobile ? "relative" : "absolute",
-            left: isMobile ? "auto" : 10,
-            bottom: 0,
-            pointerEvents: "none",
-            display: "flex",
-            justifyContent: "center",
-            mt: isMobile ? "16px" : 0,
-            mb: isMobile ? "8px" : 0,
             order: isMobile ? 3 : "unset",
+            mb: isMobile ? "8px" : 0,
+            mt: isMobile ? "16px" : 0,
+            justifyContent: "center",
+            display: "flex",
+            pointerEvents: "none",
+            bottom: 0,
+            left: isMobile ? "auto" : 10,
+            position: isMobile ? "relative" : "absolute",
             "@keyframes happyPandaBounce": {
               "0%, 100%": { transform: "translateY(0) scale(1)" },
               "50%": { transform: "translateY(-6px) scale(1.02)" }

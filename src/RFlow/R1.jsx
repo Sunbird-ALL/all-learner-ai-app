@@ -1141,6 +1141,12 @@ const R1 = ({
       <Box>
         <Box
           sx={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            pt: { xs: 2, md: 3 },
+            pb: { xs: 1, md: 2 },
             position: "relative",
             mx: "auto",
             width: "min(100%, 900px)",
@@ -1150,24 +1156,18 @@ const R1 = ({
             backgroundColor: "#fff",
             overflow: { sm: "hidden", xs: "visible" },
             boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            pt: { xs: 2, md: 3 },
-            pb: { xs: 1, md: 2 },
           }}
         >
           <Box
             sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
               right: { xs: "10px", sm: 20 },
               top: { xs: "-30px", sm: 10 },
               zIndex: { xs: 9999, sm: 1 },
               position: "absolute",
               width: { xs: "80px", sm: "100px", md: "120px" },
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
             }}
           >
             <Box
