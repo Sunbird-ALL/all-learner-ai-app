@@ -3,7 +3,7 @@ name: ALL rig (UAT) dev Deployment
 on:
   push:
     branches:
-      - all-3.0.5
+      - all-3.0.6
 
 jobs:
   deploy:
@@ -35,6 +35,11 @@ jobs:
 
       - name: Run Husky Install
         run: npm run prepare
+
+      - name: Run Tests
+        run: npm test -- --watchAll=false
+        env:
+          CI: true
 
       - name: Build and Package Application
         env:
