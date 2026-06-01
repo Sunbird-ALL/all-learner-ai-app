@@ -6633,14 +6633,14 @@ const LetterTrain = ({
             {/* Progress container - right side */}
             <Box
               sx={{
+                zIndex: { xs: 9999, sm: 1 },
+                right: { xs: "10px", sm: 20 },
+                top: { xs: "-30px", sm: 10 },
+                position: "absolute",
+                width: { xs: "80px", sm: "100px", md: "120px" },
+                display: "flex",
                 alignItems: "center",
                 flexDirection: "column",
-                display: "flex",
-                width: { xs: "80px", sm: "100px", md: "120px" },
-                position: "absolute",
-                top: { xs: "-30px", sm: 10 },
-                right: { xs: "10px", sm: 20 },
-                zIndex: { xs: 9999, sm: 1 },
               }}
             >
               <Box
@@ -6688,17 +6688,17 @@ const LetterTrain = ({
             {/* Title container - left side */}
             <Box
               sx={{
-                position: "absolute",
-                top: { xs: "-30px", sm: 14, md: 16 },
-                left: { xs: "60px", sm: 12, md: 16 },
-                backgroundColor: "rgba(255, 255, 255, 0.95)",
-                borderRadius: { xs: "16px", sm: "20px", md: "24px" },
-                padding: { xs: "6px 10px", sm: "10px 14px", md: "14px 18px" },
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 border: "2px solid #FF9800",
                 zIndex: { xs: 9999, sm: 10 },
-                backdropFilter: "blur(5px)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                padding: { xs: "6px 10px", sm: "10px 14px", md: "14px 18px" },
+                borderRadius: { xs: "16px", sm: "20px", md: "24px" },
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
                 minWidth: { xs: "80px", sm: "120px", md: "140px" },
+                left: { xs: "60px", sm: 12, md: 16 },
+                top: { xs: "-30px", sm: 14, md: 16 },
+                position: "absolute",
+                backdropFilter: "blur(5px)",
               }}
             >
               <Typography
@@ -7070,14 +7070,14 @@ const LetterTrain = ({
           >
             <Box
               sx={{
-                alignItems: "center",
-                flexDirection: "column",
-                display: "flex",
-                width: { xs: "80px", sm: "100px", md: "120px" },
                 position: "absolute",
-                top: { xs: "-30px", sm: 10 },
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: { xs: "80px", sm: "100px", md: "120px" },
                 right: { xs: "10px", sm: 20 },
                 zIndex: { xs: 9999, sm: 1 },
+                top: { xs: "-30px", sm: 10 },
               }}
             >
               <Box

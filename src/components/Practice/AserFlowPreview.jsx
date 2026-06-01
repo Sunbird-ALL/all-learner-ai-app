@@ -338,24 +338,42 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
       {demoPhase === "demo" && (
         <div
           style={{
+            transform: "translateX(-50%)",
+            backgroundColor: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            padding: isMobile ? "6px 10px" : "16px 24px",
             position: "absolute",
             top: isMobile ? "80px" : "160px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10000,
-            backgroundColor: "white",
             borderRadius: "12px",
-            padding: isMobile ? "6px 10px" : "16px 24px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            zIndex: 10000,
+            left: "50%",
             width: isMobile ? "180px" : "auto",
           }}
         >
-          <div className={`flex flex-col items-center ${isMobile ? "mb-1" : "mb-4"}`}>
-            <div className={`flex items-center gap-2 ${isMobile ? "mb-1.5" : "mb-3"}`}>
-              <div className={`${isMobile ? "w-6 h-6" : "w-8 h-8"} bg-blue-500 rounded-full flex items-center justify-center`}>
-                <Sparkles className={`${isMobile ? "h-3 w-3" : "h-4 w-4"} text-white`} />
+          <div
+            className={`items-center flex flex-col ${
+              isMobile ? "mb-1" : "mb-4"
+            }`}
+          >
+            <div
+              className={`gap-2 flex items-center ${
+                isMobile ? "mb-1.5" : "mb-3"
+              }`}
+            >
+              <div
+                className={`${
+                  isMobile ? "w-6 h-6" : "w-8 h-8"
+                } rounded-full bg-blue-500 justify-center items-center flex`}
+              >
+                <Sparkles
+                  className={`${isMobile ? "h-3 w-3" : "h-4 w-4"} text-white`}
+                />
               </div>
-              <h2 className={`font-bold text-gray-800 ${isMobile ? "text-xs" : "text-base"}`}>
+              <h2
+                className={`font-bold text-gray-800 ${
+                  isMobile ? "text-xs" : "text-base"
+                }`}
+              >
                 {instructions.howToPlay}
               </h2>
             </div>
@@ -407,8 +425,9 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
           {/* Skip Demo Button */}
           <button
             onClick={handleSkipDemo}
-            className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform ${isMobile ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
-              }`}
+            className={`bg-blue-600 text-white hover:bg-blue-700 font-semibold shadow-lg transition-all rounded-full hover:scale-105 duration-300 transform ${
+              isMobile ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
+            }`}
           >
             {instructions.skipDemo}
           </button>
@@ -416,8 +435,9 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
           {/* Start Game Button */}
           <button
             onClick={handleStartGameClick}
-            className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform ${isMobile ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
-              }`}
+            className={`text-white bg-blue-600 font-semibold hover:bg-blue-700 transition-all shadow-lg duration-300 rounded-full transform hover:scale-105 ${
+              isMobile ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
+            }`}
           >
             {instructions.startGame}
           </button>
