@@ -1493,39 +1493,39 @@ const R1 = ({
     return (
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: { sm: "hidden", xs: "visible" },
           height: "70vh",
+          overflow: { sm: "hidden", xs: "visible" },
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          display: "flex",
         }}
       >
         <Box
           sx={{
-            position: "relative",
-            width: "min(100%, 1024px)",
-            mx: "auto",
-            backgroundColor: "#fff",
-            borderRadius: 2,
-            overflow: { sm: "hidden", xs: "visible" },
-            flexDirection: "column",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
             padding: "20px 0px",
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+            flexDirection: "column",
+            overflow: { sm: "hidden", xs: "visible" },
+            borderRadius: 2,
+            backgroundColor: "#fff",
+            mx: "auto",
+            width: "min(100%, 1024px)",
+            position: "relative",
           }}
         >
           <Box
             sx={{
-              position: "absolute",
-              width: { xs: "80px", sm: "100px", md: "120px" },
-              top: { xs: "-30px", sm: 10 },
-              right: { xs: "10px", sm: 20 },
-              zIndex: { xs: 9999, sm: 1 },
-              display: "flex",
-              flexDirection: "column",
               alignItems: "center",
+              flexDirection: "column",
+              display: "flex",
+              zIndex: { xs: 9999, sm: 1 },
+              right: { xs: "10px", sm: 20 },
+              top: { xs: "-30px", sm: 10 },
+              width: { xs: "80px", sm: "100px", md: "120px" },
+              position: "absolute",
             }}
           >
             <Box

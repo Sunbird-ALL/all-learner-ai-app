@@ -5124,15 +5124,15 @@ const R0 = ({
               borderRadius: 2,
               backgroundImage:
                 "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
-              backgroundColor: "#fff",
-              overflow: { sm: "hidden", xs: "visible" },
-              boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "flex-start",
               paddingTop: 4,
               minHeight: "50vh",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              overflow: { sm: "hidden", xs: "visible" },
+              boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
+              backgroundColor: "#fff",
             }}
           >
             {/* Progress container - right side */}
@@ -5519,13 +5519,13 @@ const R0 = ({
               mx: "auto",
               width: "min(100%, 1024px)",
               borderRadius: 2,
-              backgroundColor: "#fff",
-              overflow: { sm: "hidden", xs: "visible" },
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
               justifyContent: "center",
+              flexDirection: "column",
+              display: "flex",
+              alignItems: "center",
               padding: "20px 0",
+              overflow: { sm: "hidden", xs: "visible" },
+              backgroundColor: "#fff",
             }}
           >
             <Box
