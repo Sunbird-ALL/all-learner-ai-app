@@ -10,10 +10,13 @@ import theme from "./assets/styles/theme";
 import axios from "axios";
 import { getFontFamily } from "./utils/fontUtils";
 import { getLocalData } from "./utils/constants";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
+import { startEvent } from "./services/callTelemetryIntract";
 import {
   error as logTelemetryError,
   initialize,
 } from "./services/telemetryService";
+import { useNavigate } from "react-router-dom";
 import { reportError } from "./utils/errorReporter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
@@ -57,7 +60,9 @@ const App = () => {
   const networkErrorRef = useRef(null);
   networkErrorRef.current = setShowNetworkError;
 
-  // Update CSS variable --theme-font based on language
+  const navigate = useNavigate();
+  const [appInitialized, setAppInitialized] = useState(false);
+
   useEffect(() => {
     const updateThemeFont = () => {
       const lang = getLocalData("lang");
@@ -341,19 +346,94 @@ const App = () => {
               error?.response?.data?.msg;
             const displayMessage =
               typeof raw === "string" && raw.trim() ? raw.trim() : undefined;
-            const notifyParent =
-              !!localStorage.getItem("contentSessionId") &&
-              process.env.REACT_APP_IS_APP_IFRAME === "true";
-            openAuthSessionExpiredModal({
-              message: displayMessage,
-              notifyParent,
-            });
+
+            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              // Save reason before clearing so parent can read it
+              const logoutReason = displayMessage || errorMessage || "";
+              localStorage.setItem("logout_reason", logoutReason);
+              localStorage.setItem("logout_status", "complete");
+              // localStorage.clear();
+              sessionStorage.clear();
+            } else {
+              openAuthSessionExpiredModal({ message: displayMessage });
+            }
           }
         }
         return Promise.reject(error);
       }
     );
   }, []);
+
+  // Step 1: Check token/profile
+  useEffect(() => {
+    const token = localStorage.getItem("apiToken");
+    const profileName = getLocalData("profileName");
+
+    if (token && profileName) {
+      setAppInitialized(true);
+    } else {
+      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        localStorage.setItem("logout_reason", "");
+        localStorage.setItem("logout_status", "complete");
+      } else {
+        navigate("/login");
+      }
+    }
+  }, [navigate]);
+
+  // Step 2: Initialize telemetry
+  useEffect(() => {
+    if (!appInitialized) return;
+
+    const initService = async (visitorId) => {
+      await initialize({
+        context: {
+          mode: process.env.REACT_APP_MODE,
+          authToken: localStorage.getItem("apiToken"),
+          did: localStorage.getItem("deviceId") || visitorId,
+          uid: getLocalData("profileName") || "anonymous",
+          channel: process.env.REACT_APP_CHANNEL,
+          env: process.env.REACT_APP_ENV,
+          pdata: {
+            id: process.env.REACT_APP_ID,
+            ver: process.env.REACT_APP_VER,
+            pid: process.env.REACT_APP_PID,
+          },
+          tags: [""],
+          timeDiff: 0,
+          host: process.env.REACT_APP_HOST,
+          endpoint: process.env.REACT_APP_ENDPOINT,
+          apislug: process.env.REACT_APP_APISLUG,
+        },
+        config: {},
+        metadata: {},
+      });
+
+      if (localStorage.getItem("contentSessionId") === null) {
+        startEvent();
+      }
+    };
+
+    const setFp = async () => {
+      const fp = await FingerprintJS.load();
+      const { visitorId } = await fp.get();
+      await initService(visitorId);
+    };
+
+    setFp().catch((err) => console.error("Telemetry init failed:", err));
+  }, [appInitialized]);
+
+  // Step 3: Sync telemetry before unload
+  useEffect(() => {
+    if (!appInitialized) return;
+
+    const handleBeforeUnload = () => {
+      window.telemetry?.syncEvents?.();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [appInitialized]);
 
   return (
     <ErrorBoundary>
