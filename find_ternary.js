@@ -40,6 +40,6 @@ files.forEach(file => {
       }
     });
   } catch (e) {
-    // Ignore parse errors
+    process.stderr.write(`Skipping ${file}: ${e.message}\n`);
   }
 });

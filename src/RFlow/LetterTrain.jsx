@@ -6689,14 +6689,14 @@ const LetterTrain = ({
             <Box
               sx={{
                 border: "2px solid #FF9800",
-                zIndex: { xs: 9999, sm: 10 },
+                zIndex: { xs: 10, sm: 10 },
                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 padding: { xs: "6px 10px", sm: "10px 14px", md: "14px 18px" },
                 borderRadius: { xs: "16px", sm: "20px", md: "24px" },
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 minWidth: { xs: "80px", sm: "120px", md: "140px" },
-                left: { xs: "60px", sm: 12, md: 16 },
-                top: { xs: "-30px", sm: 14, md: 16 },
+                left: { xs: 8, sm: 12, md: 16 },
+                top: { xs: 0, sm: 14, md: 16 },
                 position: "absolute",
                 backdropFilter: "blur(5px)",
               }}
