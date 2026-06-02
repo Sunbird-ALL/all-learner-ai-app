@@ -112,6 +112,7 @@ import AlphabetChartPreview from "./AlphabetChartPreview";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getUiStrings } from "../../constants/strings";
+import { audioUrl } from "../../lib/audio";
 
 const theme = createTheme();
 
@@ -636,7 +637,9 @@ export const ProfileHeader = ({
         chartAudioRef.current = null;
       }
 
-      const audioPath = `/audio/audio-preview/Alphabet Chart/Chart Icon/${language}/ChartNarration.wav`;
+      const audioPath = audioUrl(
+        `audio-preview/Alphabet Chart/Chart Icon/${language}/ChartNarration.wav`
+      );
       const audio = new Audio(audioPath);
       chartAudioRef.current = audio;
 

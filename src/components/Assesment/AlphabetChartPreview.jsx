@@ -25,6 +25,7 @@ import { wordData } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
 import { sortByLangOrder } from "./AlphabetChart";
 import { motion, AnimatePresence } from "framer-motion";
+import { audioUrl } from "../../lib/audio";
 import {
   playTTS,
   stopAllAudio,
@@ -782,7 +783,9 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     setIsPlayingNarration(true);
     // Get the step key if not provided
     const narrationKey = stepKey || getNarrationStepKey();
-    const audioPath = `/audio/audio-preview/Alphabet Chart/${activeLang}/${narrationKey}.wav`;
+    const audioPath = audioUrl(
+      `audio-preview/Alphabet Chart/${activeLang}/${narrationKey}.wav`
+    );
     try {
       // Try to play the audio file first
       const audio = new Audio(audioPath);

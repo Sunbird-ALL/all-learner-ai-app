@@ -15,6 +15,7 @@ import { getFuelRequirement, getMissionDestination } from "../../utils/fuelCalcu
 import { playLetterAudio } from "../../utils/letterAudioUtils";
 import { memoryGameDataLoader } from "../../utils/memoryGameDataLoader";
 import { SpaceBackground } from "../SpaceBackground";
+import { audioUrl } from "../../../../audio";
 
 interface LetterLauncherGameStoryPreviewProps {
   onStartGame: () => void;
@@ -311,7 +312,7 @@ export function LetterLauncherGameStoryPreview({
   // Play audio file from public folder
   const playAudioFile = async (filename: string): Promise<boolean> => {
     return new Promise((resolve) => {
-      const audioPath = `/audio/audio-preview/combined-letter-games/letter-launcher-story/${audioLanguage}/${filename}`;
+      const audioPath = audioUrl(`audio-preview/combined-letter-games/letter-launcher-story/${audioLanguage}/${filename}`);
       const audio = new Audio(audioPath);
       // attach the slow audio toast
       attachSlowLoadToast(audio);

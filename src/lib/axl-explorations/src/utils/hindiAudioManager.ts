@@ -1,5 +1,6 @@
 // Hindi Audio Manager for local .wav files
 import { attachSlowLoadToast } from "./audioUtils";
+import { audioUrl } from "../../../audio";
 
 export interface HindiAudioConfig {
   audioFolderPath: string; // Path to audio folder
@@ -8,7 +9,7 @@ export interface HindiAudioConfig {
 
 class HindiAudioManager {
   private config: HindiAudioConfig = {
-    audioFolderPath: '/audio/hindi/letter',
+    audioFolderPath: audioUrl('hindi/letter'),
     fileExtension: '.wav'
   };
 

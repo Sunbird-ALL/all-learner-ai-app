@@ -13,6 +13,7 @@ import { englishAudioManager } from "../../utils/englishAudioManager";
 import { playSuccessSound, attachSlowLoadToast } from "../../utils/audioUtils";
 import { hindiAudioManager } from "../../utils/hindiAudioManager";
 import { getFontFamilyByLang } from "../../../../../utils/fontUtils";
+import { audioUrl } from "../../../../audio";
 
 // Core question interface for Letter Hunt
 export interface LetterHuntQuestion {
@@ -567,7 +568,7 @@ export function LetterHuntGameCore({
         }
         
         return new Promise((resolve) => {
-          const audioPath = `/audio/letter-hunt-incorrect-message/${feedbackLanguage}/feedback${feedbackNumber}.wav`;
+          const audioPath = audioUrl(`letter-hunt-incorrect-message/${feedbackLanguage}/feedback${feedbackNumber}.wav`);
           const audio = new Audio(audioPath);
           activeAudioRefs.current.add(audio);
           attachSlowLoadToast(audio);

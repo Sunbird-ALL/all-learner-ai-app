@@ -1,5 +1,6 @@
 // English Audio Manager for local .wav files
 import { attachSlowLoadToast } from "./audioUtils";
+import { audioUrl } from "../../../audio";
 
 export interface EnglishAudioConfig {
   audioFolderPath: string; // Path to audio folder
@@ -8,7 +9,7 @@ export interface EnglishAudioConfig {
 
 class EnglishAudioManager {
   private config: EnglishAudioConfig = {
-    audioFolderPath: '/audio/english/letter',
+    audioFolderPath: audioUrl('english/letter'),
     fileExtension: '.wav'
   };
 

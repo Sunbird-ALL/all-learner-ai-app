@@ -1,5 +1,6 @@
 // Telugu Audio Manager for local .wav files
 import { attachSlowLoadToast } from "./audioUtils";
+import { audioUrl } from "../../../audio";
 
 export interface TeluguAudioConfig {
   audioFolderPath: string; // Path to audio folder
@@ -8,7 +9,7 @@ export interface TeluguAudioConfig {
 
 class TeluguAudioManager {
   private config: TeluguAudioConfig = {
-    audioFolderPath: '/audio/telugu/letter',
+    audioFolderPath: audioUrl('telugu/letter'),
     fileExtension: '.wav'
   };
 

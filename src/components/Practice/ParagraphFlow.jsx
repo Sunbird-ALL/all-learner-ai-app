@@ -30,6 +30,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Modal } from "@mui/material";
 import ZoomableImage from "./ZoomableImage";
+import { audioUrl } from "../../lib/audio";
 
 const paragraphPages = [
   {
@@ -41,15 +42,15 @@ const paragraphPages = [
     keywords: [
       {
         word: "happily",
-        audio: "/audio/happily.mp3",
+        audio: audioUrl("happily.mp3"),
       },
       {
         word: "eating",
-        audio: "/audio/eating.mp3",
+        audio: audioUrl("eating.mp3"),
       },
       {
         word: "colourful",
-        audio: "/audio/colourful.mp3",
+        audio: audioUrl("colourful.mp3"),
       },
     ],
   },

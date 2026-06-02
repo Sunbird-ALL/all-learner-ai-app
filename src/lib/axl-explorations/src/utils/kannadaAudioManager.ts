@@ -1,5 +1,6 @@
 // Kannada Audio Manager for local .wav files
 import { attachSlowLoadToast } from "./audioUtils";
+import { audioUrl } from "../../../audio";
 
 export interface KannadaAudioConfig {
   audioFolderPath: string; // Path to audio folder
@@ -8,7 +9,7 @@ export interface KannadaAudioConfig {
 
 class KannadaAudioManager {
   private config: KannadaAudioConfig = {
-    audioFolderPath: '/audio/kannada/letter',
+    audioFolderPath: audioUrl('kannada/letter'),
     fileExtension: '.wav'
   };
 

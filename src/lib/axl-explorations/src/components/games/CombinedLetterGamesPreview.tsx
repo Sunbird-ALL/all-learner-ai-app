@@ -14,6 +14,7 @@ import { playAudio, playTTS, playSuccessSound, playFailureSound, stopAllAudio, i
 import { LetterHuntGameCore } from "./LetterHuntGameCore";
 import { ROARRapidVisualGameCore } from "./ROARRapidVisualGameCore";
 import { MemoryGameCore } from "./MemoryGameCore";
+import { audioUrl } from "../../../../audio";
 
 interface CombinedLetterGamesPreviewProps {
   onStartGame: () => void;
@@ -480,14 +481,14 @@ export function CombinedLetterGamesPreview({
       // Determine the correct audio path based on language
       let audioPath = '';
       if (contentLanguage === 'te') {
-        audioPath = `/audio/telugu/letter/${text}.wav`;
+        audioPath = audioUrl(`telugu/letter/${text}.wav`);
       } else if (contentLanguage === 'kn') {
-        audioPath = `/audio/kannada/letter/${text}.wav`;
+        audioPath = audioUrl(`kannada/letter/${text}.wav`);
       } else if (contentLanguage === 'mr') {
-        audioPath = `/audio/marathi/letter/${text}.wav`;
+        audioPath = audioUrl(`marathi/letter/${text}.wav`);
       } else {
         // Default to English for other languages
-        audioPath = `/audio/english/letter/${text}.wav`;
+        audioPath = audioUrl(`english/letter/${text}.wav`);
       }
       
       const audio = new Audio(audioPath);

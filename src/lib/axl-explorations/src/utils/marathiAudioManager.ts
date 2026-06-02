@@ -1,5 +1,6 @@
 // Marathi Audio Manager for local .wav files
 import { attachSlowLoadToast } from "./audioUtils";
+import { audioUrl } from "../../../audio";
 
 export interface MarathiAudioConfig {
   audioFolderPath: string; // Path to audio folder
@@ -8,7 +9,7 @@ export interface MarathiAudioConfig {
 
 class MarathiAudioManager {
   private config: MarathiAudioConfig = {
-    audioFolderPath: '/audio/marathi/letter',
+    audioFolderPath: audioUrl('marathi/letter'),
     fileExtension: '.wav'
   };
 

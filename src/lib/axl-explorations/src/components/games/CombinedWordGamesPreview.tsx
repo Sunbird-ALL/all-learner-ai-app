@@ -13,6 +13,7 @@ import { playAudio, playTTS, playSuccessSound, playFailureSound, stopAllAudio, i
 import { ROARWordGameCore } from "./ROARWordGameCore";
 import { ROARPhonemeGameCore } from "./ROARPhonemeGameCore";
 import { ROARPictureVocabGameCore } from "./ROARPictureVocabGameCore";
+import { audioUrl } from "../../../../audio";
 
 interface CombinedWordGamesPreviewProps {
   onStartGame: () => void;
@@ -796,7 +797,7 @@ export function CombinedWordGamesPreview({
     
     // For soundMatch game, try to play audio file from sound-match folder first
     const word = text.toLowerCase().trim();
-    const audioPath = `/audio/audio-preview/combined-word-games/sound-match/${language}/${word}.wav`;
+    const audioPath = audioUrl(`audio-preview/combined-word-games/sound-match/${language}/${word}.wav`);
     
     try {
       const audio = new Audio(audioPath);
