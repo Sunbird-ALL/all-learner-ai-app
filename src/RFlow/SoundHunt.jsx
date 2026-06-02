@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
 import * as s3Assets from "../utils/s3Links";
@@ -3679,6 +3680,22 @@ const content = {
   ],
 };
 
+const transformSoundHuntMechanicsData = (mechanicsData, steps) => {
+  if (!mechanicsData || mechanicsData.length === 0) return null;
+  const transformed = mechanicsData.map((item) => ({
+    correctWord: item.text,
+    audio: getAssetAudioUrl(item.audio_url),
+    allwords: item.options.map((opt) => ({
+      text: opt.text,
+      img: getAssetUrl(opt.image_url),
+      audio: getAssetAudioUrl(opt.audio_url),
+    })),
+    flowName: "API",
+    type: "soundMatch",
+  }));
+  return steps && steps > 0 ? transformed.slice(0, steps) : transformed;
+};
+
 const SoundHunt = ({
   setVoiceText,
   setRecordedAudio,
@@ -3744,21 +3761,8 @@ const SoundHunt = ({
   //    - Other steps: use step title as flowName (e.g., P3 → flowName P3)
   // 4. Limit by steps (contentCount from config)
   const filteredContent = useMemo(() => {
-    // Use API mechanics_data when available instead of hardcoded content
-    if (mechanicsData && mechanicsData.length > 0) {
-      const transformed = mechanicsData.map((item) => ({
-        correctWord: item.text,
-        audio: getAssetAudioUrl(item.audio_url),
-        allwords: item.options.map((opt) => ({
-          text: opt.text,
-          img: getAssetUrl(opt.image_url),
-          audio: getAssetAudioUrl(opt.audio_url),
-        })),
-        flowName: "API",
-        type: "soundMatch",
-      }));
-      return steps && steps > 0 ? transformed.slice(0, steps) : transformed;
-    }
+    const apiContent = transformSoundHuntMechanicsData(mechanicsData, steps);
+    if (apiContent) return apiContent;
 
     // Get milestone level (level prop is number like 1, 2, etc.)
     const milestoneLevel = level ? `m${level}` : null;
@@ -4251,6 +4255,10 @@ const SoundHunt = ({
       )}
     </MainLayout>
   );
+};
+
+SoundHunt.propTypes = {
+  mechanicsData: PropTypes.array,
 };
 
 export default SoundHunt;

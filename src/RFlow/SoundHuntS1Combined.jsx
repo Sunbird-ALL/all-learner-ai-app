@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
 import * as s3Assets from "../utils/s3Links";
@@ -10759,6 +10760,10 @@ const SoundHuntS1Combined = ({
       </div>
     </MainLayout>
   );
+};
+
+SoundHuntS1Combined.propTypes = {
+  mechanicsData: PropTypes.array,
 };
 
 export default SoundHuntS1Combined;
