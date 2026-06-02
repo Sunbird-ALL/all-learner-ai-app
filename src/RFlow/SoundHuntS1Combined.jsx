@@ -9385,6 +9385,7 @@ const SoundHuntS1Combined = ({
   rStep,
   vocabCount,
   wordCount,
+  mechanicsData,
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedWord, setSelectedWord] = useState(null);
@@ -9429,31 +9430,46 @@ const SoundHuntS1Combined = ({
     const targetFlowName =
       currentLevel === "S1" ? "S1" : currentLevel === "S2" ? "S2" : "S1";
 
-    // Get soundMatch content for the current language and level
-    const soundMatchForLevel = soundMatchContent[language]?.[level] || [];
+    // Prefer API mechanics_data over hardcoded content for both question types
+    let soundMatchFiltered;
+    let pictureWordsFiltered;
+    if (mechanicsData && mechanicsData.length > 0) {
+      soundMatchFiltered = mechanicsData.map((item) => ({
+        correctWord: item.text,
+        audio: getAssetAudioUrl(item.audio_url),
+        allwords: item.options.map((opt) => ({
+          text: opt.text,
+          img: getAssetUrl(opt.image_url),
+          audio: getAssetAudioUrl(opt.audio_url),
+        })),
+        flowName: targetFlowName,
+        type: "soundMatch",
+      }));
+      pictureWordsFiltered = mechanicsData.map((item) => ({
+        word: item.text,
+        audioOptions: item.options.map((opt) => ({
+          audio: getAssetAudioUrl(opt.audio_url),
+          isCorrect: opt.isAns,
+        })),
+        flowName: targetFlowName,
+        type: "pictureWords",
+      }));
+    } else {
+      const soundMatchForLevel = soundMatchContent[language]?.[level] || [];
+      soundMatchFiltered = soundMatchForLevel.filter(
+        (item) => item.flowName === targetFlowName
+      );
+      const pictureWordsForLevel = pictureWordsContent[language]?.[level] || [];
+      pictureWordsFiltered = pictureWordsForLevel.filter(
+        (item) => item.flowName === targetFlowName
+      );
+    }
 
-    // Filter soundMatch content by target flowName
-    const soundMatchFiltered = soundMatchForLevel.filter(
-      (item) => item.flowName === targetFlowName
-    );
-
-    // Get pictureWords content for the current language and level
-    const pictureWordsForLevel = pictureWordsContent[language]?.[level] || [];
-
-    // Filter pictureWords content by target flowName
-    const pictureWordsFiltered = pictureWordsForLevel.filter(
-      (item) => item.flowName === targetFlowName
-    );
-
-    // Randomly select 10 from soundMatch (or all if less than 10)
     const randomSoundMatch = getRandomItems(soundMatchFiltered, 10);
-
-    // Randomly select 10 from pictureWords (or all if less than 10)
     const randomPictureWords = getRandomItems(pictureWordsFiltered, 10);
 
-    // Combine: first 10 soundMatch, then 10 pictureWords
     return [...randomSoundMatch, ...randomPictureWords];
-  }, [level, currentLevel, language]);
+  }, [level, currentLevel, language, mechanicsData]);
 
   // Audio recording state
   const mediaRecorderRef = React.useRef(null);

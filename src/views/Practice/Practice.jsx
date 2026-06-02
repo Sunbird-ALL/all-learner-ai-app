@@ -4288,6 +4288,9 @@ const Practice = () => {
           isShowCase={false}
           {...commonProps}
           customLetters={customLetters}
+          mechanicsData={questions
+            .map((q) => q.mechanics_data?.[0])
+            .filter(Boolean)}
         />
       );
     } else if (
@@ -4347,7 +4350,13 @@ const Practice = () => {
       };
 
       return (
-        <SoundHuntS1Combined {...commonProps} customLetters={customLetters} />
+        <SoundHuntS1Combined
+          {...commonProps}
+          customLetters={customLetters}
+          mechanicsData={questions
+            .map((q) => q.mechanics_data?.[0])
+            .filter(Boolean)}
+        />
       );
     } else if (readMatch === "true") {
       return (

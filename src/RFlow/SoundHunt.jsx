@@ -3712,6 +3712,7 @@ const SoundHunt = ({
   rStep,
   vocabCount,
   wordCount,
+  mechanicsData,
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedWord, setSelectedWord] = useState(null);
@@ -3743,6 +3744,22 @@ const SoundHunt = ({
   //    - Other steps: use step title as flowName (e.g., P3 → flowName P3)
   // 4. Limit by steps (contentCount from config)
   const filteredContent = useMemo(() => {
+    // Use API mechanics_data when available instead of hardcoded content
+    if (mechanicsData && mechanicsData.length > 0) {
+      const transformed = mechanicsData.map((item) => ({
+        correctWord: item.text,
+        audio: getAssetAudioUrl(item.audio_url),
+        allwords: item.options.map((opt) => ({
+          text: opt.text,
+          img: getAssetUrl(opt.image_url),
+          audio: getAssetAudioUrl(opt.audio_url),
+        })),
+        flowName: "API",
+        type: "soundMatch",
+      }));
+      return steps && steps > 0 ? transformed.slice(0, steps) : transformed;
+    }
+
     // Get milestone level (level prop is number like 1, 2, etc.)
     const milestoneLevel = level ? `m${level}` : null;
     const language = getLocalData("lang");
@@ -3795,7 +3812,7 @@ const SoundHunt = ({
 
     // Default: return all filtered content for the step
     return stepContent;
-  }, [steps, progressData, level]);
+  }, [steps, progressData, level, mechanicsData]);
 
   const handleWordClick = (word) => {
     setSelectedWord(word);
