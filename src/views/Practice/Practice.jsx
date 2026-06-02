@@ -4290,7 +4290,7 @@ const Practice = () => {
           customLetters={customLetters}
           mechanicsData={questions
             .map((q) => q.mechanics_data?.[0])
-            .filter(Boolean)}
+            .filter((item) => item && Array.isArray(item.options) && item.options.length > 0)}
         />
       );
     } else if (
@@ -4355,7 +4355,7 @@ const Practice = () => {
           customLetters={customLetters}
           mechanicsData={questions
             .map((q) => q.mechanics_data?.[0])
-            .filter(Boolean)}
+            .filter((item) => item && Array.isArray(item.options) && item.options.length > 0)}
         />
       );
     } else if (readMatch === "true") {
