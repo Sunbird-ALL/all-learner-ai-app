@@ -616,7 +616,7 @@ const MainLayout = (props) => {
     if (containerWidth === 0) return 5; // Default to 5 if width not measured yet
 
     // Step dimensions based on screen size
-    const stepWidth = isMobile ? 22 : isTablet ? 32 : 36; // xs: 22px, sm: 32px, md: 36px, lg: 40px
+    const stepWidth = isMobile ? 28 : isTablet ? 32 : 40; // xs: 28px, sm: 32px, md: 36px, lg: 40px
     const stepMargin = isMobile ? 4 : isTablet ? 8 : 12; // xs: 0.5 * 8px, sm: 1 * 8px, md: 1.5 * 8px
     const containerPadding = isMobile ? 16 : isTablet ? 24 : 32; // xs: 8px*2, sm: 12px*2, md: 16px*2
     const buttonWidth = isMobile ? 24 : isTablet ? 48 : 56; // Button width
@@ -828,7 +828,6 @@ const MainLayout = (props) => {
 
   // Update progress bar start index when current step changes to keep it visible
   useEffect(() => {
-    const stepChanged = lastPracticeStepRef.current !== currentPracticeStep;
     lastPracticeStepRef.current = currentPracticeStep;
 
     if (totalSteps <= VISIBLE_STEPS) {
@@ -836,27 +835,25 @@ const MainLayout = (props) => {
       return;
     }
 
-    if (stepChanged) {
-      // Calculate if current step is in the current visible range
-      const currentStart = progressBarStartIndex;
-      const currentEnd = Math.min(currentStart + VISIBLE_STEPS, totalSteps);
+    // Calculate if current step is in the current visible range
+    const currentStart = progressBarStartIndex;
+    const currentEnd = Math.min(currentStart + VISIBLE_STEPS, totalSteps);
 
-      // If current step is outside visible range, adjust to center it
-      if (
-        currentPracticeStep < currentStart ||
-        currentPracticeStep >= currentEnd
-      ) {
-        // Center current step: show 2 before and 2 after (or adjust if near edges)
-        let newStart;
-        if (currentPracticeStep < 2) {
-          newStart = 0;
-        } else if (currentPracticeStep >= totalSteps - 2) {
-          newStart = Math.max(0, totalSteps - VISIBLE_STEPS);
-        } else {
-          newStart = Math.max(0, currentPracticeStep - 2);
-        }
-        setProgressBarStartIndex(newStart);
+    // If current step is outside visible range, adjust to center it
+    if (
+      currentPracticeStep < currentStart ||
+      currentPracticeStep >= currentEnd
+    ) {
+      // Center current step: show 2 before and 2 after (or adjust if near edges)
+      let newStart;
+      if (currentPracticeStep < 2) {
+        newStart = 0;
+      } else if (currentPracticeStep >= totalSteps - 2) {
+        newStart = Math.max(0, totalSteps - VISIBLE_STEPS);
+      } else {
+        newStart = Math.max(0, currentPracticeStep - 2);
       }
+      setProgressBarStartIndex(newStart);
     }
   }, [currentPracticeStep, totalSteps, VISIBLE_STEPS]);
 

@@ -2079,13 +2079,13 @@ const Assesment = ({ discoverStart }) => {
     //   rFlow === "true" ? rOneImage : images?.[`desktopLevel${level || 1}`]
     // })`,
     backgroundImage: `url(${rFlow === "true"
-      ? level == 1
+      ? Number(level) === 1
         ? rOneImage
-        : level == 2 && rStep === 2
+        : Number(level) === 2 && rStep === 2
           ? rTwoImage
-          : level == 2 && rStep === 3
+          : Number(level) === 2 && rStep === 3
             ? rThreeImage
-            : level == 2 && rStep === 4
+            : Number(level) === 2 && rStep === 4
               ? rFourImage
               : images?.[imageKey]
       : images?.[imageKey]

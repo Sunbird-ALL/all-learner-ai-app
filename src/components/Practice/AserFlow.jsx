@@ -173,7 +173,15 @@ const AserFlow = ({
         let resAssessment;
 
         if (charDiscoveryRaw) {
-          const parsed = JSON.parse(charDiscoveryRaw);
+          let parsed = null;
+          try {
+            parsed = JSON.parse(charDiscoveryRaw);
+          } catch (parseError) {
+            // Corrupt session data — clear it and fall through to a fresh fetch
+            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_SESSION);
+            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.STATE);
+            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
+          }
           if (parsed && parsed.lang === lang) {
             sentences = { collectionId: parsed.collectionId, name: parsed.storyTitle };
             resAssessment = { data: [] };
