@@ -907,10 +907,19 @@ export const ProfileHeader = ({
   const handleProfileBack = () => {
     try {
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        const targetOrigin = (() => {
+          if (window?.location?.ancestorOrigins?.[0]) {
+            return window.location.ancestorOrigins[0];
+          }
+          try {
+            return window.parent.location.origin;
+          } catch (_) {
+            return "*";
+          }
+        })();
         window.parent.postMessage(
           { type: "restore-iframe-content" },
-          window?.location?.ancestorOrigins?.[0] ||
-          window.parent.location.origin
+          targetOrigin
         );
         navigate("/");
       } else {
@@ -1798,8 +1807,8 @@ const Assesment = ({ discoverStart }) => {
           setLevel(parsedLevel);
 
           setVocabCount(
-            getMilestoneDetails?.data?.extra?.vocabulary_count +
-            getMilestoneDetails?.data?.extra?.learned_voc_count || 0
+            (getMilestoneDetails?.data?.extra?.vocabulary_count || 0) +
+            (getMilestoneDetails?.data?.extra?.learned_voc_count || 0)
           );
           setWordCount(
             getMilestoneDetails?.data?.extra?.latest_towre_data
