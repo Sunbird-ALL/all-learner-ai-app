@@ -1,3 +1,5 @@
+import { imageUrl } from "../../../../audio";
+
 interface PlanetIconProps {
   level?: number;
   destination?: string;
@@ -7,16 +9,16 @@ interface PlanetIconProps {
 }
 
 const PLANET_CONFIG: Record<number, { image: string; label: string }> = {
-  1: { image: '/images/moon.png', label: 'Moon' },
-  2: { image: '/images/mars.png', label: 'Mars' },
-  3: { image: '/images/jupiter.png', label: 'Jupiter' },
-  4: { image: '/images/saturn.png', label: 'Saturn' },
-  5: { image: '/images/venus.png', label: 'Venus' },
-  6: { image: '/images/uranus.png', label: 'Uranus' },
-  7: { image: '/images/neptune.png', label: 'Neptune' },
-  8: { image: '/images/mercury.png', label: 'Mercury' },
-  9: { image: '/images/pluto.png', label: 'Pluto' },
-  10: { image: '/images/sun.png', label: 'Sun' },
+  1: { image: imageUrl('moon.png'), label: 'Moon' },
+  2: { image: imageUrl('mars.png'), label: 'Mars' },
+  3: { image: imageUrl('jupiter.png'), label: 'Jupiter' },
+  4: { image: imageUrl('saturn.png'), label: 'Saturn' },
+  5: { image: imageUrl('venus.png'), label: 'Venus' },
+  6: { image: imageUrl('uranus.png'), label: 'Uranus' },
+  7: { image: imageUrl('neptune.png'), label: 'Neptune' },
+  8: { image: imageUrl('mercury.png'), label: 'Mercury' },
+  9: { image: imageUrl('pluto.png'), label: 'Pluto' },
+  10: { image: imageUrl('sun.png'), label: 'Sun' },
 };
 
 export function PlanetIcon({ level, destination, className = 'text-4xl', alt, animated = false }: PlanetIconProps) {

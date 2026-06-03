@@ -30,6 +30,13 @@ export const audioUrl = (relativePath: string): string => {
     return `${BASE}/audio/${clean}`;
 };
 
+// Image URL builder — mirrors audioUrl, using the same BASE prefix.
+// Standalone: "/images/foo.png". Iframe: "/all-app/images/foo.png".
+export const imageUrl = (relativePath: string): string => {
+    const clean = relativePath.replace(/^\/?(images\/)?/, '');
+    return `${BASE}/images/${clean}`;
+};
+
 /*
  * Language code → folder name mapping used by per-letter audio.
  * Only te / kn / mr have dedicated folders; everything else (including 'hi'
