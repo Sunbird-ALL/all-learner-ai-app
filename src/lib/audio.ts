@@ -29,3 +29,31 @@ export const audioUrl = (relativePath: string): string => {
     const clean = relativePath.replace(/^\/?(audio\/)?/, '');
     return `${BASE}/audio/${clean}`;
 };
+
+/*
+ * Language code → folder name mapping used by per-letter audio.
+ * Only te / kn / mr have dedicated folders; everything else (including 'hi'
+ * and 'en') falls back to the 'english' folder — this exactly mirrors the
+ * pre-existing if-else behavior in the consuming game components.
+ */
+const LETTER_LANGUAGE_FOLDER: Record<string, string> = {
+    te: 'telugu',
+    kn: 'kannada',
+    mr: 'marathi',
+};
+
+// Build the URL for a single-letter audio file given a language code.
+// Equivalent to:
+//   te → audioUrl(`telugu/letter/${letter}.wav`)
+//   kn → audioUrl(`kannada/letter/${letter}.wav`)
+//   mr → audioUrl(`marathi/letter/${letter}.wav`)
+//   default → audioUrl(`english/letter/${letter}.wav`)
+export const letterAudioUrl = (lang: string, letter: string): string => {
+    const folder = LETTER_LANGUAGE_FOLDER[lang] ?? 'english';
+    return audioUrl(`${folder}/letter/${letter}.wav`);
+};
+
+// Build the URL for a sound-match audio file used by multiple game components.
+// Equivalent to: audioUrl(`audio-preview/combined-word-games/sound-match/${language}/${word}.wav`)
+export const soundMatchAudioUrl = (language: string, word: string): string =>
+    audioUrl(`audio-preview/combined-word-games/sound-match/${language}/${word}.wav`);

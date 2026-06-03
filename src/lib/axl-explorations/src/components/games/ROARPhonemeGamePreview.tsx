@@ -10,7 +10,7 @@ import { CountdownTimer } from "../CountdownTimer";
 import { DemoCompletionScreen } from "../DemoCompletionScreen";
 import { playAudio, playTTS, playSuccessSound, playFailureSound, stopAllAudio, isAudioStopped, trackAudio, attachSlowLoadToast } from "../../utils/audioUtils";
 import { ROARPhonemeGameCore, type ROARPhonemeQuestion } from "./ROARPhonemeGameCore";
-import { audioUrl } from "../../../../audio";
+import { soundMatchAudioUrl } from "../../../../audio";
 
 interface ROARPhonemeGamePreviewProps {
   onStartGame: () => void;
@@ -279,7 +279,7 @@ export function ROARPhonemeGamePreview({
     
     // Try to play audio file from sound-match folder first
     const word = text.toLowerCase().trim();
-    const audioPath = audioUrl(`audio-preview/combined-word-games/sound-match/${language}/${word}.wav`);
+    const audioPath = soundMatchAudioUrl(language, word);
     
     try {
       const audio = new Audio(audioPath);

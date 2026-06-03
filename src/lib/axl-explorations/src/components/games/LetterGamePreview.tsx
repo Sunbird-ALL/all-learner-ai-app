@@ -31,7 +31,7 @@ import {
   type LetterHuntQuestion,
 } from "./LetterHuntGameCore";
 import { setLocalData } from "../../../../../utils/constants";
-import { audioUrl } from "../../../../audio";
+import { letterAudioUrl } from "../../../../audio";
 
 interface LetterGamePreviewProps {
   onStartGame: () => void;
@@ -274,17 +274,7 @@ export function LetterGamePreview({
   const playAudioSound = async (text: string): Promise<void> => {
     return new Promise((resolve) => {
       // Determine the correct audio path based on language
-      let audioPath = "";
-      if (contentLanguage === "te") {
-        audioPath = audioUrl(`telugu/letter/${text}.wav`);
-      } else if (contentLanguage === "kn") {
-        audioPath = audioUrl(`kannada/letter/${text}.wav`);
-      } else if (contentLanguage === "mr") {
-        audioPath = audioUrl(`marathi/letter/${text}.wav`);
-      } else {
-        // Default to English for other languages
-        audioPath = audioUrl(`english/letter/${text}.wav`);
-      }
+      const audioPath = letterAudioUrl(contentLanguage, text);
 
       const audio = new Audio(audioPath);
 

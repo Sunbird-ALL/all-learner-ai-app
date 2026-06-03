@@ -4,7 +4,7 @@ import { Volume2 } from "lucide-react";
 import { Language } from "../../constants/languages";
 import { ContinueButton } from "./ContinueButton";
 import { attachSlowLoadToast } from "../../utils/audioUtils";
-import { audioUrl } from "../../../../audio";
+import { soundMatchAudioUrl } from "../../../../audio";
 
 export interface ROARPhonemeQuestion {
   target: {
@@ -81,7 +81,7 @@ export function ROARPhonemeGameCore({
     // Try to play audio file from sound-match folder first
     const word = text.toLowerCase().trim();
     console.log(word)
-    const audioPath = audioUrl(`audio-preview/combined-word-games/sound-match/${language}/${word}.wav`);
+    const audioPath = soundMatchAudioUrl(language, word);
     
     try {
       const audio = new Audio(audioPath);
