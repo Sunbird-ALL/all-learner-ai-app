@@ -2182,15 +2182,23 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             onClose();
           }}
           sx={{
-            color: "#666666",
+            color: isMobile ? "#444444" : "#666666",
             fontFamily: "Quicksand",
-            fontWeight: 600,
+            fontWeight: isMobile ? 700 : 600,
             textTransform: "none",
-            fontSize: { xs: "12px", sm: "14px", md: "16px" },
-            padding: { xs: "8px 12px", sm: "10px 16px" },
+            fontSize: isMobile ? "16px" : "14px",
+            padding: isMobile ? "8px 18px" : "10px 16px",
+            background: "transparent",
+            border: isMobile ? "1.5px solid rgba(100, 100, 100, 0.22)" : "none",
+            borderRadius: isMobile ? "20px" : "4px",
+            boxShadow: isMobile ? "0 2px 10px rgba(0,0,0,0.08)" : "none",
+            backdropFilter: isMobile ? "blur(6px)" : "none",
+            transition: "all 0.2s ease",
             "&:hover": {
               color: "#6DAF19",
-              background: "rgba(109, 175, 25, 0.1)",
+              background: "rgba(109, 175, 25, 0.08)",
+              borderColor: isMobile ? "rgba(109, 175, 25, 0.4)" : "transparent",
+              boxShadow: isMobile ? "0 4px 14px rgba(109, 175, 25, 0.15)" : "none",
             },
           }}
         >

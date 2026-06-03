@@ -333,10 +333,10 @@ const MainLayout = (props) => {
   let flowNames = isF3FlowActive
     ? getF3FlowNames() || props?.flowNames
     : isF2FlowActive
-    ? getF2FlowNames() || props?.flowNames
-    : isF1FlowActive
-    ? getF1FlowNames() || props?.flowNames
-    : props?.flowNames;
+      ? getF2FlowNames() || props?.flowNames
+      : isF1FlowActive
+        ? getF1FlowNames() || props?.flowNames
+        : props?.flowNames;
 
   // For F3 flow, set activeFlow based on current F3 step
   // For F2 flow, set activeFlow based on current F2 step
@@ -721,10 +721,10 @@ const MainLayout = (props) => {
   const displayPracticeSteps = isF3FlowActive
     ? getF3PracticeSteps() || practiceSteps
     : isF2FlowActive
-    ? getF2PracticeSteps() || practiceSteps
-    : isF1FlowActive
-    ? getF1PracticeSteps() || practiceSteps
-    : practiceSteps;
+      ? getF2PracticeSteps() || practiceSteps
+      : isF1FlowActive
+        ? getF1PracticeSteps() || practiceSteps
+        : practiceSteps;
 
   // Calculate visible steps range (show dynamic steps based on width, ensure current step is visible)
   const totalSteps = displayPracticeSteps?.length || 0;
@@ -898,9 +898,8 @@ const MainLayout = (props) => {
   };
   const sectionStyle = {
     width: "100%",
-    backgroundImage: `url(${
-      backgroundImage ? backgroundImage : levelsImages?.[LEVEL]?.background
-    })`,
+    backgroundImage: `url(${backgroundImage ? backgroundImage : levelsImages?.[LEVEL]?.background
+      })`,
     backgroundSize: "cover",
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
@@ -967,10 +966,10 @@ const MainLayout = (props) => {
               LEVEL === 1
                 ? "3px"
                 : LEVEL === 2
-                ? "40px"
-                : LEVEL === 3
-                ? "78px"
-                : "78px",
+                  ? "40px"
+                  : LEVEL === 3
+                    ? "78px"
+                    : "78px",
           }}
         >
           <img
@@ -1243,10 +1242,10 @@ const MainLayout = (props) => {
                                 props.rStep === 2
                                   ? Assets.r2MileImg
                                   : props.rStep === 3
-                                  ? Assets.r3MileImg
-                                  : props.rStep === 4
-                                  ? Assets.r4MileImg
-                                  : null
+                                    ? Assets.r3MileImg
+                                    : props.rStep === 4
+                                      ? Assets.r4MileImg
+                                      : null
                               }
                               alt={`R Step ${props.rStep}`}
                               height={isMobile ? "130px" : "200px"}
@@ -1405,8 +1404,8 @@ const MainLayout = (props) => {
                                         currentPracticeStep > actualIndex
                                           ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
                                           : currentPracticeStep === actualIndex
-                                          ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
-                                          : "rgba(0, 0, 0, 0.04)",
+                                            ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
+                                            : "rgba(0, 0, 0, 0.04)",
                                       ml:
                                         visibleIndex > 0
                                           ? { xs: 0.5, sm: 1, md: 1.5 }
@@ -1438,18 +1437,18 @@ const MainLayout = (props) => {
                                           fontSize: isMobile
                                             ? "9px"
                                             : isTablet
-                                            ? "12px"
-                                            : "14px",
+                                              ? "12px"
+                                              : "14px",
                                           fontFamily: "Quicksand",
                                         }}
                                       >
                                         {LEVEL === 1
                                           ? elem.title
                                           : LEVEL === 2
-                                          ? elem.titleNew
-                                          : LEVEL === 3
-                                          ? elem.titleNew
-                                          : elem.name}
+                                            ? elem.titleNew
+                                            : LEVEL === 3
+                                              ? elem.titleNew
+                                              : elem.name}
                                       </span>
                                     )}
                                   </Box>
@@ -1577,8 +1576,8 @@ const MainLayout = (props) => {
                                                 ? "linear-gradient(90deg, #FF4BC2 0%, #C20281 95%)"
                                                 : flowNames?.indexOf(flow) <
                                                   flowNames?.indexOf(activeFlow)
-                                                ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
-                                                : "rgba(0, 0, 0, 0.04)",
+                                                  ? "linear-gradient(90deg, rgba(132, 246, 48, 0.1) 0%, rgba(64, 149, 0, 0.1) 95%)"
+                                                  : "rgba(0, 0, 0, 0.04)",
                                             ml: {
                                               xs: 0.5,
                                               sm: 0.5,
@@ -1594,7 +1593,7 @@ const MainLayout = (props) => {
                                           }}
                                         >
                                           {flowNames?.indexOf(flow) <
-                                          flowNames?.indexOf(activeFlow) ? (
+                                            flowNames?.indexOf(activeFlow) ? (
                                             <GreenTick />
                                           ) : (
                                             <span
@@ -1624,7 +1623,7 @@ const MainLayout = (props) => {
                                       ml: 1,
                                       visibility:
                                         currentPageStart + 10 >=
-                                        flowNames?.length
+                                          flowNames?.length
                                           ? "hidden"
                                           : "visible",
                                     }}
@@ -1707,7 +1706,12 @@ const MainLayout = (props) => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  backgroundImage: `url(${cardBackground || textureImage})`,
+                  backgroundImage: {
+                    xs: isShowCase && !startShowCase && !gameOverData
+                      ? "none"
+                      : `url(${cardBackground || textureImage})`,
+                    md: `url(${cardBackground || textureImage})`,
+                  },
                   backgroundSize: "contain",
                   backgroundRepeat: "round",
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
@@ -1744,6 +1748,8 @@ const MainLayout = (props) => {
                     overflowY: { xs: "auto", md: "unset" },
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
+                    display: { xs: "flex", md: "block" },
+                    flexDirection: { xs: "column", md: "unset" },
                     "&::-webkit-scrollbar": {
                       width: "4px",
                     },
@@ -1757,7 +1763,16 @@ const MainLayout = (props) => {
                   }}
                 >
                   {isShowCase && !startShowCase && !gameOverData && (
-                    <>
+                    <Box
+                      sx={{
+                        display: { xs: "flex", md: "block" },
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexGrow: { xs: 1, md: "unset" },
+                        width: "100%",
+                      }}
+                    >
                       <Typography
                         className="successHeader"
                         sx={{
@@ -1786,7 +1801,7 @@ const MainLayout = (props) => {
                           {"Ready for Challenge?"}
                         </span>
                       </Typography>
-                    </>
+                    </Box>
                   )}
                   {gameOverData && (
                     <>
@@ -1994,8 +2009,8 @@ const MainLayout = (props) => {
                                               )}
                                               <audio
                                                 ref={(el) =>
-                                                  (audioRefs.current[index] =
-                                                    el)
+                                                (audioRefs.current[index] =
+                                                  el)
                                                 }
                                                 src={elem?.audioUrl}
                                               />
@@ -2049,43 +2064,43 @@ const MainLayout = (props) => {
                                       [10, 11, 12, 13, 14, 15].includes(
                                         LEVEL
                                       )) && (
-                                      <Stack
-                                        sx={{
-                                          mt: 2,
-                                          pt: 2,
-                                          borderTop: "1px dashed #e0e0e0",
-                                          backgroundColor:
-                                            "rgba(255, 152, 0, 0.08)",
-                                          borderRadius: "10px",
-                                          padding: "12px",
-                                          marginTop: "16px",
-                                        }}
-                                        justifyContent={"center"}
-                                        alignItems={"center"}
-                                        direction={"row"}
-                                        spacing={1.5}
-                                      >
-                                        <img
-                                          src={Assets.turtle}
-                                          alt="turtleImage"
-                                          style={{
-                                            width: "45px",
-                                            height: "45px",
+                                        <Stack
+                                          sx={{
+                                            mt: 2,
+                                            pt: 2,
+                                            borderTop: "1px dashed #e0e0e0",
+                                            backgroundColor:
+                                              "rgba(255, 152, 0, 0.08)",
+                                            borderRadius: "10px",
+                                            padding: "12px",
+                                            marginTop: "16px",
                                           }}
-                                        />
-                                        <span
-                                          style={{
-                                            color: "#E65100",
-                                            fontWeight: 700,
-                                            lineHeight: "22px",
-                                            fontSize: "15px",
-                                            fontFamily: "Quicksand",
-                                          }}
+                                          justifyContent={"center"}
+                                          alignItems={"center"}
+                                          direction={"row"}
+                                          spacing={1.5}
                                         >
-                                          {"Oops, a bit slow!"}
-                                        </span>
-                                      </Stack>
-                                    )}
+                                          <img
+                                            src={Assets.turtle}
+                                            alt="turtleImage"
+                                            style={{
+                                              width: "45px",
+                                              height: "45px",
+                                            }}
+                                          />
+                                          <span
+                                            style={{
+                                              color: "#E65100",
+                                              fontWeight: 700,
+                                              lineHeight: "22px",
+                                              fontSize: "15px",
+                                              fontFamily: "Quicksand",
+                                            }}
+                                          >
+                                            {"Oops, a bit slow!"}
+                                          </span>
+                                        </Stack>
+                                      )}
                                   </Box>
                                 )}
                             </Stack>

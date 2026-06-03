@@ -341,18 +341,18 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
             transform: "translateX(-50%)",
             backgroundColor: "white",
             boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-            padding: isMobile ? "6px 10px" : "16px 24px",
+            padding: isMobile ? "14px 12px" : "16px 24px",
             position: "absolute",
             top: isMobile ? "80px" : "160px",
             borderRadius: "12px",
             zIndex: 10000,
             left: "50%",
-            width: isMobile ? "180px" : "auto",
+            width: isMobile ? "190px" : "auto",
           }}
         >
           <div
             className={`items-center flex flex-col ${
-              isMobile ? "mb-1" : "mb-4"
+              isMobile ? "mb-0" : "mb-4"
             }`}
           >
             <div
@@ -371,7 +371,7 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
               </div>
               <h2
                 className={`font-bold text-gray-800 ${
-                  isMobile ? "text-xs" : "text-base"
+                  isMobile ? "text-sm" : "text-base"
                 }`}
               >
                 {instructions.howToPlay}

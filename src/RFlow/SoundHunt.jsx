@@ -3699,7 +3699,7 @@ const SoundHunt = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => {},
+  playTeacherAudio = () => { },
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -3884,7 +3884,7 @@ const SoundHunt = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: isMobile ? "flex-start" : "center",
             bottom: isMobile ? "5px" : "auto",
             left: isMobile ? "5px" : "auto",
             position: isMobile ? "absolute" : "relative",
@@ -3896,6 +3896,7 @@ const SoundHunt = ({
             boxSizing: "border-box",
             background: "linear-gradient(180deg, #91E7EF 0%, #42C6FF 100%)",
             padding: "16px",
+            paddingTop: isMobile ? "20px" : "16px",
             overflow: "hidden",
           }}
         >
@@ -3933,81 +3934,94 @@ const SoundHunt = ({
                 ))}
               </div>
 
-              {selectedWord === currentQuestion?.correctWord ? (
-                <div
-                  style={{
-                    width: "45px",
-                    height: "45px",
-                    borderRadius: "50%",
-                    backgroundColor: "#fff",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                    marginBottom: "75px",
-                  }}
-                >
-                  <img
-                    src={Assets.tickImg}
-                    alt="Tick"
-                    style={{ width: "50px", height: "50px" }}
-                  />
-                </div>
-              ) : wrongWord ? (
-                <div
-                  style={{
-                    width: "45px",
-                    height: "45px",
-                    borderRadius: "60%",
-                    backgroundColor: "rgba(255, 127, 54, 0.8)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                    border: "4px solid #FFFFFF",
-                    marginBottom: "75px",
-                  }}
-                >
-                  <img
-                    src={Assets.xImg}
-                    alt="Wrong"
-                    style={{ width: "25px", height: "25px" }}
-                  />
-                </div>
-              ) : (
-                <button
-                  onClick={handlePlayAudio}
-                  disabled={isPlaying}
-                  style={{
-                    position: "relative",
-                    marginBottom: "75px",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  <img
-                    src={
-                      isPlaying ? Assets.pauseButtonImg : Assets.playButtonImg
-                    }
-                    alt="Audio"
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  order: isMobile ? 2 : 0,
+                  marginTop: isMobile ? "24px" : "0px",
+                  marginBottom: isMobile ? "10px" : "0px",
+                }}
+              >
+                {selectedWord === currentQuestion?.correctWord ? (
+                  <div
                     style={{
-                      width: "55px",
-                      height: "55px",
-                      transform: `scale(${scale})`,
-                      transition: "transform 0.5s ease-in-out",
+                      width: "45px",
+                      height: "45px",
+                      borderRadius: "50%",
+                      backgroundColor: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                      marginBottom: isMobile ? "0px" : "75px",
                     }}
-                  />
-                </button>
-              )}
+                  >
+                    <img
+                      src={Assets.tickImg}
+                      alt="Tick"
+                      style={{ width: "50px", height: "50px" }}
+                    />
+                  </div>
+                ) : wrongWord ? (
+                  <div
+                    style={{
+                      width: "45px",
+                      height: "45px",
+                      borderRadius: "60%",
+                      backgroundColor: "rgba(255, 127, 54, 0.8)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                      border: "4px solid #FFFFFF",
+                      marginBottom: isMobile ? "0px" : "75px",
+                    }}
+                  >
+                    <img
+                      src={Assets.xImg}
+                      alt="Wrong"
+                      style={{ width: "25px", height: "25px" }}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    onClick={handlePlayAudio}
+                    disabled={isPlaying}
+                    style={{
+                      position: "relative",
+                      marginBottom: isMobile ? "0px" : "75px",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img
+                      src={
+                        isPlaying ? Assets.pauseButtonImg : Assets.playButtonImg
+                      }
+                      alt="Audio"
+                      style={{
+                        width: "55px",
+                        height: "55px",
+                        transform: `scale(${scale})`,
+                        transition: "transform 0.5s ease-in-out",
+                      }}
+                    />
+                  </button>
+                )}
+              </div>
 
               <div
                 style={{
                   display: "flex",
-                  gap: isMobile ? "18px" : "24px",
-                  marginTop: isMobile ? "32px" : "24px",
+                  flexDirection: isMobile ? "column" : "row",
+                  gap: isMobile ? "12px" : "24px",
+                  marginTop: isMobile ? "10px" : "24px",
                   justifyContent: "center",
                   alignItems: "center",
+                  order: isMobile ? 1 : 0,
                 }}
               >
                 {currentQuestion?.allwords.map((item, index) => {
@@ -4022,19 +4036,22 @@ const SoundHunt = ({
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        flexShrink: 0,
                         backgroundColor: isCorrect
                           ? "rgba(117, 209, 0, 0.6)"
                           : isWrong
-                          ? "rgba(255, 127, 54, 0.8)"
-                          : "#FFFFFF",
-                        padding: "8px",
-                        borderRadius: "24px",
+                            ? "rgba(255, 127, 54, 0.8)"
+                            : "#FFFFFF",
+                        padding: isMobile ? "6px" : "8px",
+                        borderRadius: isMobile ? "28px" : "24px",
                         boxShadow: isMobile
                           ? "0px 8px 20px rgba(0, 0, 0, 0.12)"
                           : "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                        border: "2px solid rgba(255, 255, 255, 0.7)",
-                        width: isMobile ? "79px" : "128px",
-                        height: isMobile ? "79px" : "128px",
+                        border: isMobile
+                          ? "1px solid rgba(255, 255, 255, 0.8)"
+                          : "2px solid rgba(255, 255, 255, 0.7)",
+                        width: isMobile ? "125px" : "128px",
+                        height: isMobile ? "125px" : "128px",
                         backdropFilter: "blur(56px)",
                         WebkitBackdropFilter: "blur(56px)",
                         cursor: isAudioPlayedOnce ? "pointer" : "not-allowed",
@@ -4043,25 +4060,25 @@ const SoundHunt = ({
                           selectedWord === item.text
                             ? "scale(1.12)"
                             : wrongWord === item.text
-                            ? "scale(0.9)"
-                            : "scale(1)",
+                              ? "scale(0.9)"
+                              : "scale(1)",
                         transition:
                           "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                         "&:hover": isAudioPlayedOnce
                           ? {
-                              transform:
-                                selectedWord === item.text
-                                  ? "scale(1.12)"
-                                  : "scale(1.06)",
-                              boxShadow: isMobile
-                                ? "0px 10px 24px rgba(0, 0, 0, 0.16)"
-                                : "0px 8px 16px rgba(0, 0, 0, 0.15)",
-                            }
+                            transform:
+                              selectedWord === item.text
+                                ? "scale(1.12)"
+                                : "scale(1.06)",
+                            boxShadow: isMobile
+                              ? "0px 10px 24px rgba(0, 0, 0, 0.16)"
+                              : "0px 8px 16px rgba(0, 0, 0, 0.15)",
+                          }
                           : {},
                         "&:active": isAudioPlayedOnce
                           ? {
-                              transform: "scale(0.95)",
-                            }
+                            transform: "scale(0.95)",
+                          }
                           : {},
                       }}
                       onClick={() => {
@@ -4074,8 +4091,8 @@ const SoundHunt = ({
                         src={item.img}
                         alt={item.text}
                         style={{
-                          width: isMobile ? "63px" : "110px",
-                          height: isMobile ? "63px" : "110px",
+                          width: "100%",
+                          height: "100%",
                           objectFit: "contain",
                           borderRadius: isMobile ? "16px" : "20px",
                         }}
@@ -4093,20 +4110,24 @@ const SoundHunt = ({
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "80px",
+                height: isMobile ? "100%" : "auto",
+                width: "100%",
+                gap: isMobile ? "40px" : "80px",
+                paddingBottom: isMobile ? "40px" : "0px",
+                boxSizing: "border-box",
               }}
             >
               <div
                 style={{
                   backgroundColor: "#FFFFFF",
-                  padding: "8px",
-                  borderRadius: isMobile ? "26px" : "24px",
+                  padding: isMobile ? "10px" : "8px",
+                  borderRadius: isMobile ? "36px" : "24px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                   border: isMobile
-                    ? "5px solid rgba(255, 255, 255, 0.8)"
+                    ? "1.5px solid rgba(255, 255, 255, 0.8)"
                     : "2px solid rgba(255, 255, 255, 0.5)",
-                  width: isMobile ? "100px" : "128px",
-                  height: isMobile ? "120px" : "128px",
+                  width: isMobile ? "240px" : "128px",
+                  height: isMobile ? "240px" : "128px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -4114,16 +4135,17 @@ const SoundHunt = ({
                   WebkitBackdropFilter: "blur(56px)",
                   cursor: "pointer",
                   transition: "background-color 0.3s ease-in-out",
+                  flexShrink: 0,
                 }}
-                //onClick={() => handleWordClick(currentQuestion.correctWord)}
+              //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
                 <img
                   src={correctImage}
                   alt={currentQuestion.correctWord}
                   style={{
-                    width: isMobile ? "100px" : "110px",
-                    height: isMobile ? "100px" : "110px",
-                    borderRadius: isMobile ? "22px" : "20px",
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: isMobile ? "28px" : "20px",
                     objectFit: "contain",
                   }}
                 />
@@ -4145,7 +4167,11 @@ const SoundHunt = ({
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "80px",
+                height: isMobile ? "100%" : "auto",
+                width: "100%",
+                gap: isMobile ? "40px" : "80px",
+                paddingBottom: isMobile ? "40px" : "0px",
+                boxSizing: "border-box",
               }}
             >
               <div
@@ -4154,29 +4180,30 @@ const SoundHunt = ({
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: "#FFFFFF",
-                  padding: "8px",
-                  borderRadius: isMobile ? "32px" : "24px",
+                  padding: isMobile ? "10px" : "8px",
+                  borderRadius: isMobile ? "36px" : "24px",
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                   border: isMobile
-                    ? "5px solid rgba(255, 255, 255, 0.8)"
+                    ? "1.5px solid rgba(255, 255, 255, 0.8)"
                     : "2px solid rgba(255, 255, 255, 0.5)",
-                  width: isMobile ? "100px" : "128px",
-                  height: isMobile ? "100px" : "128px",
+                  width: isMobile ? "240px" : "128px",
+                  height: isMobile ? "240px" : "128px",
                   backdropFilter: "blur(56px)",
                   WebkitBackdropFilter: "blur(56px)",
                   cursor: "pointer",
                   transition: "background-color 0.3s ease-in-out",
+                  flexShrink: 0,
                 }}
-                //onClick={() => handleWordClick(currentQuestion.correctWord)}
+              //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
                 <img
                   src={correctImage}
                   alt={currentQuestion.correctWord}
                   style={{
                     objectFit: "contain",
-                    width: isMobile ? "74px" : "110px",
-                    height: isMobile ? "74px" : "110px",
-                    borderRadius: isMobile ? "24px" : "20px",
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: isMobile ? "28px" : "20px",
                   }}
                 />
               </div>

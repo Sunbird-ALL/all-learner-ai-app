@@ -654,6 +654,22 @@ export const ProfileHeader = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const menuRef = React.useRef(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleOutsideClick = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("touchstart", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick);
+    };
+  }, [menuOpen]);
   const [animatedVocabCount, setAnimatedVocabCount] = useState(0);
   const [animatedWordCount, setAnimatedWordCount] = useState(0);
   const [milestone, setMilestone] = useState(0);
@@ -812,8 +828,8 @@ export const ProfileHeader = ({
       }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("alphabetDemoComplete", handleDemoEvent);
+    globalThis.addEventListener("storage", handleStorageChange);
+    globalThis.addEventListener("alphabetDemoComplete", handleDemoEvent);
 
     // 🔇 Listen for stop signal from Practice.jsx (non-milestone cleanup)
     const handleDemoStop = () => {
@@ -827,12 +843,12 @@ export const ProfileHeader = ({
       setLocalData("showAlphabetDemo", "false");
       setIsAlphabetDemoActive(false);
     };
-    window.addEventListener("alphabetDemoStop", handleDemoStop);
+    globalThis.addEventListener("alphabetDemoStop", handleDemoStop);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("alphabetDemoComplete", handleDemoEvent);
-      window.removeEventListener("alphabetDemoStop", handleDemoStop);
+      globalThis.removeEventListener("storage", handleStorageChange);
+      globalThis.removeEventListener("alphabetDemoComplete", handleDemoEvent);
+      globalThis.removeEventListener("alphabetDemoStop", handleDemoStop);
 
       if (chartAudioRef.current) {
         chartAudioRef.current.pause();
@@ -908,16 +924,20 @@ export const ProfileHeader = ({
     try {
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
         const targetOrigin = (() => {
-          if (window?.location?.ancestorOrigins?.[0]) {
-            return window.location.ancestorOrigins[0];
+          if (globalThis?.location?.ancestorOrigins?.[0]) {
+            return globalThis.location.ancestorOrigins[0];
           }
           try {
-            return window.parent.location.origin;
-          } catch (_) {
+            return globalThis.parent.location.origin;
+          } catch (error) {
+            console.warn(
+              "Cross-origin access restriction on parent location, falling back to wildcard origin.",
+              error
+            );
             return "*";
           }
         })();
-        window.parent.postMessage(
+        globalThis.parent.postMessage(
           { type: "restore-iframe-content" },
           targetOrigin
         );
@@ -1012,25 +1032,25 @@ export const ProfileHeader = ({
                   src={profilePic}
                   alt="profile-pic"
                   style={{
-                    height: isMobile ? "25px" : "30px",
-                    width: isMobile ? "25px" : "30px",
+                    height: isMobile ? "35px" : "30px",
+                    width: isMobile ? "35px" : "30px",
                     borderRadius: "50%",
                     objectFit: "cover",
                   }}
                 />
               </Box>
-              <Box ml={isMobile ? "4px" : "12px"} sx={{ minWidth: 0 }}>
+              <Box ml={isMobile ? "6px" : "12px"} sx={{ minWidth: 0 }}>
                 <span
                   style={{
                     color: "#000000",
                     fontWeight: 700,
-                    fontSize: isMobile ? "12px" : "16px",
+                    fontSize: isMobile ? "17px" : "16px",
                     fontFamily: "Quicksand",
-                    lineHeight: isMobile ? "18px" : "25px",
+                    lineHeight: isMobile ? "22px" : "25px",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    maxWidth: isMobile ? "65px" : "180px",
+                    maxWidth: isMobile ? "100px" : "180px",
                     display: "block",
                   }}
                 >
@@ -1053,89 +1073,91 @@ export const ProfileHeader = ({
               }}
             >
               {/* Words Learnt */}
-              <Box
-                sx={{
-                  position: "relative",
-                  background:
-                    "linear-gradient(90deg, #7B2CBF 0%, #9D4EDD 100%)",
-                  border: "1px solid white",
-                  color: "#fff",
-                  borderRadius: isMobile ? "8px" : "12px",
-                  px: isMobile ? 1 : 3,
-                  py: isMobile ? "3px" : "4px",
-                  display: "flex",
-                  alignItems: "center",
-                  width: {
-                    xs: "95px",
-                    sm: "auto",
-                  },
-                  minWidth: isMobile ? "95px" : "auto",
-                  boxShadow: 2,
-                  mr: isMobile ? "8px" : "0px",
-                }}
-              >
+              {!isMobile && (
                 <Box
                   sx={{
-                    fontSize: isMobile ? "12px" : "20px",
-                    fontWeight: "bold",
-                    mr: isMobile ? 0.5 : 1,
-                    fontFamily: "Quicksand",
-                    flexShrink: 0,
-                  }}
-                >
-                  {vocabCount > 0 ? (
-                    <NumberFlow
-                      value={animatedVocabCount}
-                      decimals={0}
-                      duration={4000}
-                      style={{
-                        fontSize: isMobile ? "12px" : "18px",
-                        fontWeight: "bold",
-                        fontFamily: "Quicksand",
-                        color: "white",
-                      }}
-                    />
-                  ) : (
-                    "-"
-                  )}
-                </Box>
-                <Box
-                  sx={{
-                    fontSize: isMobile ? "9px" : "16px",
-                    fontWeight: 600,
-                    mr: isMobile ? 0.8 : 2,
-                    fontFamily: getFontFamily(lang),
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    maxWidth: isMobile ? "52px" : "unset",
-                  }}
-                >
-                  {ui.ASSESSMENT_WORDS_LEARNT}
-                </Box>
-                <Box
-                  component="img"
-                  src={Assets.books}
-                  alt="Books"
-                  sx={{
-                    position: "absolute",
-                    right: {
-                      xs: "-8px",
-                      sm: "-20px",
+                    position: "relative",
+                    background:
+                      "linear-gradient(90deg, #7B2CBF 0%, #9D4EDD 100%)",
+                    border: "1px solid white",
+                    color: "#fff",
+                    borderRadius: isMobile ? "8px" : "12px",
+                    px: isMobile ? 1 : 3,
+                    py: isMobile ? "3px" : "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    width: {
+                      xs: "95px",
+                      sm: "auto",
                     },
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    width: isMobile ? "16px" : "40px",
-                    height: isMobile ? "16px" : "40px",
-                    border: isMobile ? "2px solid white" : "4px solid white",
-                    borderRadius: "50%",
-                    backgroundColor: "#fff",
+                    minWidth: isMobile ? "95px" : "auto",
+                    boxShadow: 2,
+                    mr: isMobile ? "8px" : "0px",
                   }}
-                />
-              </Box>
+                >
+                  <Box
+                    sx={{
+                      fontSize: isMobile ? "12px" : "20px",
+                      fontWeight: "bold",
+                      mr: isMobile ? 0.5 : 1,
+                      fontFamily: "Quicksand",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {vocabCount > 0 ? (
+                      <NumberFlow
+                        value={animatedVocabCount}
+                        decimals={0}
+                        duration={4000}
+                        style={{
+                          fontSize: isMobile ? "12px" : "18px",
+                          fontWeight: "bold",
+                          fontFamily: "Quicksand",
+                          color: "white",
+                        }}
+                      />
+                    ) : (
+                      "-"
+                    )}
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: isMobile ? "9px" : "16px",
+                      fontWeight: 600,
+                      mr: isMobile ? 0.8 : 2,
+                      fontFamily: getFontFamily(lang),
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: isMobile ? "52px" : "unset",
+                    }}
+                  >
+                    {ui.ASSESSMENT_WORDS_LEARNT}
+                  </Box>
+                  <Box
+                    component="img"
+                    src={Assets.books}
+                    alt="Books"
+                    sx={{
+                      position: "absolute",
+                      right: {
+                        xs: "-8px",
+                        sm: "-20px",
+                      },
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: isMobile ? "16px" : "40px",
+                      height: isMobile ? "16px" : "40px",
+                      border: isMobile ? "2px solid white" : "4px solid white",
+                      borderRadius: "50%",
+                      backgroundColor: "#fff",
+                    }}
+                  />
+                </Box>
+              )}
 
               {/* Words Per Minute */}
-              {lang === "en" && (
+              {!isMobile && lang === "en" && (
                 <Box
                   sx={{
                     position: "relative",
@@ -1222,7 +1244,7 @@ export const ProfileHeader = ({
         </Box>
 
         {isMobile && (
-          <Box sx={{ position: "relative", zIndex: 10, mr: isMobile ? 1 : 3 }}>
+          <Box ref={menuRef} sx={{ position: "relative", zIndex: 10, mr: isMobile ? 1 : 3 }}>
             <Box
               onClick={toggleMenu}
               sx={{
@@ -1282,14 +1304,15 @@ export const ProfileHeader = ({
               >
                 <List disablePadding>
                   <ListItemButton
-                    onClick={() =>
+                    onClick={() => {
+                      setMenuOpen(false);
                       setOpenLangModal
                         ? setOpenLangModal(true)
                         : setOpenMessageDialog({
                           message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
                           dontShowHeader: true,
-                        })
-                    }
+                        });
+                    }}
                   >
                     <TranslateIcon sx={{ mr: 1 }} />
                     <ListItemText
@@ -1329,7 +1352,10 @@ export const ProfileHeader = ({
                   {["B", "m1", "m2", "m3"].includes(milestoneLevel) && (
                     <>
                       <Divider />
-                      <ListItemButton onClick={handleAlphabetChartOpen}>
+                      <ListItemButton onClick={() => {
+                        setMenuOpen(false);
+                        handleAlphabetChartOpen();
+                      }}>
                         <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
                         <ListItemText
                           primary={ui.ASSESSMENT_ALPHABET_CHART}
@@ -1344,7 +1370,10 @@ export const ProfileHeader = ({
                     </>
                   )}
                   <Divider />
-                  <ListItemButton onClick={handleLogout}>
+                  <ListItemButton onClick={() => {
+                    setMenuOpen(false);
+                    handleLogout();
+                  }}>
                     <LogoutIcon sx={{ mr: 1 }} />
                     <ListItemText
                       primary={ui.ASSESSMENT_LOGOUT}
@@ -1857,7 +1886,8 @@ const Assesment = ({ discoverStart }) => {
             level?.startsWith("m") ? Number(level.replace("m", "")) : level
           );
           setVocabCount(
-            getMilestoneDetails?.data?.extra?.vocabulary_count || 0
+            (getMilestoneDetails?.data?.extra?.vocabulary_count || 0) +
+            (getMilestoneDetails?.data?.extra?.learned_voc_count || 0)
           );
           setWordCount(
             getMilestoneDetails?.data?.extra?.latest_towre_data
@@ -1937,12 +1967,24 @@ const Assesment = ({ discoverStart }) => {
         );
       }
 
-      const parentOrigin =
-        window?.location?.ancestorOrigins?.[0] || window.parent.location.origin;
+      const parentOrigin = (() => {
+        if (globalThis?.location?.ancestorOrigins?.[0]) {
+          return globalThis.location.ancestorOrigins[0];
+        }
+        try {
+          return globalThis.parent.location.origin;
+        } catch (error) {
+          console.warn(
+            "Cross-origin access restriction on parent location, falling back to wildcard origin.",
+            error
+          );
+          return "*";
+        }
+      })();
 
       if (allowedOrigins.includes(parentOrigin)) {
         try {
-          window.parent.postMessage(
+          globalThis.parent.postMessage(
             {
               message: "help-video-link",
             },
@@ -2081,24 +2123,29 @@ const Assesment = ({ discoverStart }) => {
   //   f3FlowStepIndex: f3FlowStep.index,
   // });
 
+  const getBackgroundImage = () => {
+    if (rFlow !== "true") {
+      return images?.[imageKey];
+    }
+
+    const numLevel = Number(level);
+    if (numLevel === 1) {
+      return rOneImage;
+    }
+
+    if (numLevel === 2) {
+      if (rStep === 2) return rTwoImage;
+      if (rStep === 3) return rThreeImage;
+      if (rStep === 4) return rFourImage;
+    }
+
+    return images?.[imageKey];
+  };
+
   const sectionStyle = {
     width: "100vw",
     height: "100vh",
-    // backgroundImage: `url(${
-    //   rFlow === "true" ? rOneImage : images?.[`desktopLevel${level || 1}`]
-    // })`,
-    backgroundImage: `url(${rFlow === "true"
-      ? Number(level) === 1
-        ? rOneImage
-        : Number(level) === 2 && rStep === 2
-          ? rTwoImage
-          : Number(level) === 2 && rStep === 3
-            ? rThreeImage
-            : Number(level) === 2 && rStep === 4
-              ? rFourImage
-              : images?.[imageKey]
-      : images?.[imageKey]
-      })`,
+    backgroundImage: `url(${getBackgroundImage()})`,
     backgroundRepeat: "round",
     backgroundSize: "auto",
     position: "relative",
@@ -2203,8 +2250,8 @@ const Assesment = ({ discoverStart }) => {
             <Box
               sx={{
                 position: "absolute",
-                bottom: 60,
-                right: 0,
+                bottom: { xs: 40, sm: 60 },
+                right: { xs: "-24px", sm: 0 },
                 width: "237px",
                 height: "112px",
                 background: "rgba(255, 255, 255, 0.2)",

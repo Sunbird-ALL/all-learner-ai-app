@@ -10245,38 +10245,51 @@ const SoundHuntS1Combined = ({
             {/* Word Hunt (Sound Match) - Listen to Sound and choose the right word */}
             {isSoundMatch && !isPictureWords && currentQuestion?.allwords && (
               <>
-                <button
-                  onClick={handlePlayMainAudio}
-                  disabled={isPlaying}
+                <div
                   style={{
-                    position: "relative",
-                    marginBottom: "75px",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    order: isMobile ? 2 : 0,
+                    marginTop: isMobile ? "40px" : "0px",
+                    marginBottom: isMobile ? "0px" : "75px",
                   }}
                 >
-                  <img
-                    src={
-                      isPlaying ? Assets.pauseButtonImg : Assets.playButtonImg
-                    }
-                    alt="Audio"
+                  <button
+                    onClick={handlePlayMainAudio}
+                    disabled={isPlaying}
                     style={{
-                      width: "55px",
-                      height: "55px",
-                      transform: `scale(${scale})`,
-                      transition: "transform 0.5s ease-in-out",
+                      position: "relative",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
                     }}
-                  />
-                </button>
+                  >
+                    <img
+                      src={
+                        isPlaying ? Assets.pauseButtonImg : Assets.playButtonImg
+                      }
+                      alt="Audio"
+                      style={{
+                        width: "55px",
+                        height: "55px",
+                        transform: `scale(${scale})`,
+                        transition: "transform 0.5s ease-in-out",
+                      }}
+                    />
+                  </button>
+                </div>
 
                 <div
                   style={{
                     display: "flex",
-                    gap: "24px",
-                    marginTop: "24px",
+                    flexDirection: isMobile ? "column" : "row",
+                    gap: isMobile ? "16px" : "24px",
+                    marginTop: isMobile ? "0px" : "24px",
                     flexWrap: "wrap",
                     justifyContent: "center",
+                    order: isMobile ? 1 : 0,
+                    transform: isMobile ? "translateY(-15px)" : "none",
                   }}
                 >
                   {currentQuestion?.allwords.map((item, index) => {
@@ -10315,8 +10328,8 @@ const SoundHuntS1Combined = ({
                           opacity:
                             isAudioPlayedOnce && !hasSelectedOption ? 1 : 0.7,
                           transition: "background-color 0.3s ease-in-out",
-                          minWidth: isMobile ? "80px" : "120px",
-                          minHeight: isMobile ? "50px" : "60px",
+                          minWidth: isMobile ? "92px" : "120px",
+                          minHeight: isMobile ? "58px" : "60px",
                         }}
                         onClick={() => {
                           if (isAudioPlayedOnce && !hasSelectedOption) {
@@ -10365,11 +10378,12 @@ const SoundHuntS1Combined = ({
                       borderRadius: "12px",
                       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                       border: "5px solid #10618E",
-                      marginBottom: "60px",
+                      marginBottom: isMobile ? "35px" : "60px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       minWidth: isMobile ? "150px" : "200px",
+                      transform: isMobile ? "translateY(-60px)" : "none",
                     }}
                   >
                     <span
@@ -10396,10 +10410,13 @@ const SoundHuntS1Combined = ({
                   <div
                     style={{
                       display: "flex",
-                      gap: "24px",
-                      marginTop: "24px",
+                      flexDirection: isMobile ? "column" : "row",
+                      gap: isMobile ? "16px" : "24px",
+                      marginTop: isMobile ? "0px" : "24px",
                       flexWrap: "wrap",
                       justifyContent: "center",
+                      alignItems: "center",
+                      transform: isMobile ? "translateY(-60px)" : "none",
                     }}
                   >
                     {currentQuestion?.audioOptions.map((audioOption, index) => {
@@ -10427,167 +10444,235 @@ const SoundHuntS1Combined = ({
                       }
 
                       return (
-                        <div
+                        <Box
                           key={index}
-                          style={{
-                            backgroundColor: backgroundColor,
-                            padding: "16px",
-                            borderRadius: "24px",
-                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                            border: borderColor,
+                          sx={{
                             display: "flex",
-                            flexDirection: "column",
                             alignItems: "center",
-                            justifyContent: "center",
-                            backdropFilter: "blur(56px)",
-                            WebkitBackdropFilter: "blur(56px)",
-                            cursor: hasSelectedOption
-                              ? "not-allowed"
-                              : "pointer",
-                            opacity: hasSelectedOption && !isSelected ? 0.5 : 1,
-                            transition: "all 0.3s ease-in-out",
-                            minWidth: isMobile ? "100px" : "140px",
-                            minHeight: isMobile ? "100px" : "140px",
+                            gap: { xs: "12px", md: "0px" },
                             position: "relative",
                           }}
-                          onClick={() => {
-                            if (!hasSelectedOption) {
-                              handleAudioClick(index);
-                            }
-                          }}
                         >
-                          {/* Checkbox indicator - shown when selected */}
-                          {isSelected && (
-                            <div
-                              style={{
-                                position: "absolute",
-                                top: "8px",
-                                right: "8px",
-                                width: isMobile ? "28px" : "32px",
-                                height: isMobile ? "28px" : "32px",
-                                backgroundColor: isCorrect
-                                  ? "#4CAF50"
-                                  : "#F44336",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-                                zIndex: 10,
-                              }}
-                            >
-                              {isCorrect ? (
-                                <span
-                                  style={{
-                                    color: "#FFFFFF",
-                                    fontSize: isMobile ? "18px" : "20px",
-                                    fontWeight: "bold",
-                                    lineHeight: 1,
-                                  }}
-                                >
-                                  ✓
-                                </span>
-                              ) : (
-                                <span
-                                  style={{
-                                    color: "#FFFFFF",
-                                    fontSize: isMobile ? "18px" : "20px",
-                                    fontWeight: "bold",
-                                    lineHeight: 1,
-                                  }}
-                                >
-                                  ✕
-                                </span>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Unselected checkbox indicator - shown when not selected and no option has been selected yet */}
-                          {!isSelected && !hasSelectedOption && (
-                            <div
-                              style={{
-                                position: "absolute",
-                                top: "8px",
-                                right: "8px",
-                                width: isMobile ? "24px" : "28px",
-                                height: isMobile ? "24px" : "28px",
-                                border: "2px solid #BDBDBD",
-                                borderRadius: "4px",
-                                backgroundColor: "#FFFFFF",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                zIndex: 10,
-                              }}
-                            >
-                              {/* Empty checkbox */}
-                            </div>
-                          )}
-
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (!hasSelectedOption) {
-                                handlePlayAudio(index);
-                              }
-                            }}
-                            disabled={isPlaying || hasSelectedOption}
-                            style={{
-                              background: "none",
-                              border: "none",
+                          <Box
+                            sx={{
+                              backgroundColor: backgroundColor,
+                              padding: { xs: "18px 12px", md: "16px" },
+                              borderRadius: "24px",
+                              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                              border: borderColor,
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backdropFilter: "blur(56px)",
+                              WebkitBackdropFilter: "blur(56px)",
                               cursor: hasSelectedOption
                                 ? "not-allowed"
                                 : "pointer",
-                              marginBottom: "8px",
-                              opacity:
-                                hasSelectedOption && !isSelected ? 0.5 : 1,
+                              opacity: hasSelectedOption && !isSelected ? 0.5 : 1,
+                              transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                              minWidth: { xs: "115px", md: "140px" },
+                              minHeight: { xs: "115px", md: "140px" },
+                              position: "relative",
+                              "&:hover": {
+                                transform: { xs: "none", md: "scale(1.05)" },
+                              },
+                              "&:active": {
+                                transform: "scale(0.95)",
+                              },
                             }}
-                          >
-                            <img
-                              src={
-                                isPlaying
-                                  ? Assets.pauseButtonImg
-                                  : Assets.playButtonImg
+                            onClick={() => {
+                              if (!hasSelectedOption) {
+                                handleAudioClick(index);
                               }
-                              alt="Play Audio"
-                              style={{
-                                width: isMobile ? "40px" : "50px",
-                                height: isMobile ? "40px" : "50px",
-                                transform: isPlaying
-                                  ? `scale(${scale})`
-                                  : "scale(1)",
-                                transition: "transform 0.5s ease-in-out",
-                                filter:
-                                  hasSelectedOption && !isSelected
-                                    ? "grayscale(100%)"
-                                    : "none",
-                              }}
-                            />
-                          </button>
-                          <span
-                            style={{
-                              color:
-                                isSelected && (isCorrect || !isCorrect)
-                                  ? isCorrect
-                                    ? "#2E7D32"
-                                    : "#C62828"
-                                  : "#666666",
-                              fontWeight: isSelected ? 600 : 500,
-                              fontSize:
-                                language === "te"
-                                  ? isMobile
-                                    ? "14px"
-                                    : "16px"
-                                  : isMobile
-                                  ? "12px"
-                                  : "14px",
-                              fontFamily: getFontFamily(language),
-                              textAlign: "center",
                             }}
                           >
-                            Sound {index + 1}
-                          </span>
-                        </div>
+                            {/* Desktop Checkbox indicator - shown when selected */}
+                            {!isMobile && isSelected && (
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  top: "8px",
+                                  right: "8px",
+                                  width: "32px",
+                                  height: "32px",
+                                  backgroundColor: isCorrect
+                                    ? "#4CAF50"
+                                    : "#F44336",
+                                  borderRadius: "50%",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                                  zIndex: 10,
+                                }}
+                              >
+                                {isCorrect ? (
+                                  <span
+                                    style={{
+                                      color: "#FFFFFF",
+                                      fontSize: "20px",
+                                      fontWeight: "bold",
+                                      lineHeight: 1,
+                                    }}
+                                  >
+                                    ✓
+                                  </span>
+                                ) : (
+                                  <span
+                                    style={{
+                                      color: "#FFFFFF",
+                                      fontSize: "20px",
+                                      fontWeight: "bold",
+                                      lineHeight: 1,
+                                    }}
+                                  >
+                                    ✕
+                                  </span>
+                                )}
+                              </div>
+                            )}
+
+                            {/* Desktop Unselected checkbox indicator */}
+                            {!isMobile && !isSelected && !hasSelectedOption && (
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  top: "8px",
+                                  right: "8px",
+                                  width: "28px",
+                                  height: "28px",
+                                  border: "2px solid #BDBDBD",
+                                  borderRadius: "4px",
+                                  backgroundColor: "#FFFFFF",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  zIndex: 10,
+                                }}
+                              >
+                                {/* Empty checkbox */}
+                              </div>
+                            )}
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!hasSelectedOption) {
+                                  handlePlayAudio(index);
+                                }
+                              }}
+                              disabled={isPlaying || hasSelectedOption}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                cursor: hasSelectedOption
+                                  ? "not-allowed"
+                                  : "pointer",
+                                marginBottom: "8px",
+                                opacity:
+                                  hasSelectedOption && !isSelected ? 0.5 : 1,
+                              }}
+                            >
+                              <img
+                                src={
+                                  isPlaying
+                                    ? Assets.pauseButtonImg
+                                    : Assets.playButtonImg
+                                }
+                                alt="Play Audio"
+                                style={{
+                                  width: isMobile ? "48px" : "50px",
+                                  height: isMobile ? "48px" : "50px",
+                                  transform: isPlaying
+                                    ? `scale(${scale})`
+                                    : "scale(1)",
+                                  transition: "transform 0.5s ease-in-out",
+                                  filter:
+                                    hasSelectedOption && !isSelected
+                                      ? "grayscale(100%)"
+                                      : "none",
+                                }}
+                              />
+                            </button>
+                            <span
+                              style={{
+                                color:
+                                  isSelected && (isCorrect || !isCorrect)
+                                    ? isCorrect
+                                      ? "#2E7D32"
+                                      : "#C62828"
+                                    : "#666666",
+                                fontWeight: isSelected ? 600 : 500,
+                                fontSize:
+                                  language === "te"
+                                    ? isMobile
+                                      ? "14px"
+                                      : "16px"
+                                    : isMobile
+                                    ? "12px"
+                                    : "14px",
+                                fontFamily: getFontFamily(language),
+                                textAlign: "center",
+                              }}
+                            >
+                              Sound {index + 1}
+                            </span>
+                          </Box>
+
+                          {/* Mobile-only checkbox outside card */}
+                          {isMobile && (isSelected || !hasSelectedOption) && (
+                            <Box
+                              onClick={() => {
+                                if (!hasSelectedOption) {
+                                  handleAudioClick(index);
+                                }
+                              }}
+                              sx={{
+                                position: "absolute",
+                                left: "calc(100% + 12px)",
+                                top: "50%",
+                                width: "36px",
+                                height: "36px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderRadius: isSelected ? "50%" : "8px",
+                                border: isSelected
+                                  ? isCorrect
+                                    ? "3px solid #2E7D32"
+                                    : "3px solid #C62828"
+                                  : "3px solid #10618E",
+                                backgroundColor: isSelected
+                                  ? isCorrect
+                                    ? "#4CAF50"
+                                    : "#F44336"
+                                  : "#FFFFFF",
+                                boxShadow: isSelected
+                                  ? "0px 4px 8px rgba(0, 0, 0, 0.25)"
+                                  : "0px 3px 6px rgba(0, 0, 0, 0.15), inset 0px 1px 3px rgba(255, 255, 255, 0.8)",
+                                transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                transform: isSelected
+                                  ? "translateY(-50%) scale(1.15)"
+                                  : "translateY(-50%) scale(1)",
+                                cursor: hasSelectedOption ? "not-allowed" : "pointer",
+                              }}
+                            >
+                              {isSelected && (
+                                <span
+                                  style={{
+                                    color: "#FFFFFF",
+                                    fontSize: "22px",
+                                    fontWeight: "900",
+                                    lineHeight: 1,
+                                  }}
+                                >
+                                  {isCorrect ? "✓" : "✕"}
+                                </span>
+                              )}
+                            </Box>
+                          )}
+                        </Box>
                       );
                     })}
                   </div>

@@ -858,27 +858,29 @@ const Mechanics7 = ({
             position: "relative",
           }}
         >
-          <img
-            src={hintimg}
-            alt="hint"
-            style={{
-              width: "50px",
-              height: "50px",
-              position: "absolute",
-              top: isMobile ? "0px" : "20px",
-              left: isMobile ? "0px" : "20px",
-              cursor: "pointer",
-              zIndex: 1000,
-            }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setOpen(true);
-              }
-            }}
-            onClick={() => setOpen(true)}
-          />
+          {!isMobile && (
+            <img
+              src={hintimg}
+              alt="hint"
+              style={{
+                width: "50px",
+                height: "50px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                cursor: "pointer",
+                zIndex: 1000,
+              }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setOpen(true);
+                }
+              }}
+              onClick={() => setOpen(true)}
+            />
+          )}
 
           {/* Modal */}
           {open && (
@@ -974,8 +976,33 @@ const Mechanics7 = ({
               alignSelf: "center",
               maskBorderWidth: 6,
               height: "200px",
+              position: "relative",
+              top: { xs: "-50px", sm: "0px" },
             }}
           >
+            {isMobile && (
+              <img
+                src={hintimg}
+                alt="hint"
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  position: "absolute",
+                  top: "0px",
+                  left: "-80px",
+                  cursor: "pointer",
+                  zIndex: 1000,
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setOpen(true);
+                  }
+                }}
+                onClick={() => setOpen(true)}
+              />
+            )}
             {!isMobile && (
               <span
                 style={{
@@ -1048,6 +1075,8 @@ const Mechanics7 = ({
                 marginBottom: "16px",
                 width: isMobile ? "250px" : "400px",
                 height: "150px",
+                position: { xs: "relative", sm: "static" },
+                top: { xs: "-50px", sm: "0px" },
               }}
             >
               <Box
@@ -1163,11 +1192,20 @@ const Mechanics7 = ({
             </Box>
 
             {showMultiLingual && enableMultilingual && (
-              <img
-                src={Assets.graph}
-                alt="graph"
-                style={{ height: "40px", margin: "10px" }}
-              />
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  position: { xs: "relative", sm: "static" },
+                  top: { xs: "-30px", sm: "0px" },
+                }}
+              >
+                <img
+                  src={Assets.graph}
+                  alt="graph"
+                  style={{ height: "40px", margin: "10px" }}
+                />
+              </Box>
             )}
 
             {showMultiLingual && enableMultilingual && (
@@ -1179,6 +1217,8 @@ const Mechanics7 = ({
                   alignItems: "flex-end",
                   gap: "40px",
                   marginTop: isMobile ? "10px" : "30px",
+                  position: { xs: "relative", sm: "static" },
+                  top: { xs: "-30px", sm: "0px" },
                 }}
               >
                 <Box
@@ -1241,6 +1281,8 @@ const Mechanics7 = ({
                     maskBorderWidth: 6,
                     gap: isMobile ? 2 : 5,
                     height: isMobile ? "160px" : "250px",
+                    position: { xs: "relative", sm: "static" },
+                    top: { xs: "-30px", sm: "0px" },
                   }}
                 >
                   {isPlaying ? (
@@ -1348,6 +1390,8 @@ const Mechanics7 = ({
                   alignItems: "center",
                   maskBorderWidth: 6,
                   height: isMobile ? "160px" : "250px",
+                  position: { xs: "relative", sm: "static" },
+                  top: { xs: "-30px", sm: "0px" },
                 }}
               >
                 <Box style={{ marginTop: "10px", marginBottom: "50px" }}>
@@ -1451,6 +1495,8 @@ const Mechanics7 = ({
                     justifyContent: "center",
                     alignItems: "center",
                     height: isMobile ? "160px" : "250px",
+                    position: isMobile ? "relative" : "static",
+                    top: isMobile ? "-30px" : "0px",
                   }}
                 >
                   <Loader />
@@ -1466,6 +1512,8 @@ const Mechanics7 = ({
                     gap: isMobile ? "5px" : "10px",
                     height: isMobile ? "160px" : "250px",
                     //maskBorderWidth: 6,
+                    position: { xs: "relative", sm: "static" },
+                    top: { xs: "-30px", sm: "0px" },
                   }}
                 >
                   <Box

@@ -20,7 +20,7 @@ const languageMap = {
 };
 
 // Default language codes (fallback if env variable is not set)
-const defaultLanguageCodes = ["ka", "tn", "te", "hi"];
+const defaultLanguageCodes = ["kn", "te"];
 
 // Get languages from environment variable or use defaults
 const getNativeLanguages = () => {
@@ -137,8 +137,8 @@ const LanguageModalNew = ({ show, word, onClose }) => {
 
   const modalStyle = {
     ...styles.modal,
-    width: isMobile ? "80%" : styles.modal.width,
-    maxWidth: isMobile ? "380px" : styles.modal.maxWidth,
+    width: isMobile ? "100%" : styles.modal.width,
+    maxWidth: isMobile ? "420px" : styles.modal.maxWidth,
     backgroundSize: isMobile ? "cover" : styles.modal.backgroundSize,
     backgroundRepeat: isMobile ? "no-repeat" : styles.modal.backgroundRepeat,
     boxShadow: isMobile ? "0px 10px 30px rgba(0, 0, 0, 0.15)" : styles.modal.boxShadow,
@@ -184,7 +184,7 @@ const LanguageModalNew = ({ show, word, onClose }) => {
         <div style={langGridStyle}>
           {availableLanguages.map((entry, index) => {
             const isSelected = selectedLang === entry.text;
-            
+
             const cardStyle = {
               ...styles.card,
               backgroundColor: isSelected ? "#F37021" : "#fff",

@@ -758,10 +758,10 @@ const WordsOrImage = ({
           pointerEvents: disableScreen ? "none" : "initial",
           display: { xs: "flex", md: "block" },
           flexDirection: { xs: "column", md: "initial" },
-          justifyContent: { xs: "center", md: "initial" },
+          justifyContent: { xs: "flex-start", md: "initial" },
           alignItems: { xs: "center", md: "initial" },
           flexGrow: { xs: 1, md: 0 },
-          pt: { xs: "0px", md: isTablet ? "70px" : "100px" },
+          pt: { xs: "12px", md: isTablet ? "70px" : "100px" },
           pb: { xs: "0px", md: "16px" },
         }}
       >
