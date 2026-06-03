@@ -782,7 +782,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     setIsPlayingNarration(true);
     // Get the step key if not provided
     const narrationKey = stepKey || getNarrationStepKey();
-    const audioPath = `/audio/audio-preview/Alphabet Chart/${activeLang}/${narrationKey}.wav`;
+    const audioPath = `${process.env.PUBLIC_URL}/audio/audio-preview/Alphabet Chart/${activeLang}/${narrationKey}.wav`;
     try {
       // Try to play the audio file first
       const audio = new Audio(audioPath);
