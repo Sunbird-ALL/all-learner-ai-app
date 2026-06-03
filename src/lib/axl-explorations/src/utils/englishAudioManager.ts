@@ -1,17 +1,8 @@
 // English Audio Manager for local .wav files
-import { attachSlowLoadToast } from "./audioUtils";
-import { audioUrl } from "../../../audio";
-
-export interface EnglishAudioConfig {
-  audioFolderPath: string; // Path to audio folder
-  fileExtension: string; // .wav, .mp3, etc.
-}
+import { attachSlowLoadToast, createLetterAudioConfig, LetterAudioConfig } from "./audioUtils";
 
 class EnglishAudioManager {
-  private config: EnglishAudioConfig = {
-    audioFolderPath: audioUrl('english/letter'),
-    fileExtension: '.wav'
-  };
+  private config: LetterAudioConfig = createLetterAudioConfig('english');
 
   // Get audio URL for a specific English letter
   getAudioUrl(letter: string): string {
@@ -74,12 +65,12 @@ class EnglishAudioManager {
   }
 
   // Configure audio settings
-  configure(config: Partial<EnglishAudioConfig>) {
+  configure(config: Partial<LetterAudioConfig>) {
     this.config = { ...this.config, ...config };
   }
 
   // Get current configuration
-  getConfig(): EnglishAudioConfig {
+  getConfig(): LetterAudioConfig {
     return { ...this.config };
   }
 }

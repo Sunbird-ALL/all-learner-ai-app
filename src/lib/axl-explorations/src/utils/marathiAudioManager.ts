@@ -1,17 +1,8 @@
 // Marathi Audio Manager for local .wav files
-import { attachSlowLoadToast } from "./audioUtils";
-import { audioUrl } from "../../../audio";
-
-export interface MarathiAudioConfig {
-  audioFolderPath: string; // Path to audio folder
-  fileExtension: string; // .wav, .mp3, etc.
-}
+import { attachSlowLoadToast, createLetterAudioConfig, LetterAudioConfig } from "./audioUtils";
 
 class MarathiAudioManager {
-  private config: MarathiAudioConfig = {
-    audioFolderPath: audioUrl('marathi/letter'),
-    fileExtension: '.wav'
-  };
+  private config: LetterAudioConfig = createLetterAudioConfig('marathi');
 
   // Get audio URL for a specific Marathi letter
   getAudioUrl(letter: string): string {
@@ -101,12 +92,12 @@ class MarathiAudioManager {
   }
 
   // Configure audio settings
-  configure(config: Partial<MarathiAudioConfig>) {
+  configure(config: Partial<LetterAudioConfig>) {
     this.config = { ...this.config, ...config };
   }
 
   // Get current configuration
-  getConfig(): MarathiAudioConfig {
+  getConfig(): LetterAudioConfig {
     return { ...this.config };
   }
 }
