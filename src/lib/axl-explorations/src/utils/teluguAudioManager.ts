@@ -1,8 +1,17 @@
 // Telugu Audio Manager for local .wav files
-import { attachSlowLoadToast, createLetterAudioConfig, LetterAudioConfig } from "./audioUtils";
+import { attachSlowLoadToast } from "./audioUtils";
+import { audioUrl } from "../../../audio";
+
+export interface TeluguAudioConfig {
+  audioFolderPath: string; // Path to audio folder
+  fileExtension: string; // .wav, .mp3, etc.
+}
 
 class TeluguAudioManager {
-  private config: LetterAudioConfig = createLetterAudioConfig('telugu');
+  private config: TeluguAudioConfig = {
+    audioFolderPath: audioUrl('telugu/letter'),
+    fileExtension: '.wav'
+  };
 
   // Get audio URL for a specific Telugu letter
   getAudioUrl(letter: string): string {
@@ -73,12 +82,12 @@ class TeluguAudioManager {
   }
 
   // Configure audio settings
-  configure(config: Partial<LetterAudioConfig>) {
+  configure(config: Partial<TeluguAudioConfig>) {
     this.config = { ...this.config, ...config };
   }
 
   // Get current configuration
-  getConfig(): LetterAudioConfig {
+  getConfig(): TeluguAudioConfig {
     return { ...this.config };
   }
 }

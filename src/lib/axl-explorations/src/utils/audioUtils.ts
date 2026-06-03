@@ -489,22 +489,3 @@ export const stopAllAudio = (): void => {
     audioStopped = false;
   }, 500);
 };
-
-/*
- * Shared config + factory for per-language letter audio managers.
- *
- * All 5 language-specific managers (english/hindi/kannada/marathi/telugu)
- * share the same config shape — only the language folder name and the
- * per-language method bodies differ. Centralizing the config interface and
- * its default initialization eliminates ~14 lines of duplicated header code
- * across each manager file.
- */
-export interface LetterAudioConfig {
-  audioFolderPath: string; // Path to audio folder
-  fileExtension: string; // .wav, .mp3, etc.
-}
-
-export const createLetterAudioConfig = (language: string): LetterAudioConfig => ({
-  audioFolderPath: audioUrl(`${language}/letter`),
-  fileExtension: '.wav',
-});

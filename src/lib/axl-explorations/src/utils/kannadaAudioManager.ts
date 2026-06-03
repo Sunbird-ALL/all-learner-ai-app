@@ -1,8 +1,17 @@
 // Kannada Audio Manager for local .wav files
-import { attachSlowLoadToast, createLetterAudioConfig, LetterAudioConfig } from "./audioUtils";
+import { attachSlowLoadToast } from "./audioUtils";
+import { audioUrl } from "../../../audio";
+
+export interface KannadaAudioConfig {
+  audioFolderPath: string; // Path to audio folder
+  fileExtension: string; // .wav, .mp3, etc.
+}
 
 class KannadaAudioManager {
-  private config: LetterAudioConfig = createLetterAudioConfig('kannada');
+  private config: KannadaAudioConfig = {
+    audioFolderPath: audioUrl('kannada/letter'),
+    fileExtension: '.wav'
+  };
 
   // Get audio URL for a specific Kannada letter
   getAudioUrl(letter: string): string {
@@ -86,12 +95,12 @@ class KannadaAudioManager {
   }
 
   // Configure audio settings
-  configure(config: Partial<LetterAudioConfig>) {
+  configure(config: Partial<KannadaAudioConfig>) {
     this.config = { ...this.config, ...config };
   }
 
   // Get current configuration
-  getConfig(): LetterAudioConfig {
+  getConfig(): KannadaAudioConfig {
     return { ...this.config };
   }
 }

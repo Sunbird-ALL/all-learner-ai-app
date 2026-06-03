@@ -1,8 +1,17 @@
 // Hindi Audio Manager for local .wav files
-import { attachSlowLoadToast, createLetterAudioConfig, LetterAudioConfig } from "./audioUtils";
+import { attachSlowLoadToast } from "./audioUtils";
+import { audioUrl } from "../../../audio";
+
+export interface HindiAudioConfig {
+  audioFolderPath: string; // Path to audio folder
+  fileExtension: string; // .wav, .mp3, etc.
+}
 
 class HindiAudioManager {
-  private config: LetterAudioConfig = createLetterAudioConfig('hindi');
+  private config: HindiAudioConfig = {
+    audioFolderPath: audioUrl('hindi/letter'),
+    fileExtension: '.wav'
+  };
 
   // Get audio URL for a specific Hindi letter
   getAudioUrl(letter: string): string {
@@ -47,12 +56,12 @@ class HindiAudioManager {
   }
 
   // Configure audio settings
-  configure(config: Partial<LetterAudioConfig>) {
+  configure(config: Partial<HindiAudioConfig>) {
     this.config = { ...this.config, ...config };
   }
 
   // Get current configuration
-  getConfig(): LetterAudioConfig {
+  getConfig(): HindiAudioConfig {
     return { ...this.config };
   }
 }
