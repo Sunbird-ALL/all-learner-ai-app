@@ -46,6 +46,7 @@ import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 import { useEffect, useState, useMemo } from "react";
 import HelpLogo from "../../assets/help.png";
 import CloseIcon from "@mui/icons-material/Close";
+import ServerErrorScreen from "../ServerErrorScreen/ServerErrorScreen";
 
 import axios from "../../../node_modules/axios/index";
 // import { useDispatch } from 'react-redux';
@@ -333,9 +334,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
             onClick={() => {
               setLang(selectedLang);
               setOpenLangModal(false);
-              sessionStorage.removeItem("discovery_set_flow_char_session");
-              sessionStorage.removeItem("discovery_set_flow_state");
-              sessionStorage.removeItem("discovery_set_flow_char_result");
+
             }}
             sx={{
               padding: "0px 24px 0px 20px",
@@ -923,23 +922,11 @@ export const ProfileHeader = ({
   const handleProfileBack = () => {
     try {
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-        const targetOrigin = (() => {
-          if (globalThis?.location?.ancestorOrigins?.[0]) {
-            return globalThis.location.ancestorOrigins[0];
-          }
-          try {
-            return globalThis.parent.location.origin;
-          } catch (error) {
-            console.warn(
-              "Cross-origin access restriction on parent location, falling back to wildcard origin.",
-              error
-            );
-            return "*";
-          }
-        })();
-        globalThis.parent.postMessage(
+
+        window.parent.postMessage(
           { type: "restore-iframe-content" },
-          targetOrigin
+          window?.location?.ancestorOrigins?.[0] ||
+          window.parent.location.origin
         );
         navigate("/");
       } else {
@@ -2166,39 +2153,12 @@ const Assesment = ({ discoverStart }) => {
           textAlign: "center",
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ fontFamily: "Quicksand", fontWeight: 700, color: "#555" }}
-        >
-          Could not load your session.
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontFamily: "Quicksand", color: "#888", maxWidth: 360 }}
-        >
-          The server is unreachable right now. Check your connection and try
-          again.
-        </Typography>
-        <Button
-          variant="contained"
-          onClick={() => {
+        <ServerErrorScreen
+          onRetry={() => {
             setInitError(false);
             loadDataRef.current?.();
           }}
-          sx={{
-            mt: 1,
-            background: "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
-            color: "white",
-            fontFamily: "Quicksand",
-            fontWeight: 700,
-            borderRadius: "25px",
-            textTransform: "none",
-            px: 4,
-            py: 1.5,
-          }}
-        >
-          Try Again
-        </Button>
+        />
       </Box>
     );
   }

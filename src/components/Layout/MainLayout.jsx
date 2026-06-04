@@ -605,7 +605,6 @@ const MainLayout = (props) => {
 
   // State for progress bar pagination (dynamic steps based on width)
   const [progressBarStartIndex, setProgressBarStartIndex] = useState(0);
-  const lastPracticeStepRef = useRef(null);
   const progressBarContainerRef = useRef(null);
   const progressBarParentRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -828,8 +827,6 @@ const MainLayout = (props) => {
 
   // Update progress bar start index when current step changes to keep it visible
   useEffect(() => {
-    lastPracticeStepRef.current = currentPracticeStep;
-
     if (totalSteps <= VISIBLE_STEPS) {
       setProgressBarStartIndex(0);
       return;

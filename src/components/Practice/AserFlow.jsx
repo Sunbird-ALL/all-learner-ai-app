@@ -173,28 +173,9 @@ const AserFlow = ({
         let resAssessment;
 
         if (charDiscoveryRaw) {
-          let parsed = null;
-          try {
-            parsed = JSON.parse(charDiscoveryRaw);
-          } catch (parseError) {
-            // Corrupt session data — clear it and fall through to a fresh fetch
-            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_SESSION);
-            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.STATE);
-            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
-          }
-          if (parsed && parsed.lang === lang) {
-            sentences = { collectionId: parsed.collectionId, name: parsed.storyTitle };
-            resAssessment = { data: [] };
-          } else {
-            // Language mismatched/changed: Clear old language discovery session
-            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_SESSION);
-            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.STATE);
-            sessionStorage.removeItem(DISCOVERY_SET_FLOW_STORAGE.CHAR_RESULT);
-            resAssessment = await fetchAssessmentData(lang);
-            sentences = resAssessment?.data?.find(
-              (elem) => elem.category === "Char"
-            );
-          }
+          const { collectionId, storyTitle } = JSON.parse(charDiscoveryRaw);
+          sentences = { collectionId, name: storyTitle };
+          resAssessment = { data: [] };
         } else {
           resAssessment = await fetchAssessmentData(lang);
           sentences = resAssessment?.data?.find(
@@ -750,13 +731,6 @@ const AserFlow = ({
             return (
               <div
                 key={index}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    if (!disableBubbles) handleBubbleClick(char, index);
-                  }
-                }}
                 onClick={() => {
                   if (!disableBubbles) {
                     handleBubbleClick(char, index);

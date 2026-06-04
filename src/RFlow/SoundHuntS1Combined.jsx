@@ -9370,7 +9370,7 @@ const SoundHuntS1Combined = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => {},
+  playTeacherAudio = () => { },
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -10306,16 +10306,16 @@ const SoundHuntS1Combined = ({
                           backgroundColor: showCorrect
                             ? "#4CAF50"
                             : showWrong
-                            ? "#F44336"
-                            : "#1897DE",
+                              ? "#F44336"
+                              : "#1897DE",
                           padding: isMobile ? "12px 16px" : "16px 24px",
                           borderRadius: "12px",
                           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                           border: showCorrect
                             ? "5px solid #2E7D32"
                             : showWrong
-                            ? "5px solid #C62828"
-                            : "5px solid #10618E",
+                              ? "5px solid #C62828"
+                              : "5px solid #10618E",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -10347,8 +10347,8 @@ const SoundHuntS1Combined = ({
                                   ? "24px"
                                   : "32px"
                                 : isMobile
-                                ? "20px"
-                                : "28px",
+                                  ? "20px"
+                                  : "28px",
                             fontFamily: getFontFamily(language),
                             textAlign: "center",
                           }}
@@ -10396,8 +10396,8 @@ const SoundHuntS1Combined = ({
                               ? "38px"
                               : "54px"
                             : isMobile
-                            ? "32px"
-                            : "48px",
+                              ? "32px"
+                              : "48px",
                         fontFamily: getFontFamily(language),
                         textAlign: "center",
                       }}
@@ -10610,8 +10610,8 @@ const SoundHuntS1Combined = ({
                                       ? "14px"
                                       : "16px"
                                     : isMobile
-                                    ? "12px"
-                                    : "14px",
+                                      ? "12px"
+                                      : "14px",
                                 fontFamily: getFontFamily(language),
                                 textAlign: "center",
                               }}
