@@ -1,5 +1,6 @@
 /* global globalThis */
 import MainLayout from "../Layout/MainLayout";
+import ServerErrorScreen from "../ServerErrorScreen/ServerErrorScreen";
 import assessmentBackground from "../../assets/images/assessmentBackground.png";
 import {
   Box,
@@ -46,7 +47,7 @@ import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 import { useEffect, useState, useMemo } from "react";
 import HelpLogo from "../../assets/help.png";
 import CloseIcon from "@mui/icons-material/Close";
-import ServerErrorScreen from "../ServerErrorScreen/ServerErrorScreen";
+
 
 import axios from "../../../node_modules/axios/index";
 // import { useDispatch } from 'react-redux';
@@ -1872,8 +1873,7 @@ const Assesment = ({ discoverStart }) => {
             level?.startsWith("m") ? Number(level.replace("m", "")) : level
           );
           setVocabCount(
-            (getMilestoneDetails?.data?.extra?.vocabulary_count || 0) +
-            (getMilestoneDetails?.data?.extra?.learned_voc_count || 0)
+            getMilestoneDetails?.data?.extra?.vocabulary_count || 0
           );
           setWordCount(
             getMilestoneDetails?.data?.extra?.latest_towre_data
