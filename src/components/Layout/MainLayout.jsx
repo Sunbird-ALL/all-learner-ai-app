@@ -614,11 +614,22 @@ const MainLayout = (props) => {
   const calculateVisibleSteps = useMemo(() => {
     if (containerWidth === 0) return 5; // Default to 5 if width not measured yet
 
-    // Step dimensions based on screen size
-    const stepWidth = isMobile ? 28 : isTablet ? 32 : 40; // xs: 28px, sm: 32px, md: 36px, lg: 40px
-    const stepMargin = isMobile ? 4 : isTablet ? 8 : 12; // xs: 0.5 * 8px, sm: 1 * 8px, md: 1.5 * 8px
-    const containerPadding = isMobile ? 16 : isTablet ? 24 : 32; // xs: 8px*2, sm: 12px*2, md: 16px*2
-    const buttonWidth = isMobile ? 24 : isTablet ? 48 : 56; // Button width
+    let stepWidth = 40;
+    let stepMargin = 12;
+    let containerPadding = 32;
+    let buttonWidth = 56;
+
+    if (isMobile) {
+      stepWidth = 28;
+      stepMargin = 4;
+      containerPadding = 16;
+      buttonWidth = 24;
+    } else if (isTablet) {
+      stepWidth = 32;
+      stepMargin = 8;
+      containerPadding = 24;
+      buttonWidth = 48;
+    }
     const buttonGap = isMobile ? 8 : 12; // Gap between button and container
 
     // Account for left and right margins (180px mobile, 200px tablet, 220px desktop)

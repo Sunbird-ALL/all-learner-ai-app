@@ -334,7 +334,6 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
             onClick={() => {
               setLang(selectedLang);
               setOpenLangModal(false);
-
             }}
             sx={{
               padding: "0px 24px 0px 20px",
@@ -1823,8 +1822,8 @@ const Assesment = ({ discoverStart }) => {
           setLevel(parsedLevel);
 
           setVocabCount(
-            (getMilestoneDetails?.data?.extra?.vocabulary_count || 0) +
-            (getMilestoneDetails?.data?.extra?.learned_voc_count || 0)
+            getMilestoneDetails?.data?.extra?.vocabulary_count +
+            getMilestoneDetails?.data?.extra?.learned_voc_count || 0
           );
           setWordCount(
             getMilestoneDetails?.data?.extra?.latest_towre_data
@@ -1954,24 +1953,11 @@ const Assesment = ({ discoverStart }) => {
         );
       }
 
-      const parentOrigin = (() => {
-        if (globalThis?.location?.ancestorOrigins?.[0]) {
-          return globalThis.location.ancestorOrigins[0];
-        }
-        try {
-          return globalThis.parent.location.origin;
-        } catch (error) {
-          console.warn(
-            "Cross-origin access restriction on parent location, falling back to wildcard origin.",
-            error
-          );
-          return "*";
-        }
-      })();
-
+      const parentOrigin =
+        window?.location?.ancestorOrigins?.[0] || window.parent.location.origin;
       if (allowedOrigins.includes(parentOrigin)) {
         try {
-          globalThis.parent.postMessage(
+          window.parent.postMessage(
             {
               message: "help-video-link",
             },
@@ -2110,29 +2096,25 @@ const Assesment = ({ discoverStart }) => {
   //   f3FlowStepIndex: f3FlowStep.index,
   // });
 
-  const getBackgroundImage = () => {
-    if (rFlow !== "true") {
-      return images?.[imageKey];
-    }
-
-    const numLevel = Number(level);
-    if (numLevel === 1) {
-      return rOneImage;
-    }
-
-    if (numLevel === 2) {
-      if (rStep === 2) return rTwoImage;
-      if (rStep === 3) return rThreeImage;
-      if (rStep === 4) return rFourImage;
-    }
-
-    return images?.[imageKey];
-  };
 
   const sectionStyle = {
     width: "100vw",
     height: "100vh",
-    backgroundImage: `url(${getBackgroundImage()})`,
+    // backgroundImage: `url(${
+    //   rFlow === "true" ? rOneImage : images?.[`desktopLevel${level || 1}`]
+    // })`,
+    backgroundImage: `url(${rFlow === "true"
+      ? level == 1
+        ? rOneImage
+        : level == 2 && rStep === 2
+          ? rTwoImage
+          : level == 2 && rStep === 3
+            ? rThreeImage
+            : level == 2 && rStep === 4
+              ? rFourImage
+              : images?.[imageKey]
+      : images?.[imageKey]
+      })`,
     backgroundRepeat: "round",
     backgroundSize: "auto",
     position: "relative",

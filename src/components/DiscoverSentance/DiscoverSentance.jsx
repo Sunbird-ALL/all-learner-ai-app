@@ -178,7 +178,6 @@ const SpeakSentenceComponent = () => {
         JSON.stringify({
           collectionId: nextCol.collectionId,
           storyTitle: nextCol.name || "",
-          lang: lang,
         })
       );
       navigate("/letter-hunt");
