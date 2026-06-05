@@ -48,7 +48,6 @@ import { useEffect, useState, useMemo } from "react";
 import HelpLogo from "../../assets/help.png";
 import CloseIcon from "@mui/icons-material/Close";
 
-
 import axios from "../../../node_modules/axios/index";
 // import { useDispatch } from 'react-redux';
 import { setVirtualId } from "../../store/slices/user.slice";
@@ -239,8 +238,9 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                       flexDirection: "column",
                       justifyContent: "center",
                       display: "flex",
-                      border: `3px solid ${isSelectedLang ? "#A03D13" : "#DADADA"
-                        }`,
+                      border: `3px solid ${
+                        isSelectedLang ? "#A03D13" : "#DADADA"
+                      }`,
                       borderRadius: "10px",
                       background: isSelectedLang ? "#EE6931" : "#EFEFEF",
                       height: {
@@ -392,13 +392,15 @@ export const MessageDialog = ({
         animation: "fadeIn 0.25s ease-out forwards",
         "@keyframes fadeIn": {
           "0%": { opacity: 0 },
-          "100%": { opacity: 1 }
+          "100%": { opacity: 1 },
         },
       }}
     >
       <Box
         sx={{
-          boxShadow: isMobile ? "0px 10px 30px rgba(0, 0, 0, 0.15)" : "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
+          boxShadow: isMobile
+            ? "0px 10px 30px rgba(0, 0, 0, 0.15)"
+            : "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
           minHeight: isMobile ? "auto" : "424px",
           maxWidth: isMobile ? "380px" : "600px",
           width: isMobile ? "80%" : "600px",
@@ -414,12 +416,25 @@ export const MessageDialog = ({
           backdropFilter: "blur(25px)",
           boxSizing: "border-box",
           "@keyframes premiumModalEntrance": {
-            "0%": { transform: "scale(0.8) translateY(50px) rotate(-1deg)", opacity: 0 },
-            "60%": { transform: "scale(1.02) translateY(-5px) rotate(0.5deg)", opacity: 0.9 },
-            "80%": { transform: "scale(0.99) translateY(2px) rotate(-0.2deg)", opacity: 0.95 },
-            "100%": { transform: "scale(1) translateY(0) rotate(0)", opacity: 1 }
+            "0%": {
+              transform: "scale(0.8) translateY(50px) rotate(-1deg)",
+              opacity: 0,
+            },
+            "60%": {
+              transform: "scale(1.02) translateY(-5px) rotate(0.5deg)",
+              opacity: 0.9,
+            },
+            "80%": {
+              transform: "scale(0.99) translateY(2px) rotate(-0.2deg)",
+              opacity: 0.95,
+            },
+            "100%": {
+              transform: "scale(1) translateY(0) rotate(0)",
+              opacity: 1,
+            },
           },
-          animation: "premiumModalEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+          animation:
+            "premiumModalEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
         }}
       >
         <Box
@@ -435,7 +450,7 @@ export const MessageDialog = ({
             position: isMobile ? "relative" : "absolute",
             "@keyframes happyPandaBounce": {
               "0%, 100%": { transform: "translateY(0) scale(1)" },
-              "50%": { transform: "translateY(-6px) scale(1.02)" }
+              "50%": { transform: "translateY(-6px) scale(1.02)" },
             },
             animation: "happyPandaBounce 2.5s infinite ease-in-out",
           }}
@@ -461,7 +476,10 @@ export const MessageDialog = ({
           )}
         </Box>
 
-        <Box mt={isMobile ? "12px" : "32px"} sx={{ order: isMobile ? 0 : "unset" }}>
+        <Box
+          mt={isMobile ? "12px" : "32px"}
+          sx={{ order: isMobile ? 0 : "unset" }}
+        >
           {!dontShowHeader && (
             <Typography
               className={isError ? "failureHeader" : "successHeader"}
@@ -470,10 +488,18 @@ export const MessageDialog = ({
                 textAlign: "center",
                 fontSize: isMobile ? "28px" : "inherit",
                 "@keyframes titleSparkle": {
-                  "0%, 100%": { transform: "scale(1)", filter: "drop-shadow(0 0 0px rgba(109,175,25,0))" },
-                  "50%": { transform: "scale(1.04)", filter: "drop-shadow(0 0 6px rgba(109,175,25,0.3))" }
+                  "0%, 100%": {
+                    transform: "scale(1)",
+                    filter: "drop-shadow(0 0 0px rgba(109,175,25,0))",
+                  },
+                  "50%": {
+                    transform: "scale(1.04)",
+                    filter: "drop-shadow(0 0 6px rgba(109,175,25,0.3))",
+                  },
                 },
-                animation: isError ? "none" : "titleSparkle 2s infinite ease-in-out",
+                animation: isError
+                  ? "none"
+                  : "titleSparkle 2s infinite ease-in-out",
               }}
             >
               {isError ? ui.ASSESSMENT_DIALOG_OOPS : ui.HURRAY}
@@ -529,11 +555,18 @@ export const MessageDialog = ({
               padding: "0px 24px 0px 20px",
               zIndex: "9999",
               "@keyframes btnPulse": {
-                "0%, 100%": { transform: "scale(1)", boxShadow: "0px 4px 10px rgba(109, 175, 25, 0.2)" },
-                "50%": { transform: "scale(1.03)", boxShadow: "0px 6px 16px rgba(109, 175, 25, 0.4)" }
+                "0%, 100%": {
+                  transform: "scale(1)",
+                  boxShadow: "0px 4px 10px rgba(109, 175, 25, 0.2)",
+                },
+                "50%": {
+                  transform: "scale(1.03)",
+                  boxShadow: "0px 6px 16px rgba(109, 175, 25, 0.4)",
+                },
               },
               animation: "btnPulse 2s infinite ease-in-out",
-              transition: "transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
+              transition:
+                "transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",
               boxShadow: "0px 4px 10px rgba(109, 175, 25, 0.2)",
               "&:hover": {
                 animation: "none",
@@ -544,7 +577,7 @@ export const MessageDialog = ({
               "&:active": {
                 animation: "none",
                 transform: "scale(0.98)",
-              }
+              },
             }}
           >
             <span
@@ -922,11 +955,10 @@ export const ProfileHeader = ({
   const handleProfileBack = () => {
     try {
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-
         window.parent.postMessage(
           { type: "restore-iframe-content" },
           window?.location?.ancestorOrigins?.[0] ||
-          window.parent.location.origin
+            window.parent.location.origin
         );
         navigate("/");
       } else {
@@ -989,7 +1021,10 @@ export const ProfileHeader = ({
           {/* header back button */}
           {handleBack && (
             <Box sx={{ ml: { xs: "2px", sm: "24px" } }}>
-              <IconButton onClick={handleBack} sx={{ p: isMobile ? "4px" : "8px" }}>
+              <IconButton
+                onClick={handleBack}
+                sx={{ p: isMobile ? "4px" : "8px" }}
+              >
                 <img
                   src={back}
                   alt="back"
@@ -1231,7 +1266,10 @@ export const ProfileHeader = ({
         </Box>
 
         {isMobile && (
-          <Box ref={menuRef} sx={{ position: "relative", zIndex: 10, mr: isMobile ? 1 : 3 }}>
+          <Box
+            ref={menuRef}
+            sx={{ position: "relative", zIndex: 10, mr: isMobile ? 1 : 3 }}
+          >
             <Box
               onClick={toggleMenu}
               sx={{
@@ -1296,9 +1334,9 @@ export const ProfileHeader = ({
                       setOpenLangModal
                         ? setOpenLangModal(true)
                         : setOpenMessageDialog({
-                          message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
-                          dontShowHeader: true,
-                        });
+                            message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
+                            dontShowHeader: true,
+                          });
                     }}
                   >
                     <TranslateIcon sx={{ mr: 1 }} />
@@ -1339,10 +1377,12 @@ export const ProfileHeader = ({
                   {["B", "m1", "m2", "m3"].includes(milestoneLevel) && (
                     <>
                       <Divider />
-                      <ListItemButton onClick={() => {
-                        setMenuOpen(false);
-                        handleAlphabetChartOpen();
-                      }}>
+                      <ListItemButton
+                        onClick={() => {
+                          setMenuOpen(false);
+                          handleAlphabetChartOpen();
+                        }}
+                      >
                         <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
                         <ListItemText
                           primary={ui.ASSESSMENT_ALPHABET_CHART}
@@ -1357,10 +1397,12 @@ export const ProfileHeader = ({
                     </>
                   )}
                   <Divider />
-                  <ListItemButton onClick={() => {
-                    setMenuOpen(false);
-                    handleLogout();
-                  }}>
+                  <ListItemButton
+                    onClick={() => {
+                      setMenuOpen(false);
+                      handleLogout();
+                    }}
+                  >
                     <LogoutIcon sx={{ mr: 1 }} />
                     <ListItemText
                       primary={ui.ASSESSMENT_LOGOUT}
@@ -1564,9 +1606,9 @@ export const ProfileHeader = ({
                 setOpenLangModal
                   ? setOpenLangModal(true)
                   : setOpenMessageDialog({
-                    message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
-                    dontShowHeader: true,
-                  })
+                      message: ui.ASSESSMENT_GO_HOME_CHANGE_LANGUAGE,
+                      dontShowHeader: true,
+                    })
               }
             >
               <Box sx={{ position: "relative", cursor: "pointer" }}>
@@ -1590,7 +1632,7 @@ export const ProfileHeader = ({
                     {isMobile
                       ? ui.ASSESSMENT_LANGUAGE_SHORT
                       : languages?.find((elem) => elem.lang === language)
-                        ?.name || ui.ASSESSMENT_SELECT_LANGUAGE}
+                          ?.name || ui.ASSESSMENT_SELECT_LANGUAGE}
                   </span>
                 </Box>
               </Box>
@@ -1824,7 +1866,7 @@ const Assesment = ({ discoverStart }) => {
 
           setVocabCount(
             getMilestoneDetails?.data?.extra?.vocabulary_count +
-            getMilestoneDetails?.data?.extra?.learned_voc_count || 0
+              getMilestoneDetails?.data?.extra?.learned_voc_count || 0
           );
           setWordCount(
             getMilestoneDetails?.data?.extra?.latest_towre_data
@@ -2096,25 +2138,24 @@ const Assesment = ({ discoverStart }) => {
   //   f3FlowStepIndex: f3FlowStep.index,
   // });
 
+  const getBackgroundImage = () => {
+    if (rFlow === "true") {
+      if (level === 1) {
+        return rOneImage;
+      }
+      if (level === 2) {
+        if (rStep === 2) return rTwoImage;
+        if (rStep === 3) return rThreeImage;
+        if (rStep === 4) return rFourImage;
+      }
+    }
+    return images?.[imageKey];
+  };
 
   const sectionStyle = {
     width: "100vw",
     height: "100vh",
-    // backgroundImage: `url(${
-    //   rFlow === "true" ? rOneImage : images?.[`desktopLevel${level || 1}`]
-    // })`,
-    backgroundImage: `url(${rFlow === "true"
-      ? level == 1
-        ? rOneImage
-        : level == 2 && rStep === 2
-          ? rTwoImage
-          : level == 2 && rStep === 3
-            ? rThreeImage
-            : level == 2 && rStep === 4
-              ? rFourImage
-              : images?.[imageKey]
-      : images?.[imageKey]
-      })`,
+    backgroundImage: `url(${getBackgroundImage()})`,
     backgroundRepeat: "round",
     backgroundSize: "auto",
     position: "relative",
@@ -2229,17 +2270,17 @@ const Assesment = ({ discoverStart }) => {
                   {shouldShowF3
                     ? ui.ASSESSMENT_START_F3
                     : shouldShowF2
-                      ? ui.ASSESSMENT_START_F2
-                      : isF1FlowActive
-                        ? ui.ASSESSMENT_START_F1
-                        : milestoneLevel === "B" && rFlow === "true"
-                          ? ui.ASSESSMENT_LEARN_LETTERS
-                          : // Only show "Learn Letters" for milestone level "B" (F1/F2/F3 flows)
-                          // For milestone levels "m1", "m2", etc., show "Start Level X"
-                          ui.ASSESSMENT_START_LEVEL.replace(
-                            "{level}",
-                            String(level)
-                          )}
+                    ? ui.ASSESSMENT_START_F2
+                    : isF1FlowActive
+                    ? ui.ASSESSMENT_START_F1
+                    : milestoneLevel === "B" && rFlow === "true"
+                    ? ui.ASSESSMENT_LEARN_LETTERS
+                    : // Only show "Learn Letters" for milestone level "B" (F1/F2/F3 flows)
+                      // For milestone levels "m1", "m2", etc., show "Start Level X"
+                      ui.ASSESSMENT_START_LEVEL.replace(
+                        "{level}",
+                        String(level)
+                      )}
                 </span>
               </Box>
             </Box>
@@ -2263,7 +2304,10 @@ const Assesment = ({ discoverStart }) => {
               position: "absolute",
               top: { xs: "20px", md: "35%" },
               left: "50%",
-              transform: { xs: "translate(-50%, 0)", md: "translate(-50%, -50%)" },
+              transform: {
+                xs: "translate(-50%, 0)",
+                md: "translate(-50%, -50%)",
+              },
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -2318,9 +2362,9 @@ const Assesment = ({ discoverStart }) => {
                   >
                     {level > 0
                       ? ui.ASSESSMENT_TAKE_COMPLETE_LEVEL.replace(
-                        "{level}",
-                        String(level)
-                      )
+                          "{level}",
+                          String(level)
+                        )
                       : ui.ASSESSMENT_TAKE_DISCOVER_LEVEL}
                   </Typography>
                 </Box>
