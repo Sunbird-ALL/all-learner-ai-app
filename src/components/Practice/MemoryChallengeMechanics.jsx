@@ -76,14 +76,14 @@ const MemoryChallengeMechanicsContent = ({
     lang === "en"
       ? "en"
       : lang === "te"
-      ? "te"
-      : lang === "kn"
-      ? "kn"
-      : lang === "mr"
-      ? "mr"
-      : lang === "hi"
-      ? "hi"
-      : "en";
+        ? "te"
+        : lang === "kn"
+          ? "kn"
+          : lang === "mr"
+            ? "mr"
+            : lang === "hi"
+              ? "hi"
+              : "en";
   const initialAudioLanguage = initialLanguage;
 
   useEffect(() => {
@@ -146,10 +146,10 @@ const MemoryChallengeMechanicsContent = ({
   const generateSequences = () => {
     const supportedLanguage =
       initialLanguage === "en" ||
-      initialLanguage === "te" ||
-      initialLanguage === "kn" ||
-      initialLanguage === "mr" ||
-      initialLanguage === "hi"
+        initialLanguage === "te" ||
+        initialLanguage === "kn" ||
+        initialLanguage === "mr" ||
+        initialLanguage === "hi"
         ? initialLanguage
         : "en";
 
@@ -215,8 +215,8 @@ const MemoryChallengeMechanicsContent = ({
       (f3FlowStep.step?.type === "A"
         ? `A${f3FlowStep.step?.step}`
         : f3FlowStep.step?.type === "P"
-        ? `P${f3FlowStep.step?.step}`
-        : null);
+          ? `P${f3FlowStep.step?.step}`
+          : null);
 
     // Determine apply_level - use step title for all F3 flow steps
     const apply_level = stepTitle || undefined;
@@ -452,8 +452,7 @@ const MemoryChallengeMechanicsContent = ({
       // A1: Memory Challenge failure → P1 (failRedirect)
       // A2: Memory Challenge failure → P6 (failRedirect)
       console.log(
-        `Memory Challenge - Level ${currentGameLevel} failed (accuracy: ${accuracy}%, need >= 80%), redirecting to ${
-          failRedirect || "P1"
+        `Memory Challenge - Level ${currentGameLevel} failed (accuracy: ${accuracy}%, need >= 80%), redirecting to ${failRedirect || "P1"
         }`
       );
       setIsGameComplete(true);
@@ -692,8 +691,7 @@ const MemoryChallengeMechanicsContent = ({
                 if (hasMoreLevels) {
                   // Move to next level
                   console.log(
-                    `Memory Challenge - Level ${currentGameLevel} passed, moving to Level ${
-                      currentGameLevel + 1
+                    `Memory Challenge - Level ${currentGameLevel} passed, moving to Level ${currentGameLevel + 1
                     }`
                   );
                   setCurrentGameLevel((prev) => prev + 1);
@@ -778,8 +776,8 @@ const MemoryChallengeMechanicsContent = ({
                 hasMoreLevels
                   ? "Next Level"
                   : isAllLevelsComplete
-                  ? "Continue"
-                  : "Play Again"
+                    ? "Continue"
+                    : "Play Again"
               }
             />
           </div>

@@ -1141,6 +1141,12 @@ const R1 = ({
       <Box>
         <Box
           sx={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            pt: { xs: 2, md: 3 },
+            pb: { xs: 1, md: 2 },
             position: "relative",
             mx: "auto",
             width: "min(100%, 900px)",
@@ -1148,25 +1154,20 @@ const R1 = ({
             backgroundImage:
               "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
             backgroundColor: "#fff",
-            overflow: "hidden",
+            overflow: { sm: "hidden", xs: "visible" },
             boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            pt: { xs: 2, md: 3 },
-            pb: { xs: 1, md: 2 },
           }}
         >
           <Box
             sx={{
-              position: "absolute",
-              top: 10,
-              right: 20,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              width: "120px",
+              right: { xs: "10px", sm: 20 },
+              top: { xs: "-30px", sm: 10 },
+              zIndex: { xs: 9999, sm: 1 },
+              position: "absolute",
+              width: { xs: "80px", sm: "100px", md: "120px" },
             }}
           >
             <Box
@@ -1492,38 +1493,39 @@ const R1 = ({
     return (
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "hidden",
           height: "70vh",
+          overflow: { sm: "hidden", xs: "visible" },
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          display: "flex",
         }}
       >
         <Box
           sx={{
-            position: "relative",
-            mx: "auto",
-            width: "min(100%, 1024px)",
-            borderRadius: 2,
-            backgroundColor: "#fff",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
+            padding: "20px 0px",
             alignItems: "center",
             justifyContent: "center",
-            padding: "20px 0px",
+            display: "flex",
+            flexDirection: "column",
+            overflow: { sm: "hidden", xs: "visible" },
+            borderRadius: 2,
+            backgroundColor: "#fff",
+            mx: "auto",
+            width: "min(100%, 1024px)",
+            position: "relative",
           }}
         >
           <Box
             sx={{
-              position: "absolute",
-              top: 10,
-              right: 20,
-              display: "flex",
-              flexDirection: "column",
               alignItems: "center",
-              width: "120px",
+              flexDirection: "column",
+              display: "flex",
+              zIndex: { xs: 9999, sm: 1 },
+              right: { xs: "10px", sm: 20 },
+              top: { xs: "-30px", sm: 10 },
+              width: { xs: "80px", sm: "100px", md: "120px" },
+              position: "absolute",
             }}
           >
             <Box
@@ -1851,7 +1853,7 @@ const R1 = ({
     >
       <Box
         sx={{
-          overflow: "hidden",
+          overflow: { sm: "hidden", xs: "visible" },
           display: "flex",
           flexDirection: "column",
         }}

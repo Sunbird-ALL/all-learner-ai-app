@@ -6606,7 +6606,7 @@ const LetterTrain = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            overflow: "hidden",
+            overflow: { sm: "hidden", xs: "visible" },
             height: { xs: "auto", sm: "60vh" },
             minHeight: { xs: "50vh", sm: "60vh" },
           }}
@@ -6620,7 +6620,7 @@ const LetterTrain = ({
               backgroundImage:
                 "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
               backgroundColor: "#fff",
-              overflow: "hidden",
+              overflow: { sm: "hidden", xs: "visible" },
               boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
               display: "flex",
               flexDirection: "column",
@@ -6633,13 +6633,14 @@ const LetterTrain = ({
             {/* Progress container - right side */}
             <Box
               sx={{
+                zIndex: { xs: 9999, sm: 1 },
+                right: { xs: "10px", sm: 20 },
+                top: { xs: "-30px", sm: 10 },
                 position: "absolute",
-                top: { xs: 8, sm: 10 },
-                right: { xs: 10, sm: 20 },
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
                 width: { xs: "80px", sm: "100px", md: "120px" },
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
               }}
             >
               <Box
@@ -6687,17 +6688,17 @@ const LetterTrain = ({
             {/* Title container - left side */}
             <Box
               sx={{
-                position: "absolute",
-                top: { xs: 12, sm: 14, md: 16 },
-                left: { xs: 8, sm: 12, md: 16 },
-                backgroundColor: "rgba(255, 255, 255, 0.95)",
-                borderRadius: { xs: "16px", sm: "20px", md: "24px" },
-                padding: { xs: "8px 12px", sm: "10px 14px", md: "14px 18px" },
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 border: "2px solid #FF9800",
-                zIndex: 10,
+                zIndex: { xs: 10, sm: 10 },
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                padding: { xs: "6px 10px", sm: "10px 14px", md: "14px 18px" },
+                borderRadius: { xs: "16px", sm: "20px", md: "24px" },
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                minWidth: { xs: "80px", sm: "120px", md: "140px" },
+                left: { xs: 8, sm: 12, md: 16 },
+                top: { xs: 0, sm: 14, md: 16 },
+                position: "absolute",
                 backdropFilter: "blur(5px)",
-                minWidth: { xs: "100px", sm: "120px", md: "140px" },
               }}
             >
               <Typography
@@ -7048,7 +7049,7 @@ const LetterTrain = ({
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            overflow: "hidden",
+            overflow: { sm: "hidden", xs: "visible" },
             height: "70vh",
           }}
         >
@@ -7059,7 +7060,7 @@ const LetterTrain = ({
               width: "min(100%, 1024px)",
               borderRadius: 2,
               backgroundColor: "#fff",
-              overflow: "hidden",
+              overflow: { sm: "hidden", xs: "visible" },
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -7070,12 +7071,13 @@ const LetterTrain = ({
             <Box
               sx={{
                 position: "absolute",
-                top: 10,
-                right: 20,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                width: "120px",
+                width: { xs: "80px", sm: "100px", md: "120px" },
+                right: { xs: "10px", sm: 20 },
+                zIndex: { xs: 9999, sm: 1 },
+                top: { xs: "-30px", sm: 10 },
               }}
             >
               <Box
@@ -7276,7 +7278,7 @@ const LetterTrain = ({
     >
       <Box
         sx={{
-          overflow: "hidden",
+          overflow: { sm: "hidden", xs: "visible" },
           display: "flex",
           flexDirection: "column",
         }}

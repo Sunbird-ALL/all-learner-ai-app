@@ -1,7 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { useMediaQuery, createTheme } from "@mui/material";
 import MotherTongue from "./../assets/motherTongue.svg";
 import textureImage from "../assets/images/textureImage.png";
 import { getLocalData, setLocalData } from "./constants";
+
+const theme = createTheme();
 
 // Language code to full language object mapping
 const languageMap = {
@@ -18,6 +21,7 @@ const languageMap = {
 
 // Default language codes (fallback if env variable is not set)
 const defaultLanguageCodes = ["ka", "tn", "te", "hi"];
+// const defaultLanguageCodes = ["kn", "te"];
 
 // Get languages from environment variable or use defaults
 const getNativeLanguages = () => {
@@ -93,6 +97,8 @@ const getDefaultNativeLanguage = (availableLanguages) => {
 };
 
 const LanguageModalNew = ({ show, word, onClose }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   // Get languages from env variable or defaults
   const availableLanguages = useMemo(() => getNativeLanguages(), []);
 
@@ -130,59 +136,109 @@ const LanguageModalNew = ({ show, word, onClose }) => {
     onClose();
   };
 
+  const modalStyle = {
+    ...styles.modal,
+    width: isMobile ? "100%" : styles.modal.width,
+    maxWidth: isMobile ? "420px" : styles.modal.maxWidth,
+    backgroundSize: isMobile ? "cover" : styles.modal.backgroundSize,
+    backgroundRepeat: isMobile ? "no-repeat" : styles.modal.backgroundRepeat,
+    boxShadow: isMobile ? "0px 10px 30px rgba(0, 0, 0, 0.15)" : styles.modal.boxShadow,
+    padding: isMobile ? "20px 16px" : styles.modal.padding,
+  };
+
+  const headerStyle = {
+    ...styles.header,
+    marginBottom: isMobile ? "15px" : styles.header.marginBottom,
+  };
+
+  const avatarStyle = {
+    ...styles.avatar,
+    width: isMobile ? "40px" : styles.avatar.width,
+    height: isMobile ? "40px" : styles.avatar.height,
+  };
+
+  const titleStyle = {
+    ...styles.title,
+    fontSize: isMobile ? "20px" : styles.title.fontSize,
+  };
+
+  const langGridStyle = {
+    ...styles.langGrid,
+    gap: isMobile ? "10px" : styles.langGrid.gap,
+    marginBottom: isMobile ? "15px" : styles.langGrid.marginBottom,
+  };
+
+  const confirmBtnStyle = {
+    ...styles.confirmBtn,
+    height: isMobile ? "48px" : styles.confirmBtn.height,
+    marginTop: isMobile ? "5px" : styles.confirmBtn.marginTop,
+  };
+
   return (
     <div style={styles.backdrop}>
-      <div style={styles.modal}>
-        <div style={styles.header}>
-          <img src={MotherTongue} alt="icon" style={styles.avatar} />
-          <h2 style={styles.title}>Choose your help language</h2>
+      <div style={modalStyle}>
+        <div style={headerStyle}>
+          <img src={MotherTongue} alt="icon" style={avatarStyle} />
+          <h2 style={titleStyle}>Choose your help language</h2>
         </div>
 
-        <div style={styles.langGrid}>
+        <div style={langGridStyle}>
           {availableLanguages.map((entry, index) => {
             const isSelected = selectedLang === entry.text;
+
+            const cardStyle = {
+              ...styles.card,
+              backgroundColor: isSelected ? "#F37021" : "#fff",
+              color: isSelected ? "#fff" : "#333F61",
+              borderColor: isSelected ? "#F37021" : "#e0e0e0",
+              position: "relative",
+              flex: isMobile ? "1 1 110px" : styles.card.flex,
+              maxWidth: isMobile ? "140px" : styles.card.maxWidth,
+            };
+
+            const cardIconStyle = {
+              ...styles.cardIcon,
+              color: isSelected ? "#fff" : "#333F61",
+              fontFamily:
+                entry.text === "te"
+                  ? "Sree Krushnadevaraya, Quicksand"
+                  : "Quicksand",
+              fontSize:
+                entry.text === "te"
+                  ? (isMobile ? "34px" : "42px")
+                  : (isMobile ? "28px" : styles.cardIcon.fontSize),
+            };
+
+            const cardTextStyle = {
+              ...styles.cardText,
+              color: isSelected ? "#fff" : "#333F61",
+              fontFamily:
+                entry.text === "te"
+                  ? "Sree Krushnadevaraya, Quicksand"
+                  : "Quicksand",
+              fontSize:
+                entry.text === "te"
+                  ? (isMobile ? "18px" : "22px")
+                  : (isMobile ? "16px" : styles.cardText.fontSize),
+            };
+
             return (
               <div
                 key={index}
-                style={{
-                  ...styles.card,
-                  backgroundColor: isSelected ? "#F37021" : "#fff",
-                  color: isSelected ? "#fff" : "#333F61",
-                  borderColor: isSelected ? "#F37021" : "#e0e0e0",
-                  position: "relative",
+                style={cardStyle}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setSelectedLang(entry.text);
+                  }
                 }}
                 onClick={() => setSelectedLang(entry.text)}
               >
-                <div
-                  style={{
-                    ...styles.cardIcon,
-                    color: isSelected ? "#fff" : "#333F61",
-                    // Apply Sree Krushnadevaraya font only for Telugu
-                    fontFamily:
-                      entry.text === "te"
-                        ? "Sree Krushnadevaraya, Quicksand"
-                        : "Quicksand",
-                    // Slightly increase size for Sree Krushnadevaraya
-                    fontSize:
-                      entry.text === "te" ? "42px" : styles.cardIcon.fontSize,
-                  }}
-                >
+                <div style={cardIconStyle}>
                   {entry.icon}
                 </div>
-                <div
-                  style={{
-                    ...styles.cardText,
-                    color: isSelected ? "#fff" : "#333F61",
-                    // Apply Sree Krushnadevaraya font only for Telugu
-                    fontFamily:
-                      entry.text === "te"
-                        ? "Sree Krushnadevaraya, Quicksand"
-                        : "Quicksand",
-                    // Slightly increase size for Sree Krushnadevaraya
-                    fontSize:
-                      entry.text === "te" ? "22px" : styles.cardText.fontSize,
-                  }}
-                >
+                <div style={cardTextStyle}>
                   {entry.lang}
                 </div>
                 <div style={isSelected ? styles.tickMark : styles.noTickMark}>
@@ -193,7 +249,7 @@ const LanguageModalNew = ({ show, word, onClose }) => {
           })}
         </div>
 
-        <button style={styles.confirmBtn} onClick={handleConfirm}>
+        <button style={confirmBtnStyle} onClick={handleConfirm}>
           Confirm
         </button>
       </div>

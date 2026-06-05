@@ -304,7 +304,7 @@ const AudioRecorder = (props) => {
                   <Box
                     sx={
                       props.pageName === "m7" ||
-                      (props.pageName === "m8" && props.buttonAnimation)
+                        (props.pageName === "m8" && props.buttonAnimation)
                         ? getPulseAnimationStyle("#FF4B4B33")
                         : {}
                     }
@@ -367,13 +367,13 @@ const AudioRecorder = (props) => {
                                 <ListenButton
                                   height={
                                     props.pageName == "m7" ||
-                                    props.pageName === "m8"
+                                      props.pageName === "m8"
                                       ? 45
                                       : 70
                                   }
                                   width={
                                     props.pageName == "m7" ||
-                                    props.pageName === "m8"
+                                      props.pageName === "m8"
                                       ? 45
                                       : 70
                                   }
@@ -390,13 +390,13 @@ const AudioRecorder = (props) => {
                               <StopButton
                                 height={
                                   props.pageName == "m7" ||
-                                  props.pageName === "m8"
+                                    props.pageName === "m8"
                                     ? 45
                                     : 70
                                 }
                                 width={
                                   props.pageName == "m7" ||
-                                  props.pageName === "m8"
+                                    props.pageName === "m8"
                                     ? 45
                                     : 70
                                 }
@@ -421,7 +421,7 @@ const AudioRecorder = (props) => {
                             style={{
                               height:
                                 props.pageName == "m7" ||
-                                props.pageName === "m8"
+                                  props.pageName === "m8"
                                   ? 45
                                   : 70,
                             }}
@@ -466,8 +466,8 @@ const AudioRecorder = (props) => {
                             <Box
                               sx={
                                 props.pageName == "m7" ||
-                                (props.pageName === "m8" &&
-                                  props.buttonAnimation)
+                                  (props.pageName === "m8" &&
+                                    props.buttonAnimation)
                                   ? getPulseAnimationStyle("#58CC0233")
                                   : {}
                               }
@@ -481,13 +481,13 @@ const AudioRecorder = (props) => {
                               <SpeakButton
                                 height={
                                   props.pageName == "m7" ||
-                                  props.pageName === "m8"
+                                    props.pageName === "m8"
                                     ? 45
                                     : 70
                                 }
                                 width={
                                   props.pageName == "m7" ||
-                                  props.pageName === "m8"
+                                    props.pageName === "m8"
                                     ? 45
                                     : 70
                                 }
