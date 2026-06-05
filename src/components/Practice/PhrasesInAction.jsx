@@ -6082,7 +6082,6 @@ const PhrasesInAction = ({
           )}
           <div
             style={{
-
               width: isMobile ? "95%" : "90%",
               height: isMobile ? "110%" : "90%",
               backgroundColor: "#ffffff",
@@ -6091,19 +6090,17 @@ const PhrasesInAction = ({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent:
-                isMobile
-                  ? isRecording
-                    ? "flex-start"
-                    : "center"
-                  : "center",
+              justifyContent: isMobile
+                ? isRecording
+                  ? "flex-start"
+                  : "center"
+                : "center",
               border: "1px solid #d9d2fc",
-              padding:
-                isMobile
-                  ? isRecording
-                    ? "10px 0px"
-                    : "20px 0px"
-                  : "50px 0px",
+              padding: isMobile
+                ? isRecording
+                  ? "10px 0px"
+                  : "20px 0px"
+                : "50px 0px",
             }}
           >
             {/* <img
@@ -6200,16 +6197,18 @@ const PhrasesInAction = ({
                   )}
 
                   {isRecordingStopped && (
-                    <div style={{
-                      textAlign: "center",
-                      marginTop: isMobile ? "0" : "20px",
-                      display: isMobile ? "flex" : undefined,
-                      flexDirection: isMobile ? "column" : undefined,
-                      justifyContent: isMobile ? "space-evenly" : undefined,
-                      alignItems: isMobile ? "center" : undefined,
-                      flex: isMobile ? "1" : undefined,
-                      width: isMobile ? "100%" : undefined,
-                    }}>
+                    <div
+                      style={{
+                        textAlign: "center",
+                        marginTop: isMobile ? "0" : "20px",
+                        display: isMobile ? "flex" : undefined,
+                        flexDirection: isMobile ? "column" : undefined,
+                        justifyContent: isMobile ? "space-evenly" : undefined,
+                        alignItems: isMobile ? "center" : undefined,
+                        flex: isMobile ? "1" : undefined,
+                        width: isMobile ? "100%" : undefined,
+                      }}
+                    >
                       <div
                         style={{
                           display: isMobile ? "contents" : "flex",
@@ -6220,7 +6219,11 @@ const PhrasesInAction = ({
                         }}
                       >
                         <div
-                          style={{ display: "flex", alignItems: "center", justifyContent: isMobile ? "center" : undefined }}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: isMobile ? "center" : undefined,
+                          }}
                         >
                           <img
                             src={Assets.tickImg}
@@ -6255,8 +6258,7 @@ const PhrasesInAction = ({
                           >
                             <Box
                               sx={{
-                                marginLeft:
-                                  isMobile ? "0" : "10px",
+                                marginLeft: isMobile ? "0" : "10px",
                                 display: "flex",
                                 marginTop: "5px",
                                 alignItems: "center",
@@ -6451,7 +6453,9 @@ const PhrasesInAction = ({
                             maxWidth: "100%",
                             overflow: "visible",
                             transform: isMobile ? "scale(0.8)" : undefined,
-                            transformOrigin: isMobile ? "center top" : undefined,
+                            transformOrigin: isMobile
+                              ? "center top"
+                              : undefined,
                           }}
                         >
                           <RecordVoiceVisualizer />
@@ -6475,7 +6479,6 @@ const PhrasesInAction = ({
                     )}
 
                     {!isRecording && !isRecordingStopped && (
-                      
                       <button
                         style={{
                           background: "transparent",
