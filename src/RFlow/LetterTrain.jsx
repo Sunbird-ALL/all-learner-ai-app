@@ -6491,28 +6491,6 @@ const LetterTrain = ({
 
   const flowNames = [...new Set(data.map((item) => item.id))];
 
-  // Component-level progress values for the mobile-only header
-  const mobileCurrentItemNumber = currentIndex + 1;
-  const mobileTotalItems = (() => {
-    if (
-      customLetters &&
-      Array.isArray(customLetters) &&
-      customLetters.length > 0 &&
-      playlist &&
-      Array.isArray(playlist)
-    ) {
-      return playlist.length;
-    }
-    if (lang === "en") return 101;
-    if (lang === "hi") return 151;
-    if (lang === "te") return 146;
-    if (lang === "kn" || lang === "ka") return 142;
-    return 100;
-  })();
-  const mobileCompletionPercentage = Math.round(
-    (mobileCurrentItemNumber / mobileTotalItems) * 100
-  );
-
   const renderUI = () => {
     const cycleIndex = Math.floor(currentIndex / 20);
     const positionInCycle = currentIndex % 20;
@@ -6635,7 +6613,7 @@ const LetterTrain = ({
         >
           <Box
             sx={{
-              position: "relative",
+              position: { xs: "static", sm: "relative" },
               mx: "auto",
               width: { xs: "100%", sm: "min(95%, 1024px)" },
               borderRadius: 2,
@@ -6654,15 +6632,15 @@ const LetterTrain = ({
               minHeight: { xs: "45vh", sm: "50vh", md: "50vh" },
             }}
           >
-            {/* Progress container - desktop only inside UI1 */}
+            {/* Progress container - right side */}
             <Box
               sx={{
-                zIndex: 1,
-                right: 20,
-                top: 10,
+                zIndex: { xs: 9999, sm: 1 },
+                right: { xs: "18px", sm: 20 },
+                top: { xs: "20px", sm: 10 },
                 position: "absolute",
-                width: { sm: "100px", md: "120px" },
-                display: { xs: "none", sm: "flex" },
+                width: { xs: "80px", sm: "100px", md: "120px" },
+                display: "flex",
                 alignItems: "center",
                 flexDirection: "column",
               }}
@@ -7088,7 +7066,7 @@ const LetterTrain = ({
         >
           <Box
             sx={{
-              position: "relative",
+              position: { xs: "static", sm: "relative" },
               mx: "auto",
               width: "min(100%, 1024px)",
               borderRadius: 2,
@@ -7101,17 +7079,17 @@ const LetterTrain = ({
               padding: "30px 0",
             }}
           >
-            {/* Progress container - desktop only inside UI2 */}
+            {/* Progress container - right side */}
             <Box
               sx={{
                 position: "absolute",
-                display: { xs: "none", sm: "flex" },
+                display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                width: { sm: "100px", md: "120px" },
-                right: 20,
-                zIndex: 1,
-                top: 10,
+                width: { xs: "80px", sm: "100px", md: "120px" },
+                right: { xs: "18px", sm: 20 },
+                zIndex: { xs: 9999, sm: 1 },
+                top: { xs: "20px", sm: 10 },
               }}
             >
               <Box
@@ -7333,62 +7311,6 @@ const LetterTrain = ({
           }}
           onClick={() => setOpen(true)}
         />
-
-        {/* Mobile-only Progress Indicator - stable position */}
-        {isMobile && (
-          <Box
-            sx={{
-              position: "absolute",
-              top: "20px",
-              right: "18px",
-              width: "90px",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-              zIndex: 1000,
-            }}
-          >
-            <Box
-              sx={{
-                backgroundColor: "#fff",
-                border: "2px solid #1CB0F6",
-                borderRadius: "20px",
-                padding: "3px 10px",
-                fontFamily: getFontFamily(lang),
-                fontWeight: 700,
-                fontSize: "12px",
-                color: "#000",
-                position: "relative",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                marginBottom: "-8px",
-              }}
-            >
-              {mobileCurrentItemNumber}/{mobileTotalItems}
-            </Box>
-            <Box
-              sx={{
-                width: "100%",
-                height: "14px",
-                backgroundColor: "#E3F2FD",
-                borderRadius: "20px",
-                overflow: "hidden",
-                position: "relative",
-                zIndex: 1,
-                border: "2px solid #BBDEFB",
-              }}
-            >
-              <Box
-                sx={{
-                  width: `${mobileCompletionPercentage}%`,
-                  height: "100%",
-                  backgroundColor: "#1CB0F6",
-                  borderRadius: "20px",
-                  transition: "width 0.4s ease",
-                }}
-              />
-            </Box>
-          </Box>
-        )}
 
         {/* Mobile-only Category Badge - stable position */}
         {isMobile && item && (
