@@ -6613,7 +6613,7 @@ const LetterTrain = ({
         >
           <Box
             sx={{
-              position: { xs: "static", sm: "relative" },
+              position: { sm: "relative" },
               mx: "auto",
               width: { xs: "100%", sm: "min(95%, 1024px)" },
               borderRadius: 2,
@@ -7065,7 +7065,7 @@ const LetterTrain = ({
         >
           <Box
             sx={{
-              position: { xs: "static", sm: "relative" },
+              position: { sm: "relative" },
               mx: "auto",
               width: "min(100%, 1024px)",
               borderRadius: 2,
