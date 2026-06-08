@@ -6687,28 +6687,27 @@ const LetterTrain = ({
               </Box>
             </Box>
 
-            {/* Title container - desktop only inside UI1 */}
+            {/* Title container - all viewports inside UI1 */}
             <Box
               sx={{
                 border: "2px solid #FF9800",
                 zIndex: 10,
                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                padding: { sm: "10px 14px", md: "14px 18px" },
-                borderRadius: { sm: "20px", md: "24px" },
+                padding: { xs: "6px 10px", sm: "10px 14px", md: "14px 18px" },
+                borderRadius: { xs: "16px", sm: "20px", md: "24px" },
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
-                minWidth: { sm: "120px", md: "140px" },
-                left: { sm: 12, md: 16 },
-                top: { sm: 14, md: 16 },
+                minWidth: { xs: "80px", sm: "120px", md: "140px" },
+                left: { xs: "18px", sm: 12, md: 16 },
+                top: { xs: "80px", sm: 14, md: 16 },
                 position: "absolute",
                 backdropFilter: "blur(5px)",
-                display: { xs: "none", sm: "block" },
               }}
             >
               <Typography
                 sx={{
                   fontFamily: getFontFamily(lang),
                   fontWeight: 700,
-                  fontSize: { sm: "16px", md: "20px" },
+                  fontSize: { xs: "14px", sm: "16px", md: "20px" },
                   color: "#FF9800",
                   whiteSpace: "nowrap",
                   textAlign: "center",
@@ -7150,7 +7149,6 @@ const LetterTrain = ({
                 maxWidth: "75%",
                 height: "140px",
                 width: { xs: "100%", sm: "350px" },
-                minWidth: { xs: "unset", sm: "350px" },
                 flexShrink: 0,
                 marginTop: "10px",
               }}
@@ -7311,39 +7309,6 @@ const LetterTrain = ({
           }}
           onClick={() => setOpen(true)}
         />
-
-        {/* Mobile-only Category Badge - stable position */}
-        {isMobile && item && (
-          <Box
-            sx={{
-              border: "2px solid #FF9800",
-              zIndex: 1000,
-              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-              padding: "6px 10px",
-              borderRadius: "16px",
-              backgroundColor: "rgba(255, 255, 255, 0.95)",
-              minWidth: "80px",
-              left: "18px",
-              top: "80px",
-              position: "absolute",
-              backdropFilter: "blur(5px)",
-            }}
-          >
-            <Typography
-              sx={{
-                fontFamily: getFontFamily(lang),
-                fontWeight: 700,
-                fontSize: "14px",
-                color: "#FF9800",
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                lineHeight: 1.2,
-              }}
-            >
-              {item.title}
-            </Typography>
-          </Box>
-        )}
 
         {/* Modal */}
         {open && (
