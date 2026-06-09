@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import PropTypes from "prop-types";
 import {
   ThemeProvider,
   createTheme,
@@ -110,6 +111,15 @@ function WordTooltipResult({
   );
 }
 
+WordTooltipResult.propTypes = {
+  description: PropTypes.string,
+  multilingual: PropTypes.object,
+  multilingualLangCode: PropTypes.string,
+  nativeLangSymbol: PropTypes.string,
+  language: PropTypes.string,
+  isMobile: PropTypes.bool,
+};
+
 function RecordingActionButtons({
   isMobile,
   language,
@@ -119,6 +129,14 @@ function RecordingActionButtons({
   playRecordedAudio,
   goToNextStep,
 }) {
+  const handleAudioKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      (isPlayingRecordedAudio ? stopRecordedAudio : playRecordedAudio)();
+    }
+  };
+  const handleNextKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") goToNextStep();
+  };
   return (
     <div
       style={{
@@ -131,7 +149,10 @@ function RecordingActionButtons({
     >
       {language !== "en" && recordedBlob && (
         <div
+          role="button"
+          tabIndex={0}
           onClick={isPlayingRecordedAudio ? stopRecordedAudio : playRecordedAudio}
+          onKeyDown={handleAudioKeyDown}
           style={{ cursor: "pointer" }}
         >
           {isPlayingRecordedAudio ? (
@@ -141,12 +162,187 @@ function RecordingActionButtons({
           )}
         </div>
       )}
-      <div onClick={goToNextStep} style={{ cursor: "pointer" }}>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={goToNextStep}
+        onKeyDown={handleNextKeyDown}
+        style={{ cursor: "pointer" }}
+      >
         <NextButtonRound height={50} width={50} />
       </div>
     </div>
   );
 }
+
+RecordingActionButtons.propTypes = {
+  isMobile: PropTypes.bool,
+  language: PropTypes.string,
+  recordedBlob: PropTypes.object,
+  isPlayingRecordedAudio: PropTypes.bool,
+  stopRecordedAudio: PropTypes.func,
+  playRecordedAudio: PropTypes.func,
+  goToNextStep: PropTypes.func,
+};
+
+function StepResultDisplay({
+  wordText, wordFontSize, tickImgSize, rowFlexDirection,
+  wordMargin, wordLineHeight,
+  isMobile, language,
+  multilingual, multilingualLangCode, nativeLangSymbol,
+  recordedBlob, isPlayingRecordedAudio, stopRecordedAudio, playRecordedAudio, goToNextStep,
+}) {
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        marginTop: isMobile ? "0" : "20px",
+        display: isMobile ? "flex" : undefined,
+        flexDirection: isMobile ? "column" : undefined,
+        justifyContent: isMobile ? "space-evenly" : undefined,
+        alignItems: isMobile ? "center" : undefined,
+        flex: isMobile ? "1" : undefined,
+        width: isMobile ? "100%" : undefined,
+      }}
+    >
+      <div
+        style={{
+          display: isMobile ? undefined : "flex",
+          flexDirection: isMobile ? undefined : rowFlexDirection,
+          alignItems: isMobile ? undefined : "center",
+          justifyContent: isMobile ? undefined : "center",
+          width: isMobile ? "100%" : undefined,
+          boxSizing: isMobile ? "border-box" : undefined,
+          padding: isMobile ? "0 12px" : undefined,
+          textAlign: isMobile ? "center" : undefined,
+        }}
+      >
+        <div
+          style={{
+            display: isMobile ? "inline-flex" : "flex",
+            alignItems: "center",
+            maxWidth: isMobile ? "100%" : undefined,
+            verticalAlign: isMobile ? "middle" : undefined,
+          }}
+        >
+          <img
+            src={Assets.tickImg}
+            alt="Tick"
+            style={{
+              width: tickImgSize,
+              height: tickImgSize,
+              marginRight: "10px",
+              flexShrink: isMobile ? 0 : undefined,
+            }}
+          />
+          <p
+            style={{
+              fontSize: wordFontSize,
+              fontWeight: 700,
+              color: "#1a1a1a",
+              letterSpacing: isMobile ? 0 : "3px",
+              fontFamily: isMobile ? getFontFamily(language) : undefined,
+              margin: wordMargin,
+              lineHeight: wordLineHeight,
+            }}
+          >
+            {wordText}
+          </p>
+        </div>
+        <WordTooltipResult
+          description={wordText}
+          multilingual={multilingual}
+          multilingualLangCode={multilingualLangCode}
+          nativeLangSymbol={nativeLangSymbol}
+          language={language}
+          isMobile={isMobile}
+        />
+      </div>
+      <RecordingActionButtons
+        isMobile={isMobile}
+        language={language}
+        recordedBlob={recordedBlob}
+        isPlayingRecordedAudio={isPlayingRecordedAudio}
+        stopRecordedAudio={stopRecordedAudio}
+        playRecordedAudio={playRecordedAudio}
+        goToNextStep={goToNextStep}
+      />
+    </div>
+  );
+}
+StepResultDisplay.propTypes = {
+  wordText: PropTypes.string,
+  wordFontSize: PropTypes.string,
+  tickImgSize: PropTypes.string,
+  rowFlexDirection: PropTypes.string,
+  wordMargin: PropTypes.string,
+  wordLineHeight: PropTypes.string,
+  isMobile: PropTypes.bool,
+  language: PropTypes.string,
+  multilingual: PropTypes.object,
+  multilingualLangCode: PropTypes.string,
+  nativeLangSymbol: PropTypes.string,
+  recordedBlob: PropTypes.object,
+  isPlayingRecordedAudio: PropTypes.bool,
+  stopRecordedAudio: PropTypes.func,
+  playRecordedAudio: PropTypes.func,
+  goToNextStep: PropTypes.func,
+};
+
+function RecordingVisualizer({
+  isMobile, boxMarginTop, boxMarginBottom, outerMarginBottom,
+  btnMarginTop, pauseImgSize, onStop,
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: outerMarginBottom,
+      }}
+    >
+      <Box
+        style={{
+          marginTop: isMobile ? "0px" : boxMarginTop,
+          marginBottom: isMobile ? "8px" : boxMarginBottom,
+          width: isMobile ? "100%" : undefined,
+          maxWidth: "100%",
+          overflow: "visible",
+          transform: isMobile ? "scale(0.8)" : undefined,
+          transformOrigin: isMobile ? "center top" : undefined,
+        }}
+      >
+        <RecordVoiceVisualizer />
+      </Box>
+      <button
+        style={{
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          marginTop: isMobile ? "16px" : btnMarginTop,
+        }}
+        onClick={onStop}
+      >
+        <img
+          src={Assets.pause}
+          alt="Stop Recording"
+          style={{ width: pauseImgSize, height: pauseImgSize }}
+        />
+      </button>
+    </div>
+  );
+}
+RecordingVisualizer.propTypes = {
+  isMobile: PropTypes.bool,
+  boxMarginTop: PropTypes.string,
+  boxMarginBottom: PropTypes.string,
+  outerMarginBottom: PropTypes.string,
+  btnMarginTop: PropTypes.string,
+  pauseImgSize: PropTypes.string,
+  onStop: PropTypes.func,
+};
 
 const PhrasesInAction = ({
   setVoiceText,
@@ -6071,6 +6267,23 @@ const PhrasesInAction = ({
     setIsRecording3((prev) => !prev);
   };
 
+  const isActiveRecording = isRecording || isRecording2;
+  const cardJustifyContent = isMobile ? (isActiveRecording ? "flex-start" : "center") : "center";
+  const cardPadding = isMobile ? (isActiveRecording ? "10px 0px" : "20px 0px") : "50px 0px";
+  const matchedMarginTop = isMatched ? (isMobile ? "0" : isTablet ? "40px" : "50px") : "20px";
+  const stepSharedProps = {
+    isMobile,
+    language,
+    multilingual,
+    multilingualLangCode,
+    nativeLangSymbol,
+    recordedBlob,
+    isPlayingRecordedAudio,
+    stopRecordedAudio,
+    playRecordedAudio,
+    goToNextStep,
+  };
+
   return (
     <MainLayout
       background={background}
@@ -6191,17 +6404,9 @@ const PhrasesInAction = ({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: isMobile
-                ? isRecording || isRecording2
-                  ? "flex-start"
-                  : "center"
-                : "center",
+              justifyContent: cardJustifyContent,
               border: "1px solid #d9d2fc",
-              padding: isMobile
-                ? isRecording || isRecording2
-                  ? "10px 0px"
-                  : "20px 0px"
-                : "50px 0px",
+              padding: cardPadding,
             }}
           >
             {/* <img
@@ -6300,84 +6505,15 @@ const PhrasesInAction = ({
                   )}
 
                   {isRecordingStopped && (
-                    <div
-                      style={{
-                        textAlign: "center",
-                        marginTop: isMobile ? "0" : "20px",
-                        display: isMobile ? "flex" : undefined,
-                        flexDirection: isMobile ? "column" : undefined,
-                        justifyContent: isMobile ? "space-evenly" : undefined,
-                        alignItems: isMobile ? "center" : undefined,
-                        flex: isMobile ? "1" : undefined,
-                        width: isMobile ? "100%" : undefined,
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: isMobile ? undefined : "flex",
-                          flexDirection: isMobile ? undefined : "row",
-                          alignItems: isMobile ? undefined : "center",
-                          justifyContent: isMobile ? undefined : "center",
-                          width: isMobile ? "100%" : undefined,
-                          boxSizing: isMobile ? "border-box" : undefined,
-                          padding: isMobile ? "0 12px" : undefined,
-                          textAlign: isMobile ? "center" : undefined,
-                        }}
-                      >
-                        {/* Tick + text: inline-flex so textAlign:center in parent centers it */}
-                        <div
-                          style={{
-                            display: isMobile ? "inline-flex" : "flex",
-                            alignItems: "center",
-                            maxWidth: isMobile ? "100%" : undefined,
-                            verticalAlign: isMobile ? "middle" : undefined,
-                          }}
-                        >
-                          <img
-                            src={Assets.tickImg}
-                            alt="Tick"
-                            style={{
-                              width: "40px",
-                              height: "40px",
-                              marginRight: "10px",
-                              flexShrink: isMobile ? 0 : undefined,
-                            }}
-                          />
-                          <p
-                            style={{
-                              fontSize: "30px",
-                              fontWeight: 700,
-                              color: "#1a1a1a",
-                              letterSpacing: isMobile ? 0 : "3px",
-                              fontFamily: isMobile ? getFontFamily(language) : undefined,
-                              margin: isMobile ? "0" : undefined,
-                              lineHeight: isMobile ? "1.4" : undefined,
-                            }}
-                          >
-                            {levelData?.allwords[0]?.text}
-                          </p>
-                        </div>
-                        {/* Show multilingual box only for English on step1 */}
-                        <WordTooltipResult
-                          description={levelData?.allwords[0]?.text}
-                          multilingual={multilingual}
-                          multilingualLangCode={multilingualLangCode}
-                          nativeLangSymbol={nativeLangSymbol}
-                          language={language}
-                          isMobile={isMobile}
-                        />
-                      </div>
-                      {/* Listen to recorded audio button - step1, 2nd page, for all languages except English */}
-                      <RecordingActionButtons
-                        isMobile={isMobile}
-                        language={language}
-                        recordedBlob={recordedBlob}
-                        isPlayingRecordedAudio={isPlayingRecordedAudio}
-                        stopRecordedAudio={stopRecordedAudio}
-                        playRecordedAudio={playRecordedAudio}
-                        goToNextStep={goToNextStep}
-                      />
-                    </div>
+                    <StepResultDisplay
+                      wordText={levelData?.allwords[0]?.text}
+                      wordFontSize="30px"
+                      tickImgSize="40px"
+                      rowFlexDirection="row"
+                      wordMargin={isMobile ? "0" : undefined}
+                      wordLineHeight={isMobile ? "1.4" : undefined}
+                      {...stepSharedProps}
+                    />
                   )}
 
                   {!isRecordingStopped && !isPaused && (
@@ -6478,46 +6614,15 @@ const PhrasesInAction = ({
                     }}
                   >
                     {isRecording && (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          marginBottom: "5px",
-                        }}
-                      >
-                        <Box
-                          style={{
-                            marginTop: isMobile ? "0px" : "-45px",
-                            marginBottom: isMobile ? "8px" : "55px",
-                            width: isMobile ? "100%" : undefined,
-                            maxWidth: "100%",
-                            overflow: "visible",
-                            transform: isMobile ? "scale(0.8)" : undefined,
-                            transformOrigin: isMobile
-                              ? "center top"
-                              : undefined,
-                          }}
-                        >
-                          <RecordVoiceVisualizer />
-                        </Box>
-                        <button
-                          style={{
-                            background: "transparent",
-                            border: "none",
-                            cursor: "pointer",
-                            marginTop: isMobile ? "16px" : "-18px",
-                          }}
-                          onClick={handleMicClick}
-                        >
-                          <img
-                            src={Assets.pause}
-                            alt="Stop Recording"
-                            style={{ width: "45px", height: "45px" }}
-                          />
-                        </button>
-                      </div>
+                      <RecordingVisualizer
+                        isMobile={isMobile}
+                        boxMarginTop="-45px"
+                        boxMarginBottom="55px"
+                        outerMarginBottom="5px"
+                        btnMarginTop="-18px"
+                        pauseImgSize="45px"
+                        onStop={handleMicClick}
+                      />
                     )}
 
                     {!isRecording && !isRecordingStopped && (
@@ -6778,59 +6883,19 @@ const PhrasesInAction = ({
                       display: "flex",
                       alignItems: "center",
                       position: "relative",
-                      marginTop: isMatched
-                        ? isMobile
-                          ? "0"
-                          : isTablet
-                          ? "40px"
-                          : "50px"
-                        : "20px",
+                      marginTop: matchedMarginTop,
                     }}
                   >
                     {isRecording2 && (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          marginBottom: isMobile ? "0" : "15px",
-                        }}
-                      >
-                        <Box
-                          style={{
-                            marginTop: isMobile ? "0px" : "-25px",
-                            marginBottom: isMobile ? "8px" : "67px",
-                            width: isMobile ? "100%" : undefined,
-                            maxWidth: "100%",
-                            overflow: "visible",
-                            transform: isMobile ? "scale(0.8)" : undefined,
-                            transformOrigin: isMobile
-                              ? "center top"
-                              : undefined,
-                          }}
-                        >
-                          <RecordVoiceVisualizer />
-                        </Box>
-                        <button
-                          style={{
-                            background: "transparent",
-                            border: "none",
-                            cursor: "pointer",
-                            marginTop: isMobile ? "16px" : "-25px",
-                          }}
-                          onClick={handleMicClick2}
-                        >
-                          <img
-                            src={Assets.pause}
-                            alt="Stop Recording"
-                            style={{
-                              width: "49px",
-                              height: "49px",
-                            }}
-                          />
-                        </button>
-                      </div>
+                      <RecordingVisualizer
+                        isMobile={isMobile}
+                        boxMarginTop="-25px"
+                        boxMarginBottom="67px"
+                        outerMarginBottom={isMobile ? "0" : "15px"}
+                        btnMarginTop="-25px"
+                        pauseImgSize="49px"
+                        onStop={handleMicClick2}
+                      />
                     )}
 
                     {isCorrectImageSelected &&
@@ -6858,93 +6923,15 @@ const PhrasesInAction = ({
                   </div>
 
                   {isRecordingStopped2 && (
-                    <div
-                      style={{
-                        textAlign: "center",
-                        marginTop: isMobile ? "0" : "20px",
-                        display: isMobile ? "flex" : undefined,
-                        flexDirection: isMobile ? "column" : undefined,
-                        justifyContent: isMobile ? "space-evenly" : undefined,
-                        alignItems: isMobile ? "center" : undefined,
-                        flex: isMobile ? "1" : undefined,
-                        width: isMobile ? "100%" : undefined,
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: isMobile ? undefined : "flex",
-                          alignItems: isMobile ? undefined : "center",
-                          justifyContent: isMobile ? undefined : "center",
-                          width: isMobile ? "100%" : undefined,
-                          boxSizing: isMobile ? "border-box" : undefined,
-                          padding: isMobile ? "0 12px" : undefined,
-                          textAlign: isMobile ? "center" : undefined,
-                        }}
-                      >
-                        {/* Tick + text: inline-flex so textAlign:center in parent centers it */}
-                        <div
-                          style={{
-                            display: isMobile ? "inline-flex" : "flex",
-                            alignItems: "center",
-                            maxWidth: isMobile ? "100%" : undefined,
-                            verticalAlign: isMobile ? "middle" : undefined,
-                          }}
-                        >
-                          <img
-                            src={Assets.tickImg}
-                            alt="Tick"
-                            style={{
-                              width: isMobile
-                                ? "40px"
-                                : isTablet
-                                ? "35px"
-                                : "40px",
-                              height: isMobile
-                                ? "40px"
-                                : isTablet
-                                ? "35px"
-                                : "40px",
-                              marginRight: "10px",
-                              flexShrink: isMobile ? 0 : undefined,
-                            }}
-                          />
-                          <p
-                            style={{
-                              fontSize: isMobile
-                                ? "24px"
-                                : isTablet
-                                ? "28px"
-                                : "36px",
-                              fontWeight: 700,
-                              color: "#1a1a1a",
-                              letterSpacing: isMobile ? 0 : "3px",
-                              fontFamily: isMobile ? getFontFamily(language) : undefined,
-                            }}
-                          >
-                            {levelData?.correctWordTwo}
-                          </p>
-                        </div>
-                        {/* Show multilingual box only for English on step2 */}
-                        <WordTooltipResult
-                          description={levelData?.correctWordTwo}
-                          multilingual={multilingual}
-                          multilingualLangCode={multilingualLangCode}
-                          nativeLangSymbol={nativeLangSymbol}
-                          language={language}
-                          isMobile={isMobile}
-                        />
-                      </div>
-                      {/* Listen to recorded audio button - step2, 2nd page, for all languages except English */}
-                      <RecordingActionButtons
-                        isMobile={isMobile}
-                        language={language}
-                        recordedBlob={recordedBlob}
-                        isPlayingRecordedAudio={isPlayingRecordedAudio}
-                        stopRecordedAudio={stopRecordedAudio}
-                        playRecordedAudio={playRecordedAudio}
-                        goToNextStep={goToNextStep}
-                      />
-                    </div>
+                    <StepResultDisplay
+                      wordText={levelData?.correctWordTwo}
+                      wordFontSize={isMobile ? "24px" : isTablet ? "28px" : "36px"}
+                      tickImgSize={isMobile ? "40px" : isTablet ? "35px" : "40px"}
+                      rowFlexDirection={undefined}
+                      wordMargin={undefined}
+                      wordLineHeight={undefined}
+                      {...stepSharedProps}
+                    />
                   )}
                 </div>
               )}
