@@ -5,7 +5,18 @@ import tortoiseImg from "../assets/tortoise.svg";
 import meterlineimg from "../assets/meterline.svg";
 import dotimg from "../assets/dott.svg";
 
-const SpeedSelector = ({ onSelect, selected: propSelected }) => {
+const SPEED_ITEMS = [
+  { label: "Slow", img: tortoiseImg },
+  { label: "Medium", img: rabbitImg },
+  { label: "Fast", img: cheetahImg },
+];
+
+const SpeedSelector = ({
+  onSelect,
+  selected: propSelected,
+  horizontal = false,
+  floated = true,
+}) => {
   const [localSelected, setLocalSelected] = useState("Slow");
   const selected = propSelected !== undefined ? propSelected : localSelected;
 
@@ -29,34 +40,61 @@ const SpeedSelector = ({ onSelect, selected: propSelected }) => {
 
   const { needleRotate, fillRotate } = getRotationAndFill();
 
+  // All sizing/layout values derived from the orientation flag — single render tree below
+  const gaugeW = horizontal ? 52 : 80;
+  const gaugeH = horizontal ? 26 : 40;
+  const gaugeR = horizontal ? 30 : 40; // border-radius for arc layers
+  const innerTop = horizontal ? 8 : 12; // white inner arc top offset
+  const innerWGap = horizontal ? 16 : 25; // calc(100% - X) for inner arc width
+  const innerHGap = horizontal ? 5 : 8; // calc(100% - X) for inner arc height
+  const needleH = horizontal ? 20 : 30;
+  const needleW = horizontal ? 3 : 5;
+  const dotW = horizontal ? 7 : 10;
+  const iconW = horizontal ? 28 : 34;
+  const labelSize = horizontal ? "11px" : "16px";
+  const gaugeMB = horizontal ? 0 : "20px";
+  const itemPad = horizontal ? "6px 10px" : "10px 0";
+  const itemMinW = horizontal ? "52px" : undefined;
+  const itemBR = horizontal ? "12px" : "16px";
+  const iconMB = horizontal ? "3px" : "5px";
+
   return (
     <div
       style={{
-        position: "absolute",
-        right: "20px",
-        top: "59%",
-        transform: "translateY(-50%)",
+        // horizontal: flows as a row  |  floated vertical: absolute to card  |  inline vertical: normal flow column
+        ...(!horizontal && floated
+          ? {
+              position: "absolute",
+              right: "20px",
+              top: "59%",
+              transform: "translateY(-50%)",
+            }
+          : {}),
         display: "flex",
-        flexDirection: "column",
+        flexDirection: horizontal ? "row" : "column",
         alignItems: "center",
+        gap: horizontal ? "6px" : undefined,
         background: "#fff",
         borderRadius: "16px",
         boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
-        padding: "-5px 5px",
+        padding: horizontal ? "8px 10px" : "0 5px",
       }}
     >
+      {/* Gauge — shared between both orientations, scaled via variables */}
       <div
         style={{
           position: "relative",
-          width: "80px",
-          height: "40px",
+          width: `${gaugeW}px`,
+          height: `${gaugeH}px`,
           overflow: "hidden",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginBottom: "20px",
+          marginBottom: gaugeMB,
+          flexShrink: 0,
         }}
       >
+        {/* White base */}
         <div
           style={{
             position: "absolute",
@@ -65,22 +103,23 @@ const SpeedSelector = ({ onSelect, selected: propSelected }) => {
             width: "100%",
             height: "100%",
             backgroundColor: "#fff",
-            borderTopLeftRadius: "40px",
-            borderTopRightRadius: "40px",
+            borderTopLeftRadius: `${gaugeR}px`,
+            borderTopRightRadius: `${gaugeR}px`,
           }}
         />
 
+        {/* Orange fill arc */}
         <div
           style={{
             position: "absolute",
-            bottom: "0px",
-            left: "0px",
+            bottom: 0,
+            left: 0,
             width: "100%",
             height: "100%",
             background:
               "conic-gradient(from -90deg at 50% 100%, orange 0deg, orange 180deg, white 180deg, white 360deg)",
-            borderTopLeftRadius: "40px",
-            borderTopRightRadius: "40px",
+            borderTopLeftRadius: `${gaugeR}px`,
+            borderTopRightRadius: `${gaugeR}px`,
             transform: `rotate(${fillRotate}deg)`,
             transformOrigin: "50% 100%",
             transition: "transform 0.4s ease",
@@ -88,31 +127,34 @@ const SpeedSelector = ({ onSelect, selected: propSelected }) => {
           }}
         />
 
+        {/* Gray track */}
         <div
           style={{
             position: "absolute",
-            top: "0px",
+            top: 0,
             width: "100%",
             height: "100%",
-            borderTopLeftRadius: "40px",
-            borderTopRightRadius: "40px",
+            borderTopLeftRadius: `${gaugeR}px`,
+            borderTopRightRadius: `${gaugeR}px`,
             backgroundColor: "#eeeff1",
           }}
         />
 
+        {/* White inner arc (donut cutout) */}
         <div
           style={{
             position: "absolute",
-            top: "12px",
-            width: "calc(100% - 25px)",
-            height: "calc(100% - 8px)",
-            borderTopLeftRadius: "40px",
-            borderTopRightRadius: "40px",
+            top: `${innerTop}px`,
+            width: `calc(100% - ${innerWGap}px)`,
+            height: `calc(100% - ${innerHGap}px)`,
+            borderTopLeftRadius: `${gaugeR}px`,
+            borderTopRightRadius: `${gaugeR}px`,
             backgroundColor: "#fff",
             zIndex: 2,
           }}
         />
 
+        {/* Needle */}
         <div
           style={{
             position: "absolute",
@@ -130,54 +172,55 @@ const SpeedSelector = ({ onSelect, selected: propSelected }) => {
           <img
             src={meterlineimg}
             alt="needle"
-            style={{ width: "5px", height: "30px" }}
+            style={{ width: `${needleW}px`, height: `${needleH}px` }}
           />
           <img
             src={dotimg}
             alt="dot"
-            style={{ width: "10px", marginTop: "-2px" }}
+            style={{ width: `${dotW}px`, marginTop: "-1px" }}
           />
         </div>
       </div>
 
+      {/* Speed options — column on desktop, row on mobile */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: horizontal ? "row" : "column",
           alignItems: "center",
-          gap: "10px",
-          width: "100%",
+          gap: horizontal ? "4px" : "10px",
+          width: horizontal ? undefined : "100%",
         }}
       >
-        {[
-          { label: "Slow", img: tortoiseImg },
-          { label: "Medium", img: rabbitImg },
-          { label: "Fast", img: cheetahImg },
-        ].map((item) => (
+        {SPEED_ITEMS.map((item) => (
           <div
             key={item.label}
             onClick={() => handleSelect(item.label)}
             style={{
               cursor: "pointer",
-              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: horizontal ? undefined : "100%",
+              minWidth: itemMinW,
               textAlign: "center",
-              borderRadius: "16px",
-              padding: "10px 0",
+              borderRadius: itemBR,
+              padding: itemPad,
               background:
                 selected === item.label
                   ? "linear-gradient(180deg, #fff3e0, #ffe0b2)"
                   : "transparent",
-              transition: "0.3s",
+              transition: "background 0.3s",
             }}
           >
             <img
               src={item.img}
               alt={item.label}
-              style={{ width: "34px", marginBottom: "5px" }}
+              style={{ width: `${iconW}px`, marginBottom: iconMB }}
             />
             <div
               style={{
-                fontSize: "16px",
+                fontSize: labelSize,
                 fontWeight: "600",
                 color: selected === item.label ? "#333" : "#555",
               }}
