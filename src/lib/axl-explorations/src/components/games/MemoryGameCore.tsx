@@ -178,7 +178,7 @@ export function MemoryGameCore({
 {/* Letter Selection Grid */}
 <div className="mb-2 sm:mb-3">
   <div className="flex justify-center">
-    <div className="relative">
+    <div className="relative w-full">
       {/* Hand Pointer for preview mode */}
       {mode === 'preview' && showHandPointer && !showFeedback && userInput.length < currentSequence.sequence.length && (
         <div className="absolute left-0 top-1/2 transform -translate-x-12 -translate-y-1/2 rotate-90">
@@ -193,7 +193,8 @@ export function MemoryGameCore({
   ref={optionsRef}
       className={`
     grid
-    ${mode === 'preview' ? 'gap-3 sm:gap-4 md:gap-5 lg:gap-6' : 'gap-3 sm:gap-4 md:gap-5 lg:gap-6'}
+    w-full
+    gap-2 sm:gap-4 md:gap-5 lg:gap-6
     justify-items-center
     transition-all duration-300
   `}
@@ -202,7 +203,7 @@ export function MemoryGameCore({
     gridTemplateColumns: `repeat(${Math.min(
       Math.ceil(currentLetterOptions.length / 2), // 2 letters per row by default
       5 // max 5 columns
-    )}, minmax(3rem, 1fr))`,
+    )}, minmax(2.5rem, 1fr))`,
     maxWidth: mode === 'preview'
       ? (currentLetterOptions.length <= 4
           ? '22rem' // small
@@ -232,8 +233,8 @@ export function MemoryGameCore({
     transition-all duration-200 shadow-md hover:shadow-lg
 
     ${mode === 'preview' 
-      ? 'h-10 w-10 text-xl sm:h-12 sm:w-12 sm:text-2xl md:h-14 md:w-14 md:text-3xl lg:h-16 lg:w-16 lg:text-4xl'
-      : 'h-16 w-16 text-3xl sm:h-20 sm:w-20 sm:text-4xl md:h-24 md:w-24 md:text-5xl lg:h-26 lg:w-26 lg:text-6xl'
+      ? 'h-9 w-9 text-lg sm:h-12 sm:w-12 sm:text-2xl md:h-14 md:w-14 md:text-3xl lg:h-16 lg:w-16 lg:text-4xl'
+      : 'h-11 w-11 text-xl sm:h-20 sm:w-20 sm:text-4xl md:h-24 md:w-24 md:text-5xl lg:h-26 lg:w-26 lg:text-6xl'
     }
   `}
   style={{

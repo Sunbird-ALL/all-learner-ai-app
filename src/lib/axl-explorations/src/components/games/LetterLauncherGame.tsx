@@ -1221,7 +1221,7 @@ export function LetterLauncherGame({ onBack, contentCount = 30 }: LetterLauncher
     <SpaceBackground className="h-screen p-2 sm:p-4 overflow-hidden flex flex-col">
       <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col min-h-0">
           {/* Header */}
-          <div className="relative flex flex-row items-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
+          <div className="letter-launcher-header-wrapper relative flex flex-row items-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
             <Button 
               onClick={handleBackClick}
               className="bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30 hover:text-white text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 z-10"
@@ -1232,7 +1232,7 @@ export function LetterLauncherGame({ onBack, contentCount = 30 }: LetterLauncher
             </Button>
             
             <div className="absolute left-1/2 transform -translate-x-1/2 text-center w-full">
-              <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
+              <h1 className="letter-launcher-header text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
                 Letter Launcher
               </h1>
               <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-[10px] sm:text-xs mt-0.5">
