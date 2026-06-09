@@ -34,7 +34,7 @@ interface LetterHuntGameCoreProps {
   
   // Mode configuration
   mode: 'game' | 'preview';
-  
+
   // Event handlers
   onAnswerSelect: (answer: string) => void;
   onContinue: () => void;
@@ -198,7 +198,7 @@ export function LetterHuntGameCore({
     if (isAudioStoppedRef.current) {
       return;
     }
-    
+
     return new Promise((resolve) => {
       // For Telugu, try to use local audio files first
       if (language === 'te') {
@@ -765,17 +765,17 @@ export function LetterHuntGameCore({
 
   const Container: any = useContainer === 'card' ? Card : 'div';
   const containerClass = useContainer === 'card'
-    ? `flex-1 p-0 sm:p-0.5 md:p-1 lg:p-2 bg-white/95 backdrop-blur-sm shadow-floating overflow-y-auto flex flex-col relative ${className}`
-    : `flex-1 p-0 sm:p-0.5 md:p-1 lg:p-2 overflow-y-auto flex flex-col relative ${className}`;
+    ? `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 bg-white/95 backdrop-blur-sm shadow-floating overflow-y-auto flex flex-col relative ${className}`
+    : `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 overflow-y-auto flex flex-col relative ${className}`;
 
   return (
     <Container className={containerClass}>
       {/* Progress Bar with Stars and Lives */}
       {showProgress && progress && (
         <div className="flex-shrink-0 mb-0">
-          <ProgressBar 
-            current={progress.current} 
-            total={progress.total} 
+          <ProgressBar
+            current={progress.current}
+            total={progress.total}
             score={progress.score}
             lives={lives}
             maxLives={maxLives}
@@ -787,20 +787,19 @@ export function LetterHuntGameCore({
       <div className="flex-1 flex flex-col justify-center px-0 py-0 min-h-0">
         {/* Top Section - Audio */}
         {showSpeaker && (
-          <div className="text-center mb-0 sm:mb-0.5 md:mb-1 flex-shrink-0">
-            <div 
+          <div className="text-center mb-0 sm:mb-0.5 md:mb-1 flex-shrink-0 mb-[16px] md:mb-[25px]">
+            <div
               ref={speakerButtonRef}
-              className={`inline-block p-0.5 sm:p-1 md:p-1.5 rounded-lg transition-colors ${
-                mode === 'preview' && demoStep === 'waitForSpeaker' && !hasClickedSpeaker
-                  ? 'bg-blue-100 cursor-pointer hover:bg-blue-200 hover:scale-110 ring-4 ring-blue-400 ring-opacity-50 animate-pulse'
-                  : mode === 'preview' && demoStep === 'instruction1'
+              className={`inline-block p-0.5 sm:p-1 md:p-1.5 rounded-lg transition-colors ${mode === 'preview' && demoStep === 'waitForSpeaker' && !hasClickedSpeaker
+                ? 'bg-blue-100 cursor-pointer hover:bg-blue-200 hover:scale-110 ring-4 ring-blue-400 ring-opacity-50 animate-pulse'
+                : mode === 'preview' && demoStep === 'instruction1'
                   ? 'bg-gray-100 cursor-not-allowed opacity-50'
                   : 'bg-blue-100 cursor-pointer hover:bg-blue-200'
-              }`}
+                }`}
               onClick={handleSpeakerClick}
               tabIndex={mode === 'preview' && demoStep === 'waitForSpeaker' ? 0 : -1}
             >
-              <span className="text-sm sm:text-base md:text-lg lg:text-xl">🔊</span>
+              <span className="text-4xl sm:text-3xl md:text-4xl lg:text-5xl">🔊</span>
             </div>
             
             {/* Hand pointer for preview mode */}
@@ -845,18 +844,16 @@ export function LetterHuntGameCore({
                         : isSelected ? "default" : "outline"
                     }
                     size="lg"
-                    className={`h-10 sm:h-12 md:h-14 lg:h-16 xl:h-20 2xl:h-24 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl ${effectiveLanguage !== 'te' ? 'font-bold' : 'font-normal'} transition-all duration-200 shadow-sm ${
-                      isGreyedOut 
-                        ? 'bg-gray-200 text-gray-400 opacity-60 cursor-not-allowed' 
-                        : isSelected && !showFeedback
+                    className={`h-10 sm:h-12 md:h-14 lg:h-16 xl:h-20 2xl:h-24 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl ${effectiveLanguage !== 'te' ? 'font-bold' : 'font-normal'} transition-all duration-200 shadow-sm ${isGreyedOut
+                      ? 'bg-gray-200 text-gray-400 opacity-60 cursor-not-allowed'
+                      : isSelected && !showFeedback
                         ? 'bg-blue-500 text-white border-blue-600 ring-2 ring-blue-400'
                         : !showFeedback && !disabled
-                        ? 'hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-md'
-                        : ''
-                    } ${
-                      mode === 'preview' && !showFeedback && !disabled && !isGreyedOut ? 'hover:scale-105 cursor-pointer' : ''
-                    }`}
-                   style={{ fontFamily }} 
+                          ? 'hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-md'
+                          : ''
+                      } ${mode === 'preview' && !showFeedback && !disabled && !isGreyedOut ? 'hover:scale-105 cursor-pointer' : ''
+                      }`}
+                    style={{ fontFamily }}
                     onClick={() => handleOptionClick(letter)}
                     disabled={showFeedback || disabled || isGreyedOut}
                   >

@@ -232,7 +232,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     };
     
     const lettersToUse = getLevelLetters(language, level);
-    
+
     // Build weighted letter array based on confidentLetters
     const buildWeightedLetterArray = (letters: string[]): string[] => {
       if (!confidentLetters || confidentLetters.length === 0 || letters.length === 0) {
@@ -420,14 +420,14 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         
         // Extract game name without language suffix
         const gameName = gameKey.split('_')[0];
-        
+
         // Search for level stats using current user
         const searchParams = {
           userId: currentUser.username,
           courseId: gameName,
           unitId: selectedLanguage
         };
-        
+
         const result = await trackingAssessmentService.searchAssessmentTracking(searchParams);
         
         // Handle the enhanced backend response format
@@ -1057,13 +1057,13 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           selectedLanguage={selectedLanguage!}
           currentLevel={currentLevel}
           gameKey={gameKey}
-            onTryAgain={handleTryAgain}
+          onTryAgain={handleTryAgain}
           onBackToHome={onBack}
           livesLost={gameEndedByLives}
         />
       );
     }
-    
+
     // If level passed, show success screen
     // Determine if there's a next level (respecting endLevel if specified)
     const maxAllowedLevel = endLevel !== undefined ? endLevel : languageLevels.maxLevels;
@@ -1128,7 +1128,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           // Reset tracking assessment state
           setLevelStartTime(Date.now());
           setQuestionSummaries([]);
-          
+
           // Regenerate questions for the next level if within endLevel range
           if (selectedLanguage && (endLevel === undefined || nextLevel <= endLevel)) {
             const session = startSession(gameKey);

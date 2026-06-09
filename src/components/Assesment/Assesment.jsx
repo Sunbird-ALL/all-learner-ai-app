@@ -2156,8 +2156,8 @@ const Assesment = ({ discoverStart }) => {
     width: "100vw",
     height: "100vh",
     backgroundImage: `url(${getBackgroundImage()})`,
-    backgroundRepeat: "round",
-    backgroundSize: "auto",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
     position: "relative",
   };
 
