@@ -146,8 +146,14 @@ export function SpaceBackground({ children, className = '' }: SpaceBackgroundPro
           0%, 100% { opacity: 0.25; transform: scale(1); }
           50% { opacity: 0.5; transform: scale(1.1); }
         }
+        
+        @media (max-width: 767px) {
+          .space-background-container {
+            border-radius: 20px !important;
+          }
+        }
       `}</style>
-      <div className={`relative ${className}`} style={{
+      <div className={`relative space-background-container ${className}`} style={{
         background: 'radial-gradient(ellipse at bottom, #1a1a2e 0%, #16213e 25%, #0f0c29 50%, #000000 100%)',
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover',

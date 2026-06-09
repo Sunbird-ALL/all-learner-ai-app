@@ -685,7 +685,7 @@ export function LetterGamePreview({
               {/* Skip Demo Button - Bottom Left */}
               <Button
                 onClick={handleSkipDemo}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform"
+                className="w-[46%] min-w-[110px] max-w-[180px] md:w-auto md:min-w-0 md:max-w-none py-2 md:px-6 md:py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[clamp(11px,2.8vw,14px)] md:text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform whitespace-nowrap flex items-center justify-center"
               >
                 {contentLanguage === "en"
                   ? "Skip Demo"
@@ -699,9 +699,9 @@ export function LetterGamePreview({
               {/* Start Game Button - Bottom Right */}
               <Button
                 onClick={handleStartGame}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform"
+                className="w-[46%] min-w-[110px] max-w-[180px] md:w-auto md:min-w-0 md:max-w-none py-2 md:px-6 md:py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[clamp(11px,2.8vw,14px)] md:text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform whitespace-nowrap flex items-center justify-center"
               >
-                <Gamepad2 className="h-7 w-4 mr-2" />
+                <Gamepad2 className="h-[4.5vw] w-[4.5vw] mr-1.5 md:h-7 md:w-4 md:mr-2 flex-shrink-0" />
                 {contentLanguage === "en"
                   ? "Start Game"
                   : contentLanguage === "te"
