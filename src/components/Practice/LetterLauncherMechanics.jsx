@@ -1870,6 +1870,7 @@ const LetterLauncherMechanicsContent = ({
                 overflow: "hidden",
                 display: "flex",
                 flexDirection: "column",
+                borderRadius: "20px",
               }}
             >
               <div
@@ -2005,6 +2006,7 @@ const LetterLauncherMechanicsContent = ({
           setStartShowCase={effectiveSetStartShowCase}
         >
           <div
+            className="letter-launcher-screen-wrapper"
             style={{
               height: "100%",
               maxHeight: "100vh",
@@ -2067,6 +2069,7 @@ const LetterLauncherMechanicsContent = ({
           style={{ height: "100%", maxHeight: "100vh", overflow: "auto" }}
         >
           <div
+            className="letter-launcher-screen-wrapper"
             style={{
               height: "100%",
               maxHeight: "100vh",
@@ -2335,9 +2338,9 @@ const LetterLauncherMechanicsContent = ({
           style={{ height: "100%", minHeight: 0 }}
         >
           {/* Header */}
-          <div className="relative flex flex-row items-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
+          <div className="letter-launcher-header-wrapper relative flex flex-row items-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
             <div className="absolute left-1/2 transform -translate-x-1/2 text-center w-full">
-              <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
+              <h1 className="letter-launcher-header text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
                 Letter Launcher
               </h1>
             </div>

@@ -1212,10 +1212,9 @@ export function LetterLauncherGameStoryPreview({
           visibility: isVisible ? 'visible' : 'hidden'
         }}
       >
-        <div className="relative w-full max-w-[120px] xs:max-w-[140px] sm:max-w-[220px] md:max-w-sm lg:max-w-md xl:max-w-lg">
+        <div className="relative w-full max-w-[123px] xs:max-w-[140px] sm:max-w-[220px] md:max-w-sm lg:max-w-md xl:max-w-lg">
           {/* Speech bubble */}
-          <div className={`bg-white rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-2.5 md:p-3 lg:p-4 shadow-lg border-2 ${
-            character === 'rahi' ? 'border-blue-300' : 
+          <div className={`bg-white rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-2.5 md:p-3 lg:p-4 shadow-lg border-2 ${character === 'rahi' ? 'border-blue-300' :
             character === 'rilo' ? 'border-purple-300' : 
             'border-yellow-300'
           }`}>
@@ -1225,9 +1224,8 @@ export function LetterLauncherGameStoryPreview({
           </div>
           {/* Arrow pointing DOWN to character below */}
           <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 sm:-bottom-2 md:-bottom-3">
-            <div className={`w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] sm:border-l-[8px] sm:border-r-[8px] sm:border-t-[10px] md:border-l-[10px] md:border-r-[10px] md:border-t-[12px] lg:border-l-[12px] lg:border-r-[12px] lg:border-t-[14px] ${
-              character === 'rahi' ? 'border-l-transparent border-r-transparent border-t-blue-300' : 
-              character === 'rilo' ? 'border-l-transparent border-r-transparent border-t-purple-300' : 
+            <div className={`w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] sm:border-l-[8px] sm:border-r-[8px] sm:border-t-[10px] md:border-l-[10px] md:border-r-[10px] md:border-t-[12px] lg:border-l-[12px] lg:border-r-[12px] lg:border-t-[14px] ${character === 'rahi' ? 'border-l-transparent border-r-transparent border-t-blue-300' :
+              character === 'rilo' ? 'border-l-transparent border-r-transparent border-t-purple-300' :
               'border-l-transparent border-r-transparent border-t-yellow-300'
             }`}></div>
           </div>
@@ -1241,7 +1239,7 @@ export function LetterLauncherGameStoryPreview({
     const emoji = character === 'rahi' ? '👨‍🚀' : '🤖';
     // Fixed sizes for consistency
     const size = character === 'rahi' 
-      ? 'w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-5xl sm:text-6xl md:text-7xl' 
+      ? 'w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-5xl sm:text-6xl md:text-7xl'
       : 'w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 text-4xl sm:text-5xl md:text-6xl';
     
     return (
@@ -1532,7 +1530,11 @@ export function LetterLauncherGameStoryPreview({
 
             {/* Practice Rounds */}
             {(storyPhase === 'practice1' || storyPhase === 'practice2' || storyPhase === 'practice3') && (practiceQuestion || showPracticeCompletionMessage || showPracticeIntro) && (
-              <div className="w-full max-w-6xl mx-auto px-2 sm:px-4">
+              <div className="w-full max-w-6xl mx-auto px-2 sm:px-4"
+                style={{
+                  height: '100%'
+                }}
+              >
                 {/* Practice intro message - "Let's practice a tiny bit" */}
                 {showPracticeIntro && (
                   <div className="w-full max-w-6xl mx-auto px-2 sm:px-4">
@@ -1633,7 +1635,15 @@ export function LetterLauncherGameStoryPreview({
 
                 {/* Practice with conversation - Grid layout for round 1 */}
                 {practiceQuestion && practiceRound === 1 && showControlsInstruction && !showPracticeIntro && (
-                <div className="w-full max-w-full px-1 sm:px-2 md:px-0">
+                <div className="w-full max-w-full px-1 sm:px-2 md:px-0"
+                    style={{
+                      height: "93%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+
+                    }}
+                  >
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:gap-6 w-full">
                     {/* Left side - Question Box */}
                     <div className="order-1 w-full mb-24 sm:mb-4 md:mb-0">

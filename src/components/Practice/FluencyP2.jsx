@@ -460,11 +460,10 @@ const FluencyP2 = ({
 
   const renderReadingScreen = () => (
     <div
-      ref={whiteContainerRef}
       className="whiteContainer"
       style={{
         width: "90%",
-        minHeight: "400px",
+        minHeight: isMobile ? "450px" : "560px",
         height: "auto",
         maxWidth: "1200px",
         background: "#fff",
@@ -473,7 +472,7 @@ const FluencyP2 = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "0px 20px 20px 20px",
+        padding: "0",
         position: "relative",
         overflow: "visible",
       }}
@@ -501,7 +500,7 @@ const FluencyP2 = ({
             top: 0,
             left: 0,
             width: "100%",
-            height: "90vh",
+            height: "100%",
             backgroundColor: "rgba(0,0,0,0.7)",
             display: "flex",
             alignItems: "center",
@@ -550,120 +549,155 @@ const FluencyP2 = ({
       )}
       <audio ref={audioRefs} onEnded={handleAudioEnd} hidden />
 
-      <div style={{ width: "103.2%" }}>
-        <img
-          src={headerImg}
-          alt="header"
-          style={{ width: "100%", borderRadius: "12px 12px 0 0" }}
-        />
-      </div>
+      <img
+        src={headerImg}
+        alt="header"
+        style={{
+          width: "100%",
+          display: "block",
+          borderRadius: "12px 12px 0 0",
+        }}
+      />
 
       <div
+        ref={whiteContainerRef}
         style={{
-          width: "80%",
-          maxWidth: "600px",
-          minHeight: "112px",
-          height: "auto",
-          border: "2px dashed #FF6600",
-          borderRadius: "18px",
-          background: "rgba(255, 102, 0, 0.05)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "18px 20px",
           position: "relative",
-          overflow: "hidden",
-          marginTop: "48px",
-          marginBottom: "20px",
-          zIndex: 1,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          boxSizing: "border-box",
         }}
       >
-        {!showContent ? (
-          <CircularTimer
-            key={resetTimer ? `timer-${Date.now()}` : "timer"}
-            duration={3}
-            onComplete={() => {
-              setShowContent(true);
-              setResetTimer(false);
-              startRecording();
-            }}
-          />
-        ) : (
+        {/* Row wrapper: on desktop/tablet the sentence box and SpeedSelector sit side-by-side
+          so the selector always aligns with the box regardless of what is rendered below */}
+        <div
+          style={{
+            width: isMobile ? "92%" : "90%",
+            maxWidth: isMobile ? "none" : "720px",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
+            gap: isMobile ? 0 : "24px",
+            marginTop: isMobile ? "60px" : "48px",
+            marginBottom: isMobile ? "10px" : "20px",
+          }}
+        >
+          {/* Sentence box */}
           <div
             style={{
-              width: "100%",
-              minHeight: "72px",
+              flex: isMobile ? undefined : 1,
+              width: isMobile ? "100%" : undefined,
+              minHeight: isMobile ? "72px" : "112px",
+              height: "auto",
+              border: "2px dashed #FF6600",
+              borderRadius: "18px",
+              background: "rgba(255, 102, 0, 0.05)",
               display: "flex",
-              justifyContent: "flex-start",
-              alignItems: showFinalState || showBearDance ? "center" : "center",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: isMobile ? "10px 12px" : "10px 20px",
               position: "relative",
-              overflow: showFinalState || showBearDance ? "visible" : "hidden",
-              padding: showFinalState || showBearDance ? "10px 0" : "0",
+              overflow: "hidden",
+              zIndex: 1,
             }}
           >
-            <div
-              ref={sentenceRef}
-              key={animationKey}
-              style={{
-                fontWeight: "700",
-                fontSize: showFinalState || showBearDance ? "26px" : "30px",
-                lineHeight: 1.45,
-                color: "rgba(51, 63, 97, 1)",
-                textAlign: "left",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexWrap: showFinalState || showBearDance ? "wrap" : "nowrap",
-                position:
-                  showFinalState || showBearDance ? "relative" : "absolute",
-                left:
-                  showFinalState || showBearDance
-                    ? "0"
-                    : paused
-                    ? "50%"
-                    : "100%",
-                transform:
-                  showFinalState || showBearDance || paused
-                    ? "none"
-                    : "translateX(-50%)",
-                animation:
-                  showSentence && !paused && !showFinalState
-                    ? `scrollText ${getAnimationDuration()} linear infinite`
-                    : "none",
-                whiteSpace:
-                  showFinalState || showBearDance ? "normal" : "nowrap",
-                wordBreak: "break-word",
-                width: showFinalState || showBearDance ? "100%" : "auto",
-              }}
-            >
-              {showFinalState && (
-                <img
-                  src={listenImg}
-                  onClick={() => {
-                    playWordAudio(
-                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
-                    );
-                  }}
-                  alt="listen"
+            {!showContent ? (
+              <CircularTimer
+                key={resetTimer ? `timer-${Date.now()}` : "timer"}
+                duration={3}
+                onComplete={() => {
+                  setShowContent(true);
+                  setResetTimer(false);
+                  startRecording();
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  minHeight: isMobile ? "44px" : "72px",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems:
+                    showFinalState || showBearDance ? "center" : "center",
+                  position: "relative",
+                  overflow:
+                    showFinalState || showBearDance ? "visible" : "hidden",
+                  padding: showFinalState || showBearDance ? "8px 0" : "0",
+                }}
+              >
+                <div
+                  ref={sentenceRef}
+                  key={animationKey}
                   style={{
-                    width: "35px",
-                    height: "35px",
-                    marginRight: "10px",
-                    cursor: "pointer",
+                    fontWeight: "700",
+                    fontSize: isMobile
+                      ? showFinalState || showBearDance
+                        ? "16px"
+                        : "18px"
+                      : showFinalState || showBearDance
+                      ? "26px"
+                      : "30px",
+                    lineHeight: 1.45,
+                    color: "rgba(51, 63, 97, 1)",
+                    textAlign: "left",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexWrap:
+                      showFinalState || showBearDance ? "wrap" : "nowrap",
+                    position:
+                      showFinalState || showBearDance ? "relative" : "absolute",
+                    left:
+                      showFinalState || showBearDance
+                        ? "0"
+                        : paused
+                        ? "50%"
+                        : "100%",
+                    transform:
+                      showFinalState || showBearDance || paused
+                        ? "none"
+                        : "translateX(-50%)",
+                    animation:
+                      showSentence && !paused && !showFinalState
+                        ? `scrollText ${getAnimationDuration()} linear infinite`
+                        : "none",
+                    whiteSpace:
+                      showFinalState || showBearDance ? "normal" : "nowrap",
+                    wordBreak: "break-word",
+                    width: showFinalState || showBearDance ? "100%" : "auto",
                   }}
-                />
-              )}
-              {showFinalState
-                ? renderUnderlinedText(
-                    currentSentence.sentence,
-                    currentSentence.underlinedWords
-                  )
-                : currentSentence.sentence}
-            </div>
+                >
+                  {showFinalState && (
+                    <img
+                      src={listenImg}
+                      onClick={() => {
+                        playWordAudio(
+                          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
+                        );
+                      }}
+                      alt="listen"
+                      style={{
+                        width: "35px",
+                        height: "35px",
+                        marginRight: "10px",
+                        cursor: "pointer",
+                      }}
+                    />
+                  )}
+                  {showFinalState
+                    ? renderUnderlinedText(
+                        currentSentence.sentence,
+                        currentSentence.underlinedWords
+                      )
+                    : currentSentence.sentence}
+                </div>
 
-            {/* CSS Animation */}
-            <style>
-              {`
+                {/* CSS Animation */}
+                <style>
+                  {`
                 @keyframes scrollText {
                   0% {
                     left: 100%;
@@ -673,138 +707,154 @@ const FluencyP2 = ({
                   }
                 }
               `}
-            </style>
+                </style>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+          {/* end sentence box */}
 
-      {!showFinalState &&
-        (isMobile ? (
+          {/* Desktop / tablet: SpeedSelector flows inline as flex sibling of sentence box */}
+          {!showFinalState && !isMobile && (
+            <div style={{ flexShrink: 0, paddingTop: "8px" }}>
+              <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
+            </div>
+          )}
+        </div>
+        {/* end row wrapper */}
+
+        {/* Mobile: SpeedSelector as horizontal row below the sentence box */}
+        {!showFinalState && isMobile && (
           <div
             style={{
-              marginTop: "70px",
               width: "100%",
               display: "flex",
-              justifyContent: "flex-end", // RIGHT CORNER
-              paddingRight: "190px", // thoda right side ka gap
-              transform: "scale(0.70)", // optional smaller size
+              justifyContent: "center",
+              marginTop: "12px",
+              marginBottom: "8px",
             }}
           >
-            <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
+            <SpeedSelector
+              onSelect={handleSpeedSelect}
+              selected={selected}
+              horizontal
+            />
           </div>
-        ) : (
-          <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
-        ))}
+        )}
 
-      {showFinalState && hoveredWord && currentSentence?.hints[hoveredWord] && (
+        {showFinalState &&
+          hoveredWord &&
+          currentSentence?.hints[hoveredWord] && (
+            <div
+              style={{
+                position: "absolute",
+                left: hintPosition.x,
+                top: hintPosition.y,
+                transform: "translateX(-50%)",
+                zIndex: 1000,
+                pointerEvents: "none",
+              }}
+            >
+              <img
+                src={LanguageHint}
+                alt="language hint"
+                style={{
+                  width: "190px",
+                  height: "140px",
+                  userSelect: "none",
+                }}
+              />
+            </div>
+          )}
+
+        {showConfetti && showBearDance && whiteContainerRef.current && (
+          <Confetti
+            width={whiteContainerRef.current.offsetWidth}
+            height={whiteContainerRef.current.offsetHeight}
+            recycle={false}
+          />
+        )}
+
         <div
           style={{
-            position: "absolute",
-            left: hintPosition.x,
-            top: hintPosition.y,
-            transform: "translateX(-50%)",
-            zIndex: 1000,
-            pointerEvents: "none",
+            marginTop: "10px",
+            minHeight: isMobile ? "180px" : "200px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "20px",
           }}
         >
-          <img
-            src={LanguageHint}
-            alt="language hint"
-            style={{
-              width: "190px",
-              height: "140px",
-              userSelect: "none",
-            }}
-          />
+          {showContent && !animationCompleted && !paused && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: isMobile ? "10px" : "15px",
+              }}
+            >
+              <img
+                src={graphImg}
+                alt="graph"
+                style={{
+                  width: isMobile ? "220px" : "350px",
+                  maxWidth: "100%",
+                }}
+              />
+
+              <img
+                src={pauseImg}
+                alt="pause"
+                style={{
+                  width: isMobile ? "35px" : "50px",
+                  cursor: "pointer",
+                }}
+                onClick={handlePauseClick}
+              />
+            </div>
+          )}
+
+          {showBearDance && !showFinalState && (
+            <img
+              src={beardanceImg}
+              alt="bear dance"
+              style={{
+                width: "160px",
+                height: "160px",
+              }}
+            />
+          )}
+
+          {showFinalState && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "30px",
+                marginTop: "20px",
+              }}
+            >
+              <RetryIcon
+                height={50}
+                width={50}
+                style={{ cursor: "pointer" }}
+                onClick={handleRetryClick}
+              />
+              <img
+                src={nextImg}
+                alt="next"
+                role="button"
+                tabIndex={0}
+                style={{ width: "50px", cursor: "pointer" }}
+                onClick={(e) => handleNextClick(e)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    e.currentTarget.click();
+                }}
+              />
+            </div>
+          )}
         </div>
-      )}
-
-      {showConfetti && showBearDance && whiteContainerRef.current && (
-        <Confetti
-          width={whiteContainerRef.current.offsetWidth}
-          height={whiteContainerRef.current.offsetHeight}
-          recycle={false}
-        />
-      )}
-
-      <div
-        style={{
-          marginTop: "10px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "20px",
-        }}
-      >
-        {showContent && !animationCompleted && !paused && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: isMobile ? "10px" : "20px",
-            }}
-          >
-            <img
-              src={graphImg}
-              alt="graph"
-              style={{
-                width: isMobile ? "220px" : "350px",
-                maxWidth: "100%",
-              }}
-            />
-
-            <img
-              src={pauseImg}
-              alt="pause"
-              style={{
-                width: isMobile ? "35px" : "50px",
-                cursor: "pointer",
-              }}
-              onClick={handlePauseClick}
-            />
-          </div>
-        )}
-
-        {showBearDance && !showFinalState && (
-          <img
-            src={beardanceImg}
-            alt="bear dance"
-            style={{
-              width: "160px",
-              height: "160px",
-            }}
-          />
-        )}
-
-        {showFinalState && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "30px",
-              marginTop: "20px",
-            }}
-          >
-            <RetryIcon
-              height={50}
-              width={50}
-              style={{ cursor: "pointer" }}
-              onClick={handleRetryClick}
-            />
-            <img
-              src={nextImg}
-              alt="next"
-              role="button"
-              tabIndex={0}
-              style={{ width: "50px", cursor: "pointer" }}
-              onClick={(e) => handleNextClick(e)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
-              }}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
@@ -840,10 +890,11 @@ const FluencyP2 = ({
       <div
         style={{
           width: "100%",
-          background: "linear-gradient(to bottom, #fff7ef, #ffeede)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          padding: isMobile ? "12px 0 16px" : "20px 0 28px",
+          boxSizing: "border-box",
         }}
       >
         {renderReadingScreen()}

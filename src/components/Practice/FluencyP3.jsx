@@ -512,10 +512,10 @@ const FluencyP3 = ({
           alt="Beardance"
           style={{
             position: "absolute",
-            bottom: -42,
+            bottom: isMobile ? -30 : -42,
             left: "50%",
             transform: "translateX(-50%)",
-            height: "200px",
+            height: isMobile ? "100px" : "200px",
             animation: "jump 1.3s ease-in-out infinite",
             userSelect: "none",
             pointerEvents: "none",
@@ -534,10 +534,10 @@ const FluencyP3 = ({
           alt="Beardance"
           style={{
             position: "absolute",
-            bottom: -42,
+            bottom: isMobile ? -30 : -42,
             left: "50%",
             transform: "translateX(-50%)",
-            height: "200px",
+            height: isMobile ? "100px" : "200px",
             animation: "jump 1.3s ease-in-out infinite",
             userSelect: "none",
             pointerEvents: "none",
@@ -582,29 +582,13 @@ const FluencyP3 = ({
       <div
         style={{
           width: "100%",
-          background: getSpeedBackground(),
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          position: "relative",
-          overflow: "hidden",
+          padding: isMobile ? "12px 0 16px" : "20px 0 28px",
+          boxSizing: "border-box",
         }}
       >
-        <img
-          src={hintimg}
-          alt="hint"
-          style={{
-            width: "50px",
-            height: "50px",
-            position: "absolute",
-            top: "20px",
-            left: "0px",
-            cursor: "pointer",
-            zIndex: 1000,
-          }}
-          onClick={() => setOpen(true)}
-        />
-
         {/* Modal */}
         {open && (
           <div
@@ -613,7 +597,7 @@ const FluencyP3 = ({
               top: 0,
               left: 0,
               width: "100%",
-              height: "90vh",
+              height: "100%",
               backgroundColor: "rgba(0,0,0,0.7)",
               display: "flex",
               alignItems: "center",
@@ -662,32 +646,51 @@ const FluencyP3 = ({
         )}
         <div
           style={{
-            width: "90%",
-            maxWidth: "1200px",
-            height: "400px",
+            width: "95%",
+            minHeight: isMobile ? "70vh" : "560px",
+            height: "auto",
             background: "#fff",
             borderRadius: "12px",
-            boxShadow: "0px 2px8px rgba(0,0,0,0.1)",
+            boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "0px 20px 10px 20px",
+            padding: isMobile ? "0 0 16px 0" : "0 0 10px 0",
+            marginBottom: isMobile ? "30px" : undefined,
             position: "relative",
-            overflow: "hidden",
+            overflow: "visible",
           }}
         >
-          <div style={{ width: "103.2%" }}>
-            <img
-              src={headerImg}
-              alt="header"
-              style={{ width: "100%", borderRadius: "12px 12px 0 0" }}
-            />
-          </div>
+          <img
+            src={hintimg}
+            alt="hint"
+            style={{
+              width: isMobile ? "30px" : "50px",
+              height: "50px",
+              position: "absolute",
+              top: "20px",
+              left: "10px",
+              cursor: "pointer",
+              zIndex: 1000,
+            }}
+            onClick={() => setOpen(true)}
+          />
+
+          <img
+            src={headerImg}
+            alt="header"
+            style={{
+              width: isMobile ? "100%" : "100%",
+              marginLeft: "0",
+              display: "block",
+              borderRadius: "12px 12px 0 0",
+            }}
+          />
 
           {showResultScreen ? (
             <div
               style={{
-                marginTop: isMobile ? "5px" : "8px",
+                marginTop: isMobile ? "40px" : "8px",
                 marginBottom: isMobile ? "5px" : "8px",
                 textAlign: "center",
                 flex: 1,
@@ -706,8 +709,8 @@ const FluencyP3 = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: isMobile ? "6px" : "8px",
-                  marginBottom: isMobile ? "5px" : "8px",
+                  gap: isMobile ? "4px" : "8px",
+                  marginBottom: isMobile ? "2px" : "8px",
                 }}
               >
                 <img
@@ -720,7 +723,7 @@ const FluencyP3 = ({
 
                 <h2
                   style={{
-                    fontSize: isMobile ? "16px" : isTablet ? "18px" : "20px",
+                    fontSize: isMobile ? "14px" : isTablet ? "18px" : "20px",
                     fontWeight: "600",
                     color: "#333F61",
                     margin: 0,
@@ -736,7 +739,7 @@ const FluencyP3 = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "stretch",
-                  gap: isMobile ? "8px" : "15px",
+                  gap: isMobile ? "6px" : "15px",
                   flexWrap: isMobile ? "wrap" : "nowrap",
                   marginBottom: isMobile ? "5px" : "8px",
                 }}
@@ -828,7 +831,7 @@ const FluencyP3 = ({
           ) : showWordAfterYes ? (
             <div
               style={{
-                marginTop: "10px",
+                marginTop: isMobile ? "100px" : "10px",
                 textAlign: "center",
                 flex: 1,
                 position: "relative",
@@ -844,7 +847,7 @@ const FluencyP3 = ({
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "20px",
-                  marginBottom: "60px",
+                  marginBottom: isMobile ? "30px" : "60px",
                 }}
               >
                 <img
@@ -859,7 +862,7 @@ const FluencyP3 = ({
                 <div
                   style={{
                     fontWeight: "700",
-                    fontSize: "42px",
+                    fontSize: isMobile ? "28px" : isTablet ? "36px" : "42px",
                     color: "rgba(51, 63, 97, 1)",
                     textAlign: "center",
                   }}
@@ -926,17 +929,18 @@ const FluencyP3 = ({
           ) : !showFinalScreen && !showContent ? (
             <div
               style={{
-                marginTop: "40px",
-                width: "80%",
-                maxWidth: "500px",
-                height: "100px",
+                marginTop: isMobile ? "50px" : "40px",
+                width: isMobile ? "92%" : "80%",
+                maxWidth: isMobile ? "none" : "500px",
+                minHeight: isMobile ? "72px" : "100px",
+                height: "auto",
                 border: "1px dashed rgba(241, 153, 32, 1)",
                 borderRadius: "18px",
                 background: "rgba(255, 102, 0, 0.05)",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "20px",
+                padding: isMobile ? "10px 12px" : "20px",
                 overflow: "hidden",
               }}
             >
@@ -958,52 +962,84 @@ const FluencyP3 = ({
             <>
               <div
                 style={{
-                  marginTop: "40px",
-                  width: "80%",
-                  maxWidth: "500px",
-                  height: "100px",
-                  border: "1px dashed rgba(241, 153, 32, 1)",
-                  borderRadius: "18px",
-                  background: "rgba(255, 102, 0, 0.05)",
+                  width: isMobile ? "92%" : "90%",
+                  maxWidth: isMobile ? "none" : "720px",
                   display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "20px",
-                  overflow: "hidden",
+                  flexDirection: "row",
+                  alignItems: "flex-start",
+                  gap: isMobile ? 0 : "24px",
+                  marginTop: isMobile ? "20px" : "40px",
+                  marginBottom: isMobile ? "10px" : "20px",
                 }}
               >
                 <div
                   style={{
-                    fontWeight: "700",
-                    fontSize: "28px",
-                    color: "rgba(51, 63, 97, 1)",
-                    textAlign: "center",
-                    whiteSpace: "nowrap",
+                    flex: isMobile ? undefined : 1,
+                    width: isMobile ? "100%" : undefined,
+                    minHeight: isMobile ? "72px" : "100px",
+                    height: "auto",
+                    marginTop: isMobile ? "40px" : "0px",
+                    border: "1px dashed rgba(241, 153, 32, 1)",
+                    borderRadius: "18px",
+                    background: "rgba(255, 102, 0, 0.05)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: isMobile ? "10px 12px" : "20px",
+                    overflow: "hidden",
                   }}
                 >
-                  {currentSentence[currentWordIndex]?.word}
+                  <div
+                    style={{
+                      fontWeight: "700",
+                      fontSize: isMobile ? "22px" : "28px",
+                      color: "rgba(51, 63, 97, 1)",
+                      textAlign: "center",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {currentSentence[currentWordIndex]?.word}
+                  </div>
                 </div>
+                {!isMobile && (
+                  <div style={{ flexShrink: 0, paddingTop: "8px" }}>
+                    <SpeedSelector
+                      onSelect={handleSpeedSelect}
+                      selected={selected}
+                    />
+                  </div>
+                )}
               </div>
-              <div style={{ marginTop: "40px" }}>
-                <SpeedSelector
-                  onSelect={handleSpeedSelect}
-                  selected={selected}
-                />
-              </div>
+              {isMobile && (
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "12px",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <SpeedSelector
+                    onSelect={handleSpeedSelect}
+                    selected={selected}
+                    horizontal
+                  />
+                </div>
+              )}
             </>
           ) : (
             <div
               style={{
                 marginTop: "40px",
+                paddingBottom: isMobile ? "16px" : "40px",
                 textAlign: "center",
-                flex: 1,
-                position: "relative",
                 width: "100%",
               }}
             >
               <div
                 style={{
-                  fontSize: "32px",
+                  fontSize: isMobile ? "18px" : isTablet ? "24px" : "32px",
                   fontWeight: "600",
                   color: "#333F61",
                   marginBottom: "20px",
@@ -1014,10 +1050,10 @@ const FluencyP3 = ({
 
               <div
                 style={{
-                  fontSize: "40px",
+                  fontSize: isMobile ? "28px" : isTablet ? "34px" : "40px",
                   fontWeight: "700",
                   color: "#FF6600",
-                  marginBottom: "64px",
+                  marginBottom: isMobile ? "30px" : "64px",
                 }}
               >
                 {currentQuestionWord}
@@ -1028,7 +1064,7 @@ const FluencyP3 = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: "40px",
+                  gap: isMobile ? "20px" : "40px",
                   marginTop: isMobile ? "15px" : isTablet ? "30px" : "50px",
                   position: "relative",
                   zIndex: 10,
@@ -1036,9 +1072,10 @@ const FluencyP3 = ({
               >
                 <button
                   onClick={handleNoClick}
+                  disabled={yesClicked || noClicked}
                   style={{
                     padding: isMobile
-                      ? "10px 30px"
+                      ? "10px 20px"
                       : isTablet
                       ? "12px 40px"
                       : "14px 54px",
@@ -1052,7 +1089,7 @@ const FluencyP3 = ({
                         ? "1px solid rgba(255, 127, 54, 1)"
                         : "1px solid #ccc",
                     background: "#fff",
-                    cursor: "pointer",
+                    cursor: yesClicked || noClicked ? "not-allowed" : "pointer",
                     color:
                       noClicked && questionStage === 1
                         ? "rgba(88, 204, 2, 1)"
@@ -1064,6 +1101,7 @@ const FluencyP3 = ({
                     alignItems: "center",
                     gap: "10px",
                     transition: "all 0.3s ease",
+                    opacity: (yesClicked || noClicked) && !noClicked ? 0.5 : 1,
                   }}
                 >
                   <span
@@ -1085,9 +1123,10 @@ const FluencyP3 = ({
 
                 <button
                   onClick={handleYesClick}
+                  disabled={yesClicked || noClicked}
                   style={{
                     padding: isMobile
-                      ? "10px 30px"
+                      ? "10px 20px"
                       : isTablet
                       ? "12px 40px"
                       : "14px 54px",
@@ -1101,7 +1140,7 @@ const FluencyP3 = ({
                         ? "1px solid rgba(255, 127, 54, 1)"
                         : "1px solid #ccc",
                     background: "#fff",
-                    cursor: "pointer",
+                    cursor: yesClicked || noClicked ? "not-allowed" : "pointer",
                     color:
                       yesClicked && questionStage === 0
                         ? "rgba(88, 204, 2, 1)"
@@ -1113,6 +1152,7 @@ const FluencyP3 = ({
                     alignItems: "center",
                     gap: "10px",
                     transition: "all 0.3s ease",
+                    opacity: (yesClicked || noClicked) && !yesClicked ? 0.5 : 1,
                   }}
                 >
                   <span
@@ -1132,11 +1172,11 @@ const FluencyP3 = ({
                   Yes
                 </button>
               </div>
-
-              {/* Render bear animation */}
-              {renderBearAnimation()}
             </div>
           )}
+
+          {/* Bear anchored to white container so it never overlaps the buttons */}
+          {renderBearAnimation()}
         </div>
 
         {showConfetti && (
