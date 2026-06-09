@@ -15,7 +15,9 @@ const UI_STRINGS_BY_LANG = {
 export function getUiStrings(lang) {
   if (!lang) return en;
   const code = String(lang).toLowerCase();
-  return UI_STRINGS_BY_LANG[code] || en;
+  const strings = UI_STRINGS_BY_LANG[code];
+  if (!strings) return en;
+  return { ...en, ...strings };
 }
 
 export { en, hi, te };

@@ -19,6 +19,7 @@ import {
   getBrowserLanguage,
 } from "../../utils/constants";
 // import Play from "../../assets/playButton.svg";
+import { getUiStrings } from "../../constants/strings";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -65,6 +66,11 @@ import hintimg from "../../assets/hintsicon.svg";
 const isChrome = true;
 const theme = createTheme();
 
+const useBreakpoints = () => ({
+  isMobile: useMediaQuery(theme.breakpoints.down("sm")),
+  isTablet: useMediaQuery(theme.breakpoints.between("sm", "md")),
+});
+
 const BingoPage = React.memo(
   ({
     transformed,
@@ -86,8 +92,7 @@ const BingoPage = React.memo(
     wordCount,
     handleNext,
   }) => {
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-    const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+    const { isMobile, isTablet } = useBreakpoints();
 
     const firstWord = transformed?.arrM?.[0];
     const [localShowConfetti, setLocalShowConfetti] = useState(false);
@@ -351,8 +356,8 @@ const BingoPage = React.memo(
 );
 
 const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const { isMobile, isTablet } = useBreakpoints();
+  const ui = getUiStrings(getLocalData("lang"));
 
   return (
     <div
@@ -371,8 +376,8 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        // flex: isMobile ? 1 : undefined,
-        minHeight: isMobile ? "95%" : isTablet ? "400px" : "450px",
+        flex: isMobile ? 1 : undefined,
+        minHeight: isMobile ? undefined : isTablet ? "400px" : "450px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -399,7 +404,7 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
           textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
         }}
       >
-        Well done!
+        {ui.BINGO_WELL_DONE}
       </h1>
 
       <div
@@ -439,7 +444,7 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
           margin: 0,
         }}
       >
-        You found {completedPairs.length} words
+        {ui.BINGO_WORDS_FOUND.replace("{count}", completedPairs.length)}
       </p>
 
       <img
@@ -533,8 +538,7 @@ const BingoCard = ({
   const [detectedWord, setDetectedWord] = useState("");
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
   const [showWrongTick, setShowWrongTick] = useState(true);
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const { isMobile, isTablet } = useBreakpoints();
   const {
     transcript,
     interimTranscript,
