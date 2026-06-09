@@ -88,6 +88,10 @@ const en = {
   ASSESSMENT_DIALOG_OOPS: "Oops...",
   ASSESSMENT_DIALOG_CONTINUE: "Continue",
   ASSESSMENT_LANG_CONFIRM: "Confirm",
+
+  // Bingo card
+  BINGO_WELL_DONE: "Well done!",
+  BINGO_WORDS_FOUND: "You found {count} words",
 };
 
 export default en;

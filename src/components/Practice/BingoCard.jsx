@@ -19,6 +19,7 @@ import {
   getBrowserLanguage,
 } from "../../utils/constants";
 // import Play from "../../assets/playButton.svg";
+import { getUiStrings } from "../../constants/strings";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -65,6 +66,11 @@ import hintimg from "../../assets/hintsicon.svg";
 const isChrome = true;
 const theme = createTheme();
 
+const useBreakpoints = () => ({
+  isMobile: useMediaQuery(theme.breakpoints.down("sm")),
+  isTablet: useMediaQuery(theme.breakpoints.between("sm", "md")),
+});
+
 const BingoPage = React.memo(
   ({
     transformed,
@@ -86,6 +92,8 @@ const BingoPage = React.memo(
     wordCount,
     handleNext,
   }) => {
+    const { isMobile, isTablet } = useBreakpoints();
+
     const firstWord = transformed?.arrM?.[0];
     const [localShowConfetti, setLocalShowConfetti] = useState(false);
     const [localCurrent, setLocalCurrent] = useState(0);
@@ -177,23 +185,33 @@ const BingoPage = React.memo(
     return (
       <div
         style={{
-          backgroundColor: "#fff",
           borderRadius: "20px",
-          padding: "40px 60px",
+          padding: isMobile ? "20px 0px" : isTablet ? "32px 40px" : "40px 60px",
           textAlign: "center",
-          position: "relative",
-          width: "1130px",
-          maxWidth: "90%",
-          boxShadow: "0px 0px 16.9px 0px rgba(219,242,254,1)",
-          border: "2px solid rgba(231,232,236,1)",
-          minHeight: "450px",
+          width: "100%",
+          maxWidth: "1130px",
+          flex: isMobile ? 1 : undefined,
+          minHeight: isMobile ? undefined : isTablet ? "380px" : "450px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          boxSizing: "border-box",
         }}
       >
-        {localShowConfetti && <Confetti />}
+        {localShowConfetti && (
+          <Confetti
+            width={window.innerWidth}
+            height={window.innerHeight}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              pointerEvents: "none",
+              zIndex: 9999,
+            }}
+          />
+        )}
 
         <div
           style={{
@@ -215,7 +233,7 @@ const BingoPage = React.memo(
           >
             <span
               style={{
-                fontSize: "50px",
+                fontSize: isMobile ? "28px" : isTablet ? "38px" : "50px",
                 fontWeight: "700",
                 color: "rgba(51,63,97,1)",
                 textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
@@ -297,11 +315,20 @@ const BingoPage = React.memo(
           </div>
         </div>
 
-        <div style={{ position: "absolute", bottom: "-30px", left: "-35px" }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: isMobile ? "65px" : isTablet ? "-20px" : "30px",
+            left: isMobile ? "-10px" : isTablet ? "-20px" : "25px",
+          }}
+        >
           <img
             src={bearimg}
             alt="bear"
-            style={{ width: "150px", height: "200px" }}
+            style={{
+              width: isMobile ? "100px" : isTablet ? "120px" : "150px",
+              height: isMobile ? "130px" : isTablet ? "160px" : "200px",
+            }}
           />
         </div>
 
@@ -312,9 +339,9 @@ const BingoPage = React.memo(
             style={{
               position: "absolute",
               bottom: "-42px",
-              left: "15%",
+              left: "25%",
               transform: "translateX(-50%)",
-              height: "200px",
+              height: isMobile ? "140px" : isTablet ? "170px" : "200px",
               animation: "jump 1.3s ease-in-out infinite",
               userSelect: "none",
               pointerEvents: "none",
@@ -329,80 +356,69 @@ const BingoPage = React.memo(
 );
 
 const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
+  const { isMobile, isTablet } = useBreakpoints();
+  const ui = getUiStrings(getLocalData("lang"));
+
   return (
     <div
       style={{
         backgroundColor: "#fff",
+        marginTop: isMobile ? undefined : "5%",
         borderRadius: "20px",
-        padding: "40px 60px",
+        padding: isMobile ? "10px 16px" : isTablet ? "32px 40px" : "40px 60px",
         textAlign: "center",
         position: "relative",
-        width: "1130px",
-        maxWidth: "90%",
+        width: "100%",
+        maxWidth: "1130px",
         boxShadow: "0px 0px 16.9px 0px rgba(219,242,254,1)",
         border: "2px solid rgba(231,232,236,1)",
         backgroundImage: `url(${starbackgroundimg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "450px",
+        flex: isMobile ? 1 : undefined,
+        minHeight: isMobile ? undefined : isTablet ? "400px" : "450px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        gap: isMobile ? "12px" : isTablet ? "14px" : "16px",
+        boxSizing: "border-box",
       }}
     >
-      <div
+      <img
+        src={beariconimg}
+        alt="bear icon"
         style={{
-          position: "absolute",
-          top: "70px",
-          left: "50%",
-          transform: "translateX(-50%)",
+          width: isMobile ? "40px" : isTablet ? "60px" : "80px",
+          height: isMobile ? "40px" : isTablet ? "60px" : "80px",
         }}
-      >
-        <img
-          src={beariconimg}
-          alt="bear icon"
-          style={{ width: "80px", height: "80px" }}
-        />
-      </div>
+      />
 
-      <div
+      <h1
         style={{
-          position: "absolute",
-          top: "150px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 10,
+          fontSize: isMobile ? "24px" : isTablet ? "28px" : "32px",
+          fontWeight: "700",
+          color: "rgba(255, 127, 54, 1)",
+          margin: 0,
+          textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
         }}
       >
-        <h1
-          style={{
-            fontSize: "32px",
-            fontWeight: "700",
-            color: "rgba(255, 127, 54, 1)",
-            margin: 0,
-            textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
-          }}
-        >
-          Well done!
-        </h1>
-      </div>
+        {ui.BINGO_WELL_DONE}
+      </h1>
 
       <div
         style={{
           position: "relative",
-          width: "100px",
-          height: "100px",
-          marginTop: "140px",
-          marginBottom: "30px",
+          width: isMobile ? "80px" : isTablet ? "90px" : "100px",
+          height: isMobile ? "80px" : isTablet ? "90px" : "100px",
           zIndex: 5,
         }}
       >
         <img
           src={starimg}
           alt="star"
-          style={{ width: "100%", height: "100px", objectFit: "contain" }}
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
         />
         <span
           style={{
@@ -410,7 +426,7 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            fontSize: "26px",
+            fontSize: isMobile ? "20px" : isTablet ? "22px" : "26px",
             fontWeight: "700",
             color: "#181414ff",
             textShadow: "1px 1px 3px rgba(0,0,0,0.5)",
@@ -420,42 +436,48 @@ const SuccessPage = React.memo(({ score, completedPairs, onNext }) => {
         </span>
       </div>
 
-      <div style={{ marginBottom: "10px" }}>
-        <p
-          style={{
-            fontSize: "18px",
-            fontWeight: "600",
-            color: "rgba(51, 63, 97, 1)",
-            margin: 0,
-          }}
-        >
-          You found {completedPairs.length} words
-        </p>
-      </div>
+      <p
+        style={{
+          fontSize: isMobile ? "15px" : isTablet ? "16px" : "18px",
+          fontWeight: "600",
+          color: "rgba(51, 63, 97, 1)",
+          margin: 0,
+        }}
+      >
+        {ui.BINGO_WORDS_FOUND.replace("{count}", completedPairs.length)}
+      </p>
 
-      <div style={{ marginTop: "10px" }}>
-        <img
-          src={Assets.nextimg}
-          alt="next"
-          role="button"
-          tabIndex={0}
-          style={{
-            width: "100px",
-            height: "45px",
-            cursor: "pointer",
-          }}
-          onClick={onNext}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
-          }}
-        />
-      </div>
+      <img
+        src={Assets.nextimg}
+        alt="next"
+        role="button"
+        tabIndex={0}
+        style={{
+          width: isMobile ? "80px" : isTablet ? "90px" : "100px",
+          height: isMobile ? "36px" : isTablet ? "40px" : "45px",
+          cursor: "pointer",
+          marginTop: "4px",
+        }}
+        onClick={onNext}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+        }}
+      />
 
-      <div style={{ position: "absolute", bottom: "-37px", left: "-26px" }}>
+      <div
+        style={{
+          position: "absolute",
+          bottom: isMobile ? "10px" : "-37px",
+          left: isMobile ? "-10px" : "-20px",
+        }}
+      >
         <img
           src={bearclapimg}
           alt="bear clapping"
-          style={{ width: "150px", height: "160px" }}
+          style={{
+            width: isMobile ? "100px" : isTablet ? "120px" : "150px",
+            height: isMobile ? "100px" : isTablet ? "130px" : "160px",
+          }}
         />
       </div>
     </div>
@@ -516,8 +538,7 @@ const BingoCard = ({
   const [detectedWord, setDetectedWord] = useState("");
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
   const [showWrongTick, setShowWrongTick] = useState(true);
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const { isMobile, isTablet } = useBreakpoints();
   const {
     transcript,
     interimTranscript,
@@ -1254,77 +1275,139 @@ const BingoCard = ({
         style={{
           backgroundColor: "#fff",
           borderRadius: "20px",
-          padding: "40px 60px",
-          textAlign: "center",
+          marginTop: 0,
+          padding: isMobile
+            ? "12px 16px"
+            : isTablet
+            ? "32px 40px"
+            : "40px 60px",
+          // textAlign: "center",
           position: "relative",
-          width: "1130px",
-          maxWidth: "90%",
+          width: "100%",
+          maxWidth: "1130px",
           boxShadow: "0px 0px 16.9px 0px rgba(219,242,254,1)",
           border: "2px solid rgba(231,232,236,1)",
+          boxSizing: "border-box",
         }}
       >
         <div
           style={{
-            position: "absolute",
-            top: "63px",
-            right: "30px",
-            width: "70px",
-            height: "70px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            marginTop: "10px",
+            marginBottom: isMobile ? "20px" : isTablet ? "28px" : "40px",
           }}
         >
-          <img
-            src={starimg}
-            alt="star"
-            style={{ width: "100%", height: "100%", objectFit: "contain" }}
-          />
-          <span
+          <div
             style={{
-              position: "absolute",
-              top: "55%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              fontSize: "19px",
-              fontWeight: "700",
-              color: "#181414ff",
-              textShadow: "1px 1px 3px rgba(0,0,0,0.5)",
+              width: isMobile ? "50px" : isTablet ? "60px" : "70px",
+              height: isMobile ? "50px" : isTablet ? "60px" : "70px",
+              flexShrink: 0,
+            }}
+          />
+
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              overflow: "hidden",
             }}
           >
-            {score}
-          </span>
-        </div>
+            <img
+              src={wordheadingimg}
+              alt="Bingo Puzzle"
+              style={{
+                height: isMobile ? "20px" : isTablet ? "26px" : "30px",
+                objectFit: "contain",
+                maxWidth: "100%",
+              }}
+            />
+          </div>
 
-        <div style={{ marginBottom: "50px", marginTop: "10px" }}>
-          <img
-            src={wordheadingimg}
-            alt="Bingo Puzzle"
-            style={{ height: "30px", objectFit: "contain" }}
-          />
+          <div
+            style={{
+              position: "relative",
+              width: isMobile ? "50px" : isTablet ? "60px" : "70px",
+              height: isMobile ? "50px" : isTablet ? "60px" : "70px",
+              flexShrink: 0,
+            }}
+          >
+            <img
+              src={starimg}
+              alt="star"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                top: "55%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: isMobile ? "14px" : isTablet ? "16px" : "19px",
+                fontWeight: "700",
+                color: "#181414ff",
+                textShadow: "1px 1px 3px rgba(0,0,0,0.5)",
+              }}
+            >
+              {score}
+            </span>
+          </div>
         </div>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4,1fr)",
-            gap: "25px",
+            gridTemplateColumns: `repeat(${
+              isMobile ? 2 : isTablet ? 3 : 4
+            }, 1fr)`,
+            gap: isMobile ? "12px" : isTablet ? "18px" : "25px",
             justifyItems: "center",
           }}
         >
           {transformed?.words?.map((word, index) => (
             <div
               key={index}
+              role="button"
+              tabIndex={correct.includes(word) ? -1 : 0}
+              aria-pressed={selected.includes(word)}
               onClick={() => handleWordClick(word)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleWordClick(word);
+              }}
               style={{
                 ...getButtonStyle(word),
                 borderRadius: "12px",
-                padding: "16px 33px",
+                padding: isMobile
+                  ? "12px 16px"
+                  : isTablet
+                  ? "14px 22px"
+                  : "16px 33px",
                 textAlign: "center",
-                fontSize: "19px",
+                fontSize: isMobile ? "16px" : isTablet ? "17px" : "19px",
                 fontWeight: "600",
-                minWidth: "80px",
+                width: "100%",
+                minWidth: 0,
                 border: "1px solid rgba(231,232,236,1)",
                 cursor: correct.includes(word) ? "default" : "pointer",
                 userSelect: "none",
                 transition: "all 0.3s ease",
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+                boxSizing: "border-box",
+                outline: "none",
+              }}
+              onFocus={(e) => {
+                if (!correct.includes(word)) {
+                  e.currentTarget.style.outline =
+                    "2px solid rgba(28,176,246,0.7)";
+                  e.currentTarget.style.outlineOffset = "2px";
+                }
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
               }}
             >
               {word}
@@ -1336,10 +1419,11 @@ const BingoCard = ({
           style={{
             display: "flex",
             justifyContent: "center",
-            gap: "40px",
-            marginTop: "5px",
+            gap: isMobile ? "24px" : isTablet ? "32px" : "40px",
+            marginTop: isMobile ? "16px" : isTablet ? "10px" : "5px",
             position: "relative",
-            height: "40px",
+            minHeight: "64px",
+            alignItems: "center",
           }}
         >
           {!showNextButton ? (
@@ -1347,14 +1431,25 @@ const BingoCard = ({
               <img
                 src={iconimg}
                 alt="hint"
+                role="button"
+                tabIndex={0}
                 style={{ width: "55px", height: "55px", cursor: "pointer" }}
                 onClick={handleHintClick}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") handleHintClick();
+                }}
               />
               <img
                 src={listeenimg}
                 alt="listen"
+                role="button"
+                tabIndex={0}
                 style={{ width: "55px", height: "55px", cursor: "pointer" }}
                 onClick={() => startAudio(currentWordIndex)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    startAudio(currentWordIndex);
+                }}
               />
             </>
           ) : (
@@ -1372,20 +1467,30 @@ const BingoCard = ({
           )}
         </div>
 
-        <div style={{ position: "absolute", bottom: "-30px", left: "-35px" }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: isMobile ? "-28px" : "-100px",
+            left: isMobile ? "-15px" : "-20px",
+          }}
+        >
           <img
             src={bearimg}
             alt="bear"
-            style={{ width: "150px", height: "200px", position: "relative" }}
+            style={{
+              width: isMobile ? "100px" : isTablet ? "130px" : "150px",
+              height: isMobile ? "130px" : isTablet ? "170px" : "200px",
+              position: "relative",
+            }}
           />
           {showHint && (
             <div
               style={{
                 position: "absolute",
                 top: "-160px",
-                left: "210px",
+                left: isMobile ? "140px" : isTablet ? "230px" : "210px",
                 transform: "translateX(-50%)",
-                width: "400px",
+                width: isMobile ? "280px" : isTablet ? "360px" : "400px",
                 height: "200px",
                 display: "flex",
                 justifyContent: "center",
@@ -1431,10 +1536,13 @@ const BingoCard = ({
     handleWordClick,
     getButtonStyle,
     correct,
+    selected,
     handleHintClick,
     startAudio,
     handleNextClick,
     getHintImage,
+    isMobile,
+    isTablet,
   ]);
 
   return (
@@ -1465,23 +1573,43 @@ const BingoCard = ({
         <div
           style={{
             width: "100%",
-            height: "70vh",
+            flex: isMobile ? "1 1 0%" : undefined,
+            minHeight: isMobile ? 0 : isTablet ? "60vh" : "70vh",
             position: "relative",
             overflowX: "hidden",
-            backgroundColor: "#DDF3FF",
-            overflowY: "hidden",
+            // backgroundColor: "#DDF3FF",
             display: "flex",
-            justifyContent: "center",
+            flexDirection: "column",
+            justifyContent: "flex-start",
             alignItems: "center",
+            paddingTop: isMobile ? "16px" : isTablet ? "20px" : "24px",
+            paddingBottom: isMobile ? "40px" : isTablet ? "60px" : "70px",
+            paddingLeft: isMobile ? "16px" : isTablet ? "20px" : "24px",
+            paddingRight: isMobile ? "16px" : isTablet ? "20px" : "24px",
             fontFamily: "'Quicksand', sans-serif",
             color: "rgba(51,63,97,1)",
           }}
         >
-          {showConfetti && <Confetti />}
+          {showConfetti && (
+            <Confetti
+              width={screenWidth}
+              height={window.innerHeight}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                pointerEvents: "none",
+                zIndex: 9999,
+              }}
+            />
+          )}
           {/* Hint Icon */}
           <img
             src={hintimg}
-            alt="hint"
+            alt="hint video"
+            role="button"
+            tabIndex={0}
+            aria-label="Show hint video"
             style={{
               width: "50px",
               height: "50px",
@@ -1492,6 +1620,9 @@ const BingoCard = ({
               zIndex: 1000,
             }}
             onClick={() => setOpen(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") setOpen(true);
+            }}
           />
 
           {/* Modal */}
@@ -1502,7 +1633,7 @@ const BingoCard = ({
                 top: 0,
                 left: 0,
                 width: "100%",
-                height: "90vh",
+                height: "100vh",
                 backgroundColor: "rgba(0,0,0,0.7)",
                 display: "flex",
                 alignItems: "center",
@@ -1526,6 +1657,7 @@ const BingoCard = ({
                 {/* Close Button */}
                 <button
                   onClick={() => setOpen(false)}
+                  aria-label="Close video"
                   style={{
                     position: "absolute",
                     top: "-10px",
@@ -1533,10 +1665,14 @@ const BingoCard = ({
                     background: "white",
                     border: "none",
                     borderRadius: "50%",
-                    width: "30px",
-                    height: "30px",
+                    width: "44px",
+                    height: "44px",
                     fontWeight: "bold",
                     cursor: "pointer",
+                    fontSize: "18px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   ×
@@ -1589,25 +1725,6 @@ const BingoCard = ({
                 </span>
               </div>
             </div>
-          )}
-
-          {showConfetti && (
-            <img
-              src={bearrdanceimg}
-              alt="bear dancing"
-              style={{
-                position: "absolute",
-                bottom: "-42px",
-                left: "20%",
-                transform: "translateX(-50%)",
-                height: "200px",
-                animation: "jump 1.3s ease-in-out infinite",
-                userSelect: "none",
-                pointerEvents: "none",
-                zIndex: 1000,
-              }}
-              draggable={false}
-            />
           )}
 
           {showBingoPage ? (
