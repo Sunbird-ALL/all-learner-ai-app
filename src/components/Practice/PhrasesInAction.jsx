@@ -47,6 +47,107 @@ import { Log } from "../../services/telemetryService";
 
 const theme = createTheme();
 
+function WordTooltipResult({
+  description,
+  multilingual,
+  multilingualLangCode,
+  nativeLangSymbol,
+  language,
+  isMobile,
+}) {
+  if (language !== "en") return null;
+  return (
+    <div
+      style={{
+        marginTop: isMobile ? "8px" : undefined,
+        marginLeft: isMobile ? undefined : "10px",
+      }}
+    >
+      <AudioTooltipModal
+        audioSrc={multilingual?.[multilingualLangCode]?.audio_url}
+        description={description}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            marginTop: "5px",
+            alignItems: "center",
+            justifyContent: "space-between",
+            border: "2px solid #FF7F36",
+            borderRadius: "16px",
+            gap: "10px",
+            padding: "15px",
+            backgroundColor: "#fff",
+            cursor: "pointer",
+          }}
+        >
+          {/* Kannada Letter Box */}
+          <Box
+            sx={{
+              backgroundColor: "#FEBC2F66",
+              borderRadius: "4px",
+              padding: "5px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "40px",
+                fontWeight: "400",
+                color: "#333F61",
+                fontStyle: "Quicksand",
+              }}
+            >
+              {nativeLangSymbol}
+            </span>
+          </Box>
+          <ListenButton height={50} width={50} />
+        </Box>
+      </AudioTooltipModal>
+    </div>
+  );
+}
+
+function RecordingActionButtons({
+  isMobile,
+  language,
+  recordedBlob,
+  isPlayingRecordedAudio,
+  stopRecordedAudio,
+  playRecordedAudio,
+  goToNextStep,
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "20px",
+        marginTop: isMobile ? "0" : "30px",
+      }}
+    >
+      {language !== "en" && recordedBlob && (
+        <div
+          onClick={isPlayingRecordedAudio ? stopRecordedAudio : playRecordedAudio}
+          style={{ cursor: "pointer" }}
+        >
+          {isPlayingRecordedAudio ? (
+            <StopButton height={50} width={50} />
+          ) : (
+            <ListenButton height={50} width={50} />
+          )}
+        </div>
+      )}
+      <div onClick={goToNextStep} style={{ cursor: "pointer" }}>
+        <NextButtonRound height={50} width={50} />
+      </div>
+    </div>
+  );
+}
+
 const PhrasesInAction = ({
   setVoiceText,
   setRecordedAudio,
@@ -6137,15 +6238,15 @@ const PhrasesInAction = ({
                         fontSize: "30px",
                         fontWeight: 700,
                         color: "#1a1a1a",
-                        letterSpacing: 0,
+                        letterSpacing: isMobile ? 0 : "3px",
                         lineHeight: isMobile ? "1.0" : undefined,
-                        fontFamily: getFontFamily(language),
+                        fontFamily: isMobile ? getFontFamily(language) : undefined,
                         position: "relative",
                         marginBottom: "-5px",
                         width: "100%",
                         boxSizing: "border-box",
                         gap: isMobile ? undefined : "0",
-                        padding: isMobile ? "0 62px 0 12px" : "0",
+                        padding: isMobile ? "0 62px 0 12px" : "0", 
                       }}
                     >
                       <span
@@ -6247,8 +6348,8 @@ const PhrasesInAction = ({
                               fontSize: "30px",
                               fontWeight: 700,
                               color: "#1a1a1a",
-                              letterSpacing: 0,
-                              fontFamily: getFontFamily(language),
+                              letterSpacing: isMobile ? 0 : "3px",
+                              fontFamily: isMobile ? getFontFamily(language) : undefined,
                               margin: isMobile ? "0" : undefined,
                               lineHeight: isMobile ? "1.4" : undefined,
                             }}
@@ -6257,98 +6358,25 @@ const PhrasesInAction = ({
                           </p>
                         </div>
                         {/* Show multilingual box only for English on step1 */}
-                        {language === "en" && (
-                          <div
-                            style={{
-                              marginTop: isMobile ? "8px" : undefined,
-                              marginLeft: isMobile ? undefined : "10px",
-                            }}
-                          >
-                            <AudioTooltipModal
-                              audioSrc={
-                                multilingual?.[multilingualLangCode]?.audio_url
-                              }
-                              description={levelData?.allwords[0]?.text}
-                            >
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  marginTop: "5px",
-                                  alignItems: "center",
-                                  justifyContent: "space-between",
-                                  border: "2px solid #FF7F36",
-                                  borderRadius: "16px",
-                                  gap: "10px",
-                                  padding: "15px",
-                                  //width: "300px",
-                                  backgroundColor: "#fff",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                {/* Kannada Letter Box */}
-                                <Box
-                                  sx={{
-                                    backgroundColor: "#FEBC2F66",
-                                    borderRadius: "4px",
-                                    //width: "100px",
-                                    //height: "100px",
-                                    padding: "5px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                  }}
-                                >
-                                  <span
-                                    style={{
-                                      fontSize: "40px",
-                                      fontWeight: "400",
-                                      color: "#333F61",
-                                      fontStyle: "Quicksand",
-                                    }}
-                                  >
-                                    {nativeLangSymbol}
-                                  </span>
-                                </Box>
-
-                                <ListenButton height={50} width={50} />
-                              </Box>
-                            </AudioTooltipModal>
-                          </div>
-                        )}
+                        <WordTooltipResult
+                          description={levelData?.allwords[0]?.text}
+                          multilingual={multilingual}
+                          multilingualLangCode={multilingualLangCode}
+                          nativeLangSymbol={nativeLangSymbol}
+                          language={language}
+                          isMobile={isMobile}
+                        />
                       </div>
                       {/* Listen to recorded audio button - step1, 2nd page, for all languages except English */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "20px",
-                          marginTop: isMobile ? "0" : "30px",
-                        }}
-                      >
-                        {language !== "en" && recordedBlob && (
-                          <div
-                            onClick={
-                              isPlayingRecordedAudio
-                                ? stopRecordedAudio
-                                : playRecordedAudio
-                            }
-                            style={{ cursor: "pointer" }}
-                          >
-                            {isPlayingRecordedAudio ? (
-                              <StopButton height={50} width={50} />
-                            ) : (
-                              <ListenButton height={50} width={50} />
-                            )}
-                          </div>
-                        )}
-                        <div
-                          onClick={goToNextStep}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <NextButtonRound height={50} width={50} />
-                        </div>
-                      </div>
+                      <RecordingActionButtons
+                        isMobile={isMobile}
+                        language={language}
+                        recordedBlob={recordedBlob}
+                        isPlayingRecordedAudio={isPlayingRecordedAudio}
+                        stopRecordedAudio={stopRecordedAudio}
+                        playRecordedAudio={playRecordedAudio}
+                        goToNextStep={goToNextStep}
+                      />
                     </div>
                   )}
 
@@ -6537,8 +6565,8 @@ const PhrasesInAction = ({
                             : "30px",
                           fontWeight: 700,
                           color: "#1a1a1a",
-                          letterSpacing: 0,
-                          fontFamily: getFontFamily(language),
+                          letterSpacing: isMobile ? 0 : "3px",
+                          fontFamily: isMobile ? getFontFamily(language) : undefined,
                           position: "relative",
                           marginBottom: "5px",
                         }}
@@ -6889,106 +6917,33 @@ const PhrasesInAction = ({
                                 : "36px",
                               fontWeight: 700,
                               color: "#1a1a1a",
-                              letterSpacing: 0,
-                              fontFamily: getFontFamily(language),
+                              letterSpacing: isMobile ? 0 : "3px",
+                              fontFamily: isMobile ? getFontFamily(language) : undefined,
                             }}
                           >
                             {levelData?.correctWordTwo}
                           </p>
                         </div>
                         {/* Show multilingual box only for English on step2 */}
-                        {language === "en" && (
-                          <div
-                            style={{
-                              marginTop: isMobile ? "8px" : undefined,
-                              marginLeft: isMobile ? undefined : "10px",
-                            }}
-                          >
-                            <AudioTooltipModal
-                              audioSrc={
-                                multilingual?.[multilingualLangCode]?.audio_url
-                              }
-                              description={levelData?.correctWordTwo}
-                            >
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  marginTop: "5px",
-                                  alignItems: "center",
-                                  justifyContent: "space-between",
-                                  border: "2px solid #FF7F36",
-                                  borderRadius: "16px",
-                                  gap: "10px",
-                                  padding: "15px",
-                                  //width: "300px",
-                                  backgroundColor: "#fff",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                {/* Kannada Letter Box */}
-                                <Box
-                                  sx={{
-                                    backgroundColor: "#FEBC2F66",
-                                    borderRadius: "4px",
-                                    //width: "100px",
-                                    //height: "100px",
-                                    padding: "5px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                  }}
-                                >
-                                  <span
-                                    style={{
-                                      fontSize: "40px",
-                                      fontWeight: "400",
-                                      color: "#333F61",
-                                      fontStyle: "Quicksand",
-                                    }}
-                                  >
-                                    {nativeLangSymbol}
-                                  </span>
-                                </Box>
-
-                                <ListenButton height={50} width={50} />
-                              </Box>
-                            </AudioTooltipModal>
-                          </div>
-                        )}
+                        <WordTooltipResult
+                          description={levelData?.correctWordTwo}
+                          multilingual={multilingual}
+                          multilingualLangCode={multilingualLangCode}
+                          nativeLangSymbol={nativeLangSymbol}
+                          language={language}
+                          isMobile={isMobile}
+                        />
                       </div>
                       {/* Listen to recorded audio button - step2, 2nd page, for all languages except English */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "20px",
-                          marginTop: isMobile ? "0" : "30px",
-                        }}
-                      >
-                        {language !== "en" && recordedBlob && (
-                          <div
-                            onClick={
-                              isPlayingRecordedAudio
-                                ? stopRecordedAudio
-                                : playRecordedAudio
-                            }
-                            style={{ cursor: "pointer" }}
-                          >
-                            {isPlayingRecordedAudio ? (
-                              <StopButton height={50} width={50} />
-                            ) : (
-                              <ListenButton height={50} width={50} />
-                            )}
-                          </div>
-                        )}
-                        <div
-                          onClick={goToNextStep}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <NextButtonRound height={50} width={50} />
-                        </div>
-                      </div>
+                      <RecordingActionButtons
+                        isMobile={isMobile}
+                        language={language}
+                        recordedBlob={recordedBlob}
+                        isPlayingRecordedAudio={isPlayingRecordedAudio}
+                        stopRecordedAudio={stopRecordedAudio}
+                        playRecordedAudio={playRecordedAudio}
+                        goToNextStep={goToNextStep}
+                      />
                     </div>
                   )}
                 </div>
