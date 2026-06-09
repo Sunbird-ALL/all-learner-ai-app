@@ -120,6 +120,14 @@ WordTooltipResult.propTypes = {
   isMobile: PropTypes.bool,
 };
 
+const recordingActionPropTypes = {
+  recordedBlob: PropTypes.object,
+  isPlayingRecordedAudio: PropTypes.bool,
+  stopRecordedAudio: PropTypes.func,
+  playRecordedAudio: PropTypes.func,
+  goToNextStep: PropTypes.func,
+};
+
 function RecordingActionButtons({
   isMobile,
   language,
@@ -129,14 +137,6 @@ function RecordingActionButtons({
   playRecordedAudio,
   goToNextStep,
 }) {
-  const handleAudioKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      (isPlayingRecordedAudio ? stopRecordedAudio : playRecordedAudio)();
-    }
-  };
-  const handleNextKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " ") goToNextStep();
-  };
   return (
     <div
       style={{
@@ -148,29 +148,25 @@ function RecordingActionButtons({
       }}
     >
       {language !== "en" && recordedBlob && (
-        <div
-          role="button"
-          tabIndex={0}
+        <button
+          type="button"
           onClick={isPlayingRecordedAudio ? stopRecordedAudio : playRecordedAudio}
-          onKeyDown={handleAudioKeyDown}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", background: "none", border: "none", padding: 0 }}
         >
           {isPlayingRecordedAudio ? (
             <StopButton height={50} width={50} />
           ) : (
             <ListenButton height={50} width={50} />
           )}
-        </div>
+        </button>
       )}
-      <div
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
         onClick={goToNextStep}
-        onKeyDown={handleNextKeyDown}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: "pointer", background: "none", border: "none", padding: 0 }}
       >
         <NextButtonRound height={50} width={50} />
-      </div>
+      </button>
     </div>
   );
 }
@@ -178,11 +174,53 @@ function RecordingActionButtons({
 RecordingActionButtons.propTypes = {
   isMobile: PropTypes.bool,
   language: PropTypes.string,
-  recordedBlob: PropTypes.object,
-  isPlayingRecordedAudio: PropTypes.bool,
-  stopRecordedAudio: PropTypes.func,
-  playRecordedAudio: PropTypes.func,
-  goToNextStep: PropTypes.func,
+  ...recordingActionPropTypes,
+};
+
+function TickAndText({ wordText, wordFontSize, tickImgSize, isMobile, language, wordMargin, wordLineHeight }) {
+  return (
+    <div
+      style={{
+        display: isMobile ? "inline-flex" : "flex",
+        alignItems: "center",
+        maxWidth: isMobile ? "100%" : undefined,
+        verticalAlign: isMobile ? "middle" : undefined,
+      }}
+    >
+      <img
+        src={Assets.tickImg}
+        alt="Tick"
+        style={{
+          width: tickImgSize,
+          height: tickImgSize,
+          marginRight: "10px",
+          flexShrink: isMobile ? 0 : undefined,
+        }}
+      />
+      <p
+        style={{
+          fontSize: wordFontSize,
+          fontWeight: 700,
+          color: "#1a1a1a",
+          letterSpacing: isMobile ? 0 : "3px",
+          fontFamily: isMobile ? getFontFamily(language) : undefined,
+          margin: wordMargin,
+          lineHeight: wordLineHeight,
+        }}
+      >
+        {wordText}
+      </p>
+    </div>
+  );
+}
+TickAndText.propTypes = {
+  wordText: PropTypes.string,
+  wordFontSize: PropTypes.string,
+  tickImgSize: PropTypes.string,
+  isMobile: PropTypes.bool,
+  language: PropTypes.string,
+  wordMargin: PropTypes.string,
+  wordLineHeight: PropTypes.string,
 };
 
 function StepResultDisplay({
@@ -217,38 +255,15 @@ function StepResultDisplay({
           textAlign: isMobile ? "center" : undefined,
         }}
       >
-        <div
-          style={{
-            display: isMobile ? "inline-flex" : "flex",
-            alignItems: "center",
-            maxWidth: isMobile ? "100%" : undefined,
-            verticalAlign: isMobile ? "middle" : undefined,
-          }}
-        >
-          <img
-            src={Assets.tickImg}
-            alt="Tick"
-            style={{
-              width: tickImgSize,
-              height: tickImgSize,
-              marginRight: "10px",
-              flexShrink: isMobile ? 0 : undefined,
-            }}
-          />
-          <p
-            style={{
-              fontSize: wordFontSize,
-              fontWeight: 700,
-              color: "#1a1a1a",
-              letterSpacing: isMobile ? 0 : "3px",
-              fontFamily: isMobile ? getFontFamily(language) : undefined,
-              margin: wordMargin,
-              lineHeight: wordLineHeight,
-            }}
-          >
-            {wordText}
-          </p>
-        </div>
+        <TickAndText
+          wordText={wordText}
+          wordFontSize={wordFontSize}
+          tickImgSize={tickImgSize}
+          isMobile={isMobile}
+          language={language}
+          wordMargin={wordMargin}
+          wordLineHeight={wordLineHeight}
+        />
         <WordTooltipResult
           description={wordText}
           multilingual={multilingual}
@@ -282,11 +297,7 @@ StepResultDisplay.propTypes = {
   multilingual: PropTypes.object,
   multilingualLangCode: PropTypes.string,
   nativeLangSymbol: PropTypes.string,
-  recordedBlob: PropTypes.object,
-  isPlayingRecordedAudio: PropTypes.bool,
-  stopRecordedAudio: PropTypes.func,
-  playRecordedAudio: PropTypes.func,
-  goToNextStep: PropTypes.func,
+  ...recordingActionPropTypes,
 };
 
 function RecordingVisualizer({
@@ -6268,9 +6279,20 @@ const PhrasesInAction = ({
   };
 
   const isActiveRecording = isRecording || isRecording2;
-  const cardJustifyContent = isMobile ? (isActiveRecording ? "flex-start" : "center") : "center";
-  const cardPadding = isMobile ? (isActiveRecording ? "10px 0px" : "20px 0px") : "50px 0px";
-  const matchedMarginTop = isMatched ? (isMobile ? "0" : isTablet ? "40px" : "50px") : "20px";
+  let cardJustifyContent = "center";
+  if (isMobile && isActiveRecording) cardJustifyContent = "flex-start";
+  let cardPadding = "50px 0px";
+  if (isMobile && isActiveRecording) cardPadding = "10px 0px";
+  else if (isMobile) cardPadding = "20px 0px";
+  let matchedMarginTop = "20px";
+  if (isMatched && isMobile) matchedMarginTop = "0";
+  else if (isMatched && isTablet) matchedMarginTop = "40px";
+  else if (isMatched) matchedMarginTop = "50px";
+  let step2WordFontSize = "36px";
+  if (isMobile) step2WordFontSize = "24px";
+  else if (isTablet) step2WordFontSize = "28px";
+  let step2TickImgSize = "40px";
+  if (isTablet) step2TickImgSize = "35px";
   const stepSharedProps = {
     isMobile,
     language,
@@ -6925,8 +6947,8 @@ const PhrasesInAction = ({
                   {isRecordingStopped2 && (
                     <StepResultDisplay
                       wordText={levelData?.correctWordTwo}
-                      wordFontSize={isMobile ? "24px" : isTablet ? "28px" : "36px"}
-                      tickImgSize={isMobile ? "40px" : isTablet ? "35px" : "40px"}
+                      wordFontSize={step2WordFontSize}
+                      tickImgSize={step2TickImgSize}
                       rowFlexDirection={undefined}
                       wordMargin={undefined}
                       wordLineHeight={undefined}
