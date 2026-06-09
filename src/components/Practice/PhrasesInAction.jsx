@@ -12,6 +12,7 @@ import * as Assets from "../../utils/imageAudioLinks";
 import * as s3Assets from "../../utils/s3Links";
 import { getAssetUrl } from "../../utils/s3Links";
 import { getAssetAudioUrl } from "../../utils/s3Links";
+import { getFontFamily } from "../../utils/fontUtils";
 import Confetti from "react-confetti";
 import listenImg from "../../assets/listen.png";
 import pause from "../../assets/pause.png";
@@ -6081,17 +6082,25 @@ const PhrasesInAction = ({
           )}
           <div
             style={{
-              width: "90%",
-              height: "90%",
+              width: isMobile ? "95%" : "90%",
+              height: isMobile ? "110%" : "90%",
               backgroundColor: "#ffffff",
               borderRadius: "20px",
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: isMobile
+                ? isRecording
+                  ? "flex-start"
+                  : "center"
+                : "center",
               border: "1px solid #d9d2fc",
-              padding: "50px 0px",
+              padding: isMobile
+                ? isRecording
+                  ? "10px 0px"
+                  : "20px 0px"
+                : "50px 0px",
             }}
           >
             {/* <img
@@ -6111,6 +6120,9 @@ const PhrasesInAction = ({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                width: "100%",
+                flex: isMobile ? "1" : undefined,
+                justifyContent: isMobile ? "space-evenly" : undefined,
               }}
             >
               {currentSteps === "step1" && (
@@ -6118,24 +6130,39 @@ const PhrasesInAction = ({
                   {!isRecordingStopped && (
                     <div
                       style={{
-                        display: "flex",
-                        alignItems: "center",
+                        display: isMobile ? "block" : "flex",
+                        alignItems: isMobile ? undefined : "center",
+                        justifyContent: isMobile ? undefined : "center",
+                        textAlign: isMobile ? "center" : undefined,
                         fontSize: "30px",
-                        fontWeight: "bold",
+                        fontWeight: 700,
                         color: "#1a1a1a",
-                        letterSpacing: "3px",
+                        letterSpacing: 0,
+                        lineHeight: isMobile ? "1.0" : undefined,
+                        fontFamily: getFontFamily(language),
                         position: "relative",
                         marginBottom: "-5px",
+                        width: "100%",
+                        boxSizing: "border-box",
+                        gap: isMobile ? undefined : "0",
+                        padding: isMobile ? "0 62px 0 12px" : "0",
                       }}
                     >
-                      <span style={{ margin: "0 10px" }}>
+                      <span
+                        style={{
+                          margin: isMobile ? "0" : "0 10px",
+                        }}
+                      >
                         {levelData?.allwords[0]?.text}
                       </span>
                       {isPlaying ? (
                         <Box
                           sx={{
-                            marginTop: "7px",
-                            position: "relative",
+                            marginTop: isMobile ? "0px" : "7px",
+                            position: isMobile ? "absolute" : "relative",
+                            right: isMobile ? "12px" : "auto",
+                            top: isMobile ? "50%" : "auto",
+                            transform: isMobile ? "translateY(-50%)" : "none",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
@@ -6150,14 +6177,16 @@ const PhrasesInAction = ({
                         <Box
                           //className="walkthrough-step-1"
                           sx={{
-                            marginTop: "7px",
-                            position: "relative",
+                            marginTop: isMobile ? "0px" : "7px",
+                            position: isMobile ? "absolute" : "relative",
+                            right: isMobile ? "12px" : "auto",
+                            top: isMobile ? "50%" : "auto",
+                            transform: isMobile ? "translateY(-50%)" : "none",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             minWidth: { xs: "50px", sm: "60px", md: "70px" },
                             cursor: "pointer",
-                            //cursor: `url(${clapImage}) 32 24, auto`,
                           }}
                           onClick={playAudio2}
                         >
@@ -6168,33 +6197,57 @@ const PhrasesInAction = ({
                   )}
 
                   {isRecordingStopped && (
-                    <div style={{ textAlign: "center", marginTop: "20px" }}>
+                    <div
+                      style={{
+                        textAlign: "center",
+                        marginTop: isMobile ? "0" : "20px",
+                        display: isMobile ? "flex" : undefined,
+                        flexDirection: isMobile ? "column" : undefined,
+                        justifyContent: isMobile ? "space-evenly" : undefined,
+                        alignItems: isMobile ? "center" : undefined,
+                        flex: isMobile ? "1" : undefined,
+                        width: isMobile ? "100%" : undefined,
+                      }}
+                    >
                       <div
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
+                          display: isMobile ? "contents" : "flex",
+                          flexDirection: isMobile ? undefined : "row",
+                          alignItems: isMobile ? undefined : "center",
+                          justifyContent: isMobile ? undefined : "center",
+                          gap: isMobile ? undefined : "0",
                         }}
                       >
-                        <img
-                          src={Assets.tickImg}
-                          alt="Tick"
+                        <div
                           style={{
-                            width: "40px",
-                            height: "40px",
-                            marginRight: "10px",
-                          }}
-                        />
-                        <p
-                          style={{
-                            fontSize: "30px",
-                            fontWeight: "bold",
-                            color: "#1a1a1a",
-                            letterSpacing: "3px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: isMobile ? "center" : undefined,
                           }}
                         >
-                          {levelData?.allwords[0]?.text}
-                        </p>
+                          <img
+                            src={Assets.tickImg}
+                            alt="Tick"
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              marginRight: "10px",
+                            }}
+                          />
+                          <p
+                            style={{
+                              fontSize: "30px",
+                              fontWeight: 700,
+                              color: "#1a1a1a",
+                              letterSpacing: 0,
+                              fontFamily: getFontFamily(language),
+                              margin: isMobile ? "0" : undefined,
+                              lineHeight: isMobile ? "1.4" : undefined,
+                            }}
+                          >
+                            {levelData?.allwords[0]?.text}
+                          </p>
+                        </div>
                         {/* Show multilingual box only for English on step1 */}
                         {language === "en" && (
                           <AudioTooltipModal
@@ -6205,7 +6258,7 @@ const PhrasesInAction = ({
                           >
                             <Box
                               sx={{
-                                marginLeft: "10px",
+                                marginLeft: isMobile ? "0" : "10px",
                                 display: "flex",
                                 marginTop: "5px",
                                 alignItems: "center",
@@ -6256,7 +6309,7 @@ const PhrasesInAction = ({
                           alignItems: "center",
                           justifyContent: "center",
                           gap: "20px",
-                          marginTop: "30px",
+                          marginTop: isMobile ? "0" : "30px",
                         }}
                       >
                         {language !== "en" && recordedBlob && (
@@ -6291,7 +6344,7 @@ const PhrasesInAction = ({
                         display: "flex",
                         justifyContent: "center",
                         width: "100%",
-                        margin: "20px 0",
+                        margin: isMobile ? "8px 0" : "20px 0",
                       }}
                     >
                       {levelData?.allwords && levelData.allwords.length > 0 ? (
@@ -6308,13 +6361,13 @@ const PhrasesInAction = ({
                                 width: "180px",
                                 height: "190px",
                                 border: "1px solid #000",
-                                margin: "10px",
+                                margin: isMobile ? "5px" : "10px",
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
                                 cursor: "pointer",
                                 flexDirection: "column",
-                                marginBottom: "30px",
+                                marginBottom: isMobile ? "8px" : "30px",
                                 overflow: "hidden",
                                 boxSizing: "border-box",
                               }}
@@ -6393,7 +6446,17 @@ const PhrasesInAction = ({
                         }}
                       >
                         <Box
-                          style={{ marginTop: "-45px", marginBottom: "55px" }}
+                          style={{
+                            marginTop: isMobile ? "0px" : "-45px",
+                            marginBottom: isMobile ? "8px" : "55px",
+                            width: isMobile ? "100%" : undefined,
+                            maxWidth: "100%",
+                            overflow: "visible",
+                            transform: isMobile ? "scale(0.8)" : undefined,
+                            transformOrigin: isMobile
+                              ? "center top"
+                              : undefined,
+                          }}
                         >
                           <RecordVoiceVisualizer />
                         </Box>
@@ -6402,7 +6465,7 @@ const PhrasesInAction = ({
                             background: "transparent",
                             border: "none",
                             cursor: "pointer",
-                            marginTop: "-18px",
+                            marginTop: isMobile ? "16px" : "-18px",
                           }}
                           onClick={handleMicClick}
                         >
@@ -6455,9 +6518,10 @@ const PhrasesInAction = ({
                             : isTablet
                             ? "30px"
                             : "30px",
-                          fontWeight: "bold",
+                          fontWeight: 700,
                           color: "#1a1a1a",
-                          letterSpacing: "3px",
+                          letterSpacing: 0,
+                          fontFamily: getFontFamily(language),
                           position: "relative",
                           marginBottom: "5px",
                         }}
@@ -6771,9 +6835,10 @@ const PhrasesInAction = ({
                               : isTablet
                               ? "28px"
                               : "36px",
-                            fontWeight: "bold",
+                            fontWeight: 700,
                             color: "#1a1a1a",
-                            letterSpacing: "3px",
+                            letterSpacing: 0,
+                            fontFamily: getFontFamily(language),
                           }}
                         >
                           {levelData?.correctWordTwo}
