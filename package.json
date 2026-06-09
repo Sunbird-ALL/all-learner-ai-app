@@ -150,8 +150,6 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.28.5",
     "@mui/styles": "^5.15.10",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.23",
     "customize-cra": "^1.0.0",
     "eslint": "^7.32.0",
@@ -165,8 +163,7 @@
     "react": "^18.2.0",
     "react-app-rewired": "^2.2.1",
     "tailwindcss": "^3.4.17",
-    "tailwindcss-animate": "^1.0.7",
-    "typescript": "^6.0.3"
+    "tailwindcss-animate": "^1.0.7"
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
