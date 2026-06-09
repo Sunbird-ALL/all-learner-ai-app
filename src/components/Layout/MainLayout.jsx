@@ -962,6 +962,15 @@ const MainLayout = (props) => {
       : livesData?.lives;
 
   const navigate = useNavigate();
+
+  const fFlowWrapperStyle = {
+    height: isMobile ? "80px" : "150px",
+    width: isMobile ? "80px" : "150px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
   return (
     <Box sx={sectionStyle}>
       <ProfileHeader
@@ -1192,7 +1201,7 @@ const MainLayout = (props) => {
                   <Box
                     sx={{
                       position: "absolute",
-                      left: isMobile ? "-25px" : 0,
+                      left: isMobile ? "0px" : 0,
                       bottom: isMobile ? "2px" : "-2px",
                       zIndex: "9999",
                       pointerEvents: "none",
@@ -1213,29 +1222,29 @@ const MainLayout = (props) => {
                       {tFlow !== "true" &&
                         (milestoneLevel === "B" && isF3FlowActive ? (
                           // F3 Flow - Show F3 milestone image
-                          <div style={{ height: "150px", width: "150px" }}>
+                          <div style={fFlowWrapperStyle}>
                             <img
                               src={F3Image}
                               alt="F3"
-                              height={isMobile ? "130px" : "200px"}
+                              height={isMobile ? "75px" : "140px"}
                             />
                           </div>
                         ) : milestoneLevel === "B" && isF2FlowActive ? (
                           // F2 Flow - Show F2 milestone image
-                          <div style={{ height: "150px", width: "150px" }}>
+                          <div style={fFlowWrapperStyle}>
                             <img
                               src={F2Image}
                               alt="F2"
-                              height={isMobile ? "130px" : "200px"}
+                              height={isMobile ? "75px" : "140px"}
                             />
                           </div>
                         ) : milestoneLevel === "B" && isF1FlowActive ? (
                           // F1 Flow - Show F1 milestone image
-                          <div style={{ height: "150px", width: "150px" }}>
+                          <div style={fFlowWrapperStyle}>
                             <img
                               src={F1Image}
                               alt="F1"
-                              height={isMobile ? "130px" : "200px"}
+                              height={isMobile ? "75px" : "140px"}
                             />
                           </div>
                         ) : rFlow === "true" && milestoneLevel === "B" ? (

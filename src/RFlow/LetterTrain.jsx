@@ -6613,15 +6613,17 @@ const LetterTrain = ({
         >
           <Box
             sx={{
-              position: "relative",
+              position: { sm: "relative" },
               mx: "auto",
-              width: { xs: "95%", sm: "min(95%, 1024px)" },
+              width: { xs: "100%", sm: "min(95%, 1024px)" },
               borderRadius: 2,
-              backgroundImage:
-                "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
-              backgroundColor: "#fff",
+              backgroundColor: { xs: "transparent", sm: "#fff" },
+              backgroundImage: {
+                xs: "none",
+                sm: "repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 44px, #e6e9ef 46px)",
+              },
+              boxShadow: { xs: "none", sm: "0 2px 10px rgba(0,0,0,0.06)" },
               overflow: { sm: "hidden", xs: "visible" },
-              boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -6634,8 +6636,8 @@ const LetterTrain = ({
             <Box
               sx={{
                 zIndex: { xs: 9999, sm: 1 },
-                right: { xs: "10px", sm: 20 },
-                top: { xs: "-30px", sm: 10 },
+                right: { xs: "18px", sm: 20 },
+                top: { xs: "20px", sm: 10 },
                 position: "absolute",
                 width: { xs: "80px", sm: "100px", md: "120px" },
                 display: "flex",
@@ -6647,11 +6649,11 @@ const LetterTrain = ({
                 sx={{
                   backgroundColor: "#fff",
                   border: "2px solid #1CB0F6",
-                  borderRadius: "50%",
-                  padding: { xs: "4px 8px", sm: "5px 10px", md: "6px 12px" },
+                  borderRadius: "20px",
+                  padding: { xs: "3px 10px", sm: "5px 10px", md: "6px 12px" },
                   fontFamily: getFontFamily(lang),
                   fontWeight: 700,
-                  fontSize: { xs: "11px", sm: "12px", md: "14px" },
+                  fontSize: { xs: "12px", sm: "12px", md: "14px" },
                   color: "#000",
                   position: "relative",
                   boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
@@ -6685,18 +6687,18 @@ const LetterTrain = ({
               </Box>
             </Box>
 
-            {/* Title container - left side */}
+            {/* Title container - all viewports inside UI1 */}
             <Box
               sx={{
                 border: "2px solid #FF9800",
-                zIndex: { xs: 10, sm: 10 },
+                zIndex: 10,
                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 padding: { xs: "6px 10px", sm: "10px 14px", md: "14px 18px" },
                 borderRadius: { xs: "16px", sm: "20px", md: "24px" },
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 minWidth: { xs: "80px", sm: "120px", md: "140px" },
-                left: { xs: 8, sm: 12, md: 16 },
-                top: { xs: 0, sm: 14, md: 16 },
+                left: { xs: "18px", sm: 12, md: 16 },
+                top: { xs: "80px", sm: 14, md: 16 },
                 position: "absolute",
                 backdropFilter: "blur(5px)",
               }}
@@ -6721,7 +6723,7 @@ const LetterTrain = ({
                 textAlign: "center",
                 position: "relative",
                 mb: 0,
-                mt: 0.5,
+                mt: { xs: "0px", sm: 0.5 },
               }}
             >
               <img
@@ -6729,8 +6731,8 @@ const LetterTrain = ({
                 alt="train"
                 style={{
                   width: "100%",
-                  maxWidth: isMobile ? "280px" : isTablet ? "380px" : "480px",
-                  maxHeight: isMobile ? "50px" : isTablet ? "60px" : "70px",
+                  maxWidth: isMobile ? "350px" : isTablet ? "380px" : "480px",
+                  maxHeight: isMobile ? "60px" : isTablet ? "60px" : "70px",
                   objectFit: "contain",
                   marginTop: "2px",
                 }}
@@ -6759,8 +6761,8 @@ const LetterTrain = ({
                     >
                       <Box
                         sx={{
-                          minWidth: { xs: 40, sm: 50, md: 60 },
-                          minHeight: { xs: 40, sm: 50, md: 60 },
+                          minWidth: { xs: 45, sm: 50, md: 60 },
+                          minHeight: { xs: 45, sm: 50, md: 60 },
                           borderRadius: "6px",
                           display: "flex",
                           alignItems: "center",
@@ -6777,12 +6779,12 @@ const LetterTrain = ({
                             fontSize:
                               lang === "te"
                                 ? isMobile
-                                  ? "24px"
+                                  ? "26px"
                                   : isTablet
                                   ? "28px"
                                   : "32px"
                                 : isMobile
-                                ? "20px"
+                                ? "22px"
                                 : isTablet
                                 ? "24px"
                                 : "28px",
@@ -6799,8 +6801,8 @@ const LetterTrain = ({
 
             <Box
               sx={{
-                width: { xs: "90%", sm: "80%", md: "75%" },
-                maxWidth: { xs: 280, sm: 340, md: 380 },
+                width: { xs: "95%", sm: "80%", md: "75%" },
+                maxWidth: { xs: 320, sm: 340, md: 380 },
                 height: "auto",
                 mx: "auto",
                 display: "flex",
@@ -6810,7 +6812,7 @@ const LetterTrain = ({
                 borderRadius: { xs: "10px", sm: "12px", md: "14px" },
                 backgroundColor: "#F1FAFE",
                 mb: 0.5,
-                padding: { xs: "3px", sm: "3.5px", md: "4px" },
+                padding: { xs: "8px 4px", sm: "3.5px", md: "4px" },
                 marginTop: 1,
               }}
             >
@@ -6822,7 +6824,7 @@ const LetterTrain = ({
                 sx={{
                   color: red,
                   fontWeight: 500,
-                  fontSize: { xs: 50, md: 75 },
+                  fontSize: { xs: 62, md: 75 },
                   lineHeight: 1,
                   fontFamily: getFontFamily(lang),
                   flex: 1,
@@ -6866,8 +6868,8 @@ const LetterTrain = ({
                   src={item.image}
                   alt={item.word}
                   imageStyle={{
-                    width: isMobile ? "60px" : "85px",
-                    height: isMobile ? "60px" : "85px",
+                    width: isMobile ? "75px" : "85px",
+                    height: isMobile ? "75px" : "85px",
                     objectFit: "contain",
                   }}
                 />
@@ -6881,14 +6883,22 @@ const LetterTrain = ({
                 alignItems: "center",
                 height: "100%",
                 width: "100%",
-                mt: 3,
+                mt: { xs: "20px", sm: 3 },
+                mb: { xs: "20px", sm: 0 },
               }}
             >
               <span
                 style={{
                   color: "#333F61",
                   fontWeight: lang === "te" ? 400 : 700,
-                  fontSize: lang === "te" ? "56px" : "50px",
+                  fontSize:
+                    lang === "te"
+                      ? isMobile
+                        ? "62px"
+                        : "56px"
+                      : isMobile
+                      ? "58px"
+                      : "50px",
                   lineHeight: "1",
                   letterSpacing: "2%",
                   fontFamily: getFontFamily(lang),
@@ -6915,8 +6925,8 @@ const LetterTrain = ({
               <IconButton
                 onClick={handleBackNavigation}
                 sx={{
-                  width: 48,
-                  height: 48,
+                  width: { xs: 60, sm: 48 },
+                  height: { xs: 60, sm: 48 },
                   bgcolor: "#1CB0F6",
                   color: "#fff",
                   borderRadius: "50%",
@@ -6925,14 +6935,14 @@ const LetterTrain = ({
                   transform: "translateY(-4px)",
                 }}
               >
-                <ArrowLeft size={22} />
+                <ArrowLeft size={isMobile ? 26 : 22} />
               </IconButton>
 
               <IconButton
                 onClick={handleRetry}
                 sx={{
-                  width: 48,
-                  height: 48,
+                  width: { xs: 60, sm: 48 },
+                  height: { xs: 60, sm: 48 },
                   bgcolor: pink,
                   color: "#fff",
                   borderRadius: "50%",
@@ -6941,15 +6951,15 @@ const LetterTrain = ({
                   transform: "translateY(-1px)",
                 }}
               >
-                <RotateCcw size={22} />
+                <RotateCcw size={isMobile ? 26 : 22} />
               </IconButton>
 
               {/* ➡️ Next button */}
               <IconButton
                 onClick={handleNextWord}
                 sx={{
-                  width: 48,
-                  height: 48,
+                  width: { xs: 60, sm: 48 },
+                  height: { xs: 60, sm: 48 },
                   bgcolor: orange,
                   color: "#fff",
                   borderRadius: "50%",
@@ -6957,7 +6967,7 @@ const LetterTrain = ({
                   "&:hover": { bgcolor: orange },
                 }}
               >
-                <ArrowRight size={22} />
+                <ArrowRight size={isMobile ? 30 : 22} />
               </IconButton>
             </Box>
           </Box>
@@ -7055,11 +7065,11 @@ const LetterTrain = ({
         >
           <Box
             sx={{
-              position: "relative",
+              position: { sm: "relative" },
               mx: "auto",
               width: "min(100%, 1024px)",
               borderRadius: 2,
-              backgroundColor: "#fff",
+              backgroundColor: { xs: "transparent", sm: "#fff" },
               overflow: { sm: "hidden", xs: "visible" },
               display: "flex",
               flexDirection: "column",
@@ -7068,6 +7078,7 @@ const LetterTrain = ({
               padding: "30px 0",
             }}
           >
+            {/* Progress container - right side */}
             <Box
               sx={{
                 position: "absolute",
@@ -7075,20 +7086,20 @@ const LetterTrain = ({
                 flexDirection: "column",
                 alignItems: "center",
                 width: { xs: "80px", sm: "100px", md: "120px" },
-                right: { xs: "10px", sm: 20 },
+                right: { xs: "18px", sm: 20 },
                 zIndex: { xs: 9999, sm: 1 },
-                top: { xs: "-30px", sm: 10 },
+                top: { xs: "20px", sm: 10 },
               }}
             >
               <Box
                 sx={{
                   backgroundColor: "#fff",
                   border: "2px solid #1CB0F6",
-                  borderRadius: "50%",
-                  padding: "6px 12px",
+                  borderRadius: "20px",
+                  padding: { xs: "3px 10px", sm: "6px 12px" },
                   fontFamily: getFontFamily(lang),
                   fontWeight: 700,
-                  fontSize: "14px",
+                  fontSize: { xs: "12px", sm: "14px" },
                   color: "#000",
                   position: "relative",
                   boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
@@ -7101,7 +7112,7 @@ const LetterTrain = ({
               <Box
                 sx={{
                   width: "100%",
-                  height: "18px",
+                  height: { xs: "14px", sm: "18px" },
                   backgroundColor: "#E3F2FD",
                   borderRadius: "20px",
                   overflow: "hidden",
@@ -7124,7 +7135,9 @@ const LetterTrain = ({
 
             <Box
               sx={{
-                backgroundColor: recAudio ? "#1CB0F60F" : "#fff",
+                backgroundColor: recAudio
+                  ? "#1CB0F60F"
+                  : { xs: "transparent", sm: "#fff" },
                 border: recAudio ? "2px solid #58CC02" : "none",
                 borderRadius: "16px",
                 display: "flex",
@@ -7135,8 +7148,7 @@ const LetterTrain = ({
                 marginBottom: "40px",
                 maxWidth: "75%",
                 height: "140px",
-                width: "350px",
-                minWidth: "350px",
+                width: { xs: "100%", sm: "350px" },
                 flexShrink: 0,
                 marginTop: "10px",
               }}
@@ -7291,7 +7303,7 @@ const LetterTrain = ({
             height: "50px",
             position: "absolute",
             top: "20px",
-            left: "0px",
+            left: "18px",
             cursor: "pointer",
             zIndex: 1000,
           }}
