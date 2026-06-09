@@ -1238,6 +1238,10 @@ const WordsOrImage = ({
                             : isTranscriptCorrect === false
                               ? "red" // todo: need to change to red
                               : "#333F61",
+                        display: isMobile ? "flex" : undefined,
+                        flexDirection: isMobile ? "column" : undefined,
+                        alignItems: isMobile ? "center" : undefined,
+                        width: isMobile ? "100%" : undefined,
                       }}
                     >
                       {words}
@@ -1252,7 +1256,7 @@ const WordsOrImage = ({
                           <Box
                             sx={{
                               display: "flex",
-                              marginTop: "5px",
+                              marginTop: isMobile ? "16px" : "5px",
                               alignItems: "center",
                               justifyContent: "space-between",
                               border: "2px solid #FF7F36",
@@ -1262,7 +1266,7 @@ const WordsOrImage = ({
                               //width: "300px",
                               backgroundColor: "#fff",
                               cursor: "pointer",
-                              marginLeft: "15px",
+                              marginLeft: isMobile ? 0 : "15px",
                             }}
                           >
                             {/* Kannada Letter Box */}
