@@ -660,7 +660,7 @@ export function CombinedLetterGamesPreview({
         
         setDemoStep('instruction3');
         await playNarration(currentGameInstructions.narration3, 3);
-        
+
         setDemoStep('waitForAnswer');
         
         setTimeout(() => {
@@ -778,7 +778,7 @@ export function CombinedLetterGamesPreview({
         setCompletionCount(newCompletionCount);
         
         setDemoStep('complete');
-        
+
         // Wait a moment, then move to next game or show completion page
         setTimeout(() => {
           if (currentGameIndex < games.length - 1) {
@@ -1253,10 +1253,9 @@ export function CombinedLetterGamesPreview({
                         showReadyButton ? (
                           <div className="flex flex-col items-center justify-center h-full space-y-3">
                             <div className="text-4xl mb-2">
-                              <Eye className={`h-16 w-16 mx-auto transition-colors ${
-                                demoStep === 'waitForReady' 
-                                  ? 'text-blue-600 animate-pulse' 
-                                  : demoStep === 'instruction1'
+                              <Eye className={`h-16 w-16 mx-auto transition-colors ${demoStep === 'waitForReady'
+                                ? 'text-blue-600 animate-pulse'
+                                : demoStep === 'instruction1'
                                   ? 'text-gray-400'
                                   : 'text-blue-600'
                               }`} />
@@ -1440,9 +1439,9 @@ export function CombinedLetterGamesPreview({
               </Button>
                </div>
 
-               {/* Right Side - Placeholder */}
-               <div className="w-24"></div>
-             
+              {/* Right Side - Placeholder */}
+              <div className="w-24"></div>
+
           </div>
         </Card>
       </div>

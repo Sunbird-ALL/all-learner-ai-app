@@ -1226,7 +1226,7 @@ const MainLayout = (props) => {
                             <img
                               src={F3Image}
                               alt="F3"
-                              height={isMobile ? "75px" : "140px"}
+                              height={isMobile ? "75px" : "200px"}
                             />
                           </div>
                         ) : milestoneLevel === "B" && isF2FlowActive ? (
@@ -1235,7 +1235,7 @@ const MainLayout = (props) => {
                             <img
                               src={F2Image}
                               alt="F2"
-                              height={isMobile ? "75px" : "140px"}
+                              height={isMobile ? "75px" : "200px"}
                             />
                           </div>
                         ) : milestoneLevel === "B" && isF1FlowActive ? (
@@ -1244,7 +1244,7 @@ const MainLayout = (props) => {
                             <img
                               src={F1Image}
                               alt="F1"
-                              height={isMobile ? "75px" : "140px"}
+                              height={isMobile ? "75px" : "200px"}
                             />
                           </div>
                         ) : rFlow === "true" && milestoneLevel === "B" ? (
