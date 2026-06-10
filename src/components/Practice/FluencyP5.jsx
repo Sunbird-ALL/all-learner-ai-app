@@ -49,13 +49,13 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-function CircularTimer({ duration = 30, isActive = true }) {
+function CircularTimer({ duration = 30, isActive = true, small = false }) {
   const [timeLeft, setTimeLeft] = React.useState(duration);
   const [elapsed, setElapsed] = React.useState(0);
 
-  const radius = 30;
-  const cx = 40;
-  const cy = 40;
+  const radius = small ? 18 : 30;
+  const cx = small ? 24 : 40;
+  const cy = small ? 24 : 40;
   const circumference = 2 * Math.PI * radius;
 
   // Decrease timeLeft every 1s
@@ -84,24 +84,26 @@ function CircularTimer({ duration = 30, isActive = true }) {
   const totalElapsed = duration - timeLeft + elapsed;
   const progress = Math.max(0, (1 - totalElapsed / duration) * 100);
 
+  const svgSize = small ? 48 : 80;
+
   return (
     <div
       style={{
-        width: "100px",
-        height: "100px",
+        width: small ? "45px" : "100px",
+        height: small ? "40px" : "100px",
         position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <svg width="80" height="80">
+      <svg width={svgSize} height={svgSize}>
         <circle
           cx={cx}
           cy={cy}
           r={radius}
           stroke="rgba(255, 187, 150, 0.3)"
-          strokeWidth="8"
+          strokeWidth={small ? 5 : 8}
           fill="transparent"
         />
 
@@ -110,7 +112,7 @@ function CircularTimer({ duration = 30, isActive = true }) {
           cy={cy}
           r={radius}
           stroke="#F39F27"
-          strokeWidth="8"
+          strokeWidth={small ? 5 : 8}
           fill="transparent"
           strokeDasharray={`${circumference} ${circumference}`}
           strokeDashoffset={circumference * (1 - progress / 100)}
@@ -126,32 +128,8 @@ function CircularTimer({ duration = 30, isActive = true }) {
       <div
         style={{
           position: "absolute",
-          width: "80px",
-          height: "80px",
-          transform: `rotate(${-360 * (1 - progress / 100)}deg)`,
-          transition: "transform 0.1s linear",
-        }}
-      >
-        {/* <img
-          src={dogImg}
-          alt="dog"
-          style={{
-            position: "absolute",
-            width: "35px",
-            height: "35px",
-            top: "-13px",
-            left: "calc(50% - 13.5px)",
-            pointerEvents: "none",
-            userSelect: "none",
-          }}
-        /> */}
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
           fontWeight: "700",
-          fontSize: "20px",
+          fontSize: small ? "13px" : "20px",
           color: timeLeft === 0 ? "red" : "#ff6600",
         }}
       >
@@ -740,13 +718,16 @@ const FluencyP5 = ({
             <img
               src={wellImg}
               alt="well"
-              style={{ width: "80px", marginBottom: "10px" }}
+              style={{
+                width: isMobile ? "55px" : "80px",
+                marginBottom: "10px",
+              }}
             />
             <h2
               style={{
                 color: "#333f61",
                 fontWeight: "700",
-                fontSize: "35px",
+                fontSize: isMobile ? "22px" : "35px",
                 fontFamily: "Quicksand",
               }}
             >
@@ -762,20 +743,23 @@ const FluencyP5 = ({
               backgroundColor: "#FFF4E6",
               border: "1px solid rgba(241, 153, 32, 1)",
               borderRadius: "12px",
-              padding: "15px 30px",
+              padding: isMobile ? "10px 14px" : "15px 30px",
               fontFamily: "Quicksand",
               fontWeight: 600,
-              fontSize: "22px",
+              fontSize: isMobile ? "13px" : "22px",
               color: "rgba(51, 63, 97, 1)",
               boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)",
-              marginBottom: "30px",
-              gap: "15px",
+              marginBottom: isMobile ? "18px" : "30px",
+              gap: isMobile ? "10px" : "15px",
             }}
           >
             <img
               src={bookImg}
               alt="book"
-              style={{ width: "35px", height: "40px" }}
+              style={{
+                width: isMobile ? "24px" : "35px",
+                height: isMobile ? "28px" : "40px",
+              }}
             />
             {isMatch ? (
               <span style={{ fontWeight: "bold" }}>
@@ -796,8 +780,8 @@ const FluencyP5 = ({
             }}
           >
             <RetryIcon
-              height={50}
-              width={50}
+              height={isMobile ? 38 : 50}
+              width={isMobile ? 38 : 50}
               style={{ cursor: "pointer" }}
               onClick={handleRetryClick}
             />
@@ -806,7 +790,7 @@ const FluencyP5 = ({
               alt="next"
               role="button"
               tabIndex={0}
-              style={{ width: "50px", cursor: "pointer" }}
+              style={{ width: isMobile ? "38px" : "50px", cursor: "pointer" }}
               onClick={(e) => handleNextClick(e)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
@@ -818,226 +802,245 @@ const FluencyP5 = ({
     }
 
     return (
-      <div
-        ref={whiteContainerRef}
-        className="whiteContainer"
-        style={{
-          width: "90%",
-          height: "68vh",
-          maxWidth: "1200px",
-          background: "#fff",
-          borderRadius: "12px",
-          boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "20px",
-          position: "relative",
-          overflow: "hidden",
-          justifyContent: "center",
-        }}
-      >
-        <audio ref={audioRefs} onEnded={handleAudioEnd} hidden />
-        <img
-          src={hintimg}
-          alt="hint"
-          style={{
-            width: "50px",
-            height: "50px",
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            cursor: "pointer",
-            zIndex: 1000,
-          }}
-          onClick={() => setOpen(true)}
-        />
-
-        {/* ✅ Common Modal */}
-        {open && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100vh",
-              backgroundColor: "rgba(0,0,0,0.7)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 11000,
-            }}
-          >
-            <div
-              style={{
-                position: "relative",
-                background: "#000",
-                padding: "10px",
-                borderRadius: "12px",
-                maxWidth: "90%",
-                width: "900px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <button
-                onClick={() => setOpen(false)}
-                style={{
-                  position: "absolute",
-                  top: "-10px",
-                  right: "-10px",
-                  background: "white",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "30px",
-                  height: "30px",
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                }}
-              >
-                ×
-              </button>
-
-              <SafeYouTubePlayer
-                videoId="Wdg-v_oXy6U"
-                style={{ borderRadius: "8px" }}
-              />
-            </div>
-          </div>
-        )}
-        {!showBearDance && (
-          <div
-            style={{
-              position: "absolute",
-              top: isMobile ? "140px" : "180px",
-              right: isMobile ? "-12px" : "20px",
-              zIndex: 1000,
-              background: "#fff",
-              padding: isMobile ? "6px" : "8px",
-              borderRadius: "12px",
-              transform: isMobile ? "scale(0.9)" : "scale(1)",
-            }}
-          >
-            <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
-          </div>
-        )}
-
-        {!showBearDance && (
-          <div style={{ marginBottom: "15px" }}>
-            <CircularTimer duration={30} isActive={true} />
-          </div>
-        )}
-
+      <>
         <div
-          ref={scrollContainerRef}
+          ref={whiteContainerRef}
+          className="whiteContainer"
           style={{
-            width: "60%",
-            height: showBearDance ? "auto" : "90%",
-            border: "2px dashed #FF6600",
-            borderRadius: "18px",
-            background: "rgba(255, 102, 0, 0.05)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "10px",
-            position: "relative",
-            overflow: "hidden",
-            marginBottom: "20px",
-          }}
-        >
-          <div
-            ref={textBlockRef}
-            key={animationKey}
-            style={{
-              position: showBearDance ? "relative" : "absolute",
-              width: "80%",
-              textAlign: "center",
-              fontWeight: "700",
-              fontSize: "20px",
-              lineHeight: "1.4",
-              color: "rgba(51, 63, 97, 1)",
-              top: showBearDance ? "0" : `${scrollPosition}%`,
-              whiteSpace: "normal",
-              wordBreak: "break-word",
-            }}
-          >
-            {currentSentence.sentence}
-          </div>
-
-          <style>
-            {`
-              /* @keyframes floatUp is no longer needed */
-            `}
-          </style>
-        </div>
-
-        {!isSpeaking && !showFinalState && !showBearDance && (
-          <img
-            src={speakButton}
-            alt="speak"
-            style={{
-              width: "60px",
-              cursor: "pointer",
-              marginBottom: "20px",
-            }}
-            onClick={handleSpeakClick}
-          />
-        )}
-
-        <div
-          style={{
-            marginTop: "-20px",
+            width: "90%",
+            height: "68vh",
+            maxWidth: "1200px",
+            background: "#fff",
+            borderRadius: "12px",
+            boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "15px",
+            padding: isMobile ? "70px 20px 20px" : "20px",
+            position: "relative",
+            overflow: "hidden",
+            justifyContent: isMobile ? "flex-start" : "center",
           }}
         >
-          {isSpeaking && !paused && !showBearDance && (
+          <audio ref={audioRefs} onEnded={handleAudioEnd} hidden />
+          <img
+            src={hintimg}
+            alt="hint"
+            style={{
+              width: isMobile ? "36px" : "50px",
+              height: isMobile ? "36px" : "50px",
+              position: "absolute",
+              top: isMobile ? "5px" : "20px",
+              left: isMobile ? "5px" : "20px",
+              cursor: "pointer",
+              zIndex: 1000,
+            }}
+            onClick={() => setOpen(true)}
+          />
+
+          {/* ✅ Common Modal */}
+          {open && (
             <div
               style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100vh",
+                backgroundColor: "rgba(0,0,0,0.7)",
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
-                gap: "3px",
-                marginTop: "8px",
+                justifyContent: "center",
+                zIndex: 11000,
               }}
             >
-              <img
-                src={graphImg}
-                alt="graph"
+              <div
                 style={{
-                  width: "190px",
+                  position: "relative",
+                  background: "#000",
+                  padding: "10px",
+                  borderRadius: "12px",
+                  maxWidth: "90%",
+                  width: "900px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
-              />
-              <img
-                src={pauseImg}
-                alt="pause"
+              >
+                <button
+                  onClick={() => setOpen(false)}
+                  style={{
+                    position: "absolute",
+                    top: "-10px",
+                    right: "-10px",
+                    background: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "30px",
+                    height: "30px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                >
+                  ×
+                </button>
+
+                <SafeYouTubePlayer
+                  videoId="Wdg-v_oXy6U"
+                  style={{ borderRadius: "8px" }}
+                />
+              </div>
+            </div>
+          )}
+          {!showBearDance && !isMobile && (
+            <SpeedSelector onSelect={handleSpeedSelect} selected={selected} />
+          )}
+
+          {!showBearDance &&
+            (isMobile ? (
+              <div
                 style={{
-                  width: "50px",
-                  cursor: "pointer",
+                  position: "absolute",
+                  top: "5px",
+                  right: "5px",
+                  zIndex: 10,
                 }}
-                onClick={handlePauseClick}
+              >
+                <CircularTimer duration={30} isActive={true} small />
+              </div>
+            ) : (
+              <div style={{ marginBottom: "15px" }}>
+                <CircularTimer duration={30} isActive={true} />
+              </div>
+            ))}
+
+          <div
+            ref={scrollContainerRef}
+            style={{
+              width: isMobile ? "100%" : "60%",
+              height: showBearDance ? "auto" : isMobile ? "40%" : "90%",
+              border: "2px dashed #FF6600",
+              borderRadius: "18px",
+              background: "rgba(255, 102, 0, 0.05)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              position: "relative",
+              overflow: "hidden",
+              marginBottom: "20px",
+            }}
+          >
+            <div
+              ref={textBlockRef}
+              key={animationKey}
+              style={{
+                position: showBearDance ? "relative" : "absolute",
+                width: "90%",
+                textAlign: "center",
+                fontWeight: "700",
+                fontSize: isMobile ? "16px" : "20px",
+                lineHeight: "1.4",
+                color: "rgba(51, 63, 97, 1)",
+                top: showBearDance ? "0" : `${scrollPosition}%`,
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+              }}
+            >
+              {currentSentence.sentence}
+            </div>
+
+            <style>
+              {`
+              /* @keyframes floatUp is no longer needed */
+            `}
+            </style>
+          </div>
+          {!showBearDance && isMobile && (
+            <div
+              style={{
+                width: "90%",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "12px",
+              }}
+            >
+              <SpeedSelector
+                onSelect={handleSpeedSelect}
+                selected={selected}
+                horizontal
+                floated={false}
               />
             </div>
           )}
 
-          {showBearDance && !showFinalState && (
+          {!isSpeaking && !showFinalState && !showBearDance && (
             <img
-              src={beardanceImg}
-              alt="bear dance"
+              src={speakButton}
+              alt="speak"
               style={{
-                width: "170px",
-                height: "170px",
+                width: "60px",
+                cursor: "pointer",
+                marginTop: isMobile ? "10px" : "0px",
+                marginBottom: "20px",
               }}
+              onClick={handleSpeakClick}
             />
           )}
-        </div>
 
-        {showConfetti && showBearDance && <Confetti recycle={false} />}
-      </div>
+          <div
+            style={{
+              marginTop: isMobile ? "8px" : "-20px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "15px",
+            }}
+          >
+            {isSpeaking && !paused && !showBearDance && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "3px",
+                  marginTop: "8px",
+                }}
+              >
+                <img
+                  src={graphImg}
+                  alt="graph"
+                  style={{
+                    width: isMobile ? "140px" : "190px",
+                  }}
+                />
+                <img
+                  src={pauseImg}
+                  alt="pause"
+                  style={{
+                    width: "50px",
+                    cursor: "pointer",
+                  }}
+                  onClick={handlePauseClick}
+                />
+              </div>
+            )}
+
+            {showBearDance && !showFinalState && (
+              <img
+                src={beardanceImg}
+                alt="bear dance"
+                style={{
+                  width: "170px",
+                  height: "170px",
+                }}
+              />
+            )}
+          </div>
+
+          {showConfetti && showBearDance && <Confetti recycle={false} />}
+        </div>
+      </>
     );
   };
 
@@ -1074,6 +1077,7 @@ const FluencyP5 = ({
           width: "100%",
           background: "linear-gradient(to bottom, #fff7ef, #ffeede)",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
