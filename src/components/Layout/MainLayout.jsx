@@ -1175,6 +1175,7 @@ const MainLayout = (props) => {
                           ...Array(Math.max(0, redLivesToShow) || 0).keys(),
                         ]?.map((elem) => (
                           <Diamond
+                            key={`red-live-${elem}`}
                             height={isMobile ? "25px" : "50px"}
                             width={isMobile ? "25px" : "50px"}
                             style={{ flexShrink: 0 }}
@@ -1185,6 +1186,7 @@ const MainLayout = (props) => {
                           ...Array(Math.max(0, blackLivesToShow) || 0).keys(),
                         ]?.map((elem) => (
                           <HeartBlack
+                            key={`black-live-${elem}`}
                             height={isMobile ? "25px" : "50px"}
                             width={isMobile ? "25px" : "50px"}
                             style={{ flexShrink: 0 }}
