@@ -204,7 +204,7 @@ const Mechanics5 = ({
             alignItems: "center",
             textAlign: "center",
             color: "#333F61",
-            payddingTop: isMobile ? "10px" : isTablet ? "16vh" : "12vh",
+            paddingTop: isMobile ? "10px" : isTablet ? "16vh" : "12vh",
           }}
         >
           {header}
