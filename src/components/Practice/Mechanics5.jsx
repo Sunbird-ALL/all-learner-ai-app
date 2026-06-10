@@ -231,7 +231,7 @@ const Mechanics5 = ({
             }}
           >
             {/* Image with full-width gradient overlay on top */}
-            {image?.split("/")?.[4] && (
+            {image && (
               <ZoomableImage
                 src={image}
                 alt="contentImage"
