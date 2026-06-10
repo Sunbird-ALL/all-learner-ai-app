@@ -2151,9 +2151,10 @@ const TowreFlow = ({
     >
       <div
         style={{
-          //backgroundColor: "#dff3fc",
-          //minHeight: "100vh",
+          width: isMobile ? "100%" : "auto",
+          height: isMobile ? "100%" : "auto",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -2161,14 +2162,18 @@ const TowreFlow = ({
         {!loading && isStarted && (
           <div
             style={{
-              width: "95%",
+              width: isMobile ? "100%" : "95%",
               maxWidth: 1150,
               background: "#fff",
               borderRadius: 20,
               padding: "0 20px",
               position: "relative",
               overflow: "hidden",
-              height: "530px",
+              height: isMobile
+                ? showFinalWords
+                  ? "calc(100% - 70px)"
+                  : "100%"
+                : "530px",
             }}
           >
             {showCountdown && !loading ? (
@@ -2373,7 +2378,7 @@ const TowreFlow = ({
                           key={colIndex}
                           style={{
                             position: "relative",
-                            width: 180,
+                            width: isMobile ? 65 : 180,
                             height: 85,
                             display: "flex",
                             justifyContent: "center",
@@ -2415,27 +2420,31 @@ const TowreFlow = ({
                   ))}
                 </div>
 
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: location.pathname.includes("/towre-flow") ? 55 : 20,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    textAlign: "center",
-                  }}
-                >
-                  <button
-                    onClick={handleNextWordSet}
+                {!isMobile && (
+                  <div
                     style={{
-                      background: "none",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
+                      position: "absolute",
+                      bottom: location.pathname.includes("/towre-flow")
+                        ? 55
+                        : 20,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      textAlign: "center",
                     }}
                   >
-                    <img src={nextImg} alt="next" style={{ width: 60 }} />
-                  </button>
-                </div>
+                    <button
+                      onClick={handleNextWordSet}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        cursor: "pointer",
+                      }}
+                    >
+                      <img src={nextImg} alt="next" style={{ width: 60 }} />
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
               <>
@@ -2523,8 +2532,8 @@ const TowreFlow = ({
                             key={colIndex}
                             style={{
                               position: "relative",
-                              width: isMobile ? 200 : 180,
-                              height: 100,
+                              width: isMobile ? 120 : 180,
+                              height: isMobile ? 65 : 100,
                               display: "flex",
                               justifyContent: "center",
                               alignItems: "center",
@@ -2776,10 +2785,31 @@ const TowreFlow = ({
             )}
           </div>
         )}
+        {isMobile && !loading && isStarted && showFinalWords && (
+          <div
+            style={{
+              marginTop: "12px",
+              textAlign: "center",
+              zIndex: 10,
+            }}
+          >
+            <button
+              onClick={handleNextWordSet}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            >
+              <img src={nextImg} alt="next" style={{ width: 50 }} />
+            </button>
+          </div>
+        )}
         {!isStarted && (
           <div
             style={{
-              width: "95%",
+              width: isMobile ? "100%" : "95%",
               maxWidth: 1150,
               backgroundImage: `url(${Assets.yellowLightImg})`,
               backgroundSize: "cover",
@@ -2788,7 +2818,7 @@ const TowreFlow = ({
               padding: "0 20px",
               position: "relative",
               overflow: "hidden",
-              height: "530px",
+              height: isMobile ? "100%" : "530px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -2809,13 +2839,21 @@ const TowreFlow = ({
               }}
             />
 
-            <div style={{ textAlign: "center", zIndex: 1 }}>
+            <div
+              style={{
+                textAlign: "center",
+                zIndex: 1,
+                display: isMobile ? "flex" : "block",
+                flexDirection: isMobile ? "column" : "initial",
+                alignItems: isMobile ? "center" : "initial",
+              }}
+            >
               <h2
                 style={{
                   fontFamily: "Quicksand",
                   fontWeight: 1200,
-                  fontSize: "54px",
-                  lineHeight: "60px",
+                  fontSize: isMobile ? "44px" : "64px",
+                  lineHeight: isMobile ? "50px" : "70px",
                   textAlign: "center",
                   color: "#FF9050",
                   marginBottom: "20px",
@@ -2827,7 +2865,7 @@ const TowreFlow = ({
                 src={Assets.birthdayBoxImg}
                 alt="Birthday Box"
                 style={{
-                  maxWidth: "200px",
+                  maxWidth: isMobile ? "160px" : "240px",
                   width: "100%",
                   marginBottom: "10px",
                 }}
@@ -2853,7 +2891,11 @@ const TowreFlow = ({
               <img
                 src={Assets.startButtonImg}
                 alt="Start Button"
-                style={{ maxWidth: "180px", width: "100%", cursor: "pointer" }}
+                style={{
+                  maxWidth: isMobile ? "150px" : "220px",
+                  width: "100%",
+                  cursor: "pointer",
+                }}
                 onClick={() => {
                   setIsStarted(true);
                 }}

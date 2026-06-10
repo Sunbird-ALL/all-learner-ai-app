@@ -1,4 +1,11 @@
-import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
@@ -23,9 +30,12 @@ const sectionStyle = {
   justifyContent: "center",
   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
   backdropFilter: "blur(25px)",
+  position: "relative",
 };
 
 const SpeakSentenceComponent = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [shake, setShake] = useState(true);
   const [level, setLevel] = useState("");
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
@@ -98,13 +108,18 @@ const SpeakSentenceComponent = () => {
             src={discoverEndLeft}
             alt="timer"
             className={shake && "shakeImage"}
+            style={{
+              width: isMobile ? "100px" : "auto",
+              height: "auto",
+            }}
           />
         </Box>
         <Box
           sx={{
             position: "absolute",
             right: "3px",
-            bottom: "0px",
+            bottom: isMobile ? "auto" : "0px",
+            top: isMobile ? "0px" : "auto",
             pointerEvents: "none",
           }}
         >
@@ -112,6 +127,10 @@ const SpeakSentenceComponent = () => {
             src={discoverEndRight}
             alt="timer"
             className={shake && "shakeImage"}
+            style={{
+              width: isMobile ? "100px" : "auto",
+              height: "auto",
+            }}
           />
         </Box>
         <Box sx={{ pointerEvents: "none" }}>
@@ -125,6 +144,7 @@ const SpeakSentenceComponent = () => {
               mb: 4,
               mt: 5,
               textAlign: "center",
+              fontSize: isMobile ? "40px" : "64px",
             }}
           >
             Hurray!!!
@@ -136,8 +156,8 @@ const SpeakSentenceComponent = () => {
               mb: 4,
               color: "#50507D",
               textAlign: "center",
-              fontSize: "18px",
-              width: "60%",
+              fontSize: isMobile ? "18px" : "26px",
+              width: isMobile ? "85%" : "70%",
               margin: "0 auto",
               fontWeight: 600,
               fontFamily: "Quicksand",
@@ -156,7 +176,7 @@ const SpeakSentenceComponent = () => {
             sx={{
               display: "flex",
               justifyContent: "center",
-              width: "60%",
+              width: isMobile ? "80%" : "280px",
               margin: "0 auto",
               cursor: "pointer",
               zIndex: "99999",
