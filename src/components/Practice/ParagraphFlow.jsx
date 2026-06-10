@@ -139,6 +139,143 @@ const styles = `
     background: rgba(0,0,0,0.2);
     border-radius: 3px;
   }
+
+  @media (max-width: 600px) {
+    .pf-title {
+      text-align: center !important;
+      align-self: stretch !important;
+      margin-top: 55px !important;
+      white-space: nowrap !important;
+    }
+    .pf-book-section {
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: 1 !important;
+      min-height: 0 !important;
+      margin-top: 0 !important;
+    }
+    .pf-book-section .scale-transition {
+      margin-left: auto !important;
+      margin-right: auto !important;
+      width: 85% !important;
+      max-width: 100% !important;
+    }
+    .pf-book-section .scale-transition img {
+      height: 35vh !important;
+      width: 100% !important;
+      object-fit: contain !important;
+    }
+    .pf-listen-bear {
+      width: 15vh !important;
+      left: calc(-7vh) !important;
+      bottom: -9vh !important;
+    }
+    .pf-paragraph-text {
+      text-align: left !important;
+    }
+    .pf-text-container {
+      width: 96% !important;
+      margin-left: 0 !important;
+      padding: 10px !important;
+      flex: 1 !important;
+      min-height: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    .pf-listen-icon {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      transform: none !important;
+      margin-top: 12px !important;
+      margin-bottom: 8px !important;
+      flex-shrink: 0 !important;
+      width: 40px !important;
+      height: 40px !important;
+      padding: 0 !important;
+    }
+    .pf-next-btn {
+      flex-shrink: 0 !important;
+    }
+    .pf-speak-btn {
+      flex-shrink: 0 !important;
+      margin-top: 12px !important;
+    }
+    .pf-outer-container {
+      justify-content: flex-start !important;
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+      padding-bottom: 12vh !important;
+    }
+    .pf-highlighted-section {
+      flex: 1 !important;
+      min-height: 0 !important;
+      margin-top: 6vh !important;
+      justify-content: flex-start !important;
+    }
+    .smooth-text-container {
+      -webkit-overflow-scrolling: touch !important;
+      overflow-y: auto !important;
+      flex: 1 !important;
+      min-height: 0 !important;
+      max-height: none !important;
+    }
+    .pf-bear-dance {
+      width: 150px !important;
+      max-height: 200px !important;
+      object-fit: contain !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition {
+      justify-content: space-evenly !important;
+      padding: 22px 10px 10px !important;
+      flex: 1 !important;
+      min-height: 0 !important;
+      width: 100% !important;
+      height: unset !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) {
+      padding: 8px !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > div:first-child {
+      margin-top: 0 !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > div:first-child img {
+      width: 38px !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > div:first-child h2 {
+      font-size: 22px !important;
+      margin: 0 !important;
+      white-space: nowrap !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > div:nth-child(2) {
+      margin-top: 30px !important;
+      flex-direction: row !important;
+      gap: 10px !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > h2 {
+      font-size: 22px !important;
+      margin-top: 0 !important;
+      margin-bottom: 5px !important;
+      text-align: center !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > p {
+      font-size: 22px !important;
+      margin: 10px 20px !important;
+      text-align: center !important;
+      line-height: 1.4 !important;
+    }
+    .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > img {
+      margin: 20px 5px 5px !important;
+    }
+  }
 `;
 
 const ParagraphFlow = ({
@@ -1032,7 +1169,7 @@ const ParagraphFlow = ({
       }}
     >
       <div
-        className="slow-transition"
+        className="slow-transition pf-outer-container"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -1130,6 +1267,7 @@ const ParagraphFlow = ({
 
         {/* Title */}
         <h2
+          className="pf-title"
           style={{
             fontSize: "26px",
             fontWeight: "700",
@@ -1145,6 +1283,7 @@ const ParagraphFlow = ({
         {/* ==== BOOK SECTION WITH LISTEN BEAR AT BOTTOM LEFT ==== */}
         {!showHighlighted && (
           <div
+            className="pf-book-section"
             style={{
               position: "relative",
               display: "flex",
@@ -1203,6 +1342,7 @@ const ParagraphFlow = ({
               <ZoomableImage
                 src={paragraphData.bookImage}
                 alt="contentImage"
+                containerStyle={{ width: "100%" }}
                 imageStyle={{
                   width: "100%",
                   borderRadius: "10px",
@@ -1217,6 +1357,7 @@ const ParagraphFlow = ({
               <img
                 src={listenbear}
                 alt="Listen Bear"
+                className="pf-listen-bear"
                 style={{
                   position: "absolute",
                   bottom: "-50px", // Book के नीचे
@@ -1235,8 +1376,9 @@ const ParagraphFlow = ({
           <img
             src={beardanceImg}
             alt="Bear Dance"
+            className="pf-bear-dance"
             style={{
-              marginTop: "15px",
+              marginTop: "40px",
               width: "200px",
               height: "auto",
               animation: "bounce 2s infinite",
@@ -1247,6 +1389,7 @@ const ParagraphFlow = ({
         {/* ==== SPEAK BUTTON ==== */}
         {!showHighlighted && !showBearDance && (
           <div
+            className="pf-speak-btn"
             onClick={handleSpeakClick}
             style={{
               marginTop: "25px",
@@ -1294,7 +1437,7 @@ const ParagraphFlow = ({
         {/* ==== HIGHLIGHTED TEXT ==== */}
         {showHighlighted && (
           <div
-            className="slow-transition"
+            className="slow-transition pf-highlighted-section"
             style={{
               display: "flex",
               flexDirection: "column",
@@ -1307,6 +1450,7 @@ const ParagraphFlow = ({
           >
             <div
               ref={textContainerRef}
+              className="pf-text-container"
               style={{
                 padding: "20px",
                 borderRadius: "12px",
@@ -1327,6 +1471,7 @@ const ParagraphFlow = ({
                 }}
               >
                 <p
+                  className="pf-paragraph-text"
                   style={{
                     fontSize:
                       (getLocalData("lang") || "en") === "te" ? "20px" : "18px",
@@ -1371,6 +1516,7 @@ const ParagraphFlow = ({
             <img
               src={listenImg}
               alt="Listen"
+              className="pf-listen-icon"
               onClick={handleListenClick}
               style={{
                 position: "absolute",
@@ -1398,6 +1544,7 @@ const ParagraphFlow = ({
             <img
               src={nextImg}
               alt="Next"
+              className="pf-next-btn"
               onClick={handleNextClick}
               style={{
                 marginTop: "5px",
