@@ -43,7 +43,7 @@ const GiftBox = () => {
     <Lottie
       animationData={Giftbox}
       loop={true}
-      style={{ width: 600, height: 600 }}
+      style={{ width: "min(500px, 90vw)", height: "min(500px, 90vw)" }}
     />
   );
 };
@@ -82,6 +82,9 @@ const WordWall = ({
   const [giftsOpened, setGiftsOpened] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const navigate = useNavigate();
+
+  const isMobile = useMediaQuery("(max-width: 600px)");
+  const isTablet = useMediaQuery("(min-width: 601px) and (max-width: 1024px)");
 
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -223,6 +226,15 @@ const WordWall = ({
           0% { top: 80px; opacity: 0; }
           30% { opacity: 1; }
           100% { top: 300px; opacity: 1; }
+        }`,
+        styleSheet.cssRules.length
+      );
+
+      styleSheet.insertRule(
+        `@keyframes dropFromTopMobile {
+          0% { top: 50px; opacity: 0; }
+          30% { opacity: 1; }
+          100% { top: 220px; opacity: 1; }
         }`,
         styleSheet.cssRules.length
       );
@@ -474,7 +486,7 @@ const WordWall = ({
     <div
       style={{
         backgroundColor: "#FDFEFF",
-        height: "100vh",
+        minHeight: isMobile ? "68vh" : "80vh",
         margin: 0,
         padding: 0,
         fontFamily: "Arial, sans-serif",
@@ -482,13 +494,14 @@ const WordWall = ({
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "center",
+        // overflow: "auto",
       }}
     >
       <div
         style={{
           backgroundColor: "#2DAEF5",
           color: "#fff",
-          fontSize: "24px",
+          fontSize: isMobile ? "18px" : "24px",
           fontWeight: "bold",
           textAlign: "center",
           padding: "16px 0",
@@ -506,14 +519,16 @@ const WordWall = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
-          gap: "60px",
-          marginTop: "40px",
+          gap: isMobile ? "24px" : "60px",
+          marginTop: isMobile ? "14px" : "40px",
+          flexWrap: "wrap",
+          padding: "0 16px",
         }}
       >
         <div
           style={{
-            width: "230px",
-            height: "230px",
+            width: isMobile ? "150px" : "230px",
+            height: isMobile ? "150px" : "230px",
             backgroundImage: `url(${greenboxImg})`,
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
@@ -533,19 +548,19 @@ const WordWall = ({
               top: "20px",
               left: "50%",
               transform: "translateX(-50%)",
-              width: "32px",
+              width: isMobile ? "24px" : "32px",
             }}
           />
           <div
             style={{
               backgroundColor: "#fff",
-              width: "50px",
-              height: "50px",
+              width: isMobile ? "42px" : "50px",
+              height: isMobile ? "42px" : "50px",
               borderRadius: "50%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "28px",
+              fontSize: isMobile ? "22px" : "28px",
               fontWeight: "bold",
               color: "#2F2F2F",
               marginBottom: "6px",
@@ -558,7 +573,7 @@ const WordWall = ({
           </div>
           <div
             style={{
-              fontSize: "18px",
+              fontSize: isMobile ? "14px" : "18px",
               textAlign: "center",
               lineHeight: "22px",
               color: "#2F2F2F",
@@ -572,8 +587,8 @@ const WordWall = ({
 
         <div
           style={{
-            width: "230px",
-            height: "230px",
+            width: isMobile ? "150px" : "230px",
+            height: isMobile ? "150px" : "230px",
             backgroundImage: `url(${redboxImg})`,
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
@@ -583,7 +598,7 @@ const WordWall = ({
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: "20px",
+            marginTop: isMobile ? "5px" : "20px",
           }}
         >
           <img
@@ -594,19 +609,19 @@ const WordWall = ({
               top: "20px",
               left: "50%",
               transform: "translateX(-50%)",
-              width: "40px",
+              width: isMobile ? "30px" : "40px",
             }}
           />
           <div
             style={{
               backgroundColor: "#fff",
-              width: "50px",
-              height: "50px",
+              width: isMobile ? "42px" : "50px",
+              height: isMobile ? "42px" : "50px",
               borderRadius: "50%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "28px",
+              fontSize: isMobile ? "22px" : "28px",
               fontWeight: "bold",
               color: "#2F2F2F",
               marginBottom: "6px",
@@ -616,7 +631,7 @@ const WordWall = ({
           </div>
           <div
             style={{
-              fontSize: "18px",
+              fontSize: isMobile ? "14px" : "18px",
               textAlign: "center",
               lineHeight: "22px",
               color: "#2F2F2F",
@@ -631,8 +646,8 @@ const WordWall = ({
 
       <div
         style={{
-          marginBottom: "140px",
-          marginTop: "40px",
+          marginBottom: isMobile ? "40px" : "140px",
+          marginTop: isMobile ? "14px" : "40px",
         }}
       >
         <img
@@ -667,11 +682,13 @@ const WordWall = ({
           <div
             style={{
               position: "absolute",
-              top: "80px",
+              top: isMobile ? "50px" : "80px",
               left: "50%",
               transform: "translateX(-50%)",
-              height: "170px",
-              animation: "dropFromTop 1.3s ease-out forwards",
+              height: isMobile ? "120px" : "170px",
+              animation: isMobile
+                ? "dropFromTopMobile 1.3s ease-out forwards"
+                : "dropFromTop 1.3s ease-out forwards",
               zIndex: 2,
               cursor: "pointer",
             }}
@@ -688,10 +705,13 @@ const WordWall = ({
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                fontSize: "40px",
+                fontSize: isMobile ? "22px" : "40px",
                 fontWeight: "bold",
                 color: "#333F61",
                 textAlign: "center",
+                maxWidth: "90%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
               }}
             >
@@ -702,10 +722,11 @@ const WordWall = ({
           <div
             style={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: isMobile ? "center" : "space-between",
               alignItems: "center",
               marginTop: "40px",
-              padding: "0 40px",
+              padding: isMobile ? "0 16px" : "0 40px",
+              gap: isMobile ? "12px" : "0",
             }}
           >
             <div
@@ -715,15 +736,18 @@ const WordWall = ({
                 transform: `translateX(${
                   pendingScoreUpdate.isCorrect === false && scoreAnimation.show
                     ? "-10px"
+                    : isMobile
+                    ? "0px"
                     : "-10px"
                 })`,
                 transition: "transform 0.3s ease",
+                flexShrink: 0,
               }}
             >
               <img
                 src={wrongBoxImg}
                 alt="Wrong Count"
-                style={{ height: "60px" }}
+                style={{ height: isMobile ? "40px" : "60px" }}
               />
               <div
                 style={{
@@ -731,7 +755,7 @@ const WordWall = ({
                   top: "45%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  fontSize: "18px",
+                  fontSize: isMobile ? "12px" : "18px",
                   fontWeight: "bold",
                   color: "#F37052",
                 }}
@@ -743,9 +767,9 @@ const WordWall = ({
                 alt="Wrong Icon"
                 style={{
                   position: "absolute",
-                  top: "-5px",
-                  right: "-5px",
-                  height: "22px",
+                  top: "-4px",
+                  right: "-4px",
+                  height: isMobile ? "16px" : "22px",
                 }}
               />
             </div>
@@ -754,26 +778,34 @@ const WordWall = ({
               style={{
                 backgroundColor: "#ffe9f9",
                 borderRadius: "20px",
-                padding: "16px 150px",
-                fontSize: "30px",
-                fontWeight: "700",
+                padding: isMobile
+                  ? "10px 14px"
+                  : isTablet
+                  ? "14px 60px"
+                  : "16px 100px",
+                fontSize: isMobile ? "16px" : "30px",
+                fontWeight: 700,
                 color: "#333F61",
                 display: "flex",
                 alignItems: "center",
-                gap: "10px",
+                gap: isMobile ? "6px" : "10px",
                 cursor: "pointer",
                 transition: "transform 0.2s ease",
                 fontFamily: "Quicksand",
-                fontStyle: "bold",
+                justifyContent: "center",
+                flexShrink: 1,
+                minWidth: 0,
               }}
               onClick={() => setShowQuiz(true)}
             >
               <img
                 src={clickbubbleImg}
                 alt="Click Bubble"
-                style={{ height: "28px" }}
+                style={{ height: isMobile ? "18px" : "28px", flexShrink: 0 }}
               />
-              <span style={{ lineHeight: "1" }}>Click Bubble</span>
+              <span style={{ lineHeight: "1", whiteSpace: "nowrap" }}>
+                Click Bubble
+              </span>
             </div>
 
             <div
@@ -783,15 +815,18 @@ const WordWall = ({
                 transform: `translateX(${
                   pendingScoreUpdate.isCorrect === true && scoreAnimation.show
                     ? "10px"
+                    : isMobile
+                    ? "0px"
                     : "10px"
                 })`,
                 transition: "transform 0.3s ease",
+                flexShrink: 0,
               }}
             >
               <img
                 src={correctBoxImg}
                 alt="Correct Count"
-                style={{ height: "60px" }}
+                style={{ height: isMobile ? "40px" : "60px" }}
               />
               <div
                 style={{
@@ -799,7 +834,7 @@ const WordWall = ({
                   top: "45%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  fontSize: "18px",
+                  fontSize: isMobile ? "12px" : "18px",
                   fontWeight: "bold",
                   color: "#1F9D55",
                 }}
@@ -811,9 +846,9 @@ const WordWall = ({
                 alt="Correct Icon"
                 style={{
                   position: "absolute",
-                  top: "-5px",
-                  right: "-5px",
-                  height: "22px",
+                  top: "-4px",
+                  right: "-4px",
+                  height: isMobile ? "16px" : "22px",
                 }}
               />
             </div>
@@ -831,24 +866,25 @@ const WordWall = ({
           <div
             style={{
               backgroundColor: "#FF4BC21A",
-              padding: "20px 90px",
+              padding: isMobile ? "12px 20px" : "20px 60px",
               borderRadius: "16px",
               display: "inline-block",
-              fontSize: "30px",
+              fontSize: isMobile ? "20px" : "30px",
               color: "#333F61",
-              fontWeight: "800",
+              fontWeight: 800,
               marginBottom: "10px",
-              fontStyle: "bold",
             }}
           >
             Can you find the?
           </div>
           <div
             style={{
-              fontSize: "40px",
+              fontSize: isMobile ? "28px" : "40px",
               fontWeight: "bold",
               color: "#333F61",
               marginBottom: "20px",
+              padding: "0 16px",
+              wordBreak: "break-word",
             }}
           >
             {dropText}
@@ -857,8 +893,9 @@ const WordWall = ({
             style={{
               display: "flex",
               justifyContent: "center",
-              gap: "60px",
+              gap: isMobile ? "16px" : "60px",
               flexWrap: "wrap",
+              padding: "0 16px",
             }}
           >
             {gameData?.[currentQuestionIndex]?.images?.map((item, idx) => (
@@ -874,8 +911,8 @@ const WordWall = ({
                   }`,
                   borderRadius: "16px",
                   padding: "10px",
-                  width: "140px",
-                  height: "140px",
+                  width: isMobile ? "100px" : "140px",
+                  height: isMobile ? "100px" : "140px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -900,21 +937,25 @@ const WordWall = ({
   );
 
   const renderGiftBoxesView = () => (
-    <div style={{ textAlign: "center", marginTop: "60px" }}>
+    <div style={{ textAlign: "center", marginTop: isMobile ? "32px" : "60px" }}>
       <div
         style={{
           backgroundColor: "#FF4BC21A",
           borderRadius: "20px",
-          padding: "19px 150px",
-          fontSize: "30px",
-          fontWeight: "700",
+          padding: isMobile
+            ? "14px 24px"
+            : isTablet
+            ? "19px 60px"
+            : "19px 80px",
+          fontSize: isMobile ? "20px" : "30px",
+          fontWeight: 700,
           color: "#333F61",
           display: "inline-flex",
           alignItems: "center",
           gap: "10px",
-          marginBottom: "40px",
+          marginBottom: isMobile ? "24px" : "40px",
           fontFamily: "Quicksand",
-          fontStyle: "Bold",
+          maxWidth: "calc(100% - 32px)",
         }}
       >
         <span style={{ lineHeight: "1" }}>Let's open gifts</span>
@@ -924,7 +965,7 @@ const WordWall = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: "40px",
+          gap: isMobile ? "24px" : "40px",
           flexWrap: "wrap",
           padding: "0 20px",
         }}
@@ -937,8 +978,8 @@ const WordWall = ({
             <div
               key={idx}
               style={{
-                width: "120px",
-                height: "120px",
+                width: isMobile ? "90px" : "120px",
+                height: isMobile ? "90px" : "120px",
                 position: "relative",
                 animationDelay: `${idx * 0.1}s`,
                 cursor: isOpened || isAnimating ? "default" : "pointer",
@@ -970,7 +1011,7 @@ const WordWall = ({
                         left: "50%",
                         transform: "translate(-50%, -50%)",
                         textAlign: "center",
-                        fontSize: "14px",
+                        fontSize: isMobile ? "11px" : "14px",
                         fontWeight: "bold",
                         color: "#000",
                         padding: "4px 6px",
@@ -1055,19 +1096,24 @@ const WordWall = ({
     if (!currentAnswer) return null;
 
     return (
-      <div style={{ textAlign: "center", padding: "20px" }}>
+      <div style={{ textAlign: "center", padding: isMobile ? "16px" : "20px" }}>
         <div
           style={{
             backgroundColor: "#FF4BC21A",
-            padding: "14px 160px",
+            padding: isMobile
+              ? "8px 14px"
+              : isTablet
+              ? "14px 60px"
+              : "14px 80px",
             borderRadius: "16px",
-            fontSize: "40px",
+            fontSize: isMobile ? "18px" : "40px",
             color: "#333F61",
-            marginBottom: "20px",
+            marginBottom: isMobile ? "12px" : "20px",
+            marginTop: isMobile ? "9vh" : "1px",
             display: "inline-block",
             fontFamily: "Quicksand",
-            fontStyle: "semiBold",
             fontWeight: 900,
+            maxWidth: "calc(100% - 32px)",
           }}
         >
           This is called a...
@@ -1077,10 +1123,10 @@ const WordWall = ({
           style={{
             display: "flex",
             justifyContent: "center",
-            gap: "20%",
+            gap: isMobile ? "12px" : "10%",
             alignItems: "center",
             flexWrap: "wrap",
-            marginLeft: "-150px",
+            padding: "0 16px",
           }}
         >
           <div style={{ textAlign: "center" }}>
@@ -1088,19 +1134,20 @@ const WordWall = ({
               src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${currentAnswer?.image_url}`}
               alt={currentAnswer?.text}
               style={{
-                width: "200px",
-                height: "200px",
+                width: isMobile ? "100px" : "200px",
+                height: isMobile ? "100px" : "200px",
                 borderRadius: "10px",
                 border: "2px solid #eee",
                 backgroundColor: "#fff",
-                padding: "20px",
+                padding: isMobile ? "8px" : "20px",
+                objectFit: "contain",
               }}
             />
             <div
               style={{
-                marginTop: "15px",
+                marginTop: isMobile ? "8px" : "15px",
                 display: "flex",
-                gap: "15px",
+                gap: isMobile ? "6px" : "15px",
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -1109,14 +1156,15 @@ const WordWall = ({
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "8px",
+                  gap: isMobile ? "4px" : "8px",
                   cursor: "pointer",
                   color: "#31356E",
-                  padding: "5px 10px",
+                  padding: isMobile ? "6px 8px" : "8px 12px",
                   borderRadius: "20px",
                   fontFamily: "Quicksand",
-                  fontStyle: "Bold",
                   fontWeight: 800,
+                  minHeight: isMobile ? "36px" : "44px",
+                  fontSize: isMobile ? "13px" : "inherit",
                 }}
                 onClick={() =>
                   playAudio(
@@ -1127,7 +1175,7 @@ const WordWall = ({
                 <img
                   src={listenblueImg}
                   alt="Listen"
-                  style={{ height: "40px" }}
+                  style={{ height: isMobile ? "26px" : "40px" }}
                 />
                 <span>English</span>
               </div>
@@ -1135,14 +1183,15 @@ const WordWall = ({
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "8px",
+                  gap: isMobile ? "4px" : "8px",
                   cursor: "pointer",
                   color: "#333F61",
-                  padding: "5px 10px",
+                  padding: isMobile ? "6px 8px" : "8px 12px",
                   borderRadius: "20px",
                   fontFamily: "Quicksand",
-                  fontStyle: "Bold",
                   fontWeight: 800,
+                  minHeight: isMobile ? "36px" : "44px",
+                  fontSize: isMobile ? "13px" : "inherit",
                 }}
                 onClick={() =>
                   playAudio(
@@ -1153,7 +1202,7 @@ const WordWall = ({
                 <img
                   src={listenvioletImg}
                   alt="Listen"
-                  style={{ height: "40px" }}
+                  style={{ height: isMobile ? "26px" : "40px" }}
                 />
                 <span>ಕನ್ನಡ</span>
               </div>
@@ -1170,16 +1219,16 @@ const WordWall = ({
           >
             <Box
               sx={{
-                backgroundColor: "#1CB0F60F", // default background
-                border: "2px solid #1CB0F633", // default border
+                backgroundColor: "#1CB0F60F",
+                border: "2px solid #1CB0F633",
                 borderRadius: "16px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "10px 40px",
-                marginBottom: "16px",
-                //marginLeft: "390px"
+                padding: isMobile ? "8px 16px" : "10px 40px",
+                marginBottom: isMobile ? "10px" : "16px",
+                maxWidth: "calc(100vw - 64px)",
               }}
             >
               <Box
@@ -1193,10 +1242,17 @@ const WordWall = ({
                   style={{
                     color: "#333F61",
                     fontWeight: 600,
-                    fontSize: lang === "te" ? "56px" : "50px",
-                    lineHeight: "60px",
+                    fontSize: isMobile
+                      ? lang === "te"
+                        ? "28px"
+                        : "24px"
+                      : lang === "te"
+                      ? "56px"
+                      : "50px",
+                    lineHeight: isMobile ? "1.3" : "60px",
                     letterSpacing: "1%",
                     fontFamily: getFontFamily(lang),
+                    wordBreak: "break-word",
                   }}
                 >
                   {currentAnswer?.text}
@@ -1207,23 +1263,24 @@ const WordWall = ({
             <button
               onClick={handleReviewComplete}
               style={{
-                marginTop: "50px",
+                marginTop: isMobile ? "10px" : "50px",
                 backgroundColor: "transparent",
                 border: "none",
                 cursor: "pointer",
                 padding: 0,
-                //marginLeft: "390px"
+                minHeight: "44px",
+                minWidth: "44px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <img
                 src={nexttImg}
                 alt="Back to Gifts"
                 style={{
-                  height: "50px",
+                  height: isMobile ? "40px" : "50px",
                   transition: "transform 0.2s",
-                  ":hover": {
-                    transform: "scale(1.1)",
-                  },
                 }}
               />
             </button>
@@ -1232,6 +1289,10 @@ const WordWall = ({
       </div>
     );
   };
+
+  const showProgressBar = showGiftBoxes || showGiftAnimation || showReview;
+  const progressBarWidth = isMobile ? 140 : 240;
+  const progressBarRight = isMobile ? 10 : 50;
 
   return (
     <MainLayout
@@ -1262,7 +1323,8 @@ const WordWall = ({
         <div
           style={{
             position: "relative",
-            minHeight: "100vh",
+            minHeight: isMobile ? "75vh" : "100vh",
+            width: "100%",
             backgroundColor: "#ffffff",
             overflow: "hidden",
             borderRadius: "16px",
@@ -1305,41 +1367,49 @@ const WordWall = ({
               backgroundRepeat: "repeat-x",
               backgroundSize: "cover",
               width: "100%",
-              padding: "20px",
+              padding: isMobile ? "12px 16px" : "20px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              fontSize: "40px",
-              fontWeight: "700px",
+              fontSize: isMobile ? "20px" : "40px",
+              fontWeight: 700,
               color: "#ffffff",
               borderTopLeftRadius: "16px",
               borderTopRightRadius: "16px",
-              marginBottom: "40px",
+              marginBottom: isMobile ? "5px" : "40px",
               fontFamily: "Quicksand",
               position: "relative",
-              height: "80px",
+              minHeight: "60px",
+              boxSizing: "border-box",
             }}
           >
             <div
               style={{
                 textAlign: "center",
                 flex: 1,
+                paddingRight: showProgressBar
+                  ? `${progressBarWidth + progressBarRight + 16}px`
+                  : "0",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
               }}
             >
               {`${username}'s Word Wall`}
             </div>
 
-            {(showGiftBoxes || showGiftAnimation || showReview) && (
+            {showProgressBar && (
               <div
                 style={{
-                  width: 240,
+                  width: progressBarWidth,
                   height: 35,
                   backgroundColor: "#fff",
                   borderRadius: 40,
                   position: "absolute",
-                  right: "50px",
+                  right: `${progressBarRight}px`,
                   boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
                   overflow: "visible",
+                  flexShrink: 0,
                 }}
               >
                 <div
@@ -1373,9 +1443,11 @@ const WordWall = ({
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "flex-end",
                     width: "100%",
                     height: "100%",
+                    paddingRight: "12px",
+                    boxSizing: "border-box",
                   }}
                 >
                   <div
@@ -1390,8 +1462,8 @@ const WordWall = ({
                       src={giftscoreImg}
                       alt="Gift"
                       style={{
-                        width: "60px",
-                        height: "60px",
+                        width: isMobile ? "44px" : "60px",
+                        height: isMobile ? "44px" : "60px",
                         filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
                       }}
                     />
@@ -1399,10 +1471,9 @@ const WordWall = ({
 
                   <div
                     style={{
-                      fontSize: 16,
+                      fontSize: isMobile ? 13 : 16,
                       fontWeight: "600",
                       color: "#2C2C4A",
-                      marginLeft: "179px",
                     }}
                   >
                     {giftsOpened}/{wrongAnswersAllQuestions.length}
