@@ -201,35 +201,12 @@ const CloseButton = ({ onClick }) => (
 const SystemBanners = () => {
   const [showDowntime, setShowDowntime] = useState(isDowntime);
   const [browserDismissed, setBrowserDismissed] = useState(false);
-  const [mobileDismissed, setMobileDismissed] = useState(false);
-  const [viewportDismissed, setViewportDismissed] = useState(false);
-
   const showBrowserWarning = !IS_CHROME && !browserDismissed;
-
-  // window.innerWidth reflects the true usable space — it shrinks when the user zooms
-  // in OR when the physical screen is small. Both cases have the same fix: zoom out.
-  // We only check width; height would false-trigger because browser chrome (tabs,
-  // address bar) consumes ~130–150 px even on a fully maximised window.
-  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
-
-  const showMobileBanner = IS_MOBILE && !mobileDismissed;
-  // Covers both "small screen" and "zoomed in" — solution is the same: zoom out.
-  const showViewportWarning =
-    !IS_MOBILE && !viewportDismissed && viewportWidth < ZOOM_THRESHOLD;
 
   // Re-check downtime every minute
   useEffect(() => {
     const id = setInterval(() => setShowDowntime(isDowntime()), 60_000);
     return () => clearInterval(id);
-  }, []);
-
-  // Track viewport width changes: zoom in/out, window resize, monitor change
-  useEffect(() => {
-    if (IS_MOBILE) return;
-    const handleResize = () =>
-      requestAnimationFrame(() => setViewportWidth(window.innerWidth));
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Full-page downtime screen takes priority — renders instead of (not alongside) other banners
@@ -304,7 +281,7 @@ const SystemBanners = () => {
     );
   }
 
-  const hasAny = showBrowserWarning || showMobileBanner || showViewportWarning;
+  const hasAny = showBrowserWarning;
   if (!hasAny) return null;
 
   return (
@@ -337,42 +314,6 @@ const SystemBanners = () => {
                 <ChromeIcon />
                 &nbsp;<strong>Google Chrome</strong> only. Please switch your
                 browser for the best experience.
-              </span>
-              <CloseButton onClick={handleClose} />
-            </Box>
-          )}
-        </BannerWrapper>
-      )}
-
-      {showMobileBanner && (
-        <BannerWrapper onDismiss={() => setMobileDismissed(true)}>
-          {(handleClose) => (
-            <Box sx={CARD_SX}>
-              <MobileIcon />
-              <span>
-                This app is designed for desktop use. Please open it on a laptop
-                or desktop with a screen of at least{" "}
-                <strong>
-                  {MIN_WIDTH}×{MIN_HEIGHT}
-                </strong>
-                .
-              </span>
-              <CloseButton onClick={handleClose} />
-            </Box>
-          )}
-        </BannerWrapper>
-      )}
-
-      {showViewportWarning && (
-        <BannerWrapper onDismiss={() => setViewportDismissed(true)}>
-          {(handleClose) => (
-            <Box sx={CARD_SX}>
-              <MonitorIcon />
-              <span>
-                The UI may be cropped. <strong>Zoom Out</strong> (
-                <strong>Ctrl&nbsp;−</strong> Windows /{" "}
-                <strong>Cmd&nbsp;−</strong> Mac) or <strong>Maximise</strong>{" "}
-                the window.
               </span>
               <CloseButton onClick={handleClose} />
             </Box>
