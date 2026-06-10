@@ -430,7 +430,6 @@ const MainLayout = (props) => {
     isCorrect,
     vocabCount,
     wordCount,
-    pageName,
   } = props;
 
   const [shake, setShake] = useState(false);
