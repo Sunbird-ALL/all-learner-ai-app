@@ -2157,7 +2157,7 @@ const Assesment = ({ discoverStart }) => {
     height: "100vh",
     backgroundImage: `url(${getBackgroundImage()})`,
     backgroundSize: "cover",
-    backgroundPosition: "center",
+    backgroundPosition: isMobile ? "37% center" : "center",
     position: "relative",
   };
 
