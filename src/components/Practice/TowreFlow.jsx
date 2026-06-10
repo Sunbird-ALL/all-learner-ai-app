@@ -2379,7 +2379,7 @@ const TowreFlow = ({
                           style={{
                             position: "relative",
                             width: isMobile ? 65 : 180,
-                            height: isMobile ? 85 : 85,
+                            height: 85,
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
