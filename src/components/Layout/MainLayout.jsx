@@ -1159,21 +1159,37 @@ const MainLayout = (props) => {
                   startShowCase && (
                     <Box
                       position={"absolute"}
-                      top={20}
-                      left={20}
+                      top={isMobile ? 10 : 20}
+                      left={isMobile ? "initial" : 20}
+                      right={isMobile ? 10 : "initial"}
                       justifyContent={"center"}
+                      sx={{
+                        display: isMobile ? "flex" : "block",
+                        flexDirection: isMobile ? "column" : "initial",
+                        alignItems: isMobile ? "flex-end" : "initial",
+                      }}
                     >
-                      <Box display={"flex"}>
+                      <Box display={"flex"} gap={isMobile ? "3px" : "5px"}>
                         {[
                           ...Array(Math.max(0, redLivesToShow) || 0).keys(),
                         ]?.map((elem) => (
-                          <Diamond />
+                          <Diamond
+                            key={`red-live-${elem}`}
+                            height={isMobile ? "25px" : "50px"}
+                            width={isMobile ? "25px" : "50px"}
+                            style={{ flexShrink: 0 }}
+                          />
                         ))}
 
                         {[
                           ...Array(Math.max(0, blackLivesToShow) || 0).keys(),
                         ]?.map((elem) => (
-                          <HeartBlack />
+                          <HeartBlack
+                            key={`black-live-${elem}`}
+                            height={isMobile ? "25px" : "50px"}
+                            width={isMobile ? "25px" : "50px"}
+                            style={{ flexShrink: 0 }}
+                          />
                         ))}
                       </Box>
                       {redLivesToShow != null && (
@@ -1182,8 +1198,8 @@ const MainLayout = (props) => {
                             marginLeft: "5px",
                             color: "#000000",
                             fontWeight: 700,
-                            fontSize: "24px",
-                            lineHeight: "30px",
+                            fontSize: isMobile ? "14px" : "24px",
+                            lineHeight: isMobile ? "18px" : "30px",
                             fontFamily: "Quicksand",
                           }}
                         >
