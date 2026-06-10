@@ -1317,6 +1317,7 @@ const MainLayout = (props) => {
                           left: 0,
                           right: 0,
                           zIndex: 10001,
+                          pointerEvents: "none",
                         }}
                       >
                         {/* Show progress bar - use F2 flow steps when F2 is active, F1 flow steps when F1 is active, otherwise use regular steps */}
@@ -1347,6 +1348,7 @@ const MainLayout = (props) => {
                               position: "relative",
                               left: { xs: "20px", sm: "auto" },
                               zIndex: 10000,
+                              pointerEvents: "auto",
                             }}
                           >
                             {/* Previous Button */}
@@ -1533,6 +1535,7 @@ const MainLayout = (props) => {
                                 display: "flex",
                                 justifyContent: "center",
                                 width: "100%",
+                                pointerEvents: "auto",
                               }}
                             >
                               <Box
