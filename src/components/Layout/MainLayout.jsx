@@ -430,6 +430,7 @@ const MainLayout = (props) => {
     isCorrect,
     vocabCount,
     wordCount,
+    pageName,
   } = props;
 
   const [shake, setShake] = useState(false);
@@ -1159,21 +1160,90 @@ const MainLayout = (props) => {
                   startShowCase && (
                     <Box
                       position={"absolute"}
-                      top={20}
-                      left={20}
+                      top={
+                        isMobile &&
+                        (pageName === "m5" || pageName === "wordsorimage")
+                          ? 10
+                          : 20
+                      }
+                      left={
+                        isMobile &&
+                        (pageName === "m5" || pageName === "wordsorimage")
+                          ? "initial"
+                          : 20
+                      }
+                      right={
+                        isMobile &&
+                        (pageName === "m5" || pageName === "wordsorimage")
+                          ? 10
+                          : "initial"
+                      }
                       justifyContent={"center"}
+                      sx={{
+                        display:
+                          isMobile &&
+                          (pageName === "m5" || pageName === "wordsorimage")
+                            ? "flex"
+                            : "block",
+                        flexDirection:
+                          isMobile &&
+                          (pageName === "m5" || pageName === "wordsorimage")
+                            ? "column"
+                            : "initial",
+                        alignItems:
+                          isMobile &&
+                          (pageName === "m5" || pageName === "wordsorimage")
+                            ? "flex-end"
+                            : "initial",
+                      }}
                     >
-                      <Box display={"flex"}>
+                      <Box
+                        display={"flex"}
+                        gap={
+                          isMobile &&
+                          (pageName === "m5" || pageName === "wordsorimage")
+                            ? "3px"
+                            : "5px"
+                        }
+                      >
                         {[
                           ...Array(Math.max(0, redLivesToShow) || 0).keys(),
                         ]?.map((elem) => (
-                          <Diamond />
+                          <Diamond
+                            height={
+                              isMobile &&
+                              (pageName === "m5" || pageName === "wordsorimage")
+                                ? "25px"
+                                : "50px"
+                            }
+                            width={
+                              isMobile &&
+                              (pageName === "m5" || pageName === "wordsorimage")
+                                ? "25px"
+                                : "50px"
+                            }
+                            style={{ flexShrink: 0 }}
+                          />
                         ))}
 
                         {[
                           ...Array(Math.max(0, blackLivesToShow) || 0).keys(),
                         ]?.map((elem) => (
-                          <HeartBlack />
+                          <HeartBlack
+                            height={
+                              isMobile &&
+                              (pageName === "m5" || pageName === "wordsorimage")
+                                ? "25px"
+                                : "50px"
+                            }
+                            width={
+                              isMobile &&
+                              (pageName === "m5" || pageName === "wordsorimage")
+                                ? "25px"
+                                : "50px"
+                            }
+                            style={{ flexShrink: 0 }}
+                          />
                         ))}
                       </Box>
                       {redLivesToShow != null && (
@@ -1182,8 +1252,16 @@ const MainLayout = (props) => {
                             marginLeft: "5px",
                             color: "#000000",
                             fontWeight: 700,
-                            fontSize: "24px",
-                            lineHeight: "30px",
+                            fontSize:
+                              isMobile &&
+                              (pageName === "m5" || pageName === "wordsorimage")
+                                ? "14px"
+                                : "24px",
+                            lineHeight:
+                              isMobile &&
+                              (pageName === "m5" || pageName === "wordsorimage")
+                                ? "18px"
+                                : "30px",
                             fontFamily: "Quicksand",
                           }}
                         >
