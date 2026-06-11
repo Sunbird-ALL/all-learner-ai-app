@@ -826,7 +826,7 @@ export function LetterHuntGameCore({
             {/* Options Grid */}
             <div 
               ref={optionsRef}
-              className="grid grid-cols-2 gap-0.5 sm:gap-1 md:gap-1.5 lg:gap-2 xl:gap-3 w-full"
+              className="grid grid-cols-2 gap-4 sm:gap-1 md:gap-1.5 lg:gap-2 xl:gap-3 w-full"
               tabIndex={0}
             >
               {currentQuestion.options.map((letter, index) => {
@@ -869,10 +869,10 @@ export function LetterHuntGameCore({
         <div className="flex-shrink-0 flex flex-col justify-center min-h-[20px] sm:min-h-[30px] md:min-h-[40px] lg:min-h-[60px] xl:min-h-[80px]">
           <div className="text-center">
             {showFeedback && (
-              <div className="animate-fade-in">
+              <div className="animate-fade-in mt-4 sm:mt-0">
                 {isCorrect ? (
                   <div className="text-success">
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
+                    <p className="text-xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
                       {selectedLanguage === 'te'
                         ? '🎉 సరైనది!'
                         : selectedLanguage === 'kn'
@@ -886,7 +886,7 @@ export function LetterHuntGameCore({
                   </div>
                 ) : (
                   <div className="text-error">
-                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
+                    <p className="text-xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
                       {(() => {
                         // Use heart break emoji if game uses hearts/lives system
                         const emoji = (maxLives && maxLives > 0) ? '💔' : '😢';

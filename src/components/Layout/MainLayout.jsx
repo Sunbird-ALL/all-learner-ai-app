@@ -1068,7 +1068,10 @@ const MainLayout = (props) => {
                   mx: { xs: "auto", md: "auto" },
                   minHeight: { xs: "unset", md: "80vh" },
                   height: { xs: "calc(100dvh - 80px)", md: "auto" },
-                  maxHeight: { xs: "none", md: "calc(100vh - 150px)" },
+                  maxHeight: {
+                    xs: "calc(100dvh - 80px)",
+                    md: "calc(100vh - 150px)",
+                  },
                   borderRadius: "20px",
                   display: "flex",
                   flexDirection: "column",
@@ -1080,7 +1083,7 @@ const MainLayout = (props) => {
                   backdropFilter: "blur(25px)",
                   mt: { xs: "0px", md: "75px" },
                   mb: { xs: "20px", md: "0px" },
-                  overflow: { sm: "hidden", xs: "visible" },
+                  overflow: { sm: "hidden", xs: "hidden" },
                 }}
               >
                 <Box>
@@ -1090,7 +1093,7 @@ const MainLayout = (props) => {
                 </Box>
                 <CardContent
                   sx={{
-                    minHeight: "100%",
+                    minHeight: { xs: "100%", md: "auto" },
                     height: { xs: "100%", md: "auto" },
                     display: { xs: "flex", md: "block" },
                     flexDirection: { xs: "column", md: "initial" },
@@ -1210,15 +1213,17 @@ const MainLayout = (props) => {
                   )}
                 <Box
                   sx={{
-                    height: isMobile ? "0px" : "110px",
+                    height: { xs: "80px", sm: "110px" },
                     position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
                   <Box
                     sx={{
                       position: "absolute",
-                      left: isMobile ? "0px" : 0,
-                      bottom: isMobile ? "2px" : "-2px",
+                      left: { xs: "-10px", sm: 0 },
+                      bottom: { xs: "2px", sm: "-2px" },
                       zIndex: "9999",
                       pointerEvents: "none",
                     }}
@@ -1508,6 +1513,7 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarNext}
                                 disabled={!canGoNext}
                                 sx={{
+                                  display: { xs: "none", sm: "inline-flex" },
                                   width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
                                     xs: "24px",
