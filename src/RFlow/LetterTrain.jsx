@@ -6741,8 +6741,8 @@ const LetterTrain = ({
               <Box
                 sx={{
                   position: "absolute",
-                  top: "-11%",
-                  left: "68%",
+                  top: { xs: "5%", sm: "-11%" },
+                  left: { xs: "61%", sm: "68%" },
                   transform: "translateX(-50%)",
                   display: "flex",
                   gap: 0.6,
@@ -6761,8 +6761,8 @@ const LetterTrain = ({
                     >
                       <Box
                         sx={{
-                          minWidth: { xs: 45, sm: 50, md: 60 },
-                          minHeight: { xs: 45, sm: 50, md: 60 },
+                          minWidth: { xs: 40, sm: 50, md: 60 },
+                          minHeight: { xs: 40, sm: 50, md: 60 },
                           borderRadius: "6px",
                           display: "flex",
                           alignItems: "center",
@@ -6779,12 +6779,12 @@ const LetterTrain = ({
                             fontSize:
                               lang === "te"
                                 ? isMobile
-                                  ? "26px"
+                                  ? "18px"
                                   : isTablet
                                   ? "28px"
                                   : "32px"
                                 : isMobile
-                                ? "22px"
+                                ? "16px"
                                 : isTablet
                                 ? "24px"
                                 : "28px",

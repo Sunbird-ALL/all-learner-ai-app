@@ -171,11 +171,15 @@ const ZoomableImage = ({
           sx={{
             position: "relative",
             outline: "none",
-            height: isMobile ? "300px" : "500px",
-            width: isMobile ? "90vw" : "500px",
+            height: { xs: "auto", sm: "500px" },
+            width: { xs: "auto", sm: "500px" },
             maxWidth: "90vw",
             maxHeight: "90vh",
-            marginTop: isMobile ? "0px" : isTablet ? "45px" : "0px",
+            display: { xs: "inline-block", sm: "block" },
+            marginTop: { xs: "0px", sm: isTablet ? "45px" : "0px" },
+            boxShadow: "0 8px 32px rgba(68, 68, 68, 0.3)",
+            borderRadius: "8px",
+            overflow: "hidden",
           }}
         >
           {/* Gradient overlay at the top of the zoomed image */}
@@ -230,10 +234,13 @@ const ZoomableImage = ({
             src={src}
             alt={alt || "Zoomed content"}
             style={{
-              width: "100%",
-              height: "100%",
+              width: isMobile ? "auto" : "100%",
+              height: isMobile ? "auto" : "100%",
+              maxWidth: isMobile ? "90vw" : "100%",
+              maxHeight: isMobile ? "80vh" : "100%",
               objectFit: "contain",
               borderRadius: "8px",
+              display: "block",
             }}
           />
         </Box>

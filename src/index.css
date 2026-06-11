@@ -325,3 +325,17 @@ div.kannada-font-override {
     padding: 0px !important;
   }
 }
+
+.voice-visualizer-container {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .voice-visualizer-container {
+    transform: scale(0.7);
+    transform-origin: center center;
+    margin: -15px auto;
+  }
+}

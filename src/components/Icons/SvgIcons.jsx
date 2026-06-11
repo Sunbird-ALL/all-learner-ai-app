@@ -11,18 +11,7 @@ export const LevelOne = (props) => (
     {...props}
   >
     <path x="65" y="135" width="50" height="20" fill="white" opacity="0.95" />
-    <text
-      x="90"
-      y="150"
-      fontSize="13"
-      fontWeight="700"
-      fill="#333"
-      textAnchor="middle"
-      fontFamily="Arial, sans-serif"
-      style={{ userSelect: "none" }}
-    >
-      Foundation
-    </text>
+
     <path
       d="M19.995 56.9151C19.995 25.6327 41.8277 0.300106 68.7769 0.300106C95.7096 0.300106 117.559 25.6327 117.559 56.9151V61.2812H19.995V56.9151Z"
       fill="#3872C1"

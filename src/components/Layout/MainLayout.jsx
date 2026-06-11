@@ -1217,8 +1217,8 @@ const MainLayout = (props) => {
                   <Box
                     sx={{
                       position: "absolute",
-                      left: isMobile ? "0px" : 0,
-                      bottom: isMobile ? "2px" : "-2px",
+                      left: { xs: "-10px", sm: 0 },
+                      bottom: { xs: "2px", sm: "-2px" },
                       zIndex: "9999",
                       pointerEvents: "none",
                     }}
@@ -1508,6 +1508,7 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarNext}
                                 disabled={!canGoNext}
                                 sx={{
+                                  display: { xs: "none", sm: "inline-flex" },
                                   width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
                                     xs: "24px",

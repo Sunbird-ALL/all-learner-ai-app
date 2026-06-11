@@ -31,7 +31,7 @@ export function ContinueButton({
   }
 
   return (
-    <div className={`mt-3 sm:mt-4 ${className}`}>
+    <div className={`mt-11 sm:mt-4 ${className}`}>
       <Button
         onClick={onContinue}
         size="lg"
