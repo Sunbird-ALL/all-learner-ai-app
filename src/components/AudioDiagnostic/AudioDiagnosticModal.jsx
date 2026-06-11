@@ -1540,8 +1540,6 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   >
                     {currentStep === "mic"
                       ? micStatus === "pending" && !hasListenedToPrompt
-                        ? translations.listenAndRepeat
-                        : micStatus === "pending" && hasListenedToPrompt
                         ? translations.nowRepeat
                         : micStatus === "testing" || isRecording
                         ? translations.keepSpeaking
