@@ -121,7 +121,7 @@ export function MemoryGameCore({
   };
 
   return (
-    <div className={`flex-1 flex flex-col justify-start px-1 sm:px-2 ${className}`}>
+    <div className={`flex-1 flex flex-col justify-start px-1 sm:px-2 min-h-0 ${className}`}>
       {showSequence ? (
         /* Sequence Display Phase */
         <div className="text-center">
@@ -220,6 +220,7 @@ export function MemoryGameCore({
           ? '48rem' // large
           : '60rem'), // extra large
     margin: '0 auto', // center the grid
+    gap: 'min(16px, 1.5vh)',
   }}
   tabIndex={0}
 >
@@ -239,6 +240,11 @@ export function MemoryGameCore({
   `}
   style={{
     lineHeight: mode === 'preview' ? '1.2' : '1.1', // visually centers text in smaller buttons
+    ...(mode !== 'preview' ? {
+      width: 'min(80px, 8vh)',
+      height: 'min(80px, 8vh)',
+      fontSize: 'min(3rem, 5vh)',
+    } : {})
   }}
   onClick={() => !disabled && onLetterClick(letter)}
   disabled={userInput.length >= currentSequence.sequence.length || disabled}
@@ -286,7 +292,12 @@ export function MemoryGameCore({
       )}
 
       {/* Feedback - Fixed Height Area */}
-      <div className="mt-0 sm:mt-1 text-center min-h-[100px] sm:min-h-[110px] flex flex-col items-center justify-center">
+      <div
+        className="mt-0 sm:mt-1 text-center min-h-[100px] sm:min-h-[110px] flex flex-col items-center justify-center"
+        style={{
+          minHeight: 'min(90px, 9vh)'
+        }}
+      >
         {showFeedback && (
           <>
             {isCorrect ? (

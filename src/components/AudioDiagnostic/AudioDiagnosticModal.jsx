@@ -546,8 +546,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         stream,
         mimeType
           ? {
-            mimeType: mimeType,
-          }
+              mimeType: mimeType,
+            }
           : {}
       );
 
@@ -590,7 +590,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         const averageLevel =
           audioLevelsRef.current.length > 0
             ? audioLevelsRef.current.reduce((a, b) => a + b, 0) /
-            audioLevelsRef.current.length
+              audioLevelsRef.current.length
             : 0;
 
         // Lenient thresholds to allow all speech while trying to catch muted microphones
@@ -615,8 +615,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         const samplesAboveThreshold =
           audioLevelsRef.current.length > 0
             ? audioLevelsRef.current.filter(
-              (level) => level > SILENCE_THRESHOLD
-            ).length
+                (level) => level > SILENCE_THRESHOLD
+              ).length
             : 0;
         const sustainedAudioRatio =
           audioLevelsRef.current.length > 0
@@ -697,7 +697,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           Log(
             `Microphone test - Recording successful. Duration: ${testDuration}s, Audio detected: true, Average level: ${averageLevel.toFixed(
               4
-            )}, Max level: ${maxLevel.toFixed(4)}, Blob size: ${blob.size
+            )}, Max level: ${maxLevel.toFixed(4)}, Blob size: ${
+              blob.size
             } bytes`,
             "audio-diagnostics",
             "ET"
@@ -740,7 +741,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           setMicError(getTranslations(lang).micErrorMuted);
           // Log test result - failed (no speech)
           Log(
-            `Microphone test - FAILED. Duration: ${testDuration}s, Reason: No speech detected in transcript, Transcript: "${finalTranscript}", Blob size: ${blob ? blob.size : 0
+            `Microphone test - FAILED. Duration: ${testDuration}s, Reason: No speech detected in transcript, Transcript: "${finalTranscript}", Blob size: ${
+              blob ? blob.size : 0
             } bytes`,
             "audio-diagnostics",
             "ET"
@@ -754,7 +756,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
           Log(
             `Microphone test - FAILED. Duration: ${testDuration}s, Reason: Microphone muted or no sound detected, Average level: ${averageLevel.toFixed(
               4
-            )}, Max level: ${maxLevel.toFixed(4)}, Blob size: ${blob ? blob.size : 0
+            )}, Max level: ${maxLevel.toFixed(4)}, Blob size: ${
+              blob ? blob.size : 0
             } bytes, Audio detected flag: ${audioDetectedRef.current}`,
             "audio-diagnostics",
             "ET"
@@ -769,7 +772,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         setIsRecording(false);
         setRecordingProgress(0);
         Log(
-          `Microphone test - FAILED. Reason: MediaRecorder error, Error: ${event?.error?.name || "UnknownError"
+          `Microphone test - FAILED. Reason: MediaRecorder error, Error: ${
+            event?.error?.name || "UnknownError"
           }, Message: ${event?.error?.message || "no message"}`,
           "audio-diagnostics",
           "ET"
@@ -810,7 +814,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       setIsRecording(false);
       setRecordingProgress(0);
       Log(
-        `Microphone test - FAILED. Reason: Exception, Error: ${error?.name || "UnknownError"
+        `Microphone test - FAILED. Reason: Exception, Error: ${
+          error?.name || "UnknownError"
         }, Message: ${error?.message || "no message"}`,
         "audio-diagnostics",
         "ET"
@@ -857,13 +862,14 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
                 const testDuration = speakerTestStartTimeRef.current
                   ? (
-                    (Date.now() - speakerTestStartTimeRef.current) /
-                    1000
-                  ).toFixed(2)
+                      (Date.now() - speakerTestStartTimeRef.current) /
+                      1000
+                    ).toFixed(2)
                   : 0;
 
                 Log(
-                  `Speaker test - FAILED. Duration: ${testDuration}s, Error: ${playErr.message || playErr
+                  `Speaker test - FAILED. Duration: ${testDuration}s, Error: ${
+                    playErr.message || playErr
                   }`,
                   "audio-diagnostics",
                   "ET"
@@ -879,12 +885,13 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
             const testDuration = speakerTestStartTimeRef.current
               ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(
-                2
-              )
+                  2
+                )
               : 0;
 
             Log(
-              `Speaker test - FAILED. Duration: ${testDuration}s, Error: ${err.message || err
+              `Speaker test - FAILED. Duration: ${testDuration}s, Error: ${
+                err.message || err
               }`,
               "audio-diagnostics",
               "ET"
@@ -906,8 +913,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
             const testDuration = speakerTestStartTimeRef.current
               ? ((Date.now() - speakerTestStartTimeRef.current) / 1000).toFixed(
-                2
-              )
+                  2
+                )
               : 0;
 
             Log(
@@ -1101,7 +1108,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
         // Log test result - failed
         Log(
-          `Speaker test - FAILED. Duration: ${testDuration}s, Reason: ${error.message || "Unknown error"
+          `Speaker test - FAILED. Duration: ${testDuration}s, Reason: ${
+            error.message || "Unknown error"
           }`,
           "audio-diagnostics",
           "ET"
@@ -1190,7 +1198,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
       // Log test result - failed (playback error)
       Log(
-        `Microphone test - FAILED. Total duration: ${totalTestDuration}s, Reason: Playback error - ${err.message || "Unknown"
+        `Microphone test - FAILED. Total duration: ${totalTestDuration}s, Reason: Playback error - ${
+          err.message || "Unknown"
         }`,
         "audio-diagnostics",
         "ET"
@@ -1355,7 +1364,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
               sx={{ color: "#6DAF19" }}
             />
             {(type === "mic" && isRecording) ||
-              (type === "speaker" && isPlaying) ? (
+            (type === "speaker" && isPlaying) ? (
               <Box
                 sx={{
                   position: "absolute",
@@ -1531,21 +1540,19 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   >
                     {currentStep === "mic"
                       ? micStatus === "pending" && !hasListenedToPrompt
-                        ? translations.listenAndRepeat
-                        : micStatus === "pending" && hasListenedToPrompt
-                          ? translations.nowRepeat
-                          : micStatus === "testing" || isRecording
-                            ? translations.keepSpeaking
-                            : micStatus === "passed"
-                              ? translations.micTestPassed
-                              : translations.testMicrophone
+                        ? translations.nowRepeat
+                        : micStatus === "testing" || isRecording
+                        ? translations.keepSpeaking
+                        : micStatus === "passed"
+                        ? translations.micTestPassed
+                        : translations.testMicrophone
                       : speakerStatus === "pending"
-                        ? translations.listenToVoice
-                        : speakerStatus === "testing" || isPlaying
-                          ? translations.canYouHear
-                          : speakerStatus === "passed"
-                            ? translations.speakerTestPassed
-                            : translations.testSpeakers}
+                      ? translations.listenToVoice
+                      : speakerStatus === "testing" || isPlaying
+                      ? translations.canYouHear
+                      : speakerStatus === "passed"
+                      ? translations.speakerTestPassed
+                      : translations.testSpeakers}
                   </Typography>
                 </Box>
               </Box>
@@ -1641,8 +1648,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                             {isPlayingPrompt
                               ? translations.playingAudio
                               : hasListenedToPrompt
-                                ? translations.clickToListenAgain
-                                : translations.clickToListen}
+                              ? translations.clickToListenAgain
+                              : translations.clickToListen}
                           </Typography>
                           <Button
                             onClick={() => {
@@ -1835,8 +1842,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                                   height: `${Math.max(
                                     10,
                                     audioLevel *
-                                    100 *
-                                    (0.5 + Math.random() * 0.5)
+                                      100 *
+                                      (0.5 + Math.random() * 0.5)
                                   )}%`,
                                   background:
                                     "linear-gradient(180deg, #6DAF19, #4caf50)",
@@ -2078,7 +2085,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                     mx: "auto",
                     maxWidth: { xs: "100%", sm: "400px" },
                     mt: { xs: 0, sm: 0 },
-                    mb: { xs: 0, sm: 0 },
+                    mb: { xs: "20px", sm: 0 },
                     background:
                       micStatus === "failed"
                         ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
@@ -2198,7 +2205,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
               color: "#6DAF19",
               background: "rgba(109, 175, 25, 0.08)",
               borderColor: isMobile ? "rgba(109, 175, 25, 0.4)" : "transparent",
-              boxShadow: isMobile ? "0 4px 14px rgba(109, 175, 25, 0.15)" : "none",
+              boxShadow: isMobile
+                ? "0 4px 14px rgba(109, 175, 25, 0.15)"
+                : "none",
             },
           }}
         >

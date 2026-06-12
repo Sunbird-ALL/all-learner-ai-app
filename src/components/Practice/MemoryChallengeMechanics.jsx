@@ -818,6 +818,7 @@ const MemoryChallengeMechanicsContent = ({
           padding: "0",
           height: isMobile ? "95%" : "100%",
           maxHeight: "100%",
+          minHeight: 0,
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
@@ -835,6 +836,7 @@ const MemoryChallengeMechanicsContent = ({
               style={{
                 height: "100%",
                 maxHeight: "100%",
+                minHeight: 0,
                 width: "100%",
                 overflow: "hidden",
                 display: "flex",

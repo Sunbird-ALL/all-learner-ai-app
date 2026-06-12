@@ -73,7 +73,7 @@ export default function RecordVoiceVisualizer() {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="voice-visualizer-container">
       <div className="playing">
         {Object.entries(renderType).map(([key, value]) => {
           return (
