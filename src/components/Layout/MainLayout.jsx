@@ -1093,13 +1093,18 @@ const MainLayout = (props) => {
                 </Box>
                 <CardContent
                   sx={{
-                    minHeight: { xs: "100%", md: "auto" },
-                    height: { xs: "100%", md: "auto" },
+                    minHeight: 0,
+                    height: { xs: "100%", md: "calc(100vh - 260px)" },
+                    maxHeight: {
+                      xs: "calc(100dvh - 160px)",
+                      md: "calc(100vh - 260px)",
+                    },
                     display: { xs: "flex", md: "block" },
                     flexDirection: { xs: "column", md: "initial" },
                     justifyContent: { xs: "center", md: "initial" },
                     alignItems: { xs: "center", md: "initial" },
-                    flexGrow: { xs: 1, md: "initial" },
+                    flexGrow: 1,
+                    overflowY: "hidden",
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
                     padding: { xs: "16px !important", md: "24px !important" },
@@ -1217,6 +1222,7 @@ const MainLayout = (props) => {
                     position: "relative",
                     display: "flex",
                     flexDirection: "column",
+                    flexShrink: 0,
                   }}
                 >
                   <Box
