@@ -433,8 +433,12 @@ export function LetterLauncherGameStoryPreview({
       // Track when audio actually starts playing
       audio.onplay = () => {
         audioStarted = true;
-        // Clear the timeout since audio has started - it will finish naturally
-        clearTimeout(timeout);
+        // Do NOT clear the timeout here — on mobile, audio can start (onplay fires)
+        // but then stall indefinitely due to slow/intermittent network. If we clear
+        // the timeout, there is no fallback and playAudioFile hangs forever, causing
+        // controlsInstructionComplete to never be set (stuck screen on mobile).
+        // The timeout handler already handles the "audioStarted but stalled" case by
+        // creating a 30-second extended safety timeout.
       };
       
       // Handle loading errors
