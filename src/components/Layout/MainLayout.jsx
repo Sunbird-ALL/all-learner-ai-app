@@ -2416,6 +2416,7 @@ MainLayout.propTypes = {
   storedData: PropTypes.array,
   resetStoredData: PropTypes.func,
   pageName: PropTypes.string,
+  cardContentStyle: PropTypes.object,
   gameOverData: PropTypes.shape({
     userWon: PropTypes.bool,
   }),
