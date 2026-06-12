@@ -8,7 +8,7 @@ export interface EnglishAudioConfig {
 
 class EnglishAudioManager {
   private config: EnglishAudioConfig = {
-    audioFolderPath: '/audio/english/letter',
+    audioFolderPath: `${process.env.PUBLIC_URL}/audio/english/letter`,
     fileExtension: '.wav'
   };
 

@@ -480,14 +480,14 @@ export function CombinedLetterGamesPreview({
       // Determine the correct audio path based on language
       let audioPath = '';
       if (contentLanguage === 'te') {
-        audioPath = `/audio/telugu/letter/${text}.wav`;
+        audioPath = `${process.env.PUBLIC_URL}/audio/telugu/letter/${text}.wav`;
       } else if (contentLanguage === 'kn') {
-        audioPath = `/audio/kannada/letter/${text}.wav`;
+        audioPath = `${process.env.PUBLIC_URL}/audio/kannada/letter/${text}.wav`;
       } else if (contentLanguage === 'mr') {
-        audioPath = `/audio/marathi/letter/${text}.wav`;
+        audioPath = `${process.env.PUBLIC_URL}/audio/marathi/letter/${text}.wav`;
       } else {
         // Default to English for other languages
-        audioPath = `/audio/english/letter/${text}.wav`;
+        audioPath = `${process.env.PUBLIC_URL}/audio/english/letter/${text}.wav`;
       }
       
       const audio = new Audio(audioPath);

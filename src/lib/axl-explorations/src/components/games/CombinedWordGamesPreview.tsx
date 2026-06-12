@@ -796,7 +796,7 @@ export function CombinedWordGamesPreview({
     
     // For soundMatch game, try to play audio file from sound-match folder first
     const word = text.toLowerCase().trim();
-    const audioPath = `/audio/audio-preview/combined-word-games/sound-match/${language}/${word}.wav`;
+    const audioPath = `${process.env.PUBLIC_URL}/audio/audio-preview/combined-word-games/sound-match/${language}/${word}.wav`;
     
     try {
       const audio = new Audio(audioPath);
