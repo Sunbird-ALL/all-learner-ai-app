@@ -27,6 +27,7 @@ export interface LetterLauncherGameCoreProps {
   disabled?: boolean;
   onAnswerSelect: (isMatch: boolean) => void;
   onContinue?: () => void;
+  onSpeakerClick?: () => void;
   className?: string;
   fuelIconImage?: string; // Optional custom fuel icon image path
 }
@@ -45,6 +46,7 @@ export function LetterLauncherGameCore({
   disabled = false,
   onAnswerSelect,
   onContinue,
+  onSpeakerClick,
   className = '',
   fuelIconImage
 }: LetterLauncherGameCoreProps) {
@@ -151,11 +153,15 @@ export function LetterLauncherGameCore({
               {currentQuestion.displayedLetter}
             </h2>
           ) : (
-            <div className={`inline-block p-2 sm:p-3 rounded-lg ${
-              isPreview 
-                ? 'bg-blue-100/80 backdrop-blur-sm border border-blue-200/50' 
-                : 'bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg'
-            }`}>
+            <div
+              className={`inline-block p-2 sm:p-3 rounded-lg transition-opacity ${
+                isPreview
+                  ? 'bg-blue-100/80 backdrop-blur-sm border border-blue-200/50'
+                  : 'bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg'
+              } ${onSpeakerClick ? 'cursor-pointer hover:opacity-70 active:scale-95' : ''}`}
+              onClick={onSpeakerClick}
+              title={onSpeakerClick ? 'Tap to play audio' : undefined}
+            >
               <span className="text-xl sm:text-2xl">🔊</span>
             </div>
           )}

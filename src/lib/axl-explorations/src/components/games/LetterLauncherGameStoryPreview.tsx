@@ -978,6 +978,17 @@ export function LetterLauncherGameStoryPreview({
     };
   }, [storyPhase, story, contentLanguage, audioLanguage, needsUserInteraction, isWaitingForInteraction]);
 
+  // Manual speaker replay — lets user tap the 🔊 icon if audio didn't play automatically
+  const handleSpeakerClick = useCallback(async () => {
+    if (isPlayingPracticeAudio || !practiceQuestion) return;
+    setIsPlayingPracticeAudio(true);
+    await playLetterAudio(practiceQuestion.audioLetter, contentLanguage);
+    setIsPlayingPracticeAudio(false);
+    setShowPracticeLetter(true);
+    // Ensure buttons unlock even if the narration flow was stuck
+    setControlsInstructionComplete(true);
+  }, [isPlayingPracticeAudio, practiceQuestion, contentLanguage]);
+
   // Handle practice answer
   const handlePracticeAnswer = useCallback(async (isMatch: boolean) => {
     if (!practiceQuestion || showPracticeFeedback || isPlayingPracticeAudio) return;
@@ -1671,8 +1682,9 @@ export function LetterLauncherGameStoryPreview({
                             isPreview={true}
                             disabled={showPracticeFeedback || isPlayingPracticeAudio || !showPracticeLetter || !controlsInstructionComplete}
                             onAnswerSelect={handlePracticeAnswer}
+                            onSpeakerClick={!showPracticeLetter ? handleSpeakerClick : undefined}
                           />
-                          
+
                           {/* Hand pointer pointing to buttons after instruction completes */}
                           {controlsInstructionComplete && showPracticeLetter && !showPracticeFeedback && (
                             <div className="absolute bottom-3 sm:bottom-4 md:bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 pointer-events-none z-30">
@@ -1757,6 +1769,7 @@ export function LetterLauncherGameStoryPreview({
                             isPreview={true}
                             disabled={showPracticeFeedback || isPlayingPracticeAudio || !showPracticeLetter}
                             onAnswerSelect={handlePracticeAnswer}
+                            onSpeakerClick={!showPracticeLetter ? handleSpeakerClick : undefined}
                           />
                         </div>
                       </div>
