@@ -231,7 +231,9 @@ export function LetterLauncherGameStoryPreview({
   const [showPracticeIntro, setShowPracticeIntro] = useState(false); // Track practice intro message
   const [showFuelFlashMessages, setShowFuelFlashMessages] = useState(false); // Track fuel flash messages
   const [visibleFlashNumber, setVisibleFlashNumber] = useState<number | null>(null); // Track which flash number to show: 5, 3, or 1
-  const [needsUserInteraction, setNeedsUserInteraction] = useState(false); // Track if autoplay is blocked
+  const [needsUserInteraction, setNeedsUserInteraction] = useState(
+    () => typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0
+  ); // Show overlay immediately on mobile to unlock audio before sequence starts
   const [isWaitingForInteraction, setIsWaitingForInteraction] = useState(false); // Track if we're waiting for user interaction
   
   const audioLanguage = selectedAudioLanguage || 'en';
