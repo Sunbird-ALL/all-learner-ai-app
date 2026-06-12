@@ -8,7 +8,7 @@ export interface KannadaAudioConfig {
 
 class KannadaAudioManager {
   private config: KannadaAudioConfig = {
-    audioFolderPath: '/audio/kannada/letter',
+    audioFolderPath: `${process.env.PUBLIC_URL}/audio/kannada/letter`,
     fileExtension: '.wav'
   };
 

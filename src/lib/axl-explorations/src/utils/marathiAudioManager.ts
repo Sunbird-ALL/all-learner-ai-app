@@ -8,7 +8,7 @@ export interface MarathiAudioConfig {
 
 class MarathiAudioManager {
   private config: MarathiAudioConfig = {
-    audioFolderPath: '/audio/marathi/letter',
+    audioFolderPath: `${process.env.PUBLIC_URL}/audio/marathi/letter`,
     fileExtension: '.wav'
   };
 
