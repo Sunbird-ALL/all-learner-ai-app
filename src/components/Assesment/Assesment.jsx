@@ -636,7 +636,7 @@ export const ProfileHeader = ({
         chartAudioRef.current = null;
       }
 
-      const audioPath = `/audio/audio-preview/Alphabet Chart/Chart Icon/${language}/ChartNarration.wav`;
+      const audioPath = `${process.env.PUBLIC_URL}/audio/audio-preview/Alphabet Chart/Chart Icon/${language}/ChartNarration.wav`;
       const audio = new Audio(audioPath);
       chartAudioRef.current = audio;
 

@@ -8,7 +8,7 @@ export interface HindiAudioConfig {
 
 class HindiAudioManager {
   private config: HindiAudioConfig = {
-    audioFolderPath: '/audio/hindi/letter',
+    audioFolderPath: `${process.env.PUBLIC_URL}/audio/hindi/letter`,
     fileExtension: '.wav'
   };
 
