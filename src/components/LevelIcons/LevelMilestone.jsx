@@ -23,7 +23,7 @@ import {
  * when a level-complete screen is about to render.
  */
 const LevelMilestone = ({ level, isMobile }) => {
-  const height = isMobile ? 120 : 168;
+  const height = isMobile ? 80 : 168;
 
   const levelComponents = {
     1: <LevelOne height={height} />,

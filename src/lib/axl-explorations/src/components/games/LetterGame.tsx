@@ -232,7 +232,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
     };
     
     const lettersToUse = getLevelLetters(language, level);
-    
+
     // Build weighted letter array based on confidentLetters
     const buildWeightedLetterArray = (letters: string[]): string[] => {
       if (!confidentLetters || confidentLetters.length === 0 || letters.length === 0) {
@@ -420,14 +420,14 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         
         // Extract game name without language suffix
         const gameName = gameKey.split('_')[0];
-        
+
         // Search for level stats using current user
         const searchParams = {
           userId: currentUser.username,
           courseId: gameName,
           unitId: selectedLanguage
         };
-        
+
         const result = await trackingAssessmentService.searchAssessmentTracking(searchParams);
         
         // Handle the enhanced backend response format
@@ -1057,13 +1057,13 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           selectedLanguage={selectedLanguage!}
           currentLevel={currentLevel}
           gameKey={gameKey}
-            onTryAgain={handleTryAgain}
+          onTryAgain={handleTryAgain}
           onBackToHome={onBack}
           livesLost={gameEndedByLives}
         />
       );
     }
-    
+
     // If level passed, show success screen
     // Determine if there's a next level (respecting endLevel if specified)
     const maxAllowedLevel = endLevel !== undefined ? endLevel : languageLevels.maxLevels;
@@ -1128,7 +1128,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           // Reset tracking assessment state
           setLevelStartTime(Date.now());
           setQuestionSummaries([]);
-          
+
           // Regenerate questions for the next level if within endLevel range
           if (selectedLanguage && (endLevel === undefined || nextLevel <= endLevel)) {
             const session = startSession(gameKey);
@@ -1170,13 +1170,13 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
   }
 
   return (
-    <div className="h-screen bg-gradient-cool p-0 sm:p-0.5 md:p-1 lg:p-2 xl:p-4 overflow-hidden flex flex-col">
+    <div className="h-screen  p-3 sm:p-0.5 md:p-1 lg:p-2 xl:p-4 overflow-hidden flex flex-col">
       <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col min-h-0">
         {/* Header */}
         <div className="flex flex-row items-center justify-center mb-0 gap-0 sm:gap-0.5 md:gap-1 flex-shrink-0">
           {/* Back button removed - using justify-center instead of justify-between */}
           <div className="text-center flex-1">
-            <h1 className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg font-bold text-white drop-shadow-lg leading-tight">
+            <h1 className="text-[16.5px] md:text-[20px] font-bold text-black drop-shadow-lg leading-tight pb-2">
               Letter Recognition
             </h1>
             {/* <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-sm sm:text-base md:text-lg mt-0.5">

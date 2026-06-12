@@ -7,9 +7,10 @@
 .letter-hunt-wrapper > div[class*="h-screen"],
 .letter-hunt-wrapper div[class*="h-screen"] {
   height: 100% !important;
-  max-height: 100% !important;
+  max-height: 80% !important;
   overflow: hidden !important;
   position: relative !important;
+  border-radius: 20px !important;
 }
 
 .letter-hunt-wrapper > div.h-screen > div,
@@ -124,6 +125,7 @@ body.letter-hunt-active {
   padding: 0.5rem;
   box-sizing: border-box;
 }
+
 .playing_opp {
   height: 60px;
   border-radius: 0.3rem;
@@ -179,6 +181,7 @@ body.letter-hunt-active {
     #46d77d 3715.87%
   );
 }
+
 .playing__bar5 {
   background: linear-gradient(90deg, #00bbe4 -5434.97%, #46d77d 1004.29%);
 }
@@ -217,6 +220,7 @@ body.letter-hunt-active {
   border-left: 1px solid var(--Button-Green, #58cc02);
   background: var(--Text-White, #fff);
 }
+
 .audioSelectedWrongWord {
   border-radius: 12px;
   border-top: 1px solid var(--Button-Green, #c30303);
@@ -283,9 +287,11 @@ body.letter-hunt-active {
   0% {
     left: 0;
   }
+
   50% {
     left: 100%;
   }
+
   100% {
     left: 0;
   }
@@ -301,4 +307,35 @@ body.letter-hunt-active {
 span.kannada-font-override,
 div.kannada-font-override {
   font-family: 'Baloo Tamma 2', Quicksand, sans-serif !important;
+}
+
+@media (max-width: 767px) {
+  body.letter-launcher-active .MuiCardContent-root {
+    padding: 5px !important;
+  }
+  .letter-launcher-header {
+    font-size: 20px !important;
+  }
+  .letter-launcher-header-wrapper {
+    margin-top: 12px !important;
+    margin-bottom: 20px !important;
+  }
+  .letter-launcher-screen-wrapper,
+  .letter-launcher-screen-wrapper > div {
+    padding: 0px !important;
+  }
+}
+
+.voice-visualizer-container {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .voice-visualizer-container {
+    transform: scale(0.7);
+    transform-origin: center center;
+    margin: -15px auto;
+  }
 }

@@ -110,6 +110,21 @@
     "lint": "eslint \"**/*.{js,jsx}\"",
     "lint:fix": "eslint \"**/*.{js,jsx}\" --fix"
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(axios|double-metaphone|metaphone|@mui|@tekdi)/)"
+    ],
+    "moduleNameMapper": {
+      "@mui/material/index$": "<rootDir>/node_modules/@mui/material/node/index.js",
+      "react-router-dom/dist/index$": "<rootDir>/node_modules/react-router-dom/dist/main.js",
+      "^number-flow/lite$": "<rootDir>/node_modules/number-flow/dist/lite.js",
+      "^number-flow/plugins$": "<rootDir>/node_modules/number-flow/dist/plugins.js",
+      "^@number-flow/react$": "<rootDir>/src/__jest_mocks__/number-flow-react.js",
+      "^number-flow/csp$": "<rootDir>/src/__jest_mocks__/number-flow-csp.js",
+      "^esm-env/(.*)$": "<rootDir>/src/__jest_mocks__/esm-env-browser.js",
+      "^esm-env$": "<rootDir>/src/__jest_mocks__/esm-env.js"
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -139,6 +154,7 @@
     "customize-cra": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^3.4.0",
     "husky": "^9.0.11",
     "lint-staged": "^11.0.0",

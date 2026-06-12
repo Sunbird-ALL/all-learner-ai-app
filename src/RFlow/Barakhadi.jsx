@@ -4180,6 +4180,8 @@ const Barakhadi = ({
   customWords, // Array of words to filter (e.g., ["నది", "చేప", "చీర"] for Telugu F2)
 }) => {
   steps = 1;
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   const [word, setWord] = useState("");
   const [targetWord, setTargetWord] = useState("");
@@ -4876,25 +4878,29 @@ const Barakhadi = ({
     padding: "0px",
     textAlign: "center",
     overflow: "hidden",
+    height: "100%",
+    paddingTop: "22px",
+    width: "100%",
+    borderRadius: "20px",
   };
 
   const cardStyle = {
     background: "#fff",
-    padding: "23px",
+    padding: "11px",
     borderRadius: "12px",
     display: "inline-block",
     position: "relative",
     boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
     width: "95%",
     maxWidth: "1200px",
-    height: "70vh",
+    height: "90%",
   };
 
   const titleStyle = {
     fontSize: "15px",
     fontWeight: "bold",
     color: "rgba(51, 63, 97, 1)",
-    marginBottom: "10px",
+    marginBottom: "16px",
     marginTop: "-12px",
     fontFamily: "Quicksand",
     gap: "10px",
@@ -4925,7 +4931,7 @@ const Barakhadi = ({
   };
 
   const buttonStyle = {
-    padding: "8px 30px",
+    padding: isMobile ? "0px" : "8px 30px",
     borderRadius: "8px",
     border: "none",
     cursor: "pointer",
@@ -4936,12 +4942,13 @@ const Barakhadi = ({
     justifyContent: "center",
     gap: "8px",
     fontSize: "13px",
-    height: "35px",
-    flexDirection: "column",
+    width: isMobile ? "46px" : "85px",
+    height: isMobile ? "38px" : "40px",
+    flexDirection: "row",
   };
 
   const disabledButtonStyle = {
-    padding: "8px 30px",
+    padding: isMobile ? "0px" : "8px 30px",
     borderRadius: "8px",
     border: "none",
     fontWeight: "bold",
@@ -4953,13 +4960,15 @@ const Barakhadi = ({
     justifyContent: "center",
     gap: "8px",
     fontSize: "13px",
-    height: "35px",
+    width: isMobile ? "38px" : "85px",
+    height: isMobile ? "38px" : "40px",
+    flexDirection: "row",
   };
 
   const tableStyle = {
     marginTop: "50px",
     borderCollapse: "collapse",
-    width: "100%",
+    width: isMobile ? "max-content" : "100%",
     tableLayout: "fixed",
     position: "relative",
   };
@@ -4970,11 +4979,30 @@ const Barakhadi = ({
     fontSize: lang === "te" ? "28px" : "23px",
     textAlign: "center",
     width: "58px",
+    ...(isMobile
+      ? {
+          minWidth: "58px",
+          height: "45px",
+          minHeight: "45px",
+          boxSizing: "border-box",
+        }
+      : {}),
     cursor: "pointer",
     fontWeight: lang === "te" ? 400 : 800,
     fontFamily: getFontFamily(lang),
     transition: "background-color 0.3s ease",
   };
+
+  const thStyle = isMobile
+    ? {
+        width: "58px",
+        minWidth: "58px",
+        height: "45px",
+        minHeight: "45px",
+        padding: "4px",
+        boxSizing: "border-box",
+      }
+    : {};
 
   const circleStyle = {
     width: lang === "te" ? "28px" : "22px",
@@ -5012,6 +5040,36 @@ const Barakhadi = ({
     textAlign: "center",
     boxShadow: "0px 4px 6px rgba(0,0,0,0.15)",
     border: "1px solid black",
+  };
+
+  const textInputStyle = {
+    border: "1px solid orange",
+    borderRadius: "10px",
+    height: isMobile ? "38px" : "50px",
+    width: isMobile ? "50%" : "65%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    fontSize: lang === "te" ? "26px" : "22px",
+    fontWeight: lang === "te" ? "normal" : "bold",
+    color:
+      word === targetWord ? "#27ae60" : isWordWrong ? "#d32f2f" : "#2c3e50",
+    background:
+      word === targetWord ? "#E8F5E8" : isWordWrong ? "#FFE8E8" : "#FFFFFF",
+    paddingLeft: isMobile ? "17px" : "20px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    transition: "background 0.3s ease, color 0.3s ease",
+    fontFamily: getFontFamily(lang),
+  };
+
+  const buttonContainerStyle = {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: "6px",
+    width: "45%",
   };
 
   return (
@@ -5156,7 +5214,7 @@ const Barakhadi = ({
               justifyContent: "center",
               alignItems: "flex-start",
               zIndex: 10000,
-              margin: "20px",
+              margin: isMobile ? "0px" : "20px",
               overflow: "auto",
             }}
           >
@@ -5166,7 +5224,7 @@ const Barakhadi = ({
                 borderRadius: "12px",
                 boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
                 padding: "10px",
-                width: "100%",
+                width: isMobile ? "97%" : "100%",
                 maxWidth: "1100px",
                 margin: "0 auto",
                 position: "relative",
@@ -5460,51 +5518,12 @@ const Barakhadi = ({
                 width: "100%",
               }}
             >
-              <div
-                style={{
-                  border: "1px solid orange",
-                  borderRadius: "10px",
-                  height: "50px",
-                  width: "65%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  fontSize: lang === "te" ? "26px" : "22px",
-                  fontWeight: lang === "te" ? "normal" : "bold",
-                  color:
-                    word === targetWord
-                      ? "#27ae60"
-                      : isWordWrong
-                      ? "#d32f2f"
-                      : "#2c3e50",
-                  background:
-                    word === targetWord
-                      ? "#E8F5E8"
-                      : isWordWrong
-                      ? "#FFE8E8"
-                      : "#FFFFFF",
-                  paddingLeft: "20px",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  transition: "background 0.3s ease, color 0.3s ease",
-                  marginBottom: "60px",
-                  fontFamily: getFontFamily(lang),
-                }}
-              >
+              {/* text box for barakhadi */}
+              <div style={textInputStyle}>
                 {word ? word : <span style={{ opacity: 0.4 }}></span>}
               </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: "22px",
-                  width: "40%",
-                  marginBottom: "80px",
-                }}
-              >
+              {/* buttons for barakhadi */}
+              <div style={buttonContainerStyle}>
                 <button
                   style={
                     word.length === 0
@@ -5514,18 +5533,12 @@ const Barakhadi = ({
                           backgroundColor: "#E4F5FF",
                           border: "2px solid #1CB0F6",
                           color: "#333F61",
-                          width: "85px",
-                          height: "40px",
-                          flexDirection: "row",
                         }
                       : {
                           ...buttonStyle,
                           boxShadow: "3px 4px 6px rgba(0, 128, 0, 1.6)",
                           backgroundColor: "#E4F5FF",
                           color: "#333F61",
-                          width: "85px",
-                          height: "40px",
-                          flexDirection: "row",
                         }
                   }
                   onClick={handleListen}
@@ -5534,7 +5547,7 @@ const Barakhadi = ({
                   <img
                     src={listenImgBox}
                     alt="listen"
-                    style={{ height: "30px" }}
+                    style={{ height: isMobile ? "22px" : "30px" }}
                   />
                 </button>
 
@@ -5543,14 +5556,15 @@ const Barakhadi = ({
                     ...buttonStyle,
                     backgroundColor: "white",
                     color: "#333F61",
-                    width: "85px",
-                    height: "40px",
-                    flexDirection: "row",
                     boxShadow: "3px 4px 6px rgba(255, 165, 0, 1.6)",
                   }}
                   onClick={handleDelete}
                 >
-                  <img src={eraseImg} alt="delete" style={{ height: "30px" }} />
+                  <img
+                    src={eraseImg}
+                    alt="delete"
+                    style={{ height: isMobile ? "22px" : "30px" }}
+                  />
                 </button>
 
                 <button
@@ -5558,83 +5572,99 @@ const Barakhadi = ({
                     ...buttonStyle,
                     backgroundColor: "white",
                     color: "#333F61",
-                    width: "85px",
-                    height: "40px",
-                    flexDirection: "row",
                     boxShadow: "3px 4px 6px rgba(255, 0, 0, 1.6)",
                   }}
                   onClick={handleErase}
                 >
-                  <img src={deleteImg} alt="erase" style={{ height: "30px" }} />
+                  <img
+                    src={deleteImg}
+                    alt="erase"
+                    style={{ height: isMobile ? "22px" : "30px" }}
+                  />
                 </button>
               </div>
             </div>
           </div>
 
           <div
-            style={{
-              position: "relative",
-              paddingLeft: "60px",
-              marginTop: "30px",
-              //height: "300px",
-            }}
+            className="barakhadiContent"
+            style={{ height: "100%", width: "100%" }}
           >
-            {vyajan.map((v, i) => (
-              <div
-                key={i}
-                style={{
-                  ...leftCircleStyle,
-                  left: "19px",
-                  top: `${i * 45 + 25}px`,
-                }}
-              >
-                {v}
-              </div>
-            ))}
-
-            <table style={tableStyle}>
-              <thead>
-                <tr>
-                  {swar.map((v, i) => (
-                    <th key={i}>
-                      <div style={circleStyle}>{v}</div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {vyajan.map((consonant, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {currentBarakhadi[consonant]?.map((cell, colIndex) => {
-                      const isIncorrectCell =
-                        incorrectCell?.rowIndex === rowIndex &&
-                        incorrectCell?.colIndex === colIndex;
-                      return (
-                        <td
-                          key={colIndex}
-                          style={{
-                            ...tdStyle,
-                            backgroundColor: isIncorrectCell
-                              ? "#FFE8E8"
-                              : tdStyle.backgroundColor || "transparent",
-                            transition: "background-color 0.3s ease",
-                          }}
-                          onClick={() =>
-                            handleLetterClick(cell, rowIndex, colIndex)
-                          }
-                        >
-                          {cell}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
             <div
               style={{
-                marginTop: "10px",
+                position: "relative",
+                paddingLeft: isMobile ? "45px" : "60px",
+                marginTop: isMobile ? "20px" : "30px",
+                height: isMobile ? "54%" : "100%",
+                overflowY: isMobile ? "auto" : "visible",
+                overflowX: isMobile ? "auto" : "visible",
+              }}
+            >
+              {
+                vyajan.map((v, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      ...leftCircleStyle,
+                      left: "11px",
+                      top: isMobile ? `${i * 45 + 103}px` : `${i * 45 + 36}px`,
+                    }}
+                  >
+                    {v}
+                  </div>
+                ))
+                // )
+              }
+
+              {
+                <table style={tableStyle}>
+                  <thead>
+                    <tr>
+                      {swar.map((v, i) => (
+                        <th key={i} style={thStyle}>
+                          <div style={circleStyle}>{v}</div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {vyajan.map((consonant, rowIndex) => (
+                      <tr key={rowIndex}>
+                        {currentBarakhadi[consonant]?.map((cell, colIndex) => {
+                          const isIncorrectCell =
+                            incorrectCell?.rowIndex === rowIndex &&
+                            incorrectCell?.colIndex === colIndex;
+                          return (
+                            <td
+                              key={colIndex}
+                              style={{
+                                ...tdStyle,
+                                backgroundColor: isIncorrectCell
+                                  ? "#FFE8E8"
+                                  : tdStyle.backgroundColor || "transparent",
+                                transition: "background-color 0.3s ease",
+                              }}
+                              onClick={() =>
+                                handleLetterClick(cell, rowIndex, colIndex)
+                              }
+                            >
+                              {cell}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                // )
+              }
+            </div>
+
+            {/* Bottom button row common to both views */}
+            <div
+              style={{
+                marginTop: isMobile ? "16px" : "10px",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -5680,14 +5710,13 @@ const Barakhadi = ({
               />
             </div>
           </div>
-
           <img
             src={boyballonflyImg}
             alt="boy balloon"
             style={{
               position: "absolute",
-              top: "10px",
-              right: "120px",
+              top: "1px",
+              right: "12px",
               width: "60px",
               zIndex: 1,
             }}

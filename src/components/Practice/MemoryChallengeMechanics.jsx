@@ -9,6 +9,7 @@ import {
 import { levelGetContent } from "../../data/levelContent";
 import { addLesson } from "../../services/orchestration/orchestrationService";
 import { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 // Import from library
 import {
@@ -70,6 +71,8 @@ const MemoryChallengeMechanicsContent = ({
   const [sessionInitialized, setSessionInitialized] = useState(false);
   const navigate = useNavigate();
   const lang = getLocalData("lang") || "en";
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // Map language to library Language type
   const initialLanguage =
@@ -809,18 +812,28 @@ const MemoryChallengeMechanicsContent = ({
       vocabCount={vocabCount}
       wordCount={wordCount}
       handleBack={handleBack}
+      cardContentStyle={{
+        height: { xs: "100%", md: "calc(100vh - 260px)" },
+        maxHeight: {
+          xs: "calc(100dvh - 160px)",
+          md: "calc(100vh - 260px)",
+        },
+      }}
     >
       <div
         style={{
           padding: "0",
-          height: "100%",
+          height: isMobile ? "95%" : "100%",
           maxHeight: "100%",
+          minHeight: 0,
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
           boxSizing: "border-box",
           position: "relative",
           background: "linear-gradient(to bottom, #87CEEB, #20B2AA)",
+          borderRadius: "20px",
+          // width: "100%"
         }}
         className="memory-challenge-wrapper"
       >
@@ -830,6 +843,7 @@ const MemoryChallengeMechanicsContent = ({
               style={{
                 height: "100%",
                 maxHeight: "100%",
+                minHeight: 0,
                 width: "100%",
                 overflow: "hidden",
                 display: "flex",
@@ -1054,7 +1068,7 @@ const MemoryChallengeMechanicsContent = ({
                     display: "flex",
                     flexDirection: "column",
                     minHeight: 0,
-                    overflow: "auto",
+                    overflow: isMobile ? "hidden" : "auto",
                   }}
                 >
                   {currentSequence && (

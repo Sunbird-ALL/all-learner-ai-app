@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { getLocalData, NextButtonRound } from "../../utils/constants";
 import { RetryIcon } from "../Icons/SvgIcons";
 import CountdownTimer from "../CountdownTimer/CountdownTimer";
@@ -117,6 +117,17 @@ const demoInstructions = {
 };
 
 const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Demo states: countdown, showSentence, recording, playAudio, retryOrContinue, completion
   const [demoPhase, setDemoPhase] = useState("countdown");
   const [currentDemoStep, setCurrentDemoStep] = useState(1); // Track demo step progress (1-5)
@@ -786,29 +797,50 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         demoPhase === "retryOrContinue") && (
         <div
           style={{
-            position: "absolute",
-            top: "clamp(80px, 12vh, 130px)",
-            left: "50%",
-            transform: "translateX(-50%)",
             zIndex: 10000,
+            top: isMobile ? "136px" : "clamp(120px, 15vh, 150px)",
+            padding: isMobile ? "8px 12px" : "16px 24px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            transform: "translateX(-50%)",
+            position: "absolute",
+            width: isMobile ? "190px" : "auto",
             backgroundColor: "white",
             borderRadius: "12px",
-            padding: "16px 24px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            left: "50%",
           }}
         >
-          <div className="flex flex-col items-center mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white" />
+          <div
+            className={`flex-col items-center flex ${
+              isMobile ? "mb-1" : "mb-4"
+            }`}
+          >
+            <div
+              className={`items-center flex gap-2 ${
+                isMobile ? "mb-1.5" : "mb-3"
+              }`}
+            >
+              <div
+                className={`${
+                  isMobile ? "w-6 h-6" : "w-8 h-8"
+                } flex items-center justify-center rounded-full bg-blue-500`}
+              >
+                <Sparkles
+                  className={`${
+                    isMobile ? "h-3.5 w-3.5" : "h-4 w-4"
+                  } text-white`}
+                />
               </div>
-              <h2 className="text-base font-bold text-gray-800">
+              <h2
+                className={`text-gray-800 font-bold ${
+                  isMobile ? "text-xs" : "text-base"
+                }`}
+              >
                 {instructions.howToPlay}
               </h2>
             </div>
             <Progress
               value={(currentDemoStep / 4) * 100}
-              className="h-1.5 w-64"
+              className={`${isMobile ? "h-1 w-36" : "h-1.5 w-64"}`}
             />
           </div>
         </div>
@@ -822,21 +854,26 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
         <div
           style={{
             position: "absolute",
-            bottom: "80px",
+            bottom: isMobile ? "calc(100vh - (75px + 76vh))" : "80px",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10000,
             display: "flex",
             justifyContent: "space-between",
-            width: "calc(100% - 280px)",
+            width: isMobile ? "calc(100% - 48px)" : "calc(100% - 280px)",
             maxWidth: "1200px",
-            padding: "0 40px",
+            padding: isMobile ? "0 10px" : "0 40px",
+            gap: isMobile ? "20px" : "0px",
           }}
         >
           {/* Skip Demo Button */}
           <button
             onClick={handleSkipDemo}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform"
+            className={`text-white font-semibold bg-blue-600 hover:bg-blue-700 shadow-lg rounded-full transition-all hover:scale-105 transform duration-300 ${
+              isMobile
+                ? "px-5 py-2.5 text-xs flex-1 text-center"
+                : "px-6 py-3 text-sm"
+            }`}
           >
             {instructions.skipDemo}
           </button>
@@ -844,7 +881,11 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
           {/* Start Game Button */}
           <button
             onClick={handleStartGameClick}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-full shadow-lg transition-all duration-300 hover:scale-105 transform"
+            className={`font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg duration-300 transition-all transform hover:scale-105 ${
+              isMobile
+                ? "px-5 py-2.5 text-xs flex-1 text-center"
+                : "px-6 py-2 text-sm"
+            }`}
           >
             {instructions.startGame}
           </button>

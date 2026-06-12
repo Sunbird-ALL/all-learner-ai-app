@@ -62,19 +62,20 @@ const UnderlinedSentence = ({
   showUnderlines,
   onWordHover,
   lang,
+  isMobile,
 }) => {
   const words = sentence.split(" ");
 
   return (
     <p
       style={{
-        fontSize: lang === "te" ? "34px" : "30px",
+        fontSize: lang === "te" ? (isMobile ? "32px" : "34px") : (isMobile ? "28px" : "30px"),
         fontWeight: lang === "te" ? "400" : "600",
         color: "rgba(51, 63, 97, 1)",
         fontFamily: getFontFamily(lang || "en"),
         fontStyle: "bold",
         textAlign: "center",
-        lineHeight: "1.5",
+        lineHeight: isMobile ? "1.2" : "1.5",
         position: "relative",
       }}
     >
@@ -700,7 +701,7 @@ const FluencyP1 = ({
               alignItems: "center",
               justifyContent: "space-between",
               padding: "10px",
-              paddingBottom: "40px",
+              paddingBottom: isMobile ? "15px" : "40px",
               position: "relative",
             }}
           >
@@ -728,7 +729,7 @@ const FluencyP1 = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginBottom: "20px",
+                  marginBottom: isMobile ? "10px" : "20px",
                 }}
               >
                 <CircularTimer duration={9} isActive={!parentModalOpen} />
@@ -738,10 +739,11 @@ const FluencyP1 = ({
             <div
               style={{
                 display: "flex",
+                flexDirection: isMobile ? "column" : "row",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "10px",
-                marginBottom: isSpeaking ? "0" : "30px",
+                marginBottom: isSpeaking ? "0" : isMobile ? "5px" : "30px",
                 position: "relative",
               }}
             >
@@ -754,7 +756,13 @@ const FluencyP1 = ({
                     );
                   }}
                   alt="listen"
-                  style={{ width: "40px", height: "40px", cursor: "pointer" }}
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    cursor: "pointer",
+                    order: isMobile ? 2 : undefined,
+                    marginTop: isMobile ? "50px" : undefined,
+                  }}
                 />
               )}
               <div
@@ -770,6 +778,7 @@ const FluencyP1 = ({
                   showUnderlines={showExtras}
                   onWordHover={handleWordHover}
                   lang={lang}
+                  isMobile={isMobile}
                 />
 
                 <LanguageHint
@@ -779,7 +788,13 @@ const FluencyP1 = ({
               </div>
             </div>
 
-            <div style={{ textAlign: "center" }}>
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom:
+                  isMobile && isSpeaking && !showResult ? "15px" : "0",
+              }}
+            >
               {!isSpeaking ? (
                 <img
                   src={speakButton}
@@ -798,7 +813,10 @@ const FluencyP1 = ({
                   <img
                     src={graphImg}
                     alt="graph"
-                    style={{ width: "220px", marginBottom: "40px" }}
+                    style={{
+                      width: isMobile ? "160px" : "220px",
+                      marginBottom: isMobile ? "10px" : "40px",
+                    }}
                   />
                   <img
                     src={pauseImg}
@@ -825,7 +843,7 @@ const FluencyP1 = ({
                   style={{
                     width: "50px",
                     position: "absolute",
-                    bottom: "20px",
+                    bottom: isMobile ? "35px" : "20px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     cursor: "pointer",
@@ -854,7 +872,7 @@ const FluencyP1 = ({
                 style={{
                   position: "absolute",
                   bottom: "0px",
-                  left: "10px",
+                  left: isMobile ? "-23px" : "10px",
                   width: isMobile ? "120px" : "250px",
                 }}
               />
@@ -871,9 +889,9 @@ const FluencyP1 = ({
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: isMobile ? "flex-start" : "center",
               alignItems: "center",
-              padding: "10px",
+              padding: isMobile ? "22px 10px 10px" : "10px",
               position: "relative",
               //backgroundColor: "linear-gradient(to bottom, #fff7ef, #ffeede)",
             }}
@@ -883,20 +901,21 @@ const FluencyP1 = ({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginTop: "10px",
+                marginTop: isMobile ? "0" : "10px",
               }}
             >
               <img
                 src={meterImg}
                 alt="meter"
-                style={{ width: "70px", marginRight: "8px" }}
+                style={{ width: isMobile ? "38px" : "70px", marginRight: "8px" }}
               />
               <h2
                 style={{
                   color: "#333f61",
                   fontWeight: "700",
-                  fontSize: "35px",
+                  fontSize: isMobile ? "20px" : "35px",
                   fontFamily: "Quicksand",
+                  margin: isMobile ? "0" : undefined,
                 }}
               >
                 Your Reading Speed
@@ -905,10 +924,11 @@ const FluencyP1 = ({
 
             <div
               style={{
-                marginTop: "10px",
+                marginTop: isMobile ? "30px" : "10px",
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: isMobile ? "row" : "column",
                 alignItems: "center",
+                gap: isMobile ? "10px" : "0",
               }}
             >
               <img
@@ -923,7 +943,8 @@ const FluencyP1 = ({
                 color: "#A66CFF",
                 fontWeight: "700",
                 fontSize: "28px",
-                marginBottom: "10px",
+                marginTop: isMobile ? "0" : undefined,
+                marginBottom: isMobile ? "5px" : "10px",
                 fontFamily: "Quicksand",
               }}
             >
@@ -932,11 +953,13 @@ const FluencyP1 = ({
             <p
               style={{
                 color: "#333f61",
-                fontSize: "24px",
-                margin: "10px 20px",
+                fontSize: isMobile ? "20px" : "24px",
+                margin: isMobile ? "38px 20px 10px" : "10px 20px",
                 fontFamily: "Quicksand",
                 fontStyle: "bold",
                 fontWeight: 600,
+                textAlign: isMobile ? "center" : undefined,
+                lineHeight: isMobile ? "1.4" : undefined,
               }}
             >
               {speed === "Fast"
@@ -956,10 +979,9 @@ const FluencyP1 = ({
                 if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
               }}
               style={{
-                marginTop: "20px",
                 width: "45px",
                 height: "45px",
-                margin: "10px 20px",
+                margin: isMobile ? "20px 5px 5px" : "10px 20px",
                 cursor: "pointer",
               }}
             />
