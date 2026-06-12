@@ -812,6 +812,13 @@ const MemoryChallengeMechanicsContent = ({
       vocabCount={vocabCount}
       wordCount={wordCount}
       handleBack={handleBack}
+      cardContentStyle={{
+        height: { xs: "100%", md: "calc(100vh - 260px)" },
+        maxHeight: {
+          xs: "calc(100dvh - 160px)",
+          md: "calc(100vh - 260px)",
+        },
+      }}
     >
       <div
         style={{
@@ -1061,7 +1068,7 @@ const MemoryChallengeMechanicsContent = ({
                     display: "flex",
                     flexDirection: "column",
                     minHeight: 0,
-                    overflow: "auto",
+                    overflow: isMobile ? "hidden" : "auto",
                   }}
                 >
                   {currentSequence && (

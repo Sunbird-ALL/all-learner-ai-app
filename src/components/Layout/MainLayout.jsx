@@ -1094,11 +1094,19 @@ const MainLayout = (props) => {
                 <CardContent
                   sx={{
                     minHeight: 0,
-                    height: { xs: "100%", md: "calc(100vh - 260px)" },
-                    maxHeight: {
-                      xs: "calc(100dvh - 160px)",
-                      md: "calc(100vh - 260px)",
+                    height: props.cardContentStyle?.height || {
+                      xs: "100%",
+                      md: "auto",
                     },
+                    maxHeight: props.cardContentStyle
+                      ? props.cardContentStyle.maxHeight || {
+                          xs: "calc(100dvh - 160px)",
+                          md: "calc(100vh - 260px)",
+                        }
+                      : {
+                          xs: "calc(100dvh - 160px)",
+                          md: "none",
+                        },
                     display: { xs: "flex", md: "block" },
                     flexDirection: { xs: "column", md: "initial" },
                     justifyContent: { xs: "center", md: "initial" },
@@ -1109,6 +1117,7 @@ const MainLayout = (props) => {
                     pointerEvents: disableScreen ? "none" : "initial",
                     padding: { xs: "16px !important", md: "24px !important" },
                     boxSizing: "border-box",
+                    ...props.cardContentStyle,
                   }}
                 >
                   {showTimer && (
@@ -2267,7 +2276,7 @@ const MainLayout = (props) => {
                       justifyContent: { xs: "center", md: "flex-end" },
                       alignItems: "center",
                       mr: { xs: 0, md: 4 },
-                      mt: { xs: 0, md: 4 },
+                      mt: 0,
                       height: "100%",
                     }}
                   >

@@ -122,6 +122,21 @@ export function MemoryGameCore({
 
   return (
     <div className={`flex-1 flex flex-col justify-start px-1 sm:px-2 min-h-0 ${className}`}>
+      <style>{`
+        @media (min-width: 768px) {
+          .responsive-mem-btn {
+            width: min(80px, 8vh) !important;
+            height: min(80px, 8vh) !important;
+            font-size: min(3rem, 5vh) !important;
+          }
+          .responsive-mem-grid {
+            gap: min(16px, 1.5vh) !important;
+          }
+          .responsive-mem-feedback {
+            min-height: min(90px, 9vh) !important;
+          }
+        }
+      `}</style>
       {showSequence ? (
         /* Sequence Display Phase */
         <div className="text-center">
@@ -197,7 +212,8 @@ export function MemoryGameCore({
     gap-2 sm:gap-4 md:gap-5 lg:gap-6
     justify-items-center
     transition-all duration-300
-  `}
+          responsive-mem-grid
+        `}
   style={{
     // dynamically calculate number of columns based on letters
     gridTemplateColumns: `repeat(${Math.min(
@@ -220,7 +236,6 @@ export function MemoryGameCore({
           ? '48rem' // large
           : '60rem'), // extra large
     margin: '0 auto', // center the grid
-    gap: 'min(16px, 1.5vh)',
   }}
   tabIndex={0}
 >
@@ -232,6 +247,7 @@ export function MemoryGameCore({
     font-bold flex items-center justify-center text-center
     hover:bg-primary hover:text-primary-foreground hover:border-primary
     transition-all duration-200 shadow-md hover:shadow-lg
+      responsive-mem-btn
 
     ${mode === 'preview' 
       ? 'h-9 w-9 text-lg sm:h-12 sm:w-12 sm:text-2xl md:h-14 md:w-14 md:text-3xl lg:h-16 lg:w-16 lg:text-4xl'
@@ -240,12 +256,7 @@ export function MemoryGameCore({
   `}
   style={{
     lineHeight: mode === 'preview' ? '1.2' : '1.1', // visually centers text in smaller buttons
-    ...(mode !== 'preview' ? {
-      width: 'min(80px, 8vh)',
-      height: 'min(80px, 8vh)',
-      fontSize: 'min(3rem, 5vh)',
-    } : {})
-  }}
+    }}
   onClick={() => !disabled && onLetterClick(letter)}
   disabled={userInput.length >= currentSequence.sequence.length || disabled}
 >
@@ -293,10 +304,7 @@ export function MemoryGameCore({
 
       {/* Feedback - Fixed Height Area */}
       <div
-        className="mt-0 sm:mt-1 text-center min-h-[100px] sm:min-h-[110px] flex flex-col items-center justify-center"
-        style={{
-          minHeight: 'min(90px, 9vh)'
-        }}
+        className="mt-0 sm:mt-1 text-center min-h-[100px] sm:min-h-[110px] flex flex-col items-center justify-center responsive-mem-feedback"
       >
         {showFeedback && (
           <>
