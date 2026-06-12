@@ -15,7 +15,7 @@ import { attachSlowLoadToast } from './audioUtils';
 export async function playLetterAudio(letter: string, language: Language): Promise<void> {
   return new Promise((resolve) => {
     let audioManager;
-    
+
     switch (language) {
       case 'en':
         audioManager = englishAudioManager;
@@ -35,11 +35,11 @@ export async function playLetterAudio(letter: string, language: Language): Promi
       default:
         audioManager = englishAudioManager;
     }
-    
+
     const audioUrl = audioManager.getAudioUrl(letter);
     const audio = new Audio(audioUrl);
     attachSlowLoadToast(audio);
-    
+
     audio.onloadeddata = () => {
       audio.play().then(() => {
         audio.onended = () => {
@@ -48,35 +48,35 @@ export async function playLetterAudio(letter: string, language: Language): Promi
       }).catch(() => {
         // Fallback to TTS if audio file doesn't exist
         const utterance = new SpeechSynthesisUtterance(letter);
-        utterance.lang = language === 'te' ? 'te-IN' : 
-                        language === 'kn' ? 'kn-IN' : 
-                        language === 'mr' ? 'mr-IN' : 
+        utterance.lang = language === 'te' ? 'te-IN' :
+                        language === 'kn' ? 'kn-IN' :
+                        language === 'mr' ? 'mr-IN' :
                         language === 'hi' ? 'hi-IN' : 'en-US';
         utterance.rate = 1.0;
         utterance.pitch = 1.0;
-        
+
         utterance.onend = () => {
           resolve();
         };
-        
+
         speechSynthesis.speak(utterance);
       });
     };
-    
+
     audio.onerror = () => {
       // Fallback to TTS if audio file doesn't exist
       const utterance = new SpeechSynthesisUtterance(letter);
-      utterance.lang = language === 'te' ? 'te-IN' : 
-                      language === 'kn' ? 'kn-IN' : 
-                      language === 'mr' ? 'mr-IN' : 
+      utterance.lang = language === 'te' ? 'te-IN' :
+                      language === 'kn' ? 'kn-IN' :
+                      language === 'mr' ? 'mr-IN' :
                       language === 'hi' ? 'hi-IN' : 'en-US';
       utterance.rate = 1.0;
       utterance.pitch = 1.0;
-      
+
       utterance.onend = () => {
         resolve();
       };
-      
+
       speechSynthesis.speak(utterance);
     };
   });
