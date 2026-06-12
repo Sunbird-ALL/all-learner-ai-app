@@ -118,6 +118,7 @@ export async function playLetterAudio(letter: string, language: Language): Promi
       utterance.rate = 1.0;
       utterance.pitch = 1.0;
       utterance.onend = () => resolve();
+      utterance.onerror = () => resolve(); // mobile: speech synthesis blocked → don't hang
       speechSynthesis.speak(utterance);
     });
 
