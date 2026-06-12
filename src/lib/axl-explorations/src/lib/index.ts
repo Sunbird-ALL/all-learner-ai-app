@@ -24,7 +24,7 @@ export { englishAudioManager } from '../utils/englishAudioManager';
 export { teluguAudioManager } from '../utils/teluguAudioManager';
 export { kannadaAudioManager } from '../utils/kannadaAudioManager';
 export { marathiAudioManager } from '../utils/marathiAudioManager';
-export { playLetterAudio } from '../utils/letterAudioUtils';
+export { playLetterAudio, prefetchLetterAudio, prefetchLetterAudioBatch } from '../utils/letterAudioUtils';
 export * from '../utils/fuelCalculation';
 
 // Session management
