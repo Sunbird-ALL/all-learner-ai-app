@@ -433,8 +433,8 @@ export function LetterLauncherGameStoryPreview({
       // Track when audio actually starts playing
       audio.onplay = () => {
         audioStarted = true;
-        // Clear the timeout since audio has started - it will finish naturally
-        clearTimeout(timeout);
+        // Do NOT clear the timeout here — on mobile, audio can start but stall
+        // and onended never fires. The timeout's stall-detection logic handles this.
       };
       
       // Handle loading errors
@@ -1288,6 +1288,10 @@ export function LetterLauncherGameStoryPreview({
           <div 
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center cursor-pointer"
             onClick={() => {
+              // Play a silent audio within this gesture to permanently unlock
+              // the audio context on mobile browsers (iOS Safari, Android Chrome)
+              const silent = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+              silent.play().catch(() => {});
               setNeedsUserInteraction(false);
               setIsWaitingForInteraction(false);
             }}
@@ -1313,6 +1317,8 @@ export function LetterLauncherGameStoryPreview({
                 </p>
                 <Button
                   onClick={() => {
+                    const silent = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+                    silent.play().catch(() => {});
                     setNeedsUserInteraction(false);
                     setIsWaitingForInteraction(false);
                   }}
