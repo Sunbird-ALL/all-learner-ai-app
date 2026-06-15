@@ -614,11 +614,22 @@ const MainLayout = (props) => {
   const calculateVisibleSteps = useMemo(() => {
     if (containerWidth === 0) return 5; // Default to 5 if width not measured yet
 
-    // Step dimensions based on screen size
-    const stepWidth = isMobile ? 28 : isTablet ? 32 : 36; // xs: 28px, sm: 32px, md: 36px, lg: 40px
-    const stepMargin = isMobile ? 4 : isTablet ? 8 : 12; // xs: 0.5 * 8px, sm: 1 * 8px, md: 1.5 * 8px
-    const containerPadding = isMobile ? 16 : isTablet ? 24 : 32; // xs: 8px*2, sm: 12px*2, md: 16px*2
-    const buttonWidth = isMobile ? 40 : isTablet ? 48 : 56; // Button width
+    let stepWidth = 40;
+    let stepMargin = 12;
+    let containerPadding = 32;
+    let buttonWidth = 56;
+
+    if (isMobile) {
+      stepWidth = 28;
+      stepMargin = 4;
+      containerPadding = 16;
+      buttonWidth = 24;
+    } else if (isTablet) {
+      stepWidth = 32;
+      stepMargin = 8;
+      containerPadding = 24;
+      buttonWidth = 48;
+    }
     const buttonGap = isMobile ? 8 : 12; // Gap between button and container
 
     // Account for left and right margins (180px mobile, 200px tablet, 220px desktop)
@@ -642,7 +653,9 @@ const MainLayout = (props) => {
 
     // Be more generous - if we have space, use it!
     // Minimum 5 steps, maximum 25 steps (very wide screens)
-    const calculatedSteps = Math.max(5, Math.min(stepsThatFit, 25));
+    const calculatedSteps = isMobile
+      ? 5
+      : Math.max(5, Math.min(stepsThatFit, 25));
 
     return calculatedSteps;
   }, [containerWidth, isMobile, isTablet]);
@@ -909,17 +922,24 @@ const MainLayout = (props) => {
     backgroundSize: "cover",
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
-    minHeight: "100vh",
-    // height: "100vh",
-    // maxHeight: "100vh",
-    // overflow: "hidden",
+    minHeight: { xs: "100dvh", md: "100vh" },
+    height: { xs: "100dvh", md: "auto" },
+    maxHeight: { xs: "100dvh", md: "none" },
+    overflow: { xs: "hidden", md: "visible" },
     display: "flex",
-    paddingTop: { md: "0px", xs: "20px" },
+    paddingTop: { md: "0px", xs: "60px" },
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: { xs: "flex-start", md: "center" },
     boxSizing: "border-box",
     background: props?.background || levelsImages?.[LEVEL]?.backgroundColor,
     position: "relative",
+    "& > div:first-of-type": {
+      background: {
+        xs: "transparent!important",
+        sm: "rgba(255, 255, 255, 0.2)!important",
+      },
+      backdropFilter: { xs: "none!important", sm: "blur(3px)!important" },
+    },
   };
 
   const steps = props.steps;
@@ -942,6 +962,15 @@ const MainLayout = (props) => {
       : livesData?.lives;
 
   const navigate = useNavigate();
+
+  const fFlowWrapperStyle = {
+    height: isMobile ? "80px" : "150px",
+    width: isMobile ? "80px" : "150px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
   return (
     <Box sx={sectionStyle}>
       <ProfileHeader
@@ -1035,10 +1064,14 @@ const MainLayout = (props) => {
                 sx={{
                   position: "relative",
                   left: { xs: "auto", md: "auto" },
-                  width: { xs: "100%", md: "85vw" },
-                  minHeight: "80vh",
-                  // maxHeight: "calc(100vh - 150px)",
-                  // height: "calc(100vh - 150px)",
+                  width: { xs: "calc(100% - 20px)", md: "85vw" },
+                  mx: { xs: "auto", md: "auto" },
+                  minHeight: { xs: "unset", md: "80vh" },
+                  height: { xs: "calc(100dvh - 80px)", md: "auto" },
+                  maxHeight: {
+                    xs: "calc(100dvh - 80px)",
+                    md: "calc(100vh - 150px)",
+                  },
                   borderRadius: "20px",
                   display: "flex",
                   flexDirection: "column",
@@ -1048,8 +1081,9 @@ const MainLayout = (props) => {
                   backgroundSize: "cover",
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
                   backdropFilter: "blur(25px)",
-                  mt: "75px",
-                  // overflow: "hidden",
+                  mt: { xs: "0px", md: "75px" },
+                  mb: { xs: "20px", md: "0px" },
+                  overflow: { sm: "hidden", xs: "hidden" },
                 }}
               >
                 <Box>
@@ -1059,24 +1093,49 @@ const MainLayout = (props) => {
                 </Box>
                 <CardContent
                   sx={{
-                    minHeight: "100%",
-                    // height: "100%",
-                    // maxHeight: "100%",
-                    // overflow: "hidden",
-                    // display: "flex",
-                    // flexDirection: "column",
+                    minHeight: 0,
+                    height: props.cardContentStyle?.height || {
+                      xs: "100%",
+                      md: "auto",
+                    },
+                    maxHeight: props.cardContentStyle
+                      ? props.cardContentStyle.maxHeight || {
+                          xs: "calc(100dvh - 160px)",
+                          md: "calc(100vh - 260px)",
+                        }
+                      : {
+                          xs: "calc(100dvh - 160px)",
+                          md: "none",
+                        },
+                    display: { xs: "flex", md: "block" },
+                    flexDirection: { xs: "column", md: "initial" },
+                    justifyContent: { xs: "center", md: "initial" },
+                    alignItems: { xs: "center", md: "initial" },
+                    flexGrow: 1,
+                    overflowY: "hidden",
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
-                    // padding: "16px !important",
-                    // boxSizing: "border-box",
+                    padding: { xs: "16px !important", md: "24px !important" },
+                    boxSizing: "border-box",
+                    ...props.cardContentStyle,
                   }}
                 >
                   {showTimer && (
-                    <Box sx={{ position: "absolute" }}>
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: { xs: "8px", sm: "16px" },
+                        left: { xs: "8px", sm: "16px" },
+                        zIndex: 10,
+                      }}
+                    >
                       <img
                         src={timer}
                         alt="timer"
-                        style={{ height: "58px", width: "58px" }}
+                        style={{
+                          height: isMobile ? "36px" : "58px",
+                          width: isMobile ? "36px" : "58px",
+                        }}
                       />
                     </Box>
                   )}
@@ -1117,21 +1176,37 @@ const MainLayout = (props) => {
                   startShowCase && (
                     <Box
                       position={"absolute"}
-                      top={20}
-                      left={20}
+                      top={isMobile ? 10 : 20}
+                      left={isMobile ? "initial" : 20}
+                      right={isMobile ? 10 : "initial"}
                       justifyContent={"center"}
+                      sx={{
+                        display: isMobile ? "flex" : "block",
+                        flexDirection: isMobile ? "column" : "initial",
+                        alignItems: isMobile ? "flex-end" : "initial",
+                      }}
                     >
-                      <Box display={"flex"}>
+                      <Box display={"flex"} gap={isMobile ? "3px" : "5px"}>
                         {[
                           ...Array(Math.max(0, redLivesToShow) || 0).keys(),
                         ]?.map((elem) => (
-                          <Diamond />
+                          <Diamond
+                            key={`red-live-${elem}`}
+                            height={isMobile ? "25px" : "50px"}
+                            width={isMobile ? "25px" : "50px"}
+                            style={{ flexShrink: 0 }}
+                          />
                         ))}
 
                         {[
                           ...Array(Math.max(0, blackLivesToShow) || 0).keys(),
                         ]?.map((elem) => (
-                          <HeartBlack />
+                          <HeartBlack
+                            key={`black-live-${elem}`}
+                            height={isMobile ? "25px" : "50px"}
+                            width={isMobile ? "25px" : "50px"}
+                            style={{ flexShrink: 0 }}
+                          />
                         ))}
                       </Box>
                       {redLivesToShow != null && (
@@ -1140,8 +1215,8 @@ const MainLayout = (props) => {
                             marginLeft: "5px",
                             color: "#000000",
                             fontWeight: 700,
-                            fontSize: "24px",
-                            lineHeight: "30px",
+                            fontSize: isMobile ? "14px" : "24px",
+                            lineHeight: isMobile ? "18px" : "30px",
                             fontFamily: "Quicksand",
                           }}
                         >
@@ -1150,13 +1225,22 @@ const MainLayout = (props) => {
                       )}
                     </Box>
                   )}
-                <Box sx={{ height: "110px", position: "relative" }}>
+                <Box
+                  sx={{
+                    height: { xs: "80px", sm: "110px" },
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    flexShrink: 0,
+                  }}
+                >
                   <Box
                     sx={{
                       position: "absolute",
-                      left: 0,
-                      bottom: "-2px",
+                      left: { xs: "-10px", sm: 0 },
+                      bottom: { xs: "2px", sm: "-2px" },
                       zIndex: "9999",
+                      pointerEvents: "none",
                     }}
                   >
                     <footer>
@@ -1174,29 +1258,29 @@ const MainLayout = (props) => {
                       {tFlow !== "true" &&
                         (milestoneLevel === "B" && isF3FlowActive ? (
                           // F3 Flow - Show F3 milestone image
-                          <div style={{ height: "150px", width: "150px" }}>
+                          <div style={fFlowWrapperStyle}>
                             <img
                               src={F3Image}
                               alt="F3"
-                              height={isMobile ? "130px" : "200px"}
+                              height={isMobile ? "75px" : "200px"}
                             />
                           </div>
                         ) : milestoneLevel === "B" && isF2FlowActive ? (
                           // F2 Flow - Show F2 milestone image
-                          <div style={{ height: "150px", width: "150px" }}>
+                          <div style={fFlowWrapperStyle}>
                             <img
                               src={F2Image}
                               alt="F2"
-                              height={isMobile ? "130px" : "200px"}
+                              height={isMobile ? "75px" : "200px"}
                             />
                           </div>
                         ) : milestoneLevel === "B" && isF1FlowActive ? (
                           // F1 Flow - Show F1 milestone image
-                          <div style={{ height: "150px", width: "150px" }}>
+                          <div style={fFlowWrapperStyle}>
                             <img
                               src={F1Image}
                               alt="F1"
-                              height={isMobile ? "130px" : "200px"}
+                              height={isMobile ? "75px" : "200px"}
                             />
                           </div>
                         ) : rFlow === "true" && milestoneLevel === "B" ? (
@@ -1240,6 +1324,7 @@ const MainLayout = (props) => {
                     sx={{
                       borderBottom: "1.5px solid rgba(51, 63, 97, 0.15)",
                       width: "100%",
+                      display: isMobile ? "none" : "block",
                     }}
                   ></Box>
                   {/* Show displayPracticeSteps progress bar - hide when flowNames progress bar is showing */}
@@ -1262,9 +1347,13 @@ const MainLayout = (props) => {
                             : "right",
                           alignItems: "center",
                           width: "100%",
-                          height: "100%",
-                          position: "relative",
+                          height: { xs: "55px", sm: "100%" },
+                          position: { xs: "absolute", sm: "relative" },
+                          bottom: { xs: "10px", sm: "auto" },
+                          left: 0,
+                          right: 0,
                           zIndex: 10001,
+                          pointerEvents: "none",
                         }}
                       >
                         {/* Show progress bar - use F2 flow steps when F2 is active, F1 flow steps when F1 is active, otherwise use regular steps */}
@@ -1277,23 +1366,25 @@ const MainLayout = (props) => {
                               justifyContent: "center",
                               alignItems: "center",
                               width: {
-                                xs: "calc(100% - 180px - 180px)",
+                                xs: "calc(100% - 16px)",
                                 sm: "calc(100% - 200px - 200px)",
                                 md: "calc(100% - 220px - 220px)",
                               },
                               gap: { xs: 1, sm: 2 },
                               marginLeft: {
-                                xs: "180px",
+                                xs: "8px",
                                 sm: "200px",
                                 md: "220px",
                               },
                               marginRight: {
-                                xs: "180px",
+                                xs: "8px",
                                 sm: "200px",
                                 md: "220px",
                               },
                               position: "relative",
+                              left: { xs: "20px", sm: "auto" },
                               zIndex: 10000,
+                              pointerEvents: "auto",
                             }}
                           >
                             {/* Previous Button */}
@@ -1302,9 +1393,9 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarPrev}
                                 disabled={!canGoPrev}
                                 sx={{
-                                  width: { xs: "32px", sm: "40px", md: "48px" },
+                                  width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
-                                    xs: "32px",
+                                    xs: "24px",
                                     sm: "40px",
                                     md: "48px",
                                   },
@@ -1322,7 +1413,7 @@ const MainLayout = (props) => {
                                 <ChevronLeft
                                   sx={{
                                     fontSize: {
-                                      xs: "20px",
+                                      xs: "14px",
                                       sm: "24px",
                                       md: "28px",
                                     },
@@ -1348,11 +1439,11 @@ const MainLayout = (props) => {
                                   md: "4px 16px",
                                 },
                                 minWidth: {
-                                  xs: "200px",
+                                  xs: "auto",
                                   sm: "280px",
                                   md: "320px",
                                 },
-                                flex: 1,
+                                flex: { xs: "none", sm: 1 },
                                 maxWidth: "100%",
                               }}
                             >
@@ -1370,7 +1461,7 @@ const MainLayout = (props) => {
                                         lg: "40px",
                                       },
                                       height: {
-                                        xs: "28px",
+                                        xs: "22px",
                                         sm: "32px",
                                         md: "36px",
                                         lg: "40px",
@@ -1393,7 +1484,13 @@ const MainLayout = (props) => {
                                     }}
                                   >
                                     {currentPracticeStep > actualIndex ? (
-                                      <GreenTick />
+                                      <GreenTick
+                                        style={{
+                                          transform: isMobile
+                                            ? "scale(0.8)"
+                                            : "none",
+                                        }}
+                                      />
                                     ) : (
                                       <span
                                         style={{
@@ -1404,7 +1501,7 @@ const MainLayout = (props) => {
                                           fontWeight: 600,
                                           lineHeight: "20px",
                                           fontSize: isMobile
-                                            ? "11px"
+                                            ? "9px"
                                             : isTablet
                                             ? "12px"
                                             : "14px",
@@ -1431,9 +1528,10 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarNext}
                                 disabled={!canGoNext}
                                 sx={{
-                                  width: { xs: "32px", sm: "40px", md: "48px" },
+                                  display: { xs: "none", sm: "inline-flex" },
+                                  width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
-                                    xs: "32px",
+                                    xs: "24px",
                                     sm: "40px",
                                     md: "48px",
                                   },
@@ -1451,7 +1549,7 @@ const MainLayout = (props) => {
                                 <ChevronRight
                                   sx={{
                                     fontSize: {
-                                      xs: "20px",
+                                      xs: "14px",
                                       sm: "24px",
                                       md: "28px",
                                     },
@@ -1474,6 +1572,7 @@ const MainLayout = (props) => {
                                 display: "flex",
                                 justifyContent: "center",
                                 width: "100%",
+                                pointerEvents: "auto",
                               }}
                             >
                               <Box
@@ -1662,18 +1761,49 @@ const MainLayout = (props) => {
             !allCompleted && (
               <Card
                 sx={{
-                  width: "85vw",
-                  minHeight: "80vh",
+                  position: { xs: "absolute", md: "relative" },
+                  top: { xs: "85px", md: "auto" },
+                  bottom: { xs: "10px", md: "auto" },
+                  left: { xs: "10px", md: "auto" },
+                  right: { xs: "10px", md: "auto" },
+                  width: { xs: "auto", md: "85vw" },
+                  mx: { xs: "auto", md: "auto" },
+                  minHeight: { xs: "unset", md: "80vh" },
+                  height: { xs: "auto", md: "auto" },
                   borderRadius: "20px",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  backgroundImage: `url(${cardBackground || textureImage})`,
+                  backgroundImage: {
+                    xs:
+                      isShowCase && !startShowCase && !gameOverData
+                        ? "none"
+                        : `url(${cardBackground || textureImage})`,
+                    md: `url(${cardBackground || textureImage})`,
+                  },
                   backgroundSize: "contain",
                   backgroundRepeat: "round",
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
                   backdropFilter: "blur(25px)",
-                  mt: "50px",
+                  mt: { xs: "0px", md: "50px" },
+                  mb: { xs: "0px", md: "0px" },
+                  "& .MuiCardContent-root": {
+                    width: { xs: "100%", md: "82vw" },
+                    minHeight: { xs: "unset", md: "100%" },
+                    boxSizing: "border-box",
+                    padding: { xs: "16px", md: "24px" },
+                  },
+                  "& img[alt='gameLost']": {
+                    height: { xs: "180px!important", md: "250px!important" },
+                  },
+                  "& img[alt='Words Learnt']": {
+                    width: { xs: "70px!important", md: "100px!important" },
+                    height: { xs: "70px!important", md: "100px!important" },
+                  },
+                  "& img[alt='Star']": {
+                    width: { xs: "50px!important", md: "100px!important" },
+                    height: { xs: "50px!important", md: "100px!important" },
+                  },
                 }}
               >
                 <Box>
@@ -1681,14 +1811,37 @@ const MainLayout = (props) => {
                 </Box>
                 <CardContent
                   sx={{
-                    width: "82vw",
-                    minHeight: "100%",
+                    width: { xs: "100%", md: "82vw" },
+                    minHeight: { xs: "unset", md: "100%" },
+                    flex: { xs: 1, md: "unset" },
+                    overflowY: { xs: "auto", md: "unset" },
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
+                    display: { xs: "flex", md: "block" },
+                    flexDirection: { xs: "column", md: "unset" },
+                    "&::-webkit-scrollbar": {
+                      width: "4px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "rgba(0,0,0,0.15)",
+                      borderRadius: "4px",
+                    },
                   }}
                 >
                   {isShowCase && !startShowCase && !gameOverData && (
-                    <>
+                    <Box
+                      sx={{
+                        display: { xs: "flex", md: "block" },
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexGrow: { xs: 1, md: "unset" },
+                        width: "100%",
+                      }}
+                    >
                       <Typography
                         className="successHeader"
                         sx={{
@@ -1717,7 +1870,7 @@ const MainLayout = (props) => {
                           {"Ready for Challenge?"}
                         </span>
                       </Typography>
-                    </>
+                    </Box>
                   )}
                   {gameOverData && (
                     <>
@@ -2103,20 +2256,28 @@ const MainLayout = (props) => {
                     </>
                   )}
                 </CardContent>
-                <Box sx={{ height: "120px", position: "relative" }}>
+                <Box
+                  sx={{
+                    height: { xs: "80px", md: "120px" },
+                    position: "relative",
+                  }}
+                >
                   <Box
                     sx={{
                       borderBottom: "1.5px solid rgba(51, 63, 97, 0.15)",
                       width: "100%",
+                      display: isMobile ? "none" : "block",
                     }}
                   ></Box>
                   {/* Progress bar removed from second Card - using the one in first Card instead */}
                   <Box
                     sx={{
                       display: "flex",
-                      justifyContent: "right",
-                      mr: 4,
-                      mt: 4,
+                      justifyContent: { xs: "center", md: "flex-end" },
+                      alignItems: "center",
+                      mr: { xs: 0, md: 4 },
+                      mt: 0,
+                      height: "100%",
                     }}
                   >
                     <Box
@@ -2255,6 +2416,7 @@ MainLayout.propTypes = {
   storedData: PropTypes.array,
   resetStoredData: PropTypes.func,
   pageName: PropTypes.string,
+  cardContentStyle: PropTypes.object,
   gameOverData: PropTypes.shape({
     userWon: PropTypes.bool,
   }),

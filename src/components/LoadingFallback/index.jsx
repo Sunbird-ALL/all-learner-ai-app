@@ -6,6 +6,7 @@ import React from "react";
  */
 const LoadingFallback = () => (
   <div
+    data-testid="loading-wrapper"
     style={{
       display: "flex",
       flexDirection: "column",
@@ -16,6 +17,7 @@ const LoadingFallback = () => (
     }}
   >
     <div
+      data-testid="loading-spinner"
       style={{
         width: "48px",
         height: "48px",

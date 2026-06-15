@@ -22,6 +22,8 @@ import {
   sessionTelemetryManager,
   SpaceBackground,
   playLetterAudio,
+  prefetchLetterAudio,
+  prefetchLetterAudioBatch,
   FuelProgressBar,
   getFuelRequirement,
   getMissionDestination,
@@ -477,6 +479,7 @@ const LetterLauncherMechanicsContent = ({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(100);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [initialAudioReady, setInitialAudioReady] = useState(false);
   const isTimerRunningRef = useRef(false); // mirrors isTimerRunning for safe reads inside setTimeout closures
   const [showLetter, setShowLetter] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -669,6 +672,51 @@ const LetterLauncherMechanicsContent = ({
     level, // Added level here to ensure it resets when level changes
   ]);
 
+  const PRIORITY_PREFETCH_COUNT = 3;
+  const PRIORITY_PREFETCH_TIMEOUT_MS = 8000;
+  const prefetchQuestionsAudio = useCallback(
+    async (questionList) => {
+      if (!Array.isArray(questionList) || questionList.length === 0) {
+        setInitialAudioReady(true);
+        return;
+      }
+      const letters = questionList.map((q) => q?.audioLetter).filter(Boolean);
+      if (letters.length === 0) {
+        setInitialAudioReady(true);
+        return;
+      }
+
+      // Hold the game until the priority questions' audio is ready.
+      setInitialAudioReady(false);
+
+      const priorityLetters = letters.slice(0, PRIORITY_PREFETCH_COUNT);
+      const backgroundLetters = letters.slice(PRIORITY_PREFETCH_COUNT);
+
+      await prefetchLetterAudioBatch(priorityLetters, initialLanguage, {
+        timeoutMs: PRIORITY_PREFETCH_TIMEOUT_MS,
+      });
+
+      setInitialAudioReady(true);
+
+      if (backgroundLetters.length > 0) {
+        prefetchLetterAudioBatch(backgroundLetters, initialLanguage);
+      }
+    },
+    [initialLanguage]
+  );
+
+  useEffect(() => {
+    if (!questions || questions.length === 0) return;
+    const next = questions[currentQuestionIndex + 1];
+    const nextNext = questions[currentQuestionIndex + 2];
+    if (next?.audioLetter) {
+      prefetchLetterAudio(next.audioLetter, initialLanguage);
+    }
+    if (nextNext?.audioLetter) {
+      prefetchLetterAudio(nextNext.audioLetter, initialLanguage);
+    }
+  }, [questions, currentQuestionIndex, initialLanguage]);
+
   // FIX: This single effect now safely manages question generation and setup
   useEffect(() => {
     const initializeGameSession = async () => {
@@ -690,6 +738,7 @@ const LetterLauncherMechanicsContent = ({
 
           setCurrentQuestionIndex(0); // FIX: Ensure explicit reset on config change
           setQuestions(generatedQuestions);
+          prefetchQuestionsAudio(generatedQuestions);
         }
 
         // Initialize level start time and reset question summaries (always do this)
@@ -752,6 +801,10 @@ const LetterLauncherMechanicsContent = ({
 
     // For Apply steps, wait for start screen to be dismissed
     if (effectiveIsShowCase && !effectiveStartShowCase) {
+      return;
+    }
+
+    if (!initialAudioReady) {
       return;
     }
 
@@ -869,6 +922,7 @@ const LetterLauncherMechanicsContent = ({
     effectiveIsShowCase,
     effectiveStartShowCase,
     initialLanguage,
+    initialAudioReady,
   ]);
 
   // Track when currentQuestion changes
@@ -892,6 +946,7 @@ const LetterLauncherMechanicsContent = ({
       effectiveStartShowCase &&
       sessionInitialized &&
       questions.length > 0 &&
+      initialAudioReady &&
       !isGameComplete &&
       !isTimerRunning
     ) {
@@ -904,6 +959,7 @@ const LetterLauncherMechanicsContent = ({
     effectiveStartShowCase,
     sessionInitialized,
     questions.length,
+    initialAudioReady,
     isGameComplete,
   ]);
 
@@ -1677,6 +1733,7 @@ const LetterLauncherMechanicsContent = ({
     // Don't reset preview states on retry - preview should only show once
     const newQuestions = generateQuestions();
     setQuestions(newQuestions);
+    prefetchQuestionsAudio(newQuestions);
 
     // Start new telemetry subsession for retry (matches LetterGame pattern)
     const startNewSubSession = async () => {
@@ -1870,6 +1927,7 @@ const LetterLauncherMechanicsContent = ({
                 overflow: "hidden",
                 display: "flex",
                 flexDirection: "column",
+                borderRadius: "20px",
               }}
             >
               <div
@@ -2005,6 +2063,7 @@ const LetterLauncherMechanicsContent = ({
           setStartShowCase={effectiveSetStartShowCase}
         >
           <div
+            className="letter-launcher-screen-wrapper"
             style={{
               height: "100%",
               maxHeight: "100vh",
@@ -2067,6 +2126,7 @@ const LetterLauncherMechanicsContent = ({
           style={{ height: "100%", maxHeight: "100vh", overflow: "auto" }}
         >
           <div
+            className="letter-launcher-screen-wrapper"
             style={{
               height: "100%",
               maxHeight: "100vh",
@@ -2128,6 +2188,7 @@ const LetterLauncherMechanicsContent = ({
                     setIsTimerRunning(false);
                     const newQuestions = generateQuestions(nextLevel);
                     setQuestions(newQuestions);
+                    prefetchQuestionsAudio(newQuestions);
 
                     // Start new telemetry subsession for next level (matches LetterGame pattern)
                     const startNextLevelSubSession = async () => {
@@ -2335,9 +2396,9 @@ const LetterLauncherMechanicsContent = ({
           style={{ height: "100%", minHeight: 0 }}
         >
           {/* Header */}
-          <div className="relative flex flex-row items-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
+          <div className="letter-launcher-header-wrapper relative flex flex-row items-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
             <div className="absolute left-1/2 transform -translate-x-1/2 text-center w-full">
-              <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
+              <h1 className="letter-launcher-header text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
                 Letter Launcher
               </h1>
             </div>
@@ -2374,25 +2435,37 @@ const LetterLauncherMechanicsContent = ({
               >
                 <LanguageProvider initialLanguage={initialLanguage}>
                   <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
-                    {currentQuestion && (
-                      <LetterLauncherGameCore
-                        key={`question-${currentQuestionIndex}`}
-                        currentQuestion={{
-                          ...currentQuestion,
-                          displayedLetter: showLetter
-                            ? currentQuestion.displayedLetter
-                            : "",
-                        }}
-                        mode="game"
-                        selectedLanguage={initialLanguage}
-                        showFeedback={showFeedback}
-                        isCorrect={isCorrect}
-                        selectedAnswer={selectedAnswer}
-                        fuelEarned={fuelEarned}
-                        disabled={!showLetter || isPlayingAudio}
-                        onAnswerSelect={handleAnswerSelect}
-                        onContinue={handleContinue}
-                      />
+                    {!initialAudioReady ? (
+                      <div className="flex-1 flex flex-col items-center justify-center text-center text-white gap-3">
+                        <div
+                          className="h-10 w-10 rounded-full border-4 border-white/30 border-t-white animate-spin"
+                          aria-hidden="true"
+                        />
+                        <p className="text-sm sm:text-base font-semibold drop-shadow-lg">
+                          Preparing audio…
+                        </p>
+                      </div>
+                    ) : (
+                      currentQuestion && (
+                        <LetterLauncherGameCore
+                          key={`question-${currentQuestionIndex}`}
+                          currentQuestion={{
+                            ...currentQuestion,
+                            displayedLetter: showLetter
+                              ? currentQuestion.displayedLetter
+                              : "",
+                          }}
+                          mode="game"
+                          selectedLanguage={initialLanguage}
+                          showFeedback={showFeedback}
+                          isCorrect={isCorrect}
+                          selectedAnswer={selectedAnswer}
+                          fuelEarned={fuelEarned}
+                          disabled={!showLetter || isPlayingAudio}
+                          onAnswerSelect={handleAnswerSelect}
+                          onContinue={handleContinue}
+                        />
+                      )
                     )}
                   </AudioLanguageProvider>
                 </LanguageProvider>

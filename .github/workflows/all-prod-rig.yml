@@ -36,6 +36,11 @@ jobs:
       - name: Run Husky Install
         run: npm run prepare
 
+      - name: Run Tests
+        run: npm test -- --watchAll=false
+        env:
+          CI: true
+
       - name: Build and Package Application
         env:
           SKIP_PREFLIGHT_CHECK: ${{ vars.SKIP_PREFLIGHT_CHECK }}

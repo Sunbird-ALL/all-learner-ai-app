@@ -77,7 +77,7 @@ const AserFlow = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => {},
+  playTeacherAudio = () => { },
   callUpdateLearner,
   // disableScreen,
   isDemo,
@@ -142,6 +142,16 @@ const AserFlow = ({
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   // In demo mode, only show 1 question; otherwise show 10
   const TOTAL_ITEMS = isDemo ? 1 : 10;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const completionPercentage = Math.min(
     (Math.min(currentItemNumber + 1, TOTAL_ITEMS) / TOTAL_ITEMS) * 100,
@@ -539,12 +549,12 @@ const AserFlow = ({
         <Box
           sx={{
             position: "absolute",
-            top: 10,
-            right: 20,
+            top: isMobile ? 5 : 10,
+            right: isMobile ? 10 : 20,
             display: hideProgress ? "none" : "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: "120px",
+            width: isMobile ? "90px" : "120px",
             zIndex: 11000,
             opacity: hideContentDuringDemo ? 0 : 1,
             visibility: hideContentDuringDemo ? "hidden" : "visible",
@@ -674,31 +684,47 @@ const AserFlow = ({
           style={{
             position: "relative",
             width: "100%",
-            height: "350px",
+            height: isMobile ? "270px" : "350px",
             //background: "#fff",
             borderRadius: "20px",
             //boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
-            overflow: "hidden",
+            overflow: "visible",
             opacity: hideContentDuringDemo ? 0 : 1,
             visibility: hideContentDuringDemo ? "hidden" : "visible",
             transition: "opacity 0.3s ease",
           }}
         >
           {questionLetters?.map((char, index) => {
-            const positions = [
-              { top: "20%", left: "20%" },
-              { top: "70%", left: "15%" },
-              { top: "48%", left: "30%" },
-              { top: "48%", left: "53%" },
-              { top: "18%", left: "62%" },
-              { top: "52%", left: "73%" },
-              { top: "20%", left: "80%" },
-              { top: "73%", left: "85%" },
-              { top: "20%", left: "40%" },
-              { top: "75%", left: "43%" },
-              { top: "79%", left: "61%" },
-              { top: "83%", left: "30%" },
-            ];
+            const bubbleSize = isMobile ? "60px" : "100px";
+            const positions = isMobile
+              ? [
+                { top: "18%", left: "16%" },  // 0
+                { top: "71%", left: "14%" },  // 1
+                { top: "46%", left: "27%" },  // 2
+                { top: "48%", left: "54%" },  // 3
+                { top: "18%", left: "62%" },  // 4
+                { top: "47%", left: "78%" },  // 5
+                { top: "23%", left: "84%" },  // 6
+                { top: "72%", left: "82%" },  // 7
+                { top: "24%", left: "39%" },  // 8
+                { top: "72%", left: "47%" },  // 9
+                { top: "89%", left: "64%" },  // 10
+                { top: "89%", left: "30%" },  // 11
+              ]
+              : [
+                { top: "20%", left: "20%" },
+                { top: "70%", left: "15%" },
+                { top: "48%", left: "30%" },
+                { top: "48%", left: "53%" },
+                { top: "18%", left: "62%" },
+                { top: "52%", left: "73%" },
+                { top: "20%", left: "80%" },
+                { top: "73%", left: "85%" },
+                { top: "20%", left: "40%" },
+                { top: "75%", left: "43%" },
+                { top: "79%", left: "61%" },
+                { top: "83%", left: "30%" },
+              ];
 
             const pos = positions[index % positions.length];
 
@@ -712,7 +738,7 @@ const AserFlow = ({
                 }}
                 style={{
                   position: "absolute",
-                  top: pos.top,
+                  top: isMobile ? `calc(${pos.top} - 50px)` : pos.top,
                   left: pos.left,
                   transform: "translate(-50%, -50%)",
                   cursor: disableBubbles ? "not-allowed" : "pointer",
@@ -734,18 +760,23 @@ const AserFlow = ({
                     src={bubbleImg}
                     alt="bubble"
                     style={{
-                      width: "100px",
-                      height: "100px",
+                      aspectRatio: "1/1",
+                      objectFit: "contain",
+                      minHeight: bubbleSize,
+                      minWidth: bubbleSize,
+                      borderRadius: "50%",
+                      height: bubbleSize,
+                      width: bubbleSize,
                       filter: ansSelectionStatus.some(
                         (item) => item.text === char && item.status === true
                       )
                         ? "drop-shadow(0 0 10px #08a169ff)"
                         : ansSelectionStatus.some(
-                            (item) =>
-                              item.text === char && item.status === false
-                          )
-                        ? "drop-shadow(0 0 10px #d31818ff)"
-                        : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
+                          (item) =>
+                            item.text === char && item.status === false
+                        )
+                          ? "drop-shadow(0 0 10px #d31818ff)"
+                          : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
                       transition: "filter 0.3s ease",
                     }}
                   />
@@ -772,7 +803,7 @@ const AserFlow = ({
                       top: "50%",
                       left: "50%",
                       transform: "translate(-50%, -50%)",
-                      fontSize: "68px",
+                      fontSize: isMobile ? "38px" : "68px",
                       fontWeight: "800",
                       fontFamily: "Quicksand",
                       color: "#333F61",
@@ -818,13 +849,14 @@ const AserFlow = ({
             opacity: hideContentDuringDemo ? 0 : 1,
             visibility: hideContentDuringDemo ? "hidden" : "visible",
             transition: "opacity 0.3s ease",
+            position: isMobile ? "relative" : "static",
           }}
         >
           <Box
             sx={{
               position: "relative",
-              width: "90px",
-              height: "90px",
+              width: isMobile ? "70px" : "90px",
+              height: isMobile ? "70px" : "90px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -842,8 +874,8 @@ const AserFlow = ({
             <Box
               sx={{
                 position: "absolute",
-                width: isAudioPlaying ? "0px" : "90px",
-                height: isAudioPlaying ? "0px" : "90px",
+                width: isAudioPlaying ? "0px" : (isMobile ? "70px" : "90px"),
+                height: isAudioPlaying ? "0px" : (isMobile ? "70px" : "90px"),
                 backgroundColor: "#A856FF",
                 borderRadius: "50%",
                 animation: isAudioPlaying
@@ -886,48 +918,54 @@ const AserFlow = ({
             });
             return shouldShowNext;
           })() && (
-            <img
-              src={nextImg}
-              alt="next"
-              role="button"
-              tabIndex={0}
-              style={{
-                width: "50px",
-                cursor: "pointer",
-                marginLeft: "10px",
-                opacity: hideContentDuringDemo ? 0 : 1,
-                visibility: hideContentDuringDemo ? "hidden" : "visible",
-                transition: "opacity 0.3s ease",
-                zIndex: 10001,
-                position: "relative",
-              }}
-              onClick={() => {
-                console.log("AserFlow - Next button clicked after completion");
-                // Handle navigation when next button is clicked after completion
-                handleNext?.();
-                if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                  navigate("/");
-                } else {
-                  navigate("/discover-start");
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
-              }}
-            />
-          )}
+              <img
+                src={nextImg}
+                alt="next"
+                role="button"
+                tabIndex={0}
+                style={{
+                  width: "50px",
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                  opacity: hideContentDuringDemo ? 0 : 1,
+                  visibility: hideContentDuringDemo ? "hidden" : "visible",
+                  transition: "opacity 0.3s ease",
+                  zIndex: 10001,
+                  position: "relative",
+                }}
+                onClick={() => {
+                  console.log("AserFlow - Next button clicked after completion");
+                  // Handle navigation when next button is clicked after completion
+                  handleNext?.();
+                  if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                    navigate("/");
+                  } else {
+                    navigate("/discover-start");
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+                }}
+              />
+            )}
           <img
             src={listenBearGif}
             alt="bear"
             style={{
               position: "absolute",
               zIndex: "9999",
-              bottom: "40px",
-              left: "-20px",
-              width: "230px",
+              objectFit: "contain",
+              width: isMobile ? "120px" : "230px",
+              maxHeight: "none",
+              bottom: isMobile ? "-15px" : "40px",
+              maxWidth: "none",
+              height: isMobile ? "110px" : "auto",
+              left: isMobile ? "auto" : "-20px",
+              right: isMobile ? "calc(50% + 45px)" : "auto",
               opacity: hideContentDuringDemo ? 0 : 1,
               visibility: hideContentDuringDemo ? "hidden" : "visible",
               transition: "opacity 0.3s ease",
+              pointerEvents: "none",
             }}
           />
         </div>

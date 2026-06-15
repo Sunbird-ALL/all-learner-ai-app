@@ -35,7 +35,7 @@ let audioStopped = false;
 /**
  * Helper function to show the "No Internet Connection" toast with icon
  */
-const showSlowLoadToast = () => {
+export const showSlowLoadToast = () => {
   const toastInstance = toast({
     title: React.createElement(
       'div',
