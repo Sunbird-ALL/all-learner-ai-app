@@ -5072,6 +5072,26 @@ const Barakhadi = ({
     width: "45%",
   };
 
+  const modalOverlayBase = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    zIndex: 11000,
+  };
+
+  const closeButtonBase = {
+    position: "absolute",
+    top: "15px",
+    right: "15px",
+    background: "white",
+    border: "none",
+    borderRadius: "50%",
+    cursor: "pointer",
+  };
+
   return (
     <MainLayout
       background={background}
@@ -5115,16 +5135,10 @@ const Barakhadi = ({
         {open && (
           <div
             style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
+              ...modalOverlayBase,
               height: "90vh",
               backgroundColor: "rgba(0,0,0,0.7)",
-              display: "flex",
-              alignItems: "center",
               justifyContent: "center",
-              zIndex: 11000,
             }}
           >
             <div
@@ -5144,16 +5158,10 @@ const Barakhadi = ({
               <button
                 onClick={() => setOpen(false)}
                 style={{
-                  position: "absolute",
-                  top: "15px",
-                  right: "15px",
-                  background: "white",
-                  border: "none",
-                  borderRadius: "50%",
+                  ...closeButtonBase,
                   width: "30px",
                   height: "30px",
                   fontWeight: "bold",
-                  cursor: "pointer",
                   zIndex: 100000,
                 }}
               >
@@ -5205,13 +5213,9 @@ const Barakhadi = ({
         {showFullChart && (
           <div
             style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
+              ...modalOverlayBase,
               height: "85%",
               backgroundColor: "rgba(0,0,0,0.5)",
-              display: "flex",
               justifyContent: "center",
               alignItems: "flex-start",
               zIndex: 10000,
@@ -5244,12 +5248,9 @@ const Barakhadi = ({
                 src={closebuttonImg}
                 alt="Close"
                 style={{
-                  position: "absolute",
-                  top: "15px",
-                  right: "15px",
+                  ...closeButtonBase,
                   width: "32px",
                   height: "32px",
-                  cursor: "pointer",
                   zIndex: 10,
                 }}
                 onClick={() => setShowFullChart(false)}
