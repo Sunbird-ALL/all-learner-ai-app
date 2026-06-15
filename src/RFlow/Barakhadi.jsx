@@ -5145,8 +5145,8 @@ const Barakhadi = ({
                 onClick={() => setOpen(false)}
                 style={{
                   position: "absolute",
-                  top: "-10px",
-                  right: "-10px",
+                  top: "15px",
+                  right: "15px",
                   background: "white",
                   border: "none",
                   borderRadius: "50%",
@@ -5154,6 +5154,7 @@ const Barakhadi = ({
                   height: "30px",
                   fontWeight: "bold",
                   cursor: "pointer",
+                  zIndex: 100000,
                 }}
               >
                 ×
@@ -5215,7 +5216,7 @@ const Barakhadi = ({
               alignItems: "flex-start",
               zIndex: 10000,
               margin: isMobile ? "0px" : "20px",
-              overflow: "auto",
+              overflow: isMobile ? "hidden" : "auto",
             }}
           >
             <div
@@ -5229,6 +5230,14 @@ const Barakhadi = ({
                 margin: "0 auto",
                 position: "relative",
                 minHeight: "auto",
+                ...(isMobile
+                  ? {
+                      display: "flex",
+                      flexDirection: "column",
+                      maxHeight: "100%",
+                      height: "100%",
+                    }
+                  : {}),
               }}
             >
               <img
@@ -5265,6 +5274,12 @@ const Barakhadi = ({
                 style={{
                   width: "100%",
                   overflowX: "auto",
+                  ...(isMobile
+                    ? {
+                        flex: 1,
+                        overflowY: "auto",
+                      }
+                    : {}),
                 }}
               >
                 <table

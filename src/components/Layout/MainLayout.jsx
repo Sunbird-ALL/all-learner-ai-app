@@ -1904,7 +1904,14 @@ const MainLayout = (props) => {
                           <img
                             src={gameWon}
                             alt="gameWon"
-                            style={{ zIndex: 9999, height: 340 }}
+                            style={{
+                              zIndex: 9999,
+                              width: "100%",
+                              maxWidth: "340px",
+                              height: "auto",
+                              maxHeight: "340px",
+                              objectFit: "contain",
+                            }}
                           />
                         ) : (
                           <Stack

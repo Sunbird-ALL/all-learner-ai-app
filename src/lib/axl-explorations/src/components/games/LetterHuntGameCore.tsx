@@ -872,7 +872,7 @@ export function LetterHuntGameCore({
               <div className="animate-fade-in mt-4 sm:mt-0">
                 {isCorrect ? (
                   <div className="text-success">
-                    <p className="text-xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
+                    <p className="text-3xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
                       {selectedLanguage === 'te'
                         ? '🎉 సరైనది!'
                         : selectedLanguage === 'kn'
@@ -886,7 +886,7 @@ export function LetterHuntGameCore({
                   </div>
                 ) : (
                   <div className="text-error">
-                    <p className="text-xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
+                    <p className="text-3xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
                       {(() => {
                         // Use heart break emoji if game uses hearts/lives system
                         const emoji = (maxLives && maxLives > 0) ? '💔' : '😢';

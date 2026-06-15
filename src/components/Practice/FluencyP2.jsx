@@ -484,7 +484,7 @@ const FluencyP2 = ({
           width: "50px",
           height: "50px",
           position: "absolute",
-          top: "20px",
+          top: isMobile ? "30px" : "20px",
           left: "20px",
           cursor: "pointer",
           zIndex: 1000,

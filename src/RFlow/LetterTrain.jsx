@@ -7344,8 +7344,8 @@ const LetterTrain = ({
                 onClick={() => setOpen(false)}
                 style={{
                   position: "absolute",
-                  top: "-10px",
-                  right: "-10px",
+                  top: "15px",
+                  right: "15px",
                   background: "white",
                   border: "none",
                   borderRadius: "50%",
@@ -7353,6 +7353,7 @@ const LetterTrain = ({
                   height: "30px",
                   fontWeight: "bold",
                   cursor: "pointer",
+                  zIndex: 100000,
                 }}
               >
                 ×
