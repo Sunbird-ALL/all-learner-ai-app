@@ -6276,6 +6276,7 @@ const LetterTrain = ({
   const blockStart = Math.floor(itemIndex / 5) * 5;
   const currentLetter = item?.letter || "";
   const [letters, setLetters] = useState([]);
+  const pendingNextRef = useRef(null);
   const COLORS = ["#8BC34A", "#9C27B0", "#E91E63", "#03A9F4", "#FF9800"];
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const [recAudio, setRecAudio] = useState(null);
@@ -6387,6 +6388,11 @@ const LetterTrain = ({
       playlist[currentIndex]?.item?.syllable ||
       "";
 
+    const isNewLetter =
+      currentLetter &&
+      current.type === "UI1" &&
+      !letters.includes(currentLetter);
+
     if (currentLetter && current.type === "UI1") {
       setLetters((prev) =>
         prev.includes(currentLetter) ? prev : [...prev, currentLetter]
@@ -6401,34 +6407,40 @@ const LetterTrain = ({
       hasHandleNext: !!handleNext,
     });
 
-    // Check if we've reached the end of the playlist
-    if (currentIndex < playlist.length - 1) {
-      // Move to next item in playlist
-      setCurrentIndex((i) => i + 1);
-    } else {
-      // Reached end of playlist - complete the LetterTrain step
-      console.log(
-        "LetterTrain completed - all customLetters done. Calling handleNext."
-      );
-      // If handleNext prop is provided (e.g., from F1), use it instead of default navigation
-      if (handleNext && typeof handleNext === "function") {
-        handleNext();
+    const isLastItem = currentIndex >= playlist.length - 1;
+    const nextType = !isLastItem ? playlist[currentIndex + 1]?.type : null;
+
+    const proceed = () => {
+      if (!isLastItem) {
+        setCurrentIndex((i) => i + 1);
+        setRecAudio(null);
+        setIsNextButtonCalled(true);
+        setEnableNext(false);
       } else {
-        // Default R0 behavior
-        setLocalData("rStepZero", 1);
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-          navigate("/");
+        // Reached end of playlist - complete the LetterTrain step
+        console.log(
+          "LetterTrain completed - all customLetters done. Calling handleNext."
+        );
+        // If handleNext prop is provided (e.g., from F1), use it instead of default navigation
+        if (handleNext && typeof handleNext === "function") {
+          handleNext();
         } else {
-          navigate("/discover-start");
+          // Default R0 behavior
+          setLocalData("rStepZero", 1);
+          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            navigate("/");
+          } else {
+            navigate("/discover-start");
+          }
+          console.log("finished r0");
         }
-        console.log("finished r0");
       }
-      // Don't continue - exit here
-      return;
+    };
+    if (isNewLetter && (isLastItem || nextType === "UI2")) {
+      pendingNextRef.current = proceed;
+    } else {
+      proceed();
     }
-    setRecAudio(null);
-    setIsNextButtonCalled(true);
-    setEnableNext(false);
   };
 
   const handlePreviousWord = () => {
@@ -6758,6 +6770,18 @@ const LetterTrain = ({
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: -50, opacity: 0 }}
                       transition={{ duration: 1.0, ease: "easeOut" }}
+                      onAnimationComplete={() => {
+                        // Only the last (newest) letter triggers the pending
+                        // transition so the user sees it land on the train first.
+                        if (
+                          i === letters.length - 1 &&
+                          pendingNextRef.current
+                        ) {
+                          const proceed = pendingNextRef.current;
+                          pendingNextRef.current = null;
+                          proceed();
+                        }
+                      }}
                     >
                       <Box
                         sx={{
