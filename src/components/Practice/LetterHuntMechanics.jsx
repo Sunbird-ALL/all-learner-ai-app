@@ -1269,6 +1269,7 @@ const LetterHuntMechanicsContent = ({
     >
       <div
         style={{
+          width: "100%",
           padding: "0",
           height: "100%",
           maxHeight: "100%",

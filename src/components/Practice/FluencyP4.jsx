@@ -28,6 +28,7 @@ import {
   RetryIcon,
   getLocalData,
   setLocalData,
+  getBrowserLanguage,
 } from "../../utils/constants";
 import { getFontFamily } from "../../utils/fontUtils";
 import { phoneticMatch } from "../../utils/phoneticUtils";
@@ -366,6 +367,7 @@ const FluencyP4 = ({
   const [showFinalResult, setShowFinalResult] = useState(false);
   const [showTimers, setShowTimers] = useState(true);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+  const [transcriptsByIndex, setTranscriptsByIndex] = useState({});
   const [hoveredWord, setHoveredWord] = useState(null);
   const [hoverPosition, setHoverPosition] = useState({ top: 0, left: 0 });
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
@@ -377,8 +379,14 @@ const FluencyP4 = ({
   const lang = getLocalData("lang");
   const [open, setOpen] = useState(false);
   const [parentModalOpen, setParentModalOpen] = useState(false);
+  const { transcript, resetTranscript } = useSpeechRecognition();
+  const transcriptRef = useRef("");
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // < 600px
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  useEffect(() => {
+    transcriptRef.current = transcript;
+  }, [transcript]);
 
   // Get multilingual language code for audio (maps nativeLang to multilingual object keys)
   const getMultilingualLangCode = () => {
@@ -499,13 +507,17 @@ const FluencyP4 = ({
     const responseStartTime = new Date().getTime();
     const base64Data = "";
 
+    // Use the transcript captured at pause-time for this specific sentence.
+    // Falls back to "" for sentences the user never spoke (never paused on).
+    const responseText = transcriptsByIndex[currentSentenceIndex] ?? "";
+
     await callTelemetryApi(
       currentSentence?.sentence,
       sessionId,
       currentStep - 1,
       base64Data,
       responseStartTime,
-      currentSentence?.sentence,
+      responseText,
       apiLevel
     );
   };
@@ -562,10 +574,26 @@ const FluencyP4 = ({
   };
 
   const handleSpeakClick = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({
+      continuous: true,
+      interimResults: true,
+      language: getBrowserLanguage(lang),
+    });
     setIsSpeaking(true);
   };
 
   const handlePauseClick = () => {
+    SpeechRecognition.stopListening();
+
+    // Capture the spoken transcript for this sentence before the index resets.
+    const capturedIndex = currentSentenceIndex;
+    const capturedTranscript = transcriptRef.current;
+    setTranscriptsByIndex((prev) => ({
+      ...prev,
+      [capturedIndex]: capturedTranscript,
+    }));
+
     setShowConfetti(true);
     const audio = new Audio(correctSound);
     audio.play();

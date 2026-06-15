@@ -19,7 +19,7 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { getLocalData } from "../../utils/constants";
+import { getLocalData, getBrowserLanguage } from "../../utils/constants";
 import textureImage from "../../assets/images/textureImage.png";
 import panda from "../../assets/images/panda.svg";
 import { impression, interact, Log } from "../../services/telemetryService";
@@ -78,19 +78,6 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
 
   // Get translations based on current language
   const translations = getTranslations(lang);
-
-  // Map language codes to browser speech recognition format
-  const getBrowserLanguage = (langCode) => {
-    const browserLangMap = {
-      en: "en-US",
-      hi: "hi-IN",
-      te: "te-IN",
-      ka: "kn-IN",
-      kn: "kn-IN",
-      ta: "ta-IN",
-    };
-    return browserLangMap[langCode] || "en-US";
-  };
 
   // Reset all state to initial values
   const resetDiagnostic = () => {
@@ -1474,6 +1461,8 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   position: "relative",
                   mb: { xs: 0.75, sm: 1, md: 1.5 },
                   mt: { xs: 0, sm: 0, md: 0 },
+                  transform: { xs: "translateY(90px)", sm: "none" },
+                  zIndex: 10,
                   maxWidth: { xs: "calc(100% - 80px)", sm: "400px" }, // Reduced width to account for skip button
                   width: "100%",
                   display: "flex",
@@ -1551,8 +1540,6 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   >
                     {currentStep === "mic"
                       ? micStatus === "pending" && !hasListenedToPrompt
-                        ? translations.listenAndRepeat
-                        : micStatus === "pending" && hasListenedToPrompt
                         ? translations.nowRepeat
                         : micStatus === "testing" || isRecording
                         ? translations.keepSpeaking
@@ -1581,7 +1568,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                   justifyContent: "center",
                   mb: { xs: 1, sm: 1, md: 1.5 },
                   mt: { xs: 0, sm: 0 },
+                  transform: { xs: "translateY(90px)", sm: "none" },
                   position: "relative",
+                  zIndex: 10,
                   width: "100%",
                   mx: "auto",
                 }}
@@ -2096,7 +2085,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
                     mx: "auto",
                     maxWidth: { xs: "100%", sm: "400px" },
                     mt: { xs: 0, sm: 0 },
-                    mb: { xs: 0, sm: 0 },
+                    mb: { xs: "20px", sm: 0 },
                     background:
                       micStatus === "failed"
                         ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
@@ -2200,15 +2189,25 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             onClose();
           }}
           sx={{
-            color: "#666666",
+            color: isMobile ? "#444444" : "#666666",
             fontFamily: "Quicksand",
-            fontWeight: 600,
+            fontWeight: isMobile ? 700 : 600,
             textTransform: "none",
-            fontSize: { xs: "12px", sm: "14px", md: "16px" },
-            padding: { xs: "8px 12px", sm: "10px 16px" },
+            fontSize: isMobile ? "16px" : "14px",
+            padding: isMobile ? "8px 18px" : "10px 16px",
+            background: "transparent",
+            border: isMobile ? "1.5px solid rgba(100, 100, 100, 0.22)" : "none",
+            borderRadius: isMobile ? "20px" : "4px",
+            boxShadow: isMobile ? "0 2px 10px rgba(0,0,0,0.08)" : "none",
+            backdropFilter: isMobile ? "blur(6px)" : "none",
+            transition: "all 0.2s ease",
             "&:hover": {
               color: "#6DAF19",
-              background: "rgba(109, 175, 25, 0.1)",
+              background: "rgba(109, 175, 25, 0.08)",
+              borderColor: isMobile ? "rgba(109, 175, 25, 0.4)" : "transparent",
+              boxShadow: isMobile
+                ? "0 4px 14px rgba(109, 175, 25, 0.15)"
+                : "none",
             },
           }}
         >
