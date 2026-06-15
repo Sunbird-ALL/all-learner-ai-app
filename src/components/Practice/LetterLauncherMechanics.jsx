@@ -1945,26 +1945,6 @@ const LetterLauncherMechanicsContent = ({
               >
                 <div
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "12px",
-                    flexShrink: 0,
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      setShowPreview(false);
-                      handleGameBack();
-                    }}
-                    className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/20 text-sm px-3 py-2"
-                  >
-                    <ArrowLeft className="h-3 w-3 mr-1" />
-                    Back
-                  </Button>
-                </div>
-                <div
-                  style={{
                     flex: 1,
                     display: "flex",
                     alignItems: "center",

@@ -7317,9 +7317,9 @@ const LetterTrain = ({
               position: "fixed",
               top: 0,
               left: 0,
-              width: "100%",
+              width: "100vw",
               height: "90vh",
-              backgroundColor: "rgba(0,0,0,0.7)",
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -7329,11 +7329,11 @@ const LetterTrain = ({
             <div
               style={{
                 position: "relative",
-                background: "#000",
-                padding: "10px",
-                borderRadius: "12px",
+                backgroundColor: "#000000",
+                padding: 10,
+                borderRadius: 12,
                 maxWidth: "90%",
-                width: "900px",
+                width: 900,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -7344,15 +7344,16 @@ const LetterTrain = ({
                 onClick={() => setOpen(false)}
                 style={{
                   position: "absolute",
-                  top: "-10px",
-                  right: "-10px",
-                  background: "white",
+                  top: 15,
+                  right: 15,
+                  backgroundColor: "white",
                   border: "none",
                   borderRadius: "50%",
-                  width: "30px",
-                  height: "30px",
+                  width: 30,
+                  height: 30,
                   fontWeight: "bold",
                   cursor: "pointer",
+                  zIndex: 100000,
                 }}
               >
                 ×
@@ -7360,7 +7361,7 @@ const LetterTrain = ({
 
               <SafeYouTubePlayer
                 videoId="LuWttky0kL0"
-                style={{ borderRadius: "8px" }}
+                style={{ borderRadius: 8 }}
               />
             </div>
           </div>

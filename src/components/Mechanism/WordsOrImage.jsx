@@ -81,7 +81,7 @@ const WordsOrImage = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -1224,7 +1224,7 @@ const WordsOrImage = ({
                       component="h4"
                       sx={{
                         fontSize: isMobile
-                          ? "1.4rem"
+                          ? "2.7rem"
                           : isTablet
                             ? "2rem"
                             : "clamp(3rem, 4vw, 5rem)",
@@ -1237,14 +1237,16 @@ const WordsOrImage = ({
                             ? "green"
                             : isTranscriptCorrect === false
                               ? "red" // todo: need to change to red
-                              : "#333F61",
+                            : "#333F61",
                         display: isMobile ? "flex" : undefined,
                         flexDirection: isMobile ? "column" : undefined,
                         alignItems: isMobile ? "center" : undefined,
                         width: isMobile ? "100%" : undefined,
                       }}
                     >
-                      {words}
+                      {words
+                        ? words.charAt(0).toUpperCase() + words.slice(1)
+                        : ""}
                       {/* Show multilingual box only for English */}
                       {isTranscriptCorrect !== null && language === "en" && (
                         <AudioTooltipModal
@@ -1354,10 +1356,10 @@ const WordsOrImage = ({
                     <span
                       style={{
                         position: "absolute",
-                        top: "100%",
+                        top: isMobile ? "calc(100% + 18px)" : "100%",
                         left: "20%",
                         transform: "translateX(-50%)",
-                        fontSize: "40px",
+                        fontSize: isMobile ? "32px" : "40px",
                         pointerEvents: "none",
                         animation: "pointerBounce 1.5s ease-in-out infinite",
                         filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
@@ -1514,7 +1516,7 @@ const WordsOrImage = ({
                           }
                           //setIsPlaying(true);
                         }}
-                      //disabled={!recordedAudioBlob}
+                        //disabled={!recordedAudioBlob}
                       >
                         <img
                           src={listenImg2}
