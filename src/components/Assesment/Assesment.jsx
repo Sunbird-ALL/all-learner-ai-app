@@ -1226,7 +1226,12 @@ export const ProfileHeader = ({
                   {process.env.REACT_APP_IS_APP_IFRAME !== "true" && (
                     <>
                       <Divider />
-                      <ListItemButton onClick={handleLogout}>
+                      <ListItemButton
+                        onClick={() => {
+                          setMenuOpen(false);
+                          handleLogout();
+                        }}
+                      >
                         <LogoutIcon sx={{ mr: 1 }} />
                         <ListItemText
                           primary={ui.ASSESSMENT_LOGOUT}
