@@ -1,5 +1,5 @@
 import MainLayout from "../Layout/MainLayout";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { getLocalData, setLocalData } from "../../utils/constants";
 import {
   AssesmentCompletePlane,
@@ -23,6 +23,8 @@ import { fetchUserPoints } from "../../services/orchestration/orchestrationServi
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 
 const AssesmentEnd = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [shake, setShake] = useState(true);
   const [level, setLevel] = useState("");
   const [previousLevel, setPreviousLevel] = useState("");
@@ -97,8 +99,9 @@ const AssesmentEnd = () => {
     width: "100vw",
     height: "100vh",
     backgroundImage: `url(${desktopLevel5})`,
-    backgroundSize: "contain", // Cover the entire viewport
-    backgroundRepeat: "round", // Center the image
+    backgroundSize: isMobile ? "cover" : "contain", // Cover the entire viewport
+    backgroundRepeat: isMobile ? "no-repeat" : "round", // Center the image
+    backgroundPosition: isMobile ? "center" : "initial",
     position: "relative",
   };
 
@@ -110,8 +113,38 @@ const AssesmentEnd = () => {
       <ProfileHeader
         {...{ level: newLevel, points, wordCount, vocabCount, lang }}
       />
-      <Box sx={{ position: "absolute", top: 5, left: 0 }}>
-        <Box sx={{ position: "relative" }} className="plane">
+      <Box
+        sx={
+          isMobile
+            ? {
+                position: "absolute",
+                top: "30%",
+                left: "50%",
+                transformOrigin: "center center",
+                animation: "mobileFloat 4s ease-in-out infinite",
+                "@keyframes mobileFloat": {
+                  "0%": {
+                    transform:
+                      "translate(-50%, -50%) scale(0.58) translateY(0px) rotate(-1deg)",
+                  },
+                  "50%": {
+                    transform:
+                      "translate(-50%, -50%) scale(0.58) translateY(-12px) rotate(1deg)",
+                  },
+                  "100%": {
+                    transform:
+                      "translate(-50%, -50%) scale(0.58) translateY(0px) rotate(-1deg)",
+                  },
+                },
+              }
+            : {
+                position: "absolute",
+                top: 5,
+                left: 0,
+              }
+        }
+      >
+        <Box sx={{ position: "relative" }} className={isMobile ? "" : "plane"}>
           <AssesmentCompletePlane />
           <Box sx={{ position: "absolute", bottom: 135, left: 120 }}>
             <span
@@ -241,7 +274,7 @@ const AssesmentEnd = () => {
           </Box> */}
         </Box>
         <Box
-          mr={8}
+          mr={isMobile ? 2 : 8}
           sx={{
             display: "flex",
           }}
