@@ -316,8 +316,16 @@ export function LetterLauncherGameStoryPreview({
     typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0
   );
   const isWaitingForInteractionRef = useRef(false);
-  useEffect(() => { needsUserInteractionRef.current = needsUserInteraction; }, [needsUserInteraction]);
-  useEffect(() => { isWaitingForInteractionRef.current = isWaitingForInteraction; }, [isWaitingForInteraction]);
+  // Update both state and ref together so async closures always see the current value
+  // without waiting for a React render cycle (useEffect would be too late).
+  const setNeedsUserInteractionImmediate = (value: boolean) => {
+    needsUserInteractionRef.current = value;
+    setNeedsUserInteraction(value);
+  };
+  const setIsWaitingForInteractionImmediate = (value: boolean) => {
+    isWaitingForInteractionRef.current = value;
+    setIsWaitingForInteraction(value);
+  };
 
   // Play audio file from public folder
   const playAudioFile = async (filename: string): Promise<boolean> => {
@@ -404,9 +412,10 @@ export function LetterLauncherGameStoryPreview({
                                    (error as Error).message?.includes('play() failed');
             
             if (isAutoplayError) {
-              // Set flag to indicate we need user interaction
-              setNeedsUserInteraction(true);
-              setIsWaitingForInteraction(true);
+              // Update ref + state together so the retry loop in playNarration
+              // sees the new value immediately (before React re-renders).
+              setNeedsUserInteractionImmediate(true);
+              setIsWaitingForInteractionImmediate(true);
               
               // Store audio reference for retry after interaction
               // Don't cleanup yet - we'll retry after user interaction
@@ -1324,8 +1333,8 @@ export function LetterLauncherGameStoryPreview({
                   src.start(0);
                 }
               } catch (_) {}
-              setNeedsUserInteraction(false);
-              setIsWaitingForInteraction(false);
+              setNeedsUserInteractionImmediate(false);
+              setIsWaitingForInteractionImmediate(false);
             }}
           >
             <Card
@@ -1362,8 +1371,8 @@ export function LetterLauncherGameStoryPreview({
                         src.start(0);
                       }
                     } catch (_) {}
-                    setNeedsUserInteraction(false);
-                    setIsWaitingForInteraction(false);
+                    setNeedsUserInteractionImmediate(false);
+                    setIsWaitingForInteractionImmediate(false);
                   }}
                   className="mt-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
                 >
