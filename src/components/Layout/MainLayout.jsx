@@ -2292,13 +2292,13 @@ const MainLayout = (props) => {
                         cursor: "pointer",
                         background:
                           "linear-gradient(90deg, rgba(255,144,80,1) 0%, rgba(225,84,4,1) 85%)",
-                        minWidth: "160px",
-                        height: "55px",
+                        minWidth: { xs: "130px", md: "160px" },
+                        height: { xs: "42px", md: "55px" },
                         borderRadius: "10px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        padding: "0px 24px 0px 20px",
+                        padding: { xs: "0px 16px", md: "0px 24px 0px 20px" },
                       }}
                       onClick={() => {
                         if (
@@ -2356,13 +2356,12 @@ const MainLayout = (props) => {
                       }}
                     >
                       <Typography
-                        style={{
+                        sx={{
                           color: "#FFFFFF",
                           fontWeight: 600,
-                          fontSize: "20px",
+                          fontSize: { xs: "13px", md: "16px" },
                           fontFamily: "Quicksand",
                         }}
-                        fontSize={{ md: "14px", xs: "10px" }}
                       >
                         {!gameOverData ? "Start Game ➜" : "Practice ➜"}
                       </Typography>
