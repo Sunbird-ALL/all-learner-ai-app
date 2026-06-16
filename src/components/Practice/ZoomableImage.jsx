@@ -69,8 +69,8 @@ const ZoomableImage = ({
               <Box
                 sx={{
                   position: "absolute",
-                  bottom: 4,
-                  right: 4,
+                  top: 4,
+                  left: 4,
                   zIndex: 10,
                 }}
                 onClick={(e) => e.stopPropagation()}
