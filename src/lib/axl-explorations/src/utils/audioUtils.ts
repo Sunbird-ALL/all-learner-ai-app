@@ -181,9 +181,9 @@ export const getAudioPath = (config: AudioConfig): string => {
   const subGameFolder = subGame ? subGameFolderMap[subGame] || subGame.toLowerCase().replace(/\s+/g, '-') : '';
   
   if (type === 'introduction') {
-    return `/audio/audio-preview/${gameFolder}/introduction/${language}/introduction.wav`;
+    return `${process.env.PUBLIC_URL}/audio/audio-preview/${gameFolder}/introduction/${language}/introduction.wav`;
   } else if (type === 'narration' && step) {
-    return `/audio/audio-preview/${gameFolder}/${subGameFolder}/${language}/narration${step}.wav`;
+    return `${process.env.PUBLIC_URL}/audio/audio-preview/${gameFolder}/${subGameFolder}/${language}/narration${step}.wav`;
   }
   
   throw new Error(`Invalid audio configuration: ${JSON.stringify(config)}`);
@@ -327,7 +327,7 @@ export const playSuccessSound = (language: Language = 'en', options?: PlaybackOp
   const resolvedLanguage = options?.exactLanguage ? language : resolveAudioLanguage(language);
   return new Promise((resolve) => {
     // Use language-specific audio file
-    const audioPath = `/audio/audio-preview/success message/${resolvedLanguage}/success.wav`;
+    const audioPath = `${process.env.PUBLIC_URL}/audio/audio-preview/success message/${resolvedLanguage}/success.wav`;
     const audio = new Audio(audioPath);
     
     // Track this audio instance
@@ -396,7 +396,7 @@ export const playFailureSound = (language: Language = 'en', options?: PlaybackOp
   const resolvedLanguage = options?.exactLanguage ? language : resolveAudioLanguage(language);
   return new Promise((resolve) => {
     // Use language-specific audio file
-    const audioPath = `/audio/audio-preview/failure message/${resolvedLanguage}/failure.wav`;
+    const audioPath = `${process.env.PUBLIC_URL}/audio/audio-preview/failure message/${resolvedLanguage}/failure.wav`;
     const audio = new Audio(audioPath);
     
     // Track this audio instance

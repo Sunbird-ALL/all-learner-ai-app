@@ -334,7 +334,7 @@ export function LetterLauncherGameStoryPreview({
   // Play audio file from public folder
   const playAudioFile = async (filename: string): Promise<boolean> => {
     return new Promise((resolve) => {
-      const audioPath = `/audio/audio-preview/combined-letter-games/letter-launcher-story/${audioLanguage}/${filename}`;
+      const audioPath = `${process.env.PUBLIC_URL}/audio/audio-preview/combined-letter-games/letter-launcher-story/${audioLanguage}/${filename}`;
       const audio = new Audio(audioPath);
       // attach the slow audio toast
       attachSlowLoadToast(audio);

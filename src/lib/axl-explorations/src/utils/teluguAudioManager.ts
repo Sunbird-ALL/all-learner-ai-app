@@ -8,7 +8,7 @@ export interface TeluguAudioConfig {
 
 class TeluguAudioManager {
   private config: TeluguAudioConfig = {
-    audioFolderPath: '/audio/telugu/letter',
+    audioFolderPath: `${process.env.PUBLIC_URL}/audio/telugu/letter`,
     fileExtension: '.wav'
   };
 

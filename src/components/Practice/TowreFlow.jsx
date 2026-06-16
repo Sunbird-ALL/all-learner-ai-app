@@ -636,7 +636,8 @@ const CombinedReportPage = ({
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         borderRadius: "20px",
-        width: "100%",
+        width: isMobile ? "92%" : "90%",
+        boxSizing: "border-box",
         //maxWidth: "1100px",
         //height: "470px",
         position: "relative",
@@ -703,7 +704,7 @@ const CombinedReportPage = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: "50px",
+          gap: isMobile ? "15px" : "50px",
           marginBottom: "20px",
         }}
       >
@@ -948,6 +949,8 @@ const CombinedReportPage = ({
           borderRadius: "24px",
           p: isMobile ? 2 : 4,
           width: isMobile ? "95%" : "90%",
+          maxHeight: isMobile ? "calc(100vh - 40px)" : "calc(100vh - 80px)",
+          boxSizing: "border-box",
           //maxWidth: "1200px",
           boxShadow: "0px 4px 20px rgba(0,0,0,0.1)",
           position: "relative",
@@ -1027,7 +1030,8 @@ const CombinedReportPage = ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: isMobile ? "0px" : "0px",
+        padding: showWordList ? (isMobile ? "20px 0px" : "40px 0px") : "0px",
+        boxSizing: "border-box",
         alignContent: "center",
         overflowX: "hidden",
         overflowY: "hidden",
@@ -2378,8 +2382,8 @@ const TowreFlow = ({
                           key={colIndex}
                           style={{
                             position: "relative",
-                            width: isMobile ? 65 : 180,
-                            height: 85,
+                            width: isMobile ? 74 : 180,
+                            height: isMobile ? 50 : 85,
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
@@ -2404,10 +2408,10 @@ const TowreFlow = ({
                               fontSize:
                                 lang === "te"
                                   ? isMobile
-                                    ? 14
+                                    ? 18
                                     : 24
                                   : isMobile
-                                  ? 12
+                                  ? 16
                                   : 20,
                               fontFamily: getFontFamily(lang),
                             }}
@@ -2515,9 +2519,9 @@ const TowreFlow = ({
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        gap: 6,
-                        marginLeft: "40px",
-                        marginRight: "40px",
+                        gap: isMobile ? 7 : 6,
+                        marginLeft: isMobile ? "2px" : "40px",
+                        marginRight: isMobile ? "2px" : "40px",
                         position: "relative",
                       }}
                     >
@@ -2532,8 +2536,8 @@ const TowreFlow = ({
                             key={colIndex}
                             style={{
                               position: "relative",
-                              width: isMobile ? 120 : 180,
-                              height: isMobile ? 65 : 100,
+                              width: isMobile ? 74 : 180,
+                              height: isMobile ? 50 : 100,
                               display: "flex",
                               justifyContent: "center",
                               alignItems: "center",
@@ -2581,10 +2585,10 @@ const TowreFlow = ({
                                 fontSize:
                                   lang === "te"
                                     ? isMobile
-                                      ? 13
+                                      ? 18
                                       : 24
                                     : isMobile
-                                    ? 11
+                                    ? 16
                                     : 20,
                                 fontFamily: getFontFamily(lang),
                               }}

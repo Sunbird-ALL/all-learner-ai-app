@@ -1266,6 +1266,13 @@ const LetterHuntMechanicsContent = ({
       showTimer={showTimer}
       startShowCase={startShowCase}
       setStartShowCase={setStartShowCase}
+      cardContentStyle={{
+        height: { xs: "100%", md: "calc(100vh - 260px)" },
+        maxHeight: {
+          xs: "calc(100dvh - 90px)",
+          md: "calc(100vh - 260px)",
+        },
+      }}
     >
       <div
         style={{

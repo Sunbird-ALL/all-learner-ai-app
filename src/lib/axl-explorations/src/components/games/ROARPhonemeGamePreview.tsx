@@ -278,7 +278,7 @@ export function ROARPhonemeGamePreview({
     
     // Try to play audio file from sound-match folder first
     const word = text.toLowerCase().trim();
-    const audioPath = `/audio/audio-preview/combined-word-games/sound-match/${language}/${word}.wav`;
+    const audioPath = `${process.env.PUBLIC_URL}/audio/audio-preview/combined-word-games/sound-match/${language}/${word}.wav`;
     
     try {
       const audio = new Audio(audioPath);
@@ -529,17 +529,6 @@ export function ROARPhonemeGamePreview({
     return (
       <div className="h-screen bg-gradient-cool p-2 sm:p-3 md:p-4 overflow-hidden flex flex-col">
         <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 overflow-hidden">
-          {!hideHeader && (
-            <div className="flex items-center justify-between mb-3 flex-shrink-0">
-              <Button
-                onClick={handleBack}
-                className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/20 text-sm px-3 py-2"
-              >
-                <ArrowLeft className="h-3 w-3 mr-1" />
-                {contentLanguage === 'en' ? 'Back' : contentLanguage === 'te' ? 'వెనుకకు' : contentLanguage === 'kn' ? 'ಹಿಂದಕ್ಕೆ' : 'मागे'}
-              </Button>
-            </div>
-          )}
           <CountdownTimer
             initialCount={3}
             onComplete={handleCountdownComplete}

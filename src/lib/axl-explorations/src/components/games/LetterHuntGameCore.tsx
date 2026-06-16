@@ -31,7 +31,7 @@ interface LetterHuntGameCoreProps {
   selectedAnswer: string | null;
   showFeedback: boolean;
   isCorrect: boolean;
-  
+
   // Mode configuration
   mode: 'game' | 'preview';
 
@@ -45,7 +45,7 @@ interface LetterHuntGameCoreProps {
    * Sequence: feedback1 → selected letter → feedback2
    */
   onFeedbackAudioComplete?: () => void;
-  
+
   // UI customization
   showSpeaker?: boolean;
   showContinueButton?: boolean;
@@ -55,7 +55,7 @@ interface LetterHuntGameCoreProps {
     total: number;
     score?: number;
   };
-  
+
   // Preview-specific props
   isPreview?: boolean;
   demoStep?: string;
@@ -64,12 +64,12 @@ interface LetterHuntGameCoreProps {
   optionsRef?: React.RefObject<HTMLDivElement>;
   showHandPointer?: boolean;
   disabled?: boolean;
-  
+
   // Styling
   className?: string;
   // Container control: default 'card' to preserve existing behavior
   useContainer?: 'card' | 'none';
-  
+
   // Lives system
   lives?: number;
   maxLives?: number;
@@ -109,10 +109,10 @@ export function LetterHuntGameCore({
   const effectiveLanguage = audioLanguageOverride || selectedLanguage;
   const currentQuestion = questions[currentQuestionIndex];
   const [isFeedbackAudioPlaying, setIsFeedbackAudioPlaying] = useState(false);
-  
+
   // Get font family based on current language (for Telugu support)
   const fontFamily = getFontFamilyByLang(effectiveLanguage || selectedLanguage);
-  
+
   // Track active audio instances for stopping playback when needed
   // This allows us to stop all audio (including feedback audio) when user clicks "Next"
   const activeAudioRefs = useRef<Set<HTMLAudioElement>>(new Set());
@@ -125,20 +125,20 @@ export function LetterHuntGameCore({
    */
   const stopAllAudio = useCallback(() => {
     isAudioStoppedRef.current = true;
-    
+
     // Stop all HTMLAudioElement instances
     activeAudioRefs.current.forEach(audio => {
       audio.pause();
       audio.currentTime = 0;
     });
     activeAudioRefs.current.clear();
-    
+
     // Stop all Text-to-Speech instances
     if ('speechSynthesis' in window) {
       speechSynthesis.cancel();
     }
     activeTTSRefs.current.clear();
-    
+
     // Reset flag after a delay to allow new audio to start
     setTimeout(() => {
       isAudioStoppedRef.current = false;
@@ -206,7 +206,7 @@ export function LetterHuntGameCore({
         const audio = new Audio(audioUrl);
         activeAudioRefs.current.add(audio);
         attachSlowLoadToast(audio);
-        
+
         audio.onloadeddata = () => {
           if (isAudioStoppedRef.current) {
             resolve();
@@ -227,7 +227,7 @@ export function LetterHuntGameCore({
             }
           });
         };
-        
+
         audio.onerror = () => {
           activeAudioRefs.current.delete(audio);
           // Fallback to TTS
@@ -244,7 +244,7 @@ export function LetterHuntGameCore({
         const audio = new Audio(audioUrl);
         activeAudioRefs.current.add(audio);
         attachSlowLoadToast(audio);
-        
+
         audio.onloadeddata = () => {
           if (isAudioStoppedRef.current) {
             resolve();
@@ -265,7 +265,7 @@ export function LetterHuntGameCore({
             }
           });
         };
-        
+
         audio.onerror = () => {
           activeAudioRefs.current.delete(audio);
           // Fallback to TTS
@@ -283,7 +283,7 @@ export function LetterHuntGameCore({
         const audio = new Audio(audioUrl);
         activeAudioRefs.current.add(audio);
         attachSlowLoadToast(audio);
-        
+
         audio.onloadeddata = () => {
           if (isAudioStoppedRef.current) {
             resolve();
@@ -304,7 +304,7 @@ export function LetterHuntGameCore({
             }
           });
         };
-        
+
         audio.onerror = () => {
           activeAudioRefs.current.delete(audio);
           // Fallback to TTS
@@ -316,14 +316,14 @@ export function LetterHuntGameCore({
         };
         return;
       }
-      
+
       // For English, try to use local audio files first
       if (language === 'en') {
         const audioUrl = englishAudioManager.getAudioUrl(text);
         const audio = new Audio(audioUrl);
         activeAudioRefs.current.add(audio);
         attachSlowLoadToast(audio);
-        
+
         audio.onloadeddata = () => {
           if (isAudioStoppedRef.current) {
             resolve();
@@ -344,7 +344,7 @@ export function LetterHuntGameCore({
             }
           });
         };
-        
+
         audio.onerror = () => {
           activeAudioRefs.current.delete(audio);
           // Fallback to TTS
@@ -356,14 +356,14 @@ export function LetterHuntGameCore({
         };
         return;
       }
-      
+
       // For Marathi, try to use local audio files first
       if (language === 'mr') {
         const audioUrl = marathiAudioManager.getAudioUrl(text);
         const audio = new Audio(audioUrl);
         activeAudioRefs.current.add(audio);
         attachSlowLoadToast(audio);
-        
+
         audio.onloadeddata = () => {
           if (isAudioStoppedRef.current) {
             resolve();
@@ -384,7 +384,7 @@ export function LetterHuntGameCore({
             }
           });
         };
-        
+
         audio.onerror = () => {
           activeAudioRefs.current.delete(audio);
           // Fallback to TTS
@@ -396,7 +396,7 @@ export function LetterHuntGameCore({
         };
         return;
       }
-      
+
       // Fallback to TTS for all other languages
       if (!isAudioStoppedRef.current) {
         console.log("playing TTS", text, language);
@@ -412,11 +412,11 @@ export function LetterHuntGameCore({
     if (isAudioStoppedRef.current) {
       return Promise.resolve();
     }
-    
+
     return new Promise((resolve) => {
       const utterance = new SpeechSynthesisUtterance(text);
       activeTTSRefs.current.add(utterance);
-      
+
       // Language-specific settings
       switch (language) {
         case 'te':
@@ -465,26 +465,26 @@ export function LetterHuntGameCore({
         }
 
         if (language === 'te') {
-          bestVoice = voices.find(voice => 
-            voice.lang.includes('te') || 
-            voice.lang.includes('hi-IN') || 
+          bestVoice = voices.find(voice =>
+            voice.lang.includes('te') ||
+            voice.lang.includes('hi-IN') ||
             voice.lang.includes('en-IN')
           );
         } else if (language === 'mr') {
-          bestVoice = voices.find(voice => 
-            voice.lang.includes('mr') || 
-            voice.lang.includes('hi-IN') || 
+          bestVoice = voices.find(voice =>
+            voice.lang.includes('mr') ||
+            voice.lang.includes('hi-IN') ||
             voice.lang.includes('en-IN')
           );
         } else if (language === 'kn') {
-          bestVoice = voices.find(voice => 
-            voice.lang.includes('kn') || 
-            voice.lang.includes('hi-IN') || 
+          bestVoice = voices.find(voice =>
+            voice.lang.includes('kn') ||
+            voice.lang.includes('hi-IN') ||
             voice.lang.includes('en-IN')
           );
         } else {
-          bestVoice = voices.find(voice => 
-            voice.lang.includes('en-US') || 
+          bestVoice = voices.find(voice =>
+            voice.lang.includes('en-US') ||
             voice.lang.includes('en-GB')
           );
         }
@@ -495,16 +495,16 @@ export function LetterHuntGameCore({
       };
 
       findAndSetVoice();
-      
+
       // Check again before speaking
       if (isAudioStoppedRef.current) {
         activeTTSRefs.current.delete(utterance);
         resolve();
         return;
       }
-      
+
       speechSynthesis.speak(utterance);
-      
+
       // Timeout to prevent hanging if TTS doesn't fire onend
       setTimeout(() => {
         if (activeTTSRefs.current.has(utterance)) {
@@ -518,7 +518,7 @@ export function LetterHuntGameCore({
   // Handle speaker button click
   const handleSpeakerClick = async () => {
     if (!currentQuestion) return;
-    
+
     // In preview mode, allow speaker clicks based on demoStep, not disabled prop
     if (mode === 'preview') {
       if (demoStep !== 'waitForSpeaker' && demoStep !== 'instruction3' && demoStep !== 'waitForAnswer') {
@@ -527,7 +527,7 @@ export function LetterHuntGameCore({
     } else if (disabled) {
       return;
     }
-    
+
     if (onSpeakerClick) {
       onSpeakerClick();
     } else {
@@ -565,13 +565,13 @@ export function LetterHuntGameCore({
         if (isAudioStoppedRef.current) {
           return;
         }
-        
+
         return new Promise((resolve) => {
-          const audioPath = `/audio/letter-hunt-incorrect-message/${feedbackLanguage}/feedback${feedbackNumber}.wav`;
+          const audioPath = `${process.env.PUBLIC_URL}/audio/letter-hunt-incorrect-message/${feedbackLanguage}/feedback${feedbackNumber}.wav`;
           const audio = new Audio(audioPath);
           activeAudioRefs.current.add(audio);
           attachSlowLoadToast(audio);
-          
+
           audio.onloadeddata = () => {
             // Check again before playing (audio might have been stopped while loading)
             if (isAudioStoppedRef.current) {
@@ -597,7 +597,7 @@ export function LetterHuntGameCore({
               }
             });
           };
-          
+
           audio.onerror = () => {
             activeAudioRefs.current.delete(audio);
             // Fallback to TTS if audio file doesn't exist or fails to load
@@ -610,7 +610,7 @@ export function LetterHuntGameCore({
               resolve();
             }
           };
-          
+
           // Safety timeout to prevent hanging if audio doesn't fire onended event
           setTimeout(() => {
             if (activeAudioRefs.current.has(audio) && !audio.ended) {
@@ -621,7 +621,7 @@ export function LetterHuntGameCore({
           }, 10000);
         });
       };
-      
+
       // Play feedback sequence sequentially:
       // 1. "chosen letter is" (feedback1)
       // 2. Selected letter audio
@@ -666,7 +666,7 @@ export function LetterHuntGameCore({
           console.warn('Auto-play audio failed:', error);
         });
       }, 800);
-      
+
       return () => {
         clearTimeout(timer);
         stopAllAudio();
@@ -734,11 +734,11 @@ export function LetterHuntGameCore({
       // Failure sound typically takes 1-2 seconds, so we wait 2 seconds to be safe
       // In game mode, start immediately
       const delay = isPreview ? 2000 : 500;
-      
+
       const timer = setTimeout(() => {
         playFeedbackAudio();
       }, delay);
-      
+
       // Cleanup: stop audio if component unmounts or effect re-runs
       return () => {
         clearTimeout(timer);
@@ -801,7 +801,7 @@ export function LetterHuntGameCore({
             >
               <span className="text-4xl sm:text-3xl md:text-4xl lg:text-5xl">🔊</span>
             </div>
-            
+
             {/* Hand pointer for preview mode */}
             {mode === 'preview' && demoStep === 'waitForSpeaker' && !hasClickedSpeaker && (
               <div className="text-center mt-0.5 sm:mt-1 text-blue-600 font-medium animate-bounce">
@@ -824,7 +824,7 @@ export function LetterHuntGameCore({
             )}
 
             {/* Options Grid */}
-            <div 
+            <div
               ref={optionsRef}
               className="grid grid-cols-2 gap-4 sm:gap-1 md:gap-1.5 lg:gap-2 xl:gap-3 w-full"
               tabIndex={0}
@@ -832,15 +832,15 @@ export function LetterHuntGameCore({
               {currentQuestion.options.map((letter, index) => {
                 const isSelected = letter === selectedAnswer;
                 const isGreyedOut = selectedAnswer !== null && !isSelected;
-                
+
                 return (
                   <Button
                     key={index}
                     variant={
-                      showFeedback 
-                        ? (isCorrect && letter === selectedAnswer ? "success" : 
-                           !isCorrect && letter === selectedAnswer ? "destructive" : 
-                           !isCorrect && letter === currentQuestion.target ? "success" : "outline")
+                      showFeedback
+                        ? (isCorrect && letter === selectedAnswer ? "success" :
+                          !isCorrect && letter === selectedAnswer ? "destructive" :
+                            !isCorrect && letter === currentQuestion.target ? "success" : "outline")
                         : isSelected ? "default" : "outline"
                     }
                     size="lg"
@@ -872,38 +872,38 @@ export function LetterHuntGameCore({
               <div className="animate-fade-in mt-4 sm:mt-0">
                 {isCorrect ? (
                   <div className="text-success">
-                    <p className="text-xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
+                    <p className="text-2xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
                       {selectedLanguage === 'te'
                         ? '🎉 సరైనది!'
                         : selectedLanguage === 'kn'
-                        ? '🎉 ಸರಿಯಿದೆ!'
-                        : selectedLanguage === 'mr'
-                        ? '🎉 बरोबर!'
-                        : selectedLanguage === 'hi'
-                        ? '🎉 सही है।'
-                        : '🎉 Correct!'}
+                          ? '🎉 ಸರಿಯಿದೆ!'
+                          : selectedLanguage === 'mr'
+                            ? '🎉 बरोबर!'
+                            : selectedLanguage === 'hi'
+                              ? '🎉 सही है।'
+                              : '🎉 Correct!'}
                     </p>
                   </div>
                 ) : (
                   <div className="text-error">
-                    <p className="text-xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
+                    <p className="text-2xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>
                       {(() => {
                         // Use heart break emoji if game uses hearts/lives system
                         const emoji = (maxLives && maxLives > 0) ? '💔' : '😢';
                         return selectedLanguage === 'te'
                           ? `${emoji} అయ్యో! తప్పు!`
                           : selectedLanguage === 'kn'
-                          ? `${emoji} ಅಯ್ಯೋ! ತಪ್ಪು!`
-                          : selectedLanguage === 'mr'
-                          ? `${emoji} अरेच्या! चुकीचे!`
-                          : selectedLanguage === 'hi'
-                          ? `${emoji} ओह! गलत!`
-                          : `${emoji} Oops! Wrong!`;
+                            ? `${emoji} ಅಯ್ಯೋ! ತಪ್ಪು!`
+                            : selectedLanguage === 'mr'
+                              ? `${emoji} अरेच्या! चुकीचे!`
+                              : selectedLanguage === 'hi'
+                                ? `${emoji} ओह! गलत!`
+                                : `${emoji} Oops! Wrong!`;
                       })()}
                     </p>
                   </div>
                 )}
-                
+
                 {/* Continue Button */}
                 <ContinueButton
                   onContinue={handleContinue}
