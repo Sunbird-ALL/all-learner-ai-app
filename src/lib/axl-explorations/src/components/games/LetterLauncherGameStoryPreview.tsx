@@ -1,4 +1,20 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Card } from "../ui/card";
+import { Button } from "../ui/button";
+import { ReplayButton } from "../ui/ReplayButton";
+import { PlanetIcon } from "../ui/PlanetIcon";
+import { ResourceRequirementCard } from "../ui/ResourceRequirementCard";
+import { PlanetWithRocketAnimation } from "../PlanetWithRocketAnimation";
+import { ArrowLeft, Rocket, Fuel } from "lucide-react";
+import { useLanguage } from "../../contexts/LanguageContext";
+import { useAudioLanguage } from "../../contexts/AudioLanguageContext";
+import { Language } from "../../constants/languages";
+import { playAudio, playTTS, playSuccessSound, stopAllAudio, attachSlowLoadToast } from "../../utils/audioUtils";
+import { LetterLauncherGameCore, type LetterLauncherQuestion } from "./LetterLauncherGameCore";
+import { getFuelRequirement, getMissionDestination } from "../../utils/fuelCalculation";
+import { playLetterAudio, playLetterAudioInGesture } from "../../utils/letterAudioUtils";
+import { memoryGameDataLoader } from "../../utils/memoryGameDataLoader";
+import { SpaceBackground } from "../SpaceBackground";
 
 // Unlock the iOS/Android audio session within a user gesture so that all
 // subsequent HTMLAudioElement.play() calls work regardless of timing.
@@ -18,22 +34,6 @@ function unlockAudioContext(): void {
     // Silently ignore — not all browsers support Web Audio API
   }
 }
-import { Card } from "../ui/card";
-import { Button } from "../ui/button";
-import { ReplayButton } from "../ui/ReplayButton";
-import { PlanetIcon } from "../ui/PlanetIcon";
-import { ResourceRequirementCard } from "../ui/ResourceRequirementCard";
-import { PlanetWithRocketAnimation } from "../PlanetWithRocketAnimation";
-import { ArrowLeft, Rocket, Fuel } from "lucide-react";
-import { useLanguage } from "../../contexts/LanguageContext";
-import { useAudioLanguage } from "../../contexts/AudioLanguageContext";
-import { Language } from "../../constants/languages";
-import { playAudio, playTTS, playSuccessSound, stopAllAudio, attachSlowLoadToast } from "../../utils/audioUtils";
-import { LetterLauncherGameCore, type LetterLauncherQuestion } from "./LetterLauncherGameCore";
-import { getFuelRequirement, getMissionDestination } from "../../utils/fuelCalculation";
-import { playLetterAudio, playLetterAudioInGesture } from "../../utils/letterAudioUtils";
-import { memoryGameDataLoader } from "../../utils/memoryGameDataLoader";
-import { SpaceBackground } from "../SpaceBackground";
 
 interface LetterLauncherGameStoryPreviewProps {
   onStartGame: () => void;

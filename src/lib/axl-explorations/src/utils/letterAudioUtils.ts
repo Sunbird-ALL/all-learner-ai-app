@@ -108,6 +108,38 @@ export function prefetchLetterAudioBatch(
 }
 
 
+// Play letter audio within a user gesture context (e.g. speaker tap).
+// Uses cached blob URL if available (preserves gesture context); otherwise
+// falls straight to TTS — never does an async fetch that would break iOS gesture timing.
+export function playLetterAudioInGesture(letter: string, language: Language): Promise<void> {
+  const url = getAudioManager(language).getAudioUrl(letter);
+  const objectUrl = blobUrlCache.get(url);
+
+  const speakTTS = (): Promise<void> =>
+    new Promise((resolve) => {
+      if (!('speechSynthesis' in window)) { resolve(); return; }
+      const utterance = new SpeechSynthesisUtterance(letter);
+      utterance.lang = getTtsLang(language);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.onend = () => resolve();
+      utterance.onerror = () => resolve();
+      speechSynthesis.speak(utterance);
+    });
+
+  if (objectUrl) {
+    return new Promise((resolve) => {
+      const audio = new Audio(objectUrl);
+      audio.onended = () => resolve();
+      audio.onerror = () => speakTTS().then(resolve);
+      audio.play().catch(() => speakTTS().then(resolve));
+    });
+  }
+
+  // Not cached — use TTS directly (fetching would break iOS gesture context)
+  return speakTTS();
+}
+
 export async function playLetterAudio(letter: string, language: Language): Promise<void> {
   const url = getAudioManager(language).getAudioUrl(letter);
 
