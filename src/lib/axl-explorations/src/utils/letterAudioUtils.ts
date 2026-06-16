@@ -124,10 +124,13 @@ export async function playLetterAudio(letter: string, language: Language): Promi
 
   let objectUrl = blobUrlCache.get(url) || null;
   if (!objectUrl) {
-    // Not prefetched yet — download now (sharing any in-flight prefetch) and
-    // show the slow-load toast if it stalls.
+    // Not prefetched yet — download now. Race with a timeout so a stalled
+    // mobile network doesn't block the game sequence forever.
     let slowTimer: number | undefined = window.setTimeout(() => showSlowLoadToast(), 1000);
-    objectUrl = await fetchAndCache(url);
+    objectUrl = await Promise.race([
+      fetchAndCache(url),
+      new Promise<null>((res) => setTimeout(() => res(null), 8000)),
+    ]) as string | null;
     if (slowTimer !== undefined) {
       window.clearTimeout(slowTimer);
       slowTimer = undefined;
@@ -136,12 +139,16 @@ export async function playLetterAudio(letter: string, language: Language): Promi
 
   return new Promise((resolve) => {
     const audio = new Audio(objectUrl || url);
-    audio.onended = () => resolve();
-    audio.onerror = () => {
-      speakFallback().then(resolve);
-    };
-    audio.play().catch(() => {
-      speakFallback().then(resolve);
-    });
+    let resolved = false;
+    const doResolve = () => { if (!resolved) { resolved = true; resolve(); } };
+    // Safety timeout — fires regardless of speakFallback status so we never
+    // hang forever. Keep short (5 s) since letter sounds are brief.
+    // NOTE: do NOT clear this in the onerror/catch paths — on iOS,
+    // speechSynthesis.speak() silently does nothing (no onerror, no onend),
+    // so this timeout is the only reliable exit if TTS is also blocked.
+    const timeout = setTimeout(doResolve, 5000);
+    audio.onended = () => { clearTimeout(timeout); doResolve(); };
+    audio.onerror = () => { speakFallback().then(doResolve); };
+    audio.play().catch(() => { speakFallback().then(doResolve); });
   });
 }
