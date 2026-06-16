@@ -1300,31 +1300,59 @@ export function LetterLauncherGameStoryPreview({
           <div 
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center cursor-pointer"
             onClick={() => {
+              // Unlock iOS/Android audio session synchronously within the gesture.
+              // Web Audio API is the most reliable unlock — it activates the media
+              // session so all subsequent HTMLAudioElement.play() calls succeed.
+              try {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+                if (Ctx) {
+                  const ctx = new Ctx();
+                  const buf = ctx.createBuffer(1, 1, 22050);
+                  const src = ctx.createBufferSource();
+                  src.buffer = buf;
+                  src.connect(ctx.destination);
+                  src.start(0);
+                }
+              } catch (_) {}
               setNeedsUserInteraction(false);
               setIsWaitingForInteraction(false);
             }}
           >
-            <Card 
+            <Card
               className="p-6 sm:p-8 max-w-md mx-4 bg-white"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-center space-y-4">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
-                  {contentLanguage === 'en' ? 'Click to Start' : 
+                  {contentLanguage === 'en' ? 'Click to Start' :
                    contentLanguage === 'te' ? 'ప్రారంభించడానికి క్లిక్ చేయండి' :
-                   contentLanguage === 'kn' ? 'ಪ್ರಾರಂಭಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ' :
+                   contentLanguage === 'kn' ? 'ಪ್ರಾರಂಭಿಸಲు ಕ್ಲಿಕ್ ಮಾಡಿ' :
                    contentLanguage === 'mr' ? 'प्रारंभ करण्यासाठी क्लिक करा' :
                    'Click to Start'}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600">
                   {contentLanguage === 'en' ? 'Please click anywhere to start the preview' :
                    contentLanguage === 'te' ? 'దయచేసి ప్రివ్యూ ప్రారంభించడానికి ఎక్కడైనా క్లిక్ చేయండి' :
-                   contentLanguage === 'kn' ? 'ದಯವಿಟ್ಟು ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ಯಾವುದೇ ಸ್ಥಳದಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ' :
+                   contentLanguage === 'kn' ? 'ದಯವಿಟ್ಟು ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನు ಪ್ರಾರಂಭಿಸಲು ಯಾವುದೇ ಸ್ಥಳದಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ' :
                    contentLanguage === 'mr' ? 'कृपया पूर्वावलोकन सुरू करण्यासाठी कुठेही क्लिक करा' :
                    'Please click anywhere to start the preview'}
                 </p>
                 <Button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent double-fire with background div
+                    try {
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+                      if (Ctx) {
+                        const ctx = new Ctx();
+                        const buf = ctx.createBuffer(1, 1, 22050);
+                        const src = ctx.createBufferSource();
+                        src.buffer = buf;
+                        src.connect(ctx.destination);
+                        src.start(0);
+                      }
+                    } catch (_) {}
                     setNeedsUserInteraction(false);
                     setIsWaitingForInteraction(false);
                   }}
