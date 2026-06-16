@@ -1035,6 +1035,11 @@ export function LetterLauncherGameStoryPreview({
     if (currentPhase === 'practice1') {
       // Only move to practice2 if we have at least 1 successful attempt
       if (newSuccessfulCount >= 1) {
+        // Reset answer/letter state in the same batch so the old answer never
+        // flashes on screen while the useEffect for practice2 hasn't run yet.
+        setShowPracticeLetter(false);
+        setPracticeAnswer(null);
+        setControlsInstructionComplete(false);
         setStoryPhase('practice2');
       } else {
         // Stay in practice1 - generate new question for retry
@@ -1044,8 +1049,10 @@ export function LetterLauncherGameStoryPreview({
         setPracticeQuestion(newQuestion);
         setShowPracticeLetter(false);
         setPracticeAnswer(null);
-        setShowPracticeFeedback(false);
-        // Play audio and show letter again
+        // Wait for the button CSS transition (200ms) to finish before starting
+        // audio, so the new letter never appears while the button is still
+        // visually fading from the previous selected state.
+        await new Promise(resolve => setTimeout(resolve, 250));
         setIsPlayingPracticeAudio(true);
         await playLetterAudio(newQuestion.audioLetter, contentLanguage);
         setIsPlayingPracticeAudio(false);
@@ -1054,6 +1061,9 @@ export function LetterLauncherGameStoryPreview({
     } else if (currentPhase === 'practice2') {
       // Only move to practice3 if we have at least 2 successful attempts
       if (newSuccessfulCount >= 2) {
+        setShowPracticeLetter(false);
+        setPracticeAnswer(null);
+        setControlsInstructionComplete(false);
         setStoryPhase('practice3');
       } else {
         // Stay in practice2 - generate new question for retry
@@ -1061,8 +1071,7 @@ export function LetterLauncherGameStoryPreview({
         setPracticeQuestion(newQuestion);
         setShowPracticeLetter(false);
         setPracticeAnswer(null);
-        setShowPracticeFeedback(false);
-        // Play audio and show letter again
+        await new Promise(resolve => setTimeout(resolve, 250));
         setIsPlayingPracticeAudio(true);
         await playLetterAudio(newQuestion.audioLetter, contentLanguage);
         setIsPlayingPracticeAudio(false);
@@ -1074,7 +1083,7 @@ export function LetterLauncherGameStoryPreview({
         // Hide the practice question window first
         setPracticeQuestion(null);
         setShowPracticeLetter(false);
-        
+
         // Show completion conversation after 3 successful attempts
         setPracticeCompletionText(story.practice.allReady);
         setShowPracticeCompletionMessage(true);
@@ -1088,8 +1097,7 @@ export function LetterLauncherGameStoryPreview({
         setPracticeQuestion(newQuestion);
         setShowPracticeLetter(false);
         setPracticeAnswer(null);
-        setShowPracticeFeedback(false);
-        // Play audio and show letter again
+        await new Promise(resolve => setTimeout(resolve, 250));
         setIsPlayingPracticeAudio(true);
         await playLetterAudio(newQuestion.audioLetter, contentLanguage);
         setIsPlayingPracticeAudio(false);
@@ -1708,6 +1716,7 @@ export function LetterLauncherGameStoryPreview({
                       <div className="bg-blue-50 rounded-lg sm:rounded-xl p-1.5 sm:p-2 md:p-3 lg:p-4 border-2 border-blue-200 w-full relative max-w-full overflow-hidden">
                         <div className="relative">
                           <LetterLauncherGameCore
+                            key={`practice1-${practiceQuestion?.audioLetter}-${practiceQuestion?.displayedLetter}`}
                             className="[&>div]:space-y-1.5 sm:[&>div]:space-y-2 md:[&>div]:space-y-3 lg:[&>div]:space-y-4 [&>div>div:first-child]:min-h-[60px] sm:[&>div>div:first-child]:min-h-[70px] md:[&>div>div:first-child]:min-h-[90px] lg:[&>div>div:first-child]:min-h-[110px] [&>div>div:last-child]:min-h-[70px] sm:[&>div>div:last-child]:min-h-[80px] md:[&>div>div:last-child]:min-h-[100px] lg:[&>div>div:last-child]:min-h-[120px]"
                             currentQuestion={{
                               ...practiceQuestion,
@@ -1795,6 +1804,7 @@ export function LetterLauncherGameStoryPreview({
                       <div className="bg-blue-50 rounded-lg sm:rounded-xl p-1.5 sm:p-2 md:p-3 lg:p-4 border-2 border-blue-200 w-full relative overflow-hidden">
                         <div className="relative">
                           <LetterLauncherGameCore
+                            key={`practice-r${practiceRound}-${practiceQuestion?.audioLetter}-${practiceQuestion?.displayedLetter}`}
                             className="[&>div]:space-y-1.5 sm:[&>div]:space-y-2 md:[&>div]:space-y-3 lg:[&>div]:space-y-4 [&>div>div:first-child]:min-h-[60px] sm:[&>div>div:first-child]:min-h-[70px] md:[&>div>div:first-child]:min-h-[90px] lg:[&>div>div:first-child]:min-h-[110px] [&>div>div:last-child]:min-h-[70px] sm:[&>div>div:last-child]:min-h-[80px] md:[&>div>div:last-child]:min-h-[100px] lg:[&>div>div:last-child]:min-h-[120px]"
                             currentQuestion={{
                               ...practiceQuestion,
