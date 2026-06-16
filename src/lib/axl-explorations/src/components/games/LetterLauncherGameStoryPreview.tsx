@@ -1714,9 +1714,8 @@ export function LetterLauncherGameStoryPreview({
                     {/* Left side - Question Box */}
                     <div className="order-1 w-full mb-24 sm:mb-4 md:mb-0">
                       <div className="bg-blue-50 rounded-lg sm:rounded-xl p-1.5 sm:p-2 md:p-3 lg:p-4 border-2 border-blue-200 w-full relative max-w-full overflow-hidden">
-                        <div className="relative">
+                        <div className="relative" key={`practice1-${practiceQuestion?.audioLetter}-${practiceQuestion?.displayedLetter}`}>
                           <LetterLauncherGameCore
-                            key={`practice1-${practiceQuestion?.audioLetter}-${practiceQuestion?.displayedLetter}`}
                             className="[&>div]:space-y-1.5 sm:[&>div]:space-y-2 md:[&>div]:space-y-3 lg:[&>div]:space-y-4 [&>div>div:first-child]:min-h-[60px] sm:[&>div>div:first-child]:min-h-[70px] md:[&>div>div:first-child]:min-h-[90px] lg:[&>div>div:first-child]:min-h-[110px] [&>div>div:last-child]:min-h-[70px] sm:[&>div>div:last-child]:min-h-[80px] md:[&>div>div:last-child]:min-h-[100px] lg:[&>div>div:last-child]:min-h-[120px]"
                             currentQuestion={{
                               ...practiceQuestion,
@@ -1802,9 +1801,8 @@ export function LetterLauncherGameStoryPreview({
                   <div className="flex justify-center w-full mb-4">
                     <div className="w-full max-w-lg">
                       <div className="bg-blue-50 rounded-lg sm:rounded-xl p-1.5 sm:p-2 md:p-3 lg:p-4 border-2 border-blue-200 w-full relative overflow-hidden">
-                        <div className="relative">
+                        <div className="relative" key={`practice-r${practiceRound}-${practiceQuestion?.audioLetter}-${practiceQuestion?.displayedLetter}`}>
                           <LetterLauncherGameCore
-                            key={`practice-r${practiceRound}-${practiceQuestion?.audioLetter}-${practiceQuestion?.displayedLetter}`}
                             className="[&>div]:space-y-1.5 sm:[&>div]:space-y-2 md:[&>div]:space-y-3 lg:[&>div]:space-y-4 [&>div>div:first-child]:min-h-[60px] sm:[&>div>div:first-child]:min-h-[70px] md:[&>div>div:first-child]:min-h-[90px] lg:[&>div>div:first-child]:min-h-[110px] [&>div>div:last-child]:min-h-[70px] sm:[&>div>div:last-child]:min-h-[80px] md:[&>div>div:last-child]:min-h-[100px] lg:[&>div>div:last-child]:min-h-[120px]"
                             currentQuestion={{
                               ...practiceQuestion,
