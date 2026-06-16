@@ -884,8 +884,22 @@ export function LetterLauncherGameStoryPreview({
             
             // Play audio letter while controls are visible
             setIsPlayingPracticeAudio(true);
-            await playLetterAudio(question.audioLetter, contentLanguage);
+            await playLetterAudio(question.audioLetter, contentLanguage, {
+              onBlocked: () => {
+                setNeedsUserInteractionImmediate(true);
+                setIsWaitingForInteractionImmediate(true);
+              }
+            });
             if (!mounted) return;
+            // If audio was blocked by autoplay policy, wait for overlay tap then retry
+            if (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+              while (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+                await new Promise(r => setTimeout(r, 100));
+                if (!mounted) return;
+              }
+              await playLetterAudio(question.audioLetter, contentLanguage);
+              if (!mounted) return;
+            }
             setIsPlayingPracticeAudio(false);
             setShowPracticeLetter(true);
             
@@ -908,8 +922,22 @@ export function LetterLauncherGameStoryPreview({
           } else {
             // Rounds 2 and 3 - just play audio and show letter
             setIsPlayingPracticeAudio(true);
-            await playLetterAudio(question.audioLetter, contentLanguage);
+            await playLetterAudio(question.audioLetter, contentLanguage, {
+              onBlocked: () => {
+                setNeedsUserInteractionImmediate(true);
+                setIsWaitingForInteractionImmediate(true);
+              }
+            });
             if (!mounted) return;
+            // If audio was blocked by autoplay policy, wait for overlay tap then retry
+            if (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+              while (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+                await new Promise(r => setTimeout(r, 100));
+                if (!mounted) return;
+              }
+              await playLetterAudio(question.audioLetter, contentLanguage);
+              if (!mounted) return;
+            }
             setIsPlayingPracticeAudio(false);
             setShowPracticeLetter(true);
           }
@@ -1060,7 +1088,19 @@ export function LetterLauncherGameStoryPreview({
         // visually fading from the previous selected state.
         await new Promise(resolve => setTimeout(resolve, 250));
         setIsPlayingPracticeAudio(true);
-        await playLetterAudio(newQuestion.audioLetter, contentLanguage);
+        await playLetterAudio(newQuestion.audioLetter, contentLanguage, {
+          onBlocked: () => {
+            setNeedsUserInteractionImmediate(true);
+            setIsWaitingForInteractionImmediate(true);
+          }
+        });
+        // If audio was blocked by autoplay policy, wait for overlay tap then retry
+        if (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+          while (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+            await new Promise(r => setTimeout(r, 100));
+          }
+          await playLetterAudio(newQuestion.audioLetter, contentLanguage);
+        }
         setIsPlayingPracticeAudio(false);
         setShowPracticeLetter(true);
       }
@@ -1079,7 +1119,19 @@ export function LetterLauncherGameStoryPreview({
         setPracticeAnswer(null);
         await new Promise(resolve => setTimeout(resolve, 250));
         setIsPlayingPracticeAudio(true);
-        await playLetterAudio(newQuestion.audioLetter, contentLanguage);
+        await playLetterAudio(newQuestion.audioLetter, contentLanguage, {
+          onBlocked: () => {
+            setNeedsUserInteractionImmediate(true);
+            setIsWaitingForInteractionImmediate(true);
+          }
+        });
+        // If audio was blocked by autoplay policy, wait for overlay tap then retry
+        if (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+          while (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+            await new Promise(r => setTimeout(r, 100));
+          }
+          await playLetterAudio(newQuestion.audioLetter, contentLanguage);
+        }
         setIsPlayingPracticeAudio(false);
         setShowPracticeLetter(true);
       }
@@ -1105,7 +1157,19 @@ export function LetterLauncherGameStoryPreview({
         setPracticeAnswer(null);
         await new Promise(resolve => setTimeout(resolve, 250));
         setIsPlayingPracticeAudio(true);
-        await playLetterAudio(newQuestion.audioLetter, contentLanguage);
+        await playLetterAudio(newQuestion.audioLetter, contentLanguage, {
+          onBlocked: () => {
+            setNeedsUserInteractionImmediate(true);
+            setIsWaitingForInteractionImmediate(true);
+          }
+        });
+        // If audio was blocked by autoplay policy, wait for overlay tap then retry
+        if (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+          while (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+            await new Promise(r => setTimeout(r, 100));
+          }
+          await playLetterAudio(newQuestion.audioLetter, contentLanguage);
+        }
         setIsPlayingPracticeAudio(false);
         setShowPracticeLetter(true);
       }

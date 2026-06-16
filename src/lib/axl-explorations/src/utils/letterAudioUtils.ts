@@ -108,7 +108,11 @@ export function prefetchLetterAudioBatch(
 }
 
 
-export async function playLetterAudio(letter: string, language: Language): Promise<void> {
+export async function playLetterAudio(
+  letter: string,
+  language: Language,
+  options: { onBlocked?: () => void } = {}
+): Promise<void> {
   const url = getAudioManager(language).getAudioUrl(letter);
 
   const speakFallback = (): Promise<void> =>
@@ -149,6 +153,20 @@ export async function playLetterAudio(letter: string, language: Language): Promi
     const timeout = setTimeout(doResolve, 5000);
     audio.onended = () => { clearTimeout(timeout); doResolve(); };
     audio.onerror = () => { speakFallback().then(doResolve); };
-    audio.play().catch(() => { speakFallback().then(doResolve); });
+    audio.play().catch((error) => {
+      // Detect autoplay policy block (NotAllowedError) and notify caller so it
+      // can show an interaction overlay before retrying.
+      const isAutoplayBlocked =
+        error?.name === 'NotAllowedError' ||
+        (typeof error?.message === 'string' && (
+          error.message.includes('user didn\'t interact') ||
+          error.message.includes('play() failed') ||
+          error.message.includes('interact with the document')
+        ));
+      if (isAutoplayBlocked) {
+        options.onBlocked?.();
+      }
+      speakFallback().then(doResolve);
+    });
   });
 }
