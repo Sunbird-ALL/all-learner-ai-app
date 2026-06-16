@@ -486,7 +486,8 @@ const WordWall = ({
     <div
       style={{
         backgroundColor: "#FDFEFF",
-        minHeight: isMobile ? "68vh" : "80vh",
+        height: isMobile ? "calc(100dvh - 280px)" : "auto",
+        maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
         margin: 0,
         padding: 0,
         fontFamily: "Arial, sans-serif",
@@ -494,7 +495,8 @@ const WordWall = ({
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "center",
-        // overflow: "auto",
+        overflow: isMobile ? "auto" : "visible",
+        boxSizing: "border-box",
       }}
     >
       <div
@@ -1323,11 +1325,15 @@ const WordWall = ({
         <div
           style={{
             position: "relative",
-            minHeight: isMobile ? "75vh" : "100vh",
-            width: "100%",
+            height: isMobile ? "calc(100dvh - 250px)" : "auto",
+            maxHeight: isMobile ? "calc(100dvh - 250px)" : "none",
+            width: isMobile ? "calc(100% - 20px)" : "100%",
             backgroundColor: "#ffffff",
-            overflow: "hidden",
+            overflow: isMobile ? "auto" : "visible",
             borderRadius: "16px",
+            marginLeft: isMobile ? "10px" : "auto",
+            marginRight: isMobile ? "10px" : "auto",
+            boxSizing: "border-box",
           }}
         >
           {showConfetti && (

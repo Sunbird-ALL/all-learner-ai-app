@@ -646,19 +646,23 @@ const FluencyP3 = ({
         )}
         <div
           style={{
-            width: "95%",
-            minHeight: isMobile ? "70vh" : "560px",
-            height: "auto",
+            width: isMobile ? "calc(100% - 20px)" : "95%",
+            minHeight: isMobile ? "unset" : "560px",
+            height: isMobile ? "calc(100dvh - 280px)" : "auto",
+            maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
             background: "#fff",
             borderRadius: "12px",
             boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: isMobile ? "0 0 16px 0" : "0 0 10px 0",
+            padding: isMobile ? "0 10px 16px 10px" : "0 0 10px 0",
             marginBottom: isMobile ? "30px" : undefined,
+            marginLeft: isMobile ? "10px" : "auto",
+            marginRight: isMobile ? "10px" : "auto",
             position: "relative",
-            overflow: "visible",
+            overflow: isMobile ? "auto" : "visible",
+            boxSizing: "border-box",
           }}
         >
           <img
