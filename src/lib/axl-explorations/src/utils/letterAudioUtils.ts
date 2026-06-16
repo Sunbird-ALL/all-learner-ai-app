@@ -127,7 +127,10 @@ export async function playLetterAudio(letter: string, language: Language): Promi
     // Not prefetched yet — download now (sharing any in-flight prefetch) and
     // show the slow-load toast if it stalls.
     let slowTimer: number | undefined = window.setTimeout(() => showSlowLoadToast(), 1000);
-    objectUrl = await fetchAndCache(url);
+    objectUrl = await Promise.race([
+      fetchAndCache(url),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 8000)),
+    ]) as string | null;
     if (slowTimer !== undefined) {
       window.clearTimeout(slowTimer);
       slowTimer = undefined;
