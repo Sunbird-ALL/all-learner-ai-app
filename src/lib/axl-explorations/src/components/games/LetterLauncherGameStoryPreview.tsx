@@ -994,7 +994,13 @@ export function LetterLauncherGameStoryPreview({
       isPlayingNarrationRef.current = false;
       setIsPlayingNarration(false);
     };
-  }, [storyPhase, story, contentLanguage, audioLanguage, needsUserInteraction, isWaitingForInteraction]);
+  // NOTE: needsUserInteraction / isWaitingForInteraction are intentionally omitted
+  // from this dep array. The while-loops inside handlePhase already poll their
+  // REFS (needsUserInteractionRef / isWaitingForInteractionRef), so the state
+  // values are not needed here. Including them caused handlePhase to restart
+  // from scratch every time the overlay was shown/dismissed mid-sequence,
+  // which produced double-audio, simultaneous narrations, and stale letter state.
+  }, [storyPhase, story, contentLanguage, audioLanguage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Manual speaker replay — lets user tap the 🔊 icon if audio didn't play automatically
   const handleSpeakerClick = useCallback(async () => {
