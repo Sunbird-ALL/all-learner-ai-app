@@ -12,28 +12,9 @@ import { Language } from "../../constants/languages";
 import { playAudio, playTTS, playSuccessSound, stopAllAudio, attachSlowLoadToast } from "../../utils/audioUtils";
 import { LetterLauncherGameCore, type LetterLauncherQuestion } from "./LetterLauncherGameCore";
 import { getFuelRequirement, getMissionDestination } from "../../utils/fuelCalculation";
-import { playLetterAudio, playLetterAudioInGesture } from "../../utils/letterAudioUtils";
+import { playLetterAudio } from "../../utils/letterAudioUtils";
 import { memoryGameDataLoader } from "../../utils/memoryGameDataLoader";
 import { SpaceBackground } from "../SpaceBackground";
-
-// Unlock the iOS/Android audio session within a user gesture so that all
-// subsequent HTMLAudioElement.play() calls work regardless of timing.
-// Web Audio API is more reliable than a silent <audio> data URI on iOS WebKit.
-function unlockAudioContext(): void {
-  try {
-    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!Ctx) return;
-    const ctx = new Ctx();
-    const buf = ctx.createBuffer(1, 1, 22050);
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    src.connect(ctx.destination);
-    src.start(0);
-    ctx.resume();
-  } catch (_) {
-    // Silently ignore — not all browsers support Web Audio API
-  }
-}
 
 interface LetterLauncherGameStoryPreviewProps {
   onStartGame: () => void;
@@ -328,8 +309,6 @@ export function LetterLauncherGameStoryPreview({
   const isReplayingRef = useRef(false);
   // Reference to track if narration is actually playing (more reliable than state)
   const isPlayingNarrationRef = useRef(false);
-  // Timestamp when practice letter audio started — used to detect a stalled/stuck state
-  const practiceAudioStartedAtRef = useRef<number | null>(null);
 
   // Play audio file from public folder
   const playAudioFile = async (filename: string): Promise<boolean> => {
@@ -887,10 +866,8 @@ export function LetterLauncherGameStoryPreview({
             
             // Play audio letter while controls are visible
             setIsPlayingPracticeAudio(true);
-            practiceAudioStartedAtRef.current = Date.now();
             await playLetterAudio(question.audioLetter, contentLanguage);
             if (!mounted) return;
-            practiceAudioStartedAtRef.current = null;
             setIsPlayingPracticeAudio(false);
             setShowPracticeLetter(true);
             
@@ -1001,25 +978,15 @@ export function LetterLauncherGameStoryPreview({
     };
   }, [storyPhase, story, contentLanguage, audioLanguage, needsUserInteraction, isWaitingForInteraction]);
 
-  // Manual speaker replay — lets user tap the 🔊 icon if audio didn't play automatically.
-  // Blocks if audio just started (<5s ago) to prevent double-play, but allows tap if stuck.
+  // Manual speaker replay — lets user tap the 🔊 icon if audio didn't play automatically
   const handleSpeakerClick = useCallback(async () => {
-    if (!practiceQuestion || showPracticeLetter) return;
-    const audioAge = practiceAudioStartedAtRef.current !== null
-      ? Date.now() - practiceAudioStartedAtRef.current
-      : null;
-    // Allow tap if sequence never started audio (null) or it's been stuck >5s
-    if (audioAge !== null && audioAge <= 5000) return;
-    // Re-unlock audio session within this tap gesture before playing
-    unlockAudioContext();
-    practiceAudioStartedAtRef.current = Date.now();
+    if (isPlayingPracticeAudio || !practiceQuestion) return;
     setIsPlayingPracticeAudio(true);
-    await playLetterAudioInGesture(practiceQuestion.audioLetter, contentLanguage);
-    practiceAudioStartedAtRef.current = null;
+    await playLetterAudio(practiceQuestion.audioLetter, contentLanguage);
     setIsPlayingPracticeAudio(false);
     setShowPracticeLetter(true);
     setControlsInstructionComplete(true);
-  }, [practiceQuestion, showPracticeLetter, contentLanguage]);
+  }, [isPlayingPracticeAudio, practiceQuestion, contentLanguage]);
 
   // Handle practice answer
   const handlePracticeAnswer = useCallback(async (isMatch: boolean) => {
@@ -1333,7 +1300,6 @@ export function LetterLauncherGameStoryPreview({
           <div 
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center cursor-pointer"
             onClick={() => {
-              unlockAudioContext();
               setNeedsUserInteraction(false);
               setIsWaitingForInteraction(false);
             }}
@@ -1358,9 +1324,7 @@ export function LetterLauncherGameStoryPreview({
                    'Please click anywhere to start the preview'}
                 </p>
                 <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    unlockAudioContext();
+                  onClick={() => {
                     setNeedsUserInteraction(false);
                     setIsWaitingForInteraction(false);
                   }}
