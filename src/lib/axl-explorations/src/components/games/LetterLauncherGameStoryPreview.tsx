@@ -309,6 +309,15 @@ export function LetterLauncherGameStoryPreview({
   const isReplayingRef = useRef(false);
   // Reference to track if narration is actually playing (more reliable than state)
   const isPlayingNarrationRef = useRef(false);
+  // Refs that mirror needsUserInteraction / isWaitingForInteraction so async
+  // functions inside useEffect closures always read the CURRENT value, not the
+  // stale value captured when the closure was created.
+  const needsUserInteractionRef = useRef(
+    typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0
+  );
+  const isWaitingForInteractionRef = useRef(false);
+  useEffect(() => { needsUserInteractionRef.current = needsUserInteraction; }, [needsUserInteraction]);
+  useEffect(() => { isWaitingForInteractionRef.current = isWaitingForInteraction; }, [isWaitingForInteraction]);
 
   // Play audio file from public folder
   const playAudioFile = async (filename: string): Promise<boolean> => {
@@ -593,10 +602,10 @@ export function LetterLauncherGameStoryPreview({
           return;
         }
         
-        // If autoplay was blocked, wait for user interaction and retry
-        if (needsUserInteraction || isWaitingForInteraction) {
-          // Wait for user interaction
-          while (needsUserInteraction || isWaitingForInteraction) {
+        // If autoplay was blocked, wait for user interaction and retry.
+        // Use refs — not state — to avoid stale closure values.
+        if (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+          while (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
             await new Promise(resolve => setTimeout(resolve, 100));
           }
           
@@ -710,10 +719,10 @@ export function LetterLauncherGameStoryPreview({
         return;
       }
       
-      // Wait for user interaction if autoplay is blocked (important for refresh)
-      if (needsUserInteraction || isWaitingForInteraction) {
-        // Wait for user interaction before proceeding
-        while (needsUserInteraction || isWaitingForInteraction) {
+      // Wait for user interaction if autoplay is blocked (important for refresh).
+      // Use refs — not state — to avoid stale closure values in this async function.
+      if (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
+        while (needsUserInteractionRef.current || isWaitingForInteractionRef.current) {
           await new Promise(resolve => setTimeout(resolve, 100));
           if (!mounted) return;
         }
