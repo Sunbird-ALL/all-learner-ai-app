@@ -69,7 +69,14 @@ const UnderlinedSentence = ({
   return (
     <p
       style={{
-        fontSize: lang === "te" ? (isMobile ? "32px" : "34px") : (isMobile ? "28px" : "30px"),
+        fontSize:
+          lang === "te"
+            ? isMobile
+              ? "32px"
+              : "34px"
+            : isMobile
+            ? "28px"
+            : "30px",
         fontWeight: lang === "te" ? "400" : "600",
         color: "rgba(51, 63, 97, 1)",
         fontFamily: getFontFamily(lang || "en"),
@@ -615,11 +622,11 @@ const FluencyP1 = ({
           src={hintimg}
           alt="hint"
           style={{
-            width: "50px",
-            height: "50px",
+            width: isMobile ? "35px" : "50px",
+            height: isMobile ? "35px" : "50px",
             position: "absolute",
-            top: "20px",
-            left: "20px",
+            top: isMobile ? "10px" : "20px",
+            left: isMobile ? "10px" : "20px",
             cursor: "pointer",
             zIndex: 1000,
           }}
@@ -690,9 +697,11 @@ const FluencyP1 = ({
         {!showFinalResult ? (
           <div
             style={{
-              width: "90%",
+              width: isMobile ? "calc(100% - 20px)" : "90%",
               maxWidth: "1500px",
-              height: "460px",
+              minHeight: isMobile ? "unset" : "70vh",
+              height: isMobile ? "calc(100dvh - 280px)" : "460px",
+              maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
               background: "#fff",
               borderRadius: "12px",
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -700,19 +709,23 @@ const FluencyP1 = ({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "space-between",
-              padding: "10px",
+              padding: isMobile ? "0 10px 16px 10px" : "10px",
               paddingBottom: isMobile ? "15px" : "40px",
               position: "relative",
+              overflow: isMobile ? "auto" : "visible",
+              boxSizing: "border-box",
+              marginLeft: isMobile ? "10px" : "auto",
+              marginRight: isMobile ? "10px" : "auto",
             }}
           >
             <div
               style={{
-                width: "103.5%",
+                width: isMobile ? "100%" : "103.5%",
                 position: "relative",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginTop: "-19px",
+                marginTop: isMobile ? "0px" : "-19px",
               }}
             >
               <img
@@ -757,11 +770,11 @@ const FluencyP1 = ({
                   }}
                   alt="listen"
                   style={{
-                    width: "40px",
-                    height: "40px",
+                    width: "50px",
+                    height: "50px",
                     cursor: "pointer",
                     order: isMobile ? 2 : undefined,
-                    marginTop: isMobile ? "50px" : undefined,
+                    marginTop: isMobile ? "30px" : undefined,
                   }}
                 />
               )}
@@ -881,9 +894,11 @@ const FluencyP1 = ({
         ) : (
           <div
             style={{
-              width: "90%",
+              width: isMobile ? "calc(100% - 20px)" : "90%",
               //maxWidth: "1500px",
-              height: "400px",
+              minHeight: isMobile ? "unset" : "70vh",
+              height: isMobile ? "calc(100dvh - 280px)" : "400px",
+              maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
               background: `url(${backgroundImg}) center/cover no-repeat`,
               borderRadius: "12px",
               boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
@@ -893,7 +908,10 @@ const FluencyP1 = ({
               alignItems: "center",
               padding: isMobile ? "22px 10px 10px" : "10px",
               position: "relative",
-              //backgroundColor: "linear-gradient(to bottom, #fff7ef, #ffeede)",
+              overflow: isMobile ? "auto" : "visible",
+              boxSizing: "border-box",
+              marginLeft: isMobile ? "10px" : "auto",
+              marginRight: isMobile ? "10px" : "auto",
             }}
           >
             <div
@@ -907,7 +925,10 @@ const FluencyP1 = ({
               <img
                 src={meterImg}
                 alt="meter"
-                style={{ width: isMobile ? "38px" : "70px", marginRight: "8px" }}
+                style={{
+                  width: isMobile ? "38px" : "70px",
+                  marginRight: "8px",
+                }}
               />
               <h2
                 style={{
