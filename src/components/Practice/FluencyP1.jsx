@@ -370,12 +370,17 @@ const FluencyP1 = ({
     };
   }, []);
 
-  const rawProgressData = getLocalData("practiceProgress");
-  const progressDatas =
-    typeof rawProgressData === "string"
-      ? JSON.parse(rawProgressData)
-      : rawProgressData;
-  const currentPracticeStep = progressDatas?.currentPracticeStep;
+  let progressDatas = getLocalData("practiceProgress");
+  //const virtualId = String(getLocalData("virtualId"));
+
+  if (typeof progressDatas === "string") {
+    progressDatas = JSON.parse(progressDatas);
+  }
+
+  let currentPracticeStep;
+  if (progressDatas) {
+    currentPracticeStep = progressDatas?.currentPracticeStep;
+  }
 
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");
