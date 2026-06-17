@@ -7,7 +7,7 @@ import { LevelSelector } from "../LevelSelector";
 import { TryAgain } from "../TryAgain";
 import { LetterGamePreview } from "./LetterGamePreview";
 import { LetterHuntGameCore, type LetterHuntQuestion } from "./LetterHuntGameCore";
-import { ArrowLeft, RotateCcw, TrendingUp, Globe } from "lucide-react";
+import { ArrowLeft, RotateCcw, TrendingUp, Globe, Clock } from "lucide-react";
 import { useLearningProgress } from "../../hooks/useLearningProgress";
 import { type LetterQuestion } from "../../utils/gameDataGenerators";
 import { memoryGameDataLoader } from "../../utils/memoryGameDataLoader";
@@ -1170,34 +1170,21 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
   }
 
   return (
-    <div className="h-full  p-3 sm:p-0.5 md:p-1 lg:p-2 xl:p-4 overflow-hidden flex flex-col">
-      <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col min-h-0">
+    <div className="h-full bg-gradient-cool rounded-[20px] p-2 sm:p-3 md:p-4 overflow-hidden flex flex-col">
+      <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 overflow-hidden">
         {/* Header */}
-        <div className="flex flex-row items-center justify-center mb-0 gap-0 sm:gap-0.5 md:gap-1 flex-shrink-0">
-          {/* Back button removed - using justify-center instead of justify-between */}
+        <div className="flex flex-row items-center justify-center mb-2 sm:mb-3 flex-shrink-0">
           <div className="text-center flex-1">
-            <h1 className="text-[16.5px] md:text-[20px] font-bold text-black drop-shadow-lg leading-tight pb-2">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1">
               Letter Recognition
             </h1>
-            {/* <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-sm sm:text-base md:text-lg mt-0.5">
-              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
+            <div className="flex items-center justify-center gap-2 text-white/80 text-xs">
+              <Clock className="h-3 w-3" />
               <span>
-                {selectedLevel !== null && selectedLevel !== gameProgress.currentLevel ? 
-                  `Level ${selectedLevel}` : 
-                  `Level ${currentLevel}`
-                }
+                Level {currentLevel} • {difficultySettings.complexity.toLowerCase()} • 5-8 min
               </span>
-            </div> */}
+            </div>
           </div>
-          
-          {/* <Button 
-            variant="outline" 
-            onClick={resetGame}
-            className="bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2"
-          >
-            <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Reset</span>
-          </Button> */}
         </div>
 
         {/* Main Content Card */}

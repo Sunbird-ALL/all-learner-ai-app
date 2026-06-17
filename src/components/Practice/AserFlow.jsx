@@ -77,7 +77,7 @@ const AserFlow = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   // disableScreen,
   isDemo,
@@ -537,7 +537,8 @@ const AserFlow = ({
       <div
         style={{
           width: "100%",
-          margin: "10px 0",
+          height: isMobile ? "100%" : "auto",
+          margin: isMobile ? "0" : "10px 0",
           background: "#fff",
           display: "flex",
           flexDirection: "column",
@@ -698,33 +699,33 @@ const AserFlow = ({
             const bubbleSize = isMobile ? "60px" : "100px";
             const positions = isMobile
               ? [
-                { top: "18%", left: "16%" },  // 0
-                { top: "71%", left: "14%" },  // 1
-                { top: "46%", left: "27%" },  // 2
-                { top: "48%", left: "54%" },  // 3
-                { top: "18%", left: "62%" },  // 4
-                { top: "47%", left: "78%" },  // 5
-                { top: "23%", left: "84%" },  // 6
-                { top: "72%", left: "82%" },  // 7
-                { top: "24%", left: "39%" },  // 8
-                { top: "72%", left: "47%" },  // 9
-                { top: "89%", left: "64%" },  // 10
-                { top: "89%", left: "30%" },  // 11
-              ]
+                  { top: "18%", left: "16%" }, // 0
+                  { top: "71%", left: "14%" }, // 1
+                  { top: "46%", left: "27%" }, // 2
+                  { top: "48%", left: "54%" }, // 3
+                  { top: "18%", left: "62%" }, // 4
+                  { top: "47%", left: "78%" }, // 5
+                  { top: "23%", left: "84%" }, // 6
+                  { top: "72%", left: "82%" }, // 7
+                  { top: "24%", left: "39%" }, // 8
+                  { top: "72%", left: "47%" }, // 9
+                  { top: "89%", left: "64%" }, // 10
+                  { top: "89%", left: "30%" }, // 11
+                ]
               : [
-                { top: "20%", left: "20%" },
-                { top: "70%", left: "15%" },
-                { top: "48%", left: "30%" },
-                { top: "48%", left: "53%" },
-                { top: "18%", left: "62%" },
-                { top: "52%", left: "73%" },
-                { top: "20%", left: "80%" },
-                { top: "73%", left: "85%" },
-                { top: "20%", left: "40%" },
-                { top: "75%", left: "43%" },
-                { top: "79%", left: "61%" },
-                { top: "83%", left: "30%" },
-              ];
+                  { top: "20%", left: "20%" },
+                  { top: "70%", left: "15%" },
+                  { top: "48%", left: "30%" },
+                  { top: "48%", left: "53%" },
+                  { top: "18%", left: "62%" },
+                  { top: "52%", left: "73%" },
+                  { top: "20%", left: "80%" },
+                  { top: "73%", left: "85%" },
+                  { top: "20%", left: "40%" },
+                  { top: "75%", left: "43%" },
+                  { top: "79%", left: "61%" },
+                  { top: "83%", left: "30%" },
+                ];
 
             const pos = positions[index % positions.length];
 
@@ -772,11 +773,11 @@ const AserFlow = ({
                       )
                         ? "drop-shadow(0 0 10px #08a169ff)"
                         : ansSelectionStatus.some(
-                          (item) =>
-                            item.text === char && item.status === false
-                        )
-                          ? "drop-shadow(0 0 10px #d31818ff)"
-                          : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
+                            (item) =>
+                              item.text === char && item.status === false
+                          )
+                        ? "drop-shadow(0 0 10px #d31818ff)"
+                        : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
                       transition: "filter 0.3s ease",
                     }}
                   />
@@ -874,8 +875,8 @@ const AserFlow = ({
             <Box
               sx={{
                 position: "absolute",
-                width: isAudioPlaying ? "0px" : (isMobile ? "70px" : "90px"),
-                height: isAudioPlaying ? "0px" : (isMobile ? "70px" : "90px"),
+                width: isAudioPlaying ? "0px" : isMobile ? "70px" : "90px",
+                height: isAudioPlaying ? "0px" : isMobile ? "70px" : "90px",
                 backgroundColor: "#A856FF",
                 borderRadius: "50%",
                 animation: isAudioPlaying
@@ -918,36 +919,36 @@ const AserFlow = ({
             });
             return shouldShowNext;
           })() && (
-              <img
-                src={nextImg}
-                alt="next"
-                role="button"
-                tabIndex={0}
-                style={{
-                  width: "50px",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                  opacity: hideContentDuringDemo ? 0 : 1,
-                  visibility: hideContentDuringDemo ? "hidden" : "visible",
-                  transition: "opacity 0.3s ease",
-                  zIndex: 10001,
-                  position: "relative",
-                }}
-                onClick={() => {
-                  console.log("AserFlow - Next button clicked after completion");
-                  // Handle navigation when next button is clicked after completion
-                  handleNext?.();
-                  if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                    navigate("/");
-                  } else {
-                    navigate("/discover-start");
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
-                }}
-              />
-            )}
+            <img
+              src={nextImg}
+              alt="next"
+              role="button"
+              tabIndex={0}
+              style={{
+                width: "50px",
+                cursor: "pointer",
+                marginLeft: "10px",
+                opacity: hideContentDuringDemo ? 0 : 1,
+                visibility: hideContentDuringDemo ? "hidden" : "visible",
+                transition: "opacity 0.3s ease",
+                zIndex: 10001,
+                position: "relative",
+              }}
+              onClick={() => {
+                console.log("AserFlow - Next button clicked after completion");
+                // Handle navigation when next button is clicked after completion
+                handleNext?.();
+                if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                  navigate("/");
+                } else {
+                  navigate("/discover-start");
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
+            />
+          )}
           <img
             src={listenBearGif}
             alt="bear"

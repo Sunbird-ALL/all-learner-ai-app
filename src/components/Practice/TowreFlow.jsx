@@ -2213,10 +2213,10 @@ const TowreFlow = ({
                   <div
                     style={{
                       position: "absolute",
-                      bottom: isMobile ? 150 : 116,
-                      right: isMobile ? 140 : 237,
-                      width: isMobile ? 150 : 183,
-                      height: isMobile ? 100 : 120,
+                      bottom: isMobile ? 95 : 116,
+                      right: isMobile ? 125 : 237,
+                      width: isMobile ? 120 : 183,
+                      height: isMobile ? 80 : 120,
                     }}
                   >
                     <img
@@ -2235,7 +2235,7 @@ const TowreFlow = ({
                     >
                       <div
                         style={{
-                          fontSize: isMobile ? 12 : 14,
+                          fontSize: isMobile ? 11 : 14,
                           fontWeight: "bold",
                         }}
                       >
@@ -2243,7 +2243,7 @@ const TowreFlow = ({
                       </div>
                       <div
                         style={{
-                          fontSize: isMobile ? 24 : 28,
+                          fontSize: isMobile ? 22 : 28,
                           fontWeight: "bold",
                           color: "#ff6e00",
                         }}
@@ -2257,9 +2257,9 @@ const TowreFlow = ({
                     src={pandaTimerImg}
                     alt="panda"
                     style={{
-                      height: isMobile ? 150 : 180,
+                      height: isMobile ? 130 : 180,
                       position: "absolute",
-                      right: 100,
+                      right: isMobile ? 10 : 100,
                       bottom: 20,
                     }}
                   />
