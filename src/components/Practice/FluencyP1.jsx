@@ -333,6 +333,34 @@ const FluencyP1 = ({
   const transcriptRef = useRef("");
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  const hintSize = isMobile ? "35px" : "50px";
+  const hintPos = isMobile ? "10px" : "20px";
+  const headerWidth = isMobile ? "100%" : "103.5%";
+  const headerMarginTop = isMobile ? "0px" : "-19px";
+  const buttonResetStyle = {
+    background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+  };
+  const getCardStyle = (desktopHeight, mobilePadding) => ({
+    width: isMobile ? "calc(100% - 20px)" : "90%",
+    minHeight: isMobile ? "unset" : "70vh",
+    height: isMobile ? "calc(100dvh - 280px)" : desktopHeight,
+    maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
+    background: "#fff",
+    borderRadius: "12px",
+    boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
+    display: "flex",
+    flexDirection: "column",
+    padding: isMobile ? mobilePadding : "10px",
+    position: "relative",
+    overflow: isMobile ? "auto" : "visible",
+    boxSizing: "border-box",
+    marginLeft: isMobile ? "10px" : "auto",
+    marginRight: isMobile ? "10px" : "auto",
+  });
   useEffect(() => {
     transcriptRef.current = transcript;
   }, [transcript]);
@@ -622,11 +650,11 @@ const FluencyP1 = ({
           src={hintimg}
           alt="hint"
           style={{
-            width: isMobile ? "35px" : "50px",
-            height: isMobile ? "35px" : "50px",
+            width: hintSize,
+            height: hintSize,
             position: "absolute",
-            top: isMobile ? "10px" : "20px",
-            left: isMobile ? "10px" : "20px",
+            top: hintPos,
+            left: hintPos,
             cursor: "pointer",
             zIndex: 1000,
           }}
@@ -697,35 +725,21 @@ const FluencyP1 = ({
         {!showFinalResult ? (
           <div
             style={{
-              width: isMobile ? "calc(100% - 20px)" : "90%",
+              ...getCardStyle("460px", "0 10px 16px 10px"),
               maxWidth: "1500px",
-              minHeight: isMobile ? "unset" : "70vh",
-              height: isMobile ? "calc(100dvh - 280px)" : "460px",
-              maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
-              background: "#fff",
-              borderRadius: "12px",
-              boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
-              display: "flex",
-              flexDirection: "column",
               alignItems: "center",
               justifyContent: "space-between",
-              padding: isMobile ? "0 10px 16px 10px" : "10px",
               paddingBottom: isMobile ? "15px" : "40px",
-              position: "relative",
-              overflow: isMobile ? "auto" : "visible",
-              boxSizing: "border-box",
-              marginLeft: isMobile ? "10px" : "auto",
-              marginRight: isMobile ? "10px" : "auto",
             }}
           >
             <div
               style={{
-                width: isMobile ? "100%" : "103.5%",
+                width: headerWidth,
                 position: "relative",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginTop: isMobile ? "0px" : "-19px",
+                marginTop: headerMarginTop,
               }}
             >
               <img
@@ -895,24 +909,10 @@ const FluencyP1 = ({
         ) : (
           <div
             style={{
-              width: isMobile ? "calc(100% - 20px)" : "90%",
-              //maxWidth: "1500px",
-              minHeight: isMobile ? "unset" : "70vh",
-              height: isMobile ? "calc(100dvh - 280px)" : "400px",
-              maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
+              ...getCardStyle("400px", "22px 10px 10px"),
               background: `url(${backgroundImg}) center/cover no-repeat`,
-              borderRadius: "12px",
-              boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
-              display: "flex",
-              flexDirection: "column",
               justifyContent: isMobile ? "flex-start" : "center",
               alignItems: "center",
-              padding: isMobile ? "22px 10px 10px" : "10px",
-              position: "relative",
-              overflow: isMobile ? "auto" : "visible",
-              boxSizing: "border-box",
-              marginLeft: isMobile ? "10px" : "auto",
-              marginRight: isMobile ? "10px" : "auto",
             }}
           >
             <div
