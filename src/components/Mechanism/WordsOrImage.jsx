@@ -6,7 +6,13 @@ import {
   Avatar,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { createRef, useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  createRef,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import v11 from "../../assets/audio/V10.mp3";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
