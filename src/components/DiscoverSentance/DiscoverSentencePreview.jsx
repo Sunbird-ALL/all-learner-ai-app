@@ -602,7 +602,13 @@ const DiscoverSentencePreview = ({ onStartGame, onBack }) => {
 
   // Render discovery UI with interactive demo
   return (
-    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+    <div
+      style={{
+        position: "relative",
+        height: isMobile ? "100dvh" : "100vh",
+        width: "100vw",
+      }}
+    >
       {/* Always render WordsOrImage (discovery UI) */}
       <WordsOrImage
         background="linear-gradient(45deg, #FF730E 30%, #FFB951 90%)"
