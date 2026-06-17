@@ -370,17 +370,12 @@ const FluencyP1 = ({
     };
   }, []);
 
-  let progressDatas = getLocalData("practiceProgress");
-  //const virtualId = String(getLocalData("virtualId"));
-
-  if (typeof progressDatas === "string") {
-    progressDatas = JSON.parse(progressDatas);
-  }
-
-  let currentPracticeStep;
-  if (progressDatas) {
-    currentPracticeStep = progressDatas?.currentPracticeStep;
-  }
+  const rawProgressData = getLocalData("practiceProgress");
+  const progressDatas =
+    typeof rawProgressData === "string"
+      ? JSON.parse(rawProgressData)
+      : rawProgressData;
+  const currentPracticeStep = progressDatas?.currentPracticeStep;
 
   const callTelemetry = async () => {
     const sessionId = getLocalData("sessionId");
@@ -839,21 +834,16 @@ const FluencyP1 = ({
                   />
                 </div>
               ) : showExtras ? (
-                <img
-                  src={nextImg}
-                  alt="next"
-                  role="button"
-                  tabIndex={0}
+                <button
                   onClick={
                     currentSentenceIndex === sentencesData.length - 1
                       ? handleNextToFinal
                       : handleNextClick
                   }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ")
-                      e.currentTarget.click();
-                  }}
                   style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
                     width: "50px",
                     position: "absolute",
                     bottom: isMobile ? "35px" : "20px",
@@ -861,7 +851,13 @@ const FluencyP1 = ({
                     transform: "translateX(-50%)",
                     cursor: "pointer",
                   }}
-                />
+                >
+                  <img
+                    src={nextImg}
+                    alt="next"
+                    style={{ width: "100%", display: "block" }}
+                  />
+                </button>
               ) : (
                 <img
                   src={bearImg}
@@ -988,24 +984,26 @@ const FluencyP1 = ({
                 : "Try reading faster"}
             </p>
 
-            <img
-              src={nextImg}
-              alt="next"
-              role="button"
-              tabIndex={0}
+            <button
               onClick={() => {
                 handleNextWord();
               }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
-              }}
               style={{
+                background: "none",
+                border: "none",
+                padding: 0,
                 width: "45px",
                 height: "45px",
                 margin: isMobile ? "20px 5px 5px" : "10px 20px",
                 cursor: "pointer",
               }}
-            />
+            >
+              <img
+                src={nextImg}
+                alt="next"
+                style={{ width: "100%", height: "100%", display: "block" }}
+              />
+            </button>
           </div>
         )}
       </div>
