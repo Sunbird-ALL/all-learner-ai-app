@@ -5005,8 +5005,8 @@ const Barakhadi = ({
     : {};
 
   const circleStyle = {
-    width: lang === "te" ? "28px" : "22px",
-    height: lang === "te" ? "28px" : "22px",
+    width: isMobile ? "29px" : lang === "te" ? "28px" : "29px",
+    height: isMobile ? "29px" : lang === "te" ? "28px" : "29px",
     borderRadius: "50%",
     background: "#2c3e50",
     color: "#fff",
@@ -5331,8 +5331,15 @@ const Barakhadi = ({
                               alignItems: "center",
                               justifyContent: "center",
                               margin: "auto",
-                              fontSize: lang === "te" ? "28px" : "18px",
+                              fontSize: isMobile
+                                ? lang === "te"
+                                  ? "18px"
+                                  : "14px"
+                                : lang === "te"
+                                ? "28px"
+                                : "18px",
                               fontFamily: getFontFamily(lang),
+                              lineHeight: "1",
                             }}
                           >
                             {v}
@@ -5370,8 +5377,15 @@ const Barakhadi = ({
                                 alignItems: "center",
                                 justifyContent: "center",
                                 margin: "auto",
-                                fontSize: lang === "te" ? "28px" : "18px",
+                                fontSize: isMobile
+                                  ? lang === "te"
+                                    ? "18px"
+                                    : "14px"
+                                  : lang === "te"
+                                  ? "28px"
+                                  : "18px",
                                 fontFamily: getFontFamily(lang),
+                                lineHeight: "1",
                               }}
                             >
                               {consonant}
@@ -5609,7 +5623,12 @@ const Barakhadi = ({
             <div
               style={{
                 position: "relative",
-                paddingLeft: isMobile ? "45px" : "60px",
+                paddingLeft: isMobile
+                  ? lang === "te"
+                    ? "52px"
+                    : "48px"
+                  : "60px",
+                paddingBottom: isMobile ? "85px" : "0px",
                 marginTop: isMobile ? "20px" : "30px",
                 height: isMobile ? "54%" : "100%",
                 overflowY: isMobile ? "auto" : "visible",
@@ -5622,7 +5641,11 @@ const Barakhadi = ({
                     key={i}
                     style={{
                       ...leftCircleStyle,
-                      left: "11px",
+                      left: isMobile
+                        ? lang === "te"
+                          ? "9px"
+                          : "10px"
+                        : "11px",
                       top: isMobile ? `${i * 45 + 103}px` : `${i * 45 + 36}px`,
                     }}
                   >
@@ -5679,14 +5702,33 @@ const Barakhadi = ({
 
             {/* Bottom button row common to both views */}
             <div
-              style={{
-                marginTop: isMobile ? "16px" : "10px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "20px",
-                padding: "0 20px",
-              }}
+              style={
+                isMobile
+                  ? {
+                      position: "absolute",
+                      bottom: "12px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: "calc(100% - 22px)",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "20px",
+                      padding: "16px 0 8px 0",
+                      background: "#fff",
+                      borderTop: "1px solid #eee",
+                      borderRadius: "0 0 12px 12px",
+                      zIndex: 10,
+                    }
+                  : {
+                      marginTop: "10px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "20px",
+                      padding: "0 20px",
+                    }
+              }
             >
               <div
                 style={{
