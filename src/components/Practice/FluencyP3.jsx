@@ -647,7 +647,7 @@ const FluencyP3 = ({
         <div
           style={{
             width: isMobile ? "calc(100% - 20px)" : "95%",
-            minHeight: isMobile ? "unset" : "560px",
+            minHeight: isMobile ? "unset" : "70vh",
             height: isMobile ? "calc(100dvh - 280px)" : "auto",
             maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
             background: "#fff",
