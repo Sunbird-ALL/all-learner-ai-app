@@ -1275,6 +1275,7 @@ const WordsOrImage = ({
                         display: isMobile ? "flex" : undefined,
                         flexDirection: isMobile ? "column" : undefined,
                         alignItems: isMobile ? "center" : undefined,
+                        textAlign: "center",
                         width: isMobile ? "100%" : undefined,
                       }}
                     >

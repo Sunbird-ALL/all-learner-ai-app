@@ -502,7 +502,7 @@ const SpeakSentenceComponent = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "100dvh",
           gap: 2,
           px: 3,
           textAlign: "center",
@@ -526,7 +526,7 @@ const SpeakSentenceComponent = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "100dvh",
           gap: 2,
         }}
       >
