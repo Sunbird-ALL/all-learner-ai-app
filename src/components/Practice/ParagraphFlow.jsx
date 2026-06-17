@@ -162,9 +162,11 @@ const styles = `
       margin-right: auto !important;
       width: 85% !important;
       max-width: 100% !important;
+      flex-shrink: 0 !important;
     }
     .pf-book-section .scale-transition img {
-      height: 35vh !important;
+      max-height: 25vh !important;
+      height: auto !important;
       width: 100% !important;
       object-fit: contain !important;
     }
@@ -195,8 +197,8 @@ const styles = `
       margin-top: 12px !important;
       margin-bottom: 8px !important;
       flex-shrink: 0 !important;
-      width: 40px !important;
-      height: 40px !important;
+      width: 50px !important;
+      height: 50px !important;
       padding: 0 !important;
     }
     .pf-next-btn {
@@ -226,8 +228,8 @@ const styles = `
       max-height: none !important;
     }
     .pf-bear-dance {
-      width: 150px !important;
-      max-height: 200px !important;
+      width: 100px !important;
+      max-height: 150px !important;
       object-fit: contain !important;
     }
     .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition {
@@ -1523,7 +1525,7 @@ const ParagraphFlow = ({
                 left: "22%",
                 top: "30%",
                 transform: "translate(-100%, -50%)",
-                width: "50px",
+                width: "70px",
                 cursor: "pointer",
                 opacity: isPlayingAudio ? 0.8 : 1,
                 transition: "all 0.3s ease",

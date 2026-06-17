@@ -6709,8 +6709,9 @@ const LetterTrain = ({
                 borderRadius: { xs: "16px", sm: "20px", md: "24px" },
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 minWidth: { xs: "80px", sm: "120px", md: "140px" },
-                left: { xs: "18px", sm: 12, md: 16 },
-                top: { xs: "80px", sm: 14, md: 16 },
+                left: { xs: "50%", sm: 12, md: 16 },
+                top: { xs: "7vh", sm: 14, md: 16 },
+                transform: { xs: "translateX(-50%)", sm: "none" },
                 position: "absolute",
                 backdropFilter: "blur(5px)",
               }}
