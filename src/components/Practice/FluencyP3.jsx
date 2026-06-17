@@ -512,7 +512,7 @@ const FluencyP3 = ({
           alt="Beardance"
           style={{
             position: "absolute",
-            bottom: isMobile ? -30 : -42,
+            bottom: isMobile ? "0px" : "-42px",
             left: "50%",
             transform: "translateX(-50%)",
             height: isMobile ? "100px" : "200px",
@@ -534,7 +534,7 @@ const FluencyP3 = ({
           alt="Beardance"
           style={{
             position: "absolute",
-            bottom: isMobile ? -30 : -42,
+            bottom: isMobile ? "0px" : "-42px",
             left: "50%",
             transform: "translateX(-50%)",
             height: isMobile ? "100px" : "200px",
@@ -835,7 +835,7 @@ const FluencyP3 = ({
           ) : showWordAfterYes ? (
             <div
               style={{
-                marginTop: isMobile ? "100px" : "10px",
+                marginTop: isMobile ? "20px" : "10px",
                 textAlign: "center",
                 flex: 1,
                 position: "relative",
@@ -843,6 +843,8 @@ const FluencyP3 = ({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                justifyContent: "space-between",
+                paddingBottom: isMobile ? "20px" : "40px",
               }}
             >
               <div

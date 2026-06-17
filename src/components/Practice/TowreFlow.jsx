@@ -1262,6 +1262,18 @@ const TowreFlow = ({
     () => allWordSets[currentWordSetIndex],
     [allWordSets, currentWordSetIndex]
   );
+  const displayedWordSet = useMemo(() => {
+    if (!currentWordSet) return [];
+    if (isMobile) {
+      const flatWords = currentWordSet.flat();
+      const mobileRows = [];
+      for (let i = 0; i < flatWords.length; i += 3) {
+        mobileRows.push(flatWords.slice(i, i + 3));
+      }
+      return mobileRows;
+    }
+    return currentWordSet;
+  }, [currentWordSet, isMobile]);
   const transcriptRef = useRef("");
   const location = useLocation();
   background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
@@ -2366,7 +2378,7 @@ const TowreFlow = ({
                 <div
                   style={{ display: "flex", flexDirection: "column", gap: 10 }}
                 >
-                  {currentWordSet.map((row, rowIndex) => (
+                  {displayedWordSet.map((row, rowIndex) => (
                     <div
                       key={rowIndex}
                       style={{
@@ -2382,7 +2394,7 @@ const TowreFlow = ({
                           key={colIndex}
                           style={{
                             position: "relative",
-                            width: isMobile ? 74 : 180,
+                            width: isMobile ? 105 : 180,
                             height: isMobile ? 50 : 85,
                             display: "flex",
                             justifyContent: "center",
@@ -2397,7 +2409,7 @@ const TowreFlow = ({
                             style={{
                               width: "100%",
                               height: "100%",
-                              objectFit: "contain",
+                              objectFit: isMobile ? "fill" : "contain",
                               opacity: 1,
                             }}
                           />
@@ -2408,10 +2420,10 @@ const TowreFlow = ({
                               fontSize:
                                 lang === "te"
                                   ? isMobile
-                                    ? 18
+                                    ? 14
                                     : 24
                                   : isMobile
-                                  ? 16
+                                  ? 12
                                   : 20,
                               fontFamily: getFontFamily(lang),
                             }}
@@ -2513,7 +2525,7 @@ const TowreFlow = ({
                 <div
                   style={{ display: "flex", flexDirection: "column", gap: 10 }}
                 >
-                  {currentWordSet.map((row, rowIndex) => (
+                  {displayedWordSet.map((row, rowIndex) => (
                     <div
                       key={rowIndex}
                       style={{
@@ -2527,7 +2539,7 @@ const TowreFlow = ({
                     >
                       {row.map((wordObj, colIndex) => {
                         const isActive =
-                          activeSet < currentWordSet.length &&
+                          activeSet < displayedWordSet.length &&
                           rowIndex === activeSet;
                         const boxImage = isActive ? activeboxImg : boxImg;
 
@@ -2536,7 +2548,7 @@ const TowreFlow = ({
                             key={colIndex}
                             style={{
                               position: "relative",
-                              width: isMobile ? 74 : 180,
+                              width: isMobile ? 105 : 180,
                               height: isMobile ? 50 : 100,
                               display: "flex",
                               justifyContent: "center",
@@ -2573,7 +2585,7 @@ const TowreFlow = ({
                               style={{
                                 width: "100%",
                                 height: "100%",
-                                objectFit: "contain",
+                                objectFit: isMobile ? "fill" : "contain",
                                 opacity: 1,
                               }}
                             />
@@ -2585,10 +2597,10 @@ const TowreFlow = ({
                                 fontSize:
                                   lang === "te"
                                     ? isMobile
-                                      ? 18
+                                      ? 14
                                       : 24
                                     : isMobile
-                                    ? 16
+                                    ? 12
                                     : 20,
                                 fontFamily: getFontFamily(lang),
                               }}

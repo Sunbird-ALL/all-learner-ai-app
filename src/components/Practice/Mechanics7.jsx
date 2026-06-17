@@ -81,7 +81,7 @@ const Mechanics7 = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -465,7 +465,7 @@ const Mechanics7 = ({
       recognitionInstance.lang = "en-US";
       recognitionInstance.maxAlternatives = 1;
 
-      recognitionInstance.onstart = () => { };
+      recognitionInstance.onstart = () => {};
 
       recognitionInstance.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
@@ -703,8 +703,8 @@ const Mechanics7 = ({
     selectedWordsRef.current?.length !== wordsAfterSplit?.length
       ? ""
       : selectedWordsRef.current?.join(" ") === parentWords
-        ? "correct"
-        : "wrong";
+      ? "correct"
+      : "wrong";
 
   // useEffect(() => {
   //   const isWrong =
@@ -874,7 +874,7 @@ const Mechanics7 = ({
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+                if (e.key === "Enter" || e.key === " ") {
                   setOpen(true);
                 }
               }}
@@ -996,7 +996,7 @@ const Mechanics7 = ({
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     setOpen(true);
                   }
                 }}
@@ -1059,22 +1059,22 @@ const Mechanics7 = ({
                 backgroundColor: !isRecorded
                   ? "#1CB0F60F" // default background
                   : isIncorrectWord
-                    ? "#58CC020F" // red FF7F360F
-                    : "#58CC020F", // green background
+                  ? "#58CC020F" // red FF7F360F
+                  : "#58CC020F", // green background
                 border: !isRecorded
                   ? "2px solid #00000033" // default border
                   : isIncorrectWord
-                    ? "2px solid #58CC02" // red FF7F36
-                    : "2px solid #58CC02", // green border
+                  ? "2px solid #58CC02" // red FF7F36
+                  : "2px solid #58CC02", // green border
                 borderRadius: "16px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: isMobile ? "10px 20px" : "10px 70px",
+                padding: isMobile ? "10px 15px" : "10px 70px",
                 marginBottom: "16px",
-                width: isMobile ? "250px" : "400px",
-                height: "150px",
+                width: isMobile ? "220px" : "400px",
+                height: isMobile ? "100px" : "150px",
                 position: { xs: "relative", sm: "static" },
                 top: { xs: "-50px", sm: "0px" },
               }}
@@ -1102,12 +1102,10 @@ const Mechanics7 = ({
                 {isLastSyllable && isRecorded ? (
                   <span
                     style={{
-                      color: !isRecorded
-                        ? "#333F61"
-                        : "#58CC02",
+                      color: !isRecorded ? "#333F61" : "#58CC02",
                       fontWeight: 700,
-                      fontSize: isMobile ? "30px" : "50px",
-                      lineHeight: isMobile ? "60px" : "70px",
+                      fontSize: isMobile ? "35px" : "50px",
+                      lineHeight: isMobile ? "45px" : "70px",
                       letterSpacing: isMobile ? "1%" : "2%",
                       fontFamily: "Quicksand",
                       textTransform: "uppercase",
@@ -1118,12 +1116,10 @@ const Mechanics7 = ({
                 ) : (
                   <span
                     style={{
-                      color: !isRecorded
-                        ? "#333F61"
-                        : "#58CC02",
+                      color: !isRecorded ? "#333F61" : "#58CC02",
                       fontWeight: 700,
-                      fontSize: "50px",
-                      lineHeight: isMobile ? "60px" : "70px",
+                      fontSize: isMobile ? "35px" : "50px",
+                      lineHeight: isMobile ? "45px" : "70px",
                       letterSpacing: isMobile ? "1%" : "2%",
                       fontFamily: "Quicksand",
                       textTransform: "uppercase",

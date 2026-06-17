@@ -1210,7 +1210,7 @@ export function LetterLauncherGameStoryPreview({
   };
 
   // Render speech bubble with smooth fade animation (no shrink/wobble)
-  const SpeechBubble = ({ text, character, position = 'left', index, isVisible = true }: { text: string; character: 'rahi' | 'rilo' | 'narrator'; position?: 'left' | 'right' | 'center'; index?: number; isVisible?: boolean }) => {
+  const SpeechBubble = ({ text, character, position = 'left', index, isVisible = true, arrowAlign = 'center' }: { text: string; character: 'rahi' | 'rilo' | 'narrator'; position?: 'left' | 'right' | 'center'; index?: number; isVisible?: boolean; arrowAlign?: 'center' | 'right' }) => {
     const characterEmoji = character === 'rahi' ? '👨‍🚀' : character === 'rilo' ? '🤖' : '✨';
     const characterName = character === 'rahi' ? 'Captain Rahi' : character === 'rilo' ? 'Rilo' : '';
     
@@ -1225,18 +1225,26 @@ export function LetterLauncherGameStoryPreview({
           visibility: isVisible ? 'visible' : 'hidden'
         }}
       >
-        <div className="relative w-full max-w-[123px] xs:max-w-[140px] sm:max-w-[220px] md:max-w-sm lg:max-w-md xl:max-w-lg">
+        <div className={`relative w-full ${
+          arrowAlign === 'right' 
+            ? 'max-w-[240px] sm:max-w-[220px] md:max-w-sm lg:max-w-md xl:max-w-lg' 
+            : 'max-w-[123px] xs:max-w-[140px] sm:max-w-[220px] md:max-w-sm lg:max-w-md xl:max-w-lg'
+        }`}>
           {/* Speech bubble */}
           <div className={`bg-white rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-2.5 md:p-3 lg:p-4 shadow-lg border-2 ${character === 'rahi' ? 'border-blue-300' :
             character === 'rilo' ? 'border-purple-300' : 
             'border-yellow-300'
           }`}>
-            <p className="text-[10px] xs:text-[11px] sm:text-sm md:text-base lg:text-lg text-gray-800 leading-tight sm:leading-relaxed whitespace-pre-line text-center break-words">
+            <p className="text-[11px] xs:text-[12px] sm:text-sm md:text-base lg:text-lg text-gray-800 leading-tight sm:leading-relaxed whitespace-pre-line text-center break-words">
               {text}
             </p>
           </div>
           {/* Arrow pointing DOWN to character below */}
-          <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 sm:-bottom-2 md:-bottom-3">
+          <div className={`absolute -bottom-1.5 sm:-bottom-2 md:-bottom-3 ${
+            arrowAlign === 'right' 
+              ? 'right-6 left-auto translate-x-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2' 
+              : 'left-1/2 -translate-x-1/2'
+          }`}>
             <div className={`w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] sm:border-l-[8px] sm:border-r-[8px] sm:border-t-[10px] md:border-l-[10px] md:border-r-[10px] md:border-t-[12px] lg:border-l-[12px] lg:border-r-[12px] lg:border-t-[14px] ${character === 'rahi' ? 'border-l-transparent border-r-transparent border-t-blue-300' :
               character === 'rilo' ? 'border-l-transparent border-r-transparent border-t-purple-300' :
               'border-l-transparent border-r-transparent border-t-yellow-300'
@@ -1517,7 +1525,6 @@ export function LetterLauncherGameStoryPreview({
                             maxWidth: 'min(calc(100vw - 3rem), 300px)',
                             left: '50%',
                             transform: 'translateX(-50%)',
-                            // On mobile, ensure it doesn't overflow right edge
                             right: 'auto'
                           }}
                         >
@@ -1654,13 +1661,14 @@ export function LetterLauncherGameStoryPreview({
 
                 {/* Practice with conversation - Grid layout for round 1 */}
                 {practiceQuestion && practiceRound === 1 && showControlsInstruction && !showPracticeIntro && (
-                <div className="w-full max-w-full px-1 sm:px-2 md:px-0"
+                <div className="w-full max-w-full px-1 sm:px-2 md:px-0 relative"
                     style={{
-                      height: "93%",
+                      height: "100%",
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
-
+                      paddingBottom: "1px",
+                      boxSizing: "border-box"
                     }}
                   >
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:gap-6 w-full">
@@ -1717,16 +1725,11 @@ export function LetterLauncherGameStoryPreview({
                       {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
                       {/* On mobile: positioned higher to avoid overlap with game card */}
                       <div 
-                        className="absolute bottom-full mb-2 sm:mb-3 md:mb-4 left-1/2 -translate-x-1/2 z-20"
+                        className="absolute bottom-full mb-2 sm:mb-3 md:mb-4 right-[-10px] left-auto translate-x-0 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 z-20 w-[240px] sm:w-[clamp(120px,70vw,320px)] max-w-[calc(100vw-1.5rem)] sm:max-w-[min(calc(100vw-3rem),320px)]"
                         style={{ 
                           opacity: 1, 
                           transition: 'opacity 0.5s ease-in-out',
-                          pointerEvents: 'auto',
-                          width: 'clamp(120px, 70vw, 320px)',
-                          maxWidth: 'min(calc(100vw - 3rem), 320px)',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          right: 'auto'
+                          pointerEvents: 'auto'
                         }}
                       >
                         <SpeechBubble 
@@ -1735,6 +1738,7 @@ export function LetterLauncherGameStoryPreview({
                           position="center"
                           index={0}
                           isVisible={true}
+                          arrowAlign="right"
                         />
                       </div>
                       
@@ -1876,8 +1880,8 @@ export function LetterLauncherGameStoryPreview({
                           opacity: visibleSpeechBubbles.length > 0 ? 1 : 0, 
                           transition: 'opacity 0.5s ease-in-out',
                           pointerEvents: visibleSpeechBubbles.length > 0 ? 'auto' : 'none',
-                            width: 'clamp(120px, 70vw, 320px)',
-                            maxWidth: 'min(calc(100vw - 3rem), 320px)',
+                          width: 'clamp(120px, 70vw, 320px)',
+                          maxWidth: 'min(calc(100vw - 3rem), 320px)',
                           left: '50%',
                           transform: 'translateX(-50%)',
                           right: 'auto'
@@ -1963,8 +1967,8 @@ export function LetterLauncherGameStoryPreview({
                         opacity: visibleSpeechBubbles.length > 0 ? 1 : 0, 
                         transition: 'opacity 0.5s ease-in-out',
                         pointerEvents: visibleSpeechBubbles.length > 0 ? 'auto' : 'none',
-                            width: 'clamp(120px, 70vw, 320px)',
-                            maxWidth: 'min(calc(100vw - 3rem), 320px)',
+                        width: 'clamp(120px, 70vw, 320px)',
+                        maxWidth: 'min(calc(100vw - 3rem), 320px)',
                         left: '50%',
                         transform: 'translateX(-50%)',
                         right: 'auto'

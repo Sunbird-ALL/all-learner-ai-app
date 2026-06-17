@@ -347,13 +347,13 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
             transform: "translateX(-50%)",
             backgroundColor: "white",
             boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-            padding: isMobile ? "14px 12px" : "16px 24px",
+            padding: isMobile ? "8px 12px" : "16px 24px",
             position: "absolute",
             top: isMobile ? "80px" : "160px",
             borderRadius: "12px",
             zIndex: 10000,
             left: "50%",
-            width: isMobile ? "190px" : "auto",
+            width: isMobile ? "145px" : "auto",
           }}
         >
           <div
@@ -362,13 +362,13 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
             }`}
           >
             <div
-              className={`gap-2 flex items-center ${
-                isMobile ? "mb-1.5" : "mb-3"
+              className={`gap-1.5 flex items-center ${
+                isMobile ? "mb-1" : "mb-3"
               }`}
             >
               <div
                 className={`${
-                  isMobile ? "w-6 h-6" : "w-8 h-8"
+                  isMobile ? "w-5 h-5" : "w-8 h-8"
                 } rounded-full bg-blue-500 justify-center items-center flex`}
               >
                 <Sparkles
@@ -377,7 +377,7 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
               </div>
               <h2
                 className={`font-bold text-gray-800 ${
-                  isMobile ? "text-sm" : "text-base"
+                  isMobile ? "text-xs" : "text-base"
                 }`}
               >
                 {instructions.howToPlay}
@@ -385,7 +385,7 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
             </div>
             <Progress
               value={(currentDemoStep / 3) * 100}
-              className={`h-1.5 ${isMobile ? "w-36" : "w-64"}`}
+              className={`${isMobile ? "h-1 w-28" : "h-1.5 w-64"}`}
             />
           </div>
         </div>
