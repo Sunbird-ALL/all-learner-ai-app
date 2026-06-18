@@ -1264,7 +1264,7 @@ const WordsOrImage = ({
                           : "clamp(3rem, 4vw, 5rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "30px" : "50px",
+                        lineHeight: isMobile ? "1.4" : "50px",
                         //background: "#FFF0BD",
                         color:
                           isTranscriptCorrect === true
