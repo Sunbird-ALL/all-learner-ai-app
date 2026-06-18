@@ -6073,7 +6073,7 @@ const PhrasesInAction = ({
         }}
       >
         {/* Zone 1 — showcase clearance spacer only (Rule 3) */}
-        <Box
+        {/* <Box
           sx={{
             flexShrink: 0,
             paddingTop: {
@@ -6082,7 +6082,7 @@ const PhrasesInAction = ({
               md: isShowCase ? "54px" : "0px",
             },
           }}
-        />
+        /> */}
 
         {/* Zone 2 — interactive content (Rule 2, 11) */}
         <Box
@@ -6099,23 +6099,29 @@ const PhrasesInAction = ({
             boxSizing: "border-box",
           }}
         >
-          {/* White card — my:"auto" centers on desktop, collapses to 0 on overflow so scroll always reveals top */}
+          <Box sx={{ flex: "1 0 0", minHeight: 0 }} />
+
+          {/* White card */}
           <Box
             sx={{
               width: { xs: "95%", md: "90%" },
-              maxWidth: "700px",
-              my: "auto",
+              maxWidth: { xs: "700px", md: "900px" },
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "flex-start",
+              justifyContent: "center",
               backgroundColor: "#ffffff",
               borderRadius: "20px",
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
               border: "1px solid #d9d2fc",
-              py: { xs: "12px", sm: "16px", md: "20px" },
-              px: { xs: "8px", md: "16px" },
+              py: { xs: "12px", sm: "16px", md: "24px" },
+              px: { xs: "8px", md: "28px" },
               boxSizing: "border-box",
+              minHeight: {
+                xs: "clamp(220px, 42dvh, 380px)",
+                md: "clamp(320px, 52dvh, 520px)",
+              },
+              flexShrink: 0,
             }}
           >
             {/* Instruction row — inside card, matches original layout */}
@@ -6127,7 +6133,7 @@ const PhrasesInAction = ({
                 flexWrap: "wrap",
                 gap: "8px",
                 width: "100%",
-                mb: { xs: "6px", md: "14px" },
+                mb: { xs: "6px", md: "20px" },
                 px: 1,
               }}
             >
@@ -6252,7 +6258,7 @@ const PhrasesInAction = ({
                         display: "flex",
                         justifyContent: "center",
                         width: "100%",
-                        my: { xs: "4px", sm: "8px", md: "12px" },
+                        my: { xs: "4px", sm: "8px", md: "14px" },
                       }}
                     >
                       {levelData?.allwords && levelData.allwords.length > 0 ? (
@@ -6273,8 +6279,8 @@ const PhrasesInAction = ({
                                     : "clamp(80px, 17dvh, 120px)",
                                   sm: "clamp(100px, 20dvh, 150px)",
                                   md: isRecording
-                                    ? "clamp(80px, 12dvh, 130px)"
-                                    : "clamp(130px, 18dvh, 180px)",
+                                    ? "clamp(100px, 14dvh, 150px)"
+                                    : "clamp(170px, 22dvh, 230px)",
                                 },
                                 height: {
                                   xs: isRecording
@@ -6282,12 +6288,12 @@ const PhrasesInAction = ({
                                     : "clamp(80px, 17dvh, 120px)",
                                   sm: "clamp(100px, 20dvh, 150px)",
                                   md: isRecording
-                                    ? "clamp(80px, 12dvh, 130px)"
-                                    : "clamp(140px, 20dvh, 190px)",
+                                    ? "clamp(100px, 14dvh, 150px)"
+                                    : "clamp(170px, 22dvh, 230px)",
                                 },
                                 border: "1px solid #000",
-                                m: { xs: "4px", md: "10px" },
-                                mb: { xs: "6px", md: "10px" },
+                                m: { xs: "4px", md: "6px" },
+                                mb: { xs: "6px", md: "6px" },
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -6364,51 +6370,70 @@ const PhrasesInAction = ({
                     </Box>
                   )}
 
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      position: "relative",
-                      width: "100%",
-                    }}
-                  >
-                    {isRecording && (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          mb: "5px",
-                          width: "100%",
-                        }}
-                      >
+                  {(isRecording || (!isRecording && !isRecordingStopped)) && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        position: "relative",
+                        width: "100%",
+                      }}
+                    >
+                      {isRecording && (
                         <Box
                           sx={{
-                            mt: { xs: "0px", md: "-45px" },
-                            mb: { xs: "4px", md: "55px" },
-                            width: "100%",
-                            maxWidth: "100%",
-                            paddingBottom: { xs: "32px", md: "48px" },
-                            boxSizing: "border-box",
                             display: "flex",
+                            flexDirection: "column",
                             justifyContent: "center",
-                            overflow: "hidden",
-                            "& > div": {
-                              "@media (max-width: 379px)": {
-                                transform: "scale(0.65)",
-                                transformOrigin: "top center",
-                              },
-                              "@media (min-width: 380px) and (max-width: 480px)":
-                                {
-                                  transform: "scale(0.78)",
-                                  transformOrigin: "top center",
-                                },
-                            },
+                            alignItems: "center",
+                            mb: "5px",
+                            width: "100%",
                           }}
                         >
-                          <RecordVoiceVisualizer />
+                          <Box
+                            sx={{
+                              mt: { xs: "4px", md: "8px" },
+                              mb: { xs: "4px", md: "8px" },
+                              width: "100%",
+                              maxWidth: "100%",
+                              paddingBottom: "26px",
+                              boxSizing: "border-box",
+                              display: "flex",
+                              justifyContent: "center",
+                              overflow: "hidden",
+                              "& > div": {
+                                "@media (max-width: 379px)": {
+                                  transform: "scale(0.65)",
+                                  transformOrigin: "top center",
+                                },
+                                "@media (min-width: 380px) and (max-width: 480px)":
+                                  {
+                                    transform: "scale(0.78)",
+                                    transformOrigin: "top center",
+                                  },
+                              },
+                            }}
+                          >
+                            <RecordVoiceVisualizer />
+                          </Box>
+                          <button
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                            }}
+                            onClick={handleMicClick}
+                          >
+                            <img
+                              src={Assets.pause}
+                              alt="Stop Recording"
+                              style={{ width: "45px", height: "45px" }}
+                            />
+                          </button>
                         </Box>
+                      )}
+                      {!isRecording && !isRecordingStopped && (
                         <button
                           style={{
                             background: "transparent",
@@ -6418,93 +6443,71 @@ const PhrasesInAction = ({
                           onClick={handleMicClick}
                         >
                           <img
-                            src={Assets.pause}
-                            alt="Stop Recording"
-                            style={{ width: "45px", height: "45px" }}
+                            src={Assets.mic}
+                            alt="Start Recording"
+                            style={{ width: "50px", height: "50px" }}
                           />
                         </button>
-                      </Box>
-                    )}
-                    {!isRecording && !isRecordingStopped && (
-                      <button
-                        style={{
-                          background: "transparent",
-                          border: "none",
-                          cursor: "pointer",
-                        }}
-                        onClick={handleMicClick}
-                      >
-                        <img
-                          src={Assets.mic}
-                          alt="Start Recording"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      </button>
-                    )}
-                  </Box>
+                      )}
+                    </Box>
+                  )}
 
                   {isRecordingStopped && (
                     <Box
                       sx={{
-                        mt: { xs: 0, md: "20px" },
+                        mt: { xs: "10px", md: "20px" },
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
                         width: "100%",
+                        gap: { xs: "10px", md: "16px" },
                       }}
                     >
                       {language === "en" && (
-                        <Box
-                          sx={{
-                            mt: { xs: "8px", md: 0 },
-                            ml: { xs: 0, md: "10px" },
-                          }}
+                        <AudioTooltipModal
+                          audioSrc={
+                            multilingual?.[multilingualLangCode]?.audio_url
+                          }
+                          description={levelData?.allwords[0]?.text}
                         >
-                          <AudioTooltipModal
-                            audioSrc={
-                              multilingual?.[multilingualLangCode]?.audio_url
-                            }
-                            description={levelData?.allwords[0]?.text}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              marginTop: "5px",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              border: "2px solid #FF7F36",
+                              borderRadius: "16px",
+                              gap: "8px",
+                              padding: { xs: "10px", md: "15px" },
+                              backgroundColor: "#fff",
+                              cursor: "pointer",
+                            }}
                           >
                             <Box
                               sx={{
+                                backgroundColor: "#FEBC2F66",
+                                borderRadius: "4px",
+                                padding: "5px",
                                 display: "flex",
-                                marginTop: "5px",
                                 alignItems: "center",
-                                justifyContent: "space-between",
-                                border: "2px solid #FF7F36",
-                                borderRadius: "16px",
-                                gap: "8px",
-                                padding: { xs: "10px", md: "15px" },
-                                backgroundColor: "#fff",
-                                cursor: "pointer",
+                                justifyContent: "center",
                               }}
                             >
                               <Box
+                                component="span"
                                 sx={{
-                                  backgroundColor: "#FEBC2F66",
-                                  borderRadius: "4px",
-                                  padding: "5px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
+                                  fontSize: "clamp(24px, 3vw, 40px)",
+                                  fontWeight: "400",
+                                  color: "#333F61",
                                 }}
                               >
-                                <Box
-                                  component="span"
-                                  sx={{
-                                    fontSize: "clamp(24px, 3vw, 40px)",
-                                    fontWeight: "400",
-                                    color: "#333F61",
-                                  }}
-                                >
-                                  {nativeLangSymbol}
-                                </Box>
+                                {nativeLangSymbol}
                               </Box>
-                              <ListenButton height={50} width={50} />
                             </Box>
-                          </AudioTooltipModal>
-                        </Box>
+                            <ListenButton height={50} width={50} />
+                          </Box>
+                        </AudioTooltipModal>
                       )}
                       <Box
                         sx={{
@@ -6512,7 +6515,8 @@ const PhrasesInAction = ({
                           alignItems: "center",
                           justifyContent: "center",
                           gap: "20px",
-                          mt: { xs: 0, md: "30px" },
+                          mt: { xs: "4px", md: "14px" },
+                          mb: { xs: "6px", md: 0 },
                         }}
                       >
                         {language !== "en" && recordedBlob && (
@@ -6567,8 +6571,8 @@ const PhrasesInAction = ({
                                   : "clamp(90px, 15dvh, 120px)",
                                 sm: "clamp(110px, 17dvh, 140px)",
                                 md: isRecording2
-                                  ? "clamp(80px, 12dvh, 120px)"
-                                  : "clamp(120px, 16dvh, 170px)",
+                                  ? "clamp(100px, 14dvh, 150px)"
+                                  : "clamp(170px, 21dvh, 220px)",
                               },
                               height: {
                                 xs: isRecording2
@@ -6576,8 +6580,8 @@ const PhrasesInAction = ({
                                   : "clamp(90px, 15dvh, 120px)",
                                 sm: "clamp(110px, 17dvh, 140px)",
                                 md: isRecording2
-                                  ? "clamp(80px, 12dvh, 120px)"
-                                  : "clamp(130px, 19dvh, 165px)",
+                                  ? "clamp(100px, 14dvh, 150px)"
+                                  : "clamp(170px, 21dvh, 220px)",
                               },
                               display: "flex",
                               justifyContent: "center",
@@ -6634,9 +6638,12 @@ const PhrasesInAction = ({
                       ) : (
                         <Grid
                           container
-                          spacing={{ xs: 1, md: 2 }}
+                          spacing={{ xs: 1, md: 3 }}
                           justifyContent="center"
-                          sx={{ m: 0, pl: 0 }}
+                          sx={{
+                            width: "100%",
+                            mt: { xs: "4px", sm: "8px", md: "18px" },
+                          }}
                         >
                           {levelData?.allwordsTwo?.map((item) => {
                             const gridImgSrc =
@@ -6649,11 +6656,11 @@ const PhrasesInAction = ({
                                 <Box
                                   onClick={() => handleDivClick(item.text)}
                                   sx={{
-                                    width: { xs: "82%", sm: "85%", md: "95%" },
+                                    width: "100%",
                                     height: {
                                       xs: "clamp(70px, 13dvh, 110px)",
                                       sm: "clamp(80px, 14dvh, 120px)",
-                                      md: "clamp(90px, 15dvh, 135px)",
+                                      md: "clamp(130px, 18dvh, 175px)",
                                     },
                                     display: "flex",
                                     justifyContent: "center",
@@ -6714,165 +6721,159 @@ const PhrasesInAction = ({
                     </>
                   )}
 
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      position: "relative",
-                      width: "100%",
-                      mt: isMatched
-                        ? { xs: "8px", sm: "16px", md: "50px" }
-                        : { xs: "8px", sm: "12px", md: "20px" },
-                    }}
-                  >
-                    {isRecording2 && (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          mb: { xs: 0, md: "10px" },
-                          width: "100%",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            mt: { xs: "0px", md: "-45px" },
-                            mb: { xs: "2px", sm: "2px", md: "10px" },
-                            width: "100%",
-                            maxWidth: "100%",
-                            paddingBottom: { xs: "32px", md: "48px" },
-                            boxSizing: "border-box",
-                            display: "flex",
-                            justifyContent: "center",
-                            overflow: "hidden",
-                            "& > div": {
-                              "@media (max-width: 379px)": {
-                                transform: "scale(0.65)",
-                                transformOrigin: "top center",
-                              },
-                              "@media (min-width: 380px) and (max-width: 480px)":
-                                {
-                                  transform: "scale(0.78)",
-                                  transformOrigin: "top center",
-                                },
-                              "@media (min-width: 481px)": {
-                                transform: "scaleY(1.3)",
-                                transformOrigin: "top center",
-                              },
-                            },
-                          }}
-                        >
-                          <RecordVoiceVisualizer />
-                        </Box>
-                        <button
-                          style={{
-                            background: "transparent",
-                            border: "none",
-                            cursor: "pointer",
-                          }}
-                          onClick={handleMicClick2}
-                        >
-                          <img
-                            src={Assets.pause}
-                            alt="Stop Recording"
-                            style={{ width: "49px", height: "49px" }}
-                          />
-                        </button>
-                      </Box>
-                    )}
-                    {isCorrectImageSelected &&
+                  {(isRecording2 ||
+                    (isCorrectImageSelected &&
                       !isRecording2 &&
-                      !isRecordingStopped2 && (
+                      !isRecordingStopped2)) && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        position: "relative",
+                        width: "100%",
+                        mt: { xs: "8px", sm: "12px", md: "16px" },
+                      }}
+                    >
+                      {isRecording2 && (
                         <Box
                           sx={{
-                            width: "100%",
                             display: "flex",
+                            flexDirection: "column",
                             justifyContent: "center",
+                            alignItems: "center",
+                            mb: { xs: 0, md: "10px" },
+                            width: "100%",
                           }}
                         >
+                          <Box
+                            sx={{
+                              mt: { xs: "4px", md: "8px" },
+                              mb: { xs: "2px", sm: "2px", md: "8px" },
+                              width: "100%",
+                              maxWidth: "100%",
+                              paddingBottom: "26px",
+                              boxSizing: "border-box",
+                              display: "flex",
+                              justifyContent: "center",
+                              overflow: "hidden",
+                              "& > div": {
+                                "@media (max-width: 379px)": {
+                                  transform: "scale(0.65)",
+                                  transformOrigin: "center",
+                                },
+                                "@media (min-width: 380px) and (max-width: 480px)":
+                                  {
+                                    transform: "scale(0.78)",
+                                    transformOrigin: "center",
+                                  },
+                              },
+                            }}
+                          >
+                            <RecordVoiceVisualizer />
+                          </Box>
                           <button
                             style={{
                               background: "transparent",
                               border: "none",
                               cursor: "pointer",
-                              marginTop: "10px",
                             }}
                             onClick={handleMicClick2}
                           >
                             <img
-                              src={Assets.mic}
-                              alt="Start Recording"
-                              style={{ width: "60px", height: "60px" }}
+                              src={Assets.pause}
+                              alt="Stop Recording"
+                              style={{ width: "49px", height: "49px" }}
                             />
                           </button>
                         </Box>
                       )}
-                  </Box>
+                      {isCorrectImageSelected &&
+                        !isRecording2 &&
+                        !isRecordingStopped2 && (
+                          <Box
+                            sx={{
+                              width: "100%",
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <button
+                              style={{
+                                background: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                marginTop: "10px",
+                              }}
+                              onClick={handleMicClick2}
+                            >
+                              <img
+                                src={Assets.mic}
+                                alt="Start Recording"
+                                style={{ width: "60px", height: "60px" }}
+                              />
+                            </button>
+                          </Box>
+                        )}
+                    </Box>
+                  )}
 
                   {isRecordingStopped2 && (
                     <Box
                       sx={{
-                        mt: { xs: 0, md: "20px" },
+                        mt: { xs: "10px", md: "20px" },
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
                         width: "100%",
+                        gap: { xs: "10px", md: "16px" },
                       }}
                     >
                       {language === "en" && (
-                        <Box
-                          sx={{
-                            mt: { xs: "8px", md: 0 },
-                            ml: { xs: 0, md: "10px" },
-                          }}
+                        <AudioTooltipModal
+                          audioSrc={
+                            multilingual?.[multilingualLangCode]?.audio_url
+                          }
+                          description={levelData?.correctWordTwo}
                         >
-                          <AudioTooltipModal
-                            audioSrc={
-                              multilingual?.[multilingualLangCode]?.audio_url
-                            }
-                            description={levelData?.correctWordTwo}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              marginTop: "5px",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              border: "2px solid #FF7F36",
+                              borderRadius: "16px",
+                              gap: "8px",
+                              padding: { xs: "10px", md: "15px" },
+                              backgroundColor: "#fff",
+                              cursor: "pointer",
+                            }}
                           >
                             <Box
                               sx={{
+                                backgroundColor: "#FEBC2F66",
+                                borderRadius: "4px",
+                                padding: "5px",
                                 display: "flex",
-                                marginTop: "5px",
                                 alignItems: "center",
-                                justifyContent: "space-between",
-                                border: "2px solid #FF7F36",
-                                borderRadius: "16px",
-                                gap: "8px",
-                                padding: { xs: "10px", md: "15px" },
-                                backgroundColor: "#fff",
-                                cursor: "pointer",
+                                justifyContent: "center",
                               }}
                             >
                               <Box
+                                component="span"
                                 sx={{
-                                  backgroundColor: "#FEBC2F66",
-                                  borderRadius: "4px",
-                                  padding: "5px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
+                                  fontSize: "clamp(24px, 3vw, 40px)",
+                                  fontWeight: "400",
+                                  color: "#333F61",
                                 }}
                               >
-                                <Box
-                                  component="span"
-                                  sx={{
-                                    fontSize: "clamp(24px, 3vw, 40px)",
-                                    fontWeight: "400",
-                                    color: "#333F61",
-                                  }}
-                                >
-                                  {nativeLangSymbol}
-                                </Box>
+                                {nativeLangSymbol}
                               </Box>
-                              <ListenButton height={50} width={50} />
                             </Box>
-                          </AudioTooltipModal>
-                        </Box>
+                            <ListenButton height={50} width={50} />
+                          </Box>
+                        </AudioTooltipModal>
                       )}
                       <Box
                         sx={{
@@ -6880,7 +6881,8 @@ const PhrasesInAction = ({
                           alignItems: "center",
                           justifyContent: "center",
                           gap: "20px",
-                          mt: { xs: 0, md: "30px" },
+                          mt: { xs: "4px", md: "14px" },
+                          mb: { xs: "6px", md: 0 },
                         }}
                       >
                         {language !== "en" && recordedBlob && (
@@ -6909,6 +6911,8 @@ const PhrasesInAction = ({
               )}
             </Box>
           </Box>
+
+          <Box sx={{ flex: "1 0 0", minHeight: 0 }} />
         </Box>
       </Box>
     </MainLayout>
