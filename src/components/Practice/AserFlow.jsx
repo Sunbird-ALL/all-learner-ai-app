@@ -612,7 +612,7 @@ const AserFlow = ({
             width: "50px",
             height: "50px",
             position: "absolute",
-            top: "20px",
+            top: isMobile ? "5px" : "20px",
             left: "10px",
             cursor: "pointer",
             zIndex: 1000,
@@ -739,7 +739,7 @@ const AserFlow = ({
                 }}
                 style={{
                   position: "absolute",
-                  top: isMobile ? `calc(${pos.top} - 50px)` : pos.top,
+                  top: pos.top,
                   left: pos.left,
                   transform: "translate(-50%, -50%)",
                   cursor: disableBubbles ? "not-allowed" : "pointer",
