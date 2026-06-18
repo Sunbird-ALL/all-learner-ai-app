@@ -97,10 +97,9 @@ export function PlanetWithRocketAnimation({
               transform: 'translate(-50%, -50%)'
             }}
           >
-            <svg 
-              width={rocketSize.width} 
-              height={rocketSize.height} 
-              viewBox="0 0 20 28" 
+            <svg
+              style={{ width: rocketSize.width, height: rocketSize.height }}
+              viewBox="0 0 20 28"
               fill="none"
             >
               {/* Rocket body */}
