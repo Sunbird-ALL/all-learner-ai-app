@@ -1503,22 +1503,22 @@ export function LetterLauncherGameStoryPreview({
                     {/* Characters on same row - Rahi left, Rilo right */}
                     <div className="relative flex items-end justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 md:px-8 lg:px-12 w-full max-w-full">
                       {/* Captain Rahi - FIXED position on LEFT */}
-                      <div className="flex flex-col items-center flex-shrink-0">
+                      <div className="flex flex-col items-center flex-shrink-0" style={{ transform: 'translateX(10px)' }}>
                         <div style={{ opacity: showRahi ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
                           <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                             👨‍🚀
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Rilo - FIXED position on RIGHT - shifted left on mobile for better visibility */}
-                      <div className="flex flex-col items-center relative flex-shrink-0 -ml-28 sm:ml-0">
+                      <div className="flex flex-col items-center relative flex-shrink-0 -ml-28 sm:ml-0" style={{ transform: 'translateX(-10px)' }}>
                         {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
                         {/* Centered above Rilo, but constrained to stay within viewport on mobile */}
-                        <div 
+                        <div
                           className="absolute bottom-full mb-1 sm:mb-3 md:mb-4 left-1/2 -translate-x-1/2 z-30"
-                          style={{ 
-                            opacity: visibleSpeechBubbles.length > 0 ? 1 : 0, 
+                          style={{
+                            opacity: visibleSpeechBubbles.length > 0 ? 1 : 0,
                             transition: 'opacity 0.5s ease-in-out',
                             pointerEvents: visibleSpeechBubbles.length > 0 ? 'auto' : 'none',
                             width: 'clamp(120px, 70vw, 300px)',
@@ -1528,8 +1528,8 @@ export function LetterLauncherGameStoryPreview({
                             right: 'auto'
                           }}
                         >
-                          <SpeechBubble 
-                            text={visibleSpeechBubbles.includes(0) ? story.riloAppears.rilo : 
+                          <SpeechBubble
+                            text={visibleSpeechBubbles.includes(0) ? story.riloAppears.rilo :
                                   visibleSpeechBubbles.includes(1) ? story.riloAppears.fuelRequirement : 
                                   visibleSpeechBubbles.includes(2) ? story.riloAppears.fuelExplanation : 
                                   visibleSpeechBubbles.includes(3) ? story.riloAppears.gameExplanation : 
@@ -1567,22 +1567,22 @@ export function LetterLauncherGameStoryPreview({
                     {/* Characters on same row - Rahi left, Rilo right */}
                     <div className="relative flex items-end justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 md:px-8 lg:px-12 w-full max-w-full">
                       {/* Captain Rahi - FIXED position on LEFT */}
-                      <div className="flex flex-col items-center flex-shrink-0">
+                      <div className="flex flex-col items-center flex-shrink-0" style={{ transform: 'translateX(10px)' }}>
                         <div style={{ opacity: showRahi ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
                           <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                             👨‍🚀
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Rilo - FIXED position on RIGHT - shifted left on mobile for better visibility */}
-                      <div className="flex flex-col items-center relative flex-shrink-0 -ml-28 sm:ml-0">
+                      <div className="flex flex-col items-center relative flex-shrink-0 -ml-28 sm:ml-0" style={{ transform: 'translateX(-10px)' }}>
                         {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
                         {/* Centered above Rilo, but constrained to stay within viewport on mobile */}
-                        <div 
+                        <div
                           className="absolute bottom-full mb-1 sm:mb-3 md:mb-4 left-1/2 -translate-x-1/2 z-30"
-                          style={{ 
-                            opacity: 1, 
+                          style={{
+                            opacity: 1,
                             transition: 'opacity 0.5s ease-in-out',
                             pointerEvents: 'auto',
                             width: 'clamp(120px, 70vw, 300px)',
@@ -1618,20 +1618,20 @@ export function LetterLauncherGameStoryPreview({
                     {/* Characters on same row - Rahi left, Rilo right */}
                     <div className="relative flex items-end justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 md:px-8 lg:px-12 w-full max-w-full">
                       {/* Captain Rahi - FIXED position on LEFT */}
-                      <div className="flex flex-col items-center flex-shrink-0">
+                      <div className="flex flex-col items-center flex-shrink-0" style={{ transform: 'translateX(10px)' }}>
                         <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                           👨‍🚀
                         </div>
                       </div>
-                      
+
                       {/* Rilo - FIXED position on RIGHT - shifted left on mobile for better visibility */}
-                      <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0">
+                      <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0" style={{ transform: 'translateX(-10px)' }}>
                         {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
                         {/* Centered above Rilo, but constrained to stay within viewport on mobile */}
-                        <div 
+                        <div
                           className="absolute bottom-full mb-1 sm:mb-3 md:mb-4 left-1/2 -translate-x-1/2 z-30"
-                          style={{ 
-                            opacity: 1, 
+                          style={{
+                            opacity: 1,
                             transition: 'opacity 0.5s ease-in-out',
                             pointerEvents: 'auto',
                             width: 'clamp(120px, 70vw, 300px)',
@@ -1641,8 +1641,8 @@ export function LetterLauncherGameStoryPreview({
                             right: 'auto'
                           }}
                         >
-                          <SpeechBubble 
-                            text={practiceCompletionText} 
+                          <SpeechBubble
+                            text={practiceCompletionText}
                             character="rilo" 
                             position="center" 
                             index={0} 
@@ -1719,7 +1719,7 @@ export function LetterLauncherGameStoryPreview({
                         👨‍🚀
                       </div>
                     </div>
-                    
+
                     {/* Rilo - FIXED position on RIGHT - shifted left on mobile for better visibility */}
                     <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0">
                       {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
@@ -1783,14 +1783,14 @@ export function LetterLauncherGameStoryPreview({
                   {/* Characters at bottom - Rahi left, Rilo right */}
                   <div className="relative flex items-end justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 md:px-8 lg:px-12 w-full max-w-full">
                     {/* Captain Rahi - FIXED position on LEFT */}
-                    <div className="flex flex-col items-center flex-shrink-0">
+                    <div className="flex flex-col items-center flex-shrink-0" style={{ transform: 'translateX(10px)' }}>
                       <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                         👨‍🚀
                       </div>
                     </div>
-                    
+
                     {/* Rilo - FIXED position on RIGHT - shifted left on mobile for better visibility */}
-                    <div className="flex flex-col items-center relative flex-shrink-0 -ml-28 sm:ml-0">
+                    <div className="flex flex-col items-center relative flex-shrink-0 -ml-28 sm:ml-0" style={{ transform: 'translateX(-10px)' }}>
                       <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                         🤖
                       </div>
@@ -1852,12 +1852,12 @@ export function LetterLauncherGameStoryPreview({
                 <div className="relative w-full">
                   <div className="flex items-end justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 md:px-8 lg:px-12 w-full max-w-full">
                     {/* Captain Rahi - FIXED position on LEFT */}
-                    <div className="flex flex-col items-center flex-shrink-0">
+                    <div className="flex flex-col items-center flex-shrink-0" style={{ transform: 'translateX(10px)' }}>
                       <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                         👨‍🚀
                       </div>
                     </div>
-                    
+
                     {/* Fuel meter visualization - in center between characters on desktop only */}
                     {visibleSpeechBubbles.includes(1) && (
                       <div className="hidden sm:flex flex-1 justify-center items-end">
@@ -1871,13 +1871,13 @@ export function LetterLauncherGameStoryPreview({
                     )}
                     
                     {/* Rilo - FIXED position on RIGHT - shifted left on mobile for better visibility */}
-                    <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0">
+                    <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0" style={{ transform: 'translateX(-10px)' }}>
                       {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
                       {/* Centered above Rilo, but constrained to stay within viewport on mobile */}
-                      <div 
+                      <div
                         className="absolute bottom-full mb-1 sm:mb-3 md:mb-4 left-1/2 -translate-x-1/2 z-20"
-                        style={{ 
-                          opacity: visibleSpeechBubbles.length > 0 ? 1 : 0, 
+                        style={{
+                          opacity: visibleSpeechBubbles.length > 0 ? 1 : 0,
                           transition: 'opacity 0.5s ease-in-out',
                           pointerEvents: visibleSpeechBubbles.length > 0 ? 'auto' : 'none',
                           width: 'clamp(120px, 70vw, 320px)',
@@ -1951,20 +1951,20 @@ export function LetterLauncherGameStoryPreview({
                 {/* Characters on same row - Rahi left, Rilo right */}
                 <div className="relative flex items-end justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 md:px-8 lg:px-12 w-full max-w-full">
                   {/* Captain Rahi - FIXED position on LEFT */}
-                  <div className="flex flex-col items-center flex-shrink-0">
+                  <div className="flex flex-col items-center flex-shrink-0" style={{ transform: 'translateX(10px)' }}>
                     <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                       👨‍🚀
                     </div>
                   </div>
-                  
+
                   {/* Rilo - FIXED position on RIGHT - shifted left on mobile for better visibility */}
-                  <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0">
+                  <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0" style={{ transform: 'translateX(-10px)' }}>
                     {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
                     {/* Centered above Rilo, but constrained to stay within viewport on mobile */}
-                    <div 
+                    <div
                       className="absolute bottom-full mb-1 sm:mb-3 md:mb-4 left-1/2 -translate-x-1/2 z-20"
-                      style={{ 
-                        opacity: visibleSpeechBubbles.length > 0 ? 1 : 0, 
+                      style={{
+                        opacity: visibleSpeechBubbles.length > 0 ? 1 : 0,
                         transition: 'opacity 0.5s ease-in-out',
                         pointerEvents: visibleSpeechBubbles.length > 0 ? 'auto' : 'none',
                         width: 'clamp(120px, 70vw, 320px)',
