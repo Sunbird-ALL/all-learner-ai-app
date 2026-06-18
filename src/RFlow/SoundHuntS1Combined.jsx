@@ -10486,7 +10486,7 @@ const SoundHuntS1Combined = ({
                               },
                             }}
                             onClick={() => {
-                              if (!hasSelectedOption) {
+                              if (!hasSelectedOption && !isMobile) {
                                 handleAudioClick(index);
                               }
                             }}
@@ -10586,8 +10586,8 @@ const SoundHuntS1Combined = ({
                                 }
                                 alt="Play Audio"
                                 style={{
-                                  width: isMobile ? "36px" : "50px",
-                                  height: isMobile ? "36px" : "50px",
+                                  width: "50px",
+                                  height: "50px",
                                   transform: isPlaying
                                     ? `scale(${scale})`
                                     : "scale(1)",
