@@ -3699,7 +3699,7 @@ const SoundHunt = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -3864,6 +3864,10 @@ const SoundHunt = ({
       flowNames={flowNames} // Pass all flows
       activeFlow={activeFlow} // Pass current active flow
       rStep={rStep}
+      cardContentStyle={{
+        maxHeight: isMobile ? "calc(100dvh - 160px)" : "calc(100vh - 260px)",
+        overflowY: isMobile ? "hidden" : "auto",
+      }}
       {...{
         steps,
         currentStep,
@@ -3884,14 +3888,15 @@ const SoundHunt = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: isMobile ? "flex-start" : "center",
+            justifyContent: isMobile ? "flex-start" : "safe center",
             bottom: isMobile ? "5px" : "auto",
             left: isMobile ? "5px" : "auto",
             position: isMobile ? "absolute" : "relative",
             right: isMobile ? "5px" : "auto",
             top: isMobile ? "5px" : "auto",
-            height: isMobile ? "calc(100% - 10px)" : "70vh",
-            width: isMobile ? "calc(100% - 10px)" : "auto",
+            height: isMobile ? "calc(100% - 10px)" : "auto",
+            minHeight: isMobile ? "unset" : "70vh",
+            width: isMobile ? "calc(100% - 10px)" : "100%",
             borderRadius: isMobile ? "15px" : "0px",
             boxSizing: "border-box",
             background: "linear-gradient(180deg, #91E7EF 0%, #42C6FF 100%)",
@@ -4040,8 +4045,8 @@ const SoundHunt = ({
                         backgroundColor: isCorrect
                           ? "rgba(117, 209, 0, 0.6)"
                           : isWrong
-                            ? "rgba(255, 127, 54, 0.8)"
-                            : "#FFFFFF",
+                          ? "rgba(255, 127, 54, 0.8)"
+                          : "#FFFFFF",
                         padding: isMobile ? "6px" : "8px",
                         borderRadius: isMobile ? "28px" : "24px",
                         boxShadow: isMobile
@@ -4060,25 +4065,25 @@ const SoundHunt = ({
                           selectedWord === item.text
                             ? "scale(1.12)"
                             : wrongWord === item.text
-                              ? "scale(0.9)"
-                              : "scale(1)",
+                            ? "scale(0.9)"
+                            : "scale(1)",
                         transition:
                           "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                         "&:hover": isAudioPlayedOnce
                           ? {
-                            transform:
-                              selectedWord === item.text
-                                ? "scale(1.12)"
-                                : "scale(1.06)",
-                            boxShadow: isMobile
-                              ? "0px 10px 24px rgba(0, 0, 0, 0.16)"
-                              : "0px 8px 16px rgba(0, 0, 0, 0.15)",
-                          }
+                              transform:
+                                selectedWord === item.text
+                                  ? "scale(1.12)"
+                                  : "scale(1.06)",
+                              boxShadow: isMobile
+                                ? "0px 10px 24px rgba(0, 0, 0, 0.16)"
+                                : "0px 8px 16px rgba(0, 0, 0, 0.15)",
+                            }
                           : {},
                         "&:active": isAudioPlayedOnce
                           ? {
-                            transform: "scale(0.95)",
-                          }
+                              transform: "scale(0.95)",
+                            }
                           : {},
                       }}
                       onClick={() => {
@@ -4137,7 +4142,7 @@ const SoundHunt = ({
                   transition: "background-color 0.3s ease-in-out",
                   flexShrink: 0,
                 }}
-              //onClick={() => handleWordClick(currentQuestion.correctWord)}
+                //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
                 <img
                   src={correctImage}
@@ -4194,7 +4199,7 @@ const SoundHunt = ({
                   transition: "background-color 0.3s ease-in-out",
                   flexShrink: 0,
                 }}
-              //onClick={() => handleWordClick(currentQuestion.correctWord)}
+                //onClick={() => handleWordClick(currentQuestion.correctWord)}
               >
                 <img
                   src={correctImage}

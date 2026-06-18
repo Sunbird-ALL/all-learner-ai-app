@@ -520,6 +520,10 @@ const AserFlow = ({
       recAudio={"recAudio"}
       isCorrect={true}
       lang={"language"}
+      cardContentStyle={{
+        maxHeight: isMobile ? "calc(100dvh - 160px)" : "calc(100vh - 260px)",
+        overflowY: isMobile ? "hidden" : "auto",
+      }}
       {...{
         steps,
         currentStep,
