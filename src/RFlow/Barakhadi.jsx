@@ -4878,7 +4878,7 @@ const Barakhadi = ({
     padding: "0px",
     textAlign: "center",
     overflow: "hidden",
-    height: "100%",
+    height: "72dvh",
     paddingTop: "22px",
     width: "100%",
     borderRadius: "20px",
@@ -5795,9 +5795,10 @@ const Barakhadi = ({
             alt="bear"
             style={{
               position: "absolute",
-              bottom: "-50px",
-              right: "0px",
-              width: "clamp(60px, 5vw, 170px)",
+              bottom: isMobile ? "10px" : "1px",
+              right: isMobile ? "10px" : "40px",
+              width: isMobile ? "15dvw" : "9dvw",
+              zIndex: isMobile ? 11 : 1,
             }}
           />
         </div>
