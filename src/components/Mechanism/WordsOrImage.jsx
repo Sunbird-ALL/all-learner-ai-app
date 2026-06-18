@@ -6,7 +6,13 @@ import {
   Avatar,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { createRef, useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  createRef,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import v11 from "../../assets/audio/V10.mp3";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
@@ -684,8 +690,8 @@ const WordsOrImage = ({
     isShowCase || isDiscover
       ? null
       : isUsingInlineSpeechFlow
-        ? answer
-        : isTranscriptCorrect;
+      ? answer
+      : isTranscriptCorrect;
 
   //console.log("wds", words, matchedChar, answer);
 
@@ -699,6 +705,14 @@ const WordsOrImage = ({
       storedData={storedData}
       resetStoredData={resetStoredData}
       pageName={"wordsorimage"}
+      cardContentStyle={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        overflowX: "hidden",
+      }}
       {...{
         steps,
         currentStep,
@@ -733,13 +747,13 @@ const WordsOrImage = ({
                 ? isMobile
                   ? "26px"
                   : isTablet
-                    ? "31px"
-                    : "36px"
+                  ? "31px"
+                  : "36px"
                 : isMobile
-                  ? "20px"
-                  : isTablet
-                    ? "25px"
-                    : "30px",
+                ? "20px"
+                : isTablet
+                ? "25px"
+                : "30px",
             letterSpacing: "1.5px",
             lineHeight: "normal",
             fontWeight: 600,
@@ -756,13 +770,17 @@ const WordsOrImage = ({
           overflow: isDemo ? "visible" : "hidden",
           opacity: disableScreen ? 0.25 : 1,
           pointerEvents: disableScreen ? "none" : "initial",
-          display: { xs: "flex", md: "block" },
-          flexDirection: { xs: "column", md: "initial" },
-          justifyContent: { xs: "center", md: "initial" },
-          alignItems: { xs: "center", md: "initial" },
-          flexGrow: { xs: 1, md: 0 },
-          pt: { xs: "12px", md: isTablet ? "70px" : "100px" },
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          flexGrow: 1,
+          pt: "0px",
           pb: { xs: "0px", md: "16px" },
+          overflowY: { xs: "auto", md: "hidden" },
+          boxSizing: "border-box",
+          height: "100%",
+          width: "100%",
         }}
       >
         <Box sx={{ width: { xs: "100%", md: "auto" } }}>
@@ -890,15 +908,15 @@ const WordsOrImage = ({
                         maxWidth: isMobile
                           ? "150px"
                           : isTablet
-                            ? "350px"
-                            : "400px",
+                          ? "350px"
+                          : "400px",
                         marginBottom: isMobile ? "10px" : "40px",
                         height: "auto",
                         maxHeight: isMobile
                           ? "200px"
                           : isTablet
-                            ? "280px"
-                            : "340px",
+                          ? "280px"
+                          : "340px",
                         objectFit: "contain",
                         marginRight: isMobile ? "30px" : "0px",
                       }}
@@ -932,13 +950,13 @@ const WordsOrImage = ({
                               borderRadius: isMobile
                                 ? "7px"
                                 : isTablet
-                                  ? "10px"
-                                  : "20px",
+                                ? "10px"
+                                : "20px",
                               fontSize: isMobile
                                 ? "10px"
                                 : isTablet
-                                  ? "8px"
-                                  : "16px",
+                                ? "8px"
+                                : "16px",
                               color: "#333F61",
                               fontWeight: isMobile ? 500 : isTablet ? 200 : 600,
                               fontFamily:
@@ -972,8 +990,8 @@ const WordsOrImage = ({
                             marginLeft: isMobile
                               ? "auto"
                               : isTablet
-                                ? "18px"
-                                : "0",
+                              ? "18px"
+                              : "0",
                             marginRight: isMobile ? "auto" : "0",
                             display: "block",
                             zIndex: 9999,
@@ -991,8 +1009,8 @@ const WordsOrImage = ({
                               width: isMobile
                                 ? "60px"
                                 : isTablet
-                                  ? "70px"
-                                  : "150px",
+                                ? "70px"
+                                : "150px",
                               backgroundColor: "#ffff12",
                               padding: "10px 15px",
                               borderRadius: "20px",
@@ -1053,11 +1071,11 @@ const WordsOrImage = ({
                     sx={{
                       ...(mechanism_id === "mechanic_15"
                         ? {
-                          display: "flex",
-                          alignItems: "center",
-                          gap: isMobile ? 1 : 2,
-                          mb: isMobile ? 4 : 8,
-                        }
+                            display: "flex",
+                            alignItems: "center",
+                            gap: isMobile ? 1 : 2,
+                            mb: isMobile ? 4 : 8,
+                          }
                         : ""),
                     }}
                   >
@@ -1069,8 +1087,8 @@ const WordsOrImage = ({
                           height: isMobile
                             ? "40px"
                             : isTablet
-                              ? "50px"
-                              : "60px",
+                            ? "50px"
+                            : "60px",
                           width: isMobile ? "40px" : isTablet ? "50px" : "60px",
                         }}
                       >
@@ -1078,55 +1096,71 @@ const WordsOrImage = ({
                       </Avatar>
                     )}
 
-                    <Typography
-                      variant="h5"
-                      component="h4"
+                    <Box
                       sx={{
-                        fontSize:
-                          language === "te"
+                        // On mobile: constrain height and enable scroll so long
+                        // paragraphs can never overlap the diamonds header zone
+                        maxHeight: { xs: "calc(100dvh - 260px)", md: "none" },
+                        overflowY: { xs: "auto", md: "visible" },
+                        width: "100%",
+                        WebkitOverflowScrolling: "touch",
+                      }}
+                    >
+                      <Typography
+                        variant="h5"
+                        component="h4"
+                        sx={{
+                          fontSize: isDiscover
+                            ? { xs: "32px", md: "40px" }
+                            : language === "te"
                             ? isMobile
                               ? "1.7rem"
                               : isTablet
-                                ? "2.3rem"
-                                : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                              ? "2.3rem"
+                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
                             : isMobile
-                              ? "1.4rem"
-                              : isTablet
-                                ? "2rem"
-                                : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                        fontWeight: language === "te" ? 400 : 700,
-                        fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "30px" : "50px",
-                        ...(mechanism_id === "mechanic_15"
-                          ? {
-                            position: "relative",
-                            backgroundColor: "#FAD7A0",
-                            padding: isMobile ? "8px 16px" : "10px 20px",
-                            borderRadius: "20px",
-                            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                            "&::before": {
-                              content: '""',
-                              position: "absolute",
-                              top: "50%",
-                              left: "-10px",
-                              transform: "translateY(-50%)",
-                              width: 0,
-                              height: 0,
-                              borderTop: "10px solid transparent",
-                              borderBottom: "10px solid transparent",
-                              borderRight: "10px solid #d8d8d8",
-                            },
-                          }
-                          : {
-                            mb: isMobile ? 2 : 4,
-                            color: getAnswerColor(resolvedAnswer),
-                            textAlign: "center",
-                          }),
-                      }}
-                      fontSize={{ md: "40px", xs: "25px" }}
-                    >
-                      {words ? words[0].toUpperCase() + words.slice(1) : ""}
-                    </Typography>
+                            ? "1.2rem"
+                            : isTablet
+                            ? "2rem"
+                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                          fontWeight: language === "te" ? 400 : 700,
+                          fontFamily: getFontFamily(language),
+                          lineHeight: isMobile ? "1.6" : "50px",
+                          ...(mechanism_id === "mechanic_15"
+                            ? {
+                                position: "relative",
+                                backgroundColor: "#FAD7A0",
+                                padding: isMobile ? "8px 16px" : "10px 20px",
+                                borderRadius: "20px",
+                                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                                "&::before": {
+                                  content: '""',
+                                  position: "absolute",
+                                  top: "50%",
+                                  left: "-10px",
+                                  transform: "translateY(-50%)",
+                                  width: 0,
+                                  height: 0,
+                                  borderTop: "10px solid transparent",
+                                  borderBottom: "10px solid transparent",
+                                  borderRight: "10px solid #d8d8d8",
+                                },
+                              }
+                            : {
+                                mb: isMobile ? 2 : 4,
+                                color: getAnswerColor(resolvedAnswer),
+                                textAlign: "center",
+                              }),
+                        }}
+                        fontSize={
+                          isDiscover
+                            ? { md: "40px", xs: "32px" }
+                            : { md: "40px", xs: "25px" }
+                        }
+                      >
+                        {words ? words[0].toUpperCase() + words.slice(1) : ""}
+                      </Typography>
+                    </Box>
                   </Box>
                 )}
                 {mechanism_id === "mechanic_15" && (
@@ -1150,13 +1184,13 @@ const WordsOrImage = ({
                             ? isMobile
                               ? "1.7rem"
                               : isTablet
-                                ? "2.3rem"
-                                : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                              ? "2.3rem"
+                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
                             : isMobile
-                              ? "1.4rem"
-                              : isTablet
-                                ? "2rem"
-                                : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                            ? "1.4rem"
+                            : isTablet
+                            ? "2rem"
+                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
@@ -1226,8 +1260,8 @@ const WordsOrImage = ({
                         fontSize: isMobile
                           ? "2.7rem"
                           : isTablet
-                            ? "2rem"
-                            : "clamp(3rem, 4vw, 5rem)",
+                          ? "2rem"
+                          : "clamp(3rem, 4vw, 5rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "30px" : "50px",
@@ -1236,11 +1270,12 @@ const WordsOrImage = ({
                           isTranscriptCorrect === true
                             ? "green"
                             : isTranscriptCorrect === false
-                              ? "red" // todo: need to change to red
+                            ? "red" // todo: need to change to red
                             : "#333F61",
                         display: isMobile ? "flex" : undefined,
                         flexDirection: isMobile ? "column" : undefined,
                         alignItems: isMobile ? "center" : undefined,
+                        textAlign: "center",
                         width: isMobile ? "100%" : undefined,
                       }}
                     >

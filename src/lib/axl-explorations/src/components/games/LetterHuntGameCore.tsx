@@ -787,10 +787,10 @@ export function LetterHuntGameCore({
       <div className="flex-1 flex flex-col justify-center px-0 py-0 min-h-0">
         {/* Top Section - Audio */}
         {showSpeaker && (
-          <div className="text-center mb-0 sm:mb-0.5 md:mb-1 flex-shrink-0 mb-[16px] md:mb-[25px]">
+          <div className="text-center flex-shrink-0 mb-[12px] md:mb-[16px]">
             <div
               ref={speakerButtonRef}
-              className={`inline-block p-0.5 sm:p-1 md:p-1.5 rounded-lg transition-colors ${mode === 'preview' && demoStep === 'waitForSpeaker' && !hasClickedSpeaker
+              className={`inline-block p-0.5 sm:p-1 md:p-1 rounded-lg transition-colors ${mode === 'preview' && demoStep === 'waitForSpeaker' && !hasClickedSpeaker
                 ? 'bg-blue-100 cursor-pointer hover:bg-blue-200 hover:scale-110 ring-4 ring-blue-400 ring-opacity-50 animate-pulse'
                 : mode === 'preview' && demoStep === 'instruction1'
                   ? 'bg-gray-100 cursor-not-allowed opacity-50'
@@ -799,7 +799,7 @@ export function LetterHuntGameCore({
               onClick={handleSpeakerClick}
               tabIndex={mode === 'preview' && demoStep === 'waitForSpeaker' ? 0 : -1}
             >
-              <span className="text-4xl sm:text-3xl md:text-4xl lg:text-5xl">🔊</span>
+              <span className="text-4xl sm:text-3xl md:text-2xl lg:text-3xl">🔊</span>
             </div>
 
             {/* Hand pointer for preview mode */}

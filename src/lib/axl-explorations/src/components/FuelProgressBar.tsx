@@ -116,7 +116,7 @@ export function FuelProgressBar({
         {/* 80% checkpoint marker */}
         {showCheckpoint && (
           <div className="absolute top-0 h-full w-1.5 bg-white rounded" style={{ left: `${requiredFuel/maxFuel*100}%` }}>
-            <div className="absolute -top-12 left-1/2 -translate-x-1/2 text-[25px] text-green-600 font-bold whitespace-nowrap">
+            <div className="absolute -top-16 sm:-top-12 left-1/2 -translate-x-1/2 text-[25px] text-green-600 font-bold whitespace-nowrap">
               🎯
             </div>
           </div>

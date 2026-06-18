@@ -319,7 +319,13 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
   const messages = completionMessages[language] || completionMessages.en;
 
   return (
-    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+    <div
+      style={{
+        position: "relative",
+        height: isMobile ? "100dvh" : "100vh",
+        width: "100vw",
+      }}
+    >
       {/* Actual AserFlow Component */}
       <AserFlow
         key={gameKey}
