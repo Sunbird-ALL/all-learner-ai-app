@@ -812,6 +812,7 @@ const MemoryChallengeMechanicsContent = ({
       vocabCount={vocabCount}
       wordCount={wordCount}
       handleBack={handleBack}
+      showTimer={false}
       cardContentStyle={{
         height: { xs: "100%", md: "calc(100vh - 260px)" },
         maxHeight: {
@@ -865,26 +866,6 @@ const MemoryChallengeMechanicsContent = ({
                   flexShrink: 0,
                 }}
               >
-                <button
-                  onClick={handleGameBack}
-                  style={{
-                    background: "rgba(255, 255, 255, 0.2)",
-                    backdropFilter: "blur(4px)",
-                    color: "white",
-                    border: "1px solid rgba(255, 255, 255, 0.3)",
-                    borderRadius: "0.375rem",
-                    padding: "0.375rem 0.625rem",
-                    fontSize: "0.75rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
-                    cursor: "pointer",
-                  }}
-                >
-                  <span>←</span>
-                  <span>Back</span>
-                </button>
-
                 <div style={{ textAlign: "center", flex: 1 }}>
                   <h1
                     style={{
@@ -928,7 +909,7 @@ const MemoryChallengeMechanicsContent = ({
                   borderRadius: "0.5rem",
                   padding: "0.75rem 1rem",
                   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  overflow: "hidden",
+                  overflow: "clip",
                   display: "flex",
                   flexDirection: "column",
                   minHeight: 0,
@@ -1068,7 +1049,7 @@ const MemoryChallengeMechanicsContent = ({
                     display: "flex",
                     flexDirection: "column",
                     minHeight: 0,
-                    overflow: isMobile ? "hidden" : "auto",
+                    overflow: "auto",
                   }}
                 >
                   {currentSequence && (
