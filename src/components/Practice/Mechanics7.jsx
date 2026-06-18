@@ -800,6 +800,13 @@ const Mechanics7 = ({
       recAudio={recAudio}
       isCorrect={true}
       lang={language}
+      cardContentStyle={{
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "hidden",
+        justifyContent: "flex-start",
+        alignItems: "stretch",
+      }}
       {...{
         steps,
         currentStep,
@@ -847,30 +854,14 @@ const Mechanics7 = ({
         </Box>
       )} */}
       <ThemeProvider theme={theme}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            //alignItems: "center",
-            justifyContent: "space-evenly",
-            height: "80%",
-            alignItems: "flex-start",
-            position: "relative",
-          }}
-        >
-          {!isMobile && (
+        <Box sx={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", width: "100%", boxSizing: "border-box" }}>
+
+          {/* Zone 1 — hint button, always visible, never scrolls */}
+          <Box sx={{ flexShrink: 0, display: "flex", alignItems: "center", pb: 0.5 }}>
             <img
               src={hintimg}
               alt="hint"
-              style={{
-                width: "50px",
-                height: "50px",
-                position: "absolute",
-                top: "20px",
-                left: "20px",
-                cursor: "pointer",
-                zIndex: 1000,
-              }}
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
@@ -880,63 +871,75 @@ const Mechanics7 = ({
               }}
               onClick={() => setOpen(true)}
             />
-          )}
-
-          {/* Modal */}
-          {open && (
-            <div
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "90vh",
-                backgroundColor: "rgba(0,0,0,0.7)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 11000,
-              }}
-            >
+            {open && (
               <div
                 style={{
-                  position: "relative",
-                  background: "#000",
-                  padding: "10px",
-                  borderRadius: "12px",
-                  maxWidth: "90%",
-                  width: "900px",
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "90vh",
+                  backgroundColor: "rgba(0,0,0,0.7)",
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 11000,
                 }}
               >
-                {/* Close Button */}
-                <button
-                  onClick={() => setOpen(false)}
+                <div
                   style={{
-                    position: "absolute",
-                    top: "-10px",
-                    right: "-10px",
-                    background: "white",
-                    border: "none",
-                    borderRadius: "50%",
-                    width: "30px",
-                    height: "30px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
+                    position: "relative",
+                    background: "#000",
+                    padding: "10px",
+                    borderRadius: "12px",
+                    maxWidth: "90%",
+                    width: "900px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                 >
-                  ×
-                </button>
-
-                <SafeYouTubePlayer
-                  videoId="sY0ve9rpxbw"
-                  style={{ borderRadius: "8px" }}
-                />
+                  <button
+                    onClick={() => setOpen(false)}
+                    style={{
+                      position: "absolute",
+                      top: "-10px",
+                      right: "-10px",
+                      background: "white",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ×
+                  </button>
+                  <SafeYouTubePlayer
+                    videoId="sY0ve9rpxbw"
+                    style={{ borderRadius: "8px" }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </Box>
+
+          {/* Zone 2 — scrollable content area */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              justifyContent: "space-evenly",
+              flex: 1,
+              minHeight: 0,
+              overflowY: "auto",
+              alignItems: "flex-start",
+              width: "100%",
+              boxSizing: "border-box",
+              paddingBottom: "90px",
+            }}
+          >
 
           {/*         
         <Joyride
@@ -973,36 +976,12 @@ const Mechanics7 = ({
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              alignSelf: "center",
+              alignSelf: "safe center",
               maskBorderWidth: 6,
               height: "200px",
               position: "relative",
-              top: { xs: "-50px", sm: "0px" },
             }}
           >
-            {isMobile && (
-              <img
-                src={hintimg}
-                alt="hint"
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  position: "absolute",
-                  top: "0px",
-                  left: "-80px",
-                  cursor: "pointer",
-                  zIndex: 1000,
-                }}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    setOpen(true);
-                  }
-                }}
-                onClick={() => setOpen(true)}
-              />
-            )}
             {!isMobile && (
               <span
                 style={{
@@ -1050,7 +1029,7 @@ const Mechanics7 = ({
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              alignSelf: "center",
+              alignSelf: "safe center",
             }}
           >
             <Box
@@ -1075,8 +1054,6 @@ const Mechanics7 = ({
                 marginBottom: "16px",
                 width: isMobile ? "220px" : "400px",
                 height: isMobile ? "100px" : "150px",
-                position: { xs: "relative", sm: "static" },
-                top: { xs: "-50px", sm: "0px" },
               }}
             >
               <Box
@@ -1192,8 +1169,6 @@ const Mechanics7 = ({
                 sx={{
                   display: "flex",
                   justifyContent: "center",
-                  position: { xs: "relative", sm: "static" },
-                  top: { xs: "-30px", sm: "0px" },
                 }}
               >
                 <img
@@ -1213,8 +1188,6 @@ const Mechanics7 = ({
                   alignItems: "flex-end",
                   gap: "40px",
                   marginTop: isMobile ? "10px" : "30px",
-                  position: { xs: "relative", sm: "static" },
-                  top: { xs: "-30px", sm: "0px" },
                 }}
               >
                 <Box
@@ -1277,8 +1250,6 @@ const Mechanics7 = ({
                     maskBorderWidth: 6,
                     gap: isMobile ? 2 : 5,
                     height: isMobile ? "160px" : "250px",
-                    position: { xs: "relative", sm: "static" },
-                    top: { xs: "-30px", sm: "0px" },
                   }}
                 >
                   {isPlaying ? (
@@ -1386,8 +1357,6 @@ const Mechanics7 = ({
                   alignItems: "center",
                   maskBorderWidth: 6,
                   height: isMobile ? "160px" : "250px",
-                  position: { xs: "relative", sm: "static" },
-                  top: { xs: "-30px", sm: "0px" },
                 }}
               >
                 <Box style={{ marginTop: "10px", marginBottom: "50px" }}>
@@ -1508,8 +1477,6 @@ const Mechanics7 = ({
                     gap: isMobile ? "5px" : "10px",
                     height: isMobile ? "160px" : "250px",
                     //maskBorderWidth: 6,
-                    position: { xs: "relative", sm: "static" },
-                    top: { xs: "-30px", sm: "0px" },
                   }}
                 >
                   <Box
@@ -1656,7 +1623,8 @@ const Mechanics7 = ({
             word={selectedWord}
             onClose={() => setShowModal(false)}
           />
-        </div>
+          </div>
+        </Box>
       </ThemeProvider>
     </MainLayout>
   );
