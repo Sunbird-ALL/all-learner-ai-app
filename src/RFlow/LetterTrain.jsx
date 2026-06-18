@@ -6758,6 +6758,7 @@ const LetterTrain = ({
                   position: "absolute",
                   top: { xs: "5%", sm: "-11%" },
                   left: { xs: "61%", sm: "68%" },
+                  "@media (max-width: 369px)": { left: "63%" },
                   transform: "translateX(-50%)",
                   display: "flex",
                   gap: 0.6,
@@ -6788,8 +6789,8 @@ const LetterTrain = ({
                     >
                       <Box
                         sx={{
-                          minWidth: { xs: 40, sm: 50, md: 60 },
-                          minHeight: { xs: 40, sm: 50, md: 60 },
+                          minWidth: { xs: "clamp(24px, calc(40px * (100vw - 20px) / 350px), 40px)", sm: 50, md: 60 },
+                          minHeight: { xs: "clamp(24px, calc(40px * (100vw - 20px) / 350px), 40px)", sm: 50, md: 60 },
                           borderRadius: "6px",
                           display: "flex",
                           alignItems: "center",
@@ -6806,12 +6807,12 @@ const LetterTrain = ({
                             fontSize:
                               lang === "te"
                                 ? isMobile
-                                  ? "18px"
+                                  ? "clamp(11px, 5vw, 18px)"
                                   : isTablet
                                   ? "28px"
                                   : "32px"
                                 : isMobile
-                                ? "16px"
+                                ? "clamp(10px, 4.5vw, 16px)"
                                 : isTablet
                                 ? "24px"
                                 : "28px",
