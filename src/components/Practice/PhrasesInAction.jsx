@@ -6732,9 +6732,7 @@ const PhrasesInAction = ({
                         justifyContent: "center",
                         position: "relative",
                         width: "100%",
-                        mt: isMatched
-                          ? { xs: "8px", sm: "12px", md: "16px" }
-                          : { xs: "8px", sm: "12px", md: "16px" },
+                        mt: { xs: "8px", sm: "12px", md: "16px" },
                       }}
                     >
                       {isRecording2 && (
