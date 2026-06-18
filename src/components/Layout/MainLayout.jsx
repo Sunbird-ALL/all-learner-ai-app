@@ -1896,6 +1896,9 @@ const MainLayout = (props) => {
                         sx={{
                           display: "flex",
                           justifyContent: "center",
+                          alignItems: "center",
+                          flex: 1,
+                          minHeight: 0,
                           position: "relative",
                           zIndex: "100",
                         }}
