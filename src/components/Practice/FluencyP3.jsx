@@ -1008,7 +1008,7 @@ const FluencyP3 = ({
                     width: isMobile ? "100%" : undefined,
                     minHeight: isMobile ? "72px" : "100px",
                     height: "auto",
-                    marginTop: isMobile ? "0px" : "0px",
+                    marginTop: "0px",
                     border: "1px dashed rgba(241, 153, 32, 1)",
                     borderRadius: "18px",
                     background: "rgba(255, 102, 0, 0.05)",
