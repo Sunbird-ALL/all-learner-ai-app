@@ -2831,10 +2831,11 @@ const TowreFlow = ({
               backgroundSize: "cover",
               backgroundPosition: "center",
               borderRadius: 20,
-              padding: "0 20px",
+              padding: "clamp(16px, 4dvh, 40px) 20px",
               position: "relative",
-              overflow: "hidden",
-              height: isMobile ? "100%" : "530px",
+              overflowX: "hidden",
+              height: isMobile ? "100%" : "auto",
+              minHeight: isMobile ? "unset" : "clamp(320px, 70dvh, 600px)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -2859,20 +2860,21 @@ const TowreFlow = ({
               style={{
                 textAlign: "center",
                 zIndex: 1,
-                display: isMobile ? "flex" : "block",
-                flexDirection: isMobile ? "column" : "initial",
-                alignItems: isMobile ? "center" : "initial",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "clamp(4px, 1dvh, 10px)",
               }}
             >
               <h2
                 style={{
                   fontFamily: "Quicksand",
                   fontWeight: 1200,
-                  fontSize: isMobile ? "44px" : "64px",
-                  lineHeight: isMobile ? "50px" : "70px",
+                  fontSize: "clamp(28px, min(5vw, 7dvh), 56px)",
+                  lineHeight: 1.1,
                   textAlign: "center",
                   color: "#FF9050",
-                  marginBottom: "20px",
+                  marginBottom: "clamp(4px, 1dvh, 10px)",
                 }}
               >
                 Towre Flow
@@ -2881,9 +2883,9 @@ const TowreFlow = ({
                 src={Assets.birthdayBoxImg}
                 alt="Birthday Box"
                 style={{
-                  maxWidth: isMobile ? "160px" : "240px",
+                  maxWidth: "clamp(90px, min(18vw, 26dvh), 220px)",
                   width: "100%",
-                  marginBottom: "10px",
+                  marginBottom: "clamp(2px, 0.5dvh, 6px)",
                 }}
               />
               {browserWarning && (
@@ -2893,8 +2895,8 @@ const TowreFlow = ({
                     border: "1px solid #ffc107",
                     borderRadius: 10,
                     padding: "10px 18px",
-                    marginBottom: 16,
-                    fontSize: isMobile ? "11px" : "13px",
+                    marginBottom: 8,
+                    fontSize: "clamp(11px, 1.2vw, 13px)",
                     color: "#856404",
                     textAlign: "center",
                     fontFamily: "Quicksand",
@@ -2908,7 +2910,7 @@ const TowreFlow = ({
                 src={Assets.startButtonImg}
                 alt="Start Button"
                 style={{
-                  maxWidth: isMobile ? "150px" : "220px",
+                  maxWidth: "clamp(110px, min(16vw, 22dvh), 210px)",
                   width: "100%",
                   cursor: "pointer",
                 }}

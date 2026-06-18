@@ -37,6 +37,7 @@ import nextimg from "../../assets/nxxt.svg";
 import redsmileImg from "../../assets/redsmile.svg";
 import greenstarImg from "../../assets/greenstar.svg";
 import { useNavigate } from "react-router-dom";
+import { splitGraphemes } from "split-graphemes";
 
 const GiftBox = () => {
   return (
@@ -375,6 +376,17 @@ const WordWall = ({
     }
   }, [currentQuestionIndex]);
 
+  useEffect(() => {
+    if (showConfetti) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showConfetti]);
+
   const loadQuestion = (questionIndex) => {
     const correct = gameData?.[questionIndex]?.images?.find(
       (img) => img.isCorrect
@@ -677,6 +689,22 @@ const WordWall = ({
     return item.isCorrect ? "#DEF5CC" : "#FEE4D5";
   };
 
+  const getBubbleFontSize = (text) => {
+    const len = splitGraphemes(text).length;
+    if (isMobile) {
+      if (len <= 4) return "22px";
+      if (len <= 6) return "18px";
+      if (len <= 8) return "15px";
+      return "13px";
+    } else {
+      if (len <= 4) return "28px";
+      if (len <= 6) return "22px";
+      if (len <= 8) return "18px";
+      if (len <= 10) return "14px";
+      return "16px";
+    }
+  };
+
   const renderGameView = () => (
     <>
       {!showQuiz ? (
@@ -707,13 +735,11 @@ const WordWall = ({
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                fontSize: isMobile ? "22px" : "40px",
+                fontSize: getBubbleFontSize(dropText),
                 fontWeight: "bold",
                 color: "#333F61",
                 textAlign: "center",
-                maxWidth: "90%",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                maxWidth: "80%",
                 whiteSpace: "nowrap",
               }}
             >
@@ -1301,6 +1327,7 @@ const WordWall = ({
       background={background}
       handleNext={handleNext}
       enableNext={enableNext}
+      showTimer={false}
       pageName={"m7"}
       {...{
         steps,
@@ -1338,10 +1365,17 @@ const WordWall = ({
         >
           {showConfetti && (
             <Confetti
-              width={windowSize.width}
-              height={windowSize.height}
+              width={document.documentElement.clientWidth}
+              height={document.documentElement.clientHeight}
               recycle={false}
               numberOfPieces={500}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                pointerEvents: "none",
+                zIndex: 9999,
+              }}
             />
           )}
 
