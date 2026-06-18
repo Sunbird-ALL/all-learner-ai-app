@@ -1916,6 +1916,9 @@ const LetterLauncherMechanicsContent = ({
             isShowCase={effectiveIsShowCase}
             startShowCase={effectiveStartShowCase}
             setStartShowCase={effectiveSetStartShowCase}
+            cardContentStyle={{
+              height: { xs: "100%", md: "68vh" },
+            }}
           >
             <div
               style={{
@@ -2100,6 +2103,9 @@ const LetterLauncherMechanicsContent = ({
         isShowCase={effectiveIsShowCase}
         startShowCase={effectiveStartShowCase}
         setStartShowCase={effectiveSetStartShowCase}
+        cardContentStyle={{
+          height: { xs: "100%", md: "68vh" },
+        }}
       >
         <SpaceBackground
           className="h-full w-full"

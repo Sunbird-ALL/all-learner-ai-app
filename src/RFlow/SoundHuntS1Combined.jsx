@@ -10176,6 +10176,10 @@ const SoundHuntS1Combined = ({
       startShowCase={startShowCase}
       setStartShowCase={setStartShowCase}
       gameOverData={gameOverData}
+      cardContentStyle={{
+        maxHeight: isMobile ? "calc(100dvh - 160px)" : "calc(100vh - 260px)",
+        overflowY: isMobile ? "hidden" : "auto",
+      }}
       {...{
         steps: filteredContent.length, // Use filteredContent length (should be 20)
         currentStep: currentQuestionIndex + 1, // Use internal currentQuestionIndex
@@ -10195,14 +10199,15 @@ const SoundHuntS1Combined = ({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: isMobile ? "center" : "safe center",
           bottom: isMobile ? "5px" : "auto",
           left: isMobile ? "5px" : "auto",
           top: isMobile ? "5px" : "auto",
           position: isMobile ? "absolute" : "relative",
           right: isMobile ? "5px" : "auto",
-          width: isMobile ? "calc(100% - 10px)" : "auto",
-          height: isMobile ? "calc(100% - 10px)" : "70vh",
+          width: isMobile ? "calc(100% - 10px)" : "100%",
+          height: isMobile ? "calc(100% - 10px)" : "auto",
+          minHeight: isMobile ? "unset" : "70vh",
           borderRadius: isMobile ? "15px" : "0px",
           boxSizing: "border-box",
           background: "linear-gradient(180deg, #91E7EF 0%, #42C6FF 100%)",
