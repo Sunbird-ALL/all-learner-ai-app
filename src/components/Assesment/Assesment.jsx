@@ -2159,11 +2159,13 @@ const Assesment = ({ discoverStart }) => {
 
   const sectionStyle = {
     width: "100vw",
-    height: isMobile ? "100dvh" : "100vh",
+    height: "100dvh",
+    minHeight: "-webkit-fill-available",
     backgroundImage: `url(${getBackgroundImage()})`,
-    backgroundSize: isMobile ? "100% 100%" : "cover",
-    backgroundPosition: isMobile ? "37% center" : "center",
+    backgroundSize: "cover",
+    backgroundPosition: isMobile ? "37% bottom" : "center bottom",
     position: "relative",
+    overflow: "hidden",
   };
 
   // Show a friendly error card when API calls on mount fail (server down / timeout).
@@ -2238,9 +2240,9 @@ const Assesment = ({ discoverStart }) => {
             <Box
               sx={{
                 position: "absolute",
-                bottom: { xs: 40, sm: 60 },
+                bottom: { xs: 24, sm: 60 },
                 right: { xs: "-24px", sm: 0 },
-                width: "237px",
+                width: { xs: "200px", sm: "237px" },
                 height: "112px",
                 background: "rgba(255, 255, 255, 0.2)",
                 borderRadius: "20px 0px 0px 20px",
