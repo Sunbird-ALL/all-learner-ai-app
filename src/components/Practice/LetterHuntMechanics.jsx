@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import MainLayout from "../Layout/MainLayout";
+import { useAlphabetDemo } from "../../context/AlphabetDemoContext";
 import {
   getLocalData,
   setLocalData,
@@ -69,6 +70,7 @@ const LetterHuntMechanicsContent = ({
   customLetters, // Optional: Custom letters to use for Letter Hunt (from F1/F2 config)
   confidentLetters, // Optional: Letters user is confident with (appear less frequently)
 }) => {
+  const { isAlphabetDemoPopupVisible } = useAlphabetDemo();
   // Store the current level being played for failure handling
   const [currentGameLevel, setCurrentGameLevel] = useState(1);
   const [isGameComplete, setIsGameComplete] = useState(false);
@@ -1290,14 +1292,17 @@ const LetterHuntMechanicsContent = ({
         <LanguageProvider initialLanguage={initialLanguage}>
           <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
             {isAlphabetDemoActive ? (
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                height="60vh"
-              >
-                <CircularProgress size={60} thickness={4.5} />
-              </Box>
+              // Hide the loader once the demo popup is visible; show it otherwise.
+              isAlphabetDemoPopupVisible ? null : (
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  height="60vh"
+                >
+                  <CircularProgress size={60} thickness={4.5} />
+                </Box>
+              )
             ) : (
               <div
                 style={{

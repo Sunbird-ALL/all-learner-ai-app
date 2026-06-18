@@ -10,6 +10,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import MainLayout from "../components/Layout/MainLayout";
+import { useAlphabetDemo } from "../context/AlphabetDemoContext";
 import SafeYouTubePlayer from "../components/SafeYouTubePlayer";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
@@ -6131,6 +6132,7 @@ const LetterTrain = ({
   //isNextButtonCalled,
   //setIsNextButtonCalled,
 }) => {
+  const { isAlphabetDemoPopupVisible } = useAlphabetDemo();
   steps = 1;
   let lang = getLocalData("lang");
   // Normalize Kannada language codes: both "kn" and "ka" should work
@@ -7392,14 +7394,17 @@ const LetterTrain = ({
           </div>
         )}
         {isAlphabetDemoActive ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="40vh"
-          >
-            <CircularProgress size={60} thickness={4.5} />
-          </Box>
+          // hide it once the popup is actually visible.
+          isAlphabetDemoPopupVisible ? null : (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="40vh"
+            >
+              <CircularProgress size={60} thickness={4.5} />
+            </Box>
+          )
         ) : (
           renderUI()
         )}

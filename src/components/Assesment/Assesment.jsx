@@ -633,7 +633,8 @@ export const ProfileHeader = ({
   vocabCount = 0,
   wordCount = 0,
 }) => {
-  const { setIsAlphabetDemoActive } = useAlphabetDemo();
+  const { setIsAlphabetDemoActive, setIsAlphabetDemoPopupVisible } =
+    useAlphabetDemo();
   const language = lang || getLocalData("lang");
   const ui = useMemo(() => getUiStrings(language || "en"), [language]);
   let username = profileName || getLocalData("profileName");
@@ -927,6 +928,13 @@ export const ProfileHeader = ({
       }
     };
   }, []);
+
+  // Publish demo-popup visibility so the F1 loader (LetterTrain/LetterHunt) can
+  // hide itself only once the popup is actually on screen.
+  useEffect(() => {
+    setIsAlphabetDemoPopupVisible(showChartPointer);
+    return () => setIsAlphabetDemoPopupVisible(false);
+  }, [showChartPointer, setIsAlphabetDemoPopupVisible]);
 
   const getAlphabetTooltipText = () => {
     const texts = {
@@ -1510,67 +1518,6 @@ export const ProfileHeader = ({
                     )}
                   </Box>
                 </CustomTooltip>
-                {showChartPointer && (
-                  <Dialog
-                    open
-                    PaperProps={{
-                      sx: {
-                        borderRadius: 3,
-                        p: 4,
-                        maxWidth: 600, // ⬆️ wider dialog
-                        // zIndex: 6000,
-                      },
-                    }}
-                  >
-                    <Box>
-                      {/* Header */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          mb: 2,
-                        }}
-                      >
-                        <Typography
-                          fontWeight={700}
-                          fontSize="22px" // ⬆️ bigger header
-                          lineHeight={1.3}
-                        >
-                          {tooltipText.title}
-                        </Typography>
-
-                        <IconButton
-                          size="medium"
-                          onClick={() => {
-                            setShowChartPointer(false);
-                            if (chartAudioRef.current) {
-                              chartAudioRef.current.pause();
-                              chartAudioRef.current.currentTime = 0;
-                              chartAudioRef.current = null;
-                            }
-                            setIsAudioPlaying(false);
-                            setIsAlphabetDemoActive(false);
-                            globalThis.dispatchEvent(
-                              new Event("alphabetDemoStop")
-                            );
-                          }}
-                        >
-                          <CloseIcon fontSize="medium" />
-                        </IconButton>
-                      </Box>
-
-                      {/* Description */}
-                      <Typography
-                        fontSize="18px" // ⬆️ bigger description
-                        lineHeight={1.7}
-                        color="text.secondary"
-                      >
-                        {tooltipText.desc}
-                      </Typography>
-                    </Box>
-                  </Dialog>
-                )}
               </>
             )}
 
@@ -1692,6 +1639,59 @@ export const ProfileHeader = ({
           </Box>
         )}
       </Box>
+      {/* Alphabet chart demo popup — rendered here (outside the desktop-only
+          header branch) so it shows on mobile too. */}
+      {["B", "m1", "m2", "m3"].includes(milestoneLevel) && showChartPointer && (
+        <Dialog
+          open
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              p: 4,
+              maxWidth: 600, // ⬆️ wider dialog
+              // zIndex: 6000,
+            },
+          }}
+        >
+          <Box>
+            {/* Header */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 2,
+              }}
+            >
+              <Typography fontWeight={700} fontSize="22px" lineHeight={1.3}>
+                {tooltipText.title}
+              </Typography>
+
+              <IconButton
+                size="medium"
+                onClick={() => {
+                  setShowChartPointer(false);
+                  if (chartAudioRef.current) {
+                    chartAudioRef.current.pause();
+                    chartAudioRef.current.currentTime = 0;
+                    chartAudioRef.current = null;
+                  }
+                  setIsAudioPlaying(false);
+                  setIsAlphabetDemoActive(false);
+                  globalThis.dispatchEvent(new Event("alphabetDemoStop"));
+                }}
+              >
+                <CloseIcon fontSize="medium" />
+              </IconButton>
+            </Box>
+
+            {/* Description */}
+            <Typography fontSize="18px" lineHeight={1.7} color="text.secondary">
+              {tooltipText.desc}
+            </Typography>
+          </Box>
+        </Dialog>
+      )}
       <AlphabetChartPreview
         open={openAlphabetPreview}
         onClose={() => setOpenAlphabetPreview(false)}
