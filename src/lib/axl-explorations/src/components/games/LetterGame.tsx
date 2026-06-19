@@ -1188,7 +1188,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         </div>
 
         {/* Main Content Card */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
           {/* Game Core Component */}
           <LetterHuntGameCore
             questions={currentDisplayedQuestion ? [currentDisplayedQuestion] : questions}

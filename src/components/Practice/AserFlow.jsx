@@ -520,10 +520,6 @@ const AserFlow = ({
       recAudio={"recAudio"}
       isCorrect={true}
       lang={"language"}
-      cardContentStyle={{
-        maxHeight: isMobile ? "calc(100dvh - 160px)" : "calc(100vh - 260px)",
-        overflowY: isMobile ? "hidden" : "auto",
-      }}
       {...{
         steps,
         currentStep,
@@ -689,7 +685,7 @@ const AserFlow = ({
           style={{
             position: "relative",
             width: "100%",
-            height: isMobile ? "270px" : "350px",
+            height: isMobile ? "270px" : "min(350px, 40vh)",
             //background: "#fff",
             borderRadius: "20px",
             //boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
@@ -700,7 +696,7 @@ const AserFlow = ({
           }}
         >
           {questionLetters?.map((char, index) => {
-            const bubbleSize = isMobile ? "60px" : "100px";
+            const bubbleSize = isMobile ? "60px" : "min(100px, 11vh)";
             const positions = isMobile
               ? [
                   { top: "18%", left: "16%" }, // 0
@@ -808,7 +804,7 @@ const AserFlow = ({
                       top: "50%",
                       left: "50%",
                       transform: "translate(-50%, -50%)",
-                      fontSize: isMobile ? "38px" : "68px",
+                      fontSize: isMobile ? "38px" : "min(68px, 7.5vh)",
                       fontWeight: "800",
                       fontFamily: "Quicksand",
                       color: "#333F61",
@@ -860,8 +856,8 @@ const AserFlow = ({
           <Box
             sx={{
               position: "relative",
-              width: isMobile ? "70px" : "90px",
-              height: isMobile ? "70px" : "90px",
+              width: isMobile ? "70px" : "min(90px, 11vh)",
+              height: isMobile ? "70px" : "min(90px, 11vh)",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -879,8 +875,16 @@ const AserFlow = ({
             <Box
               sx={{
                 position: "absolute",
-                width: isAudioPlaying ? "0px" : isMobile ? "70px" : "90px",
-                height: isAudioPlaying ? "0px" : isMobile ? "70px" : "90px",
+                width: isAudioPlaying
+                  ? "0px"
+                  : isMobile
+                  ? "70px"
+                  : "min(90px, 11vh)",
+                height: isAudioPlaying
+                  ? "0px"
+                  : isMobile
+                  ? "70px"
+                  : "min(90px, 11vh)",
                 backgroundColor: "#A856FF",
                 borderRadius: "50%",
                 animation: isAudioPlaying
@@ -960,9 +964,9 @@ const AserFlow = ({
               position: "absolute",
               zIndex: "9999",
               objectFit: "contain",
-              width: isMobile ? "120px" : "230px",
+              width: isMobile ? "120px" : "min(230px, 30vh)",
               maxHeight: "none",
-              bottom: isMobile ? "-15px" : "40px",
+              bottom: isMobile ? "-15px" : "min(40px, 5vh)",
               maxWidth: "none",
               height: isMobile ? "95px" : "auto",
               left: isMobile ? "auto" : "-20px",

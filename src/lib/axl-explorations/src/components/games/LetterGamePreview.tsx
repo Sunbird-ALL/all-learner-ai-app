@@ -608,10 +608,10 @@ export function LetterGamePreview({
           )}
 
           {/* Main Content Card */}
-          <Card className="flex-1 p-3 sm:p-4 md:p-5 bg-white/95 backdrop-blur-sm shadow-floating overflow-hidden flex flex-col rounded-2xl min-h-0">
+          <Card className="flex-1 p-3 sm:p-4 md:p-[clamp(10px,2vh,20px)] bg-white/95 backdrop-blur-sm shadow-floating overflow-hidden flex flex-col rounded-2xl min-h-0">
             {/* How to Play Section - Centered */}
-            <div className="flex flex-col items-center mb-1.5 sm:mb-2 px-2">
-              <div className="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1.5">
+            <div className="flex flex-col items-center mb-[clamp(4px,1vh,8px)] px-2">
+              <div className="flex items-center gap-1 sm:gap-1.5 mb-[clamp(2px,0.5vh,6px)]">
                 <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Sparkles className="h-1.5 w-1.5 sm:h-2 sm:w-2 md:h-2.5 md:w-2.5 text-white" />
                 </div>
