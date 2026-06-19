@@ -77,7 +77,7 @@ import desktopLevel5Mobile from "../../assets/images/mobilebglevel5.png";
 import desktopLevel6Mobile from "../../assets/images/mobilebglevel6.png";
 import desktopLevel7Mobile from "../../assets/images/mobilebglevel7.png";
 import desktopLevel8Mobile from "../../assets/images/mobilebglevel8.png";
-import desktopLevel9Mobile from "../../assets/images/mobilebglevel9.png";
+import desktopLevel9Mobile from "../../assets/images/mobilebglevel10.png";
 import desktopLevel10Mobile from "../../assets/images/mobilebglevel10.png";
 import rOneImage from "../../assets/R1Back.png";
 import rTwoImage from "../../assets/R2Back.png";

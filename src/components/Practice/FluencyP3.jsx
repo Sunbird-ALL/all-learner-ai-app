@@ -646,8 +646,9 @@ const FluencyP3 = ({
         )}
         <div
           style={{
-            width: isMobile ? "calc(100% - 20px)" : "95%",
-            minHeight: isMobile ? "unset" : "70vh",
+            width: isMobile ? "calc(100% - 20px)" : "90%",
+            maxWidth: isMobile ? "none" : "1200px",
+            minHeight: isMobile ? "unset" : "560px",
             height: isMobile ? "calc(100dvh - 280px)" : "auto",
             maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
             background: "#fff",
@@ -661,7 +662,7 @@ const FluencyP3 = ({
             marginLeft: isMobile ? "10px" : "auto",
             marginRight: isMobile ? "10px" : "auto",
             position: "relative",
-            overflow: isMobile ? "auto" : "visible",
+            overflow: "hidden",
             boxSizing: "border-box",
           }}
         >
@@ -744,7 +745,7 @@ const FluencyP3 = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "stretch",
-                  gap: isMobile ? "6px" : "15px",
+                  gap: isMobile ? "9px" : "15px",
                   flexWrap: isMobile ? "wrap" : "nowrap",
                   marginBottom: isMobile ? "5px" : "8px",
                 }}

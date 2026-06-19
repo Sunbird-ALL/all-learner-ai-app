@@ -338,6 +338,12 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
         hideContentDuringDemo={demoPhase === "countdown"}
         blockProgression={blockGameProgression}
         hideProgress={true}
+        showSpeakerPointer={
+          showPointer &&
+          demoPhase === "demo" &&
+          !isInstructionPlaying &&
+          pointerTarget === "speaker"
+        }
       />
 
       {/* "How to Play" Progress Indicator */}
@@ -349,7 +355,7 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
             boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
             padding: isMobile ? "8px 12px" : "16px 24px",
             position: "absolute",
-            top: isMobile ? "80px" : "160px",
+            top: isMobile ? "80px" : "min(110px, 15vh)",
             borderRadius: "12px",
             zIndex: 10000,
             left: "50%",
@@ -417,7 +423,7 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
         <div
           style={{
             position: "absolute",
-            bottom: isMobile ? "40px" : "80px",
+            bottom: isMobile ? "40px" : "min(80px, 10vh)",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10000,
@@ -449,28 +455,6 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
           </button>
         </div>
       )}
-
-      {/* Pointer - Only for speaker button */}
-      {showPointer &&
-        demoPhase === "demo" &&
-        !isInstructionPlaying &&
-        pointerTarget === "speaker" && (
-          <div
-            style={{
-              position: "absolute",
-              bottom: isMobile ? "80px" : "130px",
-              left: isMobile ? "calc(50% - 20px)" : "calc(50% - 35px)",
-              zIndex: 10000,
-              fontSize: isMobile ? "40px" : "64px",
-              animation:
-                "pointToButton 1.5s ease-in-out infinite, bounce 1s ease-in-out infinite",
-              pointerEvents: "none",
-              filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-            }}
-          >
-            👇
-          </div>
-        )}
 
       {/* Completion Screen */}
       {demoPhase === "completion" && (

@@ -13,6 +13,20 @@ import * as Assets from "../../utils/imageAudioLinks";
 const AudioTooltipModal = ({ audioSrc, description, children }) => {
   const [showModal, setShowModal] = useState(false);
   const audioRef = useRef(null);
+  const containerRef = useRef(null);
+  const isTouchDevice = useMediaQuery("(any-pointer: coarse)");
+
+  // Dismiss on click-outside for touch devices
+  useEffect(() => {
+    if (!isTouchDevice || !showModal) return;
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setShowModal(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [isTouchDevice, showModal]);
 
   useEffect(() => {
     if (showModal && audioSrc) {
@@ -37,16 +51,26 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
     };
   }, [showModal, audioSrc]);
 
+  const handleClick = (e) => {
+    if (isTouchDevice) {
+      e.stopPropagation();
+      setShowModal((prev) => !prev);
+    }
+  };
+
   return (
     <div
+      ref={containerRef}
       style={{ position: "relative", display: "inline-block" }}
-      onMouseEnter={() => setShowModal(true)}
-      onMouseLeave={() => setShowModal(false)}
+      onMouseEnter={() => !isTouchDevice && setShowModal(true)}
+      onMouseLeave={() => !isTouchDevice && setShowModal(false)}
+      onClick={handleClick}
     >
       {children}
 
       {showModal && (
         <div
+          onClick={(e) => e.stopPropagation()}
           style={{
             position: "absolute",
             top: "100%",

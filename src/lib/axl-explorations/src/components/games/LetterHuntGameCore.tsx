@@ -765,8 +765,8 @@ export function LetterHuntGameCore({
 
   const Container: any = useContainer === 'card' ? Card : 'div';
   const containerClass = useContainer === 'card'
-    ? `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 bg-white/95 backdrop-blur-sm shadow-floating overflow-y-auto flex flex-col relative ${className}`
-    : `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 overflow-y-auto flex flex-col relative ${className}`;
+    ? `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 bg-white/95 backdrop-blur-sm shadow-floating overflow-hidden flex flex-col relative ${className}`
+    : `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 overflow-hidden flex flex-col relative ${className}`;
 
   return (
     <Container className={containerClass}>
@@ -787,7 +787,7 @@ export function LetterHuntGameCore({
       <div className="flex-1 flex flex-col justify-center px-0 py-0 min-h-0">
         {/* Top Section - Audio */}
         {showSpeaker && (
-          <div className="text-center flex-shrink-0 mb-[12px] md:mb-[16px]">
+          <div className="text-center flex-shrink-0 mb-[clamp(4px,1vh,16px)]">
             <div
               ref={speakerButtonRef}
               className={`inline-block p-0.5 sm:p-1 md:p-1 rounded-lg transition-colors ${mode === 'preview' && demoStep === 'waitForSpeaker' && !hasClickedSpeaker
@@ -799,7 +799,7 @@ export function LetterHuntGameCore({
               onClick={handleSpeakerClick}
               tabIndex={mode === 'preview' && demoStep === 'waitForSpeaker' ? 0 : -1}
             >
-              <span className="text-4xl sm:text-3xl md:text-2xl lg:text-3xl">🔊</span>
+              <span className="text-4xl sm:text-3xl md:text-2xl lg:text-[clamp(20px,4vh,30px)]">🔊</span>
             </div>
 
             {/* Hand pointer for preview mode */}
@@ -844,7 +844,7 @@ export function LetterHuntGameCore({
                         : isSelected ? "default" : "outline"
                     }
                     size="lg"
-                    className={`h-10 sm:h-12 md:h-14 lg:h-16 xl:h-20 2xl:h-24 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl ${effectiveLanguage !== 'te' ? 'font-bold' : 'font-normal'} transition-all duration-200 shadow-sm ${isGreyedOut
+                    className={`h-10 sm:h-12 md:h-14 lg:h-[clamp(40px,7.5vh,64px)] xl:h-[clamp(45px,8vh,80px)] 2xl:h-[clamp(50px,8.5vh,96px)] text-lg sm:text-xl md:text-2xl lg:text-[clamp(18px,3.5vh,30px)] xl:text-[clamp(20px,4vh,36px)] 2xl:text-[clamp(22px,4.5vh,48px)] ${effectiveLanguage !== 'te' ? 'font-bold' : 'font-normal'} transition-all duration-200 shadow-sm ${isGreyedOut
                       ? 'bg-gray-200 text-gray-400 opacity-60 cursor-not-allowed'
                       : isSelected && !showFeedback
                         ? 'bg-blue-500 text-white border-blue-600 ring-2 ring-blue-400'
