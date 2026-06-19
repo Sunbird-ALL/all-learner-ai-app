@@ -661,7 +661,7 @@ const FluencyP3 = ({
             marginLeft: isMobile ? "10px" : "auto",
             marginRight: isMobile ? "10px" : "auto",
             position: "relative",
-            overflow: isMobile ? "auto" : "visible",
+            overflow: "hidden",
             boxSizing: "border-box",
           }}
         >

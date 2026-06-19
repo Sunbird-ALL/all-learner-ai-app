@@ -1070,7 +1070,7 @@ const MainLayout = (props) => {
                   height: { xs: "calc(100dvh - 80px)", md: "auto" },
                   maxHeight: {
                     xs: "calc(100dvh - 80px)",
-                    md: "calc(100vh - 150px)",
+                    md: "none",
                   },
                   borderRadius: "20px",
                   display: "flex",
@@ -1081,7 +1081,7 @@ const MainLayout = (props) => {
                   backgroundSize: "cover",
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
                   backdropFilter: "blur(25px)",
-                  mt: { xs: "0px", md: "75px" },
+                  mt: { xs: "0px", md: "min(75px, 8vh)" },
                   mb: { xs: "20px", md: "0px" },
                   overflow: { sm: "hidden", xs: "hidden" },
                 }}
