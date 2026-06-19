@@ -106,7 +106,7 @@ jobs:
         run: npm run build
 
       - name: Deploy to S3 Bucket
-        run: aws s3 sync ./build s3://axl-dev-test/all/
+        run: aws s3 sync ./build s3://axl-dev-test/all-app/
 
       - name: Debug Environment Variables
         run: |
