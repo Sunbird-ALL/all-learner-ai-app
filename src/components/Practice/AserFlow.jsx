@@ -964,7 +964,7 @@ const AserFlow = ({
               maxHeight: "none",
               bottom: isMobile ? "-15px" : "40px",
               maxWidth: "none",
-              height: isMobile ? "110px" : "auto",
+              height: isMobile ? "95px" : "auto",
               left: isMobile ? "auto" : "-20px",
               right: isMobile ? "calc(50% + 45px)" : "auto",
               opacity: hideContentDuringDemo ? 0 : 1,

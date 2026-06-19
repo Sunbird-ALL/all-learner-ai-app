@@ -909,6 +909,7 @@ export function LetterHuntGameCore({
                   onContinue={handleContinue}
                   mode={mode}
                   showContinueButton={showContinueButton && !isFeedbackAudioPlaying}
+                  className="!mt-3 sm:!mt-4"
                 />
               </div>
             )}
