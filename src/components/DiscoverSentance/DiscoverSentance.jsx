@@ -73,6 +73,7 @@ const SpeakSentenceComponent = () => {
   const discoveryHistoryRef = useRef([]);
   const [questionsReady, setQuestionsReady] = useState(false);
   const [fetchError, setFetchError] = useState(false);
+  const [pendingLetterHuntNav, setPendingLetterHuntNav] = useState(false);
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
   const sessionId = getLocalData("sessionId");
@@ -180,7 +181,15 @@ const SpeakSentenceComponent = () => {
           storyTitle: nextCol.name || "",
         })
       );
-      navigate("/letter-hunt");
+      setPendingLetterHuntNav(true);
+      setDisableScreen(true);
+      callConfettiAndPlay();
+      setTimeout(() => {
+        setOpenMessageDialog({
+          message:
+            "You have successfully completed assessment " + assesmentCount,
+        });
+      }, 1200);
       return;
     }
     const resPagination = await fetchPaginatedContent(nextCol.collectionId, 5);
@@ -553,6 +562,10 @@ const SpeakSentenceComponent = () => {
           closeDialog={() => {
             setOpenMessageDialog("");
             setDisableScreen(false);
+            if (pendingLetterHuntNav) {
+              setPendingLetterHuntNav(false);
+              navigate("/letter-hunt");
+            }
           }}
           isError={openMessageDialog.isError}
           dontShowHeader={openMessageDialog.dontShowHeader}
