@@ -99,6 +99,7 @@ const AserFlow = ({
   hideContentDuringDemo = false,
   blockProgression = false,
   hideProgress = false,
+  showSpeakerPointer = false,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedLetter, setSelectedLetter] = useState("");
@@ -538,7 +539,8 @@ const AserFlow = ({
         style={{
           width: "100%",
           height: isMobile ? "100%" : "auto",
-          margin: isMobile ? "0" : "10px 0",
+          margin: isMobile ? "0" : "70px 0 10px 0",
+          paddingBottom: isMobile ? "0px" : "65px",
           background: "#fff",
           display: "flex",
           flexDirection: "column",
@@ -685,7 +687,7 @@ const AserFlow = ({
           style={{
             position: "relative",
             width: "100%",
-            height: isMobile ? "270px" : "min(350px, 40vh)",
+            height: isMobile ? "270px" : "min(280px, 32vh)",
             //background: "#fff",
             borderRadius: "20px",
             //boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
@@ -724,7 +726,7 @@ const AserFlow = ({
                   { top: "20%", left: "40%" },
                   { top: "75%", left: "43%" },
                   { top: "79%", left: "61%" },
-                  { top: "83%", left: "30%" },
+                  { top: "98%", left: "30%" },
                 ];
 
             const pos = positions[index % positions.length];
@@ -913,6 +915,32 @@ const AserFlow = ({
             >
               <ListenButton height={50} width={50} />
             </Box>
+            {showSpeakerPointer && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "3px",
+                  zIndex: 10000,
+                  pointerEvents: "none",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: isMobile ? "40px" : "64px",
+                    animation:
+                      "pointToButton 1.5s ease-in-out infinite, bounce 1s ease-in-out infinite",
+                    filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                  }}
+                >
+                  👇
+                </div>
+              </div>
+            )}
           </Box>
           {/* Show next button only after completing all items (hide in demo mode) */}
           {(() => {

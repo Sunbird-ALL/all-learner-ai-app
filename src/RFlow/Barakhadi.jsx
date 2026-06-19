@@ -5795,7 +5795,7 @@ const Barakhadi = ({
             alt="bear"
             style={{
               position: "absolute",
-              bottom: isMobile ? "10px" : "1px",
+              bottom: isMobile ? "-45px" : "1px",
               right: isMobile ? "10px" : "40px",
               width: isMobile ? "15dvw" : "9dvw",
               zIndex: isMobile ? 11 : 1,
