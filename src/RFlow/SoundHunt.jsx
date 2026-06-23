@@ -3975,7 +3975,7 @@ const SoundHunt = ({
                       width: "45px",
                       height: "45px",
                       borderRadius: "60%",
-                      backgroundColor: "rgba(255, 127, 54, 0.8)",
+                      backgroundColor: "#F44336",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -4043,9 +4043,9 @@ const SoundHunt = ({
                         justifyContent: "center",
                         flexShrink: 0,
                         backgroundColor: isCorrect
-                          ? "rgba(117, 209, 0, 0.6)"
+                          ? "#4CAF50"
                           : isWrong
-                          ? "rgba(255, 127, 54, 0.8)"
+                          ? "#F44336"
                           : "#FFFFFF",
                         padding: isMobile ? "6px" : "8px",
                         borderRadius: isMobile ? "28px" : "24px",
