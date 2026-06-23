@@ -3316,13 +3316,13 @@ export const ಸಧನImg = "66a489f0-676a-4e55-a4ad-d3807364dd13.png";
 export const ಸಧನAudio = "66a489f0-676a-4e55-a4ad-d3807364dd13.wav";
 export const ಅImg = "1476e42b-4453-4aab-ac42-36ea0871c818.png";
 export const ಅAudio = "16305f7f-f919-4ee9-a8ec-eaf3eebb8a64.wav";
-export const ಙImg = "eb0c2a30-fffe-46ce-b247-1a5077275732.png";
+export const ಙImg = "1be31ffb-aefc-4b01-90e5-9a54a2786226.png";
 export const ಙAudio = "213fc3f0-0845-4868-907f-0d7b39cec56a.wav";
-export const ಞImg = "96d6e03c-c0a7-4d56-9a7e-84e56c012056.png";
+export const ಞImg = "b0a16847-cf64-4ae1-993d-1a3e14f019b0.png";
 export const ಞAudio = "31e49d38-110b-4f3c-88ac-76b32b18d7cd.wav";
-export const ಕಷImg = "a7a01039-7e0e-4144-b2c6-5399545344e4.png";
+export const ಕಷImg = "12c22bf2-2221-4e45-83c4-d89b0456e3bd.png";
 export const ಕಷAudio = "45f00b7d-cdae-479f-9845-97146a2a2312.wav";
-export const ಜಞImg = "9fb96c70-f34e-4372-9bcb-9404cf5fe9e0.png";
+export const ಜಞImg = "731b1bdf-801b-464d-9bb2-2aaebe31cd7a.png";
 export const ಜಞAudio = "5918a748-72ef-4ba2-8b4e-76a84e40f3b0.wav";
 
 //F2 KN
