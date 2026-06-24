@@ -10,6 +10,7 @@ import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import PropTypes from "prop-types";
 import ZoomableImage from "./ZoomableImage";
 import { getFontFamily } from "../../utils/fontUtils";
+import { getUiStrings } from "../../constants/strings";
 
 const Mechanics5 = ({
   background,
@@ -67,6 +68,7 @@ const Mechanics5 = ({
   const [playingIndex, setPlayingIndex] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null); // Add state to track selected radio button
   const lang = getLocalData("lang");
+  const ui = getUiStrings(lang || "en");
   const [storedData, setStoredData] = useState([]);
 
   const updateStoredData = (audios, isCorrect) => {
@@ -405,13 +407,13 @@ const Mechanics5 = ({
                             wordBreak: "break-word",
                           }}
                         >
-                          {option?.text || "Text is missing"}
+                          {option?.text || ui.CONTENT_TEXT_MISSING}
                         </Typography>
                       </Box>
                     </Box>
                   ))
                 ) : (
-                  <Box>No options available</Box>
+                  <Box>{ui.NO_OPTIONS}</Box>
                 )}
               </Box>
             </Grid>

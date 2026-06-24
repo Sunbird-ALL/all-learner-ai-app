@@ -4982,8 +4982,8 @@ const Barakhadi = ({
     ...(isMobile
       ? {
           minWidth: "58px",
-          height: "45px",
-          minHeight: "45px",
+          height: "52px",
+          minHeight: "52px",
           boxSizing: "border-box",
         }
       : {}),
@@ -5045,7 +5045,7 @@ const Barakhadi = ({
   const textInputStyle = {
     border: "1px solid orange",
     borderRadius: "10px",
-    height: isMobile ? "38px" : "50px",
+    height: isMobile ? "44px" : "50px",
     width: isMobile ? "50%" : "65%",
     display: "flex",
     alignItems: "center",
@@ -5057,6 +5057,7 @@ const Barakhadi = ({
     background:
       word === targetWord ? "#E8F5E8" : isWordWrong ? "#FFE8E8" : "#FFFFFF",
     paddingLeft: isMobile ? "17px" : "20px",
+    paddingBottom: isMobile ? "8px" : "0",
     overflow: "hidden",
     whiteSpace: "nowrap",
     transition: "background 0.3s ease, color 0.3s ease",
@@ -5446,7 +5447,7 @@ const Barakhadi = ({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "space-between",
-              height: "105px",
+              height: isMobile ? "111px" : "105px",
               padding: "15px 20px",
             }}
           >

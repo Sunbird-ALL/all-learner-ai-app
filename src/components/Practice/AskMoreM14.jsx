@@ -8,6 +8,7 @@ import {
   getLocalData,
   setLocalData,
 } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import MainLayout from "../Layout/MainLayout";
 import {
   level13,
@@ -137,6 +138,7 @@ const AskMoreM14 = ({
   const [isPlaying, setIsPlaying] = useState(null);
   const [audioInstance, setAudioInstance] = useState(null);
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
+  const ui = getUiStrings(language);
   const {
     transcript,
     interimTranscript,
@@ -157,7 +159,7 @@ const AskMoreM14 = ({
         if (count > 2) {
           setOpenMessageDialog({
             open: true,
-            message: `Please speak appropriately.`,
+            message: ui.VOICE_PROMPT_SPEAK_APPROPRIATELY,
             severity: "warning",
             isError: true,
           });
@@ -561,7 +563,7 @@ const AskMoreM14 = ({
                 color: "white",
               }}
             >
-              Ask More!
+              {ui.ASK_MORE_TITLE}
             </span>
             <img src={Assets.modalImg} alt="Modal" style={{ width: "500px" }} />
             <img
@@ -946,7 +948,7 @@ const AskMoreM14 = ({
                 color: "white",
               }}
             >
-              Conversation Complete!
+              {ui.CONVO_DONE}
             </div>
           )
         )}

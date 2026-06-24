@@ -36,11 +36,7 @@ import {
   getLanguageOrDefault,
 } from "../../utils/constants";
 import { useAlphabetDemo } from "../../context/AlphabetDemoContext";
-import {
-  RoundTick,
-  StartAssessmentButton,
-  SelectLanguageButton,
-} from "../Icons/SvgIcons";
+import { RoundTick, SelectLanguageButton } from "../Icons/SvgIcons";
 import { getFontFamily } from "../../utils/fontUtils";
 import practicebg from "../../assets/images/practice-bg.svg";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
@@ -117,7 +113,7 @@ const theme = createTheme();
 
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
-  const ui = useMemo(() => getUiStrings(lang || "en"), [lang]);
+  const ui = useMemo(() => getUiStrings(selectedLang || "en"), [selectedLang]);
   return (
     <Box
       sx={{
@@ -175,7 +171,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                 xs: "clamp(22px, 5.5vw, 30px)",
                 sm: "clamp(28px, 3.5vw, 36px)",
               },
-              fontFamily: getFontFamily(lang),
+              fontFamily: getFontFamily(selectedLang),
               lineHeight: 1.2,
             }}
           >
@@ -353,7 +349,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                 color: "#FFFFFF",
                 fontWeight: 600,
                 fontSize: "20px",
-                fontFamily: getFontFamily(lang),
+                fontFamily: getFontFamily(selectedLang),
                 display: "flex",
                 alignItems: "center",
               }}
@@ -936,30 +932,6 @@ export const ProfileHeader = ({
     return () => setIsAlphabetDemoPopupVisible(false);
   }, [showChartPointer, setIsAlphabetDemoPopupVisible]);
 
-  const getAlphabetTooltipText = () => {
-    const texts = {
-      en: {
-        title: "📚 Alphabet Chart",
-        desc: "If you need help with an alphabet or syllable, check the chart here.",
-      },
-      te: {
-        title: "📚 అక్షరమాల చార్ట్",
-        desc: "మీకు ఏదైనా అక్షరం లేదా అక్షర సమూహంతో సహాయం కావాలా? అయితే, ఇక్కడ ఉన్న పట్టికను చూడండి.",
-      },
-      kn: {
-        title: "📚 ವರ್ಣಮಾಲೆ ಚಾರ್ಟ್‌",
-        desc: "ನಿಮಗೆ ಅಕ್ಷರಗಳು ಅಥವಾ ಗುಣಿತಾಕ್ಷರಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಲು ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿರುವ ಚಾರ್ಟ್‌ ನೋಡಿ.",
-      },
-      hi: {
-        title: "📚 वर्णमाला चार्ट",
-        desc: "यदि आपको किसी वर्णमाला या सिलेबल के लिए सहायता चाहिए, तो यहाँ चार्ट देखें।",
-      },
-    };
-
-    return texts[lang] || texts.en;
-  };
-  const tooltipText = getAlphabetTooltipText();
-
   const handleProfileBack = () => {
     try {
       if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
@@ -987,6 +959,23 @@ export const ProfileHeader = ({
       end({});
       navigate("/login");
     }
+  };
+
+  // Mobile menu logout: iframe -> ask parent to run logout handshake, standalone -> local logout
+  const handleMenuLogout = () => {
+    if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+      try {
+        globalThis.parent.postMessage(
+          { type: "REQUEST_LOGOUT" },
+          globalThis?.location?.ancestorOrigins?.[0] ||
+            globalThis.parent.location.origin
+        );
+      } catch (error) {
+        console.error("REQUEST_LOGOUT postMessage failed:", error);
+      }
+      return;
+    }
+    handleLogout();
   };
 
   return (
@@ -1404,28 +1393,27 @@ export const ProfileHeader = ({
                       </ListItemButton>
                     </>
                   )}
-                  {process.env.REACT_APP_IS_APP_IFRAME !== "true" && (
-                    <>
-                      <Divider />
-                      <ListItemButton
-                        onClick={() => {
-                          setMenuOpen(false);
-                          handleLogout();
+                  {/* Logout: iframe -> parent handshake, standalone -> local */}
+                  <>
+                    <Divider />
+                    <ListItemButton
+                      onClick={() => {
+                        setMenuOpen(false);
+                        handleMenuLogout();
+                      }}
+                    >
+                      <LogoutIcon sx={{ mr: 1 }} />
+                      <ListItemText
+                        primary={ui.ASSESSMENT_LOGOUT}
+                        primaryTypographyProps={{
+                          fontFamily: "Quicksand",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                          color: "#333F61",
                         }}
-                      >
-                        <LogoutIcon sx={{ mr: 1 }} />
-                        <ListItemText
-                          primary={ui.ASSESSMENT_LOGOUT}
-                          primaryTypographyProps={{
-                            fontFamily: "Quicksand",
-                            fontWeight: 600,
-                            fontSize: "14px",
-                            color: "#333F61",
-                          }}
-                        />
-                      </ListItemButton>
-                    </>
-                  )}
+                      />
+                    </ListItemButton>
+                  </>
                 </List>
               </Box>
             </Collapse>
@@ -1613,29 +1601,28 @@ export const ProfileHeader = ({
                 />
               </IconButton>
             </CustomTooltip>
-            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" &&
-              process.env.REACT_APP_IS_APP_IFRAME !== "true" && (
-                <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
-                  <IconButton
-                    onClick={handleLogout}
-                    sx={{
-                      mr: { xs: "5px", sm: "10px" },
-                      padding: isMobile ? "6px" : "8px",
-                      backgroundColor: "rgba(255, 255, 255, 0.7)",
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      },
-                    }}
-                  >
-                    <img
-                      className="logout-img"
-                      style={{ height: 25, width: 25 }}
-                      src={LogoutImg}
-                      alt="Logout"
-                    />
-                  </IconButton>
-                </CustomTooltip>
-              )}
+            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+              <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
+                <IconButton
+                  onClick={handleMenuLogout}
+                  sx={{
+                    mr: { xs: "5px", sm: "10px" },
+                    padding: isMobile ? "6px" : "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    },
+                  }}
+                >
+                  <img
+                    className="logout-img"
+                    style={{ height: 25, width: 25 }}
+                    src={LogoutImg}
+                    alt="Logout"
+                  />
+                </IconButton>
+              </CustomTooltip>
+            )}
           </Box>
         )}
       </Box>
@@ -1664,7 +1651,7 @@ export const ProfileHeader = ({
               }}
             >
               <Typography fontWeight={700} fontSize="22px" lineHeight={1.3}>
-                {tooltipText.title}
+                {ui.ASSESSMENT_ALPHABET_CHART_TOOLTIP_TITLE}
               </Typography>
 
               <IconButton
@@ -1687,7 +1674,7 @@ export const ProfileHeader = ({
 
             {/* Description */}
             <Typography fontSize="18px" lineHeight={1.7} color="text.secondary">
-              {tooltipText.desc}
+              {ui.ASSESSMENT_ALPHABET_CHART_TOOLTIP_DESC}
             </Typography>
           </Box>
         </Dialog>
@@ -1741,38 +1728,6 @@ const Assesment = ({ discoverStart }) => {
   const nativeLang = getLocalData("nativeLang");
   const rStepNo = getLocalData("rStepZero");
   const rFlows = String(getLocalData("rFlow"));
-
-  const getAssessmentText = () => {
-    const texts = {
-      en: {
-        testSkills: "Let's test your language skills",
-        goodSkills: "You have good language skills",
-        discoverLevel: "Take the assessment to discover your level",
-        completeLevel: (level) =>
-          `Take the assessment to complete Level ${level}.`,
-        startAssessment: "Start Assessment",
-      },
-      te: {
-        testSkills: "మీ భాషా నైపుణ్యాలను పరీక్షించుకుందాం",
-        goodSkills: "మీకు మంచి భాషా నైపుణ్యాలు ఉన్నాయి",
-        discoverLevel: "మీ స్థాయిని తెలుసుకోవడానికి మూల్యాంకనాన్ని చేయండి.",
-        completeLevel: (level) =>
-          `Level ${level} పూర్తి చేయడానికి మూల్యాంకనాన్ని చేయండి.`,
-        startAssessment: "మూల్యాంకనాన్ని ప్రారంభించండి",
-      },
-      kn: {
-        testSkills: "Let's test your language skills",
-        goodSkills: "You have good language skills",
-        discoverLevel: "Take the assessment to discover your level",
-        completeLevel: (level) =>
-          `Take the assessment to complete Level ${level}.`,
-        startAssessment: "Start Assessment",
-      },
-    };
-
-    return texts[lang] || texts.en;
-  };
-  const assessmentText = getAssessmentText();
 
   const handleWordClick = () => {
     setShowModal(true);
@@ -2025,7 +1980,7 @@ const Assesment = ({ discoverStart }) => {
     if (!username && !profileName && !TOKEN && level === 0) {
       // alert("please add username in query param");
       setOpenMessageDialog({
-        message: "please add username in query param",
+        message: ui.ASSESSMENT_NO_USERNAME_QUERY_PARAM,
         isError: true,
       });
       return;
@@ -2335,7 +2290,7 @@ const Assesment = ({ discoverStart }) => {
                     fontFamily: getFontFamily(lang),
                   }}
                 >
-                  Please wait, we are fetching details for you…
+                  {ui.LOADING_FETCHING_DETAILS}
                 </Typography>
               </>
             ) : (
@@ -2397,35 +2352,31 @@ const Assesment = ({ discoverStart }) => {
                     }}
                     onClick={handleRedirect}
                   >
-                    {lang === "te" ? (
-                      <Box
-                        sx={{
-                          background: "#EDB530",
-                          border: "2px solid #322020",
-                          borderRadius: "9px",
-                          padding: "12px 24px",
-                          minWidth: "218px",
-                          height: "60px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                    <Box
+                      sx={{
+                        background: "#EDB530",
+                        border: "2px solid #322020",
+                        borderRadius: "9px",
+                        padding: "12px 24px",
+                        minWidth: "218px",
+                        height: "60px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "#322020",
+                          fontWeight: 600,
+                          fontSize: "20px",
+                          fontFamily: getFontFamily(lang),
                         }}
                       >
-                        <span
-                          style={{
-                            color: "#322020",
-                            fontWeight: 600,
-                            fontSize: "20px",
-                            fontFamily: getFontFamily(lang),
-                          }}
-                        >
-                          {assessmentText.startAssessment}
-                        </span>
-                      </Box>
-                    ) : (
-                      <StartAssessmentButton />
-                    )}
+                        {ui.ASSESSMENT_START_ASSESSMENT}
+                      </span>
+                    </Box>
                   </Box>
                 </Box>
               </>

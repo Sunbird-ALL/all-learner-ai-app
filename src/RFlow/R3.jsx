@@ -521,7 +521,7 @@ const R3 = ({
                     width: "45px",
                     height: "45px",
                     borderRadius: "60%",
-                    backgroundColor: "rgba(255, 127, 54, 0.8)",
+                    backgroundColor: "#F44336",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -574,9 +574,9 @@ const R3 = ({
                       key={index}
                       style={{
                         backgroundColor: isCorrect
-                          ? "rgba(117, 209, 0, 0.6)"
+                          ? "#4CAF50"
                           : isWrong
-                          ? "rgba(255, 127, 54, 0.8)"
+                          ? "#F44336"
                           : "#FFFFFF",
                         padding: "8px",
                         borderRadius: "24px",

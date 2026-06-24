@@ -53,6 +53,7 @@ import { Log } from "../../services/telemetryService";
 import { getF1FlowStep, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, F2_FLOW } from "../../RFlow/F2";
 import { getF3FlowStep, F3_FLOW } from "../../RFlow/F3";
+import { getUiStrings } from "../../constants/strings";
 
 // Level milestone SVGs are lazy-loaded — only downloaded when a level-complete screen renders
 const LevelMilestone = lazy(() => import("../LevelIcons/LevelMilestone"));
@@ -437,6 +438,7 @@ const MainLayout = (props) => {
   const audioRefs = useRef([]);
 
   const language = getLocalData("lang");
+  const ui = getUiStrings(language);
 
   //console.log("levelss", LEVEL, livesData);
 
@@ -1046,7 +1048,7 @@ const MainLayout = (props) => {
                   color: "#333F61",
                 }}
               >
-                Loading
+                {ui.LOADING_GAME}
               </p>
             </Box>
           ) : (
@@ -1737,7 +1739,7 @@ const MainLayout = (props) => {
                             fontFamily: "Quicksand",
                           }}
                         >
-                          {"Next Lesson"}
+                          {ui.MAIN_LAYOUT_NEXT_LESSON}
                         </span>
                       </Box>
                       {enableNext ? (
@@ -1848,7 +1850,7 @@ const MainLayout = (props) => {
                           textAlign: "center",
                         }}
                       >
-                        Hurray!!!
+                        {ui.HURRAY}
                       </Typography>
                       <Typography
                         sx={{
@@ -1867,7 +1869,7 @@ const MainLayout = (props) => {
                             fontFamily: "Quicksand",
                           }}
                         >
-                          {"Ready for Challenge?"}
+                          {ui.MAIN_LAYOUT_READY_CHALLENGE}
                         </span>
                       </Typography>
                     </Box>
@@ -1959,16 +1961,14 @@ const MainLayout = (props) => {
 
                                 {!fluency ? (
                                   <Typography textAlign="center" sx={{ mt: 2 }}>
-                                    Good try! Need more speed.
+                                    {ui.MAIN_LAYOUT_GAMEOVER_GOOD_TRY_SPEED}
                                   </Typography>
                                 ) : (
                                   <Typography textAlign="center" sx={{ mt: 2 }}>
-                                    Oops! You need{" "}
-                                    <span style={{ fontWeight: "bold" }}>
-                                      {Math.abs(70 - percentage)}
-                                    </span>{" "}
-                                    more points to pass. You're almost there—try
-                                    again!
+                                    {ui.MAIN_LAYOUT_GAMEOVER_NEED_POINTS.replace(
+                                      "{points}",
+                                      Math.abs(70 - percentage)
+                                    )}
                                   </Typography>
                                 )}
                               </Typography>
@@ -2065,8 +2065,8 @@ const MainLayout = (props) => {
                                                   }}
                                                   aria-label={
                                                     audioPlaying === index
-                                                      ? "Pause audio"
-                                                      : "Play audio"
+                                                      ? ui.A11Y_PAUSE_AUDIO
+                                                      : ui.A11Y_PLAY_AUDIO
                                                   }
                                                 >
                                                   <img
@@ -2176,7 +2176,7 @@ const MainLayout = (props) => {
                                             fontFamily: "Quicksand",
                                           }}
                                         >
-                                          {"Oops, a bit slow!"}
+                                          {ui.MAIN_LAYOUT_OOPS_SLOW}
                                         </span>
                                       </Stack>
                                     )}
@@ -2222,7 +2222,7 @@ const MainLayout = (props) => {
                                   fontFamily: "Quicksand",
                                 }}
                               >
-                                Words Learnt
+                                {ui.ASSESSMENT_WORDS_LEARNT}
                               </Typography>
                               <Stack
                                 direction="row"
@@ -2256,7 +2256,7 @@ const MainLayout = (props) => {
                                     fontFamily: "Quicksand",
                                   }}
                                 >
-                                  Let’s practice more
+                                  {ui.MAIN_LAYOUT_PRACTICE_MORE}
                                 </Typography>
                               </Stack>
                             </Stack>
@@ -2366,7 +2366,9 @@ const MainLayout = (props) => {
                           fontFamily: "Quicksand",
                         }}
                       >
-                        {!gameOverData ? "Start Game ➜" : "Practice ➜"}
+                        {!gameOverData
+                          ? ui.MAIN_LAYOUT_START_GAME
+                          : ui.MAIN_LAYOUT_PRACTICE_ARROW}
                       </Typography>
                     </Box>
                   </Box>

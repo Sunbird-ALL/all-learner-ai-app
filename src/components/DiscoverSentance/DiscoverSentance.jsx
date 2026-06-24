@@ -44,6 +44,7 @@ import {
   resolveAfterSetComplete,
   DISCOVERY_SET_FLOW_STORAGE,
 } from "../../utils/discoverSetFlow";
+import { getUiStrings } from "../../constants/strings";
 
 const SpeakSentenceComponent = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -77,6 +78,7 @@ const SpeakSentenceComponent = () => {
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
   const sessionId = getLocalData("sessionId");
+  const ui = getUiStrings(getLocalData("lang"));
 
   const callConfettiAndPlay = () => {
     let audio = new Audio(levelCompleteAudioSrc);
@@ -96,8 +98,10 @@ const SpeakSentenceComponent = () => {
       setTimeout(() => {
         // alert();
         setOpenMessageDialog({
-          message:
-            "You have successfully completed assessment " + assesmentCount,
+          message: ui.ASSESSMENT_COMPLETE_ASSESSMENT.replace(
+            "{count}",
+            assesmentCount
+          ),
         });
         // setDisableScreen(false);
       }, 1200);
@@ -186,8 +190,10 @@ const SpeakSentenceComponent = () => {
       callConfettiAndPlay();
       setTimeout(() => {
         setOpenMessageDialog({
-          message:
-            "You have successfully completed assessment " + assesmentCount,
+          message: ui.ASSESSMENT_COMPLETE_ASSESSMENT.replace(
+            "{count}",
+            assesmentCount
+          ),
         });
       }, 1200);
       return;
@@ -245,7 +251,7 @@ const SpeakSentenceComponent = () => {
     if (voiceText === "error") {
       // alert("");
       setOpenMessageDialog({
-        message: "Sorry I couldn't hear a voice. Could you please speak again?",
+        message: ui.VOICE_COULD_NOT_HEAR_AGAIN,
         isError: true,
       });
       setVoiceText("");
@@ -253,7 +259,7 @@ const SpeakSentenceComponent = () => {
     }
     if (voiceText === "profanity") {
       setOpenMessageDialog({
-        message: `Please speak appropriately.`,
+        message: ui.VOICE_PROMPT_SPEAK_APPROPRIATELY,
         severity: "warning",
         isError: true,
       });
@@ -548,7 +554,7 @@ const SpeakSentenceComponent = () => {
             fontSize: "18px",
           }}
         >
-          Please wait, we are fetching details for you…
+          {ui.LOADING_FETCHING_DETAILS}
         </Typography>
       </Box>
     );
@@ -576,8 +582,8 @@ const SpeakSentenceComponent = () => {
           background: "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)",
           header:
             questions[currentQuestion]?.contentType === "image"
-              ? `Guess the below image`
-              : `Speak the below ${questions[currentQuestion]?.contentType}`,
+              ? ui.PRACTICE_GUESS_IMAGE
+              : `${ui.PRACTICE_SPEAK_BELOW} ${questions[currentQuestion]?.contentType}`,
           words: questions[currentQuestion]?.contentSourceData?.[0]?.text,
           contentType: currentContentType,
           contentId: questions[currentQuestion]?.contentId,
