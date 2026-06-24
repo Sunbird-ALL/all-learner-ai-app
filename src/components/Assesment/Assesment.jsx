@@ -1629,29 +1629,28 @@ export const ProfileHeader = ({
                 />
               </IconButton>
             </CustomTooltip>
-            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" &&
-              process.env.REACT_APP_IS_APP_IFRAME !== "true" && (
-                <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
-                  <IconButton
-                    onClick={handleLogout}
-                    sx={{
-                      mr: { xs: "5px", sm: "10px" },
-                      padding: isMobile ? "6px" : "8px",
-                      backgroundColor: "rgba(255, 255, 255, 0.7)",
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      },
-                    }}
-                  >
-                    <img
-                      className="logout-img"
-                      style={{ height: 25, width: 25 }}
-                      src={LogoutImg}
-                      alt="Logout"
-                    />
-                  </IconButton>
-                </CustomTooltip>
-              )}
+            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+              <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
+                <IconButton
+                  onClick={handleMenuLogout}
+                  sx={{
+                    mr: { xs: "5px", sm: "10px" },
+                    padding: isMobile ? "6px" : "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    },
+                  }}
+                >
+                  <img
+                    className="logout-img"
+                    style={{ height: 25, width: 25 }}
+                    src={LogoutImg}
+                    alt="Logout"
+                  />
+                </IconButton>
+              </CustomTooltip>
+            )}
           </Box>
         )}
       </Box>
