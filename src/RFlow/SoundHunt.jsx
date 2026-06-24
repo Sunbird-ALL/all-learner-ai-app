@@ -3888,7 +3888,7 @@ const SoundHunt = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: isMobile ? "flex-start" : "safe center",
+            justifyContent: "safe center",
             bottom: isMobile ? "5px" : "auto",
             left: isMobile ? "5px" : "auto",
             position: isMobile ? "absolute" : "relative",
@@ -3945,8 +3945,8 @@ const SoundHunt = ({
                   justifyContent: "center",
                   alignItems: "center",
                   order: isMobile ? 2 : 0,
-                  marginTop: isMobile ? "24px" : "0px",
-                  marginBottom: isMobile ? "10px" : "0px",
+                  marginTop: isMobile ? "clamp(8px, 2dvh, 24px)" : "0px",
+                  marginBottom: isMobile ? "clamp(4px, 1dvh, 10px)" : "0px",
                 }}
               >
                 {selectedWord === currentQuestion?.correctWord ? (
@@ -4021,9 +4021,10 @@ const SoundHunt = ({
               <div
                 style={{
                   display: "flex",
-                  flexDirection: isMobile ? "column" : "row",
-                  gap: isMobile ? "12px" : "24px",
-                  marginTop: isMobile ? "10px" : "24px",
+                  flexDirection: "row",
+                  flexWrap: isMobile ? "wrap" : "nowrap",
+                  gap: isMobile ? "clamp(6px, 1.5dvh, 12px)" : "24px",
+                  marginTop: isMobile ? "clamp(4px, 1dvh, 10px)" : "24px",
                   justifyContent: "center",
                   alignItems: "center",
                   order: isMobile ? 1 : 0,
@@ -4041,7 +4042,6 @@ const SoundHunt = ({
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        flexShrink: 0,
                         backgroundColor: isCorrect
                           ? "#4CAF50"
                           : isWrong
@@ -4055,8 +4055,10 @@ const SoundHunt = ({
                         border: isMobile
                           ? "1px solid rgba(255, 255, 255, 0.8)"
                           : "2px solid rgba(255, 255, 255, 0.7)",
-                        width: isMobile ? "125px" : "128px",
-                        height: isMobile ? "125px" : "128px",
+                        width: isMobile ? "clamp(75px, 18dvh, 125px)" : "128px",
+                        height: isMobile
+                          ? "clamp(75px, 18dvh, 125px)"
+                          : "128px",
                         backdropFilter: "blur(56px)",
                         WebkitBackdropFilter: "blur(56px)",
                         cursor: isAudioPlayedOnce ? "pointer" : "not-allowed",
