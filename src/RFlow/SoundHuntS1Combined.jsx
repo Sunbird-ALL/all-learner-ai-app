@@ -10437,17 +10437,17 @@ const SoundHuntS1Combined = ({
                       let borderColor = "2px solid rgba(255, 255, 255, 0.5)";
 
                       if (isSelected && isCorrect) {
-                        backgroundColor = "#E8F5E9";
-                        borderColor = "3px solid #4CAF50";
+                        backgroundColor = "#4CAF50";
+                        borderColor = "5px solid #2E7D32";
                       } else if (isSelected && !isCorrect) {
-                        backgroundColor = "#FFEBEE";
-                        borderColor = "3px solid #F44336";
+                        backgroundColor = "#F44336";
+                        borderColor = "5px solid #C62828";
                       } else if (isWrong) {
-                        backgroundColor = "#FFEBEE";
-                        borderColor = "3px solid #F44336";
+                        backgroundColor = "#F44336";
+                        borderColor = "5px solid #C62828";
                       } else if (isSelected) {
-                        backgroundColor = "#E3F2FD";
-                        borderColor = "3px solid #2196F3";
+                        backgroundColor = "#4CAF50";
+                        borderColor = "5px solid #2E7D32";
                       }
 
                       return (
