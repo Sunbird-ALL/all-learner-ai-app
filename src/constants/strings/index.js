@@ -1,10 +1,12 @@
 import en from "./en";
 import hi from "./hi";
+import kn from "./kn";
 import te from "./te";
 
 const UI_STRINGS_BY_LANG = {
   en,
   hi,
+  kn,
   te,
 };
 
@@ -20,4 +22,4 @@ export function getUiStrings(lang) {
   return { ...en, ...strings };
 }
 
-export { en, hi, te };
+export { en, hi, kn, te };

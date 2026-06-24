@@ -1,6 +1,8 @@
 import MainLayout from "../Layout/MainLayout";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { getLocalData, setLocalData } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
+import { getFontFamily } from "../../utils/fontUtils";
 import {
   AssesmentCompletePlane,
   AverageMood,
@@ -33,6 +35,7 @@ const AssesmentEnd = () => {
   const [vocabCount, setVocabCount] = useState(0);
   const [wordCount, setWordCount] = useState(0);
   const lang = getLocalData("lang");
+  const ui = getUiStrings(lang);
   const hasFetchedData = useRef(false);
 
   useEffect(() => {
@@ -152,12 +155,12 @@ const AssesmentEnd = () => {
                 color: "#00B359",
                 fontWeight: 700,
                 fontSize: "22px",
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
                 lineHeight: "32.5px",
                 letterSpacing: "2%",
               }}
             >
-              {newLevel === previousLevel ? "Amost There.!" : `Hurray.!`}
+              {newLevel === previousLevel ? ui.ALMOST_THERE : ui.HURRAY}
             </span>
           </Box>
           <Box
@@ -172,55 +175,17 @@ const AssesmentEnd = () => {
               style={{
                 color: "#183346",
                 fontWeight: 700,
-                fontSize: "18px",
-                fontFamily: "Quicksand",
+                fontSize: "15px",
+                fontFamily: getFontFamily(lang),
                 lineHeight: "30px",
               }}
             >
               {newLevel === previousLevel
-                ? "more"
-                : `Level ${previousLevel || ""}`}
-            </span>
-          </Box>
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: 110,
-              left: 105,
-              // transform: "rotate(-2deg)",
-            }}
-          >
-            <span
-              style={{
-                color: "#183346",
-                fontWeight: 700,
-                fontSize: "18px",
-                fontFamily: "Quicksand",
-                lineHeight: "30px",
-              }}
-            >
-              {newLevel === previousLevel ? "practice" : `completed`}
-            </span>
-          </Box>
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: newLevel === previousLevel ? 115 : 125,
-              left: newLevel === previousLevel ? 190 : 200,
-              transform:
-                newLevel === previousLevel ? "rotate(-5deg)" : "rotate(-18deg)",
-            }}
-          >
-            <span
-              style={{
-                color: "#183346",
-                fontWeight: 700,
-                fontSize: "18px",
-                fontFamily: "Quicksand",
-                lineHeight: "30px",
-              }}
-            >
-              {newLevel === previousLevel ? "required" : `successfully`}
+                ? ui.ASSESSMENT_END_MORE_PRACTICE
+                : ui.ASSESSMENT_END_LEVEL_COMPLETED.replace(
+                    "{level}",
+                    previousLevel || ""
+                  )}
             </span>
           </Box>
         </Box>
@@ -325,10 +290,10 @@ const AssesmentEnd = () => {
                 color: "#FFFFFF",
                 fontWeight: 600,
                 fontSize: "20px",
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
               }}
             >
-              {"Continue"}
+              {ui.COMMON_CONTINUE}
             </span>
           </Box>
         </Box>
@@ -379,7 +344,7 @@ const AssesmentEnd = () => {
             textAlign: "center",
           }}
         >
-          {newLevel === previousLevel ? `Almost There!!!` : `Hurray!!!`}
+          {newLevel === previousLevel ? ui.ALMOST_THERE : ui.HURRAY}
         </Typography>
         <Box mt={1}>
           <span
@@ -387,14 +352,17 @@ const AssesmentEnd = () => {
               color: "#50507D",
               fontWeight: 600,
               fontSize: "30px",
-              fontFamily: "Quicksand",
+              fontFamily: getFontFamily(lang),
               lineHeight: "37.5px",
               letterSpacing: "2%",
             }}
           >
             {newLevel === previousLevel
-              ? `Some more practice required to complete ${previousLevel}`
-              : `You completed Level ${previousLevel} successfully`}
+              ? ui.ASSESSMENT_END_MORE_PRACTICE
+              : ui.ASSESSMENT_END_LEVEL_COMPLETED.replace(
+                  "{level}",
+                  previousLevel || ""
+                )}
           </span>
         </Box>
         {/* <Box display="flex" mt={2}>
@@ -444,11 +412,14 @@ const AssesmentEnd = () => {
               color: "#5C5C84",
               fontWeight: 400,
               fontSize: "26px",
-              fontFamily: "Quicksand",
+              fontFamily: getFontFamily(lang),
               lineHeight: "28.5px",
             }}
           >
-            {`Rate your experience for Level ${previousLevel}`}
+            {ui.ASSESSMENT_END_RATE_EXPERIENCE.replace(
+              "{level}",
+              previousLevel || ""
+            )}
           </span>
         </Box>
         <Box display="flex" mt={2}>

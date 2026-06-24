@@ -27,6 +27,7 @@ import booksStackImg from "../../assets/totalWord.svg";
 import reportPandaImg from "../../assets/pandaa.svg";
 import reportImg from "../../assets/reportImg.svg";
 import { setLocalData, getLocalData } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import { getFontFamily } from "../../utils/fontUtils";
 import { useNavigate, useLocation } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
@@ -617,6 +618,7 @@ const CombinedReportPage = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const location = useLocation();
+  const ui = getUiStrings(getLocalData("lang") || "en");
   const wordCount = transcript.trim().split(/\s+/).length;
   //const wordsPerMinute = Math.round((wordCount / totalSec) * 60);
   const totalWordsInCurrentSets = (currentWordSetIndex + 1) * 12;
@@ -665,7 +667,7 @@ const CombinedReportPage = ({
           fontWeight: "700",
         }}
       >
-        Well done!
+        {ui.TOWRE_RESULT_WELL_DONE}
       </h2>
       <p
         style={{
@@ -676,7 +678,7 @@ const CombinedReportPage = ({
           marginBottom: "25px",
         }}
       >
-        You're reading faster.
+        {ui.TOWRE_RESULT_READING_FASTER}
       </p>
 
       {browserUnsupported && (
@@ -694,9 +696,7 @@ const CombinedReportPage = ({
             width: "100%",
           }}
         >
-          ⚠️ Speech recognition is not supported in your browser, so words could
-          not be scored automatically. Please use Google Chrome or Microsoft
-          Edge for accurate results.
+          {ui.TOWRE_SCORE_UNAVAILABLE_WARNING}
         </div>
       )}
 
@@ -726,7 +726,7 @@ const CombinedReportPage = ({
           <div
             style={{ color: "#333F61", fontSize: isMobile ? "18px" : "20px" }}
           >
-            Words Per Minute
+            {ui.TOWRE_RESULT_WORDS_PER_MINUTE}
           </div>
         </div>
 
@@ -748,7 +748,7 @@ const CombinedReportPage = ({
           <div
             style={{ color: "#333F61", fontSize: isMobile ? "18px" : "20px" }}
           >
-            New Words Learnt
+            {ui.TOWRE_RESULT_NEW_WORDS_LEARNT}
           </div>
         </div>
 
@@ -770,7 +770,7 @@ const CombinedReportPage = ({
           <div
             style={{ color: "#333F61", fontSize: isMobile ? "18px" : "20px" }}
           >
-            Total Words Learnt
+            {ui.TOWRE_RESULT_TOTAL_WORDS_LEARNT}
           </div>
         </div>
       </div>
@@ -969,11 +969,13 @@ const CombinedReportPage = ({
           }}
         >
           <Box sx={statStyles.attempted}>
-            Attempted Words: {attemptedWordsCount}
+            {ui.TOWRE_ATTEMPTED_WORDS}: {attemptedWordsCount}
           </Box>
-          <Box sx={statStyles.correct}>Correct Words: {correctWordsCount}</Box>
+          <Box sx={statStyles.correct}>
+            {ui.TOWRE_CORRECT_WORDS}: {correctWordsCount}
+          </Box>
           <Box sx={statStyles.unattempted}>
-            Unattempted Words: {unattemptedWordsCount}
+            {ui.TOWRE_UNATTEMPTED_WORDS}: {unattemptedWordsCount}
           </Box>
         </Box>
 
@@ -1041,6 +1043,8 @@ const CombinedReportPage = ({
     </div>
   );
 };
+const lang = getLocalData("lang");
+const ui = getUiStrings(lang || "en");
 
 const TowreFlow = ({
   setVoiceText,
@@ -1087,9 +1091,7 @@ const TowreFlow = ({
 }) => {
   const [activeSet, setActiveSet] = useState(0);
   const [currentWordSetIndex, setCurrentWordSetIndex] = useState(0);
-  const [message, setMessage] = useState(
-    "Look at the words.\nYou'll read them soon — left to right, top to bottom"
-  );
+  const [message, setMessage] = useState(null);
   const [showCountdown, setShowCountdown] = useState(false);
   const [count, setCount] = useState(3);
   const [showFinalWords, setShowFinalWords] = useState(false);
@@ -1114,7 +1116,6 @@ const TowreFlow = ({
   const [transcript, setTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
   const [listening, setListening] = useState(false);
-  const lang = getLocalData("lang");
 
   // Map language codes to browser Speech Recognition format
   // Memoize to prevent function recreation on every render
@@ -1569,9 +1570,7 @@ const TowreFlow = ({
     setIsStarted(false);
     setActiveSet(0);
     setCurrentWordSetIndex(0);
-    setMessage(
-      "Look at the words.\nYou'll read them soon — left to right, top to bottom"
-    );
+    setMessage(ui.TOWRE_MSG_LOOK_AT_WORDS);
     setShowCountdown(false);
     setCount(3);
     setShowFinalWords(false);
@@ -1622,9 +1621,7 @@ const TowreFlow = ({
     );
     if (!browserSupportsSpeechRecognition) {
       console.error("❌ Speech recognition is not supported in this browser!");
-      setBrowserWarning(
-        "Your browser may not support speech recognition. For best results, please use Google Chrome or Microsoft Edge."
-      );
+      setBrowserWarning(ui.TOWRE_BROWSER_SPEECH_WARNING);
     }
   }, [browserSupportsSpeechRecognition]);
 
@@ -1673,25 +1670,21 @@ const TowreFlow = ({
 
   const handleNext = () => {
     if (activeSet === 0) {
-      setMessage("Here come your next words!");
+      setMessage(ui.TOWRE_MSG_NEXT_WORDS_SHORT);
       setActiveSet(1);
     } else if (activeSet === 1) {
-      setMessage("Great job! Here come your next words.");
+      setMessage(ui.TOWRE_MSG_NEXT_WORDS_GREAT);
       setActiveSet(2);
     } else if (activeSet === 2) {
-      setMessage(
-        "You'll go to the next set of words, when you click the button below."
-      );
+      setMessage(ui.TOWRE_MSG_NEXT_SET_HINT);
       setActiveSet(3);
     } else if (activeSet === 3) {
-      setMessage(
-        "If you are not able to speak a word, You can move to the next word."
-      );
+      setMessage(ui.TOWRE_MSG_SKIP_WORD_HINT);
       setActiveSet(4);
     } else if (activeSet === 4) {
       isMobile
-        ? setMessage("Are You Ready? You'll have 45 seconds.")
-        : setMessage("Are You Ready?⏱️ You'll have 45 seconds.");
+        ? setMessage(ui.TOWRE_MSG_READY_SECONDS)
+        : setMessage(ui.TOWRE_MSG_READY_SECONDS_ICON);
       setActiveSet(5);
     } else if (activeSet === 5) {
       startCountdown();
@@ -1702,7 +1695,7 @@ const TowreFlow = ({
     if (currentWordSetIndex < allWordSets.length - 1) {
       setCurrentWordSetIndex(currentWordSetIndex + 1);
       setActiveSet(0);
-      setMessage("Read the words out\nloud one by one!\nStart from top left");
+      setMessage(ui.TOWRE_MSG_READ_WORDS);
     } else {
       const endTime = Date.now();
       const elapsedSeconds = (endTime - startTime) / 1000;
@@ -1770,9 +1763,7 @@ const TowreFlow = ({
               action: "towre_mic_permission_denied",
               message: error?.message || "Microphone permission denied",
             });
-            alert(
-              "Microphone access is required for speech recognition. Please allow microphone access and try again."
-            );
+            alert(ui.TOWRE_MIC_ACCESS_REQUIRED);
             return;
           }
 
@@ -1847,7 +1838,7 @@ const TowreFlow = ({
     setCurrentWordSetIndex(0);
     setShowFinalWords(false);
     setActiveSet(0);
-    setMessage("Read the words out\nloud one by one!\nStart from top left");
+    setMessage(ui.TOWRE_MSG_READ_WORDS);
     setCompletedAllSets(false);
     setShowResults(false);
     setTimer(45);
@@ -2212,10 +2203,10 @@ const TowreFlow = ({
                       color: "#1d3557",
                     }}
                   >
-                    Get ready to read the words!
+                    {ui.TOWRE_COUNTDOWN_READY}
                   </div>
                   <div style={{ fontSize: 16, color: "#444", marginTop: 6 }}>
-                    Read the words out loud as fast as you can in 45 seconds.
+                    {ui.TOWRE_COUNTDOWN_INSTRUCTION}
                   </div>
                 </div>
 
@@ -2251,7 +2242,7 @@ const TowreFlow = ({
                           fontWeight: "bold",
                         }}
                       >
-                        Starts In
+                        {ui.TOWRE_COUNTDOWN_STARTS_IN}
                       </div>
                       <div
                         style={{
@@ -2291,10 +2282,10 @@ const TowreFlow = ({
                 <h2
                   style={{ fontSize: 28, color: "#1d3557", marginBottom: 20 }}
                 >
-                  Activity Completed!
+                  {ui.TOWRE_COMPLETED_TITLE}
                 </h2>
                 <p style={{ fontSize: 18, marginBottom: 30 }}>
-                  You've gone through all the word sets.
+                  {ui.TOWRE_COMPLETED_SUBTITLE}
                 </p>
                 <button
                   onClick={() => setShowResults(true)}
@@ -2309,7 +2300,7 @@ const TowreFlow = ({
                     cursor: "pointer",
                   }}
                 >
-                  View Results
+                  {ui.TOWRE_VIEW_RESULTS}
                 </button>
               </div>
             ) : showFinalWords && !loading ? (
@@ -2371,7 +2362,7 @@ const TowreFlow = ({
                       fontSize: isMobile ? 12 : 14,
                     }}
                   >
-                    Recording
+                    {ui.TOWRE_RECORDING}
                   </span>
                 </div>
 
@@ -2489,7 +2480,7 @@ const TowreFlow = ({
                       fontSize: isMobile ? 11 : 14,
                     }}
                   >
-                    Recording
+                    {ui.TOWRE_RECORDING}
                   </span>
                 </div>
 
@@ -2644,23 +2635,20 @@ const TowreFlow = ({
                       }}
                     />
 
-                    {/* Hide arrow for this specific message */}
-                    {message !==
-                      "You'll go to the next set of words when you click the button below." &&
-                      message !==
-                        "If you are not able to speak a word, You can move to the next word." && (
-                        <img
-                          src={arrowImg}
-                          alt="arrow"
-                          style={{
-                            width: isMobile ? "50px" : "80px",
-                            position: "absolute",
-                            top: "15px",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                          }}
-                        />
-                      )}
+                    {/* Hide arrow when showing next-set or skip-word hints */}
+                    {activeSet !== 3 && activeSet !== 4 && (
+                      <img
+                        src={arrowImg}
+                        alt="arrow"
+                        style={{
+                          width: isMobile ? "50px" : "80px",
+                          position: "absolute",
+                          top: "15px",
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                        }}
+                      />
+                    )}
 
                     <div
                       style={{
@@ -2686,8 +2674,7 @@ const TowreFlow = ({
                         {message}
                       </div>
 
-                      {message ===
-                      "You'll go to the next set of words\nwhen you click the button below." ? (
+                      {activeSet === 3 ? (
                         <div
                           style={{
                             position: "absolute",
@@ -2725,8 +2712,7 @@ const TowreFlow = ({
                             />
                           </button>
                         </div>
-                      ) : message ===
-                        "Are You Ready?⏱️ You'll have 45 seconds." ? (
+                      ) : activeSet === 5 ? (
                         <img
                           src={Assets.startNewButtonImg}
                           alt="start"
@@ -2760,8 +2746,7 @@ const TowreFlow = ({
                     }}
                   />
                 </div>
-                {message ===
-                  "You'll go to the next set of words\nwhen you click the button below." && (
+                {activeSet === 3 && (
                   <div
                     style={{
                       position: "absolute",
@@ -2877,7 +2862,7 @@ const TowreFlow = ({
                   marginBottom: "clamp(4px, 1dvh, 10px)",
                 }}
               >
-                Towre Flow
+                {ui.TOWRE_SCREEN_TITLE}
               </h2>
               <img
                 src={Assets.birthdayBoxImg}

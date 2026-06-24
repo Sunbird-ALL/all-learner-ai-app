@@ -14,6 +14,7 @@ import {
   NextButtonRound,
   RetryIcon,
 } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import MainLayout from "../Layout/MainLayout";
 import {
   level13,
@@ -247,6 +248,7 @@ const ActOutM13 = ({
   isNextButtonCalled,
   setIsNextButtonCalled,
 }) => {
+  const ui = getUiStrings(getLocalData("lang"));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [girlState, setGirlState] = useState("mic");
   const [isComplete, setIsComplete] = useState(false);
@@ -277,7 +279,7 @@ const ActOutM13 = ({
 
   const startRecording = () => {
     if (!browserSupportsSpeechRecognition) {
-      alert("Speech recognition is not supported in your browser.");
+      alert(ui.ERROR_SPEECH_RECOGNITION_BROWSER_UNSUPPORTED);
       return;
     }
     resetTranscript();
@@ -337,7 +339,7 @@ const ActOutM13 = ({
 
   const handleStartRecording = () => {
     if (!browserSupportsSpeechRecognition) {
-      alert("Speech recognition is not supported in your browser.");
+      alert(ui.ERROR_SPEECH_RECOGNITION_BROWSER_UNSUPPORTED);
       return;
     }
     resetTranscript();
@@ -740,7 +742,7 @@ const ActOutM13 = ({
               justifyContent: "center",
             }}
           >
-            <h1>Conversation Complete!</h1>
+            <h1>{ui.CONVO_DONE}</h1>
           </div>
         )}
       </div>

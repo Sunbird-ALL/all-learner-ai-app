@@ -23,6 +23,7 @@ import {
   setLocalData,
 } from "../utils/constants";
 import { getFontFamily } from "../utils/fontUtils";
+import { getUiStrings } from "../constants/strings";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telemetryService";
 import { Typography, Stack, IconButton } from "@mui/material";
@@ -6139,6 +6140,13 @@ const LetterTrain = ({
   if (lang === "ka") {
     lang = "kn"; // Normalize to "kn" for consistency, but getFontFamily handles both
   }
+  const ui = getUiStrings(lang);
+  const titleMap = {
+    Letter: ui.LETTER_TRAIN_LETTER,
+    Syllable: ui.ASSESSMENT_SYLLABLE,
+    Vowel: ui.LETTER_TRAIN_VOWEL,
+    Consonant: ui.LETTER_TRAIN_CONSONANT,
+  };
   // Debug: Log language and font family
   console.log(
     "LetterTrain - Language:",
@@ -6729,7 +6737,7 @@ const LetterTrain = ({
                   lineHeight: 1.2,
                 }}
               >
-                {item.title}
+                {titleMap[item.title] || item.title}
               </Typography>
             </Box>
 
@@ -6789,8 +6797,16 @@ const LetterTrain = ({
                     >
                       <Box
                         sx={{
-                          minWidth: { xs: "clamp(24px, calc(40px * (100vw - 20px) / 350px), 40px)", sm: 50, md: 60 },
-                          minHeight: { xs: "clamp(24px, calc(40px * (100vw - 20px) / 350px), 40px)", sm: 50, md: 60 },
+                          minWidth: {
+                            xs: "clamp(24px, calc(40px * (100vw - 20px) / 350px), 40px)",
+                            sm: 50,
+                            md: 60,
+                          },
+                          minHeight: {
+                            xs: "clamp(24px, calc(40px * (100vw - 20px) / 350px), 40px)",
+                            sm: 50,
+                            md: 60,
+                          },
                           borderRadius: "6px",
                           display: "flex",
                           alignItems: "center",

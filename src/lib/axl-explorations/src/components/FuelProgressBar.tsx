@@ -1,5 +1,7 @@
 import { Fuel } from "lucide-react";
 import { cn } from "../lib/utils";
+import { getUiStrings } from "../../../../constants/strings";
+import { Language } from "../constants/languages";
 
 interface FuelProgressBarProps {
   currentFuel: number;
@@ -12,12 +14,13 @@ interface FuelProgressBarProps {
   maxFuel: number;
   hideHeader?: boolean;
   progressIcon?: string; // Custom icon to show on progress bar (default: 🚀)
+  selectedLanguage?: Language;
 }
 
 
-export function FuelProgressBar({ 
-  currentFuel, 
-  requiredFuel, 
+export function FuelProgressBar({
+  currentFuel,
+  requiredFuel,
   className,
   showRocket = true,
   hidePercentage = false,
@@ -25,8 +28,10 @@ export function FuelProgressBar({
   showCheckpoint = true,
   maxFuel,
   hideHeader = false,
-  progressIcon = "🚀"
+  progressIcon = "🚀",
+  selectedLanguage = 'en'
 }: FuelProgressBarProps) {
+  const ui = getUiStrings(selectedLanguage);
   const percentage = Math.min((currentFuel / maxFuel) * 100, 100);
   const isComplete = currentFuel >= requiredFuel;
 
@@ -47,14 +52,14 @@ export function FuelProgressBar({
             <Fuel className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-blue-600 fill-blue-600" />
           )}
           <span className="font-medium text-white">
-            Fuel: {currentFuel} / {maxFuel}
+            {ui.FUEL_LABEL} {currentFuel} / {maxFuel}
           </span>
         </div>
         {showRocket && isComplete && (
           <div className={cn(
             "flex items-center gap-1.5 transition-all duration-300 text-green-500"
           )}>
-            <span className="text-xs font-semibold">Ready to Launch!</span>
+            <span className="text-xs font-semibold">{ui.FUEL_READY_TO_LAUNCH}</span>
           </div>
         )}
       </div>
