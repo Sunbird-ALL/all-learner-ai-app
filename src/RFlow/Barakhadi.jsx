@@ -4910,7 +4910,7 @@ const Barakhadi = ({
     border: "1px dashed #ff9800",
     padding: "15px",
     borderRadius: "10px",
-    marginBottom: "15px",
+    marginBottom: isMobile ? "5px" : "15px",
     boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
     zIndex: 1000,
     background: "#FFF9ED",
@@ -4966,7 +4966,7 @@ const Barakhadi = ({
   };
 
   const tableStyle = {
-    marginTop: "50px",
+    marginTop: isMobile ? "20px" : "50px",
     borderCollapse: "collapse",
     width: isMobile ? "max-content" : "100%",
     tableLayout: "fixed",
@@ -5619,7 +5619,7 @@ const Barakhadi = ({
 
           <div
             className="barakhadiContent"
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: isMobile ? "100%" : "auto", width: "100%" }}
           >
             <div
               style={{
@@ -5630,8 +5630,8 @@ const Barakhadi = ({
                     : "48px"
                   : "60px",
                 paddingBottom: isMobile ? "85px" : "0px",
-                marginTop: isMobile ? "20px" : "30px",
-                height: isMobile ? "54%" : "100%",
+                marginTop: isMobile ? "8px" : "30px",
+                height: isMobile ? "54%" : "auto",
                 overflowY: isMobile ? "auto" : "visible",
                 overflowX: isMobile ? "auto" : "visible",
               }}
@@ -5647,7 +5647,7 @@ const Barakhadi = ({
                           ? "9px"
                           : "10px"
                         : "11px",
-                      top: isMobile ? `${i * 52 + 103}px` : `${i * 45 + 36}px`,
+                      top: isMobile ? `${i * 45 + 73}px` : `${i * 45 + 36}px`,
                     }}
                   >
                     {v}

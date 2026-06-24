@@ -1235,7 +1235,10 @@ export function LetterLauncherGameStoryPreview({
             character === 'rilo' ? 'border-purple-300' : 
             'border-yellow-300'
           }`}>
-            <p className="text-[11px] xs:text-[12px] sm:text-sm md:text-base lg:text-lg text-gray-800 leading-tight sm:leading-relaxed whitespace-pre-line text-center break-words">
+            <p 
+              className="text-[11px] xs:text-[12px] sm:text-sm md:text-base lg:text-lg text-gray-800 whitespace-pre-line text-center break-words"
+              style={{ lineHeight: '1.55rem' }}
+            >
               {text}
             </p>
           </div>
