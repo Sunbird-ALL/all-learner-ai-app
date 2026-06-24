@@ -6,6 +6,7 @@ import {
   setLocalData,
   practiceSteps,
 } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import { levelGetContent } from "../../data/levelContent";
 import {
   addLesson,
@@ -177,6 +178,7 @@ const LetterLauncherMechanicsContent = ({
   const effectiveSetStartShowCase = setStartShowCase || setLocalStartShowCase;
 
   const lang = getLocalData("lang") || "en";
+  const ui = getUiStrings(lang);
 
   // Map language to library Language type
   const initialLanguage =
@@ -1793,7 +1795,7 @@ const LetterLauncherMechanicsContent = ({
         setStartShowCase={effectiveSetStartShowCase}
       >
         <div style={{ padding: "20px", textAlign: "center" }}>
-          <p>Loading game...</p>
+          <p>{ui.LOADING_GAME}</p>
         </div>
       </MainLayout>
     );
@@ -2130,6 +2132,7 @@ const LetterLauncherMechanicsContent = ({
               onPlayAgain={resetGame}
               onBackToHub={handleGameBack}
               hasNextLevel={true}
+              selectedLanguage={initialLanguage}
               onNextLevel={async () => {
                 // Continue to next step/level - clear completion state
                 setIsGameComplete(false);
@@ -2385,7 +2388,7 @@ const LetterLauncherMechanicsContent = ({
           <div className="letter-launcher-header-wrapper relative flex flex-row items-center mb-1.5 sm:mb-2 gap-2 flex-shrink-0">
             <div className="absolute left-1/2 transform -translate-x-1/2 text-center w-full">
               <h1 className="letter-launcher-header text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white drop-shadow-lg leading-tight">
-                Letter Launcher
+                {ui.PRACTICE_LETTER_LAUNCHER_TITLE}
               </h1>
             </div>
 
@@ -2406,6 +2409,7 @@ const LetterLauncherMechanicsContent = ({
                   requiredFuel={requiredFuel}
                   maxFuel={maxFuel}
                   hidePercentage={true}
+                  selectedLanguage={initialLanguage}
                 />
               </div>
             )}

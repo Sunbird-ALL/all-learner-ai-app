@@ -6,12 +6,13 @@ import {
   registerAuthSessionExpiredHandler,
   unregisterAuthSessionExpiredHandler,
 } from "./sessionExpiredBridge";
-
-const DEFAULT_AUTH_MESSAGE = "Your session has ended. Please sign in again.";
+import { getUiStrings } from "../constants/strings";
+import { getLocalData } from "../utils/constants";
 
 export function SessionExpiredProvider({ children }) {
   const navigate = useNavigate();
   const [modal, setModal] = useState(null);
+  const ui = getUiStrings(getLocalData("lang") || "en");
   /** Avoid stacking duplicate modals (parallel 401s or re-renders). */
   const activeRef = useRef(false);
 
@@ -52,7 +53,7 @@ export function SessionExpiredProvider({ children }) {
       const text =
         typeof message === "string" && message.trim()
           ? message.trim()
-          : DEFAULT_AUTH_MESSAGE;
+          : ui.SESSION_EXPIRED_DEFAULT;
       setModal({
         message: text,
         notifyParent: !!notifyParent,

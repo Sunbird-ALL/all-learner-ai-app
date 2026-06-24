@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getUiStrings } from "../../constants/strings";
 import {
   LetterLauncherGame,
   LanguageProvider,
@@ -50,11 +51,12 @@ const LetterLauncherDemo = () => {
     );
   } catch (error) {
     console.error("LetterLauncherDemo render error:", error);
+    const ui = getUiStrings(initialLanguage);
     return (
       <div style={{ padding: "20px", textAlign: "center" }}>
-        <h2>Error loading game</h2>
+        <h2>{ui.GAME_ERROR}</h2>
         <p>{error.message}</p>
-        <button onClick={handleBack}>Go Back</button>
+        <button onClick={handleBack}>{ui.COMMON_BACK}</button>
       </div>
     );
   }

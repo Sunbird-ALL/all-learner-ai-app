@@ -4,6 +4,7 @@ import { Language } from "../../constants/languages";
 import { FuelCalculationResult, getFuelTierText } from "../../utils/fuelCalculation";
 import { useState, useEffect } from "react";
 import React from "react";
+import { getUiStrings } from "../../../../../constants/strings";
 
 export interface LetterLauncherQuestion {
   audioLetter: string; // The letter sound that plays
@@ -50,6 +51,7 @@ export function LetterLauncherGameCore({
   className = '',
   fuelIconImage
 }: LetterLauncherGameCoreProps) {
+  const ui = getUiStrings(selectedLanguage);
   // State for fuel fill animation
   const [fillWidth, setFillWidth] = useState(0);
   const [sliderPosition, setSliderPosition] = useState(0);
@@ -112,32 +114,6 @@ export function LetterLauncherGameCore({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [disabled, showFeedback, onAnswerSelect]);
-
-  // Get localized text
-  const getLocalizedText = (key: string) => {
-    const texts = {
-      isThisMatch: {
-        en: 'Does this letter match the sound?',
-        te: 'ఈ అక్షరం ధ్వనికి సరిపోతుందా?',
-        kn: 'ಈ ಅಕ್ಷರವು ಧ್ವನಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆಯೇ?',
-        mr: 'हा अक्षर आवाजाशी जुळतो का?'
-      },
-      correctMessage: {
-        en: '🎉 Correct!',
-        te: '🎉 సరైనది!',
-        kn: '🎉 ಸರಿಯಿದೆ!',
-        mr: '🎉 बरोबर!'
-      },
-      wrongMessage: {
-        en: '😢 Oops! Wrong!',
-        te: '😢 అయ్యో! తప్పు!',
-        kn: '😢 ಅಯ್ಯೋ! ತಪ್ಪು!',
-        mr: '😢 अरेच्या! चुकीचे!'
-      }
-    };
-    
-    return texts[key as keyof typeof texts]?.[selectedLanguage] || texts[key as keyof typeof texts]?.en || '';
-  };
 
   return (
     <div className={`flex-1 flex flex-col justify-center px-1 sm:px-2 ${className}`}>
@@ -263,7 +239,7 @@ export function LetterLauncherGameCore({
                   ?  'text-green-600'
                   : 'text-red-600'
               }`}>
-                {isCorrect ? getLocalizedText('correctMessage') : getLocalizedText('wrongMessage')}
+                {isCorrect ? ui.FEEDBACK_CORRECT : ui.FEEDBACK_WRONG}
               </p>
               
               {/* Fuel earned display with filling animation */}

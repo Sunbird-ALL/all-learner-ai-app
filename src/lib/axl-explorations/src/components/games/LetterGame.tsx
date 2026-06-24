@@ -41,9 +41,10 @@ interface LetterGameProps {
   sub_apply_level?: number; // Optional: Sub apply level (1, 2, or 3 - the level within the Apply step)
   onA3Pass?: () => void; // Optional: callback when A3 passes and sessionResult is "Pass"
   skipPreview?: boolean; // Optional: if true, skip the game preview/demo
+  title?: string; // Optional: localized game title, defaults to 'Letter Recognition'
 }
 
-export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, confidentLetters, sub_session_id,sessionId, sub_milestone_level, apply_level, sub_apply_level, onA3Pass, skipPreview = false }: LetterGameProps) {
+export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, confidentLetters, sub_session_id,sessionId, sub_milestone_level, apply_level, sub_apply_level, onA3Pass, skipPreview = false, title = 'Letter Recognition' }: LetterGameProps) {
   const navigate = useNavigate();
   const params = useParams<{ level?: string }>();
   const { level: urlLevel } = params || {};
@@ -994,7 +995,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           setForcePreview(true);
           setShowPreview(true);
         }}
-        gameTitle="Letter Recognition"
+        gameTitle={title}
         gameKey={gameKey}
         unlockAll={true}
       />
@@ -1084,6 +1085,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         onPlayAgain={resetGame}
         onBackToHub={onBack}
         hasNextLevel={shouldShowContinue ? true : hasNextLevelInRange}
+        selectedLanguage={selectedLanguage || 'en'}
         onNextLevel={() => {
           // If Apply step is complete, call onLevelComplete to trigger redirect
           if (shouldShowContinue && onLevelComplete) {
@@ -1176,14 +1178,8 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         <div className="flex flex-row items-center justify-center mb-2 sm:mb-3 flex-shrink-0">
           <div className="text-center flex-1">
             <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1">
-              Letter Recognition
+              {title}
             </h1>
-            <div className="flex items-center justify-center gap-2 text-white/80 text-xs">
-              <Clock className="h-3 w-3" />
-              <span>
-                Level {currentLevel} • {difficultySettings.complexity.toLowerCase()} • 5-8 min
-              </span>
-            </div>
           </div>
         </div>
 

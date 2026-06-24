@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { TrendingUp, RotateCcw, ChevronRight, Rocket, Fuel } from "lucide-react";
 import { Language } from "../constants/languages";
 import { SpaceBackground } from "./SpaceBackground";
+import { getUiStrings } from "../../../../constants/strings";
 
 interface TryAgainProps {
   totalCorrect: number;
@@ -36,6 +37,7 @@ export function TryAgain({
   destination = "",
   useSpaceBackground = false
 }: TryAgainProps) {
+  const ui = getUiStrings(selectedLanguage);
   const [isVisible, setIsVisible] = useState(false);
   const scorePercentage = totalQuestions > 0 ? (totalCorrect / totalQuestions) * 100 : 0;
 
@@ -145,7 +147,7 @@ export function TryAgain({
             {/* "Game Over!" text - only in English, for all languages */}
             {livesLost && (
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 animate-fade-in">
-                Game Over!
+                {ui.GAME_OVER}
               </h1>
             )}
             { !livesLost && !fuelMode && <>
@@ -186,7 +188,7 @@ export function TryAgain({
               className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-sm sm:text-base py-2.5 px-6"
             >
               <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5" />
-              Play Again
+              {ui.PLAY_AGAIN}
             </Button>
             
           </div>
