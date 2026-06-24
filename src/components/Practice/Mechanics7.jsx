@@ -1463,7 +1463,7 @@ const Mechanics7 = ({
                     zIndex: 1000,
                   }}
                 >
-                  Warning: Inappropriate word detected ({detectedWord})
+                  {ui.ABUSIVE_WORD_DETECTED.replace("{word}", detectedWord)}
                 </div>
               )}
 

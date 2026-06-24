@@ -136,7 +136,7 @@ export function LetterLauncherGameCore({
                   : 'bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg'
               } ${onSpeakerClick ? 'cursor-pointer hover:opacity-70 active:scale-95' : ''}`}
               onClick={onSpeakerClick}
-              title={onSpeakerClick ? 'Tap to play audio' : undefined}
+              title={onSpeakerClick ? ui.A11Y_PLAY_AUDIO : undefined}
             >
               <span className="text-xl sm:text-2xl">🔊</span>
             </div>
@@ -274,7 +274,7 @@ export function LetterLauncherGameCore({
                         fuelEarned.speedTier === 'medium' ? 'text-xl sm:text-2xl' :
                         'text-lg sm:text-xl'
                       }`}>
-                        +{fuelEarned.fuelEarned} Fuel
+                        {ui.FUEL_EARNED.replace("{count}", String(fuelEarned.fuelEarned))}
                       </span>
                     </div>
                     

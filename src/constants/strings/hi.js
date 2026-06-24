@@ -86,6 +86,7 @@ const hi = {
   SUCCESS_MASCOT_MESSAGE: "मुझे आप पर बहुत गर्व है! ऐसे ही जारी रखो!",
   FUEL_LABEL: "ईंधन:",
   FUEL_READY_TO_LAUNCH: "उड़ान के लिए तैयार!",
+  FUEL_EARNED: "+{count} ईंधन",
   PRACTICE_MESSAGE_STEP_COMPLETE: "आपने {stepName} सफलतापूर्वक पूरा कर लिया है",
 
   // Assessment
@@ -142,6 +143,7 @@ const hi = {
     "माफ़ करें, मुझे आवाज़ सुनाई नहीं दे रही थी। क्या आप कृपया फिर से बोल सकते हैं?",
   VOICE_PROMPT_SPEAK_APPROPRIATELY: "कृपया ठीक से बोलें।",
   VOICE_PROMPT_SPEAK_PROPERLY: "कृपया ठीक से बोलें।",
+  ABUSIVE_WORD_DETECTED: "चेतावनी: अनुचित शब्द पाया गया ({word})",
 
   // Main layout / game results
   MAIN_LAYOUT_READY_CHALLENGE: "चैलेंज के लिए तैयार हैं?",

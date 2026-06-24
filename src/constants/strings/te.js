@@ -3,16 +3,16 @@ const te = {
   NEXT: "తదుపరి",
 
   // Actions
-  SPEAK: "Speak",
-  LISTEN: "Listen",
+  SPEAK: "మాట్లాడండి",
+  LISTEN: "వినండి",
 
   // Status
-  LOADING_GAME: "Loading game...",
+  LOADING_GAME: "ఆట లోడ్ అవుతోంది...",
 
   // Feedback
   HURRAY: "అభినందనలు!!!",
   ALMOST_THERE: "దాదాపు అయింది!!!",
-  DEMO_COMPLETE: "Demo Complete!",
+  DEMO_COMPLETE: "డెమో పూర్తయింది!",
   DEMO_COMPLETION_SUBTITLE: "మీరు మాట్లాడటం ప్రారంభించడానికి సిద్ధంగా ఉన్నారు!",
   DEMO_COMPLETION_MESSAGE:
     "బాగా చేసారు! మీరు మీ గొంతును రికార్డ్ చేయడం మరియు వినడం ఎలా చేయాలో నేర్చుకున్నారు. ఇప్పుడు నిజమైన వాక్యాలతో అభ్యసించే సమయం!",
@@ -20,13 +20,13 @@ const te = {
   DEMO_COMPLETION_REPLAY: "డెమోను మళ్లీ ప్లే చేయండి",
 
   // Errors
-  GAME_ERROR: "Error loading game",
-  NO_OPTIONS: "No options available",
+  GAME_ERROR: "ఆట లోడ్ చేయడంలో లోపం",
+  NO_OPTIONS: "ఎటువంటి ఎంపికలు అందుబాటులో లేవు",
 
   // Microphone / Audio
 
   // Phone conversation activity
-  CONVO_DONE: "Conversation Complete!",
+  CONVO_DONE: "సంభాషణ పూర్తయింది!",
 
   // Common actions (new keys)
   COMMON_BACK: "వెనుకకు",
@@ -83,6 +83,7 @@ const te = {
   SUCCESS_MASCOT_MESSAGE: "నేను మీపై చాలా గర్వపడుతున్నాను! ఇలాగే కొనసాగించండి!",
   FUEL_LABEL: "ఇంధనం:",
   FUEL_READY_TO_LAUNCH: "ప్రయోగానికి సిద్ధం!",
+  FUEL_EARNED: "+{count} ఇంధనం",
   PRACTICE_MESSAGE_STEP_COMPLETE: "మీరు {stepName}ను విజయవంతంగా పూర్తి చేసారు",
 
   // Assessment
@@ -144,6 +145,7 @@ const te = {
     "క్షమించండి, నాకు స్వరం వినపడలేదు. దయచేసి మళ్ళీ మాట్లాడగలరా?",
   VOICE_PROMPT_SPEAK_APPROPRIATELY: "దయచేసి సరైన విధంగా మాట్లాడండి.",
   VOICE_PROMPT_SPEAK_PROPERLY: "దయచేసి స్పష్టంగా మాట్లాడండి.",
+  ABUSIVE_WORD_DETECTED: "హెచ్చరిక: అసభ్యకరమైన పదం కనుగొనబడింది ({word})",
 
   // Main layout / game results
   MAIN_LAYOUT_GAMEOVER_NEED_POINTS:

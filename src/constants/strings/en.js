@@ -122,6 +122,7 @@ const en = {
   SUCCESS_MASCOT_MESSAGE: "I'm so proud of you! Keep up the amazing work!",
   FUEL_LABEL: "Fuel:",
   FUEL_READY_TO_LAUNCH: "Ready to Launch!",
+  FUEL_EARNED: "+{count} Fuel",
   PRACTICE_MESSAGE_STEP_COMPLETE: "You have successfully completed {stepName}",
 
   // Discovery
@@ -149,6 +150,7 @@ const en = {
     "Sorry I couldn't hear a voice. Could you please speak again?",
   VOICE_PROMPT_SPEAK_APPROPRIATELY: "Please speak appropriately.",
   VOICE_PROMPT_SPEAK_PROPERLY: "Please speak properly.",
+  ABUSIVE_WORD_DETECTED: "Warning: Inappropriate word detected ({word})",
 
   // Main layout / game results
   MAIN_LAYOUT_READY_CHALLENGE: "Ready for Challenge?",

@@ -87,6 +87,7 @@ const kn = {
     "ನಾನು ನಿಮ್ಮ ಬಗ್ಗೆ ತುಂಬಾ ಹೆಮ್ಮೆಪಡುತ್ತೇನೆ! ಹೀಗೆ ಮುಂದುವರಿಯಿರಿ!",
   FUEL_LABEL: "ಇಂಧನ:",
   FUEL_READY_TO_LAUNCH: "ಉಡ್ಡಯನಕ್ಕೆ ಸಿದ್ಧ!",
+  FUEL_EARNED: "+{count} ಇಂಧನ",
   PRACTICE_MESSAGE_STEP_COMPLETE:
     "ನೀವು {stepName} ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ",
 
@@ -148,6 +149,7 @@ const kn = {
     "ಕ್ಷಮಿಸಿ ನನಗೆ ಧ್ವನಿ ಕೇಳಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ನೀವು ಪುನಃ ಮಾತನಾಡಬಹುದೇ?",
   VOICE_PROMPT_SPEAK_APPROPRIATELY: "ದಯವಿಟ್ಟು ಸರಿಯಾಗಿ  ಮಾತನಾಡಿ.",
   VOICE_PROMPT_SPEAK_PROPERLY: "ದಯವಿಟ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ.",
+  ABUSIVE_WORD_DETECTED: "ಎಚ್ಚರಿಕೆ: ಅನುಚಿತ ಶಬ್ದ ಪತ್ತೆಯಾಗಿದೆ ({word})",
 
   // Main layout / game results
   MAIN_LAYOUT_READY_CHALLENGE: "ಸವಾಲಿಗೆ ಸಿದ್ಧರಿದ್ದೀರಾ?",
