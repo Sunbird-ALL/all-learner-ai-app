@@ -87,7 +87,6 @@ const kn = {
     "ನಾನು ನಿಮ್ಮ ಬಗ್ಗೆ ತುಂಬಾ ಹೆಮ್ಮೆಪಡುತ್ತೇನೆ! ಹೀಗೆ ಮುಂದುವರಿಯಿರಿ!",
   FUEL_LABEL: "ಇಂಧನ:",
   FUEL_READY_TO_LAUNCH: "ಉಡ್ಡಯನಕ್ಕೆ ಸಿದ್ಧ!",
-  FUEL_EARNED: "+{count} ಇಂಧನ",
   PRACTICE_MESSAGE_STEP_COMPLETE:
     "ನೀವು {stepName} ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ",
 
@@ -149,8 +148,6 @@ const kn = {
     "ಕ್ಷಮಿಸಿ ನನಗೆ ಧ್ವನಿ ಕೇಳಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ನೀವು ಪುನಃ ಮಾತನಾಡಬಹುದೇ?",
   VOICE_PROMPT_SPEAK_APPROPRIATELY: "ದಯವಿಟ್ಟು ಸರಿಯಾಗಿ  ಮಾತನಾಡಿ.",
   VOICE_PROMPT_SPEAK_PROPERLY: "ದಯವಿಟ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ.",
-  ABUSIVE_WORD_DETECTED: "ಎಚ್ಚರಿಕೆ: ಅನುಚಿತ ಶಬ್ದ ಪತ್ತೆಯಾಗಿದೆ ({word})",
-
   // Main layout / game results
   MAIN_LAYOUT_READY_CHALLENGE: "ಸವಾಲಿಗೆ ಸಿದ್ಧರಿದ್ದೀರಾ?",
   MAIN_LAYOUT_GAMEOVER_GOOD_TRY_SPEED: "ಉತ್ತಮ ಪ್ರಯತ್ನ! ಹೆಚ್ಚಿನ ವೇಗ ಬೇಕು.",
@@ -225,6 +222,16 @@ const kn = {
   BINGO_WORDS_FOUND: "ನೀವು {count} ಪದಗಳನ್ನು ಕಂಡುಕೊಂಡಿದ್ದೀರಿ",
   SESSION_EXPIRED_DEFAULT:
     "ನಿಮ್ಮ ಸೆಶನ್ ಮುಗಿದಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಸೈನ್ ಇನ್ ಮಾಡಿ.",
+
+  // New localization keys
+  ABUSIVE_WORD_DETECTED: "ಎಚ್ಚರಿಕೆ: ಅನುಚಿತ ಶಬ್ದ ಪತ್ತೆಯಾಗಿದೆ ({word})",
+  FUEL_EARNED: "+{count} ಇಂಧನ",
+  TRY_AGAIN_GOOD_TRY: "ಒಳ್ಳೆಯ ಪ್ರಯತ್ನ! 💪",
+  TRY_AGAIN_SCORE_SUMMARY:
+    "ನೀವು {correct} / {total} ಪ್ರಶ್ನೆಗಳಿಗೆ ಸರಿಯಾಗಿ ಉತ್ತರಿಸಿದ್ದೀರಿ ({percent}%)",
+  TRY_AGAIN_NEED_PERCENT: "ಮುಂದಿನ ಹಂತಕ್ಕೆ ಹೋಗಲು ನಿಮಗೆ ಕನಿಷ್ಠ 80% ಅಗತ್ಯವಿದೆ",
+  TRY_AGAIN_NEED_MORE_FUEL: "ಇನ್ನಷ್ಟು ಇಂಧನ ಬೇಕು!",
+  TRY_AGAIN_TOO_SLOW: "⏱️ ತುಂಬಾ ನಿಧಾನ. 🚀 ಇಂಧನ ತುಂಬಲು ವೇಗವಾಗಿ ಟ್ಯಾಪ್ ಮಾಡಿ",
 };
 
 export default kn;

@@ -83,7 +83,6 @@ const te = {
   SUCCESS_MASCOT_MESSAGE: "నేను మీపై చాలా గర్వపడుతున్నాను! ఇలాగే కొనసాగించండి!",
   FUEL_LABEL: "ఇంధనం:",
   FUEL_READY_TO_LAUNCH: "ప్రయోగానికి సిద్ధం!",
-  FUEL_EARNED: "+{count} ఇంధనం",
   PRACTICE_MESSAGE_STEP_COMPLETE: "మీరు {stepName}ను విజయవంతంగా పూర్తి చేసారు",
 
   // Assessment
@@ -145,8 +144,6 @@ const te = {
     "క్షమించండి, నాకు స్వరం వినపడలేదు. దయచేసి మళ్ళీ మాట్లాడగలరా?",
   VOICE_PROMPT_SPEAK_APPROPRIATELY: "దయచేసి సరైన విధంగా మాట్లాడండి.",
   VOICE_PROMPT_SPEAK_PROPERLY: "దయచేసి స్పష్టంగా మాట్లాడండి.",
-  ABUSIVE_WORD_DETECTED: "హెచ్చరిక: అసభ్యకరమైన పదం కనుగొనబడింది ({word})",
-
   // Main layout / game results
   MAIN_LAYOUT_GAMEOVER_NEED_POINTS:
     "అయ్యో! పాస్ అవ్వడానికి మీకు {points} పాయింట్లు కావాలి. మీరు దాదాపుగా చేరుకున్నారు—మళ్ళీ ప్రయత్నించండి!",
@@ -218,6 +215,17 @@ const te = {
   BINGO_WELL_DONE: "చాలా బాగా చేసారు!",
   BINGO_WORDS_FOUND: "మీరు {count} పదాలను కనుగొన్నారు",
   SESSION_EXPIRED_DEFAULT: "మీ సెషన్ ముగిసింది. దయచేసి మళ్ళీ సైన్ ఇన్ చేయండి.",
+
+  // New localization keys
+  ABUSIVE_WORD_DETECTED: "హెచ్చరిక: అసభ్యకరమైన పదం కనుగొనబడింది ({word})",
+  FUEL_EARNED: "+{count} ఇంధనం",
+  TRY_AGAIN_GOOD_TRY: "మంచి ప్రయత్నం! 💪",
+  TRY_AGAIN_SCORE_SUMMARY:
+    "మీరు {correct} / {total} ప్రశ్నలకు సరైన సమాధానాలు ఇచ్చారు ({percent}%)",
+  TRY_AGAIN_NEED_PERCENT:
+    "మీరు తదుపరి స్థాయికి వెళ్లడానికి కనీసం 80% స్కోర్ అవసరం",
+  TRY_AGAIN_NEED_MORE_FUEL: "మరింత ఇంధనం కావాలి!",
+  TRY_AGAIN_TOO_SLOW: "⏱️ చాలా నెమ్మదిగా. 🚀 ఇంధనం నింపడానికి వేగంగా నొక్కండి",
 };
 
 export default te;

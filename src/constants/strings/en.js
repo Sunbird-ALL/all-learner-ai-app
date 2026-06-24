@@ -122,7 +122,6 @@ const en = {
   SUCCESS_MASCOT_MESSAGE: "I'm so proud of you! Keep up the amazing work!",
   FUEL_LABEL: "Fuel:",
   FUEL_READY_TO_LAUNCH: "Ready to Launch!",
-  FUEL_EARNED: "+{count} Fuel",
   PRACTICE_MESSAGE_STEP_COMPLETE: "You have successfully completed {stepName}",
 
   // Discovery
@@ -150,8 +149,6 @@ const en = {
     "Sorry I couldn't hear a voice. Could you please speak again?",
   VOICE_PROMPT_SPEAK_APPROPRIATELY: "Please speak appropriately.",
   VOICE_PROMPT_SPEAK_PROPERLY: "Please speak properly.",
-  ABUSIVE_WORD_DETECTED: "Warning: Inappropriate word detected ({word})",
-
   // Main layout / game results
   MAIN_LAYOUT_READY_CHALLENGE: "Ready for Challenge?",
   MAIN_LAYOUT_GAMEOVER_GOOD_TRY_SPEED: "Good try! Need more speed.",
@@ -220,6 +217,16 @@ const en = {
 
   // Fluency
   SESSION_EXPIRED_DEFAULT: "Your session has ended. Please sign in again.",
+
+  // New localization keys
+  ABUSIVE_WORD_DETECTED: "Warning: Inappropriate word detected ({word})",
+  FUEL_EARNED: "+{count} Fuel",
+  TRY_AGAIN_GOOD_TRY: "Good Try! 💪",
+  TRY_AGAIN_SCORE_SUMMARY:
+    "You got {correct} / {total} questions correct ({percent}%)",
+  TRY_AGAIN_NEED_PERCENT: "You need at least 80% to advance to the next level",
+  TRY_AGAIN_NEED_MORE_FUEL: "Need more fuel!",
+  TRY_AGAIN_TOO_SLOW: "⏱️ Too slow. Tap faster to fill the 🚀 fuel",
 };
 
 export default en;

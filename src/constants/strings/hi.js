@@ -86,7 +86,6 @@ const hi = {
   SUCCESS_MASCOT_MESSAGE: "मुझे आप पर बहुत गर्व है! ऐसे ही जारी रखो!",
   FUEL_LABEL: "ईंधन:",
   FUEL_READY_TO_LAUNCH: "उड़ान के लिए तैयार!",
-  FUEL_EARNED: "+{count} ईंधन",
   PRACTICE_MESSAGE_STEP_COMPLETE: "आपने {stepName} सफलतापूर्वक पूरा कर लिया है",
 
   // Assessment
@@ -143,8 +142,6 @@ const hi = {
     "माफ़ करें, मुझे आवाज़ सुनाई नहीं दे रही थी। क्या आप कृपया फिर से बोल सकते हैं?",
   VOICE_PROMPT_SPEAK_APPROPRIATELY: "कृपया ठीक से बोलें।",
   VOICE_PROMPT_SPEAK_PROPERLY: "कृपया ठीक से बोलें।",
-  ABUSIVE_WORD_DETECTED: "चेतावनी: अनुचित शब्द पाया गया ({word})",
-
   // Main layout / game results
   MAIN_LAYOUT_READY_CHALLENGE: "चैलेंज के लिए तैयार हैं?",
   MAIN_LAYOUT_GAMEOVER_GOOD_TRY_SPEED: "अच्छा प्रयास! और स्पीड चाहिए।",
@@ -217,6 +214,17 @@ const hi = {
   BINGO_WORDS_FOUND: "आपको {count} शब्द मिले",
   SESSION_EXPIRED_DEFAULT:
     "आपका सत्र समाप्त हो गया। कृपया फिर से साइन इन करें।",
+
+  // New localization keys
+  ABUSIVE_WORD_DETECTED: "चेतावनी: अनुचित शब्द पाया गया ({word})",
+  FUEL_EARNED: "+{count} ईंधन",
+  TRY_AGAIN_GOOD_TRY: "शाबाश! 💪",
+  TRY_AGAIN_SCORE_SUMMARY:
+    "आपने {correct} / {total} प्रश्नों का सही उत्तर दिया ({percent}%)",
+  TRY_AGAIN_NEED_PERCENT:
+    "अगले स्तर पर जाने के लिए कम से कम 80% स्कोर की जरूरत है",
+  TRY_AGAIN_NEED_MORE_FUEL: "और ईंधन चाहिए!",
+  TRY_AGAIN_TOO_SLOW: "⏱️ बहुत धीमे। 🚀 ईंधन भरने के लिए तेज़ टैप करें",
 };
 
 export default hi;
