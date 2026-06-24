@@ -23,7 +23,7 @@ interface LetterLauncherGameStoryPreviewProps {
   hideHeader?: boolean;
 }
 
-type StoryPhase = 
+type StoryPhase =
   | 'intro'           // Captain Rahi introduction
   | 'riloAppears'     // Rilo robot appears and explains mission
   | 'practice1'       // First practice round
@@ -200,8 +200,8 @@ const storyScript = {
   }
 };
 
-export function LetterLauncherGameStoryPreview({ 
-  onStartGame, 
+export function LetterLauncherGameStoryPreview({
+  onStartGame,
   onBack,
   level = 1,
   hideHeader = false
@@ -235,7 +235,7 @@ export function LetterLauncherGameStoryPreview({
     () => typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0
   ); // Show overlay immediately on mobile to unlock audio before sequence starts
   const [isWaitingForInteraction, setIsWaitingForInteraction] = useState(false); // Track if we're waiting for user interaction
-  
+
   const audioLanguage = selectedAudioLanguage || 'en';
   const contentLanguage = selectedLanguage || 'en';
   const story = storyScript[contentLanguage] || storyScript.en;
@@ -244,11 +244,11 @@ export function LetterLauncherGameStoryPreview({
 
   // Generate practice questions
   const generatePracticeQuestion = (): LetterLauncherQuestion => {
-    const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' | 'hi' = 
-      (contentLanguage === 'en' || contentLanguage === 'te' || contentLanguage === 'mr' || contentLanguage === 'kn' || contentLanguage === 'hi' ) 
-        ? contentLanguage 
+    const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' | 'hi' =
+      (contentLanguage === 'en' || contentLanguage === 'te' || contentLanguage === 'mr' || contentLanguage === 'kn' || contentLanguage === 'hi' )
+        ? contentLanguage
         : 'en';
-    
+
     const lettersToUse = memoryGameDataLoader.getLetters(supportedLanguage, 'basic');
     if (lettersToUse.length === 0) {
       // Fallback
@@ -263,8 +263,8 @@ export function LetterLauncherGameStoryPreview({
 
     const audioLetter = lettersToUse[Math.floor(Math.random() * lettersToUse.length)];
     const isMatch = Math.random() < 0.5;
-    const displayedLetter = isMatch 
-      ? audioLetter 
+    const displayedLetter = isMatch
+      ? audioLetter
       : lettersToUse.filter(l => l !== audioLetter)[Math.floor(Math.random() * (lettersToUse.length - 1))] || audioLetter;
 
     return {
@@ -318,10 +318,10 @@ export function LetterLauncherGameStoryPreview({
       // attach the slow audio toast
       attachSlowLoadToast(audio);
       currentAudioRef.current = audio;
-      
+
       let resolved = false;
       let audioStarted = false;
-      
+
       const cleanup = () => {
         if (currentAudioRef.current === audio) {
           currentAudioRef.current = null;
@@ -332,7 +332,7 @@ export function LetterLauncherGameStoryPreview({
         audio.onended = null;
         audio.onerror = null;
       };
-      
+
       // Timeout to prevent hanging if audio never loads (15 seconds)
       // BUT: if audio has started playing, don't timeout - wait for it to finish
       const timeout = setTimeout(() => {
@@ -363,7 +363,7 @@ export function LetterLauncherGameStoryPreview({
           resolve(false);
         }
       }, 15000);
-      
+
       const tryPlay = () => {
         if (resolved) return;
         audio.play().then(() => {
@@ -390,15 +390,15 @@ export function LetterLauncherGameStoryPreview({
         }).catch((error) => {
           if (!resolved) {
             // Check if error is due to autoplay policy (user interaction required)
-            const isAutoplayError = error.name === 'NotAllowedError' || 
+            const isAutoplayError = error.name === 'NotAllowedError' ||
                                    (error as Error).message?.includes('user didn\'t interact') ||
                                    (error as Error).message?.includes('play() failed');
-            
+
             if (isAutoplayError) {
               // Set flag to indicate we need user interaction
               setNeedsUserInteraction(true);
               setIsWaitingForInteraction(true);
-              
+
               // Store audio reference for retry after interaction
               // Don't cleanup yet - we'll retry after user interaction
               // Resolve as false so playNarration can handle the retry
@@ -408,7 +408,7 @@ export function LetterLauncherGameStoryPreview({
               resolve(false);
               return;
             }
-            
+
             // Other errors - resolve as false
             resolved = true;
             clearTimeout(timeout);
@@ -418,27 +418,27 @@ export function LetterLauncherGameStoryPreview({
           }
         });
       };
-      
+
       // Wait for audio data to load before playing
       audio.onloadeddata = () => {
         if (resolved) return;
         tryPlay();
       };
-      
+
       // Also listen for canplay event as fallback (some browsers fire this instead)
       audio.oncanplay = () => {
         if (!audioStarted && !resolved) {
           tryPlay();
         }
       };
-      
+
       // Track when audio actually starts playing
       audio.onplay = () => {
         audioStarted = true;
         // Do NOT clear the timeout here — on mobile, audio can start but stall
         // and onended never fires. The timeout's stall-detection logic handles this.
       };
-      
+
       // Handle loading errors
       audio.onerror = () => {
         if (!resolved) {
@@ -449,7 +449,7 @@ export function LetterLauncherGameStoryPreview({
           resolve(false);
         }
       };
-      
+
       // Explicitly start loading the audio
       audio.load();
     });
@@ -462,14 +462,14 @@ export function LetterLauncherGameStoryPreview({
         resolve();
         return;
       }
-      
+
       // Check if voices are already loaded
       const voices = speechSynthesis.getVoices();
       if (voices.length > 0) {
         resolve();
         return;
       }
-      
+
       // Wait for voiceschanged event
       const onVoicesChanged = () => {
         const voices = speechSynthesis.getVoices();
@@ -478,17 +478,17 @@ export function LetterLauncherGameStoryPreview({
           resolve();
         }
       };
-      
+
       // Remove any existing listener first
       if (speechSynthesis.onvoiceschanged) {
         speechSynthesis.onvoiceschanged = null;
       }
-      
+
       speechSynthesis.onvoiceschanged = onVoicesChanged;
-      
+
       // Trigger voices check (some browsers need this)
       speechSynthesis.getVoices();
-      
+
       // Fallback timeout in case voiceschanged never fires
       setTimeout(() => {
         if (speechSynthesis.onvoiceschanged === onVoicesChanged) {
@@ -511,13 +511,13 @@ export function LetterLauncherGameStoryPreview({
 
     return new Promise<void>((resolve) => {
       const utterance = new SpeechSynthesisUtterance(text);
-      
+
       // Set language
-      utterance.lang = audioLanguage === 'te' ? 'te-IN' : 
-                      audioLanguage === 'kn' ? 'kn-IN' : 
-                      audioLanguage === 'mr' ? 'mr-IN' : 
+      utterance.lang = audioLanguage === 'te' ? 'te-IN' :
+                      audioLanguage === 'kn' ? 'kn-IN' :
+                      audioLanguage === 'mr' ? 'mr-IN' :
                       audioLanguage === 'hi' ? 'hi-IN' : 'en-US';
-      
+
       // Child-friendly speech rates (slower for clarity)
       switch (audioLanguage) {
         case 'te':
@@ -537,7 +537,7 @@ export function LetterLauncherGameStoryPreview({
       // Try to find the best voice
       const voices = speechSynthesis.getVoices();
       let selectedVoice = voices.find(voice => voice.lang === utterance.lang);
-      
+
       if (!selectedVoice) {
         const langCode = utterance.lang.split('-')[0];
         selectedVoice = voices.find(voice => voice.lang.startsWith(langCode));
@@ -549,7 +549,7 @@ export function LetterLauncherGameStoryPreview({
 
       utterance.onend = () => resolve();
       utterance.onerror = () => resolve();
-      
+
       speechSynthesis.speak(utterance);
     });
   };
@@ -567,15 +567,15 @@ export function LetterLauncherGameStoryPreview({
       speechSynthesis.cancel();
       await new Promise(resolve => setTimeout(resolve, 200));
     }
-    
+
     // Reset the playing state (both ref and state) after canceling existing audio
     // This ensures we can start new narration even if previous one was finishing
     isPlayingNarrationRef.current = false;
     setIsPlayingNarration(false);
-    
+
     // Small delay to ensure cleanup is complete and state updates propagate
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     // Set both ref and state to track playing status
     // We don't need to check here because we already canceled everything above
     isPlayingNarrationRef.current = true;
@@ -583,7 +583,7 @@ export function LetterLauncherGameStoryPreview({
     try {
       // Get the audio filename for this text
       const audioFilename = storyAudioMap[text];
-      
+
       if (audioFilename) {
         // Try to play the audio file
         const success = await playAudioFile(audioFilename);
@@ -592,14 +592,14 @@ export function LetterLauncherGameStoryPreview({
           setIsPlayingNarration(false);
           return;
         }
-        
+
         // If autoplay was blocked, wait for user interaction and retry
         if (needsUserInteraction || isWaitingForInteraction) {
           // Wait for user interaction
           while (needsUserInteraction || isWaitingForInteraction) {
             await new Promise(resolve => setTimeout(resolve, 100));
           }
-          
+
           // Try playing the existing audio element first (if it exists and is valid)
           if (currentAudioRef.current && !currentAudioRef.current.ended) {
             try {
@@ -611,20 +611,20 @@ export function LetterLauncherGameStoryPreview({
                   resolve();
                   return;
                 }
-                
+
                 const onEnded = () => {
                   audio.removeEventListener('ended', onEnded);
                   resolve();
                 };
-                
+
                 const onError = () => {
                   audio.removeEventListener('error', onError);
                   resolve();
                 };
-                
+
                 audio.addEventListener('ended', onEnded);
                 audio.addEventListener('error', onError);
-                
+
                 // Safety timeout
                 setTimeout(() => {
                   audio.removeEventListener('ended', onEnded);
@@ -632,7 +632,7 @@ export function LetterLauncherGameStoryPreview({
                   resolve();
                 }, 30000);
               });
-              
+
               isPlayingNarrationRef.current = false;
               setIsPlayingNarration(false);
               return;
@@ -641,7 +641,7 @@ export function LetterLauncherGameStoryPreview({
               console.warn('Retry with existing audio failed, creating new audio element');
             }
           }
-          
+
           // Retry playing the audio file after interaction (create new audio element)
           const retrySuccess = await playAudioFile(audioFilename);
           if (retrySuccess) {
@@ -650,7 +650,7 @@ export function LetterLauncherGameStoryPreview({
             return;
           }
         }
-        
+
         // Check if audio is actually playing even though playAudioFile returned false
         // This can happen if audio started playing but timed out during load
         if (currentAudioRef.current && !currentAudioRef.current.paused && !currentAudioRef.current.ended) {
@@ -661,20 +661,20 @@ export function LetterLauncherGameStoryPreview({
               resolve();
               return;
             }
-            
+
             const onEnded = () => {
               audio.removeEventListener('ended', onEnded);
               resolve();
             };
-            
+
             const onError = () => {
               audio.removeEventListener('error', onError);
               resolve();
             };
-            
+
             audio.addEventListener('ended', onEnded);
             audio.addEventListener('error', onError);
-            
+
             // Safety timeout in case audio never ends
             setTimeout(() => {
               audio.removeEventListener('ended', onEnded);
@@ -682,13 +682,13 @@ export function LetterLauncherGameStoryPreview({
               resolve();
             }, 30000); // 30 second max wait
           });
-          
+
           isPlayingNarrationRef.current = false;
           setIsPlayingNarration(false);
           return;
         }
       }
-      
+
       // Fallback to Web Speech API if audio file not found or failed
       console.log('Using Web Speech API fallback for:', text.substring(0, 50) + '...');
       await playWebSpeechFallback(text);
@@ -703,13 +703,13 @@ export function LetterLauncherGameStoryPreview({
   // Handle story phase progression
   useEffect(() => {
     let mounted = true;
-    
+
     const handlePhase = async () => {
       // Skip if we're in the middle of a replay operation (preventing double audio)
       if (isReplayingRef.current && storyPhase === 'readyToStart') {
         return;
       }
-      
+
       // Wait for user interaction if autoplay is blocked (important for refresh)
       if (needsUserInteraction || isWaitingForInteraction) {
         // Wait for user interaction before proceeding
@@ -718,7 +718,7 @@ export function LetterLauncherGameStoryPreview({
           if (!mounted) return;
         }
       }
-      
+
       // Wait for any ongoing narration to complete before proceeding (important for refresh)
       if (isPlayingNarration) {
         // Wait a bit and check again
@@ -728,13 +728,13 @@ export function LetterLauncherGameStoryPreview({
           return;
         }
       }
-      
+
       // On initial mount (especially after refresh), add a small delay to ensure audio is ready
       if (storyPhase === 'intro' && !isReplayingRef.current) {
         await new Promise(resolve => setTimeout(resolve, 300));
         if (!mounted) return;
       }
-      
+
       switch (storyPhase) {
         case 'intro':
           if (!mounted) return;
@@ -746,7 +746,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.intro.narrator);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // Show rocket bubble and start audio (clear previous)
           if (!mounted) return;
           setCurrentSpeechIndex(1);
@@ -754,7 +754,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.intro.rocket);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // Show Captain Rahi and destination bubble, start audio (clear previous)
           if (!mounted) return;
           setShowRahi(true);
@@ -763,7 +763,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.intro.destination);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 1000));
-          
+
           if (mounted) {
             setCurrentSpeechIndex(0);
             setVisibleSpeechBubbles([]);
@@ -778,7 +778,7 @@ export function LetterLauncherGameStoryPreview({
           setCurrentSpeechIndex(0);
           setVisibleSpeechBubbles([]);
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // First Rilo speech - show bubble and start audio
           if (!mounted) return;
           setCurrentSpeechIndex(0);
@@ -786,7 +786,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.riloAppears.rilo);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // Second Rilo speech - show bubble and start audio (clear previous)
           if (!mounted) return;
           setCurrentSpeechIndex(1);
@@ -794,7 +794,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.riloAppears.fuelRequirement);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // Third Rilo speech - show bubble and start audio (clear previous)
           if (!mounted) return;
           setCurrentSpeechIndex(2);
@@ -802,7 +802,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.riloAppears.fuelExplanation);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // Fourth Rilo speech - show bubble and start audio (clear previous)
           if (!mounted) return;
           setCurrentSpeechIndex(3);
@@ -810,7 +810,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.riloAppears.gameExplanation);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // Fifth Rilo speech - "Let's practice a tiny bit..." - show bubble and start audio (clear previous)
           if (!mounted) return;
           setCurrentSpeechIndex(4);
@@ -818,7 +818,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.practice.intro);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 1000));
-          
+
           if (mounted) {
             setCurrentSpeechIndex(0);
             setVisibleSpeechBubbles([]);
@@ -843,34 +843,34 @@ export function LetterLauncherGameStoryPreview({
           setShowPracticeCompletionMessage(false);
           setPracticeCompletionText('');
           setShowPracticeIntro(false);
-          
+
           // Reset successful attempts counter only when starting practice1
           if (roundNum === 1) {
             setSuccessfulPracticeAttempts(0);
           }
-          
+
           // Ensure Rilo is visible for practice rounds
           setShowRilo(true);
           setShowRahi(false);
-          
+
           // For rounds 2 and 3, enable question window immediately (no controls instruction)
           if (roundNum > 1) {
             setControlsInstructionComplete(true);
           }
-          
+
           if (roundNum === 1) {
             // Skip practice intro (already shown in riloAppears phase) and go straight to controls instruction
             setShowPracticeIntro(false);
             setShowControlsInstruction(true);
             setControlsInstructionComplete(false);
-            
+
             // Play audio letter while controls are visible
             setIsPlayingPracticeAudio(true);
             await playLetterAudio(question.audioLetter, contentLanguage);
             if (!mounted) return;
             setIsPlayingPracticeAudio(false);
             setShowPracticeLetter(true);
-            
+
             // Now speak the controls instruction
             await playNarration(story.practice.controls);
             if (!mounted) return;
@@ -901,7 +901,7 @@ export function LetterLauncherGameStoryPreview({
           // Ensure Rilo is visible
           setShowRilo(true);
           setShowRahi(false);
-          
+
           // First Rilo speech - show bubble and start audio
           setCurrentSpeechIndex(0);
           setVisibleSpeechBubbles([0]); // Only show current bubble
@@ -910,25 +910,25 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.fuelExplanation.rilo);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // Show flash messages sequentially: +5, then +3, then +1
           if (mounted) {
             // Show +5
             setVisibleFlashNumber(5);
             await new Promise(resolve => setTimeout(resolve, 1000));
             if (!mounted) return;
-            
+
             // Show +3
             setVisibleFlashNumber(3);
             await new Promise(resolve => setTimeout(resolve, 1000));
             if (!mounted) return;
-            
+
             // Show +1
             setVisibleFlashNumber(1);
             await new Promise(resolve => setTimeout(resolve, 1000));
             if (!mounted) return;
           }
-          
+
           // Second Rilo speech - show bubble and start audio (clear previous)
           if (!mounted) return;
           setCurrentSpeechIndex(1);
@@ -938,7 +938,7 @@ export function LetterLauncherGameStoryPreview({
           await playNarration(story.fuelExplanation.fuelMeter);
           if (!mounted) return;
           await new Promise(resolve => setTimeout(resolve, 1000));
-          
+
           if (mounted) {
             setCurrentSpeechIndex(0);
             setVisibleSpeechBubbles([]);
@@ -950,7 +950,7 @@ export function LetterLauncherGameStoryPreview({
           // Ensure Rilo is visible
           setShowRilo(true);
           setShowRahi(false);
-          
+
           // Show Rilo speech bubble and start audio
           setCurrentSpeechIndex(0);
           setVisibleSpeechBubbles([0]);
@@ -958,9 +958,9 @@ export function LetterLauncherGameStoryPreview({
           break;
       }
     };
-    
+
     handlePhase();
-    
+
     return () => {
       mounted = false;
       // Stop any ongoing audio when phase changes
@@ -992,12 +992,12 @@ export function LetterLauncherGameStoryPreview({
   // Handle practice answer
   const handlePracticeAnswer = useCallback(async (isMatch: boolean) => {
     if (!practiceQuestion || showPracticeFeedback || isPlayingPracticeAudio) return;
-    
+
     setPracticeAnswer(isMatch);
     const isCorrect = isMatch === practiceQuestion.isMatch;
     setIsPracticeCorrect(isCorrect);
     setShowPracticeFeedback(true);
-    
+
     // Show feedback message
     let newSuccessfulCount = successfulPracticeAttempts;
     if (isCorrect) {
@@ -1009,10 +1009,10 @@ export function LetterLauncherGameStoryPreview({
     } else {
       await playNarration(story.practice.wrongFeedback);
     }
-    
+
     await new Promise(resolve => setTimeout(resolve, 1500));
     setShowPracticeFeedback(false);
-    
+
     // Move to next phase - use current storyPhase from state
     const currentPhase = storyPhase;
     if (currentPhase === 'practice1') {
@@ -1057,7 +1057,7 @@ export function LetterLauncherGameStoryPreview({
         // Hide the practice question window first
         setPracticeQuestion(null);
         setShowPracticeLetter(false);
-        
+
         // Show completion conversation after 3 successful attempts
         setPracticeCompletionText(story.practice.allReady);
         setShowPracticeCompletionMessage(true);
@@ -1085,10 +1085,10 @@ export function LetterLauncherGameStoryPreview({
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (showPracticeFeedback || !practiceQuestion || !showPracticeLetter || isPlayingPracticeAudio) return;
-      
+
       // For practice round 1, only allow input after instruction conversation completes
       if (practiceRound === 1 && !controlsInstructionComplete) return;
-      
+
       if (event.key === 'ArrowLeft' || event.key === 'w' || event.key === 'W') {
         event.preventDefault();
         handlePracticeAnswer(true); // Match
@@ -1116,14 +1116,14 @@ export function LetterLauncherGameStoryPreview({
   const handleReplayStory = async () => {
     // Stop all audio first
     stopAllAudio();
-    
+
     // Clear audio ref
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
       currentAudioRef.current.currentTime = 0;
       currentAudioRef.current = null;
     }
-    
+
     // Cancel any speech synthesis and wait for it to fully stop
     if ('speechSynthesis' in window) {
       if (speechSynthesis.speaking) {
@@ -1132,7 +1132,7 @@ export function LetterLauncherGameStoryPreview({
         await new Promise(resolve => setTimeout(resolve, 150));
       }
     }
-    
+
     // Reset all state to beginning
     isPlayingNarrationRef.current = false;
     setIsPlayingNarration(false);
@@ -1157,12 +1157,12 @@ export function LetterLauncherGameStoryPreview({
     setShowPracticeIntro(false);
     setShowFuelFlashMessages(false);
     setVisibleFlashNumber(null);
-    
+
     // Reset story phase and speech bubble state
     // Set replay flag to prevent double audio during phase transition
     isReplayingRef.current = true;
     setCurrentSpeechIndex(0);
-    
+
     if (storyPhase === 'intro') {
       // Temporarily set to different phase to force useEffect to re-run
       setStoryPhase('readyToStart');
@@ -1188,18 +1188,18 @@ export function LetterLauncherGameStoryPreview({
   // Back handler with audio cleanup
   const handleBack = () => {
     stopAllAudio();
-    
+
     // Clear audio ref
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
       currentAudioRef.current = null;
     }
-    
+
     // Cancel any speech synthesis
     if ('speechSynthesis' in window && speechSynthesis.speaking) {
       speechSynthesis.cancel();
     }
-    
+
     onBack();
   };
 
@@ -1213,11 +1213,11 @@ export function LetterLauncherGameStoryPreview({
   const SpeechBubble = ({ text, character, position = 'left', index, isVisible = true, arrowAlign = 'center' }: { text: string; character: 'rahi' | 'rilo' | 'narrator'; position?: 'left' | 'right' | 'center'; index?: number; isVisible?: boolean; arrowAlign?: 'center' | 'right' }) => {
     const characterEmoji = character === 'rahi' ? '👨‍🚀' : character === 'rilo' ? '🤖' : '✨';
     const characterName = character === 'rahi' ? 'Captain Rahi' : character === 'rilo' ? 'Rilo' : '';
-    
+
     if (!text) return null;
-    
+
     return (
-      <div 
+      <div
         className={`flex ${position === 'left' ? 'justify-start' : position === 'right' ? 'justify-end' : 'justify-center'}`}
         style={{
           opacity: isVisible ? 1 : 0,
@@ -1226,23 +1226,26 @@ export function LetterLauncherGameStoryPreview({
         }}
       >
         <div className={`relative w-full ${
-          arrowAlign === 'right' 
-            ? 'max-w-[240px] sm:max-w-[220px] md:max-w-sm lg:max-w-md xl:max-w-lg' 
+          arrowAlign === 'right'
+            ? 'max-w-[240px] sm:max-w-[220px] md:max-w-sm lg:max-w-md xl:max-w-lg'
             : 'max-w-[123px] xs:max-w-[140px] sm:max-w-[220px] md:max-w-sm lg:max-w-md xl:max-w-lg'
         }`}>
           {/* Speech bubble */}
           <div className={`bg-white rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-2.5 md:p-3 lg:p-4 shadow-lg border-2 ${character === 'rahi' ? 'border-blue-300' :
-            character === 'rilo' ? 'border-purple-300' : 
+            character === 'rilo' ? 'border-purple-300' :
             'border-yellow-300'
           }`}>
-            <p className="text-[11px] xs:text-[12px] sm:text-sm md:text-base lg:text-lg text-gray-800 leading-tight sm:leading-relaxed whitespace-pre-line text-center break-words">
+            <p 
+              className="text-[11px] xs:text-[12px] sm:text-sm md:text-base lg:text-lg text-gray-800 whitespace-pre-line text-center break-words"
+              style={{ lineHeight: '1.55rem' }}
+            >
               {text}
             </p>
           </div>
           {/* Arrow pointing DOWN to character below */}
           <div className={`absolute -bottom-1.5 sm:-bottom-2 md:-bottom-3 ${
-            arrowAlign === 'right' 
-              ? 'right-6 left-auto translate-x-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2' 
+            arrowAlign === 'right'
+              ? 'right-6 left-auto translate-x-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2'
               : 'left-1/2 -translate-x-1/2'
           }`}>
             <div className={`w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] sm:border-l-[8px] sm:border-r-[8px] sm:border-t-[10px] md:border-l-[10px] md:border-r-[10px] md:border-t-[12px] lg:border-l-[12px] lg:border-r-[12px] lg:border-t-[14px] ${character === 'rahi' ? 'border-l-transparent border-r-transparent border-t-blue-300' :
@@ -1259,12 +1262,12 @@ export function LetterLauncherGameStoryPreview({
   const CharacterDisplay = ({ character, show }: { character: 'rahi' | 'rilo'; show: boolean }) => {
     const emoji = character === 'rahi' ? '👨‍🚀' : '🤖';
     // Fixed sizes for consistency
-    const size = character === 'rahi' 
+    const size = character === 'rahi'
       ? 'w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-5xl sm:text-6xl md:text-7xl'
       : 'w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 text-4xl sm:text-5xl md:text-6xl';
-    
+
     return (
-      <div 
+      <div
         className={`flex items-center justify-center ${size}`}
         style={{
           opacity: show ? 1 : 0,
@@ -1306,7 +1309,7 @@ export function LetterLauncherGameStoryPreview({
 
         {/* User Interaction Required Overlay */}
         {needsUserInteraction && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center cursor-pointer"
             onClick={() => {
               // Play a silent audio within this gesture to permanently unlock
@@ -1317,13 +1320,13 @@ export function LetterLauncherGameStoryPreview({
               setIsWaitingForInteraction(false);
             }}
           >
-            <Card 
+            <Card
               className="p-6 sm:p-8 max-w-md mx-4 bg-white"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-center space-y-4">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
-                  {contentLanguage === 'en' ? 'Click to Start' : 
+                  {contentLanguage === 'en' ? 'Click to Start' :
                    contentLanguage === 'te' ? 'ప్రారంభించడానికి క్లిక్ చేయండి' :
                    contentLanguage === 'kn' ? 'ಪ್ರಾರಂಭಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ' :
                    contentLanguage === 'mr' ? 'प्रारंभ करण्यासाठी क्लिक करा' :
@@ -1370,7 +1373,7 @@ export function LetterLauncherGameStoryPreview({
                     {visibleSpeechBubbles.length > 0 && (
                       <div className="absolute top-0 right-0 sm:top-1 sm:right-1 md:top-2 md:right-2 lg:top-3 lg:right-3 z-0" style={{ maxWidth: 'calc(50% - 1rem)' }}>
                         <div className="flex flex-col items-center">
-                          <PlanetWithRocketAnimation 
+                          <PlanetWithRocketAnimation
                             level={level}
                             planetSize="text-4xl sm:text-6xl md:text-9xl lg:text-[10rem]"
                             containerSize={{
@@ -1393,58 +1396,58 @@ export function LetterLauncherGameStoryPreview({
                     {/* Character FIXED in center - speech bubble positioned absolutely above */}
                     <div className="flex flex-col items-center justify-center relative px-2 sm:px-0 mt-20 sm:mt-24 md:mt-28 lg:mt-32 xl:mt-36">
                       {/* Speech bubble - positioned absolutely above character, doesn't affect layout */}
-                      <div 
+                      <div
                         className="absolute bottom-full mb-2 sm:mb-3 md:mb-4 lg:mb-5 left-1/2 -translate-x-1/2 z-30"
-                        style={{ 
-                          opacity: visibleSpeechBubbles.length > 0 ? 1 : 0, 
+                        style={{
+                          opacity: visibleSpeechBubbles.length > 0 ? 1 : 0,
                           transition: 'opacity 0.5s ease-in-out',
                           pointerEvents: visibleSpeechBubbles.length > 0 ? 'auto' : 'none',
                           width: 'clamp(160px, 80vw, 320px)',
                           maxWidth: 'calc(100vw - 1rem)'
                         }}
                       >
-                        <SpeechBubble 
-                          text={visibleSpeechBubbles.includes(0) ? story.intro.narrator : 
-                                visibleSpeechBubbles.includes(1) ? story.intro.rocket : 
-                                visibleSpeechBubbles.includes(2) ? story.intro.destination : ''} 
+                        <SpeechBubble
+                          text={visibleSpeechBubbles.includes(0) ? story.intro.narrator :
+                                visibleSpeechBubbles.includes(1) ? story.intro.rocket :
+                                visibleSpeechBubbles.includes(2) ? story.intro.destination : ''}
                           character="narrator"
-                          position="center" 
-                          index={0} 
-                          isVisible={visibleSpeechBubbles.length > 0} 
+                          position="center"
+                          index={0}
+                          isVisible={visibleSpeechBubbles.length > 0}
                         />
                       </div>
-                      
+
                       {/* Character FIXED in center of screen */}
                       <div className="flex flex-col items-center">
                         <CharacterDisplay character="rahi" show={visibleSpeechBubbles.length > 0} />
                       </div>
-                      
+
                       {/* Planets image with orbiting rocket - only show after "Today, you're going on a space trip" conversation, below Rahi */}
                       {/* Commented out - can be uncommented later if needed */}
                       {/* {visibleSpeechBubbles.includes(2) && (
                         <div className="mt-4 sm:mt-6 md:mt-8 z-10 relative" style={{ opacity: 1, transition: 'opacity 0.5s ease-in-out', width: 'clamp(120px, 30vw, 200px)', height: 'clamp(120px, 30vw, 200px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {/* Planets image */}
-                          {/* <img 
-                            src="/images/planets.png" 
-                            alt="Planets" 
+                          {/* <img
+                            src="/images/planets.png"
+                            alt="Planets"
                             className="w-auto h-auto max-w-[120px] sm:max-w-[150px] md:max-w-[180px] lg:max-w-[200px] object-contain relative z-10"
                           /> */}
                           {/* Orbit path */}
-                          {/* <div 
+                          {/* <div
                             className="absolute rounded-full border border-white/10"
                             style={{ width: 'clamp(140px, 35vw, 240px)', height: 'clamp(140px, 35vw, 240px)' }}
                           /> */}
                           {/* Orbiting rocket container */}
-                          {/* <div 
+                          {/* <div
                             className="absolute rocket-orbit"
                             style={{ width: 'clamp(140px, 35vw, 240px)', height: 'clamp(140px, 35vw, 240px)' }}
                           > */}
                             {/* Rocket positioned at edge, pointing tangent to orbit */}
-                            {/* <div 
+                            {/* <div
                               className="absolute"
-                              style={{ 
-                                top: '50%', 
-                                left: '100%', 
+                              style={{
+                                top: '50%',
+                                left: '100%',
                                 transform: 'translate(-50%, -50%)'
                               }}
                             > */}
@@ -1477,11 +1480,11 @@ export function LetterLauncherGameStoryPreview({
 
                 {/* Rilo Appears Phase - Characters with speech bubble pointing to Rilo */}
                 {storyPhase === 'riloAppears' && (
-                  <div className="w-full h-full relative flex flex-col items-center justify-center sm:justify-end pb-4 sm:pb-20 md:pb-24 lg:pb-28" style={{ minHeight: 'clamp(400px, 100vh, 600px)' }}>
+                  <div className="w-full h-full relative flex flex-col items-center justify-center sm:justify-end pb-4 sm:pb-20 md:pb-24 lg:pb-28">
                     {/* Moon and rocket animation - fixed position top right corner */}
                     <div className="absolute top-0 right-0 sm:top-1 sm:right-1 md:top-2 md:right-2 lg:top-3 lg:right-3 z-0" style={{ maxWidth: 'calc(50% - 1rem)' }}>
                       <div className="flex flex-col items-center">
-                        <PlanetWithRocketAnimation 
+                        <PlanetWithRocketAnimation
                           level={level}
                           planetSize="text-4xl sm:text-6xl md:text-9xl lg:text-[10rem]"
                           containerSize={{
@@ -1530,17 +1533,17 @@ export function LetterLauncherGameStoryPreview({
                         >
                           <SpeechBubble
                             text={visibleSpeechBubbles.includes(0) ? story.riloAppears.rilo :
-                                  visibleSpeechBubbles.includes(1) ? story.riloAppears.fuelRequirement : 
-                                  visibleSpeechBubbles.includes(2) ? story.riloAppears.fuelExplanation : 
-                                  visibleSpeechBubbles.includes(3) ? story.riloAppears.gameExplanation : 
-                                  visibleSpeechBubbles.includes(4) ? story.practice.intro : ''} 
-                            character="rilo" 
-                            position="center" 
-                            index={0} 
-                            isVisible={visibleSpeechBubbles.length > 0} 
+                                  visibleSpeechBubbles.includes(1) ? story.riloAppears.fuelRequirement :
+                                  visibleSpeechBubbles.includes(2) ? story.riloAppears.fuelExplanation :
+                                  visibleSpeechBubbles.includes(3) ? story.riloAppears.gameExplanation :
+                                  visibleSpeechBubbles.includes(4) ? story.practice.intro : ''}
+                            character="rilo"
+                            position="center"
+                            index={0}
+                            isVisible={visibleSpeechBubbles.length > 0}
                           />
                         </div>
-                        
+
                         {/* Rilo character - same vertical position as Rahi */}
                         <div style={{ opacity: showRilo ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
                           <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
@@ -1592,15 +1595,15 @@ export function LetterLauncherGameStoryPreview({
                             right: 'auto'
                           }}
                         >
-                          <SpeechBubble 
-                            text={story.practice.intro} 
-                            character="rilo" 
-                            position="center" 
-                            index={0} 
-                            isVisible={true} 
+                          <SpeechBubble
+                            text={story.practice.intro}
+                            character="rilo"
+                            position="center"
+                            index={0}
+                            isVisible={true}
                           />
                         </div>
-                        
+
                         {/* Rilo character - same vertical position as Rahi */}
                         <div style={{ opacity: showRilo ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
                           <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
@@ -1643,13 +1646,13 @@ export function LetterLauncherGameStoryPreview({
                         >
                           <SpeechBubble
                             text={practiceCompletionText}
-                            character="rilo" 
-                            position="center" 
-                            index={0} 
-                            isVisible={true} 
+                            character="rilo"
+                            position="center"
+                            index={0}
+                            isVisible={true}
                           />
                         </div>
-                        
+
                         {/* Rilo character - same vertical position as Rahi */}
                         <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                           🤖
@@ -1710,7 +1713,7 @@ export function LetterLauncherGameStoryPreview({
                       {/* Space reserved for conversation bubble positioned above Rilo */}
                     </div>
                   </div>
-                  
+
                   {/* Characters at bottom - Rahi left, Rilo right */}
                   <div className="relative flex items-end justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 md:px-8 lg:px-12 w-full max-w-full mt-4">
                     {/* Captain Rahi - FIXED position on LEFT */}
@@ -1724,24 +1727,24 @@ export function LetterLauncherGameStoryPreview({
                     <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0">
                       {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
                       {/* On mobile: positioned higher to avoid overlap with game card */}
-                      <div 
+                      <div
                         className="absolute bottom-full mb-2 sm:mb-3 md:mb-4 right-[-10px] left-auto translate-x-0 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 z-20 w-[240px] sm:w-[clamp(120px,70vw,320px)] max-w-[calc(100vw-1.5rem)] sm:max-w-[min(calc(100vw-3rem),320px)]"
-                        style={{ 
-                          opacity: 1, 
+                        style={{
+                          opacity: 1,
                           transition: 'opacity 0.5s ease-in-out',
                           pointerEvents: 'auto'
                         }}
                       >
-                        <SpeechBubble 
-                          text={story.practice.controls} 
-                          character="rilo" 
+                        <SpeechBubble
+                          text={story.practice.controls}
+                          character="rilo"
                           position="center"
                           index={0}
                           isVisible={true}
                           arrowAlign="right"
                         />
                       </div>
-                      
+
                       {/* Rilo character */}
                       <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
                         🤖
@@ -1779,7 +1782,7 @@ export function LetterLauncherGameStoryPreview({
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Characters at bottom - Rahi left, Rilo right */}
                   <div className="relative flex items-end justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 md:px-8 lg:px-12 w-full max-w-full">
                     {/* Captain Rahi - FIXED position on LEFT */}
@@ -1807,7 +1810,7 @@ export function LetterLauncherGameStoryPreview({
                 {/* Moon with rocket animation - centered */}
                 <div className="absolute left-1/2 top-2 sm:top-8 -translate-x-1/2 flex flex-col items-center justify-center z-10">
                   <div className="relative" style={{ width: 'clamp(120px, 30vw, 260px)', height: 'clamp(120px, 30vw, 260px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <PlanetWithRocketAnimation 
+                    <PlanetWithRocketAnimation
                       level={level}
                       planetSize="text-4xl sm:text-6xl md:text-9xl lg:text-[10rem]"
                       containerSize={{
@@ -1869,7 +1872,7 @@ export function LetterLauncherGameStoryPreview({
                         />
                               </div>
                     )}
-                    
+
                     {/* Rilo - FIXED position on RIGHT - shifted left on mobile for better visibility */}
                     <div className="flex flex-col items-center relative flex-shrink-0 mr-2 sm:mr-4 md:mr-6 lg:mr-8 -ml-28 sm:ml-0" style={{ transform: 'translateX(-10px)' }}>
                       {/* Speech bubble - positioned absolutely above Rilo, pointing to Rilo */}
@@ -1897,7 +1900,7 @@ export function LetterLauncherGameStoryPreview({
                           )}
                         </div>
                       </div>
-                      
+
                       {/* Rilo character - same vertical position as Rahi */}
                       <div style={{ opacity: showRilo ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
                         <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
@@ -1906,7 +1909,7 @@ export function LetterLauncherGameStoryPreview({
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Mobile: Fuel card below characters */}
                   {visibleSpeechBubbles.includes(1) && (
                     <div className="flex sm:hidden justify-center items-center w-full mt-4 px-2 z-30">
@@ -1929,7 +1932,7 @@ export function LetterLauncherGameStoryPreview({
                 {/* Moon with rocket animation - centered */}
                 <div className="absolute left-1/2 top-2 sm:top-8 -translate-x-1/2 flex flex-col items-center justify-center z-10">
                   <div className="relative" style={{ width: 'clamp(120px, 30vw, 260px)', height: 'clamp(120px, 30vw, 260px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <PlanetWithRocketAnimation 
+                    <PlanetWithRocketAnimation
                       level={level}
                       planetSize="text-4xl sm:text-6xl md:text-9xl lg:text-[10rem]"
                       containerSize={{
@@ -1978,7 +1981,7 @@ export function LetterLauncherGameStoryPreview({
                         <SpeechBubble text={story.readyToStart.rilo} character="rilo" position="center" index={0} isVisible={true} />
                       )}
                     </div>
-                    
+
                     {/* Rilo character - same vertical position as Rahi */}
                     <div style={{ opacity: showRilo ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
                       <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
@@ -1989,7 +1992,7 @@ export function LetterLauncherGameStoryPreview({
                 </div>
 
                 {/* Start button centered at bottom */}
-                <div className="absolute bottom-32 sm:bottom-44 md:bottom-48 lg:bottom-52 left-1/2 -translate-x-1/2 px-2 sm:px-0 z-30" style={{ maxWidth: 'calc(100% - 1rem)' }}>
+                <div className="relative mt-4 sm:mt-6 flex justify-center px-2 sm:px-0 z-30" style={{ maxWidth: 'calc(100% - 1rem)' }}>
                   <Button
                     onClick={handleStartGame}
                     size="lg"
@@ -2017,7 +2020,7 @@ export function LetterLauncherGameStoryPreview({
         .animate-twinkle {
           animation: twinkle 2s ease-in-out infinite;
         }
-        
+
         /* Nebula drift animations */
         .nebula-drift {
           animation: nebulaDrift 25s ease-in-out infinite;
@@ -2030,7 +2033,7 @@ export function LetterLauncherGameStoryPreview({
           33% { transform: translate(25px, -15px) scale(1.03); opacity: 0.28; }
           66% { transform: translate(-15px, 10px) scale(0.97); opacity: 0.22; }
         }
-        
+
         /* Aurora wave animations */
         .aurora-wave {
           animation: auroraWave 8s ease-in-out infinite;
@@ -2042,7 +2045,7 @@ export function LetterLauncherGameStoryPreview({
           0%, 100% { opacity: 0.6; transform: skewY(-3deg) translateX(0); }
           50% { opacity: 1; transform: skewY(-2deg) translateX(20px); }
         }
-        
+
         /* Cosmic dust float */
         .dust-float {
           animation: dustFloat linear infinite;
@@ -2052,7 +2055,7 @@ export function LetterLauncherGameStoryPreview({
           50% { transform: translate(60px, -25px); opacity: 0.4; }
           100% { transform: translate(120px, 10px); opacity: 0; }
         }
-        
+
         /* Shooting star with trail */
         .shooting-star {
           animation: shootingStarTrail linear infinite;
@@ -2062,7 +2065,7 @@ export function LetterLauncherGameStoryPreview({
           5% { transform: translate(15px, 15px) rotate(-45deg) scale(1); opacity: 1; }
           100% { transform: translate(350px, 350px) rotate(-45deg) scale(0.3); opacity: 0; }
         }
-        
+
         /* Galaxy rotation */
         .galaxy-rotate {
           animation: galaxyRotate 100s linear infinite;
@@ -2071,7 +2074,7 @@ export function LetterLauncherGameStoryPreview({
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
-        
+
         /* Depth layers for perspective */
         .depth-layer-far {
           transform: translateZ(-100px) scale(1.1);
@@ -2081,7 +2084,7 @@ export function LetterLauncherGameStoryPreview({
           transform: translateZ(-50px) scale(1.05);
           transform-style: preserve-3d;
         }
-        
+
         /* Light rays */
         .light-ray {
           animation: lightRayPulse 6s ease-in-out infinite;
@@ -2093,7 +2096,7 @@ export function LetterLauncherGameStoryPreview({
           0%, 100% { opacity: 0.4; }
           50% { opacity: 0.8; }
         }
-        
+
         /* Floating light orbs */
         .light-orb {
           animation: orbFloat ease-in-out infinite;
@@ -2104,7 +2107,7 @@ export function LetterLauncherGameStoryPreview({
           50% { transform: translate(-10px, -30px) scale(0.9); opacity: 0.4; }
           75% { transform: translate(20px, -15px) scale(1.05); opacity: 0.45; }
         }
-        
+
         /* Fade in animation for flash messages - stays visible after animation */
         @keyframes fade-in-out {
           0% { opacity: 0; transform: translateY(-10px) scale(0.8); }
@@ -2114,7 +2117,7 @@ export function LetterLauncherGameStoryPreview({
         .animate-fade-in-out {
           animation: fade-in-out 1s ease-in-out forwards;
         }
-        
+
         /* Sparkle bursts */
         .sparkle-burst {
           animation: sparkleBurst 3s ease-in-out infinite;
@@ -2123,7 +2126,7 @@ export function LetterLauncherGameStoryPreview({
           0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
           50% { opacity: 1; transform: scale(1) rotate(180deg); }
         }
-        
+
         /* Comet animation */
         .comet {
           animation: cometFly 12s linear infinite;
@@ -2134,7 +2137,7 @@ export function LetterLauncherGameStoryPreview({
           90% { opacity: 1; }
           100% { transform: translate(120vw, 40vh); opacity: 0; }
         }
-        
+
         /* Constellation twinkle */
         .constellation {
           animation: constellationGlow 4s ease-in-out infinite;
@@ -2143,7 +2146,7 @@ export function LetterLauncherGameStoryPreview({
           0%, 100% { opacity: 0.3; }
           50% { opacity: 0.6; }
         }
-        
+
         /* Tiny galaxies */
         .tiny-galaxy {
           animation: galaxyTwinkle 5s ease-in-out infinite;
@@ -2152,26 +2155,26 @@ export function LetterLauncherGameStoryPreview({
           0%, 100% { opacity: 0.25; transform: scale(1); }
           50% { opacity: 0.5; transform: scale(1.1); }
         }
-        
-        
+
+
         /* Smooth conversation transitions */
         .conversation-container {
           transition: all 0.4s ease-in-out;
         }
-        
+
         /* Prevent layout shifts */
         .character-container {
           min-width: 80px;
           min-height: 100px;
         }
-        
+
         @media (min-width: 640px) {
           .character-container {
             min-width: 96px;
             min-height: 120px;
           }
         }
-        
+
         @media (min-width: 768px) {
           .character-container {
             min-width: 112px;

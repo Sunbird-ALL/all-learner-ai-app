@@ -1387,7 +1387,7 @@ const WordsOrImage = ({
                   }
                 >
                   <SpeakButton size={isMobile ? "small" : "medium"} />
-                  {showPointer && pointerTarget === "mic" && (
+                  {showPointer && pointerTarget === "mic" && !isRecording && (
                     <span
                       style={{
                         position: "absolute",
@@ -1433,22 +1433,25 @@ const WordsOrImage = ({
                     }
                   >
                     <StopButton size={isMobile ? "small" : "medium"} />
-                    {showPointer && pointerTarget === "stop" && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          top: "100%",
-                          left: "20%",
-                          transform: "translateX(-50%)",
-                          fontSize: "40px",
-                          pointerEvents: "none",
-                          animation: "pointerBounce 1.5s ease-in-out infinite",
-                          filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-                        }}
-                      >
-                        👆
-                      </span>
-                    )}
+                    {showPointer &&
+                      pointerTarget === "stop" &&
+                      !isRecording && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: "100%",
+                            left: "20%",
+                            transform: "translateX(-50%)",
+                            fontSize: "40px",
+                            pointerEvents: "none",
+                            animation:
+                              "pointerBounce 1.5s ease-in-out infinite",
+                            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                          }}
+                        >
+                          👆
+                        </span>
+                      )}
                   </Box>
                   <Box
                     style={{

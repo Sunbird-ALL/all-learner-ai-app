@@ -8,6 +8,7 @@ import {
   setLocalData,
   practiceSteps,
 } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import { levelGetContent } from "../../data/levelContent";
 import {
   addLesson,
@@ -1206,6 +1207,7 @@ const LetterHuntMechanicsContent = ({
   // Use getLocalData("lang") as the primary source for language
   // This ensures the main app's language setting takes precedence over the library's selectedLanguage
   const lang = getLocalData("lang") || "en";
+  const ui = getUiStrings(lang);
   const initialLanguage =
     lang === "en"
       ? "en"
@@ -1245,7 +1247,7 @@ const LetterHuntMechanicsContent = ({
         setStartShowCase={setStartShowCase}
       >
         <div style={{ padding: "20px", textAlign: "center" }}>
-          <p>Loading game...</p>
+          <p>{ui.LOADING_GAME}</p>
         </div>
       </MainLayout>
     );
@@ -1318,6 +1320,7 @@ const LetterHuntMechanicsContent = ({
                 className="letter-hunt-wrapper"
               >
                 <LetterGame
+                  title={ui.PRACTICE_LETTER_RECOGNITION}
                   onBack={handleGameBack}
                   startLevel={level || 1}
                   endLevel={endLevel}

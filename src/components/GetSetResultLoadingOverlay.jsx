@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import { subscribeGetSetResultLoading } from "../services/learnerAi/getSetResultLoading";
 import { getLocalData } from "../utils/constants";
+import { getUiStrings } from "../constants/strings";
 import catLoading from "../assets/images/catLoading.gif";
 import towreLoading from "../assets/images/loaderGif.gif";
 import textureImage from "../assets/images/textureImage.png";
@@ -18,6 +19,7 @@ const GetSetResultLoadingOverlay = () => {
   useEffect(() => subscribeGetSetResultLoading(setOpen), []);
 
   const tFlowIsTowre = String(getLocalData("tFlow")) === "true";
+  const ui = getUiStrings(getLocalData("lang") || "en");
 
   return (
     <Backdrop
@@ -45,7 +47,7 @@ const GetSetResultLoadingOverlay = () => {
           border: 0,
         }}
       >
-        Loading
+        {ui.LOADING_OVERLAY_ARIA}
       </Box>
       <style>{`
         @keyframes getset-dots {

@@ -30,6 +30,7 @@ import {
   randomizeArray as shuffle,
 } from "../../utils/constants";
 import { getFontFamily } from "../../utils/fontUtils";
+import { getUiStrings } from "../../constants/strings";
 import giftscoreImg from "../../assets/giftscore.svg";
 import redboxImg from "../../assets/redbox.svg";
 import greenboxImg from "../../assets/greenbox.svg";
@@ -113,6 +114,7 @@ const WordWall = ({
   const wrongBoxRef = useRef(null);
   const animationRef = useRef(null);
   const username = getLocalData("profileName") || "User";
+  const ui = getUiStrings(getLocalData("lang"));
 
   console.log("counts", wrongAnswersAllQuestions);
 
@@ -525,7 +527,7 @@ const WordWall = ({
           position: "relative",
         }}
       >
-        You Did It!
+        {ui.WORD_WALL_YOU_DID_IT}
       </div>
 
       <div
@@ -593,9 +595,7 @@ const WordWall = ({
               color: "#2F2F2F",
             }}
           >
-            Words you
-            <br />
-            know
+            {ui.WORD_WALL_WORDS_YOU_KNOW}
           </div>
         </div>
 
@@ -651,9 +651,7 @@ const WordWall = ({
               color: "#2F2F2F",
             }}
           >
-            Words to
-            <br />
-            Try Again!
+            {ui.WORD_WALL_WORDS_TRY_AGAIN}
           </div>
         </div>
       </div>
@@ -832,7 +830,7 @@ const WordWall = ({
                 style={{ height: isMobile ? "18px" : "28px", flexShrink: 0 }}
               />
               <span style={{ lineHeight: "1", whiteSpace: "nowrap" }}>
-                Click Bubble
+                {ui.WORD_WALL_CLICK_BUBBLE}
               </span>
             </div>
 
@@ -903,7 +901,7 @@ const WordWall = ({
               marginBottom: "10px",
             }}
           >
-            Can you find the?
+            {ui.WORD_WALL_CAN_YOU_FIND}
           </div>
           <div
             style={{
@@ -986,7 +984,7 @@ const WordWall = ({
           maxWidth: "calc(100% - 32px)",
         }}
       >
-        <span style={{ lineHeight: "1" }}>Let's open gifts</span>
+        <span style={{ lineHeight: "1" }}>{ui.WORD_WALL_OPEN_GIFTS}</span>
       </div>
 
       <div
@@ -1144,7 +1142,7 @@ const WordWall = ({
             maxWidth: "calc(100% - 32px)",
           }}
         >
-          This is called a...
+          {ui.WORD_WALL_REVIEW_THIS_IS_CALLED}
         </div>
 
         <div
@@ -1205,7 +1203,7 @@ const WordWall = ({
                   alt="Listen"
                   style={{ height: isMobile ? "26px" : "40px" }}
                 />
-                <span>English</span>
+                <span>{ui.WORD_WALL_LISTEN_ENGLISH}</span>
               </div>
               <div
                 style={{
@@ -1435,7 +1433,7 @@ const WordWall = ({
                 whiteSpace: "nowrap",
               }}
             >
-              {`${username}'s Word Wall`}
+              {ui.WORD_WALL_TITLE.replace("{name}", username)}
             </div>
 
             {showProgressBar && (

@@ -1588,373 +1588,380 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
             )}
 
           {/* Test Content - Simplified */}
-          <Box
-            sx={{
-              width: "100%",
-              maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
-              mb: { xs: 1, sm: 1 },
-              mt: { xs: 0, sm: 0 },
-              px: { xs: 1, sm: 0 },
-              mx: "auto",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              flex: { xs: 1, sm: 0 },
-              boxSizing: "border-box",
-            }}
-          >
-            {currentStep === "mic" && (
-              <>
-                {/* Reading Prompt - Show before and during recording, hide on error */}
-                {audioPrompt && (micStatus === "pending" || isRecording) && (
-                  <Fade in={true}>
-                    <Box
-                      sx={{
-                        background: "#f8f9fa",
-                        borderRadius: { xs: "16px", sm: "16px" },
-                        p: { xs: 1.5, sm: 2, md: 2.5 },
-                        mb: { xs: 1, sm: 1.5 },
-                        border: "2px solid #6DAF19",
-                        textAlign: "center",
-                        width: "100%",
-                        maxWidth: "100%",
-                        mx: "auto",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxSizing: "border-box",
-                      }}
-                    >
-                      {!isRecording && (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: { xs: 1, sm: 1.5 },
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              fontFamily: "Quicksand",
-                              fontSize: { xs: "16px", sm: "18px", md: "20px" },
-                              fontWeight: 600,
-                              color: "#333333",
-                              mb: { xs: 1, sm: 1 },
-                            }}
-                          >
-                            {isPlayingPrompt
-                              ? translations.playingAudio
-                              : hasListenedToPrompt
-                              ? translations.clickToListenAgain
-                              : translations.clickToListen}
-                          </Typography>
-                          <Button
-                            onClick={() => {
-                              playPromptAudio();
-                              // Enable the continue button when user clicks play
-                              setTimeout(() => {
-                                setHasListenedToPrompt(true);
-                              }, 1500); // 1.5 seconds should be enough for the phrases
-                            }}
-                            disabled={isPlayingPrompt}
-                            sx={{
-                              minWidth: "auto",
-                              width: { xs: "70px", sm: "75px", md: "85px" },
-                              height: { xs: "70px", sm: "75px", md: "85px" },
-                              borderRadius: "50%",
-                              background: isPlayingPrompt
-                                ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
-                                : "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
-                              color: "white",
-                              "&:hover": {
-                                background: isPlayingPrompt
-                                  ? "linear-gradient(135deg, #f57c00 0%, #e65100 100%)"
-                                  : "linear-gradient(135deg, #5a9a15 0%, #4a8a10 100%)",
-                              },
-                              boxShadow: "0 4px 12px rgba(109, 175, 25, 0.3)",
-                            }}
-                          >
-                            <VolumeUpIcon
-                              sx={{
-                                fontSize: {
-                                  xs: "28px",
-                                  sm: "36px",
-                                  md: "42px",
-                                },
-                              }}
-                            />
-                          </Button>
-                        </Box>
-                      )}
-                      {isRecording && (
-                        <>
-                          {/* Stopwatch-style countdown timer */}
-                          {(() => {
-                            // Determine color based on remaining time
-                            // Green: 5-3 seconds, Orange: 2 seconds, Red: 1-0 seconds
-                            let circleColor = "#6DAF19"; // Green
-                            let textColor = "#6DAF19"; // Green
-
-                            if (recordingTimeRemaining <= 1) {
-                              circleColor = "#f44336"; // Red
-                              textColor = "#f44336"; // Red
-                            } else if (recordingTimeRemaining <= 2) {
-                              circleColor = "#ff9800"; // Orange
-                              textColor = "#ff9800"; // Orange
-                            }
-
-                            return (
-                              <Box
-                                sx={{
-                                  position: "relative",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  width: {
-                                    xs: "120px",
-                                    sm: "140px",
-                                    md: "160px",
-                                  },
-                                  height: {
-                                    xs: "120px",
-                                    sm: "140px",
-                                    md: "160px",
-                                  },
-                                  mb: 2,
-                                }}
-                              >
-                                {/* Circular progress background */}
-                                <CircularProgress
-                                  variant="determinate"
-                                  value={100}
-                                  size="100%"
-                                  thickness={4}
-                                  sx={{
-                                    position: "absolute",
-                                    color: "rgba(0, 0, 0, 0.1)",
-                                    "& .MuiCircularProgress-circle": {
-                                      strokeLinecap: "round",
-                                    },
-                                  }}
-                                />
-                                {/* Circular progress foreground with dynamic color */}
-                                <CircularProgress
-                                  variant="determinate"
-                                  value={recordingProgress}
-                                  size="100%"
-                                  thickness={4}
-                                  sx={{
-                                    position: "absolute",
-                                    color: circleColor,
-                                    transform: "rotate(-90deg)",
-                                    transition: "color 0.3s ease",
-                                    "& .MuiCircularProgress-circle": {
-                                      strokeLinecap: "round",
-                                    },
-                                  }}
-                                />
-                                {/* Timer number */}
-                                <Box
-                                  sx={{
-                                    position: "absolute",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                  }}
-                                >
-                                  <Typography
-                                    sx={{
-                                      fontFamily: "Quicksand",
-                                      fontSize: {
-                                        xs: "36px",
-                                        sm: "42px",
-                                        md: "48px",
-                                      },
-                                      fontWeight: 700,
-                                      color: textColor,
-                                      lineHeight: 1,
-                                      transition: "color 0.3s ease",
-                                    }}
-                                  >
-                                    {recordingTimeRemaining > 0
-                                      ? recordingTimeRemaining
-                                      : "0"}
-                                  </Typography>
-                                  <Typography
-                                    sx={{
-                                      fontFamily: "Quicksand",
-                                      fontSize: {
-                                        xs: "12px",
-                                        sm: "14px",
-                                        md: "16px",
-                                      },
-                                      fontWeight: 600,
-                                      color: textColor,
-                                      opacity: 0.8,
-                                      mt: 0.5,
-                                      transition: "color 0.3s ease",
-                                    }}
-                                  >
-                                    {recordingTimeRemaining > 0
-                                      ? "seconds"
-                                      : "stopping"}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            );
-                          })()}
-                          <LinearProgress
-                            variant="determinate"
-                            value={recordingProgress}
-                            sx={{
-                              height: 8,
-                              borderRadius: 4,
-                              backgroundColor: "rgba(109, 175, 25, 0.1)",
-                              mt: 1,
-                              mb: 1,
-                              width: "100%",
-                              "& .MuiLinearProgress-bar": {
-                                background:
-                                  "linear-gradient(90deg, #6DAF19, #4caf50)",
-                                borderRadius: 4,
-                              },
-                            }}
-                          />
+          {!(micError && currentStep === "mic") && (
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
+                mb: { xs: 1, sm: 1 },
+                mt: { xs: 0, sm: 0 },
+                px: { xs: 1, sm: 0 },
+                mx: "auto",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                flex: { xs: 1, sm: 0 },
+                boxSizing: "border-box",
+              }}
+            >
+              {currentStep === "mic" && (
+                <>
+                  {/* Reading Prompt - Show before and during recording, hide on error */}
+                  {audioPrompt && (micStatus === "pending" || isRecording) && (
+                    <Fade in={true}>
+                      <Box
+                        sx={{
+                          background: "#f8f9fa",
+                          borderRadius: { xs: "16px", sm: "16px" },
+                          p: { xs: 1.5, sm: 2, md: 2.5 },
+                          mb: { xs: 1, sm: 1.5 },
+                          border: "2px solid #6DAF19",
+                          textAlign: "center",
+                          width: "100%",
+                          maxWidth: "100%",
+                          mx: "auto",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxSizing: "border-box",
+                        }}
+                      >
+                        {!isRecording && (
                           <Box
                             sx={{
                               display: "flex",
-                              alignItems: "flex-end",
-                              justifyContent: "center",
-                              gap: "3px",
-                              height: "60px",
-                              mt: 2,
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: { xs: 1, sm: 1.5 },
                             }}
                           >
-                            {[...Array(20)].map((_, i) => (
-                              <Box
-                                key={i}
+                            <Typography
+                              sx={{
+                                fontFamily: "Quicksand",
+                                fontSize: {
+                                  xs: "16px",
+                                  sm: "18px",
+                                  md: "20px",
+                                },
+                                fontWeight: 600,
+                                color: "#333333",
+                                mb: { xs: 1, sm: 1 },
+                              }}
+                            >
+                              {isPlayingPrompt
+                                ? translations.playingAudio
+                                : hasListenedToPrompt
+                                ? translations.clickToListenAgain
+                                : translations.clickToListen}
+                            </Typography>
+                            <Button
+                              onClick={() => {
+                                playPromptAudio();
+                                // Enable the continue button when user clicks play
+                                setTimeout(() => {
+                                  setHasListenedToPrompt(true);
+                                }, 1500); // 1.5 seconds should be enough for the phrases
+                              }}
+                              disabled={isPlayingPrompt}
+                              sx={{
+                                minWidth: "auto",
+                                width: { xs: "70px", sm: "75px", md: "85px" },
+                                height: { xs: "70px", sm: "75px", md: "85px" },
+                                borderRadius: "50%",
+                                background: isPlayingPrompt
+                                  ? "linear-gradient(135deg, #ff9800 0%, #f57c00 100%)"
+                                  : "linear-gradient(135deg, #6DAF19 0%, #5a9a15 100%)",
+                                color: "white",
+                                "&:hover": {
+                                  background: isPlayingPrompt
+                                    ? "linear-gradient(135deg, #f57c00 0%, #e65100 100%)"
+                                    : "linear-gradient(135deg, #5a9a15 0%, #4a8a10 100%)",
+                                },
+                                boxShadow: "0 4px 12px rgba(109, 175, 25, 0.3)",
+                              }}
+                            >
+                              <VolumeUpIcon
                                 sx={{
-                                  width: "4px",
-                                  height: `${Math.max(
-                                    10,
-                                    audioLevel *
-                                      100 *
-                                      (0.5 + Math.random() * 0.5)
-                                  )}%`,
-                                  background:
-                                    "linear-gradient(180deg, #6DAF19, #4caf50)",
-                                  borderRadius: "2px",
-                                  transition: "height 0.1s",
+                                  fontSize: {
+                                    xs: "28px",
+                                    sm: "36px",
+                                    md: "42px",
+                                  },
                                 }}
                               />
-                            ))}
+                            </Button>
                           </Box>
-                        </>
-                      )}
-                    </Box>
-                  </Fade>
-                )}
+                        )}
+                        {isRecording && (
+                          <>
+                            {/* Stopwatch-style countdown timer */}
+                            {(() => {
+                              // Determine color based on remaining time
+                              // Green: 5-3 seconds, Orange: 2 seconds, Red: 1-0 seconds
+                              let circleColor = "#6DAF19"; // Green
+                              let textColor = "#6DAF19"; // Green
 
-                {/* Status Icon - Only show when not recording and not in error state */}
-                {!isRecording && !isPlayingBack && micStatus !== "failed" && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mb: { xs: 0.25, sm: 0.5 },
-                      minHeight: { xs: "30px", sm: "50px", md: "60px" },
-                      width: "100%",
-                    }}
-                  >
-                    {getStatusIcon(micStatus, "mic")}
-                  </Box>
-                )}
-              </>
-            )}
+                              if (recordingTimeRemaining <= 1) {
+                                circleColor = "#f44336"; // Red
+                                textColor = "#f44336"; // Red
+                              } else if (recordingTimeRemaining <= 2) {
+                                circleColor = "#ff9800"; // Orange
+                                textColor = "#ff9800"; // Orange
+                              }
 
-            {currentStep === "speaker" && (
-              <>
-                {/* Status Icon */}
-                {!isPlaying && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mb: { xs: 0.5, sm: 1 },
-                      minHeight: { xs: "30px", sm: "50px", md: "60px" },
-                      width: "100%",
-                    }}
-                  >
-                    {getStatusIcon(speakerStatus, "speaker")}
-                  </Box>
-                )}
+                              return (
+                                <Box
+                                  sx={{
+                                    position: "relative",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: {
+                                      xs: "120px",
+                                      sm: "140px",
+                                      md: "160px",
+                                    },
+                                    height: {
+                                      xs: "120px",
+                                      sm: "140px",
+                                      md: "160px",
+                                    },
+                                    mb: 2,
+                                  }}
+                                >
+                                  {/* Circular progress background */}
+                                  <CircularProgress
+                                    variant="determinate"
+                                    value={100}
+                                    size="100%"
+                                    thickness={4}
+                                    sx={{
+                                      position: "absolute",
+                                      color: "rgba(0, 0, 0, 0.1)",
+                                      "& .MuiCircularProgress-circle": {
+                                        strokeLinecap: "round",
+                                      },
+                                    }}
+                                  />
+                                  {/* Circular progress foreground with dynamic color */}
+                                  <CircularProgress
+                                    variant="determinate"
+                                    value={recordingProgress}
+                                    size="100%"
+                                    thickness={4}
+                                    sx={{
+                                      position: "absolute",
+                                      color: circleColor,
+                                      transform: "rotate(-90deg)",
+                                      transition: "color 0.3s ease",
+                                      "& .MuiCircularProgress-circle": {
+                                        strokeLinecap: "round",
+                                      },
+                                    }}
+                                  />
+                                  {/* Timer number */}
+                                  <Box
+                                    sx={{
+                                      position: "absolute",
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <Typography
+                                      sx={{
+                                        fontFamily: "Quicksand",
+                                        fontSize: {
+                                          xs: "36px",
+                                          sm: "42px",
+                                          md: "48px",
+                                        },
+                                        fontWeight: 700,
+                                        color: textColor,
+                                        lineHeight: 1,
+                                        transition: "color 0.3s ease",
+                                      }}
+                                    >
+                                      {recordingTimeRemaining > 0
+                                        ? recordingTimeRemaining
+                                        : "0"}
+                                    </Typography>
+                                    <Typography
+                                      sx={{
+                                        fontFamily: "Quicksand",
+                                        fontSize: {
+                                          xs: "12px",
+                                          sm: "14px",
+                                          md: "16px",
+                                        },
+                                        fontWeight: 600,
+                                        color: textColor,
+                                        opacity: 0.8,
+                                        mt: 0.5,
+                                        transition: "color 0.3s ease",
+                                      }}
+                                    >
+                                      {recordingTimeRemaining > 0
+                                        ? "seconds"
+                                        : "stopping"}
+                                    </Typography>
+                                  </Box>
+                                </Box>
+                              );
+                            })()}
+                            <LinearProgress
+                              variant="determinate"
+                              value={recordingProgress}
+                              sx={{
+                                height: 8,
+                                borderRadius: 4,
+                                backgroundColor: "rgba(109, 175, 25, 0.1)",
+                                mt: 1,
+                                mb: 1,
+                                width: "100%",
+                                "& .MuiLinearProgress-bar": {
+                                  background:
+                                    "linear-gradient(90deg, #6DAF19, #4caf50)",
+                                  borderRadius: 4,
+                                },
+                              }}
+                            />
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "flex-end",
+                                justifyContent: "center",
+                                gap: "3px",
+                                height: "60px",
+                                mt: 2,
+                              }}
+                            >
+                              {[...Array(20)].map((_, i) => (
+                                <Box
+                                  key={i}
+                                  sx={{
+                                    width: "4px",
+                                    height: `${Math.max(
+                                      10,
+                                      audioLevel *
+                                        100 *
+                                        (0.5 + Math.random() * 0.5)
+                                    )}%`,
+                                    background:
+                                      "linear-gradient(180deg, #6DAF19, #4caf50)",
+                                    borderRadius: "2px",
+                                    transition: "height 0.1s",
+                                  }}
+                                />
+                              ))}
+                            </Box>
+                          </>
+                        )}
+                      </Box>
+                    </Fade>
+                  )}
 
-                {/* Playing Section */}
-                {isPlaying && (
-                  <Fade in={isPlaying}>
+                  {/* Status Icon - Only show when not recording and not in error state */}
+                  {!isRecording && !isPlayingBack && micStatus !== "failed" && (
                     <Box
                       sx={{
-                        background: "#fff3e0",
-                        borderRadius: { xs: "12px", sm: "16px" },
-                        p: { xs: 1, sm: 2 },
-                        mb: { xs: 0.75, sm: 1.5 },
-                        border: "2px solid #ff9800",
-                        textAlign: "center",
-                        width: "100%",
-                        maxWidth: "100%",
                         display: "flex",
-                        flexDirection: "column",
                         alignItems: "center",
-                        boxSizing: "border-box",
+                        justifyContent: "center",
+                        mb: { xs: 0.25, sm: 0.5 },
+                        minHeight: { xs: "30px", sm: "50px", md: "60px" },
+                        width: "100%",
                       }}
                     >
-                      <Typography
-                        sx={{
-                          fontFamily: "Quicksand",
-                          fontSize: { xs: "22px", sm: "24px", md: "26px" },
-                          fontWeight: 700,
-                          color: "#f57c00",
-                          mb: 2,
-                        }}
-                      >
-                        Can you hear it?
-                      </Typography>
+                      {getStatusIcon(micStatus, "mic")}
+                    </Box>
+                  )}
+                </>
+              )}
+
+              {currentStep === "speaker" && (
+                <>
+                  {/* Status Icon */}
+                  {!isPlaying && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        mb: { xs: 0.5, sm: 1 },
+                        minHeight: { xs: "30px", sm: "50px", md: "60px" },
+                        width: "100%",
+                      }}
+                    >
+                      {getStatusIcon(speakerStatus, "speaker")}
+                    </Box>
+                  )}
+
+                  {/* Playing Section */}
+                  {isPlaying && (
+                    <Fade in={isPlaying}>
                       <Box
                         sx={{
+                          background: "#fff3e0",
+                          borderRadius: { xs: "12px", sm: "16px" },
+                          p: { xs: 1, sm: 2 },
+                          mb: { xs: 0.75, sm: 1.5 },
+                          border: "2px solid #ff9800",
+                          textAlign: "center",
+                          width: "100%",
+                          maxWidth: "100%",
                           display: "flex",
+                          flexDirection: "column",
                           alignItems: "center",
-                          justifyContent: "center",
-                          gap: "6px",
-                          height: "50px",
+                          boxSizing: "border-box",
                         }}
                       >
-                        {[...Array(5)].map((_, i) => (
-                          <Box
-                            key={i}
-                            sx={{
-                              width: "5px",
-                              height: "100%",
-                              background:
-                                "linear-gradient(180deg, #ff9800, #ff5722)",
-                              borderRadius: "3px",
-                              animation: "soundWave 1.2s ease-in-out infinite",
-                              animationDelay: `${i * 0.2}s`,
-                            }}
-                          />
-                        ))}
+                        <Typography
+                          sx={{
+                            fontFamily: "Quicksand",
+                            fontSize: { xs: "22px", sm: "24px", md: "26px" },
+                            fontWeight: 700,
+                            color: "#f57c00",
+                            mb: 2,
+                          }}
+                        >
+                          Can you hear it?
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "6px",
+                            height: "50px",
+                          }}
+                        >
+                          {[...Array(5)].map((_, i) => (
+                            <Box
+                              key={i}
+                              sx={{
+                                width: "5px",
+                                height: "100%",
+                                background:
+                                  "linear-gradient(180deg, #ff9800, #ff5722)",
+                                borderRadius: "3px",
+                                animation:
+                                  "soundWave 1.2s ease-in-out infinite",
+                                animationDelay: `${i * 0.2}s`,
+                              }}
+                            />
+                          ))}
+                        </Box>
                       </Box>
-                    </Box>
-                  </Fade>
-                )}
-              </>
-            )}
-          </Box>
+                    </Fade>
+                  )}
+                </>
+              )}
+            </Box>
+          )}
 
           {/* Error Messages - Prominent on error screen */}
           {micError && currentStep === "mic" && (

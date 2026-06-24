@@ -12,6 +12,8 @@ import {
   RotateCcw
 } from "lucide-react";
 import { cn } from "../lib/utils";
+import { getUiStrings } from "../../../../constants/strings";
+import { Language } from "../constants/languages";
 
 interface SuccessScreenProps {
   gameTitle: string;
@@ -25,6 +27,7 @@ interface SuccessScreenProps {
   onNextLevel?: () => void;
   hasNextLevel?: boolean;
   continueButtonText?: string;
+  selectedLanguage?: Language; // Language for localization
   // Fuel-mode props (used by LetterLauncherGame)
   fuelMode?: boolean;
   fuelCollected?: number;
@@ -45,8 +48,10 @@ export function SuccessScreen({
   onBackToHub,
   onNextLevel,
   hasNextLevel = false,
-  continueButtonText
+  continueButtonText,
+  selectedLanguage = 'en'
 }: SuccessScreenProps) {
+  const ui = getUiStrings(selectedLanguage);
   const [showConfetti, setShowConfetti] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
   
@@ -130,11 +135,11 @@ export function SuccessScreen({
             </div>
 
             <div className="mt-1 mb-2 text-xs sm:text-sm md:text-base font-medium text-foreground px-2">
-                {percentage === 100 && "Amazing! You got everything right!"}
-                {percentage >= 90 && percentage < 100 && "🎯 Excellent work! You're almost perfect!"}
-                {percentage >= 80 && percentage < 90 && "👏 Great job! You're learning so well!"}
-                {percentage >= 70 && percentage < 80 && "💪 Good effort! Keep practicing!"}
-                {percentage < 70 && "🌱 Nice try! Every attempt makes you stronger!"}
+                {percentage === 100 && ui.SUCCESS_PERFECT}
+                {percentage >= 90 && percentage < 100 && ui.SUCCESS_EXCELLENT}
+                {percentage >= 80 && percentage < 90 && ui.SUCCESS_GREAT}
+                {percentage >= 70 && percentage < 80 && ui.SUCCESS_GOOD}
+                {percentage < 70 && ui.SUCCESS_NICE_TRY}
               </div>
             {/* Removed game title completion line as requested */}
           </div>
@@ -177,7 +182,7 @@ export function SuccessScreen({
                   className="flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-                  {continueButtonText || "Next Level"}
+                  {continueButtonText || ui.SUCCESS_NEXT_LEVEL}
                 </Button>
               )}
               
@@ -189,7 +194,7 @@ export function SuccessScreen({
                 className="flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base"
               >
                 <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5" />
-                Play Again
+                {ui.PLAY_AGAIN}
               </Button>
               )}
             </div>
@@ -204,7 +209,7 @@ export function SuccessScreen({
               <div className="text-xl sm:text-2xl md:text-3xl animate-wiggle">🦉</div>
             </div>
             <div className="mt-1 px-2 text-xs sm:text-sm text-muted-foreground italic">
-              "I'm so proud of you! Keep up the amazing work!" 
+              {ui.SUCCESS_MASCOT_MESSAGE}
             </div>
           </div>
         </Card>
