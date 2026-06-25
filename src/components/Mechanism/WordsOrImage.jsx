@@ -772,7 +772,7 @@ const WordsOrImage = ({
           pointerEvents: disableScreen ? "none" : "initial",
           display: "flex",
           flexDirection: "column",
-          justifyContent: { xs: "flex-start", md: "center" },
+          justifyContent: "center",
           alignItems: "center",
           flexGrow: 1,
           pt: { xs: "24px", md: "0px" },

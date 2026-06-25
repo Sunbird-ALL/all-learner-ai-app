@@ -1532,10 +1532,7 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarNext}
                                 disabled={!canGoNext}
                                 sx={{
-                                  display: {
-                                    xs: "inline-flex",
-                                    sm: "inline-flex",
-                                  },
+                                  display: "inline-flex",
                                   width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
                                     xs: "24px",
