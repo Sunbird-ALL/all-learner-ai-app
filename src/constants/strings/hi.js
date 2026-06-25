@@ -129,7 +129,7 @@ const hi = {
   // Loading/Error states
   LOADING_OVERLAY_ARIA: "लोड हो रहा है, कृपया इंतज़ार करें",
   LOADING_FETCHING_DETAILS:
-    "कृपया प्रतीक्षा करें, हम आपके लिए विवरण प्राप्त कर रहे हैं…",
+    "कृपया प्रतीक्षा करें, हम आपके लिए जानकारी प्राप्त कर रहे हैं…",
   ASSESSMENT_NO_USERNAME_QUERY_PARAM: "कृपया query param में username जोड़ें",
   ASSESSMENT_ALPHABET_CHART_TOOLTIP_TITLE: "📚 वर्णमाला चार्ट",
   ASSESSMENT_ALPHABET_CHART_TOOLTIP_DESC:
@@ -178,8 +178,8 @@ const hi = {
   TOWRE_SCORE_UNAVAILABLE_WARNING:
     "⚠️ आपका ब्राउज़र स्पीच रिकग्निशन सपोर्ट नहीं करता, इसलिए शब्द स्वचालित रूप से स्कोर नहीं हो सके। सटीक परिणाम के लिए Google Chrome या Microsoft Edge उपयोग करें।",
   TOWRE_RESULT_WORDS_PER_MINUTE: "प्रति मिनट शब्द",
-  TOWRE_RESULT_NEW_WORDS_LEARNT: "नए शब्द सीखे",
-  TOWRE_RESULT_TOTAL_WORDS_LEARNT: "कुल शब्द सीखे",
+  TOWRE_RESULT_NEW_WORDS_LEARNT: "सीखे गए नए शब्द",
+  TOWRE_RESULT_TOTAL_WORDS_LEARNT: "कुल सीखे गए शब्द",
   TOWRE_COUNTDOWN_READY: "शब्द पढ़ने के लिए तैयार हो जाएं!",
   TOWRE_COUNTDOWN_INSTRUCTION:
     "45 सेकंड में जितनी जल्दी हो सके शब्द जोर से पढ़ें।",

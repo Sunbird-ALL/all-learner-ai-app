@@ -1897,12 +1897,13 @@ const MainLayout = (props) => {
                       <Box
                         sx={{
                           display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
+                          justifyContent: { xs: "flex-start", md: "center" },
+                          alignItems: { xs: "flex-start", md: "center" },
                           flex: 1,
                           minHeight: 0,
                           position: "relative",
                           zIndex: "100",
+                          width: "100%",
                         }}
                       >
                         {gameOverData?.userWon ? (
