@@ -7,7 +7,7 @@ const kn = {
   LISTEN: "ಕೇಳಿ",
 
   // Status
-  LOADING_GAME: "ಆಟ ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+  LOADING_GAME: "ಆಟವು ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
 
   // Feedback
   HURRAY: "ಅಭಿನಂದನೆಗಳು!!!",
@@ -15,12 +15,12 @@ const kn = {
   DEMO_COMPLETE: "ಡೆಮೊ ಪೂರ್ಣಗೊಂಡಿದೆ!",
   DEMO_COMPLETION_SUBTITLE: "ನೀವು ಮಾತನಾಡಲು ಪ್ರಾರಂಭಿಸಲು ಸಿದ್ಧರಾಗಿದ್ದೀರಿ!",
   DEMO_COMPLETION_MESSAGE:
-    "ಅದ್ಭುತ! ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡುವುದು ಮತ್ತು ಕೇಳುವುದು ಹೇಗೆ ಎಂದು ನೀವು ಕಲಿತಿದ್ದೀರಿ. ಈಗ ನೈಜ ವಾಕ್ಯಗಳೊಂದಿಗೆ ಅಭ್ಯಾಸ ಮಾಡುವ ಸಮಯ!",
+    "ಅದ್ಭುತ! ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡುವುದು ಮತ್ತು ಕೇಳುವುದು ಹೇಗೆ ಎಂದು ನೀವು ಕಲಿತಿದ್ದೀರಿ. ಈಗ ನಿಜವಾದ ವಾಕ್ಯಗಳೊಂದಿಗೆ ಅಭ್ಯಾಸ ಮಾಡುವ ಸಮಯ!",
   DEMO_COMPLETION_START_GAME: "ಮಾತನಾಡಲು ಪ್ರಾರಂಭಿಸಿ",
   DEMO_COMPLETION_REPLAY: "ಡೆಮೊವನ್ನು ಮರು ಪ್ಲೇ ಮಾಡಿ",
 
   // Errors
-  GAME_ERROR: "ಆಟವನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ",
+  GAME_ERROR: "ಆಟವನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ತಪ್ಪಾಗಿದೆ",
   NO_OPTIONS: "ಯಾವುದೇ ಆಯ್ಕೆಗಳು ಲಭ್ಯವಿಲ್ಲ",
 
   // Microphone / Audio
@@ -73,18 +73,19 @@ const kn = {
   FEEDBACK_CORRECT: "🎉 ಸರಿಯಿದೆ!",
   FEEDBACK_WRONG: "😢 ಅಯ್ಯೋ! ತಪ್ಪು!",
   MEMORY_TIME_UP: "ಸಮಯ ಮುಗಿದಿದೆ!",
-  MEMORY_CLICK_LETTERS: "ಕೆಳಗೆ ಅಕ್ಷರಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ...",
+  MEMORY_CLICK_LETTERS: "ಕೆಳಗಿರುವ ಅಕ್ಷರಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ...",
   MEMORY_REMOVE_LAST: "ಕೊನೆಯದನ್ನು ತೆಗೆದುಹಾಕಿ",
   MEMORY_CHECK_SEQUENCE: "ಅನುಕ್ರಮವನ್ನು ಪರಿಶೀಲಿಸಿ",
   MEMORY_CHECK: "ಪರಿಶೀಲಿಸಿ",
   SUCCESS_NEXT_LEVEL: "ಮುಂದಿನ ಹಂತ",
   SUCCESS_PERFECT: "ಅದ್ಭುತ! ನೀವು ಎಲ್ಲವನ್ನೂ ಸರಿಯಾಗಿ ಮಾಡಿದ್ದೀರಿ!",
-  SUCCESS_EXCELLENT: "🎯 ಅತ್ಯುತ್ತಮ ಕೆಲಸ! ನೀವು ಬಹುತೇಕ ಪರ್ಫೆಕ್ಟ್!",
+  SUCCESS_EXCELLENT: "🎯 ಅತ್ಯುತ್ತಮ ಕೆಲಸ! ನೀವು ಬಹುತೇಕ ಸರಿ ಮಾಡಿದ್ದೀರಿ!",
   SUCCESS_GREAT: "👏 ಭಲೇ! ನೀವು ತುಂಬಾ ಚೆನ್ನಾಗಿ ಕಲಿಯುತ್ತಿದ್ದೀರಿ!",
   SUCCESS_GOOD: "💪 ಒಳ್ಳೆಯ ಪ್ರಯತ್ನ! ಅಭ್ಯಾಸ ಮುಂದುವರೆಸಿ!",
-  SUCCESS_NICE_TRY: "🌱 ನೈಸ್ ಟ್ರೈ! ಪ್ರತಿ ಪ್ರಯತ್ನವೂ ನಿಮ್ಮನ್ನು ಬಲಗೊಳಿಸುತ್ತದೆ!",
+  SUCCESS_NICE_TRY:
+    "🌱 ಉತ್ತಮ ಪ್ರಯತ್ನ! ಪ್ರತಿ ಪ್ರಯತ್ನವೂ ನಿಮ್ಮನ್ನು ಬಲಗೊಳಿಸುತ್ತದೆ!",
   SUCCESS_MASCOT_MESSAGE:
-    "ನಾನು ನಿಮ್ಮ ಬಗ್ಗೆ ತುಂಬಾ ಹೆಮ್ಮೆಪಡುತ್ತೇನೆ! ಹೀಗೆ ಮುಂದುವರಿಯಿರಿ!",
+    "ನಾನು ನಿಮ್ಮ ಬಗ್ಗೆ ತುಂಬಾ ಹೆಮ್ಮೆಪಡುತ್ತೇನೆ! ಹೀಗೆಯೇ ಮುಂದುವರಿಯಿರಿ!",
   FUEL_LABEL: "ಇಂಧನ:",
   FUEL_READY_TO_LAUNCH: "ಉಡ್ಡಯನಕ್ಕೆ ಸಿದ್ಧ!",
   PRACTICE_MESSAGE_STEP_COMPLETE:
@@ -98,12 +99,12 @@ const kn = {
   ASSESSMENT_TEST_LANGUAGE_SKILLS: "ನಿಮ್ಮ ಭಾಷಾ ಕೌಶಲ್ಯವನ್ನು ಪರೀಕ್ಷಿಸೋಣ",
   ASSESSMENT_GOOD_LANGUAGE_SKILLS: "ನಿಮಗೆ ಉತ್ತಮ ಭಾಷಾ ಕೌಶಲ್ಯವಿದೆ",
   ASSESSMENT_TAKE_COMPLETE_LEVEL:
-    "ಹಂತವನ್ನು {level}  ಪೂರ್ಣಗೊಳಿಸಲು ಮೌಲ್ಯಮಾಪನ ತೆಗೆದುಕೊಳ್ಳಿ.",
+    "ಹಂತವನ್ನು {level} ಪೂರ್ಣಗೊಳಿಸಲು ಮೌಲ್ಯಮಾಪನ ತೆಗೆದುಕೊಳ್ಳಿ.",
   ASSESSMENT_TAKE_DISCOVER_LEVEL:
-    "ನಿಮ್ಮ ಮಟ್ಟವನ್ನು ಕಂಡುಹಿಡಿಯಲು ಮೌಲ್ಯಮಾಪನ ತೆಗೆದುಕೊಳ್ಳಿ",
+    "ನಿಮ್ಮ ಹಂತವನ್ನು ಕಂಡುಹಿಡಿಯಲು ಮೌಲ್ಯಮಾಪನ ತೆಗೆದುಕೊಳ್ಳಿ",
   ASSESSMENT_START_F1: "F1 ಪ್ರಾರಂಭಿಸಿ",
-  ASSESSMENT_START_F2: "F2  ಪ್ರಾರಂಭಿಸಿ",
-  ASSESSMENT_START_F3: "F3  ಪ್ರಾರಂಭಿಸಿ",
+  ASSESSMENT_START_F2: "F2 ಪ್ರಾರಂಭಿಸಿ",
+  ASSESSMENT_START_F3: "F3 ಪ್ರಾರಂಭಿಸಿ",
   ASSESSMENT_LEARN_LETTERS: "ಅಕ್ಷರಗಳನ್ನು ಕಲಿಯಿರಿ",
   ASSESSMENT_START_LEVEL: "ಹಂತವನ್ನು {level} ಆರಂಭಿಸಿ",
   ASSESSMENT_WORDS_LEARNT: "ಕಲಿತ ಪದಗಳು",
@@ -121,8 +122,9 @@ const kn = {
     "ನೀವು {count}ನೇ ಮೌಲ್ಯಮಾಪನವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ",
   ASSESSMENT_END_LEVEL_COMPLETED:
     "ನೀವು Level {level} ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ",
-  ASSESSMENT_END_MORE_PRACTICE: "ಸ್ವಲ್ಪ ಹೆಚ್ಚು ಅಭ್ಯಾಸ ಅಗತ್ಯ",
-  ASSESSMENT_END_RATE_EXPERIENCE: "Level {level} ಗೆ ನಿಮ್ಮ ಅನುಭವವನ್ನು ರೇಟ್ ಮಾಡಿ",
+  ASSESSMENT_END_MORE_PRACTICE: "ಸ್ವಲ್ಪ ಹೆಚ್ಚು ಅಭ್ಯಾಸ ಅಗತ್ಯವಿದೆ",
+  ASSESSMENT_END_RATE_EXPERIENCE:
+    "Level {level}ಕ್ಕೆ ನಿಮ್ಮ ಅನುಭವವನ್ನು ರೇಟ್ ಮಾಡಿ",
   ASSESSMENT_START_ASSESSMENT: "ಮೌಲ್ಯಮಾಪನ ಪ್ರಾರಂಭಿಸಿ",
 
   // Discovery
@@ -134,19 +136,19 @@ const kn = {
   // Loading/Error states
   LOADING_OVERLAY_ARIA: "ಲೋಡ್ ಆಗುತ್ತಿದೆ, ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ",
   LOADING_FETCHING_DETAILS:
-    "ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ, ನಾವು ನಿಮಗಾಗಿ ವಿವರಗಳನ್ನು ತರುತ್ತಿದ್ದೇವೆ…",
+    "ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ, ನಾವು ನಿಮಗೆ ವಿವರಗಳನ್ನು ಪಡೆಯುತ್ತಿದ್ದೇವೆ…",
   ASSESSMENT_NO_USERNAME_QUERY_PARAM:
     "ದಯವಿಟ್ಟು query param ನಲ್ಲಿ username ಸೇರಿಸಿ",
   ASSESSMENT_ALPHABET_CHART_TOOLTIP_TITLE: "📚 ವರ್ಣಮಾಲೆ ಚಾರ್ಟ್‌",
   ASSESSMENT_ALPHABET_CHART_TOOLTIP_DESC:
     "ನಿಮಗೆ ಅಕ್ಷರಗಳು ಅಥವಾ ಗುಣಿತಾಕ್ಷರಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಲು ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿರುವ ಚಾರ್ಟ್‌ ನೋಡಿ.",
   ERROR_SPEECH_RECOGNITION_BROWSER_UNSUPPORTED:
-    "ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಮಾತು ಗುರುತಿಸುವಿಕೆಯನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ.",
+    "ನಿಮ್ಮ ಬ್ರೌಸರ್‌ ಮಾತು ಗುರುತಿಸುವಿಕೆಯನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ.",
 
   // Voice prompts
   VOICE_COULD_NOT_HEAR_AGAIN:
     "ಕ್ಷಮಿಸಿ ನನಗೆ ಧ್ವನಿ ಕೇಳಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ನೀವು ಪುನಃ ಮಾತನಾಡಬಹುದೇ?",
-  VOICE_PROMPT_SPEAK_APPROPRIATELY: "ದಯವಿಟ್ಟು ಸರಿಯಾಗಿ  ಮಾತನಾಡಿ.",
+  VOICE_PROMPT_SPEAK_APPROPRIATELY: "ದಯವಿಟ್ಟು ಸರಿಯಾಗಿ ಮಾತನಾಡಿ.",
   VOICE_PROMPT_SPEAK_PROPERLY: "ದಯವಿಟ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ.",
   // Main layout / game results
   MAIN_LAYOUT_READY_CHALLENGE: "ಸವಾಲಿಗೆ ಸಿದ್ಧರಿದ್ದೀರಾ?",
@@ -163,7 +165,7 @@ const kn = {
 
   // TOWRE flow
   TOWRE_MSG_LOOK_AT_WORDS:
-    "ಪದಗಳನ್ನು ನೋಡಿ.ನೀವು ಅವುಗಳನ್ನು ಶೀಘ್ರದಲ್ಲೇ ಓದುತ್ತೀರಿ — ಎಡದಿಂದ ಬಲಕ್ಕೆ, ಮೇಲಿಂದ ಕೆಳಗೆ",
+    "ಪದಗಳನ್ನು ನೋಡಿ. ನೀವು ಅವುಗಳನ್ನು ಶೀಘ್ರದಲ್ಲೇ ಓದಬೇಕು — ಎಡದಿಂದ ಬಲಕ್ಕೆ, ಮೇಲಿಂದ ಕೆಳಗೆ",
   TOWRE_MSG_NEXT_WORDS_SHORT: "ನಿಮ್ಮ ಮುಂದಿನ ಪದಗಳು ಬರುತ್ತಿವೆ!",
   TOWRE_MSG_NEXT_WORDS_GREAT: "ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ! ನಿಮ್ಮ ಮುಂದಿನ ಪದಗಳು ಬರುತ್ತಿವೆ.",
   TOWRE_MSG_NEXT_SET_HINT:
@@ -184,7 +186,7 @@ const kn = {
   TOWRE_RESULT_WELL_DONE: "ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ!",
   TOWRE_RESULT_READING_FASTER: "ನೀವು ವೇಗವಾಗಿ ಓದುತ್ತಿದ್ದೀರಿ.",
   TOWRE_SCORE_UNAVAILABLE_WARNING:
-    "⚠️ ನಿಮ್ಮ ಬ್ರೌಸರ್ ಸ್ಪೀಚ್ ರೆಕಗ್ನಿಷನ್ ಅನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ, ಆದ್ದರಿಂದ ಪದಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸ್ಕೋರ್ ಮಾಡಲಾಗಲಿಲ್ಲ. ನಿಖರ ಫಲಿತಾಂಶಕ್ಕಾಗಿ Google Chrome ಅಥವಾ Microsoft Edge ಬಳಸಿ.",
+    "⚠️ ನಿಮ್ಮ ಬ್ರೌಸರ್ ಮಾತು ಗುರುತಿಸುವಿಕೆಯನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ, ಆದ್ದರಿಂದ ಪದಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸ್ಕೋರ್ ಮಾಡಲಾಗಲಿಲ್ಲ. ನಿಖರ ಫಲಿತಾಂಶಕ್ಕಾಗಿ Google Chrome ಅಥವಾ Microsoft Edge ಬಳಸಿ.",
   TOWRE_RESULT_WORDS_PER_MINUTE: "ನಿಮಿಷಕ್ಕೆ ಪದಗಳು",
   TOWRE_RESULT_NEW_WORDS_LEARNT: "ಹೊಸದಾಗಿ ಕಲಿತ ಪದಗಳು",
   TOWRE_RESULT_TOTAL_WORDS_LEARNT: "ಒಟ್ಟು ಕಲಿತ ಪದಗಳು",
@@ -197,7 +199,7 @@ const kn = {
   TOWRE_VIEW_RESULTS: "ಫಲಿತಾಂಶ ನೋಡಿ",
   TOWRE_ATTEMPTED_WORDS: "ಪ್ರಯತ್ನಿಸಿದ ಪದಗಳು",
   TOWRE_CORRECT_WORDS: "ಸರಿಯಾದ ಪದಗಳು",
-  TOWRE_UNATTEMPTED_WORDS: "ಪ್ರಯತ್ನಿಸದ ಪದಗಳು",
+  TOWRE_UNATTEMPTED_WORDS: "ಪ್ರಯತ್ನ ಪಡದ ಪದಗಳು",
   TOWRE_RECORDING: "ರೆಕಾರ್ಡಿಂಗ್",
 
   // Misc components
@@ -211,7 +213,7 @@ const kn = {
   WORD_WALL_WORDS_TRY_AGAIN: "ಪುನಃ ಪ್ರಯತ್ನಿಸಬೇಕಾದ ಪದಗಳು!",
   WORD_WALL_OPEN_GIFTS: "ಉಡುಗೊರೆಗಳನ್ನು ತೆರೆಯೋಣ",
   WORD_WALL_CLICK_BUBBLE: "ಬಬಲ್ ಕ್ಲಿಕ್ ಮಾಡಿ",
-  WORD_WALL_REVIEW_THIS_IS_CALLED: "ಇದನ್ನು... ಎಂದು ಕರೆಯಲಾಗುತ್ತದೆ",
+  WORD_WALL_REVIEW_THIS_IS_CALLED: "... ಎಂದು ಇದನ್ನು‌ ಕರೆಯಲಾಗುತ್ತದೆ",
   WORD_WALL_CAN_YOU_FIND: "ನೀವು ಕಂಡುಹಿಡಿಯಬಲ್ಲಿರಾ?",
   WORD_WALL_LISTEN_ENGLISH: "ಇಂಗ್ಲಿಷ್",
 
