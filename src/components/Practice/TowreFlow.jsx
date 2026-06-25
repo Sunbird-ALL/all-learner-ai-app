@@ -1154,6 +1154,7 @@ const TowreFlow = ({
         console.log("✅ Speech recognition started (onstart event)");
         setListening(true);
         recognitionStartedRef.current = true;
+        isRecognitionActiveRef.current = true;
       };
 
       recognitionRef.current.onresult = (event) => {
@@ -1196,13 +1197,20 @@ const TowreFlow = ({
       recognitionRef.current.onend = () => {
         console.log("ℹ️ Speech recognition ended");
         setListening(false);
+        isRecognitionActiveRef.current = false;
 
         // Auto-restart if we should be listening
         // Use refs to avoid stale closure issues
         if (shouldBeListeningRef.current) {
+          // Android needs more time for audio hardware to fully release between sessions
+          const restartDelay = /Android/i.test(navigator.userAgent) ? 500 : 100;
           setTimeout(() => {
             // Check current state via refs
-            if (shouldBeListeningRef.current && recognitionRef.current) {
+            if (
+              shouldBeListeningRef.current &&
+              recognitionRef.current &&
+              !isRecognitionActiveRef.current
+            ) {
               try {
                 recognitionRef.current.start();
                 console.log("🔄 Auto-restarting speech recognition");
@@ -1214,7 +1222,7 @@ const TowreFlow = ({
                 );
               }
             }
-          }, 100);
+          }, restartDelay);
         }
       };
     }
@@ -1325,6 +1333,8 @@ const TowreFlow = ({
   // Track listening state changes and auto-restart if it stops unexpectedly
   const shouldBeListeningRef = useRef(false);
   const recognitionStartedRef = useRef(false);
+  // Tracks actual SR running state synchronously (not stale React state)
+  const isRecognitionActiveRef = useRef(false);
   const retryCountRef = useRef(0);
   const maxRetries = 3;
   const retryTimeoutRef = useRef(null);
@@ -1446,9 +1456,10 @@ const TowreFlow = ({
       // Debounce restart attempts to avoid rapid-fire restarts during re-renders
       restartDebounceRef.current = setTimeout(() => {
         // Double-check conditions after debounce delay
+        // Use isRecognitionActiveRef (not stale React state) to avoid duplicate start
         if (
           shouldBeListeningRef.current &&
-          !listening &&
+          !isRecognitionActiveRef.current &&
           showFinalWords &&
           !showResults &&
           !isRestartingRef.current
@@ -1466,11 +1477,11 @@ const TowreFlow = ({
               shouldBeListeningRef.current &&
               attemptNumber <= maxRetries
             ) {
-              // Check listening state right before attempting restart
-              // If already listening, don't restart
-              if (listening) {
+              // Check actual SR running state right before attempting restart
+              // Use ref (not stale React state) to avoid calling .start() when already running
+              if (isRecognitionActiveRef.current) {
                 console.log(
-                  "ℹ️ Recognition already listening, skipping restart"
+                  "ℹ️ Recognition already active (ref check), skipping restart"
                 );
                 isRestartingRef.current = false;
                 retryCountRef.current = 0;
@@ -1749,26 +1760,33 @@ const TowreFlow = ({
             return;
           }
 
-          // Check microphone permission
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-              audio: true,
-            });
-            stream.getTracks().forEach((track) => track.stop()); // Stop immediately, we just needed permission
-            console.log("✅ Microphone permission granted");
-          } catch (error) {
-            console.error("❌ Microphone permission denied or error:", error);
-            reportError({
-              type: "audio_error",
-              action: "towre_mic_permission_denied",
-              message: error?.message || "Microphone permission denied",
-            });
-            alert(ui.TOWRE_MIC_ACCESS_REQUIRED);
-            return;
-          }
+          const isAndroid = /Android/i.test(navigator.userAgent);
 
-          // Start audio recording
-          await startAudioRecording();
+          if (isAndroid) {
+            // On Android Chrome, the getUserMedia permission check opens and immediately
+            // closes the mic. If SR starts too soon after, the audio hardware hasn't
+            // fully released and SR captures silence → ends with no results.
+            // Skip the getUserMedia check on Android — SR will request mic permission itself.
+          } else {
+            // Check microphone permission on non-Android
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+              });
+              stream.getTracks().forEach((track) => track.stop());
+              console.log("✅ Microphone permission granted");
+            } catch (error) {
+              console.error("❌ Microphone permission denied or error:", error);
+              reportError({
+                type: "audio_error",
+                action: "towre_mic_permission_denied",
+                message: error?.message || "Microphone permission denied",
+              });
+              alert(ui.TOWRE_MIC_ACCESS_REQUIRED);
+              return;
+            }
+            await startAudioRecording();
+          }
 
           // Reset transcript before starting
           resetTranscript();
@@ -1807,8 +1825,12 @@ const TowreFlow = ({
             resetTranscript();
             transcriptRef.current = "";
 
-            // Start recognition with a small delay to ensure clean state
-            await new Promise((resolve) => setTimeout(resolve, 200));
+            // On Android, use a longer delay — the audio system needs more time
+            // to be ready after the component mounts or after a previous mic session.
+            const startDelay = /Android/i.test(navigator.userAgent)
+              ? 1500
+              : 200;
+            await new Promise((resolve) => setTimeout(resolve, startDelay));
 
             if (recognitionRef.current) {
               recognitionRef.current.lang = getBrowserLanguage(lang);
@@ -2110,6 +2132,33 @@ const TowreFlow = ({
       mediaRecorderRef.current.state !== "inactive"
     ) {
       mediaRecorderRef.current.stop();
+    } else if (!mediaRecorderRef.current) {
+      // Android SR-only path — no MediaRecorder, score directly from transcript.
+      // Defer so the caller's setLoading(true) runs first, then we set it back to false.
+      setTimeout(() => {
+        const transcripts = transcriptRef.current || "";
+        setTranscripts(transcripts);
+        const transcriptWords = normalize(transcripts).filter(
+          (w) => w && w.trim().length > 0
+        );
+        const transcriptPhonetics = new Set(
+          transcriptWords.map(getPhonetic).filter((ph) => ph && ph.length > 0)
+        );
+        allWords.forEach((word) => {
+          const lower = word?.title?.toLowerCase()?.trim();
+          if (!lower || lower.length === 0) {
+            word.isCorrect = false;
+            return;
+          }
+          const wordPhonetic = getPhonetic(lower);
+          const hasValidPhonetic = wordPhonetic && wordPhonetic.length > 0;
+          word.isCorrect =
+            transcriptWords.includes(lower) ||
+            (hasValidPhonetic && transcriptPhonetics.has(wordPhonetic));
+        });
+        setLoading(false);
+        setCompleted(true);
+      }, 100);
     }
   };
 
