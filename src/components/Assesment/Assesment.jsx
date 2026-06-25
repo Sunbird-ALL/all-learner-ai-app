@@ -2227,6 +2227,9 @@ const Assesment = ({ discoverStart }) => {
                     fontFamily: getFontFamily(lang),
                     lineHeight: "25px",
                     textShadow: "#000 1px 0 10px",
+                    padding: "0 12px",
+                    textAlign: "center",
+                    display: "block",
                   }}
                 >
                   {shouldShowF3

@@ -775,7 +775,7 @@ const WordsOrImage = ({
           justifyContent: "center",
           alignItems: "center",
           flexGrow: 1,
-          pt: "0px",
+          pt: { xs: "24px", md: "0px" },
           pb: { xs: "0px", md: "16px" },
           overflowY: { xs: "auto", md: "hidden" },
           boxSizing: "border-box",
@@ -1125,7 +1125,7 @@ const WordsOrImage = ({
                             : "clamp(1.6rem, 2.5vw, 3.8rem)",
                           fontWeight: language === "te" ? 400 : 700,
                           fontFamily: getFontFamily(language),
-                          lineHeight: isMobile ? "1.6" : "50px",
+                          lineHeight: 1.4,
                           ...(mechanism_id === "mechanic_15"
                             ? {
                                 position: "relative",

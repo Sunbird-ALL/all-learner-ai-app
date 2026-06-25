@@ -7334,7 +7334,7 @@ const LetterTrain = ({
     >
       <Box
         sx={{
-          overflow: { sm: "hidden", xs: "visible" },
+          overflowX: "hidden",
           display: "flex",
           flexDirection: "column",
         }}
