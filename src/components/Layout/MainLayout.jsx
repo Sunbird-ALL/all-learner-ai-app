@@ -752,13 +752,15 @@ const MainLayout = (props) => {
     let start = progressBarStartIndex;
     let end = Math.min(start + VISIBLE_STEPS, totalSteps);
 
-    // If current step is not in visible range, adjust to include it
-    if (currentPracticeStep < start) {
-      start = Math.max(0, currentPracticeStep - 2); // Show 2 steps before current
-      end = Math.min(start + VISIBLE_STEPS, totalSteps);
-    } else if (currentPracticeStep >= end) {
-      end = Math.min(currentPracticeStep + 3, totalSteps); // Show 2 steps after current
-      start = Math.max(0, end - VISIBLE_STEPS);
+    // If current step is not in visible range, adjust to include it (Desktop only, disabled on mobile to allow manual navigation)
+    if (!isMobile) {
+      if (currentPracticeStep < start) {
+        start = Math.max(0, currentPracticeStep - 2); // Show 2 steps before current
+        end = Math.min(start + VISIBLE_STEPS, totalSteps);
+      } else if (currentPracticeStep >= end) {
+        end = Math.min(currentPracticeStep + 3, totalSteps); // Show 2 steps after current
+        start = Math.max(0, end - VISIBLE_STEPS);
+      }
     }
 
     return { start, end };
@@ -1530,7 +1532,10 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarNext}
                                 disabled={!canGoNext}
                                 sx={{
-                                  display: { xs: "none", sm: "inline-flex" },
+                                  display: {
+                                    xs: "inline-flex",
+                                    sm: "inline-flex",
+                                  },
                                   width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
                                     xs: "24px",

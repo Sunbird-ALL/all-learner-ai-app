@@ -277,6 +277,11 @@ const styles = `
     .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > img {
       margin: 20px 5px 5px !important;
     }
+    .pf-graph-img {
+      width: 180px !important;
+      height: 40px !important;
+      top: -20px !important;
+    }
   }
 `;
 
@@ -1405,18 +1410,25 @@ const ParagraphFlow = ({
               position: "relative",
               transition: "all 0.4s ease",
             }}
-            onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.1)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             {isSpeaking && (
               <img
                 src={graphImg}
                 alt="Graph"
+                className="pf-graph-img"
                 style={{
                   position: "absolute",
-                  top: "-20px",
-                  width: "200px",
-                  height: "39px",
+                  top: "-30px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "280px",
+                  height: "60px",
+                  maxWidth: "none",
+                  maxHeight: "none",
                   marginBottom: "10px",
                   transition: "all 0.5s ease",
                 }}
