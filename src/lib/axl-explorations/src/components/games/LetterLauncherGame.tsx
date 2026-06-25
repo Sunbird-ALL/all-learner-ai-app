@@ -1247,6 +1247,7 @@ export function LetterLauncherGame({ onBack, contentCount = 30 }: LetterLauncher
               requiredFuel={requiredFuel}
               maxFuel={maxFuel}
               hidePercentage={true}
+              selectedLanguage={selectedLanguage || 'en'}
             />
           </div>
 

@@ -662,7 +662,10 @@ const Practice = () => {
           stepName = step.fullName;
         }
         setOpenMessageDialog({
-          message: `You have successfully completed ${stepName} `,
+          message: ui.PRACTICE_MESSAGE_STEP_COMPLETE.replace(
+            "{stepName}",
+            stepName
+          ),
         });
       }, 1200);
     }
@@ -684,7 +687,7 @@ const Practice = () => {
   useEffect(() => {
     if (voiceText === "error") {
       setOpenMessageDialog({
-        message: "Sorry I couldn't hear a voice. Could you please speak again?",
+        message: ui.VOICE_COULD_NOT_HEAR_AGAIN,
         isError: true,
       });
       setVoiceText("");
@@ -692,7 +695,7 @@ const Practice = () => {
     }
     if (voiceText === "profanity") {
       setOpenMessageDialog({
-        message: `Please speak appropriately.`,
+        message: ui.VOICE_PROMPT_SPEAK_APPROPRIATELY,
         severity: "warning",
         isError: true,
       });

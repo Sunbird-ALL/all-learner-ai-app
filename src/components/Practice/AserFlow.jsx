@@ -1,61 +1,39 @@
-import React, { useState, useEffect, useRef } from "react";
+import { Box } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Confetti from "react-confetti";
-import { nextimg as nextImg } from "../../utils/imageAudioLinks";
-import MainLayout from "../Layout/MainLayout";
-import SafeYouTubePlayer from "../SafeYouTubePlayer";
-import {
-  practiceSteps,
-  WordRedCircle,
-  StopButton,
-  SpeakButton,
-  ListenButton,
-  NextButtonRound,
-  RetryIcon,
-  getLocalData,
-  setLocalData,
-  sendTestRigScore,
-} from "../../utils/constants";
-import { phoneticMatch } from "../../utils/phoneticUtils";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
-import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
-import Joyride from "react-joyride";
-import LanguageModalNew from "../../utils/LanguageModal";
-import {
-  fetchASROutput,
-  handleTextEvaluation,
-  callTelemetryDiscovery,
-} from "../../utils/apiUtil";
-import AudioTooltipModal from "./AudioTooltipModal";
-import { doubleMetaphone } from "double-metaphone";
-import correctSound from "../../assets/correct.wav";
+import { useNavigate } from "react-router-dom";
 import wrongSound from "../../assets/audio/wrong.wav";
-import {
-  addLesson,
-  addPointer,
-  fetchUserPoints,
-  createLearnerProgress,
-} from "../../services/orchestration/orchestrationService";
-import {
-  fetchGetSetResult,
-  callEngagementPredictor,
-  clearInteractions,
-} from "../../services/learnerAi/learnerAiService";
+import listenBearGif from "../../assets/beardances.gif";
+import bubbleImg from "../../assets/bubble.png";
+import correctSound from "../../assets/correct.wav";
+import hintimg from "../../assets/hintsicon.svg";
 import {
   fetchAssessmentData,
   fetchPaginatedContent,
 } from "../../services/content/contentService";
-import { useNavigate } from "react-router-dom";
+import {
+  callEngagementPredictor,
+  clearInteractions,
+  fetchGetSetResult,
+  updateLearnerProfile,
+} from "../../services/learnerAi/learnerAiService";
+import {
+  addLesson,
+  addPointer,
+} from "../../services/orchestration/orchestrationService";
 import { uniqueId } from "../../services/utilService";
-import { updateLearnerProfile } from "../../services/learnerAi/learnerAiService";
-import bubbleImg from "../../assets/bubble.png";
-import { Box } from "@mui/material";
-import listenBearGif from "../../assets/beardances.gif";
-import hintimg from "../../assets/hintsicon.svg";
-import { MessageDialog } from "../Assesment/Assesment";
+import { callTelemetryDiscovery } from "../../utils/apiUtil";
+import {
+  getLocalData,
+  ListenButton,
+  sendTestRigScore,
+  setLocalData,
+} from "../../utils/constants";
 import { DISCOVERY_SET_FLOW_STORAGE } from "../../utils/discoverSetFlow";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
+import { MessageDialog } from "../Assesment/Assesment";
+import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 
 const AserFlow = ({
   // setVoiceText,
@@ -746,7 +724,10 @@ const AserFlow = ({
                   transform: "translate(-50%, -50%)",
                   cursor: disableBubbles ? "not-allowed" : "pointer",
                   textAlign: "center",
-                  zIndex: 99999,
+                  zIndex:
+                    isDemo && char === correctLetter && !disableBubbles
+                      ? 999999
+                      : 1,
                   opacity: disableBubbles ? 0.5 : 1,
                   pointerEvents: disableBubbles ? "none" : "auto",
                 }}
@@ -817,26 +798,6 @@ const AserFlow = ({
                   >
                     {char}
                   </span>
-
-                  {/* Pointer under bubble for demo - show only for correct bubble in demo mode */}
-                  {isDemo && char === correctLetter && !disableBubbles && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "calc(100% + 20px)",
-                        left: "0%",
-                        rotate: "180deg",
-                        transform: "translateX(-50%)",
-                        zIndex: 10001,
-                        fontSize: "48px",
-                        animation: "pointDown 1.5s ease-in-out infinite",
-                        pointerEvents: "none",
-                        filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-                      }}
-                    >
-                      👇
-                    </div>
-                  )}
                 </div>
               </div>
             );
@@ -915,7 +876,7 @@ const AserFlow = ({
             >
               <ListenButton height={50} width={50} />
             </Box>
-            {showSpeakerPointer && (
+            {(showSpeakerPointer || (isDemo && !disableBubbles)) && (
               <div
                 style={{
                   position: "absolute",

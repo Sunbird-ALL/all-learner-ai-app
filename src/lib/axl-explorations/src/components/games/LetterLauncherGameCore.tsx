@@ -4,6 +4,7 @@ import { Language } from "../../constants/languages";
 import { FuelCalculationResult, getFuelTierText } from "../../utils/fuelCalculation";
 import { useState, useEffect } from "react";
 import React from "react";
+import { getUiStrings } from "../../../../../constants/strings";
 
 export interface LetterLauncherQuestion {
   audioLetter: string; // The letter sound that plays
@@ -50,6 +51,7 @@ export function LetterLauncherGameCore({
   className = '',
   fuelIconImage
 }: LetterLauncherGameCoreProps) {
+  const ui = getUiStrings(selectedLanguage);
   // State for fuel fill animation
   const [fillWidth, setFillWidth] = useState(0);
   const [sliderPosition, setSliderPosition] = useState(0);
@@ -113,32 +115,6 @@ export function LetterLauncherGameCore({
     };
   }, [disabled, showFeedback, onAnswerSelect]);
 
-  // Get localized text
-  const getLocalizedText = (key: string) => {
-    const texts = {
-      isThisMatch: {
-        en: 'Does this letter match the sound?',
-        te: 'ఈ అక్షరం ధ్వనికి సరిపోతుందా?',
-        kn: 'ಈ ಅಕ್ಷರವು ಧ್ವನಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆಯೇ?',
-        mr: 'हा अक्षर आवाजाशी जुळतो का?'
-      },
-      correctMessage: {
-        en: '🎉 Correct!',
-        te: '🎉 సరైనది!',
-        kn: '🎉 ಸರಿಯಿದೆ!',
-        mr: '🎉 बरोबर!'
-      },
-      wrongMessage: {
-        en: '😢 Oops! Wrong!',
-        te: '😢 అయ్యో! తప్పు!',
-        kn: '😢 ಅಯ್ಯೋ! ತಪ್ಪು!',
-        mr: '😢 अरेच्या! चुकीचे!'
-      }
-    };
-    
-    return texts[key as keyof typeof texts]?.[selectedLanguage] || texts[key as keyof typeof texts]?.en || '';
-  };
-
   return (
     <div className={`flex-1 flex flex-col justify-center px-1 sm:px-2 ${className}`}>
       <div className="space-y-4 sm:space-y-6">
@@ -160,7 +136,7 @@ export function LetterLauncherGameCore({
                   : 'bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg'
               } ${onSpeakerClick ? 'cursor-pointer hover:opacity-70 active:scale-95' : ''}`}
               onClick={onSpeakerClick}
-              title={onSpeakerClick ? 'Tap to play audio' : undefined}
+              title={onSpeakerClick ? ui.A11Y_PLAY_AUDIO : undefined}
             >
               <span className="text-xl sm:text-2xl">🔊</span>
             </div>
@@ -263,7 +239,7 @@ export function LetterLauncherGameCore({
                   ?  'text-green-600'
                   : 'text-red-600'
               }`}>
-                {isCorrect ? getLocalizedText('correctMessage') : getLocalizedText('wrongMessage')}
+                {isCorrect ? ui.FEEDBACK_CORRECT : ui.FEEDBACK_WRONG}
               </p>
               
               {/* Fuel earned display with filling animation */}
@@ -298,7 +274,7 @@ export function LetterLauncherGameCore({
                         fuelEarned.speedTier === 'medium' ? 'text-xl sm:text-2xl' :
                         'text-lg sm:text-xl'
                       }`}>
-                        +{fuelEarned.fuelEarned} Fuel
+                        {ui.FUEL_EARNED.replace("{count}", String(fuelEarned.fuelEarned))}
                       </span>
                     </div>
                     
