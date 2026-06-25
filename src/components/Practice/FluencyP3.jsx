@@ -845,7 +845,7 @@ const FluencyP3 = ({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "center",
                 paddingBottom: isMobile ? "20px" : "40px",
               }}
             >

@@ -869,7 +869,7 @@ export function LetterHuntGameCore({
         <div className="flex-shrink-0 flex flex-col justify-center min-h-[20px] sm:min-h-[30px] md:min-h-[40px] lg:min-h-[60px] xl:min-h-[80px]">
           <div className="text-center">
             {showFeedback && (
-              <div className="animate-fade-in mt-4 sm:mt-0">
+              <div className="animate-fade-in mt-4 sm:mt-4 md:mt-6">
                 {isCorrect ? (
                   <div className="text-success">
                     <p className="text-2xl sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl font-bold" style={{ fontFamily }}>

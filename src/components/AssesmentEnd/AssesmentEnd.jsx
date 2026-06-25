@@ -149,7 +149,14 @@ const AssesmentEnd = () => {
       >
         <Box sx={{ position: "relative" }} className={isMobile ? "" : "plane"}>
           <AssesmentCompletePlane />
-          <Box sx={{ position: "absolute", bottom: 135, left: 120 }}>
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 129,
+              left: 115,
+              transform: "rotate(-5deg)",
+            }}
+          >
             <span
               style={{
                 color: "#00B359",
@@ -168,7 +175,7 @@ const AssesmentEnd = () => {
               position: "absolute",
               bottom: 105,
               left: 40,
-              transform: "rotate(-12deg)",
+              transform: "rotate(-5deg)",
             }}
           >
             <span
