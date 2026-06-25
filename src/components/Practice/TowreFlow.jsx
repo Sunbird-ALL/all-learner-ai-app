@@ -1749,28 +1749,31 @@ const TowreFlow = ({
             return;
           }
 
-          // Check microphone permission
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-              audio: true,
-            });
-            stream.getTracks().forEach((track) => track.stop()); // Stop immediately, we just needed permission
-            console.log("✅ Microphone permission granted");
-          } catch (error) {
-            console.error("❌ Microphone permission denied or error:", error);
-            reportError({
-              type: "audio_error",
-              action: "towre_mic_permission_denied",
-              message: error?.message || "Microphone permission denied",
-            });
-            alert(ui.TOWRE_MIC_ACCESS_REQUIRED);
-            return;
-          }
-
-          // On Android Chrome, getUserMedia and Web Speech API cannot share the mic
-          // simultaneously — skip MediaRecorder and use SR only for scoring.
           const isAndroid = /Android/i.test(navigator.userAgent);
-          if (!isAndroid) {
+
+          if (isAndroid) {
+            // On Android Chrome, the getUserMedia permission check opens and immediately
+            // closes the mic. If SR starts too soon after, the audio hardware hasn't
+            // fully released and SR captures silence → ends with no results.
+            // Skip the getUserMedia check on Android — SR will request mic permission itself.
+          } else {
+            // Check microphone permission on non-Android
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+              });
+              stream.getTracks().forEach((track) => track.stop());
+              console.log("✅ Microphone permission granted");
+            } catch (error) {
+              console.error("❌ Microphone permission denied or error:", error);
+              reportError({
+                type: "audio_error",
+                action: "towre_mic_permission_denied",
+                message: error?.message || "Microphone permission denied",
+              });
+              alert(ui.TOWRE_MIC_ACCESS_REQUIRED);
+              return;
+            }
             await startAudioRecording();
           }
 
@@ -1811,8 +1814,10 @@ const TowreFlow = ({
             resetTranscript();
             transcriptRef.current = "";
 
-            // Start recognition with a small delay to ensure clean state
-            await new Promise((resolve) => setTimeout(resolve, 200));
+            // On Android, use a longer delay — the audio system needs more time
+            // to be ready after the component mounts or after a previous mic session.
+            const startDelay = /Android/i.test(navigator.userAgent) ? 800 : 200;
+            await new Promise((resolve) => setTimeout(resolve, startDelay));
 
             if (recognitionRef.current) {
               recognitionRef.current.lang = getBrowserLanguage(lang);
