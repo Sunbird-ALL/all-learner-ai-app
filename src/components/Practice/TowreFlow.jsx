@@ -1767,8 +1767,12 @@ const TowreFlow = ({
             return;
           }
 
-          // Start audio recording
-          await startAudioRecording();
+          // On Android Chrome, getUserMedia and Web Speech API cannot share the mic
+          // simultaneously — skip MediaRecorder and use SR only for scoring.
+          const isAndroid = /Android/i.test(navigator.userAgent);
+          if (!isAndroid) {
+            await startAudioRecording();
+          }
 
           // Reset transcript before starting
           resetTranscript();
@@ -2110,6 +2114,33 @@ const TowreFlow = ({
       mediaRecorderRef.current.state !== "inactive"
     ) {
       mediaRecorderRef.current.stop();
+    } else if (!mediaRecorderRef.current) {
+      // Android SR-only path — no MediaRecorder, score directly from transcript.
+      // Defer so the caller's setLoading(true) runs first, then we set it back to false.
+      setTimeout(() => {
+        const transcripts = transcriptRef.current || "";
+        setTranscripts(transcripts);
+        const transcriptWords = normalize(transcripts).filter(
+          (w) => w && w.trim().length > 0
+        );
+        const transcriptPhonetics = new Set(
+          transcriptWords.map(getPhonetic).filter((ph) => ph && ph.length > 0)
+        );
+        allWords.forEach((word) => {
+          const lower = word?.title?.toLowerCase()?.trim();
+          if (!lower || lower.length === 0) {
+            word.isCorrect = false;
+            return;
+          }
+          const wordPhonetic = getPhonetic(lower);
+          const hasValidPhonetic = wordPhonetic && wordPhonetic.length > 0;
+          word.isCorrect =
+            transcriptWords.includes(lower) ||
+            (hasValidPhonetic && transcriptPhonetics.has(wordPhonetic));
+        });
+        setLoading(false);
+        setCompleted(true);
+      }, 100);
     }
   };
 
