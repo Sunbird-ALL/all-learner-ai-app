@@ -198,6 +198,12 @@ const WordsOrImage = ({
   const multilingualLangCode = getMultilingualLangCode();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isFirefox =
+    typeof navigator !== "undefined" &&
+    navigator.userAgent.toLowerCase().includes("firefox");
+  const isAndroid =
+    typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent);
+  const skipAnswerColor = isFirefox || isAndroid;
   const [abusiveFound, setAbusiveFound] = useState(false);
   const [detectedWord, setDetectedWord] = useState("");
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
@@ -672,14 +678,7 @@ const WordsOrImage = ({
   };
 
   const getAnswerColor = (answer) => {
-    // const isFirefox =
-    //   typeof navigator !== "undefined" &&
-    //   navigator.userAgent.toLowerCase().includes("firefox");
-
-    // if (isFirefox && (answer === true || answer === false)) {
-    //   return "green";
-    // }
-
+    if (skipAnswerColor) return "#333F61";
     if (answer === true) return "green";
     if (answer === false) return "red";
     return "#333F61";
@@ -1266,12 +1265,13 @@ const WordsOrImage = ({
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "1.4" : "50px",
                         //background: "#FFF0BD",
-                        color:
-                          isTranscriptCorrect === true
-                            ? "green"
-                            : isTranscriptCorrect === false
-                            ? "red" // todo: need to change to red
-                            : "#333F61",
+                        color: skipAnswerColor
+                          ? "#333F61"
+                          : isTranscriptCorrect === true
+                          ? "green"
+                          : isTranscriptCorrect === false
+                          ? "red"
+                          : "#333F61",
                         display: isMobile ? "flex" : undefined,
                         flexDirection: isMobile ? "column" : undefined,
                         alignItems: isMobile ? "center" : undefined,
