@@ -16,6 +16,7 @@ import { Language, getNativeLanguageName } from "../../constants/languages";
 import { sessionManager } from "../../utils/sessionManager";
 import { sessionTelemetryManager } from "../../utils/sessionTelemetryManager";
 import { trackingAssessmentService, QuestionSummary } from "../../utils/trackingAssessmentService";
+import { getUiStrings } from "../../../../../constants/strings";
 
 // Extended question interface for multilingual support
 interface MultilingualLetterQuestion extends LetterHuntQuestion {
@@ -1147,7 +1148,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           // (handled in the level completion logic around line 699)
           // The "Next Level" button is for transitioning TO the next level, not completing it
         }}
-        continueButtonText={shouldShowContinue ? "Continue" : undefined}
+        continueButtonText={shouldShowContinue ? getUiStrings(selectedLanguage || 'en').COMMON_CONTINUE : undefined}
       />
     );
   }
