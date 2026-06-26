@@ -142,7 +142,9 @@ const LanguageModalNew = ({ show, word, onClose }) => {
     maxWidth: isMobile ? "420px" : styles.modal.maxWidth,
     backgroundSize: isMobile ? "cover" : styles.modal.backgroundSize,
     backgroundRepeat: isMobile ? "no-repeat" : styles.modal.backgroundRepeat,
-    boxShadow: isMobile ? "0px 10px 30px rgba(0, 0, 0, 0.15)" : styles.modal.boxShadow,
+    boxShadow: isMobile
+      ? "0px 10px 30px rgba(0, 0, 0, 0.15)"
+      : styles.modal.boxShadow,
     padding: isMobile ? "20px 16px" : styles.modal.padding,
   };
 
@@ -194,6 +196,7 @@ const LanguageModalNew = ({ show, word, onClose }) => {
               position: "relative",
               flex: isMobile ? "1 1 110px" : styles.card.flex,
               maxWidth: isMobile ? "140px" : styles.card.maxWidth,
+              padding: entry.text === "te" ? "0px" : styles.card.padding,
             };
 
             const cardIconStyle = {
@@ -201,12 +204,16 @@ const LanguageModalNew = ({ show, word, onClose }) => {
               color: isSelected ? "#fff" : "#333F61",
               fontFamily:
                 entry.text === "te"
-                  ? "Sree Krushnadevaraya, Quicksand"
+                  ? "Quicksand, Sree Krushnadevaraya, sans-serif"
                   : "Quicksand",
               fontSize:
                 entry.text === "te"
-                  ? (isMobile ? "34px" : "42px")
-                  : (isMobile ? "28px" : styles.cardIcon.fontSize),
+                  ? isMobile
+                    ? "34px"
+                    : "42px"
+                  : isMobile
+                  ? "28px"
+                  : styles.cardIcon.fontSize,
             };
 
             const cardTextStyle = {
@@ -214,12 +221,16 @@ const LanguageModalNew = ({ show, word, onClose }) => {
               color: isSelected ? "#fff" : "#333F61",
               fontFamily:
                 entry.text === "te"
-                  ? "Sree Krushnadevaraya, Quicksand"
+                  ? "Quicksand, Sree Krushnadevaraya, sans-serif"
                   : "Quicksand",
               fontSize:
                 entry.text === "te"
-                  ? (isMobile ? "18px" : "22px")
-                  : (isMobile ? "16px" : styles.cardText.fontSize),
+                  ? isMobile
+                    ? "18px"
+                    : "22px"
+                  : isMobile
+                  ? "16px"
+                  : styles.cardText.fontSize,
             };
 
             return (
@@ -229,18 +240,14 @@ const LanguageModalNew = ({ show, word, onClose }) => {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     setSelectedLang(entry.text);
                   }
                 }}
                 onClick={() => setSelectedLang(entry.text)}
               >
-                <div style={cardIconStyle}>
-                  {entry.icon}
-                </div>
-                <div style={cardTextStyle}>
-                  {entry.lang}
-                </div>
+                <div style={cardIconStyle}>{entry.icon}</div>
+                <div style={cardTextStyle}>{entry.lang}</div>
                 <div style={isSelected ? styles.tickMark : styles.noTickMark}>
                   {isSelected && "✔"}
                 </div>
