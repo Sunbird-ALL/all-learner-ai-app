@@ -1903,8 +1903,8 @@ const MainLayout = (props) => {
                       <Box
                         sx={{
                           display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
+                          justifyContent: { xs: "flex-start", md: "center" },
+                          alignItems: { xs: "flex-start", md: "center" },
                           flex: 1,
                           minHeight: 0,
                           position: "relative",
@@ -1947,7 +1947,7 @@ const MainLayout = (props) => {
                               <Typography
                                 sx={{ mb: 1, mt: 1, textAlign: "center" }}
                               >
-                                {!props.pageName === "m8" && (
+                                {props.pageName !== "m8" && (
                                   <span
                                     style={{
                                       fontWeight: 600,

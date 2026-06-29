@@ -1357,7 +1357,8 @@ const WordWall = ({
         <div
           style={{
             position: "relative",
-            height: isMobile ? "calc(100dvh - 250px)" : "65vh",
+            height: isMobile ? "calc(100dvh - 250px)" : "auto",
+            minHeight: "65vh",
             maxHeight: isMobile ? "calc(100dvh - 250px)" : "none",
             width: isMobile ? "calc(100% - 20px)" : "100%",
             backgroundColor: "#ffffff",

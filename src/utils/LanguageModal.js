@@ -236,8 +236,12 @@ const LanguageModalNew = ({ show, word, onClose }) => {
                 }}
                 onClick={() => setSelectedLang(entry.text)}
               >
-                <div style={cardIconStyle}>{entry.icon}</div>
-                <div style={cardTextStyle}>{entry.lang}</div>
+                 <div style={cardIconStyle}>
+                  {entry.icon}
+                </div>
+                <div style={cardTextStyle}>
+                  {entry.lang}
+                </div>
                 <div style={isSelected ? styles.tickMark : styles.noTickMark}>
                   {isSelected && "✔"}
                 </div>
