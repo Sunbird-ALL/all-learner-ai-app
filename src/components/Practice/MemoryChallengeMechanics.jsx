@@ -1037,6 +1037,7 @@ const MemoryChallengeMechanicsContent = ({
                     display: "flex",
                     flexDirection: "column",
                     minHeight: 0,
+                    overflow: "auto",
                   }}
                 >
                   {currentSequence && (

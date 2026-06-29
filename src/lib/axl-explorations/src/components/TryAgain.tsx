@@ -75,7 +75,7 @@ export function TryAgain({
           backgroundSize: '100% 100%',
           position: 'relative',
           maxHeight: 'calc(100vh - 200px)',
-          height: '70dvh',
+          height: 'auto',
           width: '100%',
           maxWidth: '400px',
           overflow: 'hidden'

@@ -431,7 +431,6 @@ const MainLayout = (props) => {
     isCorrect,
     vocabCount,
     wordCount,
-    showMilestone = true,
   } = props;
 
   const [shake, setShake] = useState(false);
@@ -1146,8 +1145,7 @@ const MainLayout = (props) => {
                   )}
                   {props.children}
                 </CardContent>
-                {showMilestone &&
-                  steps > 0 &&
+                {steps > 0 &&
                   tFlow !== "true" &&
                   !isF1FlowActive &&
                   !isF2FlowActive &&
@@ -1249,10 +1247,9 @@ const MainLayout = (props) => {
                       pointerEvents: "none",
                     }}
                   >
-                    {showMilestone && (
-                      <footer>
-                        {/* Debug: Log milestone level and LEVEL for troubleshooting */}
-                        {/* {console.log(
+                    <footer>
+                      {/* Debug: Log milestone level and LEVEL for troubleshooting */}
+                      {/* {console.log(
                         "MainLayout footer - milestoneLevel:",
                         milestoneLevel,
                         "LEVEL:",
@@ -1261,72 +1258,71 @@ const MainLayout = (props) => {
                         rFlow
                       )} */}
 
-                        {/* Only show F flow images when milestone level is "B" */}
-                        {tFlow !== "true" &&
-                          (milestoneLevel === "B" && isF3FlowActive ? (
-                            // F3 Flow - Show F3 milestone image
-                            <div style={fFlowWrapperStyle}>
-                              <img
-                                src={F3Image}
-                                alt="F3"
-                                height={isMobile ? "75px" : "200px"}
-                              />
-                            </div>
-                          ) : milestoneLevel === "B" && isF2FlowActive ? (
-                            // F2 Flow - Show F2 milestone image
-                            <div style={fFlowWrapperStyle}>
-                              <img
-                                src={F2Image}
-                                alt="F2"
-                                height={isMobile ? "75px" : "200px"}
-                              />
-                            </div>
-                          ) : milestoneLevel === "B" && isF1FlowActive ? (
-                            // F1 Flow - Show F1 milestone image
-                            <div style={fFlowWrapperStyle}>
+                      {/* Only show F flow images when milestone level is "B" */}
+                      {tFlow !== "true" &&
+                        (milestoneLevel === "B" && isF3FlowActive ? (
+                          // F3 Flow - Show F3 milestone image
+                          <div style={fFlowWrapperStyle}>
+                            <img
+                              src={F3Image}
+                              alt="F3"
+                              height={isMobile ? "75px" : "200px"}
+                            />
+                          </div>
+                        ) : milestoneLevel === "B" && isF2FlowActive ? (
+                          // F2 Flow - Show F2 milestone image
+                          <div style={fFlowWrapperStyle}>
+                            <img
+                              src={F2Image}
+                              alt="F2"
+                              height={isMobile ? "75px" : "200px"}
+                            />
+                          </div>
+                        ) : milestoneLevel === "B" && isF1FlowActive ? (
+                          // F1 Flow - Show F1 milestone image
+                          <div style={fFlowWrapperStyle}>
+                            <img
+                              src={F1Image}
+                              alt="F1"
+                              height={isMobile ? "75px" : "200px"}
+                            />
+                          </div>
+                        ) : rFlow === "true" && milestoneLevel === "B" ? (
+                          // Only show R flow images when milestone level is "B"
+                          [1, "B"]?.includes(LEVEL) ? (
+                            // R0 - Show F1 milestone image instead of R0 image
+                            rStep == null || rStep === 0 || rStep === "0" ? (
                               <img
                                 src={F1Image}
                                 alt="F1"
-                                height={isMobile ? "75px" : "200px"}
-                              />
-                            </div>
-                          ) : rFlow === "true" && milestoneLevel === "B" ? (
-                            // Only show R flow images when milestone level is "B"
-                            [1, "B"]?.includes(LEVEL) ? (
-                              // R0 - Show F1 milestone image instead of R0 image
-                              rStep == null || rStep === 0 || rStep === "0" ? (
-                                <img
-                                  src={F1Image}
-                                  alt="F1"
-                                  height={isMobile ? "130px" : "200px"}
-                                />
-                              ) : (
-                                <img
-                                  src={Assets.rOneMileImage}
-                                  alt="R One"
-                                  height={isMobile ? "130px" : "200px"}
-                                />
-                              )
-                            ) : LEVEL === 2 ? (
-                              <img
-                                src={
-                                  props.rStep === 2
-                                    ? Assets.r2MileImg
-                                    : props.rStep === 3
-                                    ? Assets.r3MileImg
-                                    : props.rStep === 4
-                                    ? Assets.r4MileImg
-                                    : null
-                                }
-                                alt={`R Step ${props.rStep}`}
                                 height={isMobile ? "130px" : "200px"}
                               />
-                            ) : null
-                          ) : (
-                            !!LEVEL && levelsImages?.[LEVEL]?.milestone
-                          ))}
-                      </footer>
-                    )}
+                            ) : (
+                              <img
+                                src={Assets.rOneMileImage}
+                                alt="R One"
+                                height={isMobile ? "130px" : "200px"}
+                              />
+                            )
+                          ) : LEVEL === 2 ? (
+                            <img
+                              src={
+                                props.rStep === 2
+                                  ? Assets.r2MileImg
+                                  : props.rStep === 3
+                                  ? Assets.r3MileImg
+                                  : props.rStep === 4
+                                  ? Assets.r4MileImg
+                                  : null
+                              }
+                              alt={`R Step ${props.rStep}`}
+                              height={isMobile ? "130px" : "200px"}
+                            />
+                          ) : null
+                        ) : (
+                          !!LEVEL && levelsImages?.[LEVEL]?.milestone
+                        ))}
+                    </footer>
                   </Box>
                   <Box
                     sx={{
@@ -1801,6 +1797,9 @@ const MainLayout = (props) => {
                     boxSizing: "border-box",
                     padding: { xs: "16px", md: "24px" },
                   },
+                  "& img[alt='gameLost']": {
+                    height: { xs: "180px!important", md: "250px!important" },
+                  },
                   "& img[alt='Words Learnt']": {
                     width: { xs: "70px!important", md: "100px!important" },
                     height: { xs: "70px!important", md: "100px!important" },
@@ -1916,9 +1915,9 @@ const MainLayout = (props) => {
                             style={{
                               zIndex: 9999,
                               width: "100%",
-                              maxWidth: isMobile ? "320px" : "600px",
+                              maxWidth: "340px",
                               height: "auto",
-                              maxHeight: isMobile ? "320px" : "500px",
+                              maxHeight: "340px",
                               objectFit: "contain",
                             }}
                           />
@@ -1935,16 +1934,12 @@ const MainLayout = (props) => {
                               <img
                                 src={Assets.gameLost}
                                 alt="gameLost"
-                                style={{
-                                  height: isMobile ? "220px" : "360px",
-                                  width: "auto",
-                                  objectFit: "contain",
-                                }}
+                                height={"250px"}
                               />
                               <Typography
                                 sx={{ mb: 1, mt: 1, textAlign: "center" }}
                               >
-                                {props.pageName !== "m8" && (
+                                {!props.pageName === "m8" && (
                                   <span
                                     style={{
                                       fontWeight: 600,
@@ -2439,7 +2434,6 @@ MainLayout.propTypes = {
   gameOverData: PropTypes.shape({
     userWon: PropTypes.bool,
   }),
-  showMilestone: PropTypes.bool,
 };
 
 export default MainLayout;

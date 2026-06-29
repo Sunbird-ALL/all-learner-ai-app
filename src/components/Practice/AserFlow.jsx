@@ -178,11 +178,11 @@ const AserFlow = ({
         if (!isDemo) {
           await addLesson({
             sessionId,
-            milestone: `showcase`,
+            milestone: `practice`,
             lesson: "0",
             progress: 0,
             language: lang,
-            milestoneLevel: "m0",
+            milestoneLevel: "B",
           });
         }
 
