@@ -3,7 +3,7 @@ name: AXL Lab1 Deployment
 on:
   push:
     branches:
-      - axl-3.0.5
+      - axl-3.0.6
 
 jobs:
   deploy:
