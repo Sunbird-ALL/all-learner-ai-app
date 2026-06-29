@@ -272,7 +272,7 @@ const styles = `
       font-size: 22px !important;
       margin: 10px 20px !important;
       text-align: center !important;
-      line-height: 1.4 !important;
+      line-height: 1.6 !important;
     }
     .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > img {
       margin: 20px 5px 5px !important;

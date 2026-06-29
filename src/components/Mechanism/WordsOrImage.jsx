@@ -1124,7 +1124,7 @@ const WordsOrImage = ({
                             : "clamp(1.6rem, 2.5vw, 3.8rem)",
                           fontWeight: language === "te" ? 400 : 700,
                           fontFamily: getFontFamily(language),
-                          lineHeight: 1.4,
+                          lineHeight: 1.6,
                           ...(mechanism_id === "mechanic_15"
                             ? {
                                 position: "relative",
