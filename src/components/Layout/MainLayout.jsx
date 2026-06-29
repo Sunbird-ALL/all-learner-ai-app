@@ -1801,9 +1801,6 @@ const MainLayout = (props) => {
                     boxSizing: "border-box",
                     padding: { xs: "16px", md: "24px" },
                   },
-                  "& img[alt='gameLost']": {
-                    height: { xs: "180px!important", md: "250px!important" },
-                  },
                   "& img[alt='Words Learnt']": {
                     width: { xs: "70px!important", md: "100px!important" },
                     height: { xs: "70px!important", md: "100px!important" },

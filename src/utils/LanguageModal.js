@@ -142,7 +142,9 @@ const LanguageModalNew = ({ show, word, onClose }) => {
     maxWidth: isMobile ? "420px" : styles.modal.maxWidth,
     backgroundSize: isMobile ? "cover" : styles.modal.backgroundSize,
     backgroundRepeat: isMobile ? "no-repeat" : styles.modal.backgroundRepeat,
-    boxShadow: isMobile ? "0px 10px 30px rgba(0, 0, 0, 0.15)" : styles.modal.boxShadow,
+    boxShadow: isMobile
+      ? "0px 10px 30px rgba(0, 0, 0, 0.15)"
+      : styles.modal.boxShadow,
     padding: isMobile ? "20px 16px" : styles.modal.padding,
   };
 
@@ -206,8 +208,12 @@ const LanguageModalNew = ({ show, word, onClose }) => {
                   : "Quicksand",
               fontSize:
                 entry.text === "te"
-                  ? (isMobile ? "34px" : "42px")
-                  : (isMobile ? "28px" : styles.cardIcon.fontSize),
+                  ? isMobile
+                    ? "34px"
+                    : "42px"
+                  : isMobile
+                  ? "28px"
+                  : styles.cardIcon.fontSize,
             };
 
             const cardTextStyle = {
@@ -219,8 +225,12 @@ const LanguageModalNew = ({ show, word, onClose }) => {
                   : "Quicksand",
               fontSize:
                 entry.text === "te"
-                  ? (isMobile ? "18px" : "22px")
-                  : (isMobile ? "16px" : styles.cardText.fontSize),
+                  ? isMobile
+                    ? "18px"
+                    : "22px"
+                  : isMobile
+                  ? "16px"
+                  : styles.cardText.fontSize,
             };
 
             return (
@@ -230,18 +240,14 @@ const LanguageModalNew = ({ show, word, onClose }) => {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     setSelectedLang(entry.text);
                   }
                 }}
                 onClick={() => setSelectedLang(entry.text)}
               >
-                 <div style={cardIconStyle}>
-                  {entry.icon}
-                </div>
-                <div style={cardTextStyle}>
-                  {entry.lang}
-                </div>
+                <div style={cardIconStyle}>{entry.icon}</div>
+                <div style={cardTextStyle}>{entry.lang}</div>
                 <div style={isSelected ? styles.tickMark : styles.noTickMark}>
                   {isSelected && "✔"}
                 </div>
