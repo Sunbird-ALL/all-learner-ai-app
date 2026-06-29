@@ -380,17 +380,6 @@ const SpeakSentenceComponent = () => {
           language: lang,
           milestoneLevel: "m0",
         });
-        const resolvedNext = resolveAfterSetComplete(newHistory);
-        if (resolvedNext.type === "terminal" && getSetData?.currentLevel) {
-          await addLesson({
-            sessionId,
-            milestone: `practice`,
-            lesson: "0",
-            progress: 0,
-            language: lang,
-            milestoneLevel: getSetData.currentLevel,
-          });
-        }
         await loadDiscoveryNextSet(newHistory, assessmentResponse);
       }
     } catch (error) {

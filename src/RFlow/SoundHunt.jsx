@@ -3897,7 +3897,7 @@ const SoundHunt = ({
             height: isMobile ? "calc(100% - 10px)" : "auto",
             minHeight: isMobile ? "unset" : "70vh",
             width: isMobile ? "calc(100% - 10px)" : "100%",
-            borderRadius: isMobile ? "15px" : "16px",
+            borderRadius: isMobile ? "15px" : "0px",
             boxSizing: "border-box",
             background: "linear-gradient(180deg, #91E7EF 0%, #42C6FF 100%)",
             padding: "16px",
