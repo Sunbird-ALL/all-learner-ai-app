@@ -561,7 +561,7 @@ const WordWall = ({
             alt="Star"
             style={{
               position: "absolute",
-              top: "20px",
+              top: isMobile ? "5px" : "20px",
               left: "50%",
               transform: "translateX(-50%)",
               width: isMobile ? "24px" : "32px",
@@ -593,6 +593,9 @@ const WordWall = ({
               textAlign: "center",
               lineHeight: "22px",
               color: "#2F2F2F",
+              maxWidth: isMobile ? "110px" : "170px",
+              whiteSpace: "normal",
+              wordBreak: "break-word",
             }}
           >
             {ui.WORD_WALL_WORDS_YOU_KNOW}
@@ -612,7 +615,7 @@ const WordWall = ({
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: isMobile ? "5px" : "20px",
+            marginTop: isMobile ? "5px" : "0px",
           }}
         >
           <img
@@ -620,10 +623,10 @@ const WordWall = ({
             alt="Smile"
             style={{
               position: "absolute",
-              top: "20px",
+              top: "10px",
               left: "50%",
               transform: "translateX(-50%)",
-              width: isMobile ? "30px" : "40px",
+              width: isMobile ? "20px" : "40px",
             }}
           />
           <div
@@ -649,6 +652,9 @@ const WordWall = ({
               textAlign: "center",
               lineHeight: "22px",
               color: "#2F2F2F",
+              maxWidth: isMobile ? "110px" : "170px",
+              whiteSpace: "normal",
+              wordBreak: "break-word",
             }}
           >
             {ui.WORD_WALL_WORDS_TRY_AGAIN}
@@ -1332,7 +1338,8 @@ const WordWall = ({
         currentStep,
         level,
         progressData,
-        showProgress,
+        showProgress: false,
+        showMilestone: false,
         handleBack,
         disableScreen,
         loading,
@@ -1350,7 +1357,7 @@ const WordWall = ({
         <div
           style={{
             position: "relative",
-            height: isMobile ? "calc(100dvh - 250px)" : "auto",
+            height: isMobile ? "calc(100dvh - 250px)" : "65vh",
             maxHeight: isMobile ? "calc(100dvh - 250px)" : "none",
             width: isMobile ? "calc(100% - 20px)" : "100%",
             backgroundColor: "#ffffff",

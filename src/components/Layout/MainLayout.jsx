@@ -431,6 +431,7 @@ const MainLayout = (props) => {
     isCorrect,
     vocabCount,
     wordCount,
+    showMilestone = true,
   } = props;
 
   const [shake, setShake] = useState(false);
@@ -1145,7 +1146,8 @@ const MainLayout = (props) => {
                   )}
                   {props.children}
                 </CardContent>
-                {steps > 0 &&
+                {showMilestone &&
+                  steps > 0 &&
                   tFlow !== "true" &&
                   !isF1FlowActive &&
                   !isF2FlowActive &&
@@ -1247,6 +1249,7 @@ const MainLayout = (props) => {
                       pointerEvents: "none",
                     }}
                   >
+                    {showMilestone && (
                     <footer>
                       {/* Debug: Log milestone level and LEVEL for troubleshooting */}
                       {/* {console.log(
@@ -1323,6 +1326,7 @@ const MainLayout = (props) => {
                           !!LEVEL && levelsImages?.[LEVEL]?.milestone
                         ))}
                     </footer>
+                    )}
                   </Box>
                   <Box
                     sx={{
@@ -1899,8 +1903,8 @@ const MainLayout = (props) => {
                       <Box
                         sx={{
                           display: "flex",
-                          justifyContent: { xs: "flex-start", md: "center" },
-                          alignItems: { xs: "flex-start", md: "center" },
+                          justifyContent: "center",
+                          alignItems: "center",
                           flex: 1,
                           minHeight: 0,
                           position: "relative",
@@ -1915,9 +1919,9 @@ const MainLayout = (props) => {
                             style={{
                               zIndex: 9999,
                               width: "100%",
-                              maxWidth: "340px",
+                              maxWidth: isMobile ? "320px" : "600px",
                               height: "auto",
-                              maxHeight: "340px",
+                              maxHeight: isMobile ? "320px" : "500px",
                               objectFit: "contain",
                             }}
                           />
@@ -1934,7 +1938,11 @@ const MainLayout = (props) => {
                               <img
                                 src={Assets.gameLost}
                                 alt="gameLost"
-                                height={"250px"}
+                                style={{
+                                  height: isMobile ? "220px" : "360px",
+                                  width: "auto",
+                                  objectFit: "contain",
+                                }}
                               />
                               <Typography
                                 sx={{ mb: 1, mt: 1, textAlign: "center" }}
