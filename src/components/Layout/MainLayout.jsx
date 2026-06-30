@@ -1920,6 +1920,7 @@ const MainLayout = (props) => {
                               height: "auto",
                               maxHeight: isMobile ? "320px" : "500px",
                               objectFit: "contain",
+                              margin: "auto",
                             }}
                           />
                         ) : (
