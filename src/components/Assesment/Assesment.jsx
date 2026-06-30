@@ -789,23 +789,26 @@ export const ProfileHeader = ({
         setIsAudioPlaying(true);
       };
 
+      const closeMobileUi = () => {
+        setMenuOpen(false);
+        setShowMobilePointer(false);
+      };
+      const endAlphabetDemo = () => {
+        setShowChartPointer(false);
+        setIsAlphabetDemoActive(false);
+        globalThis.dispatchEvent(new Event("alphabetDemoStop"));
+      };
+
       audio.onended = () => {
         setIsAudioPlaying(false);
         chartAudioRef.current = null;
 
         if (isMobile) {
           // 📱 Mobile: close hamburger & pointer 500ms BEFORE transitioning screens
-          setTimeout(() => {
-            setMenuOpen(false);
-            setShowMobilePointer(false);
-          }, 2500);
+          setTimeout(closeMobileUi, 2500);
 
           // Then end demo and move to next screen after full 3s
-          setTimeout(() => {
-            setShowChartPointer(false);
-            setIsAlphabetDemoActive(false);
-            globalThis.dispatchEvent(new Event("alphabetDemoStop"));
-          }, 3000);
+          setTimeout(endAlphabetDemo, 3000);
         } else {
           setShowChartPointer(false);
           setIsAlphabetDemoActive(false);
