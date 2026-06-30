@@ -2361,6 +2361,9 @@ const MainLayout = (props) => {
                           }
                         }
                         if (gameOverData) {
+                          if (gameOverData.wordWall) {
+                            setLocalData("wordWall", true);
+                          }
                           gameOverData.link
                             ? navigate(gameOverData.link)
                             : navigate("/_practice");

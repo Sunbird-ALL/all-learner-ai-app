@@ -2266,8 +2266,7 @@ const Practice = () => {
                 } catch (e) {
                   // catch error
                 }
-                gameOver({ link: "/assesment-end" }, true);
-                setLocalData("wordWall", true);
+                gameOver({ link: "/_practice", wordWall: true }, true);
                 return; // Exit to show feedback screen
               }
 
