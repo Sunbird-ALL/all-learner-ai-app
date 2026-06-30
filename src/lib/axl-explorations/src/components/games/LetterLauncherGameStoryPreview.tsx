@@ -1237,7 +1237,7 @@ export function LetterLauncherGameStoryPreview({
           }`}>
             <p 
               className="text-[11px] xs:text-[12px] sm:text-sm md:text-base lg:text-lg text-gray-800 whitespace-pre-line text-center break-words"
-              style={{ lineHeight: '1.55rem' }}
+              style={{ lineHeight: '0.9rem' }}
             >
               {text}
             </p>
