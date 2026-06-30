@@ -608,6 +608,9 @@ const MemoryChallengeMechanicsContent = ({
           vocabCount={vocabCount}
           wordCount={wordCount}
           handleBack={handleBack}
+          cardContentStyle={{
+            height: { xs: "100%", md: "70vh" },
+          }}
         >
           <div
             style={{
@@ -667,6 +670,9 @@ const MemoryChallengeMechanicsContent = ({
           wordCount={wordCount}
           handleBack={handleBack}
           showTimer={false}
+          cardContentStyle={{
+            height: { xs: "100%", md: "70vh" },
+          }}
         >
           <div
             style={{
