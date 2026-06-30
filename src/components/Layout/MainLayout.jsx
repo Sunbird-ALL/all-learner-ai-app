@@ -2442,6 +2442,8 @@ MainLayout.propTypes = {
   cardContentStyle: PropTypes.object,
   gameOverData: PropTypes.shape({
     userWon: PropTypes.bool,
+    wordWall: PropTypes.bool,
+    link: PropTypes.string,
   }),
   showMilestone: PropTypes.bool,
 };
