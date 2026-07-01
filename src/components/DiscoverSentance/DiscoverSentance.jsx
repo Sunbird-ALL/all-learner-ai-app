@@ -372,11 +372,16 @@ const SpeakSentenceComponent = () => {
           DISCOVERY_SET_FLOW_STORAGE.STATE,
           JSON.stringify({ history: newHistory, pendingCharSetTag: null })
         );
+        const completedSets = newHistory.length;
+        const discoveryProgress = Math.min(
+          Math.round((completedSets / 3) * 100),
+          100
+        );
         await addLesson({
           sessionId,
-          milestone: `showcase`,
+          milestone: `discovery`,
           lesson: "0",
-          progress: 50,
+          progress: discoveryProgress,
           language: lang,
           milestoneLevel: "m0",
         });
