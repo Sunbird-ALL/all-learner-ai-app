@@ -1187,8 +1187,7 @@ const ParagraphFlow = ({
           padding: "20px",
           boxSizing: "border-box",
           position: "relative",
-          overflowX: "hidden",
-          overflowY: "hidden",
+          overflowY: "clip",
         }}
       >
         {/* Hint Icon */}
