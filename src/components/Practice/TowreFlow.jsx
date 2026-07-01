@@ -2667,10 +2667,10 @@ const TowreFlow = ({
                   <div
                     style={{
                       position: "relative",
-                      width: isMobile ? "220px" : "250px",
-                      height: isMobile ? "220px" : "180px",
+                      width: "clamp(180px, 22vw, 250px)",
+                      height: "clamp(160px, 20vw, 200px)",
                       marginRight: 10,
-                      transform: "translateY(-40%)",
+                      transform: "translateY(-15%)",
                     }}
                   >
                     <img
@@ -2690,9 +2690,9 @@ const TowreFlow = ({
                         src={arrowImg}
                         alt="arrow"
                         style={{
-                          width: isMobile ? "50px" : "80px",
+                          width: "clamp(40px, 7vw, 80px)",
                           position: "absolute",
-                          top: "15px",
+                          top: "25px",
                           left: "50%",
                           transform: "translateX(-50%)",
                         }}
@@ -2707,13 +2707,16 @@ const TowreFlow = ({
                         transform: "translate(-50%, -50%)",
                         width: "80%",
                         textAlign: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "8px",
                       }}
                     >
                       <div
                         style={{
                           whiteSpace: "pre-line",
-                          fontSize: isMobile ? "11px" : "14px",
-                          marginBottom: "15px",
+                          fontSize: "clamp(11px, 1.4vw, 14px)",
                           lineHeight: "1.5",
                           color: "#333F61",
                           fontFamily: "Quicksand",
@@ -2723,65 +2726,21 @@ const TowreFlow = ({
                         {message}
                       </div>
 
-                      {activeSet === 3 ? (
-                        <div
-                          style={{
-                            position: "absolute",
-                            bottom: -30,
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                        >
-                          {/* <img
-            src={handImg}
-            alt="hand"
-            style={{
-              width: 40,
-              height: 40,
-              filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))",
-              transform: "rotate(-30deg)",
-            }}
-          /> */}
-                          <button
-                            onClick={handleNext}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              padding: 0,
-                              cursor: "pointer",
-                            }}
-                          >
-                            <img
-                              src={Assets.startNewButtonImg}
-                              alt="next"
-                              style={{ width: isMobile ? "30px" : 60 }}
-                            />
-                          </button>
-                        </div>
-                      ) : activeSet === 5 ? (
+                      <button
+                        onClick={activeSet === 5 ? startCountdown : handleNext}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          padding: 0,
+                          cursor: "pointer",
+                        }}
+                      >
                         <img
                           src={Assets.startNewButtonImg}
-                          alt="start"
-                          style={{
-                            width: isMobile ? "30px" : "60px",
-                            cursor: "pointer",
-                          }}
-                          onClick={startCountdown}
+                          alt={activeSet === 5 ? "start" : "next"}
+                          style={{ height: "clamp(28px, 4vw, 45px)" }}
                         />
-                      ) : (
-                        <img
-                          src={Assets.startNewButtonImg}
-                          alt="next"
-                          style={{
-                            height: isMobile ? "30px" : "45px",
-                            cursor: "pointer",
-                          }}
-                          onClick={handleNext}
-                        />
-                      )}
+                      </button>
                     </div>
                   </div>
 
@@ -2790,47 +2749,11 @@ const TowreFlow = ({
                     src={pandaImg}
                     alt="panda"
                     style={{
-                      height: isMobile ? 120 : 150,
+                      height: "clamp(100px, 14vw, 155px)",
                       marginBottom: "-15px",
                     }}
                   />
                 </div>
-                {activeSet === 3 && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: 5,
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      zIndex: 10,
-                    }}
-                  >
-                    <img
-                      src={handImg}
-                      alt="hand"
-                      style={{
-                        width: 30,
-                        height: 30,
-                        filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))",
-                        transform: "rotate(0deg)",
-                      }}
-                    />
-                    <button
-                      onClick={handleNext}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                        cursor: "pointer",
-                      }}
-                    >
-                      <img src={nextImg} alt="next" style={{ width: 40 }} />
-                    </button>
-                  </div>
-                )}
               </>
             )}
           </div>
