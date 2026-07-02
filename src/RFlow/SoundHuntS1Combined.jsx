@@ -10207,7 +10207,7 @@ const SoundHuntS1Combined = ({
           right: isMobile ? "5px" : "auto",
           width: isMobile ? "calc(100% - 10px)" : "100%",
           height: isMobile ? "calc(100% - 10px)" : "auto",
-          minHeight: "68vh",
+          minHeight: "64dvh",
           borderRadius: isMobile ? "15px" : "16px",
           boxSizing: "border-box",
           background: "linear-gradient(180deg, #91E7EF 0%, #42C6FF 100%)",
