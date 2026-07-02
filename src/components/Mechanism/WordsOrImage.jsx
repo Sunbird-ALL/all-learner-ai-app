@@ -1192,7 +1192,7 @@ const WordsOrImage = ({
                             : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "30px" : "50px",
+                        lineHeight: isMobile ? "30px" : "70px",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                         "&::after": {
                           content: '""',
