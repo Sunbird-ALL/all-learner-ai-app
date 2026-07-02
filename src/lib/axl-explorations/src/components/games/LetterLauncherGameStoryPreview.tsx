@@ -15,6 +15,7 @@ import { getFuelRequirement, getMissionDestination } from "../../utils/fuelCalcu
 import { playLetterAudio } from "../../utils/letterAudioUtils";
 import { memoryGameDataLoader } from "../../utils/memoryGameDataLoader";
 import { SpaceBackground } from "../SpaceBackground";
+import { getUiStrings } from "../../../../../constants/strings";
 
 interface LetterLauncherGameStoryPreviewProps {
   onStartGame: () => void;
@@ -239,6 +240,7 @@ export function LetterLauncherGameStoryPreview({
   const audioLanguage = selectedAudioLanguage || 'en';
   const contentLanguage = selectedLanguage || 'en';
   const story = storyScript[contentLanguage] || storyScript.en;
+  const ui = getUiStrings(contentLanguage);
   const requiredFuel = getFuelRequirement(level);
   const missionDestination = getMissionDestination(level);
 
@@ -1282,30 +1284,29 @@ export function LetterLauncherGameStoryPreview({
   return (
     <SpaceBackground className="h-screen p-2 sm:p-4 overflow-hidden flex flex-col">
       <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col min-h-0 relative z-10">
-        {/* Header */}
-        {!hideHeader && (
+        {/* Header - Back button hides with hideHeader, but Skip Demo/Replay always stay available */}
           <div className="flex items-center justify-between mb-3 flex-shrink-0">
+          {!hideHeader ? (
             <Button
               onClick={handleBack}
               className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/20 text-sm px-3 py-2"
             >
               <ArrowLeft className="h-3 w-3 mr-1" />
-              {contentLanguage === 'en' ? 'Back' : contentLanguage === 'te' ? 'వెనుకకు' : contentLanguage === 'kn' ? 'ಹಿಂದಕ್ಕೆ' : 'मागे'}
+              {ui.COMMON_BACK}
             </Button>
+          ) : (
+            <div />
+          )}
             <div className="flex items-center gap-2">
               <Button
                 onClick={handleStartGame}
                 className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/20 text-sm px-3 py-2"
               >
-                {contentLanguage === 'en' ? 'Skip Demo' : contentLanguage === 'te' ? 'డెమో దాటవేయి' : contentLanguage === 'kn' ? 'ಡೆಮೊ ಬಿಟ್ಟುಬಿಡಿ' : 'डेमो वगळा'}
+                {ui.COMMON_SKIP_DEMO}
               </Button>
-              <ReplayButton
-                onClick={handleReplayStory}
-                language={contentLanguage}
-              />
+
             </div>
           </div>
-        )}
 
         {/* User Interaction Required Overlay */}
         {needsUserInteraction && (
@@ -1326,18 +1327,10 @@ export function LetterLauncherGameStoryPreview({
             >
               <div className="text-center space-y-4">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
-                  {contentLanguage === 'en' ? 'Click to Start' :
-                   contentLanguage === 'te' ? 'ప్రారంభించడానికి క్లిక్ చేయండి' :
-                   contentLanguage === 'kn' ? 'ಪ್ರಾರಂಭಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ' :
-                   contentLanguage === 'mr' ? 'प्रारंभ करण्यासाठी क्लिक करा' :
-                   'Click to Start'}
+                  {ui.PREVIEW_CLICK_TO_START}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {contentLanguage === 'en' ? 'Please click anywhere to start the preview' :
-                   contentLanguage === 'te' ? 'దయచేసి ప్రివ్యూ ప్రారంభించడానికి ఎక్కడైనా క్లిక్ చేయండి' :
-                   contentLanguage === 'kn' ? 'ದಯವಿಟ್ಟು ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ಯಾವುದೇ ಸ್ಥಳದಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ' :
-                   contentLanguage === 'mr' ? 'कृपया पूर्वावलोकन सुरू करण्यासाठी कुठेही क्लिक करा' :
-                   'Please click anywhere to start the preview'}
+                  {ui.PREVIEW_CLICK_ANYWHERE_TO_START}
                 </p>
                 <Button
                   onClick={() => {
@@ -1348,11 +1341,7 @@ export function LetterLauncherGameStoryPreview({
                   }}
                   className="mt-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
                 >
-                  {contentLanguage === 'en' ? 'Start Preview' :
-                   contentLanguage === 'te' ? 'ప్రివ్యూ ప్రారంభించండి' :
-                   contentLanguage === 'kn' ? 'ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ' :
-                   contentLanguage === 'mr' ? 'पूर्वावलोकन सुरू करा' :
-                   'Start Preview'}
+                  {ui.PREVIEW_START_PREVIEW}
                 </Button>
               </div>
             </Card>

@@ -33,6 +33,13 @@ const kn = {
   // Common actions (new keys)
   COMMON_BACK: "ಹಿಂದೆ",
   COMMON_CONTINUE: "ಮುಂದುವರಿಸಿ",
+  COMMON_SKIP_DEMO: "ಡೆಮೊ ಬಿಟ್ಟುಬಿಡಿ",
+
+  // Preview / autoplay-unlock overlay
+  PREVIEW_CLICK_TO_START: "ಪ್ರಾರಂಭಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ",
+  PREVIEW_CLICK_ANYWHERE_TO_START:
+    "ದಯವಿಟ್ಟು ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ಯಾವುದೇ ಸ್ಥಳದಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ",
+  PREVIEW_START_PREVIEW: "ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ",
 
   // Errors (extended)
 
