@@ -3,7 +3,7 @@ name: ALL AXL dev Deployment (UAT)
 on:
   push:
     branches:
-      - axl-3.0.6
+      - all-3.0.6
 
 jobs:
   deploy:
