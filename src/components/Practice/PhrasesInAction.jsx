@@ -6001,12 +6001,14 @@ const PhrasesInAction = ({
         <div
           style={{
             width: "100%",
-            height: "65vh",
+            minHeight: "65vh",
+            height: "auto",
             backgroundColor: "#eae6ff",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "40px 0px",
+            padding: "20px 10px",
+            boxSizing: "border-box",
           }}
         >
           {/* Hint Icon */}
@@ -6083,24 +6085,18 @@ const PhrasesInAction = ({
           <div
             style={{
               width: isMobile ? "95%" : "90%",
-              height: isMobile ? "110%" : "90%",
+              height: "auto",
+              minHeight: isMobile ? "unset" : "60vh",
               backgroundColor: "#ffffff",
               borderRadius: "20px",
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: isMobile
-                ? isRecording || isRecording2
-                  ? "flex-start"
-                  : "center"
-                : "center",
+              justifyContent: "center",
               border: "1px solid #d9d2fc",
-              padding: isMobile
-                ? isRecording || isRecording2
-                  ? "10px 0px"
-                  : "20px 0px"
-                : "50px 0px",
+              padding: isMobile ? "16px 10px" : "40px 20px",
+              boxSizing: "border-box",
             }}
           >
             {/* <img
