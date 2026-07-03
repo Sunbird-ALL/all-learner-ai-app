@@ -981,6 +981,23 @@ export const ProfileHeader = ({
     }
   };
 
+  // Mobile menu logout: iframe -> ask parent to run logout handshake, standalone -> local logout
+  const handleMenuLogout = () => {
+    if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+      try {
+        globalThis.parent.postMessage(
+          { type: "REQUEST_LOGOUT" },
+          globalThis?.location?.ancestorOrigins?.[0] ||
+            globalThis.parent.location.origin
+        );
+      } catch (error) {
+        console.error("REQUEST_LOGOUT postMessage failed:", error);
+      }
+      return;
+    }
+    handleLogout();
+  };
+
   return (
     <>
       {!!openMessageDialog && (
@@ -1396,28 +1413,27 @@ export const ProfileHeader = ({
                       </ListItemButton>
                     </>
                   )}
-                  {process.env.REACT_APP_IS_APP_IFRAME !== "true" && (
-                    <>
-                      <Divider />
-                      <ListItemButton
-                        onClick={() => {
-                          setMenuOpen(false);
-                          handleLogout();
+                  {/* Logout: iframe -> parent handshake, standalone -> local */}
+                  <>
+                    <Divider />
+                    <ListItemButton
+                      onClick={() => {
+                        setMenuOpen(false);
+                        handleMenuLogout();
+                      }}
+                    >
+                      <LogoutIcon sx={{ mr: 1 }} />
+                      <ListItemText
+                        primary={ui.ASSESSMENT_LOGOUT}
+                        primaryTypographyProps={{
+                          fontFamily: "Quicksand",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                          color: "#333F61",
                         }}
-                      >
-                        <LogoutIcon sx={{ mr: 1 }} />
-                        <ListItemText
-                          primary={ui.ASSESSMENT_LOGOUT}
-                          primaryTypographyProps={{
-                            fontFamily: "Quicksand",
-                            fontWeight: 600,
-                            fontSize: "14px",
-                            color: "#333F61",
-                          }}
-                        />
-                      </ListItemButton>
-                    </>
-                  )}
+                      />
+                    </ListItemButton>
+                  </>
                 </List>
               </Box>
             </Collapse>
@@ -1666,29 +1682,28 @@ export const ProfileHeader = ({
                 />
               </IconButton>
             </CustomTooltip>
-            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" &&
-              process.env.REACT_APP_IS_APP_IFRAME !== "true" && (
-                <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
-                  <IconButton
-                    onClick={handleLogout}
-                    sx={{
-                      mr: { xs: "5px", sm: "10px" },
-                      padding: isMobile ? "6px" : "8px",
-                      backgroundColor: "rgba(255, 255, 255, 0.7)",
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      },
-                    }}
-                  >
-                    <img
-                      className="logout-img"
-                      style={{ height: 25, width: 25 }}
-                      src={LogoutImg}
-                      alt="Logout"
-                    />
-                  </IconButton>
-                </CustomTooltip>
-              )}
+            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+              <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
+                <IconButton
+                  onClick={handleMenuLogout}
+                  sx={{
+                    mr: { xs: "5px", sm: "10px" },
+                    padding: isMobile ? "6px" : "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    },
+                  }}
+                >
+                  <img
+                    className="logout-img"
+                    style={{ height: 25, width: 25 }}
+                    src={LogoutImg}
+                    alt="Logout"
+                  />
+                </IconButton>
+              </CustomTooltip>
+            )}
           </Box>
         )}
       </Box>
