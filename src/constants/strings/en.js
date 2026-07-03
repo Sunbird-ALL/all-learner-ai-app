@@ -86,6 +86,12 @@ const en = {
   // Common actions (shared across the app)
   COMMON_BACK: "Back",
   COMMON_CONTINUE: "Continue",
+  COMMON_SKIP_DEMO: "Skip Demo",
+
+  // Preview / autoplay-unlock overlay
+  PREVIEW_CLICK_TO_START: "Click to Start",
+  PREVIEW_CLICK_ANYWHERE_TO_START: "Please click anywhere to start the preview",
+  PREVIEW_START_PREVIEW: "Start Preview",
 
   // Generic error pages
 
