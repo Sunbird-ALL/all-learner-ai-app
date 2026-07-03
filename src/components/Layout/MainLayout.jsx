@@ -1070,7 +1070,7 @@ const MainLayout = (props) => {
                   height: { xs: "calc(100dvh - 80px)", md: "auto" },
                   maxHeight: {
                     xs: "calc(100dvh - 80px)",
-                    md: "calc(100vh - 150px)",
+                    md: "none",
                   },
                   borderRadius: "20px",
                   display: "flex",
