@@ -34,6 +34,7 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
         `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${audioSrc}`
       );
       audioRef.current = audio;
+      audio.onended = () => setShowModal(false);
       audio.play().catch((err) => console.log("Audio play error:", err));
     } else {
       if (audioRef.current) {
