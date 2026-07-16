@@ -75,6 +75,8 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
       {children}
 
       <div
+        role="status"
+        aria-label={description}
         onClick={(e) => e.stopPropagation()}
         style={{
           position: "absolute",
@@ -88,6 +90,7 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
           visibility: showModal ? "visible" : "hidden",
           transition:
             "opacity 0.40s cubic-bezier(0.16, 1, 0.3, 1), transform 0.40s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.40s",
+          boxSizing: "border-box",
           background: "#fff",
           border: "2px solid #2B72B9",
           borderRadius: "16px",
@@ -110,8 +113,8 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
           @keyframes float-note-right { 0%{transform:translate(35px,15px) scale(0.5);opacity:0} 30%{opacity:0.8} 100%{transform:translate(55px,-15px) scale(1.1) rotate(20deg);opacity:0} }
         `}</style>
         {/* Speech bubble arrow */}
-        {/* Speech bubble arrow */}
         <div
+          aria-hidden="true"
           style={{
             position: "absolute",
             top: "-8px",
@@ -129,6 +132,7 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
         {showModal && (
           <>
             <span
+              aria-hidden="true"
               style={{
                 position: "absolute",
                 left: "50%",
@@ -141,6 +145,7 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
               🎵
             </span>
             <span
+              aria-hidden="true"
               style={{
                 position: "absolute",
                 right: "50%",
@@ -156,6 +161,7 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
         )}
         {/* Soundwave bars */}
         <Box
+          aria-hidden="true"
           sx={{
             display: "flex",
             justifyContent: "center",
