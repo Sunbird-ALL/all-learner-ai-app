@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  ThemeProvider,
-  createTheme,
-  useMediaQuery,
-  Grid,
-  Box,
-  CircularProgress,
-} from "@mui/material";
-import { ListenButton } from "../../utils/constants";
-import * as Assets from "../../utils/imageAudioLinks";
+import { useMediaQuery, Box } from "@mui/material";
 
 const AudioTooltipModal = ({ audioSrc, description, children }) => {
   const [showModal, setShowModal] = useState(false);
