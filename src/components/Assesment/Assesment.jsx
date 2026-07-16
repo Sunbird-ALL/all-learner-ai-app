@@ -2201,7 +2201,7 @@ const Assesment = ({ discoverStart }) => {
   };
 
   const sectionStyle = {
-    width: "100%",
+    width: "100vw",
     height: "100dvh",
     minHeight: "-webkit-fill-available",
     backgroundImage: `url(${getBackgroundImage()})`,
