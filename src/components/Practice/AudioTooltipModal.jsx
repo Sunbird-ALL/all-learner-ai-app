@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  ThemeProvider,
-  createTheme,
-  useMediaQuery,
-  Grid,
-  Box,
-  CircularProgress,
-} from "@mui/material";
-import { ListenButton } from "../../utils/constants";
-import * as Assets from "../../utils/imageAudioLinks";
+import { useMediaQuery, Box } from "@mui/material";
+
+// Shared tooltip dimension constants (border-box sizing)
+const TOOLTIP_GAP = 12; // gap between trigger and tooltip (marginTop)
+const TOOLTIP_HEIGHT = 50; // height (border-box: includes padding & border)
+const TOOLTIP_SHADOW = 10; // clearance for box-shadow spread
+const TOOLTIP_RESERVED = `${TOOLTIP_GAP + TOOLTIP_HEIGHT + TOOLTIP_SHADOW}px`; // 72px
 
 const AudioTooltipModal = ({ audioSrc, description, children }) => {
   const [showModal, setShowModal] = useState(false);
@@ -65,7 +62,7 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
       style={{
         position: "relative",
         display: "inline-block",
-        marginBottom: showModal ? "4.06rem" : "0px",
+        marginBottom: showModal ? TOOLTIP_RESERVED : "0px",
         transition: "margin-bottom 0.40s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
       onMouseEnter={() => !isTouchDevice && setShowModal(true)}
@@ -99,11 +96,11 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
             ? "glow-pulsate 1.8s infinite ease-in-out"
             : "none",
           padding: "10px 0px",
-          marginTop: "12px",
+          marginTop: `${TOOLTIP_GAP}px`,
           zIndex: 1000,
           textAlign: "center",
           width: "180px",
-          height: "50px",
+          height: `${TOOLTIP_HEIGHT}px`,
         }}
       >
         <style>{`
