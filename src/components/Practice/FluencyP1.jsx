@@ -788,7 +788,7 @@ const FluencyP1 = ({
                     height: "50px",
                     cursor: "pointer",
                     order: isMobile ? 2 : undefined,
-                    marginTop: isMobile ? "30px" : undefined,
+                    marginTop: isMobile ? "55px" : "auto",
                   }}
                 />
               )}
