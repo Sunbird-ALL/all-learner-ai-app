@@ -66,8 +66,6 @@ import { levels, levelTwo, levelThree } from "../../data/practiceContent";
 import { onLocalData } from "../../utils/localStorageEvents";
 import { useAlphabetDemo } from "../../context/AlphabetDemoContext";
 
-const PRACTICE_LINE_HEIGHT = { xs: "1.4", md: "4.5rem" };
-
 // ─── Lazy-loaded activity components (one chunk each) ────────────────────────
 const Mechanics2 = lazy(() => import("../../components/Practice/Mechanics2"));
 const Mechanics3 = lazy(() => import("../../components/Practice/Mechanics3"));
@@ -3710,7 +3708,7 @@ const Practice = () => {
                         : "clamp(1.6rem, 2.5vw, 3.8rem)",
                     fontWeight: lang === "te" ? 400 : 700,
                     fontFamily: getFontFamily(lang),
-                    lineHeight: PRACTICE_LINE_HEIGHT,
+                    lineHeight: { xs: 1.4, md: "4.5rem" },
                     background: "#FFF0BD",
                     color: color,
                   }}
@@ -3738,7 +3736,7 @@ const Practice = () => {
                       : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
-                  lineHeight: PRACTICE_LINE_HEIGHT,
+                  lineHeight: { xs: 1.4, md: "4.5rem" },
                 }}
               >
                 {i === 0 ? word[i].toUpperCase() : word[i]}
@@ -3767,7 +3765,7 @@ const Practice = () => {
                       : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
-                  lineHeight: PRACTICE_LINE_HEIGHT,
+                  lineHeight: { xs: 1.4, md: "4.5rem" },
                   background: "#FFF0BD",
                 }}
               >
@@ -3789,7 +3787,7 @@ const Practice = () => {
                     : "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
                 fontFamily: getFontFamily(lang),
-                lineHeight: PRACTICE_LINE_HEIGHT,
+                lineHeight: { xs: 1.4, md: "4.5rem" },
               }}
               key={index}
             >
