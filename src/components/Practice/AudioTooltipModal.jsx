@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import {
   ThemeProvider,
@@ -31,7 +32,9 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
   useEffect(() => {
     if (showModal && audioSrc) {
       const audio = new Audio(
-        `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${audioSrc}`
+        `${getConfig(
+          "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+        )}/multilingual_audios/${audioSrc}`
       );
       audioRef.current = audio;
       audio.play().catch((err) => console.log("Audio play error:", err));
@@ -101,7 +104,7 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
               }}
               onClick={() => {
                 // playWordAudio(
-                //   `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${"text"}`
+                //   `${getConfig("REACT_APP_AWS_S3_BUCKET_CONTENT_URL")}/mechanics_audios/${"text"}`
                 // );
               }}
             >

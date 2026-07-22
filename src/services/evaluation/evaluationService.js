@@ -1,8 +1,9 @@
+import { getConfig } from "../../config/runtimeConfig";
 import axios from "axios";
 import { reportError } from "../../utils/errorReporter";
 
 const EVAL_URL =
-  process.env.REACT_APP_EVAL_HOST ||
+  getConfig("REACT_APP_EVAL_HOST") ||
   "https://dev-ekstep-tell-ocr-service-985885894164.asia-south1.run.app";
 
 /**

@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useEffect, useState, useRef } from "react";
 import {
   ThemeProvider,
@@ -956,7 +957,9 @@ const WordWall = ({
                 onClick={() => handleImageClick(item, idx)}
               >
                 <img
-                  src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${item?.image_url}`}
+                  src={`${getConfig(
+                    "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                  )}/mechanics_images/${item?.image_url}`}
                   alt={item?.text}
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
@@ -1163,7 +1166,9 @@ const WordWall = ({
         >
           <div style={{ textAlign: "center" }}>
             <img
-              src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${currentAnswer?.image_url}`}
+              src={`${getConfig(
+                "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+              )}/mechanics_images/${currentAnswer?.image_url}`}
               alt={currentAnswer?.text}
               style={{
                 width: isMobile ? "100px" : "200px",
@@ -1200,7 +1205,9 @@ const WordWall = ({
                 }}
                 onClick={() =>
                   playAudio(
-                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentAnswer?.audio_en}`
+                    `${getConfig(
+                      "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                    )}/all-audio-files/${lang}/${currentAnswer?.audio_en}`
                   )
                 }
               >
@@ -1227,7 +1234,9 @@ const WordWall = ({
                 }}
                 onClick={() =>
                   playAudio(
-                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentAnswer?.audio_hi}`
+                    `${getConfig(
+                      "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                    )}/multilingual_audios/${currentAnswer?.audio_hi}`
                   )
                 }
               >

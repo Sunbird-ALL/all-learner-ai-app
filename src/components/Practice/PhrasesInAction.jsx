@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Grid, Box } from "@mui/material";
 import MainLayout from "../Layout/MainLayout";
@@ -139,20 +140,28 @@ const PhrasesInAction = ({
       const step1 = {
         allwords: [
           {
-            img: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${correctOption.image_url}`,
+            img: `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/mechanics_images/${correctOption.image_url}`,
             text: correctOption.text,
           },
         ],
-        audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioFile}`,
+        audio: `${getConfig(
+          "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+        )}/mechanics_audios/${audioFile}`,
       };
 
       const step2 = {
         allwordsTwo: rawData.options.map((opt) => ({
-          img: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${opt.image_url}`,
+          img: `${getConfig(
+            "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+          )}/mechanics_images/${opt.image_url}`,
           text: opt.text,
         })),
         correctWordTwo: correctOption.text,
-        audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioFile}`,
+        audio: `${getConfig(
+          "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+        )}/mechanics_audios/${audioFile}`,
       };
 
       return { step1, step2 };
@@ -170,13 +179,17 @@ const PhrasesInAction = ({
         allwords: [
           {
             img: imageUrl
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${imageUrl}`
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_images/${imageUrl}`
               : contentSourceData.image || "",
             text: text,
           },
         ],
         audio: audioUrl
-          ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioUrl}`
+          ? `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/mechanics_audios/${audioUrl}`
           : contentSourceData.audio || "",
       };
 
@@ -185,14 +198,18 @@ const PhrasesInAction = ({
         allwordsTwo: [
           {
             img: imageUrl
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${imageUrl}`
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_images/${imageUrl}`
               : contentSourceData.image || "",
             text: text,
           },
         ],
         correctWordTwo: text,
         audio: audioUrl
-          ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${audioUrl}`
+          ? `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/mechanics_audios/${audioUrl}`
           : contentSourceData.audio || "",
       };
 

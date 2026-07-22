@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 /* global globalThis */
 // ─── Static imports (must all come before any declarations) ─────────────────
 import ServerErrorScreen from "../../components/ServerErrorScreen/ServerErrorScreen";
@@ -2107,7 +2108,7 @@ const Practice = () => {
           // Validate that points is a valid positive number
           if (!points || points <= 0) {
             console.error("Invalid points value:", points);
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
@@ -2129,7 +2130,7 @@ const Practice = () => {
               awarded: awardedPoints,
               milestone,
             });
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
@@ -2192,7 +2193,7 @@ const Practice = () => {
           Log(data, "practice", "ET");
           setPercentage(getSetData?.percentage);
           checkFluency(currentContentType, getSetData?.fluency);
-          if (process.env.REACT_APP_POST_LEARNER_PROGRESS === "true") {
+          if (getConfig("REACT_APP_POST_LEARNER_PROGRESS") === "true") {
             await createLearnerProgress(
               sub_session_id,
               getSetData?.currentLevel,
@@ -2672,12 +2673,16 @@ const Practice = () => {
   const playTeacherAudio = () => {
     const contentId = questions[currentQuestion]?.contentId;
     let audio = new Audio(
-      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
+      `${getConfig(
+        "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+      )}/all-audio-files/${lang}/${contentId}.wav`
     );
     audio.addEventListener("canplaythrough", () => {
       set_temp_audio(
         new Audio(
-          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
+          `${getConfig(
+            "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+          )}/all-audio-files/${lang}/${contentId}.wav`
         )
       );
     });
@@ -2724,9 +2729,9 @@ const Practice = () => {
         Number.isInteger(Number(resLessons?.result?.lesson));
 
       if (
-        process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
+        getConfig("REACT_APP_IS_APP_IFRAME") !== "true" &&
         (localStorage.getItem("contentSessionId") !== null ||
-          process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+          getConfig("REACT_APP_IS_IN_APP_AUTHORISATION") === "true")
       ) {
         fetchUserPoints()
           .then((points) => {
@@ -3349,7 +3354,7 @@ const Practice = () => {
         return;
       } else {
         // Can't go back further in F1 flow
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -3413,7 +3418,7 @@ const Practice = () => {
         setLocalData("practiceProgress", JSON.stringify(practiceProgress));
         return;
       } else {
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -3466,7 +3471,7 @@ const Practice = () => {
         setLocalData("practiceProgress", JSON.stringify(practiceProgress));
         return;
       } else {
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -3660,7 +3665,7 @@ const Practice = () => {
       setCurrentQuestion(practiceProgress?.currentQuestion || 0);
       setLocalData("practiceProgress", JSON.stringify(practiceProgress));
     } else {
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+      if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
         navigate("/");
       } else {
         navigate("/discover-start");
@@ -3802,7 +3807,7 @@ const Practice = () => {
 
   useEffect(() => {
     if (questions[currentQuestion]?.contentSourceData) {
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+      if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
         const contentSourceData =
           questions[currentQuestion]?.contentSourceData || [];
         const stringLengths = contentSourceData.map((item) => item.text.length);
@@ -4057,7 +4062,11 @@ const Practice = () => {
         <WordsOrImage
           {...{
             level: level,
-            audioLink: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${questions[currentQuestion]?.contentId}.wav`,
+            audioLink: `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/all-audio-files/${lang}/${
+              questions[currentQuestion]?.contentId
+            }.wav`,
             mechanism_id: mechanism?.id,
             header:
               mechanism?.id &&
@@ -4082,7 +4091,11 @@ const Practice = () => {
             type: questions[currentQuestion]?.contentType,
             image:
               mechanism?.id === "mechanic_15"
-                ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${questions[currentQuestion]?.mechanics_data[0]?.image_url}`
+                ? `${getConfig(
+                    "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                  )}/mechanics_images/${
+                    questions[currentQuestion]?.mechanics_data[0]?.image_url
+                  }`
                 : "",
             // image: elephant,
             enableNext,
@@ -4687,11 +4700,15 @@ const Practice = () => {
             storyLine,
             handleNext,
             image: questions[currentQuestion]?.mechanics_data
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/` +
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_images/` +
                 questions[currentQuestion]?.mechanics_data[0]?.image_url
               : null,
             audio: questions[currentQuestion]?.mechanics_data
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_audios/` +
                 questions[currentQuestion]?.mechanics_data[0]?.audio_url
               : null,
             enableNext,
@@ -5304,8 +5321,9 @@ const Practice = () => {
               : questions[currentQuestion]?.contentSourceData?.[0]?.text,
             contentType: currentContentType,
             question_audio: mechanics_data
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
-                mechanics_data[0].audio_url
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_audios/` + mechanics_data[0].audio_url
               : questions[currentQuestion]?.contentSourceData?.[0]?.audio_url,
             contentId: questions[currentQuestion]?.contentId,
             setVoiceText,
@@ -5318,13 +5336,15 @@ const Practice = () => {
             type: "word",
             mechanism: mechanism?.id,
             image: mechanics_data
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/` +
-                mechanics_data[0]?.image_url
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_images/` + mechanics_data[0]?.image_url
               : null,
 
             audio: mechanics_data
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
-                audioLink
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_audios/` + audioLink
               : null,
             enableNext,
             showTimer: false,
@@ -5382,7 +5402,9 @@ const Practice = () => {
             handleNext,
             // image: elephant,
             audio: questions[currentQuestion]?.mechanics_data
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_audios/` +
                 questions[currentQuestion]?.mechanics_data[0]?.audio_url
               : null,
             enableNext,
@@ -7502,11 +7524,15 @@ const Practice = () => {
             storyLine,
             handleNext,
             image: questions[currentQuestion]?.mechanics_data
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/` +
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_images/` +
                 questions[currentQuestion]?.mechanics_data[0]?.image_url
               : null,
             audio: questions[currentQuestion]?.mechanics_data
-              ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/` +
+              ? `${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_audios/` +
                 questions[currentQuestion]?.mechanics_data[0]?.audio_url
               : null,
             enableNext,
@@ -7566,7 +7592,11 @@ const Practice = () => {
         <WordsOrImage
           {...{
             level: level,
-            audioLink: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${questions[currentQuestion]?.contentId}.wav`,
+            audioLink: `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/all-audio-files/${lang}/${
+              questions[currentQuestion]?.contentId
+            }.wav`,
             mechanism_id: mechanism?.id,
             header:
               questions[currentQuestion]?.contentType === "image"

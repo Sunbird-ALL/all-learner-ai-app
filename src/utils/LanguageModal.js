@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import React, { useState, useMemo, useEffect } from "react";
 import { useMediaQuery, createTheme } from "@mui/material";
 import MotherTongue from "./../assets/motherTongue.svg";
@@ -26,7 +27,7 @@ const defaultLanguageCodes = ["ka", "tn", "te", "hi"];
 // Get languages from environment variable or use defaults
 const getNativeLanguages = () => {
   try {
-    const envLanguages = process.env.REACT_APP_NATIVE_LANGUAGES;
+    const envLanguages = getConfig("REACT_APP_NATIVE_LANGUAGES");
     if (envLanguages) {
       const parsed = JSON.parse(envLanguages);
       if (Array.isArray(parsed) && parsed.length > 0) {
@@ -62,7 +63,7 @@ const getNativeLanguages = () => {
 // Get default native language from environment variable
 const getDefaultNativeLanguage = (availableLanguages) => {
   try {
-    const envDefaultLang = process.env.REACT_APP_DEFAULT_NATIVE_LANGUAGE;
+    const envDefaultLang = getConfig("REACT_APP_DEFAULT_NATIVE_LANGUAGE");
     if (envDefaultLang) {
       const defaultCode = envDefaultLang.toLowerCase().trim();
       // Map the code to storage code (e.g., "kn" -> "ka", "ta" -> "tn")

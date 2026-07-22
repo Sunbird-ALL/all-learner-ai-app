@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import { useState, useRef, useEffect } from "react";
 import { getLocalData, NextButtonRound } from "../../utils/constants";
 import { RetryIcon } from "../Icons/SvgIcons";
@@ -190,7 +191,7 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
 
     return new Promise((resolve) => {
       // Build S3 audio path: /audio/audio-preview/combined-letter-games/letter-hunt/{language}/narration{step}.wav
-      // const audioPath = `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL || ''}/audio/audio-preview/combined-letter-games/letter-hunt/${language}/narration${step}.wav`;
+      // const audioPath = `${getConfig("REACT_APP_AWS_S3_BUCKET_CONTENT_URL") || ''}/audio/audio-preview/combined-letter-games/letter-hunt/${language}/narration${step}.wav`;
       const audioPath = `${process.env.PUBLIC_URL}/audio/audio-preview/letter-hunt/${language}/narration${step}.wav`;
       const audio = new Audio(audioPath);
       instructionAudioRef.current = audio; // Store audio reference

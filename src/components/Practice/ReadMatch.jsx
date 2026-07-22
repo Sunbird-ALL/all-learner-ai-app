@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import bikeImg from "../../assets/bike.svg";
 import lemonImg from "../../assets/Mango.svg";
@@ -194,7 +195,7 @@ const ReadMatch = ({
         })
         .catch((err) => {
           console.error("Error updating correct practice words:", err);
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
             navigate("/");
           } else {
             navigate("/discover-start");
@@ -515,7 +516,9 @@ const ReadMatch = ({
                 >
                   <Box
                     component="img"
-                    src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${item.img}`}
+                    src={`${getConfig(
+                      "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                    )}/mechanics_images/${item.img}`}
                     alt={`image-${index}`}
                     sx={{
                       width: isMobile ? "30px" : "85px",

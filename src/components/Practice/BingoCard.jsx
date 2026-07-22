@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, {
   useState,
   useEffect,
@@ -683,8 +684,12 @@ const BingoCard = ({
         words: parentWords.words,
         imageAudioMap: parentWords.imageAudioMap.reduce((acc, item) => {
           acc[item.text] = {
-            image: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${item?.image_url}`,
-            audio: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${item?.audio_url}`,
+            image: `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/mechanics_images/${item?.image_url}`,
+            audio: `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/mechanics_audios/${item?.audio_url}`,
           };
           return acc;
         }, {}),

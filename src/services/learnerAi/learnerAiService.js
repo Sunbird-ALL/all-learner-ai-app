@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import axios from "axios";
 import config from "../../utils/urlConstants.json";
 import { getLocalData, setLocalData } from "../../utils/constants";
@@ -8,7 +9,7 @@ import {
 } from "./getSetResultLoading";
 import { reportError } from "../../utils/errorReporter";
 
-const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
+const API_LEARNER_AI_APP_HOST = getConfig("REACT_APP_LEARNER_AI_APP_HOST");
 
 const getHeaders = () => {
   const token = localStorage.getItem("apiToken");
@@ -209,7 +210,7 @@ export const getSetResultPractice = async ({
         session_id: sessionId,
         totalSyllableCount: totalSyllableCount,
         language: getLocalData("lang"),
-        max_level: parseInt(maxLevel || process.env.REACT_APP_MAX_LEVEL, 10),
+        max_level: parseInt(maxLevel || getConfig("REACT_APP_MAX_LEVEL"), 10),
         is_mechanics: mechanism && mechanism?.id ? true : false,
       },
       getHeaders()
@@ -414,7 +415,7 @@ export const setMilestoneScore = async (
 
 export const predictEngagement = (payload) => {
   const token = localStorage.getItem("apiToken");
-  const url = process.env.REACT_APP_ENGAGEMENT_PREDICT_URL;
+  const url = getConfig("REACT_APP_ENGAGEMENT_PREDICT_URL");
 
   axios
     .post(url, payload, {
@@ -430,7 +431,7 @@ export const predictEngagement = (payload) => {
 
 export const callEngagementPredictor = async (subSessionId = null) => {
   const isEnabled =
-    process.env.REACT_APP_IS_ENGAGEMENT_PREDICT_ENABLE === "true";
+    getConfig("REACT_APP_IS_ENGAGEMENT_PREDICT_ENABLE") === "true";
   if (!isEnabled) return;
 
   try {

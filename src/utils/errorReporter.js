@@ -1,3 +1,5 @@
+import { getConfig } from "../config/runtimeConfig";
+
 /**
  * Safely parse a JSON string without throwing.
  * Returns `fallback` (default: null) if parsing fails.
@@ -33,9 +35,14 @@ export function safeParseJSON(str, fallback = null) {
  * @property {string}  [url]        - Page URL at time of error (auto-added)
  */
 
-const ERROR_ENDPOINT =
-  (process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST || "") +
-  "/api/client-errors";
+// Read lazily (not at module scope) so this still works if an error fires
+// before the runtime config fetch in src/index.js has resolved.
+function getErrorEndpoint() {
+  return (
+    (getConfig("REACT_APP_LEARNER_AI_ORCHESTRATION_HOST") || "") +
+    "/api/client-errors"
+  );
+}
 
 const QUEUE_KEY = "all_error_queue";
 const MAX_QUEUE_SIZE = 50;
@@ -60,7 +67,7 @@ export async function reportError(payload) {
     url: window.location.href,
   };
   try {
-    await fetch(ERROR_ENDPOINT, {
+    await fetch(getErrorEndpoint(), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(enriched),
@@ -84,7 +91,7 @@ export async function flushErrorQueue() {
   const flushed = [];
   for (const item of queue) {
     try {
-      await fetch(ERROR_ENDPOINT, {
+      await fetch(getErrorEndpoint(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item),

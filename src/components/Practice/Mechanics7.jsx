@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import {
   ThemeProvider,
   createTheme,
@@ -1015,7 +1016,9 @@ const Mechanics7 = ({
                 </span>
               )}
               <ZoomableImage
-                src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${parentWords?.image_url}`}
+                src={`${getConfig(
+                  "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                )}/mechanics_images/${parentWords?.image_url}`}
                 alt="pencil"
                 containerStyle={{
                   marginTop: isMobile ? "1px" : "0px",
@@ -1302,7 +1305,9 @@ const Mechanics7 = ({
                           }}
                           onClick={() => {
                             playWordAudio(
-                              `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentAudio}`
+                              `${getConfig(
+                                "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                              )}/mechanics_audios/${currentAudio}`
                             );
                           }}
                         >

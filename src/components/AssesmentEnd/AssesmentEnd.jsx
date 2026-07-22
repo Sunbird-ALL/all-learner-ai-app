@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import MainLayout from "../Layout/MainLayout";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { getLocalData, setLocalData } from "../../utils/constants";
@@ -76,9 +77,9 @@ const AssesmentEnd = () => {
         setLocalData("sessionId", sessionId);
       }
       if (
-        process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
+        getConfig("REACT_APP_IS_APP_IFRAME") !== "true" &&
         (localStorage.getItem("contentSessionId") !== null ||
-          process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+          getConfig("REACT_APP_IS_IN_APP_AUTHORISATION") === "true")
       ) {
         fetchUserPoints()
           .then((points) => {

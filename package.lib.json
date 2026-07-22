@@ -1,0 +1,19 @@
+{
+  "name": "all-learner-ai-app",
+  "version": "0.1.0",
+  "description": "ALL Learner AI app packaged as a React component (MyApplication) — config passed as a prop.",
+  "type": "module",
+  "main": "dist-lib/all-learner-ai-app.es.js",
+  "module": "dist-lib/all-learner-ai-app.es.js",
+  "exports": {
+    ".": "./dist-lib/all-learner-ai-app.es.js",
+    "./style.css": "./dist-lib/style.css"
+  },
+  "files": [
+    "dist-lib"
+  ],
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

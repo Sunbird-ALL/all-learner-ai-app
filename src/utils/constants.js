@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import confetti from "canvas-confetti";
 import * as React from "react";
 import CryptoJS from "crypto-js";
@@ -865,8 +866,8 @@ const AllLanguages = [
   { name: "ଓଡିଆ", lang: "or", symbol: "କ" },
 ];
 
-const appLanguages = process.env.REACT_APP_LANGUAGES
-  ? JSON.parse(process.env.REACT_APP_LANGUAGES)
+const appLanguages = getConfig("REACT_APP_LANGUAGES")
+  ? JSON.parse(getConfig("REACT_APP_LANGUAGES"))
   : [];
 
 export const languages = AllLanguages.filter((lang) =>
@@ -875,7 +876,7 @@ export const languages = AllLanguages.filter((lang) =>
 
 // Get default language from environment variable, fallback to "en"
 export const getDefaultLanguage = () => {
-  return process.env.REACT_APP_LANGUAGE || "en";
+  return getConfig("REACT_APP_LANGUAGE") || "en";
 };
 
 // Get language from localStorage or use default from environment variable
@@ -923,7 +924,7 @@ export function handleDecrypt(value) {
 }
 
 export const sendTestRigScore = (score) => {
-  if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+  if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
     window.parent.postMessage(
       {
         score,
@@ -935,8 +936,8 @@ export const sendTestRigScore = (score) => {
 };
 
 export function isRecommendationApiEnabledForLang(lang) {
-  if (process.env.REACT_APP_USE_RECOMMENDATION_API !== "true") return false;
-  const languages = process.env.REACT_APP_RECOMMENDATION_API_LANGUAGES;
+  if (getConfig("REACT_APP_USE_RECOMMENDATION_API") !== "true") return false;
+  const languages = getConfig("REACT_APP_RECOMMENDATION_API_LANGUAGES");
 
   if (!languages || languages === "null") {
     console.error("Recommendation language list missing, using default flow");

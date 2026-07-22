@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
@@ -4952,7 +4953,7 @@ const R0 = ({
       } else {
         // Default R0 behavior
         setLocalData("rStepZero", 1);
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");

@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import { Box, Typography } from "@mui/material";
 import HomophonesFinder from "homophones";
 import React, { createRef, useEffect, useState } from "react";
@@ -238,7 +239,9 @@ const Mechanics2 = ({
                     type="audio/mp3"
                     src={
                       contentId
-                        ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
+                        ? `${getConfig(
+                            "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                          )}/all-audio-files/${lang}/${contentId}.wav`
                         : ""
                     }
                   />

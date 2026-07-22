@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import { useEffect, useState } from "react";
 import { reportError } from "./errorReporter";
 import { Box, CircularProgress } from "@mui/material";
@@ -110,7 +111,7 @@ function VoiceAnalyser(props) {
   const lang = getLocalData("lang");
   const { livesData, setLivesData } = props;
   const [isAudioPreprocessing, setIsAudioPreprocessing] = useState(
-    process.env.REACT_APP_IS_AUDIOPREPROCESSING === "true"
+    getConfig("REACT_APP_IS_AUDIOPREPROCESSING") === "true"
   );
   const [isMatching, setIsMatching] = useState(false);
   const livesAddAudio = usePreloadAudio(livesAdd);
@@ -144,7 +145,9 @@ function VoiceAnalyser(props) {
       let audio = new Audio(
         audioLink
           ? audioLink
-          : `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${props.contentId}.wav`
+          : `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/all-audio-files/${lang}/${props.contentId}.wav`
       );
       //console.log("audo", audio);
       audio.addEventListener("canplaythrough", () => {
@@ -540,11 +543,11 @@ function VoiceAnalyser(props) {
 
       // TODO: Remove false when REACT_APP_AWS_S3_BUCKET_NAME and keys added
       let audioFileName = "";
-      if (process.env.REACT_APP_CAPTURE_AUDIO === "true") {
+      if (getConfig("REACT_APP_CAPTURE_AUDIO") === "true") {
         let getContentId = currentLine;
-        audioFileName = `${
-          process.env.REACT_APP_CHANNEL
-        }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+        audioFileName = `${getConfig(
+          "REACT_APP_CHANNEL"
+        )}/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
         // Update interaction with audio_path if available (for engagement tracking)
         if (callUpdateLearner && originalText && audioFileName) {
@@ -617,7 +620,7 @@ function VoiceAnalyser(props) {
         {
           // Required
           target:
-            process.env.REACT_APP_CAPTURE_AUDIO === "true"
+            getConfig("REACT_APP_CAPTURE_AUDIO") === "true"
               ? `${audioFileName}`
               : "", // Required. Target of the response
           //"qid": "", // Required. Unique assessment/question id
@@ -687,11 +690,11 @@ function VoiceAnalyser(props) {
         const sessionId = getLocalData("sessionId");
 
         let audioFileName = "";
-        if (process.env.REACT_APP_CAPTURE_AUDIO === "true") {
+        if (getConfig("REACT_APP_CAPTURE_AUDIO") === "true") {
           let getContentId = currentLine;
-          audioFileName = `${
-            process.env.REACT_APP_CHANNEL
-          }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+          audioFileName = `${getConfig(
+            "REACT_APP_CHANNEL"
+          )}/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
           try {
             await uploadWavViaPresignedUrl(audioFileName, base64Data);
@@ -701,7 +704,7 @@ function VoiceAnalyser(props) {
           {
             // Required
             target:
-              process.env.REACT_APP_CAPTURE_AUDIO === "true"
+              getConfig("REACT_APP_CAPTURE_AUDIO") === "true"
                 ? `${audioFileName}`
                 : "", // Required. Target of the response
             type: "SPEAK", // Required. Type of response. CHOOSE, DRAG, SELECT, MATCH, INPUT, SPEAK, WRITE

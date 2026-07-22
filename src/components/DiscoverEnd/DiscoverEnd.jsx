@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import {
   Box,
   Card,
@@ -73,7 +74,7 @@ const SpeakSentenceComponent = () => {
 
   const handleProfileBack = () => {
     try {
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+      if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
         navigate("/");
       } else {
         navigate("/discover-start");

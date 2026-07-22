@@ -1,21 +1,22 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import serverDowntimeImg from "../../assets/server-downtime.png";
 
 const DOWNTIME_START = parseInt(
-  process.env.REACT_APP_DOWNTIME_START_HOUR ?? "20",
+  getConfig("REACT_APP_DOWNTIME_START_HOUR") ?? "20",
   10
 );
 const DOWNTIME_END = parseInt(
-  process.env.REACT_APP_DOWNTIME_END_HOUR ?? "8",
+  getConfig("REACT_APP_DOWNTIME_END_HOUR") ?? "8",
   10
 );
 const MIN_WIDTH = parseInt(
-  process.env.REACT_APP_MIN_SCREEN_WIDTH ?? "1600",
+  getConfig("REACT_APP_MIN_SCREEN_WIDTH") ?? "1600",
   10
 );
 const MIN_HEIGHT = parseInt(
-  process.env.REACT_APP_MIN_SCREEN_HEIGHT ?? "810",
+  getConfig("REACT_APP_MIN_SCREEN_HEIGHT") ?? "810",
   10
 );
 // 10% tolerance: ignores minor pixel differences from OS taskbar/browser chrome.

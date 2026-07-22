@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import { useEffect, useState, useRef } from "react";
 import ServerErrorScreen from "../ServerErrorScreen/ServerErrorScreen";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -281,7 +282,7 @@ const SpeakSentenceComponent = () => {
       const lang = getLocalData("lang");
 
       // await axios.post(
-      //   `${process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST}/${config.URLS.ADD_LESSON}`,
+      //   `${getConfig("REACT_APP_LEARNER_AI_ORCHESTRATION_HOST")}/${config.URLS.ADD_LESSON}`,
       //   {
       //     userId: localStorage.getItem("virtualId"),
       //     sessionId: localStorage.getItem("sessionId"),
@@ -316,7 +317,7 @@ const SpeakSentenceComponent = () => {
           let milestone = "m0";
 
           if (point !== 1) {
-            if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
@@ -328,7 +329,7 @@ const SpeakSentenceComponent = () => {
             const result = await addPointer(point, milestone);
             const awardedPoints = result?.result?.points;
             if (awardedPoints !== 1) {
-              if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
                 navigate("/");
               } else {
                 navigate("/discover-start");
@@ -349,7 +350,7 @@ const SpeakSentenceComponent = () => {
         const { data: getSetData } = getSetResultRes;
         const data = JSON.stringify(getSetData);
         Log(data, "discovery", "ET");
-        if (process.env.REACT_APP_POST_LEARNER_PROGRESS === "true") {
+        if (getConfig("REACT_APP_POST_LEARNER_PROGRESS") === "true") {
           try {
             const milestoneLevel = getSetData?.currentLevel;
             const result = await createLearnerProgress(
@@ -489,9 +490,9 @@ const SpeakSentenceComponent = () => {
 
   const handleBack = () => {
     const destination =
-      process.env.REACT_APP_IS_APP_IFRAME === "true" ? "/" : "/discover-start";
+      getConfig("REACT_APP_IS_APP_IFRAME") === "true" ? "/" : "/discover-start";
     navigate(destination);
-    // if (process.env.REACT_APP_IS_APP_IFRAME === 'true') {
+    // if (getConfig("REACT_APP_IS_APP_IFRAME") === 'true') {
     //   navigate("/");
     // } else {
     //   navigate("/discover-start")
@@ -512,7 +513,7 @@ const SpeakSentenceComponent = () => {
 
   const handleDemoBack = () => {
     const destination =
-      process.env.REACT_APP_IS_APP_IFRAME === "true" ? "/" : "/discover-start";
+      getConfig("REACT_APP_IS_APP_IFRAME") === "true" ? "/" : "/discover-start";
     navigate(destination);
   };
 

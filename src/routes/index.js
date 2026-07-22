@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 /* Route declarations for the app — all views are lazy-loaded for code splitting */
 import { lazy } from "react";
 
@@ -141,7 +142,7 @@ const routData = [
     component: TowreFlowPage,
     requiresAuth: true,
   },
-  ...(process.env.REACT_APP_ENABLE_RESET_ROUTE === "true"
+  ...(getConfig("REACT_APP_ENABLE_RESET_ROUTE") === "true"
     ? [resetMilestoneRoute]
     : []),
   // ============================================
@@ -196,7 +197,7 @@ const routData = [
 
 // Conditionally add catch-all route based on auth config
 const TOKEN = localStorage.getItem("apiToken");
-const isLogin = process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true";
+const isLogin = getConfig("REACT_APP_IS_IN_APP_AUTHORISATION") === "true";
 
 if (isLogin && !TOKEN) {
   routData.push({
