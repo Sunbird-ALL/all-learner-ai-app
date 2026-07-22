@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Grid, Radio, Typography } from "@mui/material";
 import MainLayout from "../Layout/MainLayout";
@@ -351,7 +352,9 @@ const Mechanics5 = ({
                         onPause={() => setPlayingIndex(null)}
                       >
                         <source
-                          src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${option.audio_url}`}
+                          src={`${getConfig(
+                            "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                          )}/mechanics_audios/${option.audio_url}`}
                           type="audio/wav"
                         />
                       </audio>
@@ -373,7 +376,9 @@ const Mechanics5 = ({
                         {option.image_url && (
                           <Box
                             component="img"
-                            src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${option.image_url}`}
+                            src={`${getConfig(
+                              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                            )}/mechanics_images/${option.image_url}`}
                             alt={option?.text || "option image"}
                             sx={{
                               borderRadius: "20px",

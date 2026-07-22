@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useEffect, Fragment, Suspense, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import CustomizedSnackbars from "../../views/Snackbar/CustomSnackbar";
@@ -24,7 +25,7 @@ const PrivateRoute = (props) => {
 
 const AppContent = ({ routes }) => {
   const [showDiagnostic, setShowDiagnostic] = useState(
-    process.env.REACT_APP_IS_APP_IFRAME === "true" &&
+    getConfig("REACT_APP_IS_APP_IFRAME") === "true" &&
       !!localStorage.getItem("apiToken") &&
       !getLocalData("audioDiagnosticShown")
   );

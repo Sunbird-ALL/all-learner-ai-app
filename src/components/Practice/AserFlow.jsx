@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import { Box } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -273,7 +274,9 @@ const AserFlow = ({
       try {
         stopCurrentAudio();
         const audio = new Audio(
-          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${currentItem.contentId}.wav`
+          `${getConfig(
+            "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+          )}/all-audio-files/${lang}/${currentItem.contentId}.wav`
         );
         audioRef.current = audio;
         setIsAudioPlaying(true);
@@ -359,7 +362,7 @@ const AserFlow = ({
       let milestone = "B";
 
       if (point !== 1) {
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -371,7 +374,7 @@ const AserFlow = ({
         const result = await addPointer(point, milestone);
         const awardedPoints = result?.result?.points;
         if (awardedPoints !== 1) {
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
             navigate("/");
           } else {
             navigate("/discover-start");
@@ -935,7 +938,7 @@ const AserFlow = ({
                 console.log("AserFlow - Next button clicked after completion");
                 // Handle navigation when next button is clicked after completion
                 handleNext?.();
-                if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
                   navigate("/");
                 } else {
                   navigate("/discover-start");
@@ -996,7 +999,7 @@ const AserFlow = ({
               setShowSuccessMessage(false);
               // Don't auto-navigate - let user click next button instead
               // handleNext?.();
-              // if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+              // if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
               //   navigate("/");
               // } else {
               //   navigate("/discover-start");

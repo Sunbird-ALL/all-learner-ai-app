@@ -1,9 +1,11 @@
+import { getConfig } from "../../config/runtimeConfig";
 import axios from "axios";
 import config from "../../utils/urlConstants.json";
 import { getLocalData } from "../../utils/constants";
 
-const API_BASE_URL_CONTENT_SERVICE =
-  process.env.REACT_APP_CONTENT_SERVICE_APP_HOST;
+const API_BASE_URL_CONTENT_SERVICE = getConfig(
+  "REACT_APP_CONTENT_SERVICE_APP_HOST"
+);
 
 const getHeaders = () => {
   const token = localStorage.getItem("apiToken");

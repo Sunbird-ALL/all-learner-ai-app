@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import headerImg from "../../assets/headerImg.svg";
@@ -568,7 +569,9 @@ const FluencyP4 = ({
 
     if (word) {
       playWordAudio(
-        `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
+        `${getConfig(
+          "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+        )}/multilingual_audios/${currentSentence.hints[word]}`
       );
     }
   };

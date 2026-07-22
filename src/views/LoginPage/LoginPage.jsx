@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 /* global globalThis */
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +35,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const loginMode = process.env.REACT_APP_LOGIN_MODE || "product";
+  const loginMode = getConfig("REACT_APP_LOGIN_MODE") || "product";
   const isStateLogin = loginMode === "state";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -122,28 +123,28 @@ const LoginPage = () => {
 
     await initialize({
       context: {
-        mode: process.env.REACT_APP_MODE,
+        mode: getConfig("REACT_APP_MODE"),
         authToken: token,
         did: localStorage.getItem("deviceId") || visitorId,
         uid: uname || "anonymous",
-        channel: process.env.REACT_APP_CHANNEL,
-        env: process.env.REACT_APP_ENV,
+        channel: getConfig("REACT_APP_CHANNEL"),
+        env: getConfig("REACT_APP_ENV"),
         pdata: {
-          id: process.env.REACT_APP_ID,
+          id: getConfig("REACT_APP_ID"),
           ver: [
-            process.env.REACT_APP_VER,
-            process.env.REACT_APP_BUILD_NUMBER,
-            process.env.REACT_APP_COMMIT_ID?.substring(0, 7),
+            getConfig("REACT_APP_VER"),
+            getConfig("REACT_APP_BUILD_NUMBER"),
+            getConfig("REACT_APP_COMMIT_ID")?.substring(0, 7),
           ]
             .filter(Boolean)
             .join("-"),
-          pid: process.env.REACT_APP_PID,
+          pid: getConfig("REACT_APP_PID"),
         },
         tags: [""],
         timeDiff: 0,
-        host: process.env.REACT_APP_HOST,
-        endpoint: process.env.REACT_APP_ENDPOINT,
-        apislug: process.env.REACT_APP_APISLUG,
+        host: getConfig("REACT_APP_HOST"),
+        endpoint: getConfig("REACT_APP_ENDPOINT"),
+        apislug: getConfig("REACT_APP_APISLUG"),
       },
       config: {},
       metadata: {},
@@ -595,7 +596,7 @@ const LoginPage = () => {
         show={showAudioDiagnostic}
         onClose={() => {
           setShowAudioDiagnostic(false);
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
             setLocalData("audioDiagnosticShown", "true");
           }
           handleWordClick();

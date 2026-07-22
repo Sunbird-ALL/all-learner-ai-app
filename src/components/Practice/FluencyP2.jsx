@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import headerImg from "../../assets/headerImg.svg";
@@ -388,7 +389,9 @@ const FluencyP2 = ({
 
         if (showFinalState && currentSentence.hints[word]) {
           playWordAudio(
-            `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
+            `${getConfig(
+              "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+            )}/multilingual_audios/${currentSentence.hints[word]}`
           );
         }
       }
@@ -402,7 +405,9 @@ const FluencyP2 = ({
       currentSentence.hints[word]
     ) {
       playWordAudio(
-        `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
+        `${getConfig(
+          "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+        )}/multilingual_audios/${currentSentence.hints[word]}`
       );
     }
   };
@@ -675,7 +680,9 @@ const FluencyP2 = ({
                       src={listenImg}
                       onClick={() => {
                         playWordAudio(
-                          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
+                          `${getConfig(
+                            "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+                          )}/all-audio-files/${lang}/${contentId}.wav`
                         );
                       }}
                       alt="listen"

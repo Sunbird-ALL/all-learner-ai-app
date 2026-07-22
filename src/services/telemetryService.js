@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import { CsTelemetryModule } from "@project-sunbird/client-services/telemetry";
 import { uniqueId } from "./utilService";
 import { jwtDecode } from "../../node_modules/jwt-decode/build/cjs/index";
@@ -102,7 +103,7 @@ export const initialize = async ({ context, config, metadata }) => {
         localStorage.getItem("apiToken") ||
         "anonymous",
       sid: context.sid,
-      batchsize: process.env.REACT_APP_BATCHSIZE,
+      batchsize: getConfig("REACT_APP_BATCHSIZE"),
       mode: context.mode,
       host: context.host,
       apislug: context.apislug,
@@ -381,10 +382,10 @@ export const feedback = (data, contentId, telemetryMode) => {
 
 function checkTelemetryMode(currentMode) {
   return (
-    (process.env.REACT_APP_TELEMETRY_MODE === "ET" && currentMode === "ET") ||
-    (process.env.REACT_APP_TELEMETRY_MODE === "NT" &&
+    (getConfig("REACT_APP_TELEMETRY_MODE") === "ET" && currentMode === "ET") ||
+    (getConfig("REACT_APP_TELEMETRY_MODE") === "NT" &&
       (currentMode === "ET" || currentMode === "NT")) ||
-    (process.env.REACT_APP_TELEMETRY_MODE === "DT" &&
+    (getConfig("REACT_APP_TELEMETRY_MODE") === "DT" &&
       (currentMode === "ET" || currentMode === "NT" || currentMode === "DT"))
   );
 }
@@ -519,17 +520,17 @@ export const getEventOptions = () => {
     context: {
       pdata: {
         // optional
-        id: process.env.REACT_APP_ID, // Producer ID. For ex: For sunbird it would be "portal" or "genie"
+        id: getConfig("REACT_APP_ID"), // Producer ID. For ex: For sunbird it would be "portal" or "genie"
         ver: [
-          process.env.REACT_APP_VER,
-          process.env.REACT_APP_BUILD_NUMBER,
-          process.env.REACT_APP_COMMIT_ID?.substring(0, 7),
+          getConfig("REACT_APP_VER"),
+          getConfig("REACT_APP_BUILD_NUMBER"),
+          getConfig("REACT_APP_COMMIT_ID")?.substring(0, 7),
         ]
           .filter(Boolean)
           .join("-"), // Version of the App
-        pid: process.env.REACT_APP_PID, // Optional. In case the component is distributed, then which instance of that component
+        pid: getConfig("REACT_APP_PID"), // Optional. In case the component is distributed, then which instance of that component
       },
-      env: process.env.REACT_APP_ENV,
+      env: getConfig("REACT_APP_ENV"),
       uid: `${
         isBuddyLogin
           ? emis_username + "/" + buddyUserId

@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import pauseImg from "../../assets/pauseImg.svg";
@@ -612,7 +613,9 @@ const FluencyP5 = ({
 
       if (showFinalState && currentSentence.hints[word]) {
         playWordAudio(
-          `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
+          `${getConfig(
+            "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+          )}/multilingual_audios/${currentSentence.hints[word]}`
         );
       }
     }
@@ -625,7 +628,9 @@ const FluencyP5 = ({
       currentSentence.hints[word]
     ) {
       playWordAudio(
-        `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
+        `${getConfig(
+          "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+        )}/multilingual_audios/${currentSentence.hints[word]}`
       );
     }
   };

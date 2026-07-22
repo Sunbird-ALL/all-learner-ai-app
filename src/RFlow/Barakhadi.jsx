@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
@@ -4510,7 +4511,7 @@ const Barakhadi = ({
       let milestone = "B";
 
       if (point !== 1) {
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -4522,7 +4523,7 @@ const Barakhadi = ({
         const result = await addPointer(point, milestone);
         const awardedPoints = result?.result?.points;
         if (awardedPoints !== 1) {
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
             navigate("/");
           } else {
             navigate("/discover-start");
@@ -4549,7 +4550,7 @@ const Barakhadi = ({
         // Default behavior for non-flow usage
         setLocalData("rFlow", false);
         setLocalData("mFail", false);
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -4595,7 +4596,7 @@ const Barakhadi = ({
         } else {
           setLocalData("rFlow", false);
           setLocalData("mFail", false);
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
             navigate("/");
           } else {
             navigate("/discover-start");
@@ -4615,7 +4616,7 @@ const Barakhadi = ({
         // Default behavior for non-flow usage (R0, R1, etc.)
         setLocalData("rFlow", false);
         setLocalData("mFail", false);
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -4816,7 +4817,9 @@ const Barakhadi = ({
     if (wordData && wordData.audio) {
       setShowWordAudioWave(true);
 
-      const audioUrl = `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${wordData.audio}`;
+      const audioUrl = `${getConfig(
+        "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+      )}/mechanics_audios/${wordData.audio}`;
       console.log("Attempting to play audio from:", audioUrl);
 
       const audio = new Audio(audioUrl);

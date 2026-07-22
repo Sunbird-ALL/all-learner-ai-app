@@ -1,3 +1,4 @@
+import { getConfig } from "./config/runtimeConfig";
 /* global globalThis */
 import React, { useEffect, useRef, useState } from "react";
 import { ThemeProvider } from "@mui/material";
@@ -20,6 +21,7 @@ import {
 } from "./services/telemetryService";
 import { logoutUser } from "./services/orchestration/orchestrationService";
 import { reportError } from "./utils/errorReporter";
+import { loadTelemetrySdkViaScript } from "./utils/loadTelemetrySdk";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { useNavigate } from "react-router-dom";
 import GetSetResultLoadingOverlay from "./components/GetSetResultLoadingOverlay";
@@ -170,11 +172,18 @@ const App = () => {
       window.$ = jQueryStub;
     }
 
-    // Load telemetry SDK asynchronously — all window.telemetry usages use optional
-    // chaining (?.) so the app is fully functional before this resolves
-    import("@tekdi/all-telemetry-sdk/index.js").catch((err) =>
-      console.error("Telemetry SDK failed to load:", err)
-    );
+    // Package build (Vite/ESM) hands us a classic-script URL, since the SDK
+    // can't load as strict ESM; CRA build uses import(). See loadTelemetrySdk.js.
+    const telemetrySdkUrl = window.__ALL_TELEMETRY_SDK_URL__;
+    if (telemetrySdkUrl) {
+      loadTelemetrySdkViaScript(telemetrySdkUrl).catch((err) =>
+        console.error("Telemetry SDK failed to load:", err)
+      );
+    } else {
+      import("@tekdi/all-telemetry-sdk/index.js").catch((err) =>
+        console.error("Telemetry SDK failed to load:", err)
+      );
+    }
 
     const handleBeforeUnload = (event) => {
       window.telemetry &&
@@ -198,34 +207,34 @@ const App = () => {
   // initialize() is idempotent (guarded by CsTelemetryModule.instance.isInitialised),
   // so calling it here is a no-op when the user just logged in normally.
   useEffect(() => {
-    if (process.env.REACT_APP_IS_APP_IFRAME === "true") return;
+    if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") return;
     const apiToken = localStorage.getItem("apiToken");
     if (!apiToken) return;
 
     initialize({
       context: {
-        mode: process.env.REACT_APP_MODE,
+        mode: getConfig("REACT_APP_MODE"),
         authToken: apiToken,
         did: localStorage.getItem("deviceId") || "",
         uid: localStorage.getItem("virtualId") || apiToken || "anonymous",
-        channel: process.env.REACT_APP_CHANNEL,
-        env: process.env.REACT_APP_ENV,
+        channel: getConfig("REACT_APP_CHANNEL"),
+        env: getConfig("REACT_APP_ENV"),
         pdata: {
-          id: process.env.REACT_APP_ID,
+          id: getConfig("REACT_APP_ID"),
           ver: [
-            process.env.REACT_APP_VER,
-            process.env.REACT_APP_BUILD_NUMBER,
-            process.env.REACT_APP_COMMIT_ID?.substring(0, 7),
+            getConfig("REACT_APP_VER"),
+            getConfig("REACT_APP_BUILD_NUMBER"),
+            getConfig("REACT_APP_COMMIT_ID")?.substring(0, 7),
           ]
             .filter(Boolean)
             .join("-"),
-          pid: process.env.REACT_APP_PID,
+          pid: getConfig("REACT_APP_PID"),
         },
         tags: [""],
         timeDiff: 0,
-        host: process.env.REACT_APP_HOST,
-        endpoint: process.env.REACT_APP_ENDPOINT,
-        apislug: process.env.REACT_APP_APISLUG,
+        host: getConfig("REACT_APP_HOST"),
+        endpoint: getConfig("REACT_APP_ENDPOINT"),
+        apislug: getConfig("REACT_APP_APISLUG"),
       },
       config: {},
       metadata: {},
@@ -241,12 +250,12 @@ const App = () => {
     axios.defaults.timeout = RESILIENCE_CONFIG.API_TIMEOUT_MS;
 
     const axiosRetryEnabled = isEnvTruthyTrue(
-      process.env.REACT_APP_AXIOS_RETRY_ENABLED
+      getConfig("REACT_APP_AXIOS_RETRY_ENABLED")
     );
     let retryDelaysMs = [];
     if (axiosRetryEnabled) {
       retryDelaysMs = parseAxiosRetryDelaysSecToMs(
-        process.env.REACT_APP_AXIOS_RETRY_DELAYS_SEC
+        getConfig("REACT_APP_AXIOS_RETRY_DELAYS_SEC")
       );
 
       if (retryDelaysMs.length === 0) {
@@ -351,7 +360,8 @@ const App = () => {
               error?.response?.data?.msg;
             const displayMessage =
               typeof raw === "string" && raw.trim() ? raw.trim() : undefined;
-            const notifyParent = process.env.REACT_APP_IS_APP_IFRAME === "true";
+            const notifyParent =
+              getConfig("REACT_APP_IS_APP_IFRAME") === "true";
             openAuthSessionExpiredModal({
               message: displayMessage,
               notifyParent,
@@ -370,7 +380,7 @@ const App = () => {
 
     if (token && profileName) {
       setAppInitialized(true);
-    } else if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+    } else if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
       try {
         globalThis.parent?.postMessage(
           { type: "SESSION_EXPIRED" },
@@ -388,27 +398,27 @@ const App = () => {
   // Step 2: Initialize telemetry
   useEffect(() => {
     if (!appInitialized) return;
-    if (process.env.REACT_APP_IS_APP_IFRAME !== "true") return;
+    if (getConfig("REACT_APP_IS_APP_IFRAME") !== "true") return;
 
     const initService = async (visitorId) => {
       await initialize({
         context: {
-          mode: process.env.REACT_APP_MODE,
+          mode: getConfig("REACT_APP_MODE"),
           authToken: localStorage.getItem("apiToken"),
           did: localStorage.getItem("deviceId") || visitorId,
           uid: getLocalData("profileName") || "anonymous",
-          channel: process.env.REACT_APP_CHANNEL,
-          env: process.env.REACT_APP_ENV,
+          channel: getConfig("REACT_APP_CHANNEL"),
+          env: getConfig("REACT_APP_ENV"),
           pdata: {
-            id: process.env.REACT_APP_ID,
-            ver: process.env.REACT_APP_VER,
-            pid: process.env.REACT_APP_PID,
+            id: getConfig("REACT_APP_ID"),
+            ver: getConfig("REACT_APP_VER"),
+            pid: getConfig("REACT_APP_PID"),
           },
           tags: [""],
           timeDiff: 0,
-          host: process.env.REACT_APP_HOST,
-          endpoint: process.env.REACT_APP_ENDPOINT,
-          apislug: process.env.REACT_APP_APISLUG,
+          host: getConfig("REACT_APP_HOST"),
+          endpoint: getConfig("REACT_APP_ENDPOINT"),
+          apislug: getConfig("REACT_APP_APISLUG"),
         },
         config: {},
         metadata: {},
@@ -431,11 +441,11 @@ const App = () => {
   // AXL appbar logout: invalidate the token and flush telemetry here,
   // then ack so the parent can safely unmount this iframe.
   useEffect(() => {
-    if (process.env.REACT_APP_IS_APP_IFRAME !== "true") return;
+    if (getConfig("REACT_APP_IS_APP_IFRAME") !== "true") return;
 
     const handleParentMessage = async (event) => {
       // Only accept LOGOUT from the trusted AXL parent origin.
-      const trustedParentOrigin = process.env.REACT_APP_AXL_HOST;
+      const trustedParentOrigin = getConfig("REACT_APP_AXL_HOST");
       if (!trustedParentOrigin || event.origin !== trustedParentOrigin) return;
       if (event?.data?.type !== "LOGOUT") return;
       // Reply on the parent's MessagePort instead of window.parent.postMessage.
@@ -490,7 +500,7 @@ const App = () => {
           </AlphabetDemoProvider>
         </ThemeProvider>
       </StyledEngineProvider>
-      {process.env.REACT_APP_BUILD_NUMBER && (
+      {getConfig("REACT_APP_BUILD_NUMBER") && (
         <span
           style={{
             position: "fixed",
@@ -507,8 +517,8 @@ const App = () => {
             padding: "2px 6px",
           }}
         >
-          Build #{process.env.REACT_APP_BUILD_NUMBER} &middot;{" "}
-          {process.env.REACT_APP_COMMIT_ID?.substring(0, 7) || "dev"}
+          Build #{getConfig("REACT_APP_BUILD_NUMBER")} &middot;{" "}
+          {getConfig("REACT_APP_COMMIT_ID")?.substring(0, 7) || "dev"}
         </span>
       )}
     </ErrorBoundary>

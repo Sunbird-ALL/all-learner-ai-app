@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
@@ -881,7 +882,7 @@ const R1 = ({
           navigate("/discover-end");
           return;
         }
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -916,7 +917,7 @@ const R1 = ({
           navigate("/discover-end");
           return;
         }
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           setLocalData("rFlow", false);
           setLocalData("mFail", false);
           navigate("/");
@@ -1011,7 +1012,7 @@ const R1 = ({
       let milestone = "B";
 
       if (point !== 1) {
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+        if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
           navigate("/");
         } else {
           navigate("/discover-start");
@@ -1023,7 +1024,7 @@ const R1 = ({
         const result = await addPointer(point, milestone);
         const awardedPoints = result?.result?.points;
         if (awardedPoints !== 1) {
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
             navigate("/");
           } else {
             navigate("/discover-start");

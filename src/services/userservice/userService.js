@@ -1,9 +1,10 @@
+import { getConfig } from "../../config/runtimeConfig";
 import axios from "axios";
 import config from "../../utils/urlConstants.json";
 import { jwtDecode } from "jwt-decode";
 import { reportError } from "../../utils/errorReporter";
 
-const API_HOST_VIRTUAL_ID_HOST = process.env.REACT_APP_VIRTUAL_ID_HOST;
+const API_HOST_VIRTUAL_ID_HOST = getConfig("REACT_APP_VIRTUAL_ID_HOST");
 
 export const register = async (username) => {
   try {

@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import axios from "axios";
 import { compareArrays, getLocalData, replaceAll } from "./constants";
 import config from "./urlConstants.json";
@@ -127,11 +128,11 @@ export const callTelemetryApi = async (
 
   // TODO: Remove false when REACT_APP_AWS_S3_BUCKET_NAME and keys added
   let audioFileName = "";
-  if (process.env.REACT_APP_CAPTURE_AUDIO === "true") {
+  if (getConfig("REACT_APP_CAPTURE_AUDIO") === "true") {
     let getContentId = currentLine;
-    audioFileName = `${
-      process.env.REACT_APP_CHANNEL
-    }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+    audioFileName = `${getConfig(
+      "REACT_APP_CHANNEL"
+    )}/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
     try {
       await uploadWavViaPresignedUrl(audioFileName, base64Data);
@@ -142,7 +143,7 @@ export const callTelemetryApi = async (
     {
       // Required
       target:
-        process.env.REACT_APP_CAPTURE_AUDIO === "true"
+        getConfig("REACT_APP_CAPTURE_AUDIO") === "true"
           ? `${audioFileName}`
           : "", // Required. Target of the response
       //"qid": "", // Required. Unique assessment/question id
@@ -178,7 +179,7 @@ export const callTelemetryDiscovery = async (originalText) => {
 };
 
 export const uploadWavViaPresignedUrl = async (audioFileName, base64Data) => {
-  const base = process.env.REACT_APP_PRESIGNED_URL_SERVICE;
+  const base = getConfig("REACT_APP_PRESIGNED_URL_SERVICE");
   if (!base || !audioFileName || !base64Data) {
     throw new Error(
       "Missing presigned URL service or required audio data (REACT_APP_PRESIGNED_URL_SERVICE, audioFileName, and base64Data are required)."

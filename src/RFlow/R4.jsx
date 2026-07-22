@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import React, { useState, useEffect } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
@@ -701,7 +702,7 @@ const R4 = ({
                     setLocalData("mFail", false);
                     setLocalData("rStep", 0);
                     //window.location.reload();
-                    if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                    if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
                       navigate("/");
                     } else {
                       // If handleNext prop is provided (e.g., from Practice flow), use it to update progress
@@ -767,7 +768,7 @@ const R4 = ({
                       setLocalData("mFail", false);
                       setLocalData("rStep", 0);
                       //window.location.reload();
-                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                      if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
                         navigate("/");
                       } else {
                         // If handleNext prop is provided (e.g., from Practice flow), use it to update progress

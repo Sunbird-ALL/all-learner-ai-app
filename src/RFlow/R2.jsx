@@ -1,3 +1,4 @@
+import { getConfig } from "../config/runtimeConfig";
 import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import * as Assets from "../utils/imageAudioLinks";
@@ -6607,7 +6608,7 @@ const R2 = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -6800,7 +6801,7 @@ const R2 = ({
           setLocalData("rFlow", false);
           setLocalData("mFail", false);
           setLocalData("rStep", 0);
-          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+          if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
             navigate("/");
           } else {
             navigate("/discover-start");
@@ -7037,15 +7038,15 @@ const R2 = ({
                                   position: "absolute",
                                   ...(handPhase === "audio"
                                     ? {
-                                      bottom: "40px",
-                                      left: "-30px",
-                                      transform: "rotate(-120deg)",
-                                    }
+                                        bottom: "40px",
+                                        left: "-30px",
+                                        transform: "rotate(-120deg)",
+                                      }
                                     : {
-                                      bottom: "-50px",
-                                      left: "-30px",
-                                      transform: "rotate(-120deg)",
-                                    }),
+                                        bottom: "-50px",
+                                        left: "-30px",
+                                        transform: "rotate(-120deg)",
+                                      }),
                                   height: isMobile ? "70px" : "80px",
                                   zIndex: "9999",
                                   transition: "all 0.3s ease",
@@ -7323,7 +7324,7 @@ const R2 = ({
                       setLocalData("rFlow", false);
                       setLocalData("mFail", false);
                       setLocalData("rStep", 0);
-                      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                      if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
                         navigate("/");
                       } else {
                         navigate("/discover-start");

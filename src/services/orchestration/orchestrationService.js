@@ -1,13 +1,15 @@
+import { getConfig } from "../../config/runtimeConfig";
 import axios from "axios";
 import { getLocalData } from "../../utils/constants";
 import config from "../../utils/urlConstants.json";
 import { getVirtualId } from "../userservice/userService";
 import { reportError } from "../../utils/errorReporter";
 
-const API_BASE_URL_ORCHESTRATION =
-  process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST;
+const API_BASE_URL_ORCHESTRATION = getConfig(
+  "REACT_APP_LEARNER_AI_ORCHESTRATION_HOST"
+);
 
-const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
+const API_LEARNER_AI_APP_HOST = getConfig("REACT_APP_LEARNER_AI_APP_HOST");
 
 const getHeaders = () => {
   const token = localStorage.getItem("apiToken");

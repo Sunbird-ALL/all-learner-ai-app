@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, { useState, useRef, useEffect } from "react";
 import { Box } from "@mui/material";
 import MainLayout from "../Layout/MainLayout";
@@ -361,13 +362,17 @@ const ParagraphFlow = ({
   const paragraphPages = [
     {
       page: 1,
-      bookImage: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${contentSourceData?.imagePath}`,
+      bookImage: `${getConfig(
+        "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+      )}/mechanics_images/${contentSourceData?.imagePath}`,
       highlightedText: contentSourceData?.contentSourceData?.[0]?.text || "",
       keywords: Object.entries(parentWords || {}).map(([word, data]) => ({
         word,
-        audio: `${
-          process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL
-        }/multilingual_audios/${data?.[multilingualLangCode]?.audio_url || ""}`,
+        audio: `${getConfig(
+          "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+        )}/multilingual_audios/${
+          data?.[multilingualLangCode]?.audio_url || ""
+        }`,
       })),
     },
   ];

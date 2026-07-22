@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 /* global globalThis */
 import MainLayout from "../Layout/MainLayout";
 import ServerErrorScreen from "../ServerErrorScreen/ServerErrorScreen";
@@ -983,7 +984,7 @@ export const ProfileHeader = ({
 
   const handleProfileBack = () => {
     try {
-      if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+      if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
         window.parent.postMessage(
           { type: "restore-iframe-content" },
           window?.location?.ancestorOrigins?.[0] ||
@@ -1012,7 +1013,7 @@ export const ProfileHeader = ({
 
   // Mobile menu logout: iframe -> ask parent to run logout handshake, standalone -> local logout
   const handleMenuLogout = () => {
-    if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+    if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
       try {
         globalThis.parent.postMessage(
           { type: "REQUEST_LOGOUT" },
@@ -1597,7 +1598,7 @@ export const ProfileHeader = ({
               </>
             )}
 
-            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+            {getConfig("REACT_APP_IS_IN_APP_AUTHORISATION") === "true" && (
               <Box sx={{ position: "relative" }} mr="10px">
                 <img
                   src={scoreView}
@@ -1689,7 +1690,7 @@ export const ProfileHeader = ({
                 />
               </IconButton>
             </CustomTooltip>
-            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+            {getConfig("REACT_APP_IS_IN_APP_AUTHORISATION") === "true" && (
               <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
                 <IconButton
                   onClick={handleMenuLogout}
@@ -1929,9 +1930,9 @@ const Assesment = ({ discoverStart }) => {
 
           setLocalData("lang", lang || "ta");
           if (
-            process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
+            getConfig("REACT_APP_IS_APP_IFRAME") !== "true" &&
             (localStorage.getItem("contentSessionId") !== null ||
-              process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+              getConfig("REACT_APP_IS_IN_APP_AUTHORISATION") === "true")
           ) {
             fetchUserPoints()
               .then((points) => {
@@ -1998,10 +1999,10 @@ const Assesment = ({ discoverStart }) => {
           }
 
           if (
-            process.env.REACT_APP_IS_APP_IFRAME !== "true" &&
+            getConfig("REACT_APP_IS_APP_IFRAME") !== "true" &&
             TOKEN &&
             (localStorage.getItem("contentSessionId") !== null ||
-              process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true")
+              getConfig("REACT_APP_IS_IN_APP_AUTHORISATION") === "true")
           ) {
             fetchUserPoints()
               .then((points) => {
@@ -2030,11 +2031,11 @@ const Assesment = ({ discoverStart }) => {
   // }
 
   const handleOpenVideo = () => {
-    if (process.env.REACT_APP_SHOW_HELP_VIDEO === "true") {
+    if (getConfig("REACT_APP_SHOW_HELP_VIDEO") === "true") {
       let allowedOrigins = [];
       try {
         allowedOrigins = JSON.parse(
-          process.env.REACT_APP_PARENT_ORIGIN_URL || "[]"
+          getConfig("REACT_APP_PARENT_ORIGIN_URL") || "[]"
         );
       } catch (error) {
         console.error(
@@ -2265,7 +2266,7 @@ const Assesment = ({ discoverStart }) => {
             }}
           />
           <Box>
-            {process.env.REACT_APP_SHOW_HELP_VIDEO === "true" && (
+            {getConfig("REACT_APP_SHOW_HELP_VIDEO") === "true" && (
               <Box
                 onClick={handleOpenVideo}
                 sx={{
@@ -2422,7 +2423,7 @@ const Assesment = ({ discoverStart }) => {
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  {process.env.REACT_APP_SHOW_HELP_VIDEO === "true" && (
+                  {getConfig("REACT_APP_SHOW_HELP_VIDEO") === "true" && (
                     <Box
                       onClick={handleOpenVideo}
                       sx={{

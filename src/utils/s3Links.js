@@ -1,11 +1,16 @@
+import { getConfig } from "../config/runtimeConfig";
 export const getAssetUrl = (filename, type = "mechanics_images") => {
   if (!filename) return false;
-  return `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/${type}/${filename}`;
+  return `${getConfig(
+    "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+  )}/${type}/${filename}`;
 };
 
 export const getAssetAudioUrl = (filename, type = "mechanics_audios") => {
   if (!filename) return false;
-  return `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/${type}/${filename}`;
+  return `${getConfig(
+    "REACT_APP_AWS_S3_BUCKET_CONTENT_URL"
+  )}/${type}/${filename}`;
 };
 
 export const Apple = `70d97e24-abf4-42af-8aa7-779801541372.png`;

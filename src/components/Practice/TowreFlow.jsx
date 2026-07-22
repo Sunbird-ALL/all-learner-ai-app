@@ -1,3 +1,4 @@
+import { getConfig } from "../../config/runtimeConfig";
 import React, {
   useState,
   useEffect,
@@ -817,7 +818,7 @@ const CombinedReportPage = ({
             //window.location.reload();
             if (location.pathname.includes("/towre-flow")) {
               navigate("/discover-end");
-            } else if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            } else if (getConfig("REACT_APP_IS_APP_IFRAME") === "true") {
               navigate("/");
             } else {
               navigate("/discover-start");
@@ -2058,9 +2059,9 @@ const TowreFlow = ({
             const sessionId = getLocalData("sessionId");
             var audioFileName = "";
             let getContentId = "towre";
-            audioFileName = `${
-              process.env.REACT_APP_CHANNEL
-            }/${sessionId}-${Date.now()}-${getContentId}.wav`;
+            audioFileName = `${getConfig(
+              "REACT_APP_CHANNEL"
+            )}/${sessionId}-${Date.now()}-${getContentId}.wav`;
 
             try {
               await uploadWavViaPresignedUrl(audioFileName, base64Audio);
