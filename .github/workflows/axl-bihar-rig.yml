@@ -12,12 +12,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18"
+          cache: npm
           
       - name: Configure AWS credentials
         run: |
@@ -25,13 +26,14 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set default.region ${{ secrets.AWS_REGION }}
 
-      - name: Clean up node_modules and package-lock.json
-        run: |
-          rm -rf node_modules
-          rm -f package-lock.json
+     # - name: Clean up node_modules and package-lock.json
+     #   run: |
+     #     rm -rf node_modules
+     #     rm -f package-lock.json
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: npm ci
+      #  run: npm install --legacy-peer-deps
 
       - name: Run Husky Install
         run: npm run prepare
