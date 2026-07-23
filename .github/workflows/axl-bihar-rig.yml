@@ -31,8 +31,7 @@ jobs:
      #     rm -f package-lock.json
 
       - name: Install Dependencies
-        run: npm ci
-      #  run: npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
 
       - name: Run Husky Install
         run: npm run prepare
