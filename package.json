@@ -125,7 +125,8 @@
       "^@number-flow/react$": "<rootDir>/src/__jest_mocks__/number-flow-react.js",
       "^number-flow/csp$": "<rootDir>/src/__jest_mocks__/number-flow-csp.js",
       "^esm-env/(.*)$": "<rootDir>/src/__jest_mocks__/esm-env-browser.js",
-      "^esm-env$": "<rootDir>/src/__jest_mocks__/esm-env.js"
+      "^esm-env$": "<rootDir>/src/__jest_mocks__/esm-env.js",
+      "^@radix-ui/primitive/is-development$": "<rootDir>/node_modules/@radix-ui/primitive/dist/internal/is-development.false.js"
     }
   },
   "eslintConfig": {
