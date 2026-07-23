@@ -84,9 +84,7 @@ export default function RecordVoiceVisualizer() {
       <div
         className="playing"
         style={{
-          position: "absolute",
-          left: "-0.241px",
-          bottom: "-44px",
+          marginTop: "-16px",
           transform: "rotate(3.142rad)",
         }}
       >

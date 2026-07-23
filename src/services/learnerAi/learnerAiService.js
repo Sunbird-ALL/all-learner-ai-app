@@ -429,6 +429,10 @@ export const predictEngagement = (payload) => {
 };
 
 export const callEngagementPredictor = async (subSessionId = null) => {
+  const isEnabled =
+    process.env.REACT_APP_IS_ENGAGEMENT_PREDICT_ENABLE === "true";
+  if (!isEnabled) return;
+
   try {
     const lang = getLocalData("lang");
 

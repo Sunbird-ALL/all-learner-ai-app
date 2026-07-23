@@ -431,6 +431,7 @@ const MainLayout = (props) => {
     isCorrect,
     vocabCount,
     wordCount,
+    showMilestone = true,
   } = props;
 
   const [shake, setShake] = useState(false);
@@ -752,13 +753,15 @@ const MainLayout = (props) => {
     let start = progressBarStartIndex;
     let end = Math.min(start + VISIBLE_STEPS, totalSteps);
 
-    // If current step is not in visible range, adjust to include it
-    if (currentPracticeStep < start) {
-      start = Math.max(0, currentPracticeStep - 2); // Show 2 steps before current
-      end = Math.min(start + VISIBLE_STEPS, totalSteps);
-    } else if (currentPracticeStep >= end) {
-      end = Math.min(currentPracticeStep + 3, totalSteps); // Show 2 steps after current
-      start = Math.max(0, end - VISIBLE_STEPS);
+    // If current step is not in visible range, adjust to include it (Desktop only, disabled on mobile to allow manual navigation)
+    if (!isMobile) {
+      if (currentPracticeStep < start) {
+        start = Math.max(0, currentPracticeStep - 2); // Show 2 steps before current
+        end = Math.min(start + VISIBLE_STEPS, totalSteps);
+      } else if (currentPracticeStep >= end) {
+        end = Math.min(currentPracticeStep + 3, totalSteps); // Show 2 steps after current
+        start = Math.max(0, end - VISIBLE_STEPS);
+      }
     }
 
     return { start, end };
@@ -1143,7 +1146,8 @@ const MainLayout = (props) => {
                   )}
                   {props.children}
                 </CardContent>
-                {steps > 0 &&
+                {showMilestone &&
+                  steps > 0 &&
                   tFlow !== "true" &&
                   !isF1FlowActive &&
                   !isF2FlowActive &&
@@ -1245,9 +1249,10 @@ const MainLayout = (props) => {
                       pointerEvents: "none",
                     }}
                   >
-                    <footer>
-                      {/* Debug: Log milestone level and LEVEL for troubleshooting */}
-                      {/* {console.log(
+                    {showMilestone && (
+                      <footer>
+                        {/* Debug: Log milestone level and LEVEL for troubleshooting */}
+                        {/* {console.log(
                         "MainLayout footer - milestoneLevel:",
                         milestoneLevel,
                         "LEVEL:",
@@ -1256,71 +1261,72 @@ const MainLayout = (props) => {
                         rFlow
                       )} */}
 
-                      {/* Only show F flow images when milestone level is "B" */}
-                      {tFlow !== "true" &&
-                        (milestoneLevel === "B" && isF3FlowActive ? (
-                          // F3 Flow - Show F3 milestone image
-                          <div style={fFlowWrapperStyle}>
-                            <img
-                              src={F3Image}
-                              alt="F3"
-                              height={isMobile ? "75px" : "200px"}
-                            />
-                          </div>
-                        ) : milestoneLevel === "B" && isF2FlowActive ? (
-                          // F2 Flow - Show F2 milestone image
-                          <div style={fFlowWrapperStyle}>
-                            <img
-                              src={F2Image}
-                              alt="F2"
-                              height={isMobile ? "75px" : "200px"}
-                            />
-                          </div>
-                        ) : milestoneLevel === "B" && isF1FlowActive ? (
-                          // F1 Flow - Show F1 milestone image
-                          <div style={fFlowWrapperStyle}>
-                            <img
-                              src={F1Image}
-                              alt="F1"
-                              height={isMobile ? "75px" : "200px"}
-                            />
-                          </div>
-                        ) : rFlow === "true" && milestoneLevel === "B" ? (
-                          // Only show R flow images when milestone level is "B"
-                          [1, "B"]?.includes(LEVEL) ? (
-                            // R0 - Show F1 milestone image instead of R0 image
-                            rStep == null || rStep === 0 || rStep === "0" ? (
+                        {/* Only show F flow images when milestone level is "B" */}
+                        {tFlow !== "true" &&
+                          (milestoneLevel === "B" && isF3FlowActive ? (
+                            // F3 Flow - Show F3 milestone image
+                            <div style={fFlowWrapperStyle}>
+                              <img
+                                src={F3Image}
+                                alt="F3"
+                                height={isMobile ? "75px" : "200px"}
+                              />
+                            </div>
+                          ) : milestoneLevel === "B" && isF2FlowActive ? (
+                            // F2 Flow - Show F2 milestone image
+                            <div style={fFlowWrapperStyle}>
+                              <img
+                                src={F2Image}
+                                alt="F2"
+                                height={isMobile ? "75px" : "200px"}
+                              />
+                            </div>
+                          ) : milestoneLevel === "B" && isF1FlowActive ? (
+                            // F1 Flow - Show F1 milestone image
+                            <div style={fFlowWrapperStyle}>
                               <img
                                 src={F1Image}
                                 alt="F1"
-                                height={isMobile ? "130px" : "200px"}
+                                height={isMobile ? "75px" : "200px"}
                               />
-                            ) : (
+                            </div>
+                          ) : rFlow === "true" && milestoneLevel === "B" ? (
+                            // Only show R flow images when milestone level is "B"
+                            [1, "B"]?.includes(LEVEL) ? (
+                              // R0 - Show F1 milestone image instead of R0 image
+                              rStep == null || rStep === 0 || rStep === "0" ? (
+                                <img
+                                  src={F1Image}
+                                  alt="F1"
+                                  height={isMobile ? "130px" : "200px"}
+                                />
+                              ) : (
+                                <img
+                                  src={Assets.rOneMileImage}
+                                  alt="R One"
+                                  height={isMobile ? "130px" : "200px"}
+                                />
+                              )
+                            ) : LEVEL === 2 ? (
                               <img
-                                src={Assets.rOneMileImage}
-                                alt="R One"
+                                src={
+                                  props.rStep === 2
+                                    ? Assets.r2MileImg
+                                    : props.rStep === 3
+                                    ? Assets.r3MileImg
+                                    : props.rStep === 4
+                                    ? Assets.r4MileImg
+                                    : null
+                                }
+                                alt={`R Step ${props.rStep}`}
                                 height={isMobile ? "130px" : "200px"}
                               />
-                            )
-                          ) : LEVEL === 2 ? (
-                            <img
-                              src={
-                                props.rStep === 2
-                                  ? Assets.r2MileImg
-                                  : props.rStep === 3
-                                  ? Assets.r3MileImg
-                                  : props.rStep === 4
-                                  ? Assets.r4MileImg
-                                  : null
-                              }
-                              alt={`R Step ${props.rStep}`}
-                              height={isMobile ? "130px" : "200px"}
-                            />
-                          ) : null
-                        ) : (
-                          !!LEVEL && levelsImages?.[LEVEL]?.milestone
-                        ))}
-                    </footer>
+                            ) : null
+                          ) : (
+                            !!LEVEL && levelsImages?.[LEVEL]?.milestone
+                          ))}
+                      </footer>
+                    )}
                   </Box>
                   <Box
                     sx={{
@@ -1530,7 +1536,7 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarNext}
                                 disabled={!canGoNext}
                                 sx={{
-                                  display: { xs: "none", sm: "inline-flex" },
+                                  display: "inline-flex",
                                   width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
                                     xs: "24px",
@@ -1795,9 +1801,6 @@ const MainLayout = (props) => {
                     boxSizing: "border-box",
                     padding: { xs: "16px", md: "24px" },
                   },
-                  "& img[alt='gameLost']": {
-                    height: { xs: "180px!important", md: "250px!important" },
-                  },
                   "& img[alt='Words Learnt']": {
                     width: { xs: "70px!important", md: "100px!important" },
                     height: { xs: "70px!important", md: "100px!important" },
@@ -1913,10 +1916,11 @@ const MainLayout = (props) => {
                             style={{
                               zIndex: 9999,
                               width: "100%",
-                              maxWidth: "340px",
+                              maxWidth: isMobile ? "320px" : "600px",
                               height: "auto",
-                              maxHeight: "340px",
+                              maxHeight: isMobile ? "320px" : "500px",
                               objectFit: "contain",
+                              margin: "auto",
                             }}
                           />
                         ) : (
@@ -1932,12 +1936,16 @@ const MainLayout = (props) => {
                               <img
                                 src={Assets.gameLost}
                                 alt="gameLost"
-                                height={"250px"}
+                                style={{
+                                  height: isMobile ? "220px" : "360px",
+                                  width: "auto",
+                                  objectFit: "contain",
+                                }}
                               />
                               <Typography
                                 sx={{ mb: 1, mt: 1, textAlign: "center" }}
                               >
-                                {!props.pageName === "m8" && (
+                                {props.pageName !== "m8" && (
                                   <span
                                     style={{
                                       fontWeight: 600,
@@ -2353,6 +2361,9 @@ const MainLayout = (props) => {
                           }
                         }
                         if (gameOverData) {
+                          if (gameOverData.wordWall) {
+                            setLocalData("wordWall", true);
+                          }
                           gameOverData.link
                             ? navigate(gameOverData.link)
                             : navigate("/_practice");
@@ -2431,7 +2442,10 @@ MainLayout.propTypes = {
   cardContentStyle: PropTypes.object,
   gameOverData: PropTypes.shape({
     userWon: PropTypes.bool,
+    wordWall: PropTypes.bool,
+    link: PropTypes.string,
   }),
+  showMilestone: PropTypes.bool,
 };
 
 export default MainLayout;

@@ -709,6 +709,36 @@ export const ProfileHeader = ({
   const chartAudioRef = React.useRef(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
+  // 📱 Mobile demo pointer state — shown after hamburger opens with a delay
+  const [showMobilePointer, setShowMobilePointer] = useState(false);
+
+  // 📱 Mobile demo: animated sequence — Dialog → open hamburger → show pointer
+  useEffect(() => {
+    if (!isMobile) return;
+
+    if (showChartPointer) {
+      // Step 1: Dialog is already visible (controlled by showChartPointer)
+      // Step 2: Open hamburger after 3.5s
+      const t1 = setTimeout(() => {
+        setMenuOpen(true);
+      }, 3500);
+
+      // Step 3: Show hand pointer after 4.5s
+      const t2 = setTimeout(() => {
+        setShowMobilePointer(true);
+      }, 4500);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    } else {
+      // Demo ended — reset everything
+      setMenuOpen(false);
+      setShowMobilePointer(false);
+    }
+  }, [isMobile, showChartPointer]);
+
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
 
@@ -759,12 +789,31 @@ export const ProfileHeader = ({
         setIsAudioPlaying(true);
       };
 
-      audio.onended = () => {
-        setShowChartPointer(false); // 👈 demo finished
-        setIsAudioPlaying(false);
-        chartAudioRef.current = null;
+      const closeMobileUi = () => {
+        setMenuOpen(false);
+        setShowMobilePointer(false);
+      };
+      const endAlphabetDemo = () => {
+        setShowChartPointer(false);
         setIsAlphabetDemoActive(false);
         globalThis.dispatchEvent(new Event("alphabetDemoStop"));
+      };
+
+      audio.onended = () => {
+        setIsAudioPlaying(false);
+        chartAudioRef.current = null;
+
+        if (isMobile) {
+          // 📱 Mobile: close hamburger & pointer 500ms BEFORE transitioning screens
+          setTimeout(closeMobileUi, 2500);
+
+          // Then end demo and move to next screen after full 3s
+          setTimeout(endAlphabetDemo, 3000);
+        } else {
+          setShowChartPointer(false);
+          setIsAlphabetDemoActive(false);
+          globalThis.dispatchEvent(new Event("alphabetDemoStop"));
+        }
       };
 
       audio.onerror = () => {
@@ -1379,6 +1428,7 @@ export const ProfileHeader = ({
                           setMenuOpen(false);
                           handleAlphabetChartOpen();
                         }}
+                        sx={{ position: "relative" }}
                       >
                         <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
                         <ListItemText
@@ -1390,6 +1440,44 @@ export const ProfileHeader = ({
                             color: "#333F61",
                           }}
                         />
+                        {/* 📱 Animated hand pointer — only visible after hamburger opens */}
+                        {showMobilePointer && (
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              right: 12,
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              pointerEvents: "none",
+                              animation:
+                                "mobilePointerFadeIn 0.4s ease-out forwards, mobileChartPoint 1.5s ease-in-out 0.4s infinite",
+                              "@keyframes mobilePointerFadeIn": {
+                                from: {
+                                  opacity: 0,
+                                  transform:
+                                    "translateY(-50%) translateX(10px)",
+                                },
+                                to: {
+                                  opacity: 1,
+                                  transform: "translateY(-50%) translateX(0)",
+                                },
+                              },
+                              "@keyframes mobileChartPoint": {
+                                "0%, 100%": {
+                                  transform: "translateY(-50%) translateX(0)",
+                                  opacity: 1,
+                                },
+                                "50%": {
+                                  transform:
+                                    "translateY(-50%) translateX(-6px)",
+                                  opacity: 0.7,
+                                },
+                              },
+                            }}
+                          >
+                            <span style={{ fontSize: "22px" }}>👈</span>
+                          </Box>
+                        )}
                       </ListItemButton>
                     </>
                   )}
@@ -2117,10 +2205,9 @@ const Assesment = ({ discoverStart }) => {
     height: "100dvh",
     minHeight: "-webkit-fill-available",
     backgroundImage: `url(${getBackgroundImage()})`,
-    backgroundSize: "cover",
-    backgroundPosition: isMobile ? "37% bottom" : "center bottom",
+    backgroundSize: "100% 100%",
+    backgroundRepeat: "no-repeat",
     position: "relative",
-    overflow: "hidden",
   };
 
   // Show a friendly error card when API calls on mount fail (server down / timeout).
@@ -2227,6 +2314,9 @@ const Assesment = ({ discoverStart }) => {
                     fontFamily: getFontFamily(lang),
                     lineHeight: "25px",
                     textShadow: "#000 1px 0 10px",
+                    padding: "0 12px",
+                    textAlign: "center",
+                    display: "block",
                   }}
                 >
                   {shouldShowF3

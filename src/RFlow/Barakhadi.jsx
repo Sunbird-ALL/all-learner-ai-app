@@ -586,11 +586,11 @@ const barakhadiCharts = {
       "षू",
       "षृ",
       "षे",
-      "ষৈ",
-      "ষো",
-      "ষৌ",
-      "ষং",
-      "ষঃ",
+      "षै",
+      "षो",
+      "षौ",
+      "षं",
+      "षः",
     ],
     स: [
       "स",
@@ -5769,37 +5769,44 @@ const Barakhadi = ({
               />
             </div>
           </div>
-          <img
-            src={boyballonflyImg}
-            alt="boy balloon"
-            style={{
-              position: "absolute",
-              top: "1px",
-              right: "12px",
-              width: "60px",
-              zIndex: 1,
-            }}
-          />
+          {!isMobile && (
+            <img
+              src={boyballonflyImg}
+              alt="boy balloon"
+              style={{
+                position: "absolute",
+                top: "1px",
+                right: "12px",
+                width: "60px",
+                zIndex: 1,
+              }}
+            />
+          )}
 
-          <img
-            src={boyImg}
-            alt="boy"
-            style={{
-              position: "absolute",
-              top: "48px",
-              right: "60px",
-              width: "60px",
-            }}
-          />
           <img
             src={bearImg}
             alt="bear"
             style={{
               position: "absolute",
-              bottom: isMobile ? "-45px" : "1px",
-              right: isMobile ? "10px" : "40px",
-              width: isMobile ? "15dvw" : "9dvw",
+              bottom: isMobile
+                ? lang === "kn" || lang === "te"
+                  ? "-35px"
+                  : "-45px"
+                : "1px",
+              right: isMobile
+                ? lang === "kn" || lang === "te"
+                  ? "5px"
+                  : "10px"
+                : "40px",
+              width: isMobile
+                ? lang === "kn" || lang === "te"
+                  ? "min(12vw, 45px)"
+                  : "15dvw"
+                : lang === "kn" || lang === "te"
+                ? "min(8vw, 80px)"
+                : "9dvw",
               zIndex: isMobile ? 11 : 1,
+              pointerEvents: "none",
             }}
           />
         </div>

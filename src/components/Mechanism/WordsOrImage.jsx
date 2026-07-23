@@ -198,6 +198,12 @@ const WordsOrImage = ({
   const multilingualLangCode = getMultilingualLangCode();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isFirefox =
+    typeof navigator !== "undefined" &&
+    navigator.userAgent.toLowerCase().includes("firefox");
+  const isAndroid =
+    typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent);
+  const skipAnswerColor = isFirefox || isAndroid;
   const [abusiveFound, setAbusiveFound] = useState(false);
   const [detectedWord, setDetectedWord] = useState("");
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
@@ -672,14 +678,7 @@ const WordsOrImage = ({
   };
 
   const getAnswerColor = (answer) => {
-    // const isFirefox =
-    //   typeof navigator !== "undefined" &&
-    //   navigator.userAgent.toLowerCase().includes("firefox");
-
-    // if (isFirefox && (answer === true || answer === false)) {
-    //   return "green";
-    // }
-
+    if (skipAnswerColor) return "#333F61";
     if (answer === true) return "green";
     if (answer === false) return "red";
     return "#333F61";
@@ -775,7 +774,7 @@ const WordsOrImage = ({
           justifyContent: "center",
           alignItems: "center",
           flexGrow: 1,
-          pt: "0px",
+          pt: { xs: "24px", md: "0px" },
           pb: { xs: "0px", md: "16px" },
           overflowY: { xs: "auto", md: "hidden" },
           boxSizing: "border-box",
@@ -1125,7 +1124,7 @@ const WordsOrImage = ({
                             : "clamp(1.6rem, 2.5vw, 3.8rem)",
                           fontWeight: language === "te" ? 400 : 700,
                           fontFamily: getFontFamily(language),
-                          lineHeight: isMobile ? "1.6" : "50px",
+                          lineHeight: 1.4,
                           ...(mechanism_id === "mechanic_15"
                             ? {
                                 position: "relative",
@@ -1193,7 +1192,7 @@ const WordsOrImage = ({
                             : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "30px" : "50px",
+                        lineHeight: isMobile ? "30px" : "70px",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                         "&::after": {
                           content: '""',
@@ -1266,12 +1265,13 @@ const WordsOrImage = ({
                         fontFamily: getFontFamily(language),
                         lineHeight: isMobile ? "1.4" : "50px",
                         //background: "#FFF0BD",
-                        color:
-                          isTranscriptCorrect === true
-                            ? "green"
-                            : isTranscriptCorrect === false
-                            ? "red" // todo: need to change to red
-                            : "#333F61",
+                        color: skipAnswerColor
+                          ? "#333F61"
+                          : isTranscriptCorrect === true
+                          ? "green"
+                          : isTranscriptCorrect === false
+                          ? "red"
+                          : "#333F61",
                         display: isMobile ? "flex" : undefined,
                         flexDirection: isMobile ? "column" : undefined,
                         alignItems: isMobile ? "center" : undefined,
