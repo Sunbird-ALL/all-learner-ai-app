@@ -1120,7 +1120,12 @@ const MainLayout = (props) => {
                     overflowY: "hidden",
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
-                    padding: { xs: "16px !important", md: "24px !important" },
+                    padding: startShowCase
+                      ? {
+                          xs: "5rem 1rem 1rem !important",
+                          md: "8.125rem 1.5rem 1.5rem !important",
+                        }
+                      : { xs: "1rem !important", md: "1.5rem !important" },
                     boxSizing: "border-box",
                     ...props.cardContentStyle,
                   }}
