@@ -528,7 +528,9 @@ const App = () => {
             padding: "2px 6px",
           }}
         >
-          Build #{process.env.REACT_APP_BUILD_NUMBER} &middot;{" "}
+          v{process.env.REACT_APP_VER} &middot; Build #
+          {process.env.REACT_APP_BUILD_NUMBER} &middot;{" "}
+          {process.env.REACT_APP_BRANCH_NAME || "dev"} &middot;{" "}
           {process.env.REACT_APP_COMMIT_ID?.substring(0, 7) || "dev"}
         </span>
       )}
