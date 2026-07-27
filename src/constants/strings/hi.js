@@ -33,6 +33,13 @@ const hi = {
   // Common actions (new keys)
   COMMON_BACK: "वापस",
   COMMON_CONTINUE: "जारी रखें",
+  COMMON_SKIP_DEMO: "डेमो छोड़ें",
+
+  // Preview / autoplay-unlock overlay
+  PREVIEW_CLICK_TO_START: "शुरू करने के लिए क्लिक करें",
+  PREVIEW_CLICK_ANYWHERE_TO_START:
+    "कृपया पूर्वावलोकन शुरू करने के लिए कहीं भी क्लिक करें",
+  PREVIEW_START_PREVIEW: "पूर्वावलोकन शुरू करें",
 
   // Errors (extended)
 

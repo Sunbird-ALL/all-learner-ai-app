@@ -3708,7 +3708,7 @@ const Practice = () => {
                         : "clamp(1.6rem, 2.5vw, 3.8rem)",
                     fontWeight: lang === "te" ? 400 : 700,
                     fontFamily: getFontFamily(lang),
-                    lineHeight: "50px",
+                    lineHeight: { xs: 1.4, md: "4.5rem" },
                     background: "#FFF0BD",
                     color: color,
                   }}
@@ -3736,7 +3736,7 @@ const Practice = () => {
                       : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
-                  lineHeight: "50px",
+                  lineHeight: { xs: 1.4, md: "4.5rem" },
                 }}
               >
                 {i === 0 ? word[i].toUpperCase() : word[i]}
@@ -3765,7 +3765,7 @@ const Practice = () => {
                       : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
-                  lineHeight: "50px",
+                  lineHeight: { xs: 1.4, md: "4.5rem" },
                   background: "#FFF0BD",
                 }}
               >
@@ -3787,7 +3787,7 @@ const Practice = () => {
                     : "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
                 fontFamily: getFontFamily(lang),
-                lineHeight: "50px",
+                lineHeight: { xs: 1.4, md: "4.5rem" },
               }}
               key={index}
             >
