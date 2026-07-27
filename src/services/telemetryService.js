@@ -3,6 +3,16 @@ import { uniqueId } from "./utilService";
 import { jwtDecode } from "../../node_modules/jwt-decode/build/cjs/index";
 import { getLocalData, setLocalData } from "../utils/constants";
 import { reportError } from "../utils/errorReporter";
+import {
+  initSession,
+  recordStep,
+  recordAssess,
+  recordResponse,
+  recordInterruptStart,
+  recordInterruptEnd,
+  getSessionState,
+  resetSession,
+} from "./sessionManager";
 
 let startTime; // Variable to store the timestamp when the start event is raised
 let contentSessionId;
@@ -97,11 +107,18 @@ export const initialize = async ({ context, config, metadata }) => {
       channel: context.channel,
       did: context.did,
       authtoken: context.authToken || "",
-      uid:
-        getLocalData("virtualId") ||
-        localStorage.getItem("apiToken") ||
-        "anonymous",
-      sid: context.sid,
+      // uid: apiToken only — backend detokenises to resolved user ID (privacy)
+      uid: localStorage.getItem("apiToken") || "anonymous",
+      // sid: use provided value (from AXL on integration) or auto-generate for standalone
+      sid:
+        context.sid ||
+        (() => {
+          const existing = localStorage.getItem("sessionId");
+          if (existing) return existing;
+          const generated = uniqueId();
+          localStorage.setItem("sessionId", generated);
+          return generated;
+        })(),
       batchsize: process.env.REACT_APP_BATCHSIZE,
       mode: context.mode,
       host: context.host,
@@ -131,22 +148,30 @@ export const initialize = async ({ context, config, metadata }) => {
   }
 };
 
-export const start = (duration) => {
+/**
+ * start() — fires START event and begins session accumulation.
+ * @param {string} stepTitle — current step title e.g. "P1", "L2" (optional)
+ */
+export const start = (stepTitle) => {
   try {
-    // Check if telemetry service is initialized
     if (
       CsTelemetryModule.instance &&
       CsTelemetryModule.instance.telemetryService
     ) {
-      startTime = Date.now(); // Record the start time
+      startTime = Date.now();
+
+      // Begin accumulating session data in sessionManager
+      const milestone = localStorage.getItem("milestone") || null;
+      const subMilestone = localStorage.getItem("subMilestone") || null;
+      initSession(milestone, subMilestone);
 
       CsTelemetryModule.instance.telemetryService.raiseStartTelemetry({
         options: getEventOptions(),
         edata: {
           type: "content",
           mode: "play",
-          stageid: url,
-          duration: Number((duration / 1e3).toFixed(2)),
+          stageid: stepTitle || "", // current step title; empty string if unknown
+          duration: 0, // always 0 at session start
           dspec: window.navigator.userAgent,
         },
       });
@@ -166,10 +191,9 @@ export const response = (context, telemetryMode) => {
         CsTelemetryModule.instance &&
         CsTelemetryModule.instance.telemetryService
       ) {
+        recordResponse(); // update session accumulator (SUMMARY.interactions)
         CsTelemetryModule.instance.telemetryService.raiseResponseTelemetry(
-          {
-            ...context,
-          },
+          { ...context },
           getEventOptions()
         );
       } else {
@@ -291,22 +315,59 @@ export const search = (id) => {
   }
 };
 
-export const impression = (currentPage, telemetryMode) => {
+/**
+ * impression() — page view / workflow step event.
+ *
+ * Legacy call:  impression(pageString, telemetryMode)
+ * Step call:    impression({ pageid, subtype, uri, visits }, telemetryMode)
+ *
+ * When subtype="end" and pageid is set, automatically updates session accumulator.
+ */
+export const impression = (currentPageOrOptions, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
-      // Check if telemetry service is initialized
       if (
         CsTelemetryModule.instance &&
         CsTelemetryModule.instance.telemetryService
       ) {
-        CsTelemetryModule.instance.telemetryService.raiseImpressionTelemetry({
-          options: getEventOptions(),
-          edata: {
+        let edata;
+        if (
+          typeof currentPageOrOptions === "object" &&
+          currentPageOrOptions !== null
+        ) {
+          const {
+            pageid = "",
+            subtype = "",
+            uri = "",
+            visits = [],
+          } = currentPageOrOptions;
+
+          // When a step ends, update session accumulator for SUMMARY
+          if (subtype === "end" && pageid) {
+            const durationMs = visits[0]?.duration || 0;
+            recordStep(pageid, durationMs);
+            localStorage.setItem("currentStep", pageid);
+          }
+          edata = {
+            type: "workflow",
+            subtype,
+            pageid: pageid + "",
+            uri,
+            visits,
+          };
+        } else {
+          // Legacy string call — keep backward compatibility
+          edata = {
             type: "workflow",
             subtype: "",
-            pageid: currentPage + "",
+            pageid: (currentPageOrOptions || "") + "",
             uri: "",
-          },
+          };
+        }
+
+        CsTelemetryModule.instance.telemetryService.raiseImpressionTelemetry({
+          options: getEventOptions(),
+          edata,
         });
       } else {
         console.warn(
@@ -376,6 +437,205 @@ export const feedback = (data, contentId, telemetryMode) => {
     } catch (err) {
       console.error("Error raising feedback telemetry:", err);
     }
+  }
+};
+
+/**
+ * assess() — ASSESS event for step pass/fail result (Sunbird v3).
+ * Call after every getSetResult API response and at F-series Apply step boundaries.
+ *
+ * @param {Object} data  { item: { id, type, maxscore }, pass, score, resvalues, duration }
+ */
+export const assess = (data) => {
+  try {
+    if (
+      CsTelemetryModule.instance &&
+      CsTelemetryModule.instance.telemetryService
+    ) {
+      const {
+        item = {},
+        pass = false,
+        score = 0,
+        resvalues = [],
+        duration = 0,
+      } = data || {};
+
+      recordAssess(pass); // update session accumulator
+
+      // Correct method name: raiseAssesTelemetry (one 's') — per SDK TypeScript declaration
+      // Correct signature: (data, options) — two separate params, not a wrapped object
+      CsTelemetryModule.instance.telemetryService.raiseAssesTelemetry(
+        {
+          item: {
+            id: item.id || "",
+            type: item.type || "default",
+            maxscore: item.maxscore || 1,
+          },
+          pass,
+          score,
+          resvalues,
+          duration,
+        },
+        {
+          ...getEventOptions(),
+          object: { id: item.id || "", type: "Step", ver: "1.0" },
+        }
+      );
+    } else {
+      console.warn("Telemetry service not initialized, skipping assess event");
+    }
+  } catch (err) {
+    console.error("Error raising assess telemetry:", err);
+  }
+};
+
+/**
+ * audit() — AUDIT event for object state/lifecycle change (Sunbird v3).
+ * Call when a learner's milestone level changes.
+ *
+ * @param {Object} data  { props, state, prevstate, objectId, objectType }
+ */
+export const audit = (data) => {
+  try {
+    if (
+      CsTelemetryModule.instance &&
+      CsTelemetryModule.instance.telemetryService
+    ) {
+      const {
+        props = [],
+        state: newState = "",
+        prevstate = "",
+        objectId = "",
+        objectType = "Learner",
+      } = data || {};
+
+      CsTelemetryModule.instance.telemetryService.raiseAuditTelemetry({
+        options: {
+          ...getEventOptions(),
+          object: {
+            id: objectId || localStorage.getItem("apiToken") || "",
+            type: objectType,
+            ver: "1.0",
+          },
+        },
+        edata: { props, state: newState, prevstate },
+      });
+    } else {
+      console.warn("Telemetry service not initialized, skipping audit event");
+    }
+  } catch (err) {
+    console.error("Error raising audit telemetry:", err);
+  }
+};
+
+/**
+ * interrupt() — INTERRUPT event for session disruption (tab switch, device lock).
+ * Call from the visibilitychange listener in App.js.
+ *
+ * @param {Object} data  { type, pageid }
+ */
+export const interrupt = (data) => {
+  try {
+    if (
+      CsTelemetryModule.instance &&
+      CsTelemetryModule.instance.telemetryService
+    ) {
+      const { type = "background", pageid = "" } = data || {};
+      CsTelemetryModule.instance.telemetryService.raiseInterruptTelemetry({
+        options: getEventOptions(),
+        edata: { type, pageid },
+      });
+    } else {
+      console.warn(
+        "Telemetry service not initialized, skipping interrupt event"
+      );
+    }
+  } catch (err) {
+    console.error("Error raising interrupt telemetry:", err);
+  }
+};
+
+/**
+ * fireSessionEnd() — fires END + SUMMARY together at any session exit point.
+ *
+ * Call from:
+ *   1. App.js — beforeunload handler (tab close / page refresh)
+ *   2. LoginPage.jsx — logout handler
+ *   3. AssesmentEnd.jsx — milestone complete screen
+ */
+export const fireSessionEnd = () => {
+  try {
+    const s = getSessionState();
+    if (!s.startTs) return; // no active session
+
+    if (
+      !(
+        CsTelemetryModule.instance &&
+        CsTelemetryModule.instance.telemetryService
+      )
+    ) {
+      console.warn("Telemetry service not initialized, skipping END + SUMMARY");
+      return;
+    }
+
+    const now = Date.now();
+    const timespent = Math.round((now - s.startTs - s.totalInterruptMs) / 1000);
+
+    // END event
+    CsTelemetryModule.instance.telemetryService.raiseEndTelemetry({
+      edata: {
+        type: "content",
+        mode: "play",
+        pageid: localStorage.getItem("currentStep") || "",
+        duration: timespent,
+        summary: [
+          { id: "stepsCompleted", type: "Number", value: s.stepsCompleted },
+          { id: "stepsPassed", type: "Number", value: s.stepsPassed },
+        ],
+      },
+    });
+
+    // SUMMARY event — pre-aggregated session document for Metabase dashboards
+    // Correct signature: raiseSummaryTelemetry(data, options) — two separate params
+    // This fixes the double-nesting issue (events.edata.edata) in MongoDB
+    CsTelemetryModule.instance.telemetryService.raiseSummaryTelemetry(
+      {
+        type: "session",
+        mode: "play",
+        starttime: s.startTs,
+        endtime: now,
+        timespent,
+        pageviews: s.steps.length,
+        interactions: s.responseCount,
+        pagesummary: s.steps.map((st) => ({
+          id: st.stepId,
+          type: "Step",
+          env: "all-player",
+          timespent: Math.round(st.durationMs / 1000),
+          visits: 1,
+        })),
+        eventssummary: [
+          { eid: "IMPRESSION", count: s.impressionCount },
+          { eid: "ASSESS", count: s.assessCount },
+          { eid: "RESPONSE", count: s.responseCount },
+          { eid: "INTERRUPT", count: s.interruptCount },
+        ],
+        extra: {
+          milestone: s.milestone,
+          subMilestone: s.subMilestone,
+          language: s.language,
+          stepsCompleted: s.stepsCompleted,
+          stepsPassed: s.stepsPassed,
+          stepsFailed: s.stepsFailed,
+          totalAttempts: s.responseCount,
+        },
+      },
+      getEventOptions()
+    );
+
+    resetSession(); // clear for next session
+  } catch (err) {
+    console.error("Error in fireSessionEnd:", err);
   }
 };
 
@@ -485,76 +745,49 @@ let globalDeviceCdata = [];
  * Device info is calculated once during initialization and reused here
  */
 export const getEventOptions = () => {
-  var emis_username =
-    localStorage.getItem("virtualId") ||
-    localStorage.getItem("apiToken") ||
-    "anonymous";
-  var buddyUserId = "";
-  var userDetails = null;
+  // uid: apiToken only — backend detokenises to resolved user ID
+  // Privacy: no school, grade, UDISE or demographic data stored in telemetry
+  const apiToken = localStorage.getItem("apiToken") || "anonymous";
 
-  if (localStorage.getItem("token") !== null) {
-    let jwtToken = localStorage.getItem("token");
-    userDetails = jwtDecode(jwtToken);
-    emis_username = userDetails.emis_username;
-  }
-
+  let buddyUserId = "";
   if (isBuddyLogin) {
-    let jwtToken = localStorage.getItem("buddyToken");
-    let buddyUserDetails = jwtDecode(jwtToken);
-    buddyUserId = buddyUserDetails.emis_username;
+    try {
+      const buddyUserDetails = jwtDecode(localStorage.getItem("buddyToken"));
+      buddyUserId = buddyUserDetails.emis_username || "";
+    } catch (_) {}
   }
 
-  const userType = isBuddyLogin ? "Buddy User" : "User";
-  const userId = isBuddyLogin
-    ? emis_username + "/" + buddyUserId
-    : emis_username ||
-      localStorage.getItem("virtualId") ||
-      localStorage.getItem("apiToken") ||
-      "anonymous";
+  const uid = isBuddyLogin ? apiToken + "/" + buddyUserId : apiToken;
 
-  // Include device info in every event to ensure it's logged
-  // Device info is set once during initialization and stored in globalDeviceCdata
   return {
     object: {},
     context: {
       pdata: {
-        // optional
-        id: process.env.REACT_APP_ID, // Producer ID. For ex: For sunbird it would be "portal" or "genie"
+        id: process.env.REACT_APP_ID,
         ver: [
           process.env.REACT_APP_VER,
           process.env.REACT_APP_BUILD_NUMBER,
           process.env.REACT_APP_COMMIT_ID?.substring(0, 7),
         ]
           .filter(Boolean)
-          .join("-"), // Version of the App
-        pid: process.env.REACT_APP_PID, // Optional. In case the component is distributed, then which instance of that component
+          .join("-"),
+        pid: process.env.REACT_APP_PID,
       },
       env: process.env.REACT_APP_ENV,
-      uid: `${
-        isBuddyLogin
-          ? emis_username + "/" + buddyUserId
-          : emis_username ||
-            getLocalData("virtualId") ||
-            localStorage.getItem("apiToken") ||
-            "anonymous"
-      }`,
+      uid,
       cdata: [
-        // Dynamic session/user fields that may change per event
+        // Session identifiers
         {
           id: getLocalData("sessionId") || contentSessionId,
           type: "ContentSession",
         },
         { id: playSessionId, type: "PlaySession" },
-        { id: userId, type: userType },
-        { id: getLocalData("lang") || "ta", type: "language" },
-        { id: userDetails?.school_name, type: "school_name" },
-        {
-          id: userDetails?.class_studying_id,
-          type: "class_studying_id",
-        },
-        { id: userDetails?.udise_code, type: "udise_code" },
-        { id: getVirtualId() || null, type: "virtualId" },
-        // Include device info in every event to ensure it's logged
+        // Identity — apiToken only (backend resolves to user ID)
+        { id: apiToken, type: "UserID" },
+        // Learning context — non-identifiable
+        { id: getLocalData("lang") || "", type: "language" },
+        { id: localStorage.getItem("milestone") || "", type: "milestone" },
+        // Device info — captured once at init
         ...globalDeviceCdata,
       ],
       rollup: {},

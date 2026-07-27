@@ -35,7 +35,14 @@ import {
   getStepTitleFromFlowIndex,
 } from "../../utils/flowStepTelemetry";
 import { uniqueId } from "../../services/utilService";
-import { Log } from "../../services/telemetryService";
+import {
+  Log,
+  start as telemetryStart,
+  impression as telemetryImpression,
+  assess as telemetryAssess,
+  fireSessionEnd,
+  initialize as telemetryInitialize,
+} from "../../services/telemetryService";
 import { MessageDialog } from "../../components/Assesment/Assesment";
 import { RetryDialog } from "../../components/Practice/RetryDialog";
 import * as Assets from "../../utils/imageAudioLinks";
@@ -248,6 +255,62 @@ const Practice = () => {
       setLocalData("rStepZero", 0);
     }
   }, [milestoneLevelForInit, rStepZero, level]);
+
+  // Telemetry: re-initialise with apiToken uid and fire START once per Practice mount
+  useEffect(() => {
+    const apiToken = localStorage.getItem("apiToken");
+    if (!apiToken) return;
+
+    // Store current milestone so cdata picks it up
+    const ms = milestoneLevel || milestoneLevelForInit || "";
+    if (ms) localStorage.setItem("milestone", ms);
+
+    telemetryInitialize({
+      context: {
+        mode: process.env.REACT_APP_MODE,
+        authToken: apiToken,
+        did: localStorage.getItem("deviceId") || "",
+        uid: apiToken,
+        channel: process.env.REACT_APP_CHANNEL,
+        env: process.env.REACT_APP_ENV,
+        pdata: {
+          id: process.env.REACT_APP_ID,
+          ver: [
+            process.env.REACT_APP_VER,
+            process.env.REACT_APP_BUILD_NUMBER,
+            process.env.REACT_APP_COMMIT_ID?.substring(0, 7),
+          ]
+            .filter(Boolean)
+            .join("-"),
+          pid: process.env.REACT_APP_PID,
+        },
+        tags: [""],
+        timeDiff: 0,
+        host: process.env.REACT_APP_HOST,
+        endpoint: process.env.REACT_APP_ENDPOINT,
+        apislug: process.env.REACT_APP_APISLUG,
+      },
+      config: {},
+      metadata: {},
+    }).then(() => {
+      // Guard: only fire START once — App.js may also call it on page refresh
+      if (!localStorage.getItem("practiceSessionStarted")) {
+        localStorage.setItem("practiceSessionStarted", "1");
+        const stepTitle = localStorage.getItem("currentStep") || "";
+        // Guard against stale numeric value from previous session
+        const safeTitle =
+          stepTitle && isNaN(Number(stepTitle)) ? stepTitle : "";
+        telemetryStart(safeTitle);
+      }
+    });
+
+    // Fire END + SUMMARY when Practice unmounts (navigation away)
+    return () => {
+      localStorage.removeItem("practiceSessionStarted");
+      fireSessionEnd();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //console.log("practice rStepZero", rStepZero);
 
