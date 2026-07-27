@@ -2302,7 +2302,7 @@ const Practice = () => {
                 try {
                   await addLesson({
                     sessionId,
-                    milestone: milestoneType,
+                    milestone: "practice",
                     lesson: "0",
                     progress: 0,
                     language: lang,
@@ -2320,7 +2320,7 @@ const Practice = () => {
                 try {
                   await addLesson({
                     sessionId,
-                    milestone: milestoneType,
+                    milestone: "practice",
                     lesson: "0",
                     progress: 0,
                     language: lang,
@@ -2336,7 +2336,7 @@ const Practice = () => {
               try {
                 await addLesson({
                   sessionId,
-                  milestone: milestoneType,
+                  milestone: "practice",
                   lesson: "0",
                   progress: 0,
                   language: lang,

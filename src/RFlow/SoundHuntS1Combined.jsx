@@ -9604,7 +9604,7 @@ const SoundHuntS1Combined = ({
             try {
               await addLesson({
                 sessionId: sessionId,
-                milestone: "showcase", // S1 is a showcase step
+                milestone: "practice", // S1 is a showcase step
                 lesson: 0, // Reset lesson progress to 0
                 progress: 0, // Reset progress to 0
                 language: lang,
