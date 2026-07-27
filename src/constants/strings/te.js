@@ -31,6 +31,13 @@ const te = {
   // Common actions (new keys)
   COMMON_BACK: "వెనుకకు",
   COMMON_CONTINUE: "కొనసాగించండి",
+  COMMON_SKIP_DEMO: "డెమో దాటవేయి",
+
+  // Preview / autoplay-unlock overlay
+  PREVIEW_CLICK_TO_START: "ప్రారంభించడానికి క్లిక్ చేయండి",
+  PREVIEW_CLICK_ANYWHERE_TO_START:
+    "దయచేసి ప్రివ్యూ ప్రారంభించడానికి ఎక్కడైనా క్లిక్ చేయండి",
+  PREVIEW_START_PREVIEW: "ప్రివ్యూ ప్రారంభించండి",
 
   // Errors (new keys)
 
