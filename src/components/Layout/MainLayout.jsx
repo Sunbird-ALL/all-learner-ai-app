@@ -1120,12 +1120,7 @@ const MainLayout = (props) => {
                     overflowY: "hidden",
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
-                    padding: startShowCase
-                      ? {
-                          xs: "5rem 1rem 1rem !important",
-                          md: "8.125rem 1.5rem 1.5rem !important",
-                        }
-                      : { xs: "1rem !important", md: "1.5rem !important" },
+                    padding: { xs: "1rem !important", md: "1.5rem !important" },
                     boxSizing: "border-box",
                     ...props.cardContentStyle,
                   }}
@@ -1186,15 +1181,17 @@ const MainLayout = (props) => {
                   contentType.toLowerCase() !== "word" &&
                   startShowCase && (
                     <Box
-                      position={"absolute"}
-                      top={isMobile ? 10 : 20}
-                      left={isMobile ? "initial" : 20}
+                      position={isMobile ? "absolute" : "relative"}
+                      top={isMobile ? 10 : "auto"}
+                      left={isMobile ? "initial" : "auto"}
                       right={isMobile ? 10 : "initial"}
                       justifyContent={"center"}
                       sx={{
                         display: isMobile ? "flex" : "block",
                         flexDirection: isMobile ? "column" : "initial",
                         alignItems: isMobile ? "flex-end" : "initial",
+                        order: isMobile ? "unset" : -1,
+                        padding: isMobile ? 0 : "1.25rem 1.5rem 1rem",
                       }}
                     >
                       <Box display={"flex"} gap={isMobile ? "3px" : "5px"}>
