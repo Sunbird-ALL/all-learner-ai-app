@@ -2205,10 +2205,9 @@ const Assesment = ({ discoverStart }) => {
     height: "100dvh",
     minHeight: "-webkit-fill-available",
     backgroundImage: `url(${getBackgroundImage()})`,
-    backgroundSize: "cover",
-    backgroundPosition: isMobile ? "37% bottom" : "center bottom",
+    backgroundSize: "100% 100%",
+    backgroundRepeat: "no-repeat",
     position: "relative",
-    overflow: "hidden",
   };
 
   // Show a friendly error card when API calls on mount fail (server down / timeout).
