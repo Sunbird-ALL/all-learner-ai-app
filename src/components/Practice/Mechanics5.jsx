@@ -12,6 +12,45 @@ import ZoomableImage from "./ZoomableImage";
 import { getFontFamily } from "../../utils/fontUtils";
 import { getUiStrings } from "../../constants/strings";
 
+// Scrolls the MCQ panel down when new content overflows it (radio select,
+// mic start) and back to top when the user advances via Next. Extracted out
+// of Mechanics5 so this control flow doesn't count toward its complexity.
+// scrollGenerationRef lets scrollUpToTop invalidate an in-flight downward
+// scroll (queued via the double rAF below) so a fast Next click can't be
+// undone by a stale scroll-to-bottom callback firing after it.
+const useMcqAutoScroll = () => {
+  const scrollContainerRef = useRef(null);
+  const scrollGenerationRef = useRef(0);
+
+  const scrollDownIfOverflowing = () => {
+    const generation = ++scrollGenerationRef.current;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    // Wait two frames so the click's re-render has finished laying out
+    // before we measure the container's height.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (generation !== scrollGenerationRef.current) return;
+        if (container.scrollHeight > container.clientHeight) {
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+      });
+    });
+  };
+
+  const scrollUpToTop = () => {
+    scrollGenerationRef.current += 1;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    container.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return { scrollContainerRef, scrollDownIfOverflowing, scrollUpToTop };
+};
+
 const Mechanics5 = ({
   background,
   type,
@@ -65,7 +104,8 @@ const Mechanics5 = ({
     new Array(options.length).fill(null).map(() => React.createRef())
   );
   const questionAudioRef = useRef();
-  const scrollContainerRef = useRef(null);
+  const { scrollContainerRef, scrollDownIfOverflowing, scrollUpToTop } =
+    useMcqAutoScroll();
   const [playingIndex, setPlayingIndex] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null); // Add state to track selected radio button
   const lang = getLocalData("lang");
@@ -131,39 +171,6 @@ const Mechanics5 = ({
   };
 
   //console.log('Mechanics5' , storedData, options);
-
-  // Only called from click handlers below - never on mount/page load - so the
-  // panel never auto-scrolls until the user's own click introduces overflow.
-  // scrollGenerationRef lets scrollUpToTop invalidate an in-flight downward
-  // scroll (queued via the double rAF below) so a fast Next click can't be
-  // undone by a stale scroll-to-bottom callback firing after it.
-  const scrollGenerationRef = useRef(0);
-
-  const scrollDownIfOverflowing = () => {
-    const generation = ++scrollGenerationRef.current;
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    // Wait two frames so the click's re-render has finished laying out
-    // before we measure the container's height.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (generation !== scrollGenerationRef.current) return;
-        if (container.scrollHeight > container.clientHeight) {
-          container.scrollTo({
-            top: container.scrollHeight,
-            behavior: "smooth",
-          });
-        }
-      });
-    });
-  };
-
-  const scrollUpToTop = () => {
-    scrollGenerationRef.current += 1;
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    container.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const handleOptionChange = (event, i) => {
     setSelectedOption(i); // Set the selected option index
