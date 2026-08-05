@@ -65,6 +65,7 @@ const Mechanics5 = ({
     new Array(options.length).fill(null).map(() => React.createRef())
   );
   const questionAudioRef = useRef();
+  const scrollContainerRef = useRef(null);
   const [playingIndex, setPlayingIndex] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null); // Add state to track selected radio button
   const lang = getLocalData("lang");
@@ -131,9 +132,45 @@ const Mechanics5 = ({
 
   //console.log('Mechanics5' , storedData, options);
 
+  // Only called from click handlers below - never on mount/page load - so the
+  // panel never auto-scrolls until the user's own click introduces overflow.
+  const scrollDownIfOverflowing = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    // Wait two frames so the click's re-render has finished laying out
+    // before we measure the container's height.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (container.scrollHeight > container.clientHeight) {
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+      });
+    });
+  };
+
+  const scrollUpToTop = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    container.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleOptionChange = (event, i) => {
     setSelectedOption(i); // Set the selected option index
+    scrollDownIfOverflowing();
   };
+
+  // The orange Next button is the only caller that passes `true` here;
+  // internal ASR-processing effects reset it back to `false`, which must
+  // not scroll (e.g. right after the user clicks the red stop button).
+  const setIsNextButtonCalledWithScroll = setIsNextButtonCalled
+    ? (value) => {
+        if (value) scrollUpToTop();
+        setIsNextButtonCalled(value);
+      }
+    : undefined;
 
   return (
     <MainLayout
@@ -216,6 +253,7 @@ const Mechanics5 = ({
         </Box>
 
         <Box
+          ref={scrollContainerRef}
           sx={{
             flex: 1,
             minHeight: 0,
@@ -454,6 +492,7 @@ const Mechanics5 = ({
               }
               enableNext={enableNext}
               handleNext={handleNext}
+              handleStartRecording={scrollDownIfOverflowing}
               selectedOption={options[selectedOption]}
               correctness={correctness}
               audioLink={audio ? audio : null}
@@ -475,7 +514,7 @@ const Mechanics5 = ({
                 loading,
                 setLivesData,
                 isNextButtonCalled,
-                setIsNextButtonCalled,
+                setIsNextButtonCalled: setIsNextButtonCalledWithScroll,
               }}
             />
           </Box>
