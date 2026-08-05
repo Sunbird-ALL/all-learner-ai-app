@@ -134,13 +134,20 @@ const Mechanics5 = ({
 
   // Only called from click handlers below - never on mount/page load - so the
   // panel never auto-scrolls until the user's own click introduces overflow.
+  // scrollGenerationRef lets scrollUpToTop invalidate an in-flight downward
+  // scroll (queued via the double rAF below) so a fast Next click can't be
+  // undone by a stale scroll-to-bottom callback firing after it.
+  const scrollGenerationRef = useRef(0);
+
   const scrollDownIfOverflowing = () => {
+    const generation = ++scrollGenerationRef.current;
     const container = scrollContainerRef.current;
     if (!container) return;
     // Wait two frames so the click's re-render has finished laying out
     // before we measure the container's height.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
+        if (generation !== scrollGenerationRef.current) return;
         if (container.scrollHeight > container.clientHeight) {
           container.scrollTo({
             top: container.scrollHeight,
@@ -152,6 +159,7 @@ const Mechanics5 = ({
   };
 
   const scrollUpToTop = () => {
+    scrollGenerationRef.current += 1;
     const container = scrollContainerRef.current;
     if (!container) return;
     container.scrollTo({ top: 0, behavior: "smooth" });
