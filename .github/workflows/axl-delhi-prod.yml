@@ -5,6 +5,10 @@ on:
     branches:
       - all-3.0.5.1
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -22,16 +26,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "18"
-
-      - name: Configure AWS credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
-          aws configure set default.region "$AWS_REGION"
 
       - name: Clean up node_modules and package-lock.json
         run: |
@@ -113,14 +107,23 @@ jobs:
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
+      - name: Configure AWS credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+          aws configure set default.region "$AWS_REGION"
+
       - name: Deploy to S3 Bucket
         run: aws s3 sync ./build s3://axl-delhi-frontend/all-app/
 
       - name: Cloudfront Invalidation
-        uses: chetan/invalidate-cloudfront-action@fce6f6f546fae2e9fe55f3bd1411063a908f2557 # master @ 2021-12-10
         env:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
-          PATHS: "/*"
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "$DISTRIBUTION" \
+            --paths "/*"
