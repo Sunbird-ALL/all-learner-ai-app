@@ -8,22 +8,30 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     environment: axl-delhi-prod
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18"
-          
+
       - name: Configure AWS credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region ${{ secrets.AWS_REGION }}
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+          aws configure set default.region "$AWS_REGION"
 
       - name: Clean up node_modules and package-lock.json
         run: |
@@ -31,7 +39,7 @@ jobs:
           rm -f package-lock.json
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps --ignore-scripts
 
       - name: Run Husky Install
         run: npm run prepare
@@ -108,14 +116,8 @@ jobs:
       - name: Deploy to S3 Bucket
         run: aws s3 sync ./build s3://axl-delhi-frontend/all-app/
 
-      - name: Debug Environment Variables
-        run: |
-          echo "REACT_APP_AWS_S3_BUCKET_NAME: $REACT_APP_AWS_S3_BUCKET_NAME"
-          echo "AWS_REGION: $AWS_REGION"
-          echo "secrate": ${{ vars.REACT_APP_AWS_S3_BUCKET_NAME }}
-
       - name: Cloudfront Invalidation
-        uses: chetan/invalidate-cloudfront-action@master
+        uses: chetan/invalidate-cloudfront-action@fce6f6f546fae2e9fe55f3bd1411063a908f2557 # master @ 2021-12-10
         env:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
           PATHS: "/*"
