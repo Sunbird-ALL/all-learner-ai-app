@@ -1,4 +1,4 @@
-name: ALL AXL lab2 Deployment
+name: ALL AXL Lab2 Deployment (Lab2)
 
 on:
   push:
@@ -36,10 +36,10 @@ jobs:
       - name: Run Husky Install
         run: npm run prepare
 
-      # - name: Run Tests
-      #  run: npm test -- --watchAll=false
-      #  env:
-      #   CI: true
+      - name: Run Tests
+        run: npm test -- --watchAll=false
+        env:
+          CI: true
 
       - name: Build and Package Application
         env:
