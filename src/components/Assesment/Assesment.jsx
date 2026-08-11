@@ -2342,6 +2342,7 @@ const Assesment = ({ discoverStart }) => {
         <MainLayout
           showNext={false}
           showTimer={false}
+          hideFooter={discoverStart}
           cardBackground={assessmentBackground}
           backgroundImage={practicebg}
           loading={loading}

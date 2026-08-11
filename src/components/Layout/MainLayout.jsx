@@ -432,6 +432,7 @@ const MainLayout = (props) => {
     vocabCount,
     wordCount,
     showMilestone = true,
+    hideFooter = false,
   } = props;
 
   const [shake, setShake] = useState(false);
@@ -1237,7 +1238,7 @@ const MainLayout = (props) => {
                   sx={{
                     height: { xs: "80px", sm: "110px" },
                     position: "relative",
-                    display: "flex",
+                    display: hideFooter ? "none" : "flex",
                     flexDirection: "column",
                     flexShrink: 0,
                   }}
