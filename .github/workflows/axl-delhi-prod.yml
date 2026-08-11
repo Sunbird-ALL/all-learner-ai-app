@@ -32,13 +32,8 @@ jobs:
           aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
           aws configure set default.region "$AWS_REGION"
 
-      - name: Clean up node_modules and package-lock.json
-        run: |
-          rm -rf node_modules
-          rm -f package-lock.json
-
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps --ignore-scripts
+        run: npm ci --legacy-peer-deps --ignore-scripts
 
       - name: Run Husky Install
         run: npm run prepare
