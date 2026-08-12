@@ -12,6 +12,7 @@ import { ContinueButton } from "./ContinueButton";
 import { englishAudioManager } from "../../utils/englishAudioManager";
 import { playSuccessSound, attachSlowLoadToast } from "../../utils/audioUtils";
 import { hindiAudioManager } from "../../utils/hindiAudioManager";
+import { nepaliAudioManager } from "../../utils/nepaliAudioManager";
 import { getFontFamilyByLang } from "../../../../../utils/fontUtils";
 
 // Core question interface for Letter Hunt
@@ -277,6 +278,44 @@ export function LetterHuntGameCore({
         };
         return;
       }
+      if (language === 'ne') {
+        const audioUrl = nepaliAudioManager.getAudioUrl(text);
+        const audio = new Audio(audioUrl);
+        activeAudioRefs.current.add(audio);
+        attachSlowLoadToast(audio);
+
+        audio.onloadeddata = () => {
+          if (isAudioStoppedRef.current) {
+            resolve();
+            return;
+          }
+          audio.play().then(() => {
+            audio.onended = () => {
+              activeAudioRefs.current.delete(audio);
+              resolve();
+            };
+          }).catch(() => {
+            activeAudioRefs.current.delete(audio);
+            // Fallback to TTS
+            if (!isAudioStoppedRef.current) {
+              playTTSAudio(text, language).then(() => resolve());
+            } else {
+              resolve();
+            }
+          });
+        };
+
+        audio.onerror = () => {
+          activeAudioRefs.current.delete(audio);
+          // Fallback to TTS
+          if (!isAudioStoppedRef.current) {
+            playTTSAudio(text, language).then(() => resolve());
+          } else {
+            resolve();
+          }
+        };
+        return;
+      }
       // For Kannada, try to use local audio files first
       if (language === 'kn') {
         const audioUrl = kannadaAudioManager.getAudioUrl(text);
@@ -434,6 +473,18 @@ export function LetterHuntGameCore({
         case 'kn':
           utterance.lang = 'kn-IN';
           utterance.rate = 0.6; // Slower for Kannada
+          utterance.pitch = 0.9;
+          utterance.volume = 0.9;
+          break;
+        case 'hi':
+          utterance.lang = 'hi-IN';
+          utterance.rate = 0.6; // Slower for Hindi
+          utterance.pitch = 0.9;
+          utterance.volume = 0.9;
+          break;
+        case 'ne':
+          utterance.lang = 'ne-NP';
+          utterance.rate = 0.6; // Slower for Nepali
           utterance.pitch = 0.9;
           utterance.volume = 0.9;
           break;
@@ -881,7 +932,9 @@ export function LetterHuntGameCore({
                             ? '🎉 बरोबर!'
                             : selectedLanguage === 'hi'
                               ? '🎉 सही है।'
-                              : '🎉 Correct!'}
+                              : selectedLanguage === 'ne'
+                                ? '🎉 सही छ!'
+                                : '🎉 Correct!'}
                     </p>
                   </div>
                 ) : (
@@ -898,7 +951,9 @@ export function LetterHuntGameCore({
                               ? `${emoji} अरेच्या! चुकीचे!`
                               : selectedLanguage === 'hi'
                                 ? `${emoji} ओह! गलत!`
-                                : `${emoji} Oops! Wrong!`;
+                                : selectedLanguage === 'ne'
+                                  ? `${emoji} ओहो! गलत!`
+                                  : `${emoji} Oops! Wrong!`;
                       })()}
                     </p>
                   </div>

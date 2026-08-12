@@ -198,6 +198,39 @@ const storyScript = {
       rilo: "क्या तुम अपनी अंतरिक्ष यात्रा शुरू करने के लिए तैयार हो, कैप्टन?",
       button: "🚀 अंतरिक्ष यात्रा शुरू करो"
     }
+  },
+  ne: {
+    intro: {
+      narrator: "तपाईं कैप्टन राही हुनुहुन्छ, एक साहसी सानो अन्तरिक्ष यात्री।",
+      rocket: "तपाईंको रॉकेट लन्च प्याडमा पर्खिरहेको छ, चम्किरहेको छ र बिस्तारै गुनगुनाइरहेको छ।",
+      destination: "आज, तपाईं अन्तरिक्ष यात्रामा जानुहुँदैछ!",
+      planet: "🌙"
+    },
+    riloAppears: {
+      rilo: "कैप्टन राही! हाम्रो रॉकेट उड्नको लागि तयार छ तर यसलाई इन्धन चाहिन्छ!",
+      fuelRequirement: "हामीलाई आकाशगंगामा यात्रा गर्न इन्धन एकाइहरू चाहिन्छ।",
+      fuelExplanation: "हामी तपाईंको सुपर सुन्ने कानको प्रयोग गरी इन्धन बनाउन सक्छौं!",
+      gameExplanation: "तपाईंले एक आवाज सुनुहुनेछ, तपाईंले एक अक्षर देखनुहुनेछ, र यदि तिनीहरू मिल्छन् भने, हामीलाई रॉकेटको लागि इन्धन पाइनेछ!",
+      rocket: "🚀"
+    },
+    practice: {
+      intro: "आउनुहोस् साँचो यात्रा अघि अलिकति अभ्यास गरौं!",
+      question: "के यी उस्तै सुनिन्छन्?",
+      controls: "तपाईं आफ्नै तरिकाले छान्न सक्नुहुन्छ!\n\nयदि तपाईंलाई लाग्छ कि तिनीहरू मिल्छन् भने,\n← कुञ्जी थिच्नुहोस्।\n\nयदि तपाईंलाई लाग्छ कि तिनीहरू मिल्दैनन् भने,\n→ कुञ्जी थिच्नुहोस्।\n\nवा तपाईं केवल ✓ वा ✗ बटनमा क्लिक गर्न सक्नुहुन्छ!\n\nजे सजिलो लाग्छ,\nतपाईं नै रॉकेटको कैप्टन हुनुहुन्छ!",
+      correctFeedback: "वाह! यसले हामीलाई मदत गर्यो!",
+      wrongFeedback: "केही फरक पर्दैन! फेरि प्रयास गरौं!",
+      greatJob: "धेरै राम्रो, कैप्टन राही! तपाईं तयार हुनुहुन्छ!",
+      amazing: "तपाईं धेरै राम्रो गर्दै हुनुहुन्छ!",
+      allReady: "सबै तयार!"
+    },
+    fuelExplanation: {
+      rilo: "हर पटक जब तपाईं सुन्नुहुन्छ र छान्नुहुन्छ, तपाईंको रॉकेटले थप इन्धन पाउँछ! तपाईंले जति छिटो जवाफ दिनुहुन्छ, त्यति धेरै इन्धन पाइनेछ!",
+      fuelMeter: "आउनुहोस् ट्याङ्की भरौं, र आकाशगंगाको खोज गरौं!!"
+    },
+    readyToStart: {
+      rilo: "के तपाईं आफ्नो अन्तरिक्ष यात्रा सुरु गर्न तयार हुनुहुन्छ, कैप्टन?",
+      button: "🚀 अन्तरिक्ष यात्रा सुरु गर्नुहोस्"
+    }
   }
 };
 
@@ -246,8 +279,8 @@ export function LetterLauncherGameStoryPreview({
 
   // Generate practice questions
   const generatePracticeQuestion = (): LetterLauncherQuestion => {
-    const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' | 'hi' =
-      (contentLanguage === 'en' || contentLanguage === 'te' || contentLanguage === 'mr' || contentLanguage === 'kn' || contentLanguage === 'hi' )
+    const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' | 'hi' | 'ne' =
+      (contentLanguage === 'en' || contentLanguage === 'te' || contentLanguage === 'mr' || contentLanguage === 'kn' || contentLanguage === 'hi' || contentLanguage === 'ne' )
         ? contentLanguage
         : 'en';
 

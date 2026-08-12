@@ -1219,6 +1219,8 @@ const LetterHuntMechanicsContent = ({
       ? "mr"
       : lang === "hi"
       ? "hi"
+      : lang === "ne"
+      ? "ne"
       : "en";
   const initialAudioLanguage = initialLanguage;
   const sessionId = getLocalData("sessionId");
