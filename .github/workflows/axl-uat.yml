@@ -1,14 +1,14 @@
-name: ALL rig (UAT) dev Deployment
+name: ALL AXL UAT Deployment (UAT)
 
 on:
   push:
     branches:
-      - all-3.0.6-hotfix_
+      - all-3.0.7
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: all-dev-rig
+    environment: axl-uat
 
     steps:
       - name: Checkout code
@@ -90,7 +90,6 @@ jobs:
           REACT_APP_LEARNER_AI_BASE_URL: ${{ vars.REACT_APP_LEARNER_AI_BASE_URL }}
           REACT_APP_USE_RECOMMENDATION_API: ${{ vars.REACT_APP_USE_RECOMMENDATION_API }}
           REACT_APP_ENGAGEMENT_PREDICT_URL: ${{ vars.REACT_APP_ENGAGEMENT_PREDICT_URL }}
-          REACT_APP_IS_ENGAGEMENT_PREDICT_ENABLE: ${{ vars.REACT_APP_IS_ENGAGEMENT_PREDICT_ENABLE }}
           REACT_APP_TRACKING_API_BASE_URL: ${{ vars.REACT_APP_TRACKING_API_BASE_URL}}
           REACT_APP_PRESIGNED_URL_SERVICE: ${{ vars.REACT_APP_PRESIGNED_URL_SERVICE }}
           REACT_APP_RECOMMENDATION_API_LANGUAGES: ${{ vars.REACT_APP_RECOMMENDATION_API_LANGUAGES }}
@@ -102,12 +101,12 @@ jobs:
           REACT_APP_MIN_SCREEN_HEIGHT: ${{ vars.REACT_APP_MIN_SCREEN_HEIGHT }}
           REACT_APP_BUILD_NUMBER: ${{ github.run_number }}
           REACT_APP_COMMIT_ID: ${{ github.sha }}
-          REACT_APP_BRANCH_NAME: ${{ github.ref_name }}
+          PUBLIC_URL: ${{ vars.PUBLIC_URL }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
       - name: Deploy to S3 Bucket
-        run: aws s3 sync ./build s3://sballappliance/
+        run: aws s3 sync ./build s3://sballappliance/all-app/
 
       - name: Debug Environment Variables
         run: |

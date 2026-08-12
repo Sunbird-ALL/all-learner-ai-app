@@ -1,21 +1,21 @@
-name: ALL AXL bihar Deployment
+name: ALL AXL Lab2 Deployment (Lab2)
 
 on:
   push:
     branches:
-      - all-3.0.6
+      - all-3.0.6-hotfix
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: axl-bihar-prod
+    environment: axl-lab2
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
           
@@ -25,10 +25,10 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set default.region ${{ secrets.AWS_REGION }}
 
-     # - name: Clean up node_modules and package-lock.json
-     #   run: |
-     #     rm -rf node_modules
-     #     rm -f package-lock.json
+      - name: Clean up node_modules and package-lock.json
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
@@ -101,13 +101,12 @@ jobs:
           REACT_APP_MIN_SCREEN_HEIGHT: ${{ vars.REACT_APP_MIN_SCREEN_HEIGHT }}
           REACT_APP_BUILD_NUMBER: ${{ github.run_number }}
           REACT_APP_COMMIT_ID: ${{ github.sha }}
-          REACT_APP_BRANCH_NAME: ${{ github.ref_name }}
           PUBLIC_URL: ${{ vars.PUBLIC_URL }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
       - name: Deploy to S3 Bucket
-        run: aws s3 sync ./build s3://axl-bihar-frontend/all-app/
+        run: aws s3 sync ./build s3://axl-test-lab-v2-front-end/all-app/
 
       - name: Debug Environment Variables
         run: |
