@@ -87,6 +87,16 @@ const demoInstructions = {
     startGame: "ଖେଳ ଆରମ୍ଭ କରନ୍ତୁ",
     howToPlay: "କିପରି ଖେଳିବେ",
   },
+  ne: {
+    narration1:
+      "लेटर हन्टमा तपाईंलाई स्वागत छ! अक्षरको ध्वनि सुन्नको लागि स्पिकर बटनमा क्लिक गर्नुहोस्।",
+    narration2: "अक्षरको ध्वनि ध्यानपूर्वक सुन्नुहोस्",
+    narration3: "अब सही अक्षर भएको बबलमा क्लिक गर्नुहोस्",
+    narration4: "धेरै राम्रो! तपाईंले अक्षर फेला पार्नुभयो!",
+    skipDemo: "डेमो छोड्नुहोस्",
+    startGame: "खेल सुरू गर्नुहोस्",
+    howToPlay: "कसरी खेल्ने",
+  },
 };
 
 const AserFlowPreview = ({ onStartGame, onBack }) => {
@@ -313,6 +323,12 @@ const AserFlowPreview = ({ onStartGame, onBack }) => {
       message: "ବହୁତ ଭଲ! ଆପଣ ଅକ୍ଷର ଶିକାର ଆରମ୍ଭ କରିବାକୁ ପ୍ରସ୍ତୁତ।",
       replayText: "ପୁନର୍ବାର ପ୍ଲେ କରନ୍ତୁ",
       continueText: "ଜାରି ରଖନ୍ତୁ",
+    },
+    ne: {
+      title: "डेमो पूर्ण भयो!",
+      message: "धेरै राम्रो! तपाईं अक्षरहरू खोज्न सुरू गर्न तयार हुनुहुन्छ।",
+      replayText: "फेरि प्ले गर्नुहोस्",
+      continueText: "जारी राख्नुहोस्",
     },
   };
 

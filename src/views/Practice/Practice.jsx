@@ -660,15 +660,15 @@ const Practice = () => {
           ? levelThree[lang]
           : levels[lang];
 
-      const levelData = selectedLevels[currentLevelMap];
-      const levelImage = selectedLevels[currentImageMap];
+      const levelData = selectedLevels?.[currentLevelMap];
+      const levelImage = selectedLevels?.[currentImageMap];
       //console.log("levelsNew", level, levelData);
-      const currentWord = levelData[currentQuestion];
+      const currentWord = levelData?.[currentQuestion];
 
-      setCurrentImage(levelImage[currentQuestion]);
+      setCurrentImage(levelImage?.[currentQuestion]);
       setParentWords(currentWord?.syllable?.join(" "));
-      setLevelOneWord(levelImage[currentQuestion]?.completeWord);
-      setRefAudio(levelImage[currentQuestion]?.audio);
+      setLevelOneWord(levelImage?.[currentQuestion]?.completeWord);
+      setRefAudio(levelImage?.[currentQuestion]?.audio);
     }
   }, [progressData]);
 
@@ -2296,7 +2296,8 @@ const Practice = () => {
                 (lang === "en" ||
                   lang === "te" ||
                   lang === "kn" ||
-                  lang === "hi") &&
+                  lang === "hi" ||
+                  lang === "ne") &&
                 (level === 3 || level === 6 || level === 9)
               ) {
                 try {

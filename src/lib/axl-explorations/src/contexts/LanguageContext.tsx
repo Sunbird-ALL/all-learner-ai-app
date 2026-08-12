@@ -19,7 +19,7 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
   // Load language from localStorage on mount
   useEffect(() => {
     const savedLanguage = localStorage.getItem('selectedLanguage') as Language;
-    if (savedLanguage && ['en', 'te', 'mr', 'kn'].includes(savedLanguage)) {
+    if (savedLanguage && ['en', 'te', 'mr', 'kn', 'hi', 'ne'].includes(savedLanguage)) {
       setSelectedLanguage(savedLanguage);
     }
   }, []);

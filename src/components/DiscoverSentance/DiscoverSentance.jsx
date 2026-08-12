@@ -184,7 +184,11 @@ const SpeakSentenceComponent = () => {
     if (resolved.type === "terminal") {
       if (
         resolved.towre &&
-        (lang === "te" || lang === "en" || lang === "kn" || lang === "hi")
+        (lang === "te" ||
+          lang === "en" ||
+          lang === "kn" ||
+          lang === "hi" ||
+          lang === "ne")
       ) {
         navigate("/towre-flow");
       } else {
