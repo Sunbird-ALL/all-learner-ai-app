@@ -709,10 +709,14 @@ const WordsOrImage = ({
       cardContentStyle={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent:
+          startShowCase && !isDemo
+            ? { xs: "center", md: "flex-start" }
+            : "center",
         alignItems: "center",
         height: "100%",
         overflowX: "hidden",
+        overflowY: "hidden",
       }}
       {...{
         steps,
@@ -773,7 +777,10 @@ const WordsOrImage = ({
           pointerEvents: disableScreen ? "none" : "initial",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent:
+            startShowCase && !isDemo
+              ? { xs: "center", md: "flex-start" }
+              : "center",
           alignItems: "center",
           flexGrow: 1,
           pt: { xs: "24px", md: "0px" },
