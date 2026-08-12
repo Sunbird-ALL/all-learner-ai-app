@@ -5374,6 +5374,18 @@ const Barakhadi = ({
       ओ: true,
       औ: true,
     },
+    ne: {
+      अ: true,
+      आ: true,
+      इ: true,
+      ई: true,
+      उ: true,
+      ऊ: true,
+      ए: true,
+      ऐ: true,
+      ओ: true,
+      औ: true,
+    },
   };
 
   const swar = vowelsData[lang] || vowelsData.hi;

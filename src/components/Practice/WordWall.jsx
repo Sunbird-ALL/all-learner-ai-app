@@ -28,6 +28,7 @@ import {
   getLocalData,
   setLocalData,
   randomizeArray as shuffle,
+  AllLanguages,
 } from "../../utils/constants";
 import { getFontFamily } from "../../utils/fontUtils";
 import { getUiStrings } from "../../constants/strings";
@@ -167,6 +168,7 @@ const WordWall = ({
             text: contentData?.text,
             audio_en: `${item?.contentId}.wav`,
             audio_hi: item?.multilingual?.[multilingualLangCode]?.audio_url,
+            audio_lang: multilingualLangCode,
           };
         });
 
@@ -1125,6 +1127,10 @@ const WordWall = ({
   const renderReviewView = () => {
     const currentAnswer = wrongAnswersAllQuestions?.[currentReviewIndex]?.item;
     const lang = getLocalData("lang");
+    const nativeLangLabel =
+      AllLanguages.find(
+        (language) => language.lang === currentAnswer?.audio_lang
+      )?.name || "ಕನ್ನಡ";
 
     if (!currentAnswer) return null;
 
@@ -1237,7 +1243,7 @@ const WordWall = ({
                   alt="Listen"
                   style={{ height: isMobile ? "26px" : "40px" }}
                 />
-                <span>ಕನ್ನಡ</span>
+                <span>{nativeLangLabel}</span>
               </div>
             </div>
           </div>

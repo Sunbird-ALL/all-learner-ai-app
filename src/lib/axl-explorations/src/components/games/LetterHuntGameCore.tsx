@@ -178,14 +178,16 @@ export function LetterHuntGameCore({
         te: 'ఇది',
         kn: 'ಇದು',
         mr: 'हे',
-        hi: 'यह'
+        hi: 'यह',
+        ne: 'यो हो'
       },
       tryAgain: {
         en: 'try again',
         te: 'మళ్లీ ప్రయత్నించండి',
         kn: 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
         mr: 'आहे, पुन्हा प्रयत्न करा',
-        hi: 'है, फिर कोशिश करें'
+        hi: 'है, फिर कोशिश करें',
+        ne: 'छ, फेरि प्रयास गर्नुहोस्'
       }
     };
     // Determine language with shared helper (ensures consistent fallback)

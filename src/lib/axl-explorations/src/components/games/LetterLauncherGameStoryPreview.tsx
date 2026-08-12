@@ -551,7 +551,8 @@ export function LetterLauncherGameStoryPreview({
       utterance.lang = audioLanguage === 'te' ? 'te-IN' :
                       audioLanguage === 'kn' ? 'kn-IN' :
                       audioLanguage === 'mr' ? 'mr-IN' :
-                      audioLanguage === 'hi' ? 'hi-IN' : 'en-US';
+                      audioLanguage === 'hi' ? 'hi-IN' :
+                      audioLanguage === 'ne' ? 'ne-NP' : 'en-US';
 
       // Child-friendly speech rates (slower for clarity)
       switch (audioLanguage) {
@@ -559,6 +560,7 @@ export function LetterLauncherGameStoryPreview({
         case 'kn':
         case 'mr':
         case 'hi':
+        case 'ne':
           utterance.rate = 0.75;
           utterance.pitch = 0.95;
           utterance.volume = 1.0;

@@ -3764,3 +3764,5 @@ export const सितारAudio = "55922d0c-8dd4-4724-b106-37c012d5e185.wav";
 export const लोटाAudio = "a23840f7-e337-42a7-8813-e5739a5ce22a.wav";
 export const हातAudio = "0b385f44-5351-4434-9fb3-e330f1ce5dec.wav";
 export const शरीरAudio = "bde6cc67-6f65-46a6-9b11-42ff0a798338.wav";
+export const फूलImg = "b4b12346-464d-4311-af0f-d89daba1b77d.png";
+export const फूल2Audio = "b4b12346-464d-4311-af0f-d89daba1b77d.wav";
