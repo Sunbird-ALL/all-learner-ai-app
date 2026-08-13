@@ -713,8 +713,8 @@ const WordsOrImage = ({
             : "center",
         alignItems: "center",
         height: "100%",
-        overflowX: "hidden",
-        overflowY: "hidden",
+        overflowX: "auto",
+        overflowY: "auto",
       }}
       {...{
         steps,
@@ -770,324 +770,501 @@ const WordsOrImage = ({
       </Box>
       <CardContent
         sx={{
-          overflow: isDemo ? "visible" : "hidden",
+          overflowX: isDemo ? "visible" : "auto",
           opacity: disableScreen ? 0.25 : 1,
           pointerEvents: disableScreen ? "none" : "initial",
           display: "flex",
           flexDirection: "column",
-          justifyContent:
-            startShowCase && !isDemo
-              ? { xs: "center", md: "flex-start" }
-              : "center",
+          justifyContent: "flex-start",
           alignItems: "center",
           flexGrow: 1,
           pt: { xs: "24px", md: "0px" },
           pb: { xs: "0px", md: "16px" },
-          overflowY: { xs: "auto", md: "hidden" },
+          overflowY: isDemo ? "visible" : "auto",
           boxSizing: "border-box",
           height: "100%",
           width: "100%",
         }}
       >
-        <Box sx={{ width: { xs: "100%", md: "auto" } }}>
-          {type === "image" ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <img
-                src={image}
-                style={{
-                  maxWidth: isMobile ? "150px" : isTablet ? "350px" : "450px",
-                  maxHeight: isMobile ? "10px" : isTablet ? "110px" : "130px",
-                  marginBottom: isMobile ? "10px" : "40px",
-                }}
-              />
-            </Box>
-          ) : type === "phonics" ? (
-            <Box
-              position="relative"
-              sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                mb: isMobile ? "20px" : "40px",
-              }}
-            >
+        <Box
+          sx={{
+            margin: "auto 0",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ width: { xs: "100%", md: "auto" }, maxWidth: "100%" }}>
+            {type === "image" ? (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={image}
+                  style={{
+                    maxWidth: isMobile ? "150px" : isTablet ? "350px" : "450px",
+                    maxHeight: isMobile ? "10px" : isTablet ? "110px" : "130px",
+                    marginBottom: isMobile ? "10px" : "40px",
+                  }}
+                />
+              </Box>
+            ) : type === "phonics" ? (
               <Box
                 position="relative"
                 sx={{
-                  minWidth: isMobile ? "280px" : isTablet ? "350px" : "403px",
-                  borderRadius: "15px",
-                  background: "rgba(255, 161, 50, 0.1)",
-                  height: isMobile ? "70px" : "88px",
+                  width: "100%",
                   display: "flex",
+                  justifyContent: "center",
+                  mb: isMobile ? "20px" : "40px",
                 }}
               >
-                <audio
-                  ref={audioRefs}
-                  preload="metadata"
-                  onCanPlay={(e) => {
-                    setIsReady(true);
-                  }}
-                  onPlaying={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
-                >
-                  <source type="audio/mp3" src={v11} />
-                </audio>
-
                 <Box
+                  position="relative"
                   sx={{
+                    minWidth: isMobile ? "280px" : isTablet ? "350px" : "403px",
+                    borderRadius: "15px",
+                    background: "rgba(255, 161, 50, 0.1)",
                     height: isMobile ? "70px" : "88px",
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
                   }}
                 >
+                  <audio
+                    ref={audioRefs}
+                    preload="metadata"
+                    onCanPlay={(e) => {
+                      setIsReady(true);
+                    }}
+                    onPlaying={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                  >
+                    <source type="audio/mp3" src={v11} />
+                  </audio>
+
                   <Box
                     sx={{
-                      cursor: "pointer",
-                      marginLeft: isMobile ? "10px" : "20px",
-                      marginTop: "5px",
-                    }}
-                    onClick={() => {
-                      togglePlayPause();
+                      height: isMobile ? "70px" : "88px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    {isReady &&
-                      (isPlaying ? (
-                        <StopAudioButton
-                          color={"#FFA132"}
-                          size={isMobile ? "small" : "medium"}
-                        />
-                      ) : (
-                        <PlayAudioButton
-                          color={"#FFA132"}
-                          size={isMobile ? "small" : "medium"}
-                        />
-                      ))}
+                    <Box
+                      sx={{
+                        cursor: "pointer",
+                        marginLeft: isMobile ? "10px" : "20px",
+                        marginTop: "5px",
+                      }}
+                      onClick={() => {
+                        togglePlayPause();
+                      }}
+                    >
+                      {isReady &&
+                        (isPlaying ? (
+                          <StopAudioButton
+                            color={"#FFA132"}
+                            size={isMobile ? "small" : "medium"}
+                          />
+                        ) : (
+                          <PlayAudioButton
+                            color={"#FFA132"}
+                            size={isMobile ? "small" : "medium"}
+                          />
+                        ))}
+                    </Box>
+                    <Typography
+                      variant="h5"
+                      component="h4"
+                      sx={{
+                        color: "#333F61",
+                        fontSize: isMobile
+                          ? "28px"
+                          : isTablet
+                          ? "36px"
+                          : "44px",
+                        letterSpacing: "2.2px",
+                        lineHeight: "normal",
+                        fontWeight: 600,
+                        fontFamily: getFontFamily(language),
+                        marginLeft: isMobile ? "10px" : "20px",
+                      }}
+                    >
+                      {"REF LECTION"}
+                    </Typography>
                   </Box>
-                  <Typography
-                    variant="h5"
-                    component="h4"
-                    sx={{
-                      color: "#333F61",
-                      fontSize: isMobile ? "28px" : isTablet ? "36px" : "44px",
-                      letterSpacing: "2.2px",
-                      lineHeight: "normal",
-                      fontWeight: 600,
-                      fontFamily: getFontFamily(language),
-                      marginLeft: isMobile ? "10px" : "20px",
-                    }}
-                  >
-                    {"REF LECTION"}
-                  </Typography>
                 </Box>
               </Box>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                position: "relative",
-                display: {
-                  xs: "",
-                  // md: imageLoaded ? "flex" : "",
-                },
-                justifyContent: "center",
-                width: "100%",
-                flexDirection: isMobile ? "column" : "row",
-              }}
-            >
-              {image && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    width: "100%",
-                    mb: isMobile ? 2 : 0,
-                    position: "relative",
-                  }}
-                >
-                  <Box sx={{ position: "relative" }}>
-                    <ZoomableImage
-                      src={image}
-                      alt="Responsive content"
-                      imageStyle={{
-                        width: "100%",
-                        maxWidth: isMobile
-                          ? "150px"
-                          : isTablet
-                          ? "350px"
-                          : "400px",
-                        marginBottom: isMobile ? "10px" : "40px",
-                        height: "auto",
-                        maxHeight: isMobile
-                          ? "200px"
-                          : isTablet
-                          ? "280px"
-                          : "340px",
-                        objectFit: "contain",
-                        marginRight: isMobile ? "30px" : "0px",
-                      }}
-                      containerStyle={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    />
-                    {hints && (
-                      <Box
-                        sx={{
-                          position: "absolute",
-                          right: isMobile ? "-37px" : "-100px",
-                          top: isMobile ? "90px" : isTablet ? "35px" : "0px",
-                          textAlign: "center",
-                          cursor: "pointer",
-                          width: isMobile ? "60px" : "100px",
-                          zIndex: 9999,
-                        }}
-                        onClick={() => setShowHint(!showHint)}
-                      >
-                        {isMobile && showHint && (
-                          <Box
-                            sx={{
-                              position: "absolute",
-                              bottom: "100%",
-                              left: "50%",
-                              transform: "translateX(-50%)",
-                              backgroundColor: "#ffff12",
-                              padding: "8px 12px",
-                              borderRadius: isMobile
-                                ? "7px"
-                                : isTablet
-                                ? "10px"
-                                : "20px",
-                              fontSize: isMobile
-                                ? "10px"
-                                : isTablet
-                                ? "8px"
-                                : "16px",
-                              color: "#333F61",
-                              fontWeight: isMobile ? 500 : isTablet ? 200 : 600,
-                              fontFamily:
-                                '"Comic Sans MS", cursive, sans-serif',
-                              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                              maxWidth: "120px",
-                              textAlign: "center",
-                              lineHeight: "1.4",
-                              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
-                              mb: 1,
-                              "&::after": {
-                                content: '""',
-                                position: "absolute",
-                                top: "100%",
-                                left: "50%",
-                                transform: "translateX(-50%)",
-                                width: 0,
-                                height: 0,
-                                borderLeft: "8px solid transparent",
-                                borderRight: "8px solid transparent",
-                                borderTop: "8px solid #ffff12",
-                              },
-                            }}
-                          >
-                            {hints}
-                          </Box>
-                        )}
-                        <img
-                          style={{
-                            height: isMobile ? "40px" : "55px",
-                            marginLeft: isMobile
-                              ? "auto"
-                              : isTablet
-                              ? "18px"
-                              : "0",
-                            marginRight: isMobile ? "auto" : "0",
-                            display: "block",
-                            zIndex: 9999,
-                          }}
-                          src={hintsImg}
-                          alt="Hint"
-                        />
-                        {!isMobile && <p style={{ fontSize: "14px" }}></p>}
-                        {!isMobile && showHint && (
-                          <Box
-                            sx={{
-                              position: "absolute",
-                              bottom: "0px",
-                              left: "90px",
-                              width: isMobile
-                                ? "60px"
-                                : isTablet
-                                ? "70px"
-                                : "150px",
-                              backgroundColor: "#ffff12",
-                              padding: "10px 15px",
-                              borderRadius: "20px",
-                              fontSize: isTablet ? "9px" : "20px",
-                              color: "#333F61",
-                              fontWeight: isTablet ? 100 : 600,
-                              fontFamily:
-                                '"Comic Sans MS", cursive, sans-serif',
-                              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                              maxWidth: "150px",
-                              textAlign: "center",
-                              lineHeight: "1.4",
-                              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
-                              zIndex: 1001,
-                              "&::before": {
-                                content: '""',
-                                position: "absolute",
-                                bottom: "20px",
-                                left: "-15px",
-                                width: "15px",
-                                height: "15px",
-                                backgroundColor: "#ffff12",
-                                borderRadius: "50%",
-                                boxShadow: "10px 10px 0 0 #ffff12",
-                              },
-                            }}
-                          >
-                            {hints}
-                          </Box>
-                        )}
-                      </Box>
-                    )}
-                  </Box>
-                </Box>
-              )}
+            ) : (
               <Box
                 sx={{
-                  display: "flex",
-                  // flexDirection: "column",
-                  justifyContent: "space-around", // Centers content vertically
-                  alignItems: "center", // Centers content horizontally
+                  position: "relative",
+                  display: {
+                    xs: "",
+                    // md: imageLoaded ? "flex" : "",
+                  },
+                  justifyContent: "center",
                   width: "100%",
-                  gap: isMobile ? 2 : 4,
-                  marginBottom: isMobile ? "20px" : "40px",
                   flexDirection: isMobile ? "column" : "row",
                 }}
               >
-                {!words && (
-                  <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <CircularProgress
-                      size={isMobile ? "2rem" : "3rem"}
-                      sx={{ color: "#E15404" }}
-                    />
-                  </Box>
-                )}
-                {words && !matchedChar && (
+                {image && (
                   <Box
                     sx={{
-                      ...(mechanism_id === "mechanic_15"
-                        ? {
-                            display: "flex",
-                            alignItems: "center",
-                            gap: isMobile ? 1 : 2,
-                            mb: isMobile ? 4 : 8,
-                          }
-                        : ""),
+                      display: "flex",
+                      justifyContent: "center",
+                      width: "100%",
+                      mb: isMobile ? 2 : 0,
+                      position: "relative",
                     }}
                   >
-                    {mechanism_id === "mechanic_15" && (
+                    <Box sx={{ position: "relative" }}>
+                      <ZoomableImage
+                        src={image}
+                        alt="Responsive content"
+                        imageStyle={{
+                          width: "100%",
+                          maxWidth: isMobile
+                            ? "150px"
+                            : isTablet
+                            ? "350px"
+                            : "400px",
+                          marginBottom: isMobile ? "10px" : "40px",
+                          height: "auto",
+                          maxHeight: isMobile
+                            ? "200px"
+                            : isTablet
+                            ? "280px"
+                            : "340px",
+                          objectFit: "contain",
+                          marginRight: isMobile ? "30px" : "0px",
+                        }}
+                        containerStyle={{
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      />
+                      {hints && (
+                        <Box
+                          sx={{
+                            position: "absolute",
+                            right: isMobile ? "-37px" : "-100px",
+                            top: isMobile ? "90px" : isTablet ? "35px" : "0px",
+                            textAlign: "center",
+                            cursor: "pointer",
+                            width: isMobile ? "60px" : "100px",
+                            zIndex: 9999,
+                          }}
+                          onClick={() => setShowHint(!showHint)}
+                        >
+                          {isMobile && showHint && (
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                bottom: "100%",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                backgroundColor: "#ffff12",
+                                padding: "8px 12px",
+                                borderRadius: isMobile
+                                  ? "7px"
+                                  : isTablet
+                                  ? "10px"
+                                  : "20px",
+                                fontSize: isMobile
+                                  ? "10px"
+                                  : isTablet
+                                  ? "8px"
+                                  : "16px",
+                                color: "#333F61",
+                                fontWeight: isMobile
+                                  ? 500
+                                  : isTablet
+                                  ? 200
+                                  : 600,
+                                fontFamily:
+                                  '"Comic Sans MS", cursive, sans-serif',
+                                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                                maxWidth: "120px",
+                                textAlign: "center",
+                                lineHeight: "1.4",
+                                textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+                                mb: 1,
+                                "&::after": {
+                                  content: '""',
+                                  position: "absolute",
+                                  top: "100%",
+                                  left: "50%",
+                                  transform: "translateX(-50%)",
+                                  width: 0,
+                                  height: 0,
+                                  borderLeft: "8px solid transparent",
+                                  borderRight: "8px solid transparent",
+                                  borderTop: "8px solid #ffff12",
+                                },
+                              }}
+                            >
+                              {hints}
+                            </Box>
+                          )}
+                          <img
+                            style={{
+                              height: isMobile ? "40px" : "55px",
+                              marginLeft: isMobile
+                                ? "auto"
+                                : isTablet
+                                ? "18px"
+                                : "0",
+                              marginRight: isMobile ? "auto" : "0",
+                              display: "block",
+                              zIndex: 9999,
+                            }}
+                            src={hintsImg}
+                            alt="Hint"
+                          />
+                          {!isMobile && <p style={{ fontSize: "14px" }}></p>}
+                          {!isMobile && showHint && (
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                bottom: "0px",
+                                left: "90px",
+                                width: isMobile
+                                  ? "60px"
+                                  : isTablet
+                                  ? "70px"
+                                  : "150px",
+                                backgroundColor: "#ffff12",
+                                padding: "10px 15px",
+                                borderRadius: "20px",
+                                fontSize: isTablet ? "9px" : "20px",
+                                color: "#333F61",
+                                fontWeight: isTablet ? 100 : 600,
+                                fontFamily:
+                                  '"Comic Sans MS", cursive, sans-serif',
+                                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                                maxWidth: "150px",
+                                textAlign: "center",
+                                lineHeight: "1.4",
+                                textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+                                zIndex: 1001,
+                                "&::before": {
+                                  content: '""',
+                                  position: "absolute",
+                                  bottom: "20px",
+                                  left: "-15px",
+                                  width: "15px",
+                                  height: "15px",
+                                  backgroundColor: "#ffff12",
+                                  borderRadius: "50%",
+                                  boxShadow: "10px 10px 0 0 #ffff12",
+                                },
+                              }}
+                            >
+                              {hints}
+                            </Box>
+                          )}
+                        </Box>
+                      )}
+                    </Box>
+                  </Box>
+                )}
+                <Box
+                  sx={{
+                    display: "flex",
+                    // flexDirection: "column",
+                    justifyContent: "space-around", // Centers content vertically
+                    alignItems: "center", // Centers content horizontally
+                    width: "100%",
+                    gap: isMobile ? 2 : 4,
+                    marginBottom: isMobile ? "20px" : "40px",
+                    flexDirection: isMobile ? "column" : "row",
+                  }}
+                >
+                  {!words && (
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <CircularProgress
+                        size={isMobile ? "2rem" : "3rem"}
+                        sx={{ color: "#E15404" }}
+                      />
+                    </Box>
+                  )}
+                  {words && !matchedChar && (
+                    <Box
+                      sx={{
+                        ...(mechanism_id === "mechanic_15"
+                          ? {
+                              display: "flex",
+                              alignItems: "center",
+                              gap: isMobile ? 1 : 2,
+                              mb: isMobile ? 4 : 8,
+                            }
+                          : ""),
+                      }}
+                    >
+                      {mechanism_id === "mechanic_15" && (
+                        <Avatar
+                          src={teacherImg}
+                          sx={{
+                            bgcolor: "green",
+                            height: isMobile
+                              ? "40px"
+                              : isTablet
+                              ? "50px"
+                              : "60px",
+                            width: isMobile
+                              ? "40px"
+                              : isTablet
+                              ? "50px"
+                              : "60px",
+                          }}
+                        >
+                          Teacher
+                        </Avatar>
+                      )}
+
+                      <Box
+                        sx={{
+                          // On mobile: constrain height and enable scroll so long
+                          // paragraphs can never overlap the diamonds header zone
+                          maxHeight: { xs: "calc(100dvh - 260px)", md: "none" },
+                          overflowY: { xs: "auto", md: "visible" },
+                          width: "100%",
+                          WebkitOverflowScrolling: "touch",
+                        }}
+                      >
+                        <Typography
+                          variant="h5"
+                          component="h4"
+                          sx={{
+                            fontSize: isDiscover
+                              ? { xs: "32px", md: "40px" }
+                              : language === "te"
+                              ? isMobile
+                                ? "1.7rem"
+                                : isTablet
+                                ? "2.3rem"
+                                : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                              : isMobile
+                              ? "1.2rem"
+                              : isTablet
+                              ? "2rem"
+                              : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                            fontWeight: language === "te" ? 400 : 700,
+                            fontFamily: getFontFamily(language),
+                            lineHeight: { xs: 1.4, md: "4.5rem" },
+                            ...(mechanism_id === "mechanic_15"
+                              ? {
+                                  position: "relative",
+                                  backgroundColor: "#FAD7A0",
+                                  padding: isMobile ? "8px 16px" : "10px 20px",
+                                  borderRadius: "20px",
+                                  boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                                  "&::before": {
+                                    content: '""',
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "-10px",
+                                    transform: "translateY(-50%)",
+                                    width: 0,
+                                    height: 0,
+                                    borderTop: "10px solid transparent",
+                                    borderBottom: "10px solid transparent",
+                                    borderRight: "10px solid #d8d8d8",
+                                  },
+                                }
+                              : {
+                                  mb: isMobile ? 2 : 4,
+                                  color: getAnswerColor(resolvedAnswer),
+                                  textAlign: "center",
+                                }),
+                          }}
+                          fontSize={
+                            isDiscover
+                              ? { md: "40px", xs: "32px" }
+                              : { md: "40px", xs: "25px" }
+                          }
+                        >
+                          {words ? words[0].toUpperCase() + words.slice(1) : ""}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )}
+                  {mechanism_id === "mechanic_15" && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: isMobile ? 1 : 2,
+                      }}
+                    >
+                      <Typography
+                        variant="h5"
+                        component="h4"
+                        sx={{
+                          position: "relative",
+                          backgroundColor: "#D7BDE2",
+                          padding: isMobile ? "8px 16px" : "10px 20px",
+                          borderRadius: "20px",
+                          fontSize:
+                            language === "te"
+                              ? isMobile
+                                ? "1.7rem"
+                                : isTablet
+                                ? "2.3rem"
+                                : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                              : isMobile
+                              ? "1.4rem"
+                              : isTablet
+                              ? "2rem"
+                              : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                          fontWeight: language === "te" ? 400 : 700,
+                          fontFamily: getFontFamily(language),
+                          lineHeight: isMobile ? "30px" : "70px",
+                          boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                          "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            top: "50%",
+                            right: "-10px",
+                            transform: "translateY(-50%)",
+                            width: 0,
+                            height: 0,
+                            borderTop: "10px solid transparent",
+                            borderBottom: "10px solid transparent",
+                            borderLeft: "10px solid #d8d8d8",
+                          },
+                        }}
+                        fontSize={{ md: "40px", xs: "25px" }}
+                      >
+                        <motion.div style={{ display: "flex", gap: "5px" }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: isMobile ? 1 : 2,
+                            }}
+                          >
+                            Speak
+                            {[...Array(3)].map((_, i) => (
+                              <motion.span
+                                key={i}
+                                style={{
+                                  width: "8px",
+                                  height: "8px",
+                                  borderRadius: "50%",
+                                  background: "black",
+                                }}
+                                animate={{ y: [0, -5, 0] }}
+                                transition={{
+                                  duration: 0.5,
+                                  repeat: Infinity,
+                                  delay: i * 0.2,
+                                }}
+                              />
+                            ))}
+                          </Box>
+                        </motion.div>
+                      </Typography>
                       <Avatar
-                        src={teacherImg}
+                        src={studentImg}
                         sx={{
                           bgcolor: "green",
                           height: isMobile
@@ -1098,330 +1275,131 @@ const WordsOrImage = ({
                           width: isMobile ? "40px" : isTablet ? "50px" : "60px",
                         }}
                       >
-                        Teacher
+                        N
                       </Avatar>
-                    )}
-
-                    <Box
-                      sx={{
-                        // On mobile: constrain height and enable scroll so long
-                        // paragraphs can never overlap the diamonds header zone
-                        maxHeight: { xs: "calc(100dvh - 260px)", md: "none" },
-                        overflowY: { xs: "auto", md: "visible" },
-                        width: "100%",
-                        WebkitOverflowScrolling: "touch",
-                      }}
-                    >
+                    </Box>
+                  )}
+                  {matchedChar &&
+                    ([1, 2, 3].includes(level) ? (
                       <Typography
                         variant="h5"
                         component="h4"
                         sx={{
-                          fontSize: isDiscover
-                            ? { xs: "32px", md: "40px" }
-                            : language === "te"
-                            ? isMobile
-                              ? "1.7rem"
-                              : isTablet
-                              ? "2.3rem"
-                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
-                            : isMobile
-                            ? "1.2rem"
+                          fontSize: isMobile
+                            ? "2.7rem"
                             : isTablet
                             ? "2rem"
-                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                            : "clamp(3rem, 4vw, 5rem)",
                           fontWeight: language === "te" ? 400 : 700,
                           fontFamily: getFontFamily(language),
-                          lineHeight: { xs: 1.4, md: "4.5rem" },
-                          ...(mechanism_id === "mechanic_15"
-                            ? {
-                                position: "relative",
-                                backgroundColor: "#FAD7A0",
-                                padding: isMobile ? "8px 16px" : "10px 20px",
-                                borderRadius: "20px",
-                                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                                "&::before": {
-                                  content: '""',
-                                  position: "absolute",
-                                  top: "50%",
-                                  left: "-10px",
-                                  transform: "translateY(-50%)",
-                                  width: 0,
-                                  height: 0,
-                                  borderTop: "10px solid transparent",
-                                  borderBottom: "10px solid transparent",
-                                  borderRight: "10px solid #d8d8d8",
-                                },
-                              }
-                            : {
-                                mb: isMobile ? 2 : 4,
-                                color: getAnswerColor(resolvedAnswer),
-                                textAlign: "center",
-                              }),
+                          lineHeight: isMobile ? "1.4" : "50px",
+                          //background: "#FFF0BD",
+                          color: skipAnswerColor
+                            ? "#333F61"
+                            : isTranscriptCorrect === true
+                            ? "green"
+                            : isTranscriptCorrect === false
+                            ? "red"
+                            : "#333F61",
+                          display: isMobile ? "flex" : undefined,
+                          flexDirection: isMobile ? "column" : undefined,
+                          alignItems: isMobile ? "center" : undefined,
+                          textAlign: "center",
+                          width: isMobile ? "100%" : undefined,
                         }}
-                        fontSize={
-                          isDiscover
-                            ? { md: "40px", xs: "32px" }
-                            : { md: "40px", xs: "25px" }
-                        }
                       >
-                        {words ? words[0].toUpperCase() + words.slice(1) : ""}
-                      </Typography>
-                    </Box>
-                  </Box>
-                )}
-                {mechanism_id === "mechanic_15" && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: isMobile ? 1 : 2,
-                    }}
-                  >
-                    <Typography
-                      variant="h5"
-                      component="h4"
-                      sx={{
-                        position: "relative",
-                        backgroundColor: "#D7BDE2",
-                        padding: isMobile ? "8px 16px" : "10px 20px",
-                        borderRadius: "20px",
-                        fontSize:
-                          language === "te"
-                            ? isMobile
-                              ? "1.7rem"
-                              : isTablet
-                              ? "2.3rem"
-                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
-                            : isMobile
-                            ? "1.4rem"
-                            : isTablet
-                            ? "2rem"
-                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                        fontWeight: language === "te" ? 400 : 700,
-                        fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "30px" : "70px",
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                        "&::after": {
-                          content: '""',
-                          position: "absolute",
-                          top: "50%",
-                          right: "-10px",
-                          transform: "translateY(-50%)",
-                          width: 0,
-                          height: 0,
-                          borderTop: "10px solid transparent",
-                          borderBottom: "10px solid transparent",
-                          borderLeft: "10px solid #d8d8d8",
-                        },
-                      }}
-                      fontSize={{ md: "40px", xs: "25px" }}
-                    >
-                      <motion.div style={{ display: "flex", gap: "5px" }}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: isMobile ? 1 : 2,
-                          }}
-                        >
-                          Speak
-                          {[...Array(3)].map((_, i) => (
-                            <motion.span
-                              key={i}
-                              style={{
-                                width: "8px",
-                                height: "8px",
-                                borderRadius: "50%",
-                                background: "black",
-                              }}
-                              animate={{ y: [0, -5, 0] }}
-                              transition={{
-                                duration: 0.5,
-                                repeat: Infinity,
-                                delay: i * 0.2,
-                              }}
-                            />
-                          ))}
-                        </Box>
-                      </motion.div>
-                    </Typography>
-                    <Avatar
-                      src={studentImg}
-                      sx={{
-                        bgcolor: "green",
-                        height: isMobile ? "40px" : isTablet ? "50px" : "60px",
-                        width: isMobile ? "40px" : isTablet ? "50px" : "60px",
-                      }}
-                    >
-                      N
-                    </Avatar>
-                  </Box>
-                )}
-                {matchedChar &&
-                  ([1, 2, 3].includes(level) ? (
-                    <Typography
-                      variant="h5"
-                      component="h4"
-                      sx={{
-                        fontSize: isMobile
-                          ? "2.7rem"
-                          : isTablet
-                          ? "2rem"
-                          : "clamp(3rem, 4vw, 5rem)",
-                        fontWeight: language === "te" ? 400 : 700,
-                        fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "1.4" : "50px",
-                        //background: "#FFF0BD",
-                        color: skipAnswerColor
-                          ? "#333F61"
-                          : isTranscriptCorrect === true
-                          ? "green"
-                          : isTranscriptCorrect === false
-                          ? "red"
-                          : "#333F61",
-                        display: isMobile ? "flex" : undefined,
-                        flexDirection: isMobile ? "column" : undefined,
-                        alignItems: isMobile ? "center" : undefined,
-                        textAlign: "center",
-                        width: isMobile ? "100%" : undefined,
-                      }}
-                    >
-                      {words
-                        ? words.charAt(0).toUpperCase() + words.slice(1)
-                        : ""}
-                      {/* Show multilingual box only for English */}
-                      {isTranscriptCorrect !== null && language === "en" && (
-                        <AudioTooltipModal
-                          audioSrc={
-                            multilingual?.[multilingualLangCode]?.audio_url
-                          }
-                          description={words}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              marginTop: isMobile ? "16px" : "5px",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              border: "2px solid #FF7F36",
-                              borderRadius: "16px",
-                              gap: "10px",
-                              padding: "15px",
-                              //width: "300px",
-                              backgroundColor: "#fff",
-                              cursor: "pointer",
-                              marginLeft: isMobile ? 0 : "15px",
-                            }}
+                        {words
+                          ? words.charAt(0).toUpperCase() + words.slice(1)
+                          : ""}
+                        {/* Show multilingual box only for English */}
+                        {isTranscriptCorrect !== null && language === "en" && (
+                          <AudioTooltipModal
+                            audioSrc={
+                              multilingual?.[multilingualLangCode]?.audio_url
+                            }
+                            description={words}
                           >
-                            {/* Kannada Letter Box */}
                             <Box
                               sx={{
-                                backgroundColor: "#FEBC2F66",
-                                borderRadius: "4px",
-                                //width: "100px",
-                                //height: "100px",
-                                padding: "5px",
                                 display: "flex",
+                                marginTop: isMobile ? "16px" : "5px",
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "space-between",
+                                border: "2px solid #FF7F36",
+                                borderRadius: "16px",
+                                gap: "10px",
+                                padding: "15px",
+                                //width: "300px",
+                                backgroundColor: "#fff",
+                                cursor: "pointer",
+                                marginLeft: isMobile ? 0 : "15px",
                               }}
                             >
-                              <span
-                                style={{
-                                  fontSize: "40px",
-                                  fontWeight: "400",
-                                  color: "#333F61",
-                                  fontStyle: "Quicksand",
+                              {/* Kannada Letter Box */}
+                              <Box
+                                sx={{
+                                  backgroundColor: "#FEBC2F66",
+                                  borderRadius: "4px",
+                                  //width: "100px",
+                                  //height: "100px",
+                                  padding: "5px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
                                 }}
                               >
-                                {nativeLangSymbol}
-                              </span>
-                            </Box>
+                                <span
+                                  style={{
+                                    fontSize: "40px",
+                                    fontWeight: "400",
+                                    color: "#333F61",
+                                    fontStyle: "Quicksand",
+                                  }}
+                                >
+                                  {nativeLangSymbol}
+                                </span>
+                              </Box>
 
-                            <ListenButton height={50} width={50} />
-                          </Box>
-                        </AudioTooltipModal>
-                      )}
-                    </Typography>
-                  ) : (
-                    <Box
-                      display={"flex"}
-                      mb={isMobile ? 2 : 4}
-                      sx={{
-                        color: "red",
-                        width: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      {highlightWords(
-                        words,
-                        matchedChar,
-                        getAnswerColor(resolvedAnswer)
-                      )}
-                    </Box>
-                  ))}
-              </Box>
-            </Box>
-          )}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            mt: isMobile ? 2 : 0,
-          }}
-        >
-          {(level === 15 && !isShowCase) || isDemo ? (
-            <div>
-              {showSpeakButton && (
-                <Box
-                  sx={{
-                    position: "relative",
-                    cursor:
-                      isDemo && isInstructionPlaying
-                        ? "not-allowed"
-                        : "pointer",
-                    opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
-                    pointerEvents:
-                      isDemo && isInstructionPlaying ? "none" : "auto",
-                  }}
-                  onClick={() =>
-                    isDemo && onMicClick
-                      ? onMicClick()
-                      : startRecording(words, true)
-                  }
-                >
-                  <SpeakButton size={isMobile ? "small" : "medium"} />
-                  {showPointer && pointerTarget === "mic" && !isRecording && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        top: isMobile ? "calc(100% + 18px)" : "100%",
-                        left: "20%",
-                        transform: "translateX(-50%)",
-                        fontSize: isMobile ? "32px" : "40px",
-                        pointerEvents: "none",
-                        animation: "pointerBounce 1.5s ease-in-out infinite",
-                        filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-                      }}
-                    >
-                      👆
-                    </span>
-                  )}
+                              <ListenButton height={50} width={50} />
+                            </Box>
+                          </AudioTooltipModal>
+                        )}
+                      </Typography>
+                    ) : (
+                      <Box
+                        display={"flex"}
+                        mb={isMobile ? 2 : 4}
+                        sx={{
+                          color: "red",
+                          width: "100%",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {highlightWords(
+                          words,
+                          matchedChar,
+                          getAnswerColor(resolvedAnswer)
+                        )}
+                      </Box>
+                    ))}
                 </Box>
-              )}
-              {showStopButton && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    margin: "0 auto",
-                  }}
-                >
+              </Box>
+            )}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "22vh",
+              mt: isMobile ? 2 : 0,
+            }}
+          >
+            {(level === 15 && !isShowCase) || isDemo ? (
+              <div>
+                {showSpeakButton && (
                   <Box
                     sx={{
                       position: "relative",
@@ -1434,148 +1412,61 @@ const WordsOrImage = ({
                         isDemo && isInstructionPlaying ? "none" : "auto",
                     }}
                     onClick={() =>
-                      isDemo && onStopClick
-                        ? onStopClick()
-                        : stopRecording(words)
+                      isDemo && onMicClick
+                        ? onMicClick()
+                        : startRecording(words, true)
                     }
                   >
-                    <StopButton size={isMobile ? "small" : "medium"} />
-                    {showPointer &&
-                      pointerTarget === "stop" &&
-                      !isRecording && (
-                        <span
-                          style={{
-                            position: "absolute",
-                            top: "100%",
-                            left: "20%",
-                            transform: "translateX(-50%)",
-                            fontSize: "40px",
-                            pointerEvents: "none",
-                            animation:
-                              "pointerBounce 1.5s ease-in-out infinite",
-                            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-                          }}
-                        >
-                          👆
-                        </span>
-                      )}
-                  </Box>
-                  <Box
-                    style={{
-                      marginTop: isMobile ? "30px" : "50px",
-                      marginBottom: isMobile ? "30px" : "50px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "100%",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {isRecording && (
-                      <Box
-                        sx={{
-                          transform: isMobile ? "scale(0.85)" : "scale(1)",
-                          transformOrigin: "center",
+                    <SpeakButton size={isMobile ? "small" : "medium"} />
+                    {showPointer && pointerTarget === "mic" && !isRecording && (
+                      <span
+                        style={{
+                          position: "absolute",
+                          top: isMobile ? "calc(100% + 18px)" : "100%",
+                          left: "20%",
+                          transform: "translateX(-50%)",
+                          fontSize: isMobile ? "32px" : "40px",
+                          pointerEvents: "none",
+                          animation: "pointerBounce 1.5s ease-in-out infinite",
+                          filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
                         }}
                       >
-                        <RecordVoiceVisualizer />
-                      </Box>
+                        👆
+                      </span>
                     )}
                   </Box>
-                </div>
-              )}
-              {showListenRetryButtons && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    margin: "0 auto",
-                  }}
-                >
-                  {/* <Box sx={{ cursor: "pointer" }} onClick={playAudio}>
-                    <ListenButton />
-                  </Box> */}
-                  {isPlaying ? (
-                    <div>
-                      <Box
-                        sx={{
-                          //marginTop: "7px",
-                          position: "relative",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          //minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                          cursor: "pointer",
-                          //marginLeft: getMarginLeft(0),
-                        }}
-                        onClick={() => {
-                          stopPlayback();
-                          //setIsPlaying(false);
-                        }}
-                      >
-                        <img
-                          src={spinnerStop}
-                          alt="Audio"
-                          style={{
-                            height: "70px",
-                            width: "70px",
-                            cursor: "pointer",
-                          }}
-                        />
-                        {/* <StopButton height={50} width={50} /> */}
-                      </Box>
-                    </div>
-                  ) : (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
+                )}
+                {showStopButton && (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: "0 auto",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        position: "relative",
+                        cursor:
+                          isDemo && isInstructionPlaying
+                            ? "not-allowed"
+                            : "pointer",
+                        opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
+                        pointerEvents:
+                          isDemo && isInstructionPlaying ? "none" : "auto",
                       }}
+                      onClick={() =>
+                        isDemo && onStopClick
+                          ? onStopClick()
+                          : stopRecording(words)
+                      }
                     >
-                      <Box
-                        className="walkthrough-step-4"
-                        sx={{
-                          //marginTop: "7px",
-                          position: "relative",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          //minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                          //cursor: `url(${clapImage}) 32 24, auto`,
-                          //marginLeft: getMarginLeft(0),
-                          opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
-                          cursor:
-                            isDemo && isInstructionPlaying
-                              ? "not-allowed"
-                              : "pointer",
-                          pointerEvents:
-                            isDemo && isInstructionPlaying ? "none" : "auto",
-                        }}
-                        onClick={() => {
-                          if (isDemo && onPlayClick) {
-                            onPlayClick();
-                          } else {
-                            playRecordings();
-                          }
-                          //setIsPlaying(true);
-                        }}
-                        //disabled={!recordedAudioBlob}
-                      >
-                        <img
-                          src={listenImg2}
-                          alt="Audio"
-                          style={{
-                            height: "70px",
-                            width: "70px",
-                            cursor:
-                              isDemo && isInstructionPlaying
-                                ? "not-allowed"
-                                : "pointer",
-                          }}
-                        />
-                        {showPointer && pointerTarget === "play" && (
+                      <StopButton size={isMobile ? "small" : "medium"} />
+                      {showPointer &&
+                        pointerTarget === "stop" &&
+                        !isRecording && (
                           <span
                             style={{
                               position: "absolute",
@@ -1592,117 +1483,254 @@ const WordsOrImage = ({
                             👆
                           </span>
                         )}
-                      </Box>
-                    </div>
-                  )}
-                  <Box
-                    sx={{
-                      position: "relative",
-                      cursor:
-                        isDemo && isInstructionPlaying
-                          ? "not-allowed"
-                          : "pointer",
-                      marginLeft: "16px",
-                      opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
-                      pointerEvents:
-                        isDemo && isInstructionPlaying ? "none" : "auto",
+                    </Box>
+                    <Box
+                      style={{
+                        marginTop: isMobile ? "30px" : "50px",
+                        marginBottom: isMobile ? "30px" : "50px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {isRecording && (
+                        <Box
+                          sx={{
+                            transform: isMobile ? "scale(0.85)" : "scale(1)",
+                            transformOrigin: "center",
+                          }}
+                        >
+                          <RecordVoiceVisualizer />
+                        </Box>
+                      )}
+                    </Box>
+                  </div>
+                )}
+                {showListenRetryButtons && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: "0 auto",
                     }}
-                    onClick={() =>
-                      isDemo && onRetryClick
-                        ? onRetryClick()
-                        : retryRecording(words, true)
-                    }
                   >
-                    <RetryIcon />
-                    {showPointer && pointerTarget === "retry" && (
-                      <span
+                    {/* <Box sx={{ cursor: "pointer" }} onClick={playAudio}>
+                    <ListenButton />
+                  </Box> */}
+                    {isPlaying ? (
+                      <div>
+                        <Box
+                          sx={{
+                            //marginTop: "7px",
+                            position: "relative",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            //minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                            cursor: "pointer",
+                            //marginLeft: getMarginLeft(0),
+                          }}
+                          onClick={() => {
+                            stopPlayback();
+                            //setIsPlaying(false);
+                          }}
+                        >
+                          <img
+                            src={spinnerStop}
+                            alt="Audio"
+                            style={{
+                              height: "70px",
+                              width: "70px",
+                              cursor: "pointer",
+                            }}
+                          />
+                          {/* <StopButton height={50} width={50} /> */}
+                        </Box>
+                      </div>
+                    ) : (
+                      <div
                         style={{
-                          position: "absolute",
-                          top: "100%",
-                          left: "80%",
-                          transform: "translateX(-50%)",
-                          fontSize: "40px",
-                          pointerEvents: "none",
-                          animation: "pointerBounce 1.5s ease-in-out infinite",
-                          filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
                         }}
                       >
-                        👆
-                      </span>
+                        <Box
+                          className="walkthrough-step-4"
+                          sx={{
+                            //marginTop: "7px",
+                            position: "relative",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            //minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                            //cursor: `url(${clapImage}) 32 24, auto`,
+                            //marginLeft: getMarginLeft(0),
+                            opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
+                            cursor:
+                              isDemo && isInstructionPlaying
+                                ? "not-allowed"
+                                : "pointer",
+                            pointerEvents:
+                              isDemo && isInstructionPlaying ? "none" : "auto",
+                          }}
+                          onClick={() => {
+                            if (isDemo && onPlayClick) {
+                              onPlayClick();
+                            } else {
+                              playRecordings();
+                            }
+                            //setIsPlaying(true);
+                          }}
+                          //disabled={!recordedAudioBlob}
+                        >
+                          <img
+                            src={listenImg2}
+                            alt="Audio"
+                            style={{
+                              height: "70px",
+                              width: "70px",
+                              cursor:
+                                isDemo && isInstructionPlaying
+                                  ? "not-allowed"
+                                  : "pointer",
+                            }}
+                          />
+                          {showPointer && pointerTarget === "play" && (
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: "100%",
+                                left: "20%",
+                                transform: "translateX(-50%)",
+                                fontSize: "40px",
+                                pointerEvents: "none",
+                                animation:
+                                  "pointerBounce 1.5s ease-in-out infinite",
+                                filter:
+                                  "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                              }}
+                            >
+                              👆
+                            </span>
+                          )}
+                        </Box>
+                      </div>
                     )}
-                  </Box>
-                  <Box
-                    sx={{
-                      position: "relative",
-                      cursor:
-                        isDemo && isInstructionPlaying
-                          ? "not-allowed"
-                          : "pointer",
-                      marginLeft: "16px",
-                      opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
-                      pointerEvents:
-                        isDemo && isInstructionPlaying ? "none" : "auto",
-                    }}
-                    onClick={() =>
-                      isDemo && onNextClick ? onNextClick() : nextRecording()
-                    }
-                  >
-                    <NextButtonRound />
-                    {showPointer && pointerTarget === "continue" && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          top: "100%",
-                          left: "20%",
-                          transform: "translateX(-50%)",
-                          fontSize: "40px",
-                          pointerEvents: "none",
-                          animation: "pointerBounce 1.5s ease-in-out infinite",
-                          filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-                        }}
-                      >
-                        👆
-                      </span>
-                    )}
-                  </Box>
-                </div>
-              )}
-              <audio ref={audioRef} src={recordedAudioBlob} hidden />
-            </div>
-          ) : (
-            <VoiceAnalyser
-              pageName={"wordsorimage"}
-              setVoiceText={setVoiceText}
-              updateStoredData={updateStoredData}
-              setRecordedAudio={setRecordedAudio}
-              setVoiceAnimate={setVoiceAnimate}
-              storyLine={storyLine}
-              dontShowListen={type === "image" || isDiscover}
-              originalText={words}
-              handleNext={handleNextWrapped}
-              enableNext={enableNext}
-              isShowCase={isShowCase || isDiscover}
-              handleRecordingComplete={handleRecordingComplete}
-              handleStartRecording={handleStartRecording}
-              handleStopRecording={handleStopRecording}
-              audioLink={audioLink ? audioLink : null}
-              setIsCorrect={setIsTranscriptCorrect}
-              {...{
-                contentId,
-                contentType,
-                currentLine: currentStep - 1,
-                playTeacherAudio,
-                callUpdateLearner,
-                setEnableNext,
-                livesData,
-                setLivesData,
-                setOpenMessageDialog,
-                isNextButtonCalled,
-                setIsNextButtonCalled,
-                onInteractionComplete,
-              }}
-            />
-          )}
+                    <Box
+                      sx={{
+                        position: "relative",
+                        cursor:
+                          isDemo && isInstructionPlaying
+                            ? "not-allowed"
+                            : "pointer",
+                        marginLeft: "16px",
+                        opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
+                        pointerEvents:
+                          isDemo && isInstructionPlaying ? "none" : "auto",
+                      }}
+                      onClick={() =>
+                        isDemo && onRetryClick
+                          ? onRetryClick()
+                          : retryRecording(words, true)
+                      }
+                    >
+                      <RetryIcon />
+                      {showPointer && pointerTarget === "retry" && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: "100%",
+                            left: "80%",
+                            transform: "translateX(-50%)",
+                            fontSize: "40px",
+                            pointerEvents: "none",
+                            animation:
+                              "pointerBounce 1.5s ease-in-out infinite",
+                            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                          }}
+                        >
+                          👆
+                        </span>
+                      )}
+                    </Box>
+                    <Box
+                      sx={{
+                        position: "relative",
+                        cursor:
+                          isDemo && isInstructionPlaying
+                            ? "not-allowed"
+                            : "pointer",
+                        marginLeft: "16px",
+                        opacity: isDemo && isInstructionPlaying ? 0.5 : 1,
+                        pointerEvents:
+                          isDemo && isInstructionPlaying ? "none" : "auto",
+                      }}
+                      onClick={() =>
+                        isDemo && onNextClick ? onNextClick() : nextRecording()
+                      }
+                    >
+                      <NextButtonRound />
+                      {showPointer && pointerTarget === "continue" && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: "100%",
+                            left: "20%",
+                            transform: "translateX(-50%)",
+                            fontSize: "40px",
+                            pointerEvents: "none",
+                            animation:
+                              "pointerBounce 1.5s ease-in-out infinite",
+                            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                          }}
+                        >
+                          👆
+                        </span>
+                      )}
+                    </Box>
+                  </div>
+                )}
+                <audio ref={audioRef} src={recordedAudioBlob} hidden />
+              </div>
+            ) : (
+              <VoiceAnalyser
+                pageName={"wordsorimage"}
+                setVoiceText={setVoiceText}
+                updateStoredData={updateStoredData}
+                setRecordedAudio={setRecordedAudio}
+                setVoiceAnimate={setVoiceAnimate}
+                storyLine={storyLine}
+                dontShowListen={type === "image" || isDiscover}
+                originalText={words}
+                handleNext={handleNextWrapped}
+                enableNext={enableNext}
+                isShowCase={isShowCase || isDiscover}
+                handleRecordingComplete={handleRecordingComplete}
+                handleStartRecording={handleStartRecording}
+                handleStopRecording={handleStopRecording}
+                audioLink={audioLink ? audioLink : null}
+                setIsCorrect={setIsTranscriptCorrect}
+                {...{
+                  contentId,
+                  contentType,
+                  currentLine: currentStep - 1,
+                  playTeacherAudio,
+                  callUpdateLearner,
+                  setEnableNext,
+                  livesData,
+                  setLivesData,
+                  setOpenMessageDialog,
+                  isNextButtonCalled,
+                  setIsNextButtonCalled,
+                  onInteractionComplete,
+                }}
+              />
+            )}
+          </Box>
         </Box>
       </CardContent>
       {isDemo && (
