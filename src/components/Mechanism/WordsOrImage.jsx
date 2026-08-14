@@ -775,6 +775,9 @@ const WordsOrImage = ({
           pointerEvents: disableScreen ? "none" : "initial",
           display: "flex",
           flexDirection: "column",
+          // "flex-start" + marginTop/marginBottom: "auto" below (safe-center):
+          // centers this content when it fits, but pins it to the top and stays
+          // scrollable instead of clipping/hiding content when it overflows.
           justifyContent: "flex-start",
           alignItems: "center",
           flexGrow: 1,
@@ -788,7 +791,7 @@ const WordsOrImage = ({
       >
         <Box
           sx={{
-            marginTop: "auto",
+            marginTop: "auto", // safe-center; pairs with marginBottom "auto" below
             width: { xs: "100%", md: "auto" },
             maxWidth: "100%",
           }}
@@ -1375,7 +1378,7 @@ const WordsOrImage = ({
             justifyContent: "center",
             alignItems: "center",
             minHeight: "22vh",
-            marginBottom: "auto",
+            marginBottom: "auto", // safe-center; pairs with marginTop "auto" on the paragraph box above
             mt: isMobile ? 2 : 0,
           }}
         >
