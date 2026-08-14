@@ -3,7 +3,7 @@ name: ALL AXL Delhi Prod Deployment (Delhi-prod)
 on:
   push:
     branches:
-      - all-telangana-prod
+      - axl-delhi-prod
 
 jobs:
   deploy:
