@@ -713,8 +713,8 @@ const WordsOrImage = ({
             : "center",
         alignItems: "center",
         height: "100%",
-        overflowX: "auto",
-        overflowY: "auto",
+        overflowX: "hidden",
+        overflowY: "hidden",
       }}
       {...{
         steps,
