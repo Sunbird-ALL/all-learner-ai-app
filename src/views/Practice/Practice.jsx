@@ -3851,7 +3851,7 @@ const Practice = () => {
                     : "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
                 fontFamily: getFontFamily(lang),
-                lineHeight: { xs: 1.4, md: "4.5rem" },
+                lineHeight: { xs: 1.5, sm: 2, md: 1.5 },
               }}
               key={index}
             >
