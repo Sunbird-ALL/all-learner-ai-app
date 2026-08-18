@@ -154,10 +154,7 @@ export const initialize = async ({ context, config, metadata }) => {
  */
 export const start = (stepTitle) => {
   try {
-    if (
-      CsTelemetryModule.instance &&
-      CsTelemetryModule.instance.telemetryService
-    ) {
+    if (CsTelemetryModule.instance.isInitialised) {
       startTime = Date.now();
 
       // Begin accumulating session data in sessionManager
@@ -187,10 +184,7 @@ export const response = (context, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
       // Check if telemetry service is initialized
-      if (
-        CsTelemetryModule.instance &&
-        CsTelemetryModule.instance.telemetryService
-      ) {
+      if (CsTelemetryModule.instance.isInitialised) {
         recordResponse(); // update session accumulator (SUMMARY.interactions)
         CsTelemetryModule.instance.telemetryService.raiseResponseTelemetry(
           { ...context },
@@ -211,10 +205,7 @@ export const Log = (context, pageid, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
       // Check if telemetry service is initialized
-      if (
-        CsTelemetryModule.instance &&
-        CsTelemetryModule.instance.telemetryService
-      ) {
+      if (CsTelemetryModule.instance.isInitialised) {
         CsTelemetryModule.instance.telemetryService.raiseLogTelemetry({
           options: getEventOptions(),
           edata: {
@@ -240,10 +231,7 @@ export const Log = (context, pageid, telemetryMode) => {
 export const end = (data) => {
   try {
     // Check if telemetry service is initialized
-    if (
-      CsTelemetryModule.instance &&
-      CsTelemetryModule.instance.telemetryService
-    ) {
+    if (CsTelemetryModule.instance.isInitialised) {
       const endTime = Date.now(); // Record the end time
       const duration = ((endTime - startTime) / 1000).toFixed(2); // Calculate duration in seconds
 
@@ -268,10 +256,7 @@ export const interact = (telemetryMode, subtype = "", pageid = "") => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
       // Check if telemetry service is initialized
-      if (
-        CsTelemetryModule.instance &&
-        CsTelemetryModule.instance.telemetryService
-      ) {
+      if (CsTelemetryModule.instance.isInitialised) {
         CsTelemetryModule.instance.telemetryService.raiseInteractTelemetry({
           options: getEventOptions(),
           edata: { type: "TOUCH", subtype: subtype, pageid: pageid },
@@ -290,10 +275,7 @@ export const interact = (telemetryMode, subtype = "", pageid = "") => {
 export const search = (id) => {
   try {
     // Check if telemetry service is initialized
-    if (
-      CsTelemetryModule.instance &&
-      CsTelemetryModule.instance.telemetryService
-    ) {
+    if (CsTelemetryModule.instance.isInitialised) {
       CsTelemetryModule.instance.telemetryService.raiseSearchTelemetry({
         options: getEventOptions(),
         edata: {
@@ -326,10 +308,7 @@ export const search = (id) => {
 export const impression = (currentPageOrOptions, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
-      if (
-        CsTelemetryModule.instance &&
-        CsTelemetryModule.instance.telemetryService
-      ) {
+      if (CsTelemetryModule.instance.isInitialised) {
         let edata;
         if (
           typeof currentPageOrOptions === "object" &&
@@ -384,10 +363,7 @@ export const error = (error, data, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
       // Check if telemetry service is initialized
-      if (
-        CsTelemetryModule.instance &&
-        CsTelemetryModule.instance.telemetryService
-      ) {
+      if (CsTelemetryModule.instance.isInitialised) {
         const resolvedPageId = data.pageid || url || "";
         const stacktrace = JSON.stringify(
           error?.response?.data || error?.message || {}
@@ -417,10 +393,7 @@ export const feedback = (data, contentId, telemetryMode) => {
   if (checkTelemetryMode(telemetryMode)) {
     try {
       // Check if telemetry service is initialized
-      if (
-        CsTelemetryModule.instance &&
-        CsTelemetryModule.instance.telemetryService
-      ) {
+      if (CsTelemetryModule.instance.isInitialised) {
         CsTelemetryModule.instance.telemetryService.raiseFeedBackTelemetry({
           options: getEventOptions(),
           edata: {
@@ -448,10 +421,7 @@ export const feedback = (data, contentId, telemetryMode) => {
  */
 export const assess = (data) => {
   try {
-    if (
-      CsTelemetryModule.instance &&
-      CsTelemetryModule.instance.telemetryService
-    ) {
+    if (CsTelemetryModule.instance.isInitialised) {
       const {
         item = {},
         pass = false,
@@ -497,10 +467,7 @@ export const assess = (data) => {
  */
 export const audit = (data) => {
   try {
-    if (
-      CsTelemetryModule.instance &&
-      CsTelemetryModule.instance.telemetryService
-    ) {
+    if (CsTelemetryModule.instance.isInitialised) {
       const {
         props = [],
         state: newState = "",
@@ -536,14 +503,16 @@ export const audit = (data) => {
  */
 export const interrupt = (data) => {
   try {
-    if (
-      CsTelemetryModule.instance &&
-      CsTelemetryModule.instance.telemetryService
-    ) {
+    if (CsTelemetryModule.instance.isInitialised) {
       const { type = "background", pageid = "" } = data || {};
-      CsTelemetryModule.instance.telemetryService.raiseInterruptTelemetry({
+      CsTelemetryModule.instance.telemetryService.raiseLogTelemetry({
         options: getEventOptions(),
-        edata: { type, pageid },
+        edata: {
+          type: "INTERRUPT",
+          level: "INFO",
+          message: type,
+          pageid,
+        },
       });
     } else {
       console.warn(
@@ -568,12 +537,7 @@ export const fireSessionEnd = () => {
     const s = getSessionState();
     if (!s.startTs) return; // no active session
 
-    if (
-      !(
-        CsTelemetryModule.instance &&
-        CsTelemetryModule.instance.telemetryService
-      )
-    ) {
+    if (!CsTelemetryModule.instance.isInitialised) {
       console.warn("Telemetry service not initialized, skipping END + SUMMARY");
       return;
     }
