@@ -855,7 +855,7 @@ export const levelConfig = {
   15: { color: "#00C7E2" },
 };
 
-export const AllLanguages = [
+const AllLanguages = [
   { name: "English", lang: "en", symbol: "A" },
   { name: "தமிழ்", lang: "ta", symbol: "இ" },
   { name: "हिंदी", lang: "hi", symbol: "क" },
