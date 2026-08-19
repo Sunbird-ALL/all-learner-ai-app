@@ -1216,35 +1216,39 @@ const WordWall = ({
                   alt="Listen"
                   style={{ height: isMobile ? "26px" : "40px" }}
                 />
-                <span>{ui.WORD_WALL_LISTEN_ENGLISH}</span>
+                <span>
+                  {AllLanguages.find((l) => l.lang === lang)?.name || "English"}
+                </span>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: isMobile ? "4px" : "8px",
-                  cursor: "pointer",
-                  color: "#333F61",
-                  padding: isMobile ? "6px 8px" : "8px 12px",
-                  borderRadius: "20px",
-                  fontFamily: "Quicksand",
-                  fontWeight: 800,
-                  minHeight: isMobile ? "36px" : "44px",
-                  fontSize: isMobile ? "13px" : "inherit",
-                }}
-                onClick={() =>
-                  playAudio(
-                    `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentAnswer?.audio_hi}`
-                  )
-                }
-              >
-                <img
-                  src={listenvioletImg}
-                  alt="Listen"
-                  style={{ height: isMobile ? "26px" : "40px" }}
-                />
-                <span>{nativeLangLabel}</span>
-              </div>
+              {currentAnswer?.audio_hi && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: isMobile ? "4px" : "8px",
+                    cursor: "pointer",
+                    color: "#333F61",
+                    padding: isMobile ? "6px 8px" : "8px 12px",
+                    borderRadius: "20px",
+                    fontFamily: "Quicksand",
+                    fontWeight: 800,
+                    minHeight: isMobile ? "36px" : "44px",
+                    fontSize: isMobile ? "13px" : "inherit",
+                  }}
+                  onClick={() =>
+                    playAudio(
+                      `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentAnswer?.audio_hi}`
+                    )
+                  }
+                >
+                  <img
+                    src={listenvioletImg}
+                    alt="Listen"
+                    style={{ height: isMobile ? "26px" : "40px" }}
+                  />
+                  <span>{nativeLangLabel}</span>
+                </div>
+              )}
             </div>
           </div>
 
