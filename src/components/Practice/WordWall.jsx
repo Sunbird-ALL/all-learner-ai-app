@@ -1213,7 +1213,7 @@ const WordWall = ({
               </div>
               <div
                 style={{
-                  display: "flex",
+                  display: currentAnswer?.audio_hi ? "flex" : "none",
                   alignItems: "center",
                   gap: isMobile ? "4px" : "8px",
                   cursor: "pointer",
