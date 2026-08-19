@@ -1216,11 +1216,13 @@ const WordWall = ({
                   alt="Listen"
                   style={{ height: isMobile ? "26px" : "40px" }}
                 />
-                <span>{ui.WORD_WALL_LISTEN_ENGLISH}</span>
+                <span>
+                  {AllLanguages.find((l) => l.lang === lang)?.name || "English"}
+                </span>
               </div>
               <div
                 style={{
-                  display: "flex",
+                  display: currentAnswer?.audio_hi ? "flex" : "none",
                   alignItems: "center",
                   gap: isMobile ? "4px" : "8px",
                   cursor: "pointer",
