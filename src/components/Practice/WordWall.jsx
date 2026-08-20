@@ -114,7 +114,8 @@ const WordWall = ({
   const wrongBoxRef = useRef(null);
   const animationRef = useRef(null);
   const username = getLocalData("profileName") || "User";
-  const ui = getUiStrings(getLocalData("lang"));
+  const lang = getLocalData("lang") || "en";
+  const ui = getUiStrings(lang);
 
   console.log("counts", wrongAnswersAllQuestions);
 
@@ -1209,7 +1210,7 @@ const WordWall = ({
                   alt="Listen"
                   style={{ height: isMobile ? "26px" : "40px" }}
                 />
-                <span>{ui.WORD_WALL_LISTEN_ENGLISH}</span>
+                {lang === "en" && <span>{ui.WORD_WALL_LISTEN_ENGLISH}</span>}
               </div>
               <div
                 style={{
