@@ -707,10 +707,14 @@ const WordsOrImage = ({
       cardContentStyle={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent:
+          startShowCase && !isDemo
+            ? { xs: "center", md: "flex-start" }
+            : "center",
         alignItems: "center",
         height: "100%",
         overflowX: "hidden",
+        overflowY: "hidden",
       }}
       {...{
         steps,
@@ -766,23 +770,29 @@ const WordsOrImage = ({
       </Box>
       <CardContent
         sx={{
-          overflow: isDemo ? "visible" : "hidden",
+          overflowX: isDemo ? "visible" : "auto",
           opacity: disableScreen ? 0.25 : 1,
           pointerEvents: disableScreen ? "none" : "initial",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           alignItems: "center",
           flexGrow: 1,
           pt: { xs: "24px", md: "0px" },
           pb: { xs: "0px", md: "16px" },
-          overflowY: { xs: "auto", md: "hidden" },
+          overflowY: isDemo ? "visible" : "auto",
           boxSizing: "border-box",
           height: "100%",
           width: "100%",
         }}
       >
-        <Box sx={{ width: { xs: "100%", md: "auto" } }}>
+        <Box
+          sx={{
+            marginTop: "auto",
+            width: { xs: "100%", md: "auto" },
+            maxWidth: "100%",
+          }}
+        >
           {type === "image" ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <img
@@ -1363,6 +1373,9 @@ const WordsOrImage = ({
           sx={{
             display: "flex",
             justifyContent: "center",
+            alignItems: "center",
+            minHeight: "22vh",
+            marginBottom: "auto",
             mt: isMobile ? 2 : 0,
           }}
         >

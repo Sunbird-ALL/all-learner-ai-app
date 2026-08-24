@@ -463,8 +463,12 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
     // Interact event for button click
     interact("ET", "Test Microphone", "audio-diagnostics");
 
-    // Start browser speech recognition to capture transcript
-    if (browserSupportsSpeechRecognition) {
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    // On Android Chrome, SR and getUserMedia conflict for mic access — skip SR
+    // and use audio level detection only. MediaRecorder still runs so the blob
+    // is captured and the speaker test can play back the user's recorded voice.
+    if (!isAndroid && browserSupportsSpeechRecognition) {
       try {
         const browserLang = getBrowserLanguage(lang);
         SpeechRecognition.startListening({
@@ -560,9 +564,9 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       };
 
       mediaRecorder.onstop = async () => {
-        // Stop speech recognition and get final transcript
+        // Stop speech recognition and get final transcript (non-Android only)
         let finalTranscript = "";
-        if (browserSupportsSpeechRecognition) {
+        if (!isAndroid && browserSupportsSpeechRecognition) {
           try {
             SpeechRecognition.stopListening();
             // Wait a bit for final transcript to be processed
@@ -672,9 +676,10 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
         const blobSizeCheck = hasReasonableBlobSize || !isLikelyMutedMic;
 
         // Only pass if we have audio data AND actual audio was detected
-        // If speech recognition is available, REQUIRE transcript (user must have spoken words)
-        // If speech recognition is not available, fall back to audio level detection
-        const transcriptRequired = browserSupportsSpeechRecognition;
+        // If speech recognition is available (and not Android), REQUIRE transcript
+        // On Android, SR is skipped (mic conflict) — use audio level detection only
+        const transcriptRequired =
+          browserSupportsSpeechRecognition && !isAndroid;
         const transcriptCheck = transcriptRequired ? hasTranscript : true;
 
         const testPassed =
