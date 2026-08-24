@@ -44,6 +44,7 @@ import {
   resolveAfterSetComplete,
   DISCOVERY_SET_FLOW_STORAGE,
 } from "../../utils/discoverSetFlow";
+import { getUiStrings } from "../../constants/strings";
 
 const SpeakSentenceComponent = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -73,9 +74,11 @@ const SpeakSentenceComponent = () => {
   const discoveryHistoryRef = useRef([]);
   const [questionsReady, setQuestionsReady] = useState(false);
   const [fetchError, setFetchError] = useState(false);
+  const [pendingLetterHuntNav, setPendingLetterHuntNav] = useState(false);
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
   const sessionId = getLocalData("sessionId");
+  const ui = getUiStrings(getLocalData("lang"));
 
   const callConfettiAndPlay = () => {
     let audio = new Audio(levelCompleteAudioSrc);
@@ -95,8 +98,10 @@ const SpeakSentenceComponent = () => {
       setTimeout(() => {
         // alert();
         setOpenMessageDialog({
-          message:
-            "You have successfully completed assessment " + assesmentCount,
+          message: ui.ASSESSMENT_COMPLETE_ASSESSMENT.replace(
+            "{count}",
+            assesmentCount
+          ),
         });
         // setDisableScreen(false);
       }, 1200);
@@ -180,7 +185,17 @@ const SpeakSentenceComponent = () => {
           storyTitle: nextCol.name || "",
         })
       );
-      navigate("/letter-hunt");
+      setPendingLetterHuntNav(true);
+      setDisableScreen(true);
+      callConfettiAndPlay();
+      setTimeout(() => {
+        setOpenMessageDialog({
+          message: ui.ASSESSMENT_COMPLETE_ASSESSMENT.replace(
+            "{count}",
+            assesmentCount
+          ),
+        });
+      }, 1200);
       return;
     }
     const resPagination = await fetchPaginatedContent(nextCol.collectionId, 5);
@@ -236,7 +251,7 @@ const SpeakSentenceComponent = () => {
     if (voiceText === "error") {
       // alert("");
       setOpenMessageDialog({
-        message: "Sorry I couldn't hear a voice. Could you please speak again?",
+        message: ui.VOICE_COULD_NOT_HEAR_AGAIN,
         isError: true,
       });
       setVoiceText("");
@@ -244,7 +259,7 @@ const SpeakSentenceComponent = () => {
     }
     if (voiceText === "profanity") {
       setOpenMessageDialog({
-        message: `Please speak appropriately.`,
+        message: ui.VOICE_PROMPT_SPEAK_APPROPRIATELY,
         severity: "warning",
         isError: true,
       });
@@ -357,14 +372,30 @@ const SpeakSentenceComponent = () => {
           DISCOVERY_SET_FLOW_STORAGE.STATE,
           JSON.stringify({ history: newHistory, pendingCharSetTag: null })
         );
+        const completedSets = newHistory.length;
+        const discoveryProgress = Math.min(
+          Math.round((completedSets / 3) * 100),
+          100
+        );
         await addLesson({
           sessionId,
-          milestone: `showcase`,
+          milestone: `discovery`,
           lesson: "0",
-          progress: 50,
+          progress: discoveryProgress,
           language: lang,
           milestoneLevel: "m0",
         });
+        const resolvedNext = resolveAfterSetComplete(newHistory);
+        if (resolvedNext.type === "terminal" && getSetData?.currentLevel) {
+          await addLesson({
+            sessionId,
+            milestone: `practice`,
+            lesson: "0",
+            progress: 0,
+            language: lang,
+            milestoneLevel: getSetData.currentLevel,
+          });
+        }
         await loadDiscoveryNextSet(newHistory, assessmentResponse);
       }
     } catch (error) {
@@ -502,7 +533,7 @@ const SpeakSentenceComponent = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "100dvh",
           gap: 2,
           px: 3,
           textAlign: "center",
@@ -526,7 +557,7 @@ const SpeakSentenceComponent = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "100dvh",
           gap: 2,
         }}
       >
@@ -539,7 +570,7 @@ const SpeakSentenceComponent = () => {
             fontSize: "18px",
           }}
         >
-          Please wait, we are fetching details for you…
+          {ui.LOADING_FETCHING_DETAILS}
         </Typography>
       </Box>
     );
@@ -553,6 +584,10 @@ const SpeakSentenceComponent = () => {
           closeDialog={() => {
             setOpenMessageDialog("");
             setDisableScreen(false);
+            if (pendingLetterHuntNav) {
+              setPendingLetterHuntNav(false);
+              navigate("/letter-hunt");
+            }
           }}
           isError={openMessageDialog.isError}
           dontShowHeader={openMessageDialog.dontShowHeader}
@@ -563,8 +598,8 @@ const SpeakSentenceComponent = () => {
           background: "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)",
           header:
             questions[currentQuestion]?.contentType === "image"
-              ? `Guess the below image`
-              : `Speak the below ${questions[currentQuestion]?.contentType}`,
+              ? ui.PRACTICE_GUESS_IMAGE
+              : `${ui.PRACTICE_SPEAK_BELOW} ${questions[currentQuestion]?.contentType}`,
           words: questions[currentQuestion]?.contentSourceData?.[0]?.text,
           contentType: currentContentType,
           contentId: questions[currentQuestion]?.contentId,

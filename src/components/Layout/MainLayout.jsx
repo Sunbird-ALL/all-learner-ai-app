@@ -53,6 +53,7 @@ import { Log } from "../../services/telemetryService";
 import { getF1FlowStep, F1_FLOW } from "../../RFlow/F1";
 import { getF2FlowStep, F2_FLOW } from "../../RFlow/F2";
 import { getF3FlowStep, F3_FLOW } from "../../RFlow/F3";
+import { getUiStrings } from "../../constants/strings";
 
 // Level milestone SVGs are lazy-loaded — only downloaded when a level-complete screen renders
 const LevelMilestone = lazy(() => import("../LevelIcons/LevelMilestone"));
@@ -430,6 +431,7 @@ const MainLayout = (props) => {
     isCorrect,
     vocabCount,
     wordCount,
+    showMilestone = true,
   } = props;
 
   const [shake, setShake] = useState(false);
@@ -437,6 +439,7 @@ const MainLayout = (props) => {
   const audioRefs = useRef([]);
 
   const language = getLocalData("lang");
+  const ui = getUiStrings(language);
 
   //console.log("levelss", LEVEL, livesData);
 
@@ -750,13 +753,15 @@ const MainLayout = (props) => {
     let start = progressBarStartIndex;
     let end = Math.min(start + VISIBLE_STEPS, totalSteps);
 
-    // If current step is not in visible range, adjust to include it
-    if (currentPracticeStep < start) {
-      start = Math.max(0, currentPracticeStep - 2); // Show 2 steps before current
-      end = Math.min(start + VISIBLE_STEPS, totalSteps);
-    } else if (currentPracticeStep >= end) {
-      end = Math.min(currentPracticeStep + 3, totalSteps); // Show 2 steps after current
-      start = Math.max(0, end - VISIBLE_STEPS);
+    // If current step is not in visible range, adjust to include it (Desktop only, disabled on mobile to allow manual navigation)
+    if (!isMobile) {
+      if (currentPracticeStep < start) {
+        start = Math.max(0, currentPracticeStep - 2); // Show 2 steps before current
+        end = Math.min(start + VISIBLE_STEPS, totalSteps);
+      } else if (currentPracticeStep >= end) {
+        end = Math.min(currentPracticeStep + 3, totalSteps); // Show 2 steps after current
+        start = Math.max(0, end - VISIBLE_STEPS);
+      }
     }
 
     return { start, end };
@@ -1046,7 +1051,7 @@ const MainLayout = (props) => {
                   color: "#333F61",
                 }}
               >
-                Loading
+                {ui.LOADING_GAME}
               </p>
             </Box>
           ) : (
@@ -1070,7 +1075,7 @@ const MainLayout = (props) => {
                   height: { xs: "calc(100dvh - 80px)", md: "auto" },
                   maxHeight: {
                     xs: "calc(100dvh - 80px)",
-                    md: "calc(100vh - 150px)",
+                    md: "none",
                   },
                   borderRadius: "20px",
                   display: "flex",
@@ -1081,7 +1086,7 @@ const MainLayout = (props) => {
                   backgroundSize: "cover",
                   boxShadow: "0px 4px 20px -1px rgba(0, 0, 0, 0.00)",
                   backdropFilter: "blur(25px)",
-                  mt: { xs: "0px", md: "75px" },
+                  mt: { xs: "0px", md: "min(75px, 8vh)" },
                   mb: { xs: "20px", md: "0px" },
                   overflow: { sm: "hidden", xs: "hidden" },
                 }}
@@ -1115,7 +1120,7 @@ const MainLayout = (props) => {
                     overflowY: "hidden",
                     opacity: disableScreen ? 0.25 : 1,
                     pointerEvents: disableScreen ? "none" : "initial",
-                    padding: { xs: "16px !important", md: "24px !important" },
+                    padding: { xs: "1rem !important", md: "1.5rem !important" },
                     boxSizing: "border-box",
                     ...props.cardContentStyle,
                   }}
@@ -1141,7 +1146,8 @@ const MainLayout = (props) => {
                   )}
                   {props.children}
                 </CardContent>
-                {steps > 0 &&
+                {showMilestone &&
+                  steps > 0 &&
                   tFlow !== "true" &&
                   !isF1FlowActive &&
                   !isF2FlowActive &&
@@ -1175,15 +1181,17 @@ const MainLayout = (props) => {
                   contentType.toLowerCase() !== "word" &&
                   startShowCase && (
                     <Box
-                      position={"absolute"}
-                      top={isMobile ? 10 : 20}
-                      left={isMobile ? "initial" : 20}
+                      position={isMobile ? "absolute" : "relative"}
+                      top={isMobile ? 10 : "auto"}
+                      left={isMobile ? "initial" : "auto"}
                       right={isMobile ? 10 : "initial"}
                       justifyContent={"center"}
                       sx={{
                         display: isMobile ? "flex" : "block",
                         flexDirection: isMobile ? "column" : "initial",
                         alignItems: isMobile ? "flex-end" : "initial",
+                        order: isMobile ? "unset" : -1,
+                        padding: isMobile ? 0 : "1.25rem 1.5rem 1rem",
                       }}
                     >
                       <Box display={"flex"} gap={isMobile ? "3px" : "5px"}>
@@ -1243,9 +1251,10 @@ const MainLayout = (props) => {
                       pointerEvents: "none",
                     }}
                   >
-                    <footer>
-                      {/* Debug: Log milestone level and LEVEL for troubleshooting */}
-                      {/* {console.log(
+                    {showMilestone && (
+                      <footer>
+                        {/* Debug: Log milestone level and LEVEL for troubleshooting */}
+                        {/* {console.log(
                         "MainLayout footer - milestoneLevel:",
                         milestoneLevel,
                         "LEVEL:",
@@ -1254,71 +1263,72 @@ const MainLayout = (props) => {
                         rFlow
                       )} */}
 
-                      {/* Only show F flow images when milestone level is "B" */}
-                      {tFlow !== "true" &&
-                        (milestoneLevel === "B" && isF3FlowActive ? (
-                          // F3 Flow - Show F3 milestone image
-                          <div style={fFlowWrapperStyle}>
-                            <img
-                              src={F3Image}
-                              alt="F3"
-                              height={isMobile ? "75px" : "200px"}
-                            />
-                          </div>
-                        ) : milestoneLevel === "B" && isF2FlowActive ? (
-                          // F2 Flow - Show F2 milestone image
-                          <div style={fFlowWrapperStyle}>
-                            <img
-                              src={F2Image}
-                              alt="F2"
-                              height={isMobile ? "75px" : "200px"}
-                            />
-                          </div>
-                        ) : milestoneLevel === "B" && isF1FlowActive ? (
-                          // F1 Flow - Show F1 milestone image
-                          <div style={fFlowWrapperStyle}>
-                            <img
-                              src={F1Image}
-                              alt="F1"
-                              height={isMobile ? "75px" : "200px"}
-                            />
-                          </div>
-                        ) : rFlow === "true" && milestoneLevel === "B" ? (
-                          // Only show R flow images when milestone level is "B"
-                          [1, "B"]?.includes(LEVEL) ? (
-                            // R0 - Show F1 milestone image instead of R0 image
-                            rStep == null || rStep === 0 || rStep === "0" ? (
+                        {/* Only show F flow images when milestone level is "B" */}
+                        {tFlow !== "true" &&
+                          (milestoneLevel === "B" && isF3FlowActive ? (
+                            // F3 Flow - Show F3 milestone image
+                            <div style={fFlowWrapperStyle}>
+                              <img
+                                src={F3Image}
+                                alt="F3"
+                                height={isMobile ? "75px" : "200px"}
+                              />
+                            </div>
+                          ) : milestoneLevel === "B" && isF2FlowActive ? (
+                            // F2 Flow - Show F2 milestone image
+                            <div style={fFlowWrapperStyle}>
+                              <img
+                                src={F2Image}
+                                alt="F2"
+                                height={isMobile ? "75px" : "200px"}
+                              />
+                            </div>
+                          ) : milestoneLevel === "B" && isF1FlowActive ? (
+                            // F1 Flow - Show F1 milestone image
+                            <div style={fFlowWrapperStyle}>
                               <img
                                 src={F1Image}
                                 alt="F1"
-                                height={isMobile ? "130px" : "200px"}
+                                height={isMobile ? "75px" : "200px"}
                               />
-                            ) : (
+                            </div>
+                          ) : rFlow === "true" && milestoneLevel === "B" ? (
+                            // Only show R flow images when milestone level is "B"
+                            [1, "B"]?.includes(LEVEL) ? (
+                              // R0 - Show F1 milestone image instead of R0 image
+                              rStep == null || rStep === 0 || rStep === "0" ? (
+                                <img
+                                  src={F1Image}
+                                  alt="F1"
+                                  height={isMobile ? "130px" : "200px"}
+                                />
+                              ) : (
+                                <img
+                                  src={Assets.rOneMileImage}
+                                  alt="R One"
+                                  height={isMobile ? "130px" : "200px"}
+                                />
+                              )
+                            ) : LEVEL === 2 ? (
                               <img
-                                src={Assets.rOneMileImage}
-                                alt="R One"
+                                src={
+                                  props.rStep === 2
+                                    ? Assets.r2MileImg
+                                    : props.rStep === 3
+                                    ? Assets.r3MileImg
+                                    : props.rStep === 4
+                                    ? Assets.r4MileImg
+                                    : null
+                                }
+                                alt={`R Step ${props.rStep}`}
                                 height={isMobile ? "130px" : "200px"}
                               />
-                            )
-                          ) : LEVEL === 2 ? (
-                            <img
-                              src={
-                                props.rStep === 2
-                                  ? Assets.r2MileImg
-                                  : props.rStep === 3
-                                  ? Assets.r3MileImg
-                                  : props.rStep === 4
-                                  ? Assets.r4MileImg
-                                  : null
-                              }
-                              alt={`R Step ${props.rStep}`}
-                              height={isMobile ? "130px" : "200px"}
-                            />
-                          ) : null
-                        ) : (
-                          !!LEVEL && levelsImages?.[LEVEL]?.milestone
-                        ))}
-                    </footer>
+                            ) : null
+                          ) : (
+                            !!LEVEL && levelsImages?.[LEVEL]?.milestone
+                          ))}
+                      </footer>
+                    )}
                   </Box>
                   <Box
                     sx={{
@@ -1528,7 +1538,7 @@ const MainLayout = (props) => {
                                 onClick={handleProgressBarNext}
                                 disabled={!canGoNext}
                                 sx={{
-                                  display: { xs: "none", sm: "inline-flex" },
+                                  display: "inline-flex",
                                   width: { xs: "24px", sm: "40px", md: "48px" },
                                   height: {
                                     xs: "24px",
@@ -1737,7 +1747,7 @@ const MainLayout = (props) => {
                             fontFamily: "Quicksand",
                           }}
                         >
-                          {"Next Lesson"}
+                          {ui.MAIN_LAYOUT_NEXT_LESSON}
                         </span>
                       </Box>
                       {enableNext ? (
@@ -1793,9 +1803,6 @@ const MainLayout = (props) => {
                     boxSizing: "border-box",
                     padding: { xs: "16px", md: "24px" },
                   },
-                  "& img[alt='gameLost']": {
-                    height: { xs: "180px!important", md: "250px!important" },
-                  },
                   "& img[alt='Words Learnt']": {
                     width: { xs: "70px!important", md: "100px!important" },
                     height: { xs: "70px!important", md: "100px!important" },
@@ -1848,7 +1855,7 @@ const MainLayout = (props) => {
                           textAlign: "center",
                         }}
                       >
-                        Hurray!!!
+                        {ui.HURRAY}
                       </Typography>
                       <Typography
                         sx={{
@@ -1867,7 +1874,7 @@ const MainLayout = (props) => {
                             fontFamily: "Quicksand",
                           }}
                         >
-                          {"Ready for Challenge?"}
+                          {ui.MAIN_LAYOUT_READY_CHALLENGE}
                         </span>
                       </Typography>
                     </Box>
@@ -1895,16 +1902,28 @@ const MainLayout = (props) => {
                       <Box
                         sx={{
                           display: "flex",
-                          justifyContent: "center",
+                          justifyContent: { xs: "flex-start", md: "center" },
+                          alignItems: { xs: "flex-start", md: "center" },
+                          flex: 1,
+                          minHeight: 0,
                           position: "relative",
                           zIndex: "100",
+                          width: "100%",
                         }}
                       >
                         {gameOverData?.userWon ? (
                           <img
                             src={gameWon}
                             alt="gameWon"
-                            style={{ zIndex: 9999, height: 340 }}
+                            style={{
+                              zIndex: 9999,
+                              width: "100%",
+                              maxWidth: isMobile ? "320px" : "600px",
+                              height: "auto",
+                              maxHeight: isMobile ? "320px" : "500px",
+                              objectFit: "contain",
+                              margin: "auto",
+                            }}
                           />
                         ) : (
                           <Stack
@@ -1919,12 +1938,16 @@ const MainLayout = (props) => {
                               <img
                                 src={Assets.gameLost}
                                 alt="gameLost"
-                                height={"250px"}
+                                style={{
+                                  height: isMobile ? "220px" : "360px",
+                                  width: "auto",
+                                  objectFit: "contain",
+                                }}
                               />
                               <Typography
                                 sx={{ mb: 1, mt: 1, textAlign: "center" }}
                               >
-                                {!props.pageName === "m8" && (
+                                {props.pageName !== "m8" && (
                                   <span
                                     style={{
                                       fontWeight: 600,
@@ -1949,16 +1972,14 @@ const MainLayout = (props) => {
 
                                 {!fluency ? (
                                   <Typography textAlign="center" sx={{ mt: 2 }}>
-                                    Good try! Need more speed.
+                                    {ui.MAIN_LAYOUT_GAMEOVER_GOOD_TRY_SPEED}
                                   </Typography>
                                 ) : (
                                   <Typography textAlign="center" sx={{ mt: 2 }}>
-                                    Oops! You need{" "}
-                                    <span style={{ fontWeight: "bold" }}>
-                                      {Math.abs(70 - percentage)}
-                                    </span>{" "}
-                                    more points to pass. You're almost there—try
-                                    again!
+                                    {ui.MAIN_LAYOUT_GAMEOVER_NEED_POINTS.replace(
+                                      "{points}",
+                                      Math.abs(70 - percentage)
+                                    )}
                                   </Typography>
                                 )}
                               </Typography>
@@ -2055,8 +2076,8 @@ const MainLayout = (props) => {
                                                   }}
                                                   aria-label={
                                                     audioPlaying === index
-                                                      ? "Pause audio"
-                                                      : "Play audio"
+                                                      ? ui.A11Y_PAUSE_AUDIO
+                                                      : ui.A11Y_PLAY_AUDIO
                                                   }
                                                 >
                                                   <img
@@ -2166,7 +2187,7 @@ const MainLayout = (props) => {
                                             fontFamily: "Quicksand",
                                           }}
                                         >
-                                          {"Oops, a bit slow!"}
+                                          {ui.MAIN_LAYOUT_OOPS_SLOW}
                                         </span>
                                       </Stack>
                                     )}
@@ -2212,7 +2233,7 @@ const MainLayout = (props) => {
                                   fontFamily: "Quicksand",
                                 }}
                               >
-                                Words Learnt
+                                {ui.ASSESSMENT_WORDS_LEARNT}
                               </Typography>
                               <Stack
                                 direction="row"
@@ -2246,7 +2267,7 @@ const MainLayout = (props) => {
                                     fontFamily: "Quicksand",
                                   }}
                                 >
-                                  Let’s practice more
+                                  {ui.MAIN_LAYOUT_PRACTICE_MORE}
                                 </Typography>
                               </Stack>
                             </Stack>
@@ -2285,13 +2306,13 @@ const MainLayout = (props) => {
                         cursor: "pointer",
                         background:
                           "linear-gradient(90deg, rgba(255,144,80,1) 0%, rgba(225,84,4,1) 85%)",
-                        minWidth: "160px",
-                        height: "55px",
+                        minWidth: { xs: "130px", md: "160px" },
+                        height: { xs: "42px", md: "55px" },
                         borderRadius: "10px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        padding: "0px 24px 0px 20px",
+                        padding: { xs: "0px 16px", md: "0px 24px 0px 20px" },
                       }}
                       onClick={() => {
                         if (
@@ -2342,6 +2363,9 @@ const MainLayout = (props) => {
                           }
                         }
                         if (gameOverData) {
+                          if (gameOverData.wordWall) {
+                            setLocalData("wordWall", true);
+                          }
                           gameOverData.link
                             ? navigate(gameOverData.link)
                             : navigate("/_practice");
@@ -2349,15 +2373,16 @@ const MainLayout = (props) => {
                       }}
                     >
                       <Typography
-                        style={{
+                        sx={{
                           color: "#FFFFFF",
                           fontWeight: 600,
-                          fontSize: "20px",
+                          fontSize: { xs: "13px", md: "16px" },
                           fontFamily: "Quicksand",
                         }}
-                        fontSize={{ md: "14px", xs: "10px" }}
                       >
-                        {!gameOverData ? "Start Game ➜" : "Practice ➜"}
+                        {!gameOverData
+                          ? ui.MAIN_LAYOUT_START_GAME
+                          : ui.MAIN_LAYOUT_PRACTICE_ARROW}
                       </Typography>
                     </Box>
                   </Box>
@@ -2419,7 +2444,10 @@ MainLayout.propTypes = {
   cardContentStyle: PropTypes.object,
   gameOverData: PropTypes.shape({
     userWon: PropTypes.bool,
+    wordWall: PropTypes.bool,
+    link: PropTypes.string,
   }),
+  showMilestone: PropTypes.bool,
 };
 
 export default MainLayout;

@@ -14,6 +14,7 @@ import discoverEndLeft from "../../assets/images/discover-end-left.svg";
 import discoverEndRight from "../../assets/images/discover-end-right.svg";
 import textureImage from "../../assets/images/textureImage.png";
 import { getLocalData, setLocalData } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import { LetsStart } from "../Icons/SvgIcons";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
@@ -38,6 +39,8 @@ const SpeakSentenceComponent = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [shake, setShake] = useState(true);
   const [level, setLevel] = useState("");
+  const lang = getLocalData("lang");
+  const ui = getUiStrings(lang || "en");
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
 
   useEffect(() => {
@@ -147,7 +150,7 @@ const SpeakSentenceComponent = () => {
               fontSize: isMobile ? "40px" : "64px",
             }}
           >
-            Hurray!!!
+            {ui.HURRAY}
           </Typography>
           <Typography
             variant="h4"
@@ -164,10 +167,10 @@ const SpeakSentenceComponent = () => {
               letterSpacing: "0.56px",
             }}
           >
-            {`You have good language skills. You can start from Level ${level.replace(
-              "m",
-              ""
-            )}. Let the learning journey begin!`}
+            {ui.DISCOVER_END_GOOD_SKILLS_MESSAGE.replace(
+              "{level}",
+              level.replace("m", "")
+            )}
             <br /> <br />
           </Typography>
 

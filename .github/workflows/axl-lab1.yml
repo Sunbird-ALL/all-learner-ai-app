@@ -1,14 +1,14 @@
-name: AXL test-dev Deployment
+name: ALL AXL Lab1 Deployment (Lab1)
 
 on:
   push:
     branches:
-      - axl-3.0.5
+      - all-3.0.6-hotfix
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: axl-dev-test
+    environment: axl-lab1
 
     steps:
       - name: Checkout code
@@ -18,16 +18,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-
+          
       - name: Configure AWS credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AXL_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AXL_AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ap-south-1
         run: |
-          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
-          aws configure set default.region "$AWS_REGION"
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set default.region ${{ secrets.AWS_REGION }}
 
       - name: Clean up node_modules and package-lock.json
         run: |
@@ -39,6 +35,11 @@ jobs:
 
       - name: Run Husky Install
         run: npm run prepare
+
+      - name: Run Tests
+        run: npm test -- --watchAll=false
+        env:
+          CI: true
 
       - name: Build and Package Application
         env:
@@ -100,41 +101,24 @@ jobs:
           REACT_APP_MIN_SCREEN_HEIGHT: ${{ vars.REACT_APP_MIN_SCREEN_HEIGHT }}
           REACT_APP_BUILD_NUMBER: ${{ github.run_number }}
           REACT_APP_COMMIT_ID: ${{ github.sha }}
+          PUBLIC_URL: ${{ vars.PUBLIC_URL }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 
-      - name: Deploy audio to S3 root
-        run: |
-          aws s3 sync ./build/audio s3://axl-dev-test/audio/ \
-            --delete \
-            --region ap-south-1
-
-      - name: Deploy app bundle (excluding audio)
-        run: |
-          aws s3 sync ./build s3://axl-dev-test/all-app/ \
-            --exclude "audio/*" \
-            --delete \
-            --region ap-south-1
-
-      - name: Remove stale audio from /all-app
-        run: |
-          aws s3 rm s3://axl-dev-test/all-app/audio/ \
-            --recursive \
-            --region ap-south-1
+      - name: Deploy to S3 Bucket
+        run: aws s3 sync ./build s3://axl-test-lab-front-end/all-app/
 
       - name: Debug Environment Variables
-        env:
-          BUCKET_NAME: ${{ secrets.AXL_S3_BUCKET_NAME }}
         run: |
           echo "REACT_APP_AWS_S3_BUCKET_NAME: $REACT_APP_AWS_S3_BUCKET_NAME"
           echo "AWS_REGION: $AWS_REGION"
-          echo "secrate: $BUCKET_NAME"
+          echo "secrate": ${{ vars.REACT_APP_AWS_S3_BUCKET_NAME }}
 
       - name: Cloudfront Invalidation
-        uses: chetan/invalidate-cloudfront-action@fce6f6f546fae2e9fe55f3bd1411063a908f2557 # master @ 2021-12-10
+        uses: chetan/invalidate-cloudfront-action@master
         env:
-          DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV_TEST }}
+          DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
           PATHS: "/*"
-          AWS_REGION: ${{ secrets.AXL_AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AXL_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AXL_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

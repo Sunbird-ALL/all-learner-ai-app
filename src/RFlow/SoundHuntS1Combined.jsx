@@ -9370,7 +9370,7 @@ const SoundHuntS1Combined = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -9604,7 +9604,7 @@ const SoundHuntS1Combined = ({
             try {
               await addLesson({
                 sessionId: sessionId,
-                milestone: "showcase", // S1 is a showcase step
+                milestone: "practice", // S1 is a showcase step
                 lesson: 0, // Reset lesson progress to 0
                 progress: 0, // Reset progress to 0
                 language: lang,
@@ -10176,6 +10176,10 @@ const SoundHuntS1Combined = ({
       startShowCase={startShowCase}
       setStartShowCase={setStartShowCase}
       gameOverData={gameOverData}
+      cardContentStyle={{
+        maxHeight: isMobile ? "calc(100dvh - 160px)" : "calc(100vh - 260px)",
+        overflowY: isMobile ? "hidden" : "auto",
+      }}
       {...{
         steps: filteredContent.length, // Use filteredContent length (should be 20)
         currentStep: currentQuestionIndex + 1, // Use internal currentQuestionIndex
@@ -10195,15 +10199,16 @@ const SoundHuntS1Combined = ({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: isMobile ? "center" : "safe center",
           bottom: isMobile ? "5px" : "auto",
           left: isMobile ? "5px" : "auto",
           top: isMobile ? "5px" : "auto",
           position: isMobile ? "absolute" : "relative",
           right: isMobile ? "5px" : "auto",
-          width: isMobile ? "calc(100% - 10px)" : "auto",
-          height: isMobile ? "calc(100% - 10px)" : "70vh",
-          borderRadius: isMobile ? "15px" : "0px",
+          width: isMobile ? "calc(100% - 10px)" : "100%",
+          height: isMobile ? "calc(100% - 10px)" : "auto",
+          minHeight: "64dvh",
+          borderRadius: isMobile ? "15px" : "16px",
           boxSizing: "border-box",
           background: "linear-gradient(180deg, #91E7EF 0%, #42C6FF 100%)",
           padding: "16px",
@@ -10306,16 +10311,16 @@ const SoundHuntS1Combined = ({
                           backgroundColor: showCorrect
                             ? "#4CAF50"
                             : showWrong
-                              ? "#F44336"
-                              : "#1897DE",
+                            ? "#F44336"
+                            : "#1897DE",
                           padding: isMobile ? "12px 16px" : "16px 24px",
                           borderRadius: "12px",
                           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                           border: showCorrect
                             ? "5px solid #2E7D32"
                             : showWrong
-                              ? "5px solid #C62828"
-                              : "5px solid #10618E",
+                            ? "5px solid #C62828"
+                            : "5px solid #10618E",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -10347,8 +10352,8 @@ const SoundHuntS1Combined = ({
                                   ? "24px"
                                   : "32px"
                                 : isMobile
-                                  ? "20px"
-                                  : "28px",
+                                ? "20px"
+                                : "28px",
                             fontFamily: getFontFamily(language),
                             textAlign: "center",
                           }}
@@ -10374,16 +10379,18 @@ const SoundHuntS1Combined = ({
                   <div
                     style={{
                       backgroundColor: "#1897DE",
-                      padding: isMobile ? "16px 24px" : "20px 32px",
+                      padding: isMobile ? "10px 20px" : "20px 32px",
                       borderRadius: "12px",
                       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                      border: "5px solid #10618E",
-                      marginBottom: isMobile ? "35px" : "60px",
+                      border: isMobile
+                        ? "3px solid #10618E"
+                        : "5px solid #10618E",
+                      marginBottom: isMobile ? "15px" : "60px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      minWidth: isMobile ? "150px" : "200px",
-                      transform: isMobile ? "translateY(-60px)" : "none",
+                      minWidth: isMobile ? "120px" : "200px",
+                      transform: isMobile ? "translateY(-20px)" : "none",
                     }}
                   >
                     <span
@@ -10393,11 +10400,11 @@ const SoundHuntS1Combined = ({
                         fontSize:
                           language === "te"
                             ? isMobile
-                              ? "38px"
+                              ? "28px"
                               : "54px"
                             : isMobile
-                              ? "32px"
-                              : "48px",
+                            ? "24px"
+                            : "48px",
                         fontFamily: getFontFamily(language),
                         textAlign: "center",
                       }}
@@ -10411,12 +10418,12 @@ const SoundHuntS1Combined = ({
                     style={{
                       display: "flex",
                       flexDirection: isMobile ? "column" : "row",
-                      gap: isMobile ? "16px" : "24px",
+                      gap: isMobile ? "10px" : "24px",
                       marginTop: isMobile ? "0px" : "24px",
                       flexWrap: "wrap",
                       justifyContent: "center",
                       alignItems: "center",
-                      transform: isMobile ? "translateY(-60px)" : "none",
+                      transform: isMobile ? "translateY(-20px)" : "none",
                     }}
                   >
                     {currentQuestion?.audioOptions.map((audioOption, index) => {
@@ -10430,17 +10437,17 @@ const SoundHuntS1Combined = ({
                       let borderColor = "2px solid rgba(255, 255, 255, 0.5)";
 
                       if (isSelected && isCorrect) {
-                        backgroundColor = "#E8F5E9";
-                        borderColor = "3px solid #4CAF50";
+                        backgroundColor = "#4CAF50";
+                        borderColor = "5px solid #2E7D32";
                       } else if (isSelected && !isCorrect) {
-                        backgroundColor = "#FFEBEE";
-                        borderColor = "3px solid #F44336";
+                        backgroundColor = "#F44336";
+                        borderColor = "5px solid #C62828";
                       } else if (isWrong) {
-                        backgroundColor = "#FFEBEE";
-                        borderColor = "3px solid #F44336";
+                        backgroundColor = "#F44336";
+                        borderColor = "5px solid #C62828";
                       } else if (isSelected) {
-                        backgroundColor = "#E3F2FD";
-                        borderColor = "3px solid #2196F3";
+                        backgroundColor = "#4CAF50";
+                        borderColor = "5px solid #2E7D32";
                       }
 
                       return (
@@ -10456,8 +10463,8 @@ const SoundHuntS1Combined = ({
                           <Box
                             sx={{
                               backgroundColor: backgroundColor,
-                              padding: { xs: "18px 12px", md: "16px" },
-                              borderRadius: "24px",
+                              padding: { xs: "10px 8px", md: "16px" },
+                              borderRadius: "20px",
                               boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                               border: borderColor,
                               display: "flex",
@@ -10469,10 +10476,12 @@ const SoundHuntS1Combined = ({
                               cursor: hasSelectedOption
                                 ? "not-allowed"
                                 : "pointer",
-                              opacity: hasSelectedOption && !isSelected ? 0.5 : 1,
-                              transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                              minWidth: { xs: "115px", md: "140px" },
-                              minHeight: { xs: "115px", md: "140px" },
+                              opacity:
+                                hasSelectedOption && !isSelected ? 0.5 : 1,
+                              transition:
+                                "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                              minWidth: { xs: "95px", md: "140px" },
+                              minHeight: { xs: "95px", md: "140px" },
                               position: "relative",
                               "&:hover": {
                                 transform: { xs: "none", md: "scale(1.05)" },
@@ -10482,7 +10491,7 @@ const SoundHuntS1Combined = ({
                               },
                             }}
                             onClick={() => {
-                              if (!hasSelectedOption) {
+                              if (!hasSelectedOption && !isMobile) {
                                 handleAudioClick(index);
                               }
                             }}
@@ -10582,8 +10591,8 @@ const SoundHuntS1Combined = ({
                                 }
                                 alt="Play Audio"
                                 style={{
-                                  width: isMobile ? "48px" : "50px",
-                                  height: isMobile ? "48px" : "50px",
+                                  width: "50px",
+                                  height: "50px",
                                   transform: isPlaying
                                     ? `scale(${scale})`
                                     : "scale(1)",
@@ -10607,11 +10616,11 @@ const SoundHuntS1Combined = ({
                                 fontSize:
                                   language === "te"
                                     ? isMobile
-                                      ? "14px"
+                                      ? "12px"
                                       : "16px"
                                     : isMobile
-                                      ? "12px"
-                                      : "14px",
+                                    ? "10px"
+                                    : "14px",
                                 fontFamily: getFontFamily(language),
                                 textAlign: "center",
                               }}
@@ -10630,39 +10639,42 @@ const SoundHuntS1Combined = ({
                               }}
                               sx={{
                                 position: "absolute",
-                                left: "calc(100% + 12px)",
+                                left: "calc(100% + 8px)",
                                 top: "50%",
-                                width: "36px",
-                                height: "36px",
+                                width: "26px",
+                                height: "26px",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                borderRadius: isSelected ? "50%" : "8px",
+                                borderRadius: isSelected ? "50%" : "6px",
                                 border: isSelected
                                   ? isCorrect
-                                    ? "3px solid #2E7D32"
-                                    : "3px solid #C62828"
-                                  : "3px solid #10618E",
+                                    ? "2px solid #2E7D32"
+                                    : "2px solid #C62828"
+                                  : "2px solid #10618E",
                                 backgroundColor: isSelected
                                   ? isCorrect
                                     ? "#4CAF50"
                                     : "#F44336"
                                   : "#FFFFFF",
                                 boxShadow: isSelected
-                                  ? "0px 4px 8px rgba(0, 0, 0, 0.25)"
-                                  : "0px 3px 6px rgba(0, 0, 0, 0.15), inset 0px 1px 3px rgba(255, 255, 255, 0.8)",
-                                transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                                  ? "0px 3px 6px rgba(0, 0, 0, 0.2)"
+                                  : "0px 2px 4px rgba(0, 0, 0, 0.15), inset 0px 1px 2px rgba(255, 255, 255, 0.8)",
+                                transition:
+                                  "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                                 transform: isSelected
-                                  ? "translateY(-50%) scale(1.15)"
+                                  ? "translateY(-50%) scale(1.1)"
                                   : "translateY(-50%) scale(1)",
-                                cursor: hasSelectedOption ? "not-allowed" : "pointer",
+                                cursor: hasSelectedOption
+                                  ? "not-allowed"
+                                  : "pointer",
                               }}
                             >
                               {isSelected && (
                                 <span
                                   style={{
                                     color: "#FFFFFF",
-                                    fontSize: "22px",
+                                    fontSize: "16px",
                                     fontWeight: "900",
                                     lineHeight: 1,
                                   }}

@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { TrendingUp, RotateCcw, ChevronRight, Rocket, Fuel } from "lucide-react";
 import { Language } from "../constants/languages";
 import { SpaceBackground } from "./SpaceBackground";
+import { getUiStrings } from "../../../../constants/strings";
 
 interface TryAgainProps {
   totalCorrect: number;
@@ -36,6 +37,7 @@ export function TryAgain({
   destination = "",
   useSpaceBackground = false
 }: TryAgainProps) {
+  const ui = getUiStrings(selectedLanguage);
   const [isVisible, setIsVisible] = useState(false);
   const scorePercentage = totalQuestions > 0 ? (totalCorrect / totalQuestions) * 100 : 0;
 
@@ -73,7 +75,7 @@ export function TryAgain({
           backgroundSize: '100% 100%',
           position: 'relative',
           maxHeight: 'calc(100vh - 200px)',
-          height: 'auto',
+          height: '70dvh',
           width: '100%',
           maxWidth: '400px',
           overflow: 'hidden'
@@ -127,7 +129,7 @@ export function TryAgain({
             {fuelMode && (
               <>
                 <h1 className={`text-xl sm:text-2xl font-bold mb-3 ${useSpaceBackground ? 'text-white' : 'text-gray-800'}`}>
-                  Need more fuel!
+                  {ui.TRY_AGAIN_NEED_MORE_FUEL}
                 </h1>
                 <div className="mb-3 flex items-center justify-center gap-2">
                   <Fuel className="h-5 w-5 text-red-500" />
@@ -137,7 +139,7 @@ export function TryAgain({
                   <Fuel className="h-5 w-5 text-blue-500" />
                 </div>
                 <div className={`mb-3 flex items-center justify-center gap-2 ${useSpaceBackground ? 'text-white/90' : 'text-gray-600'}`}>
-                    <span className="text-xl">⏱️ Too slow. Tap faster to fill the 🚀 fuel</span>
+                    <span className="text-xl">{ui.TRY_AGAIN_TOO_SLOW}</span>
                   </div>
               </>
             )}
@@ -145,35 +147,21 @@ export function TryAgain({
             {/* "Game Over!" text - only in English, for all languages */}
             {livesLost && (
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 animate-fade-in">
-                Game Over!
+                {ui.GAME_OVER}
               </h1>
             )}
             { !livesLost && !fuelMode && <>
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
-              {selectedLanguage === 'te' ? 'మంచి ప్రయత్నం! 💪' :
-               selectedLanguage === 'mr' ? 'चांगला प्रयत्न! 💪' :
-               selectedLanguage === 'kn' ? 'ಒಳ್ಳೆಯ ಪ್ರಯತ್ನ! 💪' :
-               'Good Try! 💪'}
+              {ui.TRY_AGAIN_GOOD_TRY}
             </h2>
             <p className="text-gray-600 mb-2 text-sm">
-              {selectedLanguage === 'te' ? 
-                `మీరు ${totalCorrect} / ${totalQuestions} ప్రశ్నలకు సరైన సమాధానాలు ఇచ్చారు (${scorePercentage.toFixed(0)}%)` :
-               selectedLanguage === 'mr' ? 
-                `तुम्ही ${totalCorrect} / ${totalQuestions} प्रश्नांना योग्य उत्तरे दिली (${scorePercentage.toFixed(0)}%)` :
-               selectedLanguage === 'kn' ? 
-                `ನೀವು ${totalCorrect} / ${totalQuestions} ಪ್ರಶ್ನೆಗಳಿಗೆ ಸರಿಯಾಗಿ ಉತ್ತರಿಸಿದ್ದೀರಿ (${scorePercentage.toFixed(0)}%)` :
-               `You got ${totalCorrect} / ${totalQuestions} questions correct (${scorePercentage.toFixed(0)}%)`
-              }
+              {ui.TRY_AGAIN_SCORE_SUMMARY
+                .replace("{correct}", String(totalCorrect))
+                .replace("{total}", String(totalQuestions))
+                .replace("{percent}", scorePercentage.toFixed(0))}
             </p>
             <p className="text-xs text-gray-500">
-              {selectedLanguage === 'te' ? 
-                'మీరు తదుపరి స్థాయికి వెళ్లడానికి కనీసం 80% స్కోర్ అవసరం' :
-               selectedLanguage === 'mr' ? 
-                'पुढील स्तरावर जाण्यासाठी किमान 80% स्कोअर आवश्यक आहे' :
-               selectedLanguage === 'kn' ? 
-                'ಮುಂದಿನ ಹಂತಕ್ಕೆ ಹೋಗಲು ನಿಮಗೆ ಕನಿಷ್ಠ 80% ಅಗತ್ಯವಿದೆ' :
-               'You need at least 80% to advance to the next level'
-              }
+              {ui.TRY_AGAIN_NEED_PERCENT}
             </p>
             </>}
           </div>
@@ -186,7 +174,7 @@ export function TryAgain({
               className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-sm sm:text-base py-2.5 px-6"
             >
               <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5" />
-              Play Again
+              {ui.PLAY_AGAIN}
             </Button>
             
           </div>

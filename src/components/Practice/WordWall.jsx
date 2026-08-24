@@ -30,6 +30,7 @@ import {
   randomizeArray as shuffle,
 } from "../../utils/constants";
 import { getFontFamily } from "../../utils/fontUtils";
+import { getUiStrings } from "../../constants/strings";
 import giftscoreImg from "../../assets/giftscore.svg";
 import redboxImg from "../../assets/redbox.svg";
 import greenboxImg from "../../assets/greenbox.svg";
@@ -37,6 +38,7 @@ import nextimg from "../../assets/nxxt.svg";
 import redsmileImg from "../../assets/redsmile.svg";
 import greenstarImg from "../../assets/greenstar.svg";
 import { useNavigate } from "react-router-dom";
+import { splitGraphemes } from "split-graphemes";
 
 const GiftBox = () => {
   return (
@@ -112,6 +114,8 @@ const WordWall = ({
   const wrongBoxRef = useRef(null);
   const animationRef = useRef(null);
   const username = getLocalData("profileName") || "User";
+  const lang = getLocalData("lang") || "en";
+  const ui = getUiStrings(lang);
 
   console.log("counts", wrongAnswersAllQuestions);
 
@@ -375,6 +379,17 @@ const WordWall = ({
     }
   }, [currentQuestionIndex]);
 
+  useEffect(() => {
+    if (showConfetti) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showConfetti]);
+
   const loadQuestion = (questionIndex) => {
     const correct = gameData?.[questionIndex]?.images?.find(
       (img) => img.isCorrect
@@ -486,7 +501,8 @@ const WordWall = ({
     <div
       style={{
         backgroundColor: "#FDFEFF",
-        minHeight: isMobile ? "68vh" : "80vh",
+        height: isMobile ? "calc(100dvh - 280px)" : "auto",
+        maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
         margin: 0,
         padding: 0,
         fontFamily: "Arial, sans-serif",
@@ -494,7 +510,8 @@ const WordWall = ({
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "center",
-        // overflow: "auto",
+        overflow: isMobile ? "auto" : "visible",
+        boxSizing: "border-box",
       }}
     >
       <div
@@ -511,7 +528,7 @@ const WordWall = ({
           position: "relative",
         }}
       >
-        You Did It!
+        {ui.WORD_WALL_YOU_DID_IT}
       </div>
 
       <div
@@ -545,7 +562,7 @@ const WordWall = ({
             alt="Star"
             style={{
               position: "absolute",
-              top: "20px",
+              top: isMobile ? "5px" : "20px",
               left: "50%",
               transform: "translateX(-50%)",
               width: isMobile ? "24px" : "32px",
@@ -577,11 +594,12 @@ const WordWall = ({
               textAlign: "center",
               lineHeight: "22px",
               color: "#2F2F2F",
+              maxWidth: isMobile ? "110px" : "170px",
+              whiteSpace: "normal",
+              wordBreak: "break-word",
             }}
           >
-            Words you
-            <br />
-            know
+            {ui.WORD_WALL_WORDS_YOU_KNOW}
           </div>
         </div>
 
@@ -598,7 +616,7 @@ const WordWall = ({
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: isMobile ? "5px" : "20px",
+            marginTop: isMobile ? "5px" : "0px",
           }}
         >
           <img
@@ -606,10 +624,10 @@ const WordWall = ({
             alt="Smile"
             style={{
               position: "absolute",
-              top: "20px",
+              top: "10px",
               left: "50%",
               transform: "translateX(-50%)",
-              width: isMobile ? "30px" : "40px",
+              width: isMobile ? "20px" : "40px",
             }}
           />
           <div
@@ -635,11 +653,12 @@ const WordWall = ({
               textAlign: "center",
               lineHeight: "22px",
               color: "#2F2F2F",
+              maxWidth: isMobile ? "110px" : "170px",
+              whiteSpace: "normal",
+              wordBreak: "break-word",
             }}
           >
-            Words to
-            <br />
-            Try Again!
+            {ui.WORD_WALL_WORDS_TRY_AGAIN}
           </div>
         </div>
       </div>
@@ -675,6 +694,22 @@ const WordWall = ({
     return item.isCorrect ? "#DEF5CC" : "#FEE4D5";
   };
 
+  const getBubbleFontSize = (text) => {
+    const len = splitGraphemes(text).length;
+    if (isMobile) {
+      if (len <= 4) return "22px";
+      if (len <= 6) return "18px";
+      if (len <= 8) return "15px";
+      return "13px";
+    } else {
+      if (len <= 4) return "28px";
+      if (len <= 6) return "22px";
+      if (len <= 8) return "18px";
+      if (len <= 10) return "14px";
+      return "16px";
+    }
+  };
+
   const renderGameView = () => (
     <>
       {!showQuiz ? (
@@ -705,13 +740,11 @@ const WordWall = ({
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                fontSize: isMobile ? "22px" : "40px",
+                fontSize: getBubbleFontSize(dropText),
                 fontWeight: "bold",
                 color: "#333F61",
                 textAlign: "center",
-                maxWidth: "90%",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                maxWidth: "80%",
                 whiteSpace: "nowrap",
               }}
             >
@@ -804,7 +837,7 @@ const WordWall = ({
                 style={{ height: isMobile ? "18px" : "28px", flexShrink: 0 }}
               />
               <span style={{ lineHeight: "1", whiteSpace: "nowrap" }}>
-                Click Bubble
+                {ui.WORD_WALL_CLICK_BUBBLE}
               </span>
             </div>
 
@@ -875,7 +908,7 @@ const WordWall = ({
               marginBottom: "10px",
             }}
           >
-            Can you find the?
+            {ui.WORD_WALL_CAN_YOU_FIND}
           </div>
           <div
             style={{
@@ -958,7 +991,7 @@ const WordWall = ({
           maxWidth: "calc(100% - 32px)",
         }}
       >
-        <span style={{ lineHeight: "1" }}>Let's open gifts</span>
+        <span style={{ lineHeight: "1" }}>{ui.WORD_WALL_OPEN_GIFTS}</span>
       </div>
 
       <div
@@ -1116,7 +1149,7 @@ const WordWall = ({
             maxWidth: "calc(100% - 32px)",
           }}
         >
-          This is called a...
+          {ui.WORD_WALL_REVIEW_THIS_IS_CALLED}
         </div>
 
         <div
@@ -1177,11 +1210,11 @@ const WordWall = ({
                   alt="Listen"
                   style={{ height: isMobile ? "26px" : "40px" }}
                 />
-                <span>English</span>
+                {lang === "en" && <span>{ui.WORD_WALL_LISTEN_ENGLISH}</span>}
               </div>
               <div
                 style={{
-                  display: "flex",
+                  display: currentAnswer?.audio_hi ? "flex" : "none",
                   alignItems: "center",
                   gap: isMobile ? "4px" : "8px",
                   cursor: "pointer",
@@ -1299,13 +1332,15 @@ const WordWall = ({
       background={background}
       handleNext={handleNext}
       enableNext={enableNext}
+      showTimer={false}
       pageName={"m7"}
       {...{
         steps,
         currentStep,
         level,
         progressData,
-        showProgress,
+        showProgress: false,
+        showMilestone: false,
         handleBack,
         disableScreen,
         loading,
@@ -1323,19 +1358,31 @@ const WordWall = ({
         <div
           style={{
             position: "relative",
-            minHeight: isMobile ? "75vh" : "100vh",
-            width: "100%",
+            height: isMobile ? "calc(100dvh - 250px)" : "auto",
+            minHeight: "65vh",
+            maxHeight: isMobile ? "calc(100dvh - 250px)" : "none",
+            width: isMobile ? "calc(100% - 20px)" : "100%",
             backgroundColor: "#ffffff",
-            overflow: "hidden",
+            overflow: isMobile ? "auto" : "visible",
             borderRadius: "16px",
+            marginLeft: isMobile ? "10px" : "auto",
+            marginRight: isMobile ? "10px" : "auto",
+            boxSizing: "border-box",
           }}
         >
           {showConfetti && (
             <Confetti
-              width={windowSize.width}
-              height={windowSize.height}
+              width={document.documentElement.clientWidth}
+              height={document.documentElement.clientHeight}
               recycle={false}
               numberOfPieces={500}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                pointerEvents: "none",
+                zIndex: 9999,
+              }}
             />
           )}
 
@@ -1395,7 +1442,7 @@ const WordWall = ({
                 whiteSpace: "nowrap",
               }}
             >
-              {`${username}'s Word Wall`}
+              {ui.WORD_WALL_TITLE.replace("{name}", username)}
             </div>
 
             {showProgressBar && (

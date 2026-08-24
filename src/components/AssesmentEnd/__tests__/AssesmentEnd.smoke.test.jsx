@@ -16,6 +16,8 @@ jest.mock("../../../context/AlphabetDemoContext", () => ({
   useAlphabetDemo: () => ({
     isAlphabetDemoActive: false,
     setIsAlphabetDemoActive: () => {},
+    isAlphabetDemoPopupVisible: false,
+    setIsAlphabetDemoPopupVisible: () => {},
   }),
 }));
 jest.mock("../../../services/learnerAi/learnerAiService", () => ({

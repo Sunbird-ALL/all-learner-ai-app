@@ -51,6 +51,7 @@ import {
   compareWords,
 } from "../../utils/textUtils";
 import hintimg from "../../assets/hintsicon.svg";
+import { getUiStrings } from "../../constants/strings";
 
 // const isChrome =
 //   /Chrome/.test(navigator.userAgent) &&
@@ -81,7 +82,7 @@ const Mechanics7 = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -191,7 +192,7 @@ const Mechanics7 = ({
         if (count > 2) {
           setOpenMessageDialog({
             open: true,
-            message: `Please speak properly.`,
+            message: ui.VOICE_PROMPT_SPEAK_PROPERLY,
             severity: "warning",
             isError: true,
           });
@@ -248,6 +249,7 @@ const Mechanics7 = ({
   const [isLoading, setIsLoading] = useState(null);
   const [showMultiLingual, setShowMultiLingual] = useState(false);
   const lang = getLocalData("lang") || "en";
+  const ui = getUiStrings(lang);
 
   function sanitize(text) {
     return text
@@ -282,7 +284,7 @@ const Mechanics7 = ({
 
         setOpenMessageDialog({
           open: true,
-          message: `Please speak appropriately.`,
+          message: ui.VOICE_PROMPT_SPEAK_APPROPRIATELY,
           severity: "warning",
           isError: true,
         });
@@ -455,7 +457,7 @@ const Mechanics7 = ({
     if (SpeechRecognition) {
       recognitionInstance = new SpeechRecognition();
     } else {
-      alert("Your browser does not support Speech Recognition.");
+      alert(ui.ERROR_SPEECH_RECOGNITION_BROWSER_UNSUPPORTED);
       return;
     }
 
@@ -465,7 +467,7 @@ const Mechanics7 = ({
       recognitionInstance.lang = "en-US";
       recognitionInstance.maxAlternatives = 1;
 
-      recognitionInstance.onstart = () => { };
+      recognitionInstance.onstart = () => {};
 
       recognitionInstance.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
@@ -703,8 +705,8 @@ const Mechanics7 = ({
     selectedWordsRef.current?.length !== wordsAfterSplit?.length
       ? ""
       : selectedWordsRef.current?.join(" ") === parentWords
-        ? "correct"
-        : "wrong";
+      ? "correct"
+      : "wrong";
 
   // useEffect(() => {
   //   const isWrong =
@@ -800,6 +802,13 @@ const Mechanics7 = ({
       recAudio={recAudio}
       isCorrect={true}
       lang={language}
+      cardContentStyle={{
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "hidden",
+        justifyContent: "flex-start",
+        alignItems: "stretch",
+      }}
       {...{
         steps,
         currentStep,
@@ -847,98 +856,108 @@ const Mechanics7 = ({
         </Box>
       )} */}
       <ThemeProvider theme={theme}>
-        <div
-          style={{
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0,
             display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            //alignItems: "center",
-            justifyContent: "space-evenly",
-            height: "80%",
-            alignItems: "flex-start",
-            position: "relative",
+            flexDirection: "column",
+            width: "100%",
+            boxSizing: "border-box",
           }}
         >
-          {!isMobile && (
+          {/* Zone 1 — hint button, always visible, never scrolls */}
+          <Box
+            sx={{
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              pb: 0.5,
+            }}
+          >
             <img
               src={hintimg}
               alt="hint"
-              style={{
-                width: "50px",
-                height: "50px",
-                position: "absolute",
-                top: "20px",
-                left: "20px",
-                cursor: "pointer",
-                zIndex: 1000,
-              }}
+              style={{ width: "50px", height: "50px", cursor: "pointer" }}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+                if (e.key === "Enter" || e.key === " ") {
                   setOpen(true);
                 }
               }}
               onClick={() => setOpen(true)}
             />
-          )}
-
-          {/* Modal */}
-          {open && (
-            <div
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "90vh",
-                backgroundColor: "rgba(0,0,0,0.7)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 11000,
-              }}
-            >
+            {open && (
               <div
                 style={{
-                  position: "relative",
-                  background: "#000",
-                  padding: "10px",
-                  borderRadius: "12px",
-                  maxWidth: "90%",
-                  width: "900px",
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "90vh",
+                  backgroundColor: "rgba(0,0,0,0.7)",
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 11000,
                 }}
               >
-                {/* Close Button */}
-                <button
-                  onClick={() => setOpen(false)}
+                <div
                   style={{
-                    position: "absolute",
-                    top: "-10px",
-                    right: "-10px",
-                    background: "white",
-                    border: "none",
-                    borderRadius: "50%",
-                    width: "30px",
-                    height: "30px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
+                    position: "relative",
+                    background: "#000",
+                    padding: "10px",
+                    borderRadius: "12px",
+                    maxWidth: "90%",
+                    width: "900px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                 >
-                  ×
-                </button>
-
-                <SafeYouTubePlayer
-                  videoId="sY0ve9rpxbw"
-                  style={{ borderRadius: "8px" }}
-                />
+                  <button
+                    onClick={() => setOpen(false)}
+                    style={{
+                      position: "absolute",
+                      top: "-10px",
+                      right: "-10px",
+                      background: "white",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ×
+                  </button>
+                  <SafeYouTubePlayer
+                    videoId="sY0ve9rpxbw"
+                    style={{ borderRadius: "8px" }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </Box>
 
-          {/*         
+          {/* Zone 2 — scrollable content area */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              justifyContent: "space-evenly",
+              flex: 1,
+              minHeight: 0,
+              overflowY: "auto",
+              alignItems: "flex-start",
+              width: "100%",
+              boxSizing: "border-box",
+              paddingBottom: "90px",
+            }}
+          >
+            {/*         
         <Joyride
           steps={walkSteps}
           run={run}
@@ -967,127 +986,101 @@ const Mechanics7 = ({
           }}                  
         />
         */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-              maskBorderWidth: 6,
-              height: "200px",
-              position: "relative",
-              top: { xs: "-50px", sm: "0px" },
-            }}
-          >
-            {isMobile && (
-              <img
-                src={hintimg}
-                alt="hint"
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  position: "absolute",
-                  top: "0px",
-                  left: "-80px",
-                  cursor: "pointer",
-                  zIndex: 1000,
-                }}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    setOpen(true);
-                  }
-                }}
-                onClick={() => setOpen(true)}
-              />
-            )}
-            {!isMobile && (
-              <span
-                style={{
-                  fontWeight: 700,
-                  fontSize: isMobile ? "30px" : "50px",
-                  lineHeight: isMobile ? "60px" : "87px",
-                  letterSpacing: isMobile ? "1%" : "2%",
-                  fontFamily: "Quicksand",
-                  textTransform: "uppercase",
-                }}
-              >
-                {before && <span style={{ color: "grey" }}>{before}</span>}
-                {match && <span style={{ color: "#333F61" }}>{match}</span>}
-                {after && <span style={{ color: "grey" }}>{after}</span>}
-              </span>
-            )}
-            <ZoomableImage
-              src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${parentWords?.image_url}`}
-              alt="pencil"
-              containerStyle={{
-                marginTop: isMobile ? "1px" : "0px",
-              }}
-              imageStyle={{
-                height: "150px",
-                width: "150px",
-                zIndex: 2,
-              }}
-            />
-          </Box>
-          <Box
-            sx={{
-              width: isMobile ? "0vh" : "1px",
-              backgroundColor: isMobile ? "transparent" : "#E0E2E7",
-              height: isMobile ? "0px" : "50vh",
-              border: isMobile ? "none" : "1px solid #E0E2E7",
-              margin: isMobile ? "0px 0px 0px 0px" : "0px 0px",
-              alignSelf: "center",
-            }}
-          />
-          <Box
-            textAlign="center"
-            sx={{
-              height: "350px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
             <Box
               sx={{
-                marginTop: 3,
-                backgroundColor: !isRecorded
-                  ? "#1CB0F60F" // default background
-                  : isIncorrectWord
-                    ? "#58CC020F" // red FF7F360F
-                    : "#58CC020F", // green background
-                border: !isRecorded
-                  ? "2px solid #00000033" // default border
-                  : isIncorrectWord
-                    ? "2px solid #58CC02" // red FF7F36
-                    : "2px solid #58CC02", // green border
-                borderRadius: "16px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: isMobile ? "10px 20px" : "10px 70px",
-                marginBottom: "16px",
-                width: isMobile ? "250px" : "400px",
-                height: "150px",
-                position: { xs: "relative", sm: "static" },
-                top: { xs: "-50px", sm: "0px" },
+                alignSelf: "safe center",
+                maskBorderWidth: 6,
+                height: "200px",
+                position: "relative",
+              }}
+            >
+              {!isMobile && (
+                <span
+                  style={{
+                    fontWeight: 700,
+                    fontSize: isMobile ? "30px" : "50px",
+                    lineHeight: isMobile ? "60px" : "87px",
+                    letterSpacing: isMobile ? "1%" : "2%",
+                    fontFamily: "Quicksand",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {before && <span style={{ color: "grey" }}>{before}</span>}
+                  {match && <span style={{ color: "#333F61" }}>{match}</span>}
+                  {after && <span style={{ color: "grey" }}>{after}</span>}
+                </span>
+              )}
+              <ZoomableImage
+                src={`${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${parentWords?.image_url}`}
+                alt="pencil"
+                containerStyle={{
+                  marginTop: isMobile ? "1px" : "0px",
+                }}
+                imageStyle={{
+                  height: "150px",
+                  width: "150px",
+                  zIndex: 2,
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                width: isMobile ? "0vh" : "1px",
+                backgroundColor: isMobile ? "transparent" : "#E0E2E7",
+                height: isMobile ? "0px" : "50vh",
+                border: isMobile ? "none" : "1px solid #E0E2E7",
+                margin: isMobile ? "0px 0px 0px 0px" : "0px 0px",
+                alignSelf: "center",
+              }}
+            />
+            <Box
+              textAlign="center"
+              sx={{
+                height: "350px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                alignSelf: "safe center",
               }}
             >
               <Box
                 sx={{
-                  display: "inline-flex",
+                  marginTop: 3,
+                  backgroundColor: !isRecorded
+                    ? "#1CB0F60F" // default background
+                    : isIncorrectWord
+                    ? "#58CC020F" // red FF7F360F
+                    : "#58CC020F", // green background
+                  border: !isRecorded
+                    ? "2px solid #00000033" // default border
+                    : isIncorrectWord
+                    ? "2px solid #58CC02" // red FF7F36
+                    : "2px solid #58CC02", // green border
+                  borderRadius: "16px",
+                  display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: "10px",
+                  padding: isMobile ? "10px 15px" : "10px 70px",
+                  marginBottom: "16px",
+                  width: isMobile ? "220px" : "400px",
+                  height: isMobile ? "100px" : "150px",
                 }}
               >
-                {/* {isRecorded && (
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  {/* {isRecorded && (
                   <img
                     //src={!isIncorrectWord ? Assets.tick : Assets.wrongTick}
                     src={Assets.tick}
@@ -1099,179 +1092,279 @@ const Mechanics7 = ({
                     }}
                   />
                 )} */}
-                {isLastSyllable && isRecorded ? (
-                  <span
-                    style={{
-                      color: !isRecorded
-                        ? "#333F61"
-                        : "#58CC02",
-                      fontWeight: 700,
-                      fontSize: isMobile ? "30px" : "50px",
-                      lineHeight: isMobile ? "60px" : "70px",
-                      letterSpacing: isMobile ? "1%" : "2%",
-                      fontFamily: "Quicksand",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {currentText}
-                  </span>
-                ) : (
-                  <span
-                    style={{
-                      color: !isRecorded
-                        ? "#333F61"
-                        : "#58CC02",
-                      fontWeight: 700,
-                      fontSize: "50px",
-                      lineHeight: isMobile ? "60px" : "70px",
-                      letterSpacing: isMobile ? "1%" : "2%",
-                      fontFamily: "Quicksand",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {currentText}
-                  </span>
-                )}
-                {showMultiLingual && enableMultilingual && (
-                  <AudioTooltipModal
-                    audioSrc={multilingual?.[multilingualLangCode]?.audio_url}
-                    description={currentText}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        marginTop: "5px",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        border: "2px solid #FF7F36",
-                        borderRadius: "16px",
-                        gap: "10px",
-                        padding: "10px",
-                        //width: "300px",
-                        backgroundColor: "#fff",
-                        cursor: "pointer",
+                  {isLastSyllable && isRecorded ? (
+                    <span
+                      style={{
+                        color: !isRecorded ? "#333F61" : "#58CC02",
+                        fontWeight: 700,
+                        fontSize: isMobile ? "35px" : "50px",
+                        lineHeight: isMobile ? "45px" : "70px",
+                        letterSpacing: isMobile ? "1%" : "2%",
+                        fontFamily: "Quicksand",
+                        textTransform: "uppercase",
                       }}
                     >
-                      {/* Native language script (matches multilingual audio) */}
+                      {currentText}
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        color: !isRecorded ? "#333F61" : "#58CC02",
+                        fontWeight: 700,
+                        fontSize: isMobile ? "35px" : "50px",
+                        lineHeight: isMobile ? "45px" : "70px",
+                        letterSpacing: isMobile ? "1%" : "2%",
+                        fontFamily: "Quicksand",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {currentText}
+                    </span>
+                  )}
+                  {showMultiLingual && enableMultilingual && (
+                    <AudioTooltipModal
+                      audioSrc={multilingual?.[multilingualLangCode]?.audio_url}
+                      description={currentText}
+                    >
                       <Box
                         sx={{
-                          backgroundColor: "#FEBC2F66",
-                          borderRadius: "4px",
-                          //width: "100px",
-                          //height: "100px",
-                          padding: "5px",
                           display: "flex",
+                          marginTop: "5px",
                           alignItems: "center",
-                          justifyContent: "center",
+                          justifyContent: "space-between",
+                          border: "2px solid #FF7F36",
+                          borderRadius: "16px",
+                          gap: "10px",
+                          padding: "10px",
+                          //width: "300px",
+                          backgroundColor: "#fff",
+                          cursor: "pointer",
                         }}
                       >
-                        <span
-                          style={{
-                            fontSize: "35px",
-                            fontWeight: "400",
-                            color: "#333F61",
-                            fontStyle: "Quicksand",
+                        {/* Native language script (matches multilingual audio) */}
+                        <Box
+                          sx={{
+                            backgroundColor: "#FEBC2F66",
+                            borderRadius: "4px",
+                            //width: "100px",
+                            //height: "100px",
+                            padding: "5px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
-                          {nativeLangSymbol}
-                        </span>
-                      </Box>
+                          <span
+                            style={{
+                              fontSize: "35px",
+                              fontWeight: "400",
+                              color: "#333F61",
+                              fontStyle: "Quicksand",
+                            }}
+                          >
+                            {nativeLangSymbol}
+                          </span>
+                        </Box>
 
-                      <ListenButton height={40} width={40} />
-                    </Box>
-                  </AudioTooltipModal>
+                        <ListenButton height={40} width={40} />
+                      </Box>
+                    </AudioTooltipModal>
+                  )}
+                </Box>
+                {isRecorded && (!showMultiLingual || !enableMultilingual) && (
+                  <img
+                    src={Assets.graph}
+                    alt="graph"
+                    style={{ height: "30px", margin: "10px" }}
+                  />
                 )}
               </Box>
-              {isRecorded && (!showMultiLingual || !enableMultilingual) && (
-                <img
-                  src={Assets.graph}
-                  alt="graph"
-                  style={{ height: "30px", margin: "10px" }}
-                />
-              )}
-            </Box>
 
-            {showMultiLingual && enableMultilingual && (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  position: { xs: "relative", sm: "static" },
-                  top: { xs: "-30px", sm: "0px" },
-                }}
-              >
-                <img
-                  src={Assets.graph}
-                  alt="graph"
-                  style={{ height: "40px", margin: "10px" }}
-                />
-              </Box>
-            )}
-
-            {showMultiLingual && enableMultilingual && (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "flex-end",
-                  gap: "40px",
-                  marginTop: isMobile ? "10px" : "30px",
-                  position: { xs: "relative", sm: "static" },
-                  top: { xs: "-30px", sm: "0px" },
-                }}
-              >
+              {showMultiLingual && enableMultilingual && (
                 <Box
                   sx={{
-                    cursor: "pointer",
-                    transform: "translateY(-15px)",
-                  }}
-                  onClick={() => {
-                    setShowMultiLingual(false);
-                    setIsRecorded(false);
-                    setIsRecording(true);
-                    startRecording(currentText);
+                    display: "flex",
+                    justifyContent: "center",
                   }}
                 >
-                  <RetryIcon height={50} width={50} />
+                  <img
+                    src={Assets.graph}
+                    alt="graph"
+                    style={{ height: "40px", margin: "10px" }}
+                  />
                 </Box>
+              )}
 
+              {showMultiLingual && enableMultilingual && (
                 <Box
-                  className="walkthrough-step-5"
-                  mb={2}
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setIsRecorded(false);
-                    setShowMultiLingual(false);
-
-                    const newWordData = {
-                      original_text: currentText,
-                      content_id: contentId,
-                      milestone_level: "m1",
-                      practice_level: currentLevel,
-                      session_id: sessionId,
-                      practiced: true,
-                      learned: isWordCorrect ? true : false,
-                      subsession_id: "session_123",
-                    };
-
-                    callTelemetry();
-                    setLocalData("correctPracticeWords", [
-                      ...(correctPracticeWords || []),
-                      newWordData,
-                    ]);
-                    handleNext();
-                    setStepIndex(0);
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "flex-end",
+                    gap: "40px",
+                    marginTop: isMobile ? "10px" : "30px",
                   }}
                 >
-                  <NextButtonRound height={50} width={50} />
-                </Box>
-              </Box>
-            )}
+                  <Box
+                    sx={{
+                      cursor: "pointer",
+                      transform: "translateY(-15px)",
+                    }}
+                    onClick={() => {
+                      setShowMultiLingual(false);
+                      setIsRecorded(false);
+                      setIsRecording(true);
+                      startRecording(currentText);
+                    }}
+                  >
+                    <RetryIcon height={50} width={50} />
+                  </Box>
 
-            {!isRecording &&
-              !isRecorded &&
-              (!showMultiLingual || !enableMultilingual) && (
+                  <Box
+                    className="walkthrough-step-5"
+                    mb={2}
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setIsRecorded(false);
+                      setShowMultiLingual(false);
+
+                      const newWordData = {
+                        original_text: currentText,
+                        content_id: contentId,
+                        milestone_level: "m1",
+                        practice_level: currentLevel,
+                        session_id: sessionId,
+                        practiced: true,
+                        learned: isWordCorrect ? true : false,
+                        subsession_id: "session_123",
+                      };
+
+                      callTelemetry();
+                      setLocalData("correctPracticeWords", [
+                        ...(correctPracticeWords || []),
+                        newWordData,
+                      ]);
+                      handleNext();
+                      setStepIndex(0);
+                    }}
+                  >
+                    <NextButtonRound height={50} width={50} />
+                  </Box>
+                </Box>
+              )}
+
+              {!isRecording &&
+                !isRecorded &&
+                (!showMultiLingual || !enableMultilingual) && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      maskBorderWidth: 6,
+                      gap: isMobile ? 2 : 5,
+                      height: isMobile ? "160px" : "250px",
+                    }}
+                  >
+                    {isPlaying ? (
+                      <div>
+                        <Box
+                          sx={{
+                            marginTop: "5px",
+                            position: "relative",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                            cursor: "pointer",
+                            marginLeft: getMarginLeft(0),
+                          }}
+                          onClick={stopCompleteAudio}
+                        >
+                          <StopButton height={50} width={50} />
+                        </Box>
+                      </div>
+                    ) : (
+                      <div>
+                        <Box
+                          className="walkthrough-step-1"
+                          sx={{
+                            marginTop: "5px",
+                            position: "relative",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            minWidth: { xs: "50px", sm: "60px", md: "70px" },
+                            cursor: `url(${clapImage}) 32 24, auto`,
+                            marginLeft: getMarginLeft(0),
+                          }}
+                          onClick={() => {
+                            playWordAudio(
+                              `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentAudio}`
+                            );
+                          }}
+                        >
+                          <ListenButton height={50} width={50} />
+                        </Box>
+                      </div>
+                    )}
+                    <Box
+                      className="walkthrough-step-2"
+                      sx={{
+                        position: "relative",
+                        width: "90px",
+                        height: "90px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: "7px",
+                        //marginLeft: getMarginLeft(0),
+                        cursor: `url(${clapImage}) 32 24, auto`,
+                      }}
+                      onClick={() => {
+                        setIsRecording(true);
+                        startRecording(currentText);
+                        //startAudioRecording();
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          width: "90px",
+                          height: "90px",
+                          backgroundColor: "#58CC0233",
+                          borderRadius: "50%",
+                          animation: "pulse 1.2s linear infinite",
+                          "@keyframes pulse": {
+                            "0%": {
+                              transform: "scale(0.6)",
+                              opacity: 0,
+                            },
+                            "50%": {
+                              opacity: 1,
+                            },
+                            "100%": {
+                              transform: "scale(1.4)",
+                              opacity: 0,
+                            },
+                          },
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          position: "relative",
+                          zIndex: 1,
+                        }}
+                      >
+                        <SpeakButton height={50} width={50} />
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
+
+              {isRecording && (!showMultiLingual || !enableMultilingual) && (
                 <Box
                   sx={{
                     display: "flex",
@@ -1279,388 +1372,283 @@ const Mechanics7 = ({
                     justifyContent: "center",
                     alignItems: "center",
                     maskBorderWidth: 6,
-                    gap: isMobile ? 2 : 5,
                     height: isMobile ? "160px" : "250px",
-                    position: { xs: "relative", sm: "static" },
-                    top: { xs: "-30px", sm: "0px" },
                   }}
                 >
-                  {isPlaying ? (
-                    <div>
-                      <Box
-                        sx={{
-                          marginTop: "5px",
-                          position: "relative",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                          cursor: "pointer",
-                          marginLeft: getMarginLeft(0),
-                        }}
-                        onClick={stopCompleteAudio}
-                      >
-                        <StopButton height={50} width={50} />
-                      </Box>
-                    </div>
-                  ) : (
-                    <div>
-                      <Box
-                        className="walkthrough-step-1"
-                        sx={{
-                          marginTop: "5px",
-                          position: "relative",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                          cursor: `url(${clapImage}) 32 24, auto`,
-                          marginLeft: getMarginLeft(0),
-                        }}
-                        onClick={() => {
-                          playWordAudio(
-                            `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_audios/${currentAudio}`
-                          );
-                        }}
-                      >
-                        <ListenButton height={50} width={50} />
-                      </Box>
-                    </div>
-                  )}
+                  <Box style={{ marginTop: "10px", marginBottom: "50px" }}>
+                    <RecordVoiceVisualizer />
+                  </Box>
                   <Box
-                    className="walkthrough-step-2"
+                    className="walkthrough-step-3"
                     sx={{
+                      marginTop: "7px",
                       position: "relative",
-                      width: "90px",
-                      height: "90px",
                       display: "flex",
+                      gap: isMobile ? "20px" : "50px",
                       justifyContent: "center",
                       alignItems: "center",
-                      marginTop: "7px",
-                      //marginLeft: getMarginLeft(0),
+                      //height: { xs: "30px", sm: "40px", md: "50px" },
+                      minWidth: { xs: "50px", sm: "60px", md: "70px" },
                       cursor: `url(${clapImage}) 32 24, auto`,
-                    }}
-                    onClick={() => {
-                      setIsRecording(true);
-                      startRecording(currentText);
-                      //startAudioRecording();
                     }}
                   >
                     <Box
                       sx={{
-                        position: "absolute",
+                        position: "relative",
                         width: "90px",
                         height: "90px",
-                        backgroundColor: "#58CC0233",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        //marginTop: "7px",
+                        //marginLeft: getMarginLeft(0),
+                        cursor: `url(${clapImage}) 32 24, auto`,
                         borderRadius: "50%",
-                        animation: "pulse 1.2s linear infinite",
-                        "@keyframes pulse": {
-                          "0%": {
-                            transform: "scale(0.6)",
-                            opacity: 0,
-                          },
-                          "50%": {
-                            opacity: 1,
-                          },
-                          "100%": {
-                            transform: "scale(1.4)",
-                            opacity: 0,
-                          },
-                        },
                       }}
-                    />
-                    <Box
-                      sx={{
-                        position: "relative",
-                        zIndex: 1,
+                      onClick={() => {
+                        setIsRecording(false);
+                        setIsRecorded(true);
+                        stopRecording(currentText);
+                        //stopAudioRecording();
                       }}
                     >
-                      <SpeakButton height={50} width={50} />
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          width: "90px",
+                          height: "90px",
+                          backgroundColor: "#FF4B4B33",
+                          borderRadius: "50%",
+                          animation: "pulse 1.2s linear infinite",
+                          "@keyframes pulse": {
+                            "0%": {
+                              transform: "scale(0.6)",
+                              opacity: 0,
+                            },
+                            "50%": {
+                              opacity: 1,
+                            },
+                            "100%": {
+                              transform: "scale(1.4)",
+                              opacity: 0,
+                            },
+                          },
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          position: "relative",
+                          zIndex: 1,
+                        }}
+                      >
+                        <StopButton height={50} width={50} />
+                      </Box>
                     </Box>
                   </Box>
                 </Box>
               )}
 
-            {isRecording && (!showMultiLingual || !enableMultilingual) && (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  maskBorderWidth: 6,
-                  height: isMobile ? "160px" : "250px",
-                  position: { xs: "relative", sm: "static" },
-                  top: { xs: "-30px", sm: "0px" },
-                }}
-              >
-                <Box style={{ marginTop: "10px", marginBottom: "50px" }}>
-                  <RecordVoiceVisualizer />
-                </Box>
-                <Box
-                  className="walkthrough-step-3"
-                  sx={{
-                    marginTop: "7px",
-                    position: "relative",
-                    display: "flex",
-                    gap: isMobile ? "20px" : "50px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    //height: { xs: "30px", sm: "40px", md: "50px" },
-                    minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                    cursor: `url(${clapImage}) 32 24, auto`,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      position: "relative",
-                      width: "90px",
-                      height: "90px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      //marginTop: "7px",
-                      //marginLeft: getMarginLeft(0),
-                      cursor: `url(${clapImage}) 32 24, auto`,
-                      borderRadius: "50%",
-                    }}
-                    onClick={() => {
-                      setIsRecording(false);
-                      setIsRecorded(true);
-                      stopRecording(currentText);
-                      //stopAudioRecording();
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        width: "90px",
-                        height: "90px",
-                        backgroundColor: "#FF4B4B33",
-                        borderRadius: "50%",
-                        animation: "pulse 1.2s linear infinite",
-                        "@keyframes pulse": {
-                          "0%": {
-                            transform: "scale(0.6)",
-                            opacity: 0,
-                          },
-                          "50%": {
-                            opacity: 1,
-                          },
-                          "100%": {
-                            transform: "scale(1.4)",
-                            opacity: 0,
-                          },
-                        },
-                      }}
-                    />
-                    <Box
-                      sx={{
-                        position: "relative",
-                        zIndex: 1,
-                      }}
-                    >
-                      <StopButton height={50} width={50} />
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-
-            {abusiveFound && (
-              <div
-                style={{
-                  position: "fixed",
-                  top: "20px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  backgroundColor: "#ffebee",
-                  color: "#c62828",
-                  padding: "10px 20px",
-                  borderRadius: "5px",
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-                  zIndex: 1000,
-                }}
-              >
-                Warning: Inappropriate word detected ({detectedWord})
-              </div>
-            )}
-
-            {isRecorded &&
-              (!showMultiLingual || !enableMultilingual) &&
-              (isLoading ? (
+              {abusiveFound && (
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: isMobile ? "160px" : "250px",
-                    position: isMobile ? "relative" : "static",
-                    top: isMobile ? "-30px" : "0px",
+                    position: "fixed",
+                    top: "20px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    backgroundColor: "#ffebee",
+                    color: "#c62828",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                    zIndex: 1000,
                   }}
                 >
-                  <Loader />
+                  {ui.ABUSIVE_WORD_DETECTED.replace("{word}", detectedWord)}
                 </div>
-              ) : (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: isMobile ? "10px" : "30px",
-                    gap: isMobile ? "5px" : "10px",
-                    height: isMobile ? "160px" : "250px",
-                    //maskBorderWidth: 6,
-                    position: { xs: "relative", sm: "static" },
-                    top: { xs: "-30px", sm: "0px" },
-                  }}
-                >
+              )}
+
+              {isRecorded &&
+                (!showMultiLingual || !enableMultilingual) &&
+                (isLoading ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: isMobile ? "160px" : "250px",
+                      position: isMobile ? "relative" : "static",
+                      top: isMobile ? "-30px" : "0px",
+                    }}
+                  >
+                    <Loader />
+                  </div>
+                ) : (
                   <Box
                     sx={{
                       display: "flex",
-                      flexDirection: "row",
+                      flexDirection: "column",
                       justifyContent: "center",
                       alignItems: "center",
-                      gap: 5,
-                      marginRight: "5px",
+                      marginTop: isMobile ? "10px" : "30px",
+                      gap: isMobile ? "5px" : "10px",
+                      height: isMobile ? "160px" : "250px",
                       //maskBorderWidth: 6,
                     }}
                   >
                     <Box
                       sx={{
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center",
-                        maskBorderWidth: 6,
                         gap: 5,
+                        marginRight: "5px",
+                        //maskBorderWidth: 6,
                       }}
                     >
-                      {isPlaying ? (
-                        <div>
-                          <Box
-                            sx={{
-                              //marginTop: "7px",
-                              position: "relative",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                              cursor: "pointer",
-                              marginLeft: getMarginLeft(0),
-                            }}
-                            onClick={stopCompleteAudio}
-                          >
-                            <img
-                              src={spinnerStop}
-                              alt="Audio"
-                              style={{
-                                height: "50px",
-                                width: "50px",
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          maskBorderWidth: 6,
+                          gap: 5,
+                        }}
+                      >
+                        {isPlaying ? (
+                          <div>
+                            <Box
+                              sx={{
+                                //marginTop: "7px",
+                                position: "relative",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                minWidth: {
+                                  xs: "50px",
+                                  sm: "60px",
+                                  md: "70px",
+                                },
                                 cursor: "pointer",
+                                marginLeft: getMarginLeft(0),
                               }}
-                            />
-                            {/* <StopButton height={50} width={50} /> */}
-                          </Box>
-                        </div>
-                      ) : (
-                        <div>
-                          <Box
-                            className="walkthrough-step-4"
-                            sx={{
-                              //marginTop: "7px",
-                              position: "relative",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              minWidth: { xs: "50px", sm: "60px", md: "70px" },
-                              cursor: `url(${clapImage}) 32 24, auto`,
-                              //marginLeft: getMarginLeft(0),
-                            }}
-                            onClick={() => {
-                              playAudioFromBlob(recordedAudioBlob);
-                            }}
-                          >
-                            <img
-                              src={listenImg2}
-                              alt="Audio"
-                              style={{
-                                height: "50px",
-                                width: "50px",
-                                cursor: "pointer",
+                              onClick={stopCompleteAudio}
+                            >
+                              <img
+                                src={spinnerStop}
+                                alt="Audio"
+                                style={{
+                                  height: "50px",
+                                  width: "50px",
+                                  cursor: "pointer",
+                                }}
+                              />
+                              {/* <StopButton height={50} width={50} /> */}
+                            </Box>
+                          </div>
+                        ) : (
+                          <div>
+                            <Box
+                              className="walkthrough-step-4"
+                              sx={{
+                                //marginTop: "7px",
+                                position: "relative",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                minWidth: {
+                                  xs: "50px",
+                                  sm: "60px",
+                                  md: "70px",
+                                },
+                                cursor: `url(${clapImage}) 32 24, auto`,
+                                //marginLeft: getMarginLeft(0),
                               }}
-                            />
-                            {/* <ListenButton height={50} width={50} /> */}
-                          </Box>
-                        </div>
-                      )}
+                              onClick={() => {
+                                playAudioFromBlob(recordedAudioBlob);
+                              }}
+                            >
+                              <img
+                                src={listenImg2}
+                                alt="Audio"
+                                style={{
+                                  height: "50px",
+                                  width: "50px",
+                                  cursor: "pointer",
+                                }}
+                              />
+                              {/* <ListenButton height={50} width={50} /> */}
+                            </Box>
+                          </div>
+                        )}
+                      </Box>
+                      <div
+                        onClick={() => {
+                          setIsRecorded(false);
+                          setIsRecording(true);
+                          startRecording(currentText);
+                        }}
+                        style={{
+                          //marginTop: "-10px",
+                          cursor: "pointer",
+                          //marginLeft: "30px",
+                        }}
+                      >
+                        <RetryIcon height={50} width={50} />
+                      </div>
                     </Box>
-                    <div
+                    <Box
+                      className="walkthrough-step-5"
+                      mb={2}
                       onClick={() => {
-                        setIsRecorded(false);
-                        setIsRecording(true);
-                        startRecording(currentText);
+                        if (isLastSyllable && enableMultilingual) {
+                          setShowMultiLingual(true);
+                        } else if (isLastSyllable && !enableMultilingual) {
+                          // If multilingual is disabled, proceed to next content
+                          const newWordData = {
+                            original_text: currentText,
+                            content_id: contentId,
+                            milestone_level: "m1",
+                            practice_level: currentLevel,
+                            session_id: sessionId,
+                            practiced: true,
+                            learned: isWordCorrect ? true : false,
+                            subsession_id: "session_123",
+                          };
+
+                          callTelemetry();
+                          setLocalData("correctPracticeWords", [
+                            ...(correctPracticeWords || []),
+                            newWordData,
+                          ]);
+                          handleNext();
+                          setStepIndex(0);
+                          setIsRecorded(false);
+                        } else {
+                          setStepIndex((prev) => prev + 1);
+                          setIsRecorded(false);
+                        }
                       }}
-                      style={{
-                        //marginTop: "-10px",
+                      sx={{
+                        marginTop: isMobile ? "10px" : "30px",
                         cursor: "pointer",
                         //marginLeft: "30px",
                       }}
                     >
-                      <RetryIcon height={50} width={50} />
-                    </div>
+                      <NextButtonRound height={50} width={50} />
+                    </Box>
                   </Box>
-                  <Box
-                    className="walkthrough-step-5"
-                    mb={2}
-                    onClick={() => {
-                      if (isLastSyllable && enableMultilingual) {
-                        setShowMultiLingual(true);
-                      } else if (isLastSyllable && !enableMultilingual) {
-                        // If multilingual is disabled, proceed to next content
-                        const newWordData = {
-                          original_text: currentText,
-                          content_id: contentId,
-                          milestone_level: "m1",
-                          practice_level: currentLevel,
-                          session_id: sessionId,
-                          practiced: true,
-                          learned: isWordCorrect ? true : false,
-                          subsession_id: "session_123",
-                        };
-
-                        callTelemetry();
-                        setLocalData("correctPracticeWords", [
-                          ...(correctPracticeWords || []),
-                          newWordData,
-                        ]);
-                        handleNext();
-                        setStepIndex(0);
-                        setIsRecorded(false);
-                      } else {
-                        setStepIndex((prev) => prev + 1);
-                        setIsRecorded(false);
-                      }
-                    }}
-                    sx={{
-                      marginTop: isMobile ? "10px" : "30px",
-                      cursor: "pointer",
-                      //marginLeft: "30px",
-                    }}
-                  >
-                    <NextButtonRound height={50} width={50} />
-                  </Box>
-                </Box>
-              ))}
-            <audio ref={audioRef} onEnded={handleAudioEnd} hidden />
-          </Box>
-          <LanguageModalNew
-            show={showModal}
-            word={selectedWord}
-            onClose={() => setShowModal(false)}
-          />
-        </div>
+                ))}
+              <audio ref={audioRef} onEnded={handleAudioEnd} hidden />
+            </Box>
+            <LanguageModalNew
+              show={showModal}
+              word={selectedWord}
+              onClose={() => setShowModal(false)}
+            />
+          </div>
+        </Box>
       </ThemeProvider>
     </MainLayout>
   );

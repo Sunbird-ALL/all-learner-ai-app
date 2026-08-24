@@ -10,6 +10,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import MainLayout from "../components/Layout/MainLayout";
+import { useAlphabetDemo } from "../context/AlphabetDemoContext";
 import SafeYouTubePlayer from "../components/SafeYouTubePlayer";
 // import Mic from "../assets/mikee.svg";
 // import Stop from "../assets/pausse.svg";
@@ -22,6 +23,7 @@ import {
   setLocalData,
 } from "../utils/constants";
 import { getFontFamily } from "../utils/fontUtils";
+import { getUiStrings } from "../constants/strings";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telemetryService";
 import { Typography, Stack, IconButton } from "@mui/material";
@@ -6131,12 +6133,20 @@ const LetterTrain = ({
   //isNextButtonCalled,
   //setIsNextButtonCalled,
 }) => {
+  const { isAlphabetDemoPopupVisible } = useAlphabetDemo();
   steps = 1;
   let lang = getLocalData("lang");
   // Normalize Kannada language codes: both "kn" and "ka" should work
   if (lang === "ka") {
     lang = "kn"; // Normalize to "kn" for consistency, but getFontFamily handles both
   }
+  const ui = getUiStrings(lang);
+  const titleMap = {
+    Letter: ui.LETTER_TRAIN_LETTER,
+    Syllable: ui.ASSESSMENT_SYLLABLE,
+    Vowel: ui.LETTER_TRAIN_VOWEL,
+    Consonant: ui.LETTER_TRAIN_CONSONANT,
+  };
   // Debug: Log language and font family
   console.log(
     "LetterTrain - Language:",
@@ -6276,6 +6286,7 @@ const LetterTrain = ({
   const blockStart = Math.floor(itemIndex / 5) * 5;
   const currentLetter = item?.letter || "";
   const [letters, setLetters] = useState([]);
+  const pendingNextRef = useRef(null);
   const COLORS = ["#8BC34A", "#9C27B0", "#E91E63", "#03A9F4", "#FF9800"];
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const [recAudio, setRecAudio] = useState(null);
@@ -6387,6 +6398,11 @@ const LetterTrain = ({
       playlist[currentIndex]?.item?.syllable ||
       "";
 
+    const isNewLetter =
+      currentLetter &&
+      current.type === "UI1" &&
+      !letters.includes(currentLetter);
+
     if (currentLetter && current.type === "UI1") {
       setLetters((prev) =>
         prev.includes(currentLetter) ? prev : [...prev, currentLetter]
@@ -6401,34 +6417,40 @@ const LetterTrain = ({
       hasHandleNext: !!handleNext,
     });
 
-    // Check if we've reached the end of the playlist
-    if (currentIndex < playlist.length - 1) {
-      // Move to next item in playlist
-      setCurrentIndex((i) => i + 1);
-    } else {
-      // Reached end of playlist - complete the LetterTrain step
-      console.log(
-        "LetterTrain completed - all customLetters done. Calling handleNext."
-      );
-      // If handleNext prop is provided (e.g., from F1), use it instead of default navigation
-      if (handleNext && typeof handleNext === "function") {
-        handleNext();
+    const isLastItem = currentIndex >= playlist.length - 1;
+    const nextType = !isLastItem ? playlist[currentIndex + 1]?.type : null;
+
+    const proceed = () => {
+      if (!isLastItem) {
+        setCurrentIndex((i) => i + 1);
+        setRecAudio(null);
+        setIsNextButtonCalled(true);
+        setEnableNext(false);
       } else {
-        // Default R0 behavior
-        setLocalData("rStepZero", 1);
-        if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-          navigate("/");
+        // Reached end of playlist - complete the LetterTrain step
+        console.log(
+          "LetterTrain completed - all customLetters done. Calling handleNext."
+        );
+        // If handleNext prop is provided (e.g., from F1), use it instead of default navigation
+        if (handleNext && typeof handleNext === "function") {
+          handleNext();
         } else {
-          navigate("/discover-start");
+          // Default R0 behavior
+          setLocalData("rStepZero", 1);
+          if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+            navigate("/");
+          } else {
+            navigate("/discover-start");
+          }
+          console.log("finished r0");
         }
-        console.log("finished r0");
       }
-      // Don't continue - exit here
-      return;
+    };
+    if (isNewLetter && (isLastItem || nextType === "UI2")) {
+      pendingNextRef.current = proceed;
+    } else {
+      proceed();
     }
-    setRecAudio(null);
-    setIsNextButtonCalled(true);
-    setEnableNext(false);
   };
 
   const handlePreviousWord = () => {
@@ -6697,8 +6719,9 @@ const LetterTrain = ({
                 borderRadius: { xs: "16px", sm: "20px", md: "24px" },
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 minWidth: { xs: "80px", sm: "120px", md: "140px" },
-                left: { xs: "18px", sm: 12, md: 16 },
-                top: { xs: "80px", sm: 14, md: 16 },
+                left: { xs: "50%", sm: 12, md: 16 },
+                top: { xs: "7vh", sm: 14, md: 16 },
+                transform: { xs: "translateX(-50%)", sm: "none" },
                 position: "absolute",
                 backdropFilter: "blur(5px)",
               }}
@@ -6714,7 +6737,7 @@ const LetterTrain = ({
                   lineHeight: 1.2,
                 }}
               >
-                {item.title}
+                {titleMap[item.title] || item.title}
               </Typography>
             </Box>
 
@@ -6743,6 +6766,7 @@ const LetterTrain = ({
                   position: "absolute",
                   top: { xs: "5%", sm: "-11%" },
                   left: { xs: "61%", sm: "68%" },
+                  "@media (max-width: 369px)": { left: "63%" },
                   transform: "translateX(-50%)",
                   display: "flex",
                   gap: 0.6,
@@ -6758,11 +6782,31 @@ const LetterTrain = ({
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: -50, opacity: 0 }}
                       transition={{ duration: 1.0, ease: "easeOut" }}
+                      onAnimationComplete={() => {
+                        // Only the last (newest) letter triggers the pending
+                        // transition so the user sees it land on the train first.
+                        if (
+                          i === letters.length - 1 &&
+                          pendingNextRef.current
+                        ) {
+                          const proceed = pendingNextRef.current;
+                          pendingNextRef.current = null;
+                          proceed();
+                        }
+                      }}
                     >
                       <Box
                         sx={{
-                          minWidth: { xs: 40, sm: 50, md: 60 },
-                          minHeight: { xs: 40, sm: 50, md: 60 },
+                          minWidth: {
+                            xs: "clamp(24px, calc(40px * (100vw - 20px) / 350px), 40px)",
+                            sm: 50,
+                            md: 60,
+                          },
+                          minHeight: {
+                            xs: "clamp(24px, calc(40px * (100vw - 20px) / 350px), 40px)",
+                            sm: 50,
+                            md: 60,
+                          },
                           borderRadius: "6px",
                           display: "flex",
                           alignItems: "center",
@@ -6779,12 +6823,12 @@ const LetterTrain = ({
                             fontSize:
                               lang === "te"
                                 ? isMobile
-                                  ? "18px"
+                                  ? "clamp(11px, 5vw, 18px)"
                                   : isTablet
                                   ? "28px"
                                   : "32px"
                                 : isMobile
-                                ? "16px"
+                                ? "clamp(10px, 4.5vw, 16px)"
                                 : isTablet
                                 ? "24px"
                                 : "28px",
@@ -7290,7 +7334,7 @@ const LetterTrain = ({
     >
       <Box
         sx={{
-          overflow: { sm: "hidden", xs: "visible" },
+          overflowX: "hidden",
           display: "flex",
           flexDirection: "column",
         }}
@@ -7317,9 +7361,9 @@ const LetterTrain = ({
               position: "fixed",
               top: 0,
               left: 0,
-              width: "100%",
+              width: "100vw",
               height: "90vh",
-              backgroundColor: "rgba(0,0,0,0.7)",
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -7329,11 +7373,11 @@ const LetterTrain = ({
             <div
               style={{
                 position: "relative",
-                background: "#000",
-                padding: "10px",
-                borderRadius: "12px",
+                backgroundColor: "#000000",
+                padding: 10,
+                borderRadius: 12,
                 maxWidth: "90%",
-                width: "900px",
+                width: 900,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -7344,15 +7388,16 @@ const LetterTrain = ({
                 onClick={() => setOpen(false)}
                 style={{
                   position: "absolute",
-                  top: "-10px",
-                  right: "-10px",
-                  background: "white",
+                  top: 15,
+                  right: 15,
+                  backgroundColor: "white",
                   border: "none",
                   borderRadius: "50%",
-                  width: "30px",
-                  height: "30px",
+                  width: 30,
+                  height: 30,
                   fontWeight: "bold",
                   cursor: "pointer",
+                  zIndex: 100000,
                 }}
               >
                 ×
@@ -7360,20 +7405,23 @@ const LetterTrain = ({
 
               <SafeYouTubePlayer
                 videoId="LuWttky0kL0"
-                style={{ borderRadius: "8px" }}
+                style={{ borderRadius: 8 }}
               />
             </div>
           </div>
         )}
         {isAlphabetDemoActive ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="40vh"
-          >
-            <CircularProgress size={60} thickness={4.5} />
-          </Box>
+          // hide it once the popup is actually visible.
+          isAlphabetDemoPopupVisible ? null : (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="40vh"
+            >
+              <CircularProgress size={60} thickness={4.5} />
+            </Box>
+          )
         ) : (
           renderUI()
         )}

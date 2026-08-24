@@ -6,7 +6,13 @@ import {
   Avatar,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { createRef, useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  createRef,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import v11 from "../../assets/audio/V10.mp3";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
@@ -81,7 +87,7 @@ const WordsOrImage = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -192,6 +198,12 @@ const WordsOrImage = ({
   const multilingualLangCode = getMultilingualLangCode();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isFirefox =
+    typeof navigator !== "undefined" &&
+    navigator.userAgent.toLowerCase().includes("firefox");
+  const isAndroid =
+    typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent);
+  const skipAnswerColor = isFirefox || isAndroid;
   const [abusiveFound, setAbusiveFound] = useState(false);
   const [detectedWord, setDetectedWord] = useState("");
   const [language, setLanguage] = useState(getLocalData("lang") || "en");
@@ -666,14 +678,7 @@ const WordsOrImage = ({
   };
 
   const getAnswerColor = (answer) => {
-    // const isFirefox =
-    //   typeof navigator !== "undefined" &&
-    //   navigator.userAgent.toLowerCase().includes("firefox");
-
-    // if (isFirefox && (answer === true || answer === false)) {
-    //   return "green";
-    // }
-
+    if (skipAnswerColor) return "#333F61";
     if (answer === true) return "green";
     if (answer === false) return "red";
     return "#333F61";
@@ -684,8 +689,8 @@ const WordsOrImage = ({
     isShowCase || isDiscover
       ? null
       : isUsingInlineSpeechFlow
-        ? answer
-        : isTranscriptCorrect;
+      ? answer
+      : isTranscriptCorrect;
 
   //console.log("wds", words, matchedChar, answer);
 
@@ -699,6 +704,18 @@ const WordsOrImage = ({
       storedData={storedData}
       resetStoredData={resetStoredData}
       pageName={"wordsorimage"}
+      cardContentStyle={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent:
+          startShowCase && !isDemo
+            ? { xs: "center", md: "flex-start" }
+            : "center",
+        alignItems: "center",
+        height: "100%",
+        overflowX: "hidden",
+        overflowY: "hidden",
+      }}
       {...{
         steps,
         currentStep,
@@ -733,13 +750,13 @@ const WordsOrImage = ({
                 ? isMobile
                   ? "26px"
                   : isTablet
-                    ? "31px"
-                    : "36px"
+                  ? "31px"
+                  : "36px"
                 : isMobile
-                  ? "20px"
-                  : isTablet
-                    ? "25px"
-                    : "30px",
+                ? "20px"
+                : isTablet
+                ? "25px"
+                : "30px",
             letterSpacing: "1.5px",
             lineHeight: "normal",
             fontWeight: 600,
@@ -753,19 +770,29 @@ const WordsOrImage = ({
       </Box>
       <CardContent
         sx={{
-          overflow: isDemo ? "visible" : "hidden",
+          overflowX: isDemo ? "visible" : "auto",
           opacity: disableScreen ? 0.25 : 1,
           pointerEvents: disableScreen ? "none" : "initial",
-          display: { xs: "flex", md: "block" },
-          flexDirection: { xs: "column", md: "initial" },
-          justifyContent: { xs: "center", md: "initial" },
-          alignItems: { xs: "center", md: "initial" },
-          flexGrow: { xs: 1, md: 0 },
-          pt: { xs: "12px", md: isTablet ? "70px" : "100px" },
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          flexGrow: 1,
+          pt: { xs: "24px", md: "0px" },
           pb: { xs: "0px", md: "16px" },
+          overflowY: isDemo ? "visible" : "auto",
+          boxSizing: "border-box",
+          height: "100%",
+          width: "100%",
         }}
       >
-        <Box sx={{ width: { xs: "100%", md: "auto" } }}>
+        <Box
+          sx={{
+            marginTop: "auto",
+            width: { xs: "100%", md: "auto" },
+            maxWidth: "100%",
+          }}
+        >
           {type === "image" ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <img
@@ -890,15 +917,15 @@ const WordsOrImage = ({
                         maxWidth: isMobile
                           ? "150px"
                           : isTablet
-                            ? "350px"
-                            : "400px",
+                          ? "350px"
+                          : "400px",
                         marginBottom: isMobile ? "10px" : "40px",
                         height: "auto",
                         maxHeight: isMobile
                           ? "200px"
                           : isTablet
-                            ? "280px"
-                            : "340px",
+                          ? "280px"
+                          : "340px",
                         objectFit: "contain",
                         marginRight: isMobile ? "30px" : "0px",
                       }}
@@ -932,13 +959,13 @@ const WordsOrImage = ({
                               borderRadius: isMobile
                                 ? "7px"
                                 : isTablet
-                                  ? "10px"
-                                  : "20px",
+                                ? "10px"
+                                : "20px",
                               fontSize: isMobile
                                 ? "10px"
                                 : isTablet
-                                  ? "8px"
-                                  : "16px",
+                                ? "8px"
+                                : "16px",
                               color: "#333F61",
                               fontWeight: isMobile ? 500 : isTablet ? 200 : 600,
                               fontFamily:
@@ -972,8 +999,8 @@ const WordsOrImage = ({
                             marginLeft: isMobile
                               ? "auto"
                               : isTablet
-                                ? "18px"
-                                : "0",
+                              ? "18px"
+                              : "0",
                             marginRight: isMobile ? "auto" : "0",
                             display: "block",
                             zIndex: 9999,
@@ -991,8 +1018,8 @@ const WordsOrImage = ({
                               width: isMobile
                                 ? "60px"
                                 : isTablet
-                                  ? "70px"
-                                  : "150px",
+                                ? "70px"
+                                : "150px",
                               backgroundColor: "#ffff12",
                               padding: "10px 15px",
                               borderRadius: "20px",
@@ -1053,11 +1080,11 @@ const WordsOrImage = ({
                     sx={{
                       ...(mechanism_id === "mechanic_15"
                         ? {
-                          display: "flex",
-                          alignItems: "center",
-                          gap: isMobile ? 1 : 2,
-                          mb: isMobile ? 4 : 8,
-                        }
+                            display: "flex",
+                            alignItems: "center",
+                            gap: isMobile ? 1 : 2,
+                            mb: isMobile ? 4 : 8,
+                          }
                         : ""),
                     }}
                   >
@@ -1069,8 +1096,8 @@ const WordsOrImage = ({
                           height: isMobile
                             ? "40px"
                             : isTablet
-                              ? "50px"
-                              : "60px",
+                            ? "50px"
+                            : "60px",
                           width: isMobile ? "40px" : isTablet ? "50px" : "60px",
                         }}
                       >
@@ -1078,55 +1105,71 @@ const WordsOrImage = ({
                       </Avatar>
                     )}
 
-                    <Typography
-                      variant="h5"
-                      component="h4"
+                    <Box
                       sx={{
-                        fontSize:
-                          language === "te"
+                        // On mobile: constrain height and enable scroll so long
+                        // paragraphs can never overlap the diamonds header zone
+                        maxHeight: { xs: "calc(100dvh - 260px)", md: "none" },
+                        overflowY: { xs: "auto", md: "visible" },
+                        width: "100%",
+                        WebkitOverflowScrolling: "touch",
+                      }}
+                    >
+                      <Typography
+                        variant="h5"
+                        component="h4"
+                        sx={{
+                          fontSize: isDiscover
+                            ? { xs: "32px", md: "40px" }
+                            : language === "te"
                             ? isMobile
                               ? "1.7rem"
                               : isTablet
-                                ? "2.3rem"
-                                : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                              ? "2.3rem"
+                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
                             : isMobile
-                              ? "1.4rem"
-                              : isTablet
-                                ? "2rem"
-                                : "clamp(1.6rem, 2.5vw, 3.8rem)",
-                        fontWeight: language === "te" ? 400 : 700,
-                        fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "30px" : "50px",
-                        ...(mechanism_id === "mechanic_15"
-                          ? {
-                            position: "relative",
-                            backgroundColor: "#FAD7A0",
-                            padding: isMobile ? "8px 16px" : "10px 20px",
-                            borderRadius: "20px",
-                            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                            "&::before": {
-                              content: '""',
-                              position: "absolute",
-                              top: "50%",
-                              left: "-10px",
-                              transform: "translateY(-50%)",
-                              width: 0,
-                              height: 0,
-                              borderTop: "10px solid transparent",
-                              borderBottom: "10px solid transparent",
-                              borderRight: "10px solid #d8d8d8",
-                            },
-                          }
-                          : {
-                            mb: isMobile ? 2 : 4,
-                            color: getAnswerColor(resolvedAnswer),
-                            textAlign: "center",
-                          }),
-                      }}
-                      fontSize={{ md: "40px", xs: "25px" }}
-                    >
-                      {words ? words[0].toUpperCase() + words.slice(1) : ""}
-                    </Typography>
+                            ? "1.2rem"
+                            : isTablet
+                            ? "2rem"
+                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                          fontWeight: language === "te" ? 400 : 700,
+                          fontFamily: getFontFamily(language),
+                          lineHeight: { xs: 1.4, md: "4.5rem" },
+                          ...(mechanism_id === "mechanic_15"
+                            ? {
+                                position: "relative",
+                                backgroundColor: "#FAD7A0",
+                                padding: isMobile ? "8px 16px" : "10px 20px",
+                                borderRadius: "20px",
+                                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                                "&::before": {
+                                  content: '""',
+                                  position: "absolute",
+                                  top: "50%",
+                                  left: "-10px",
+                                  transform: "translateY(-50%)",
+                                  width: 0,
+                                  height: 0,
+                                  borderTop: "10px solid transparent",
+                                  borderBottom: "10px solid transparent",
+                                  borderRight: "10px solid #d8d8d8",
+                                },
+                              }
+                            : {
+                                mb: isMobile ? 2 : 4,
+                                color: getAnswerColor(resolvedAnswer),
+                                textAlign: "center",
+                              }),
+                        }}
+                        fontSize={
+                          isDiscover
+                            ? { md: "40px", xs: "32px" }
+                            : { md: "40px", xs: "25px" }
+                        }
+                      >
+                        {words ? words[0].toUpperCase() + words.slice(1) : ""}
+                      </Typography>
+                    </Box>
                   </Box>
                 )}
                 {mechanism_id === "mechanic_15" && (
@@ -1150,16 +1193,16 @@ const WordsOrImage = ({
                             ? isMobile
                               ? "1.7rem"
                               : isTablet
-                                ? "2.3rem"
-                                : "clamp(1.9rem, 2.8vw, 4.1rem)"
+                              ? "2.3rem"
+                              : "clamp(1.9rem, 2.8vw, 4.1rem)"
                             : isMobile
-                              ? "1.4rem"
-                              : isTablet
-                                ? "2rem"
-                                : "clamp(1.6rem, 2.5vw, 3.8rem)",
+                            ? "1.4rem"
+                            : isTablet
+                            ? "2rem"
+                            : "clamp(1.6rem, 2.5vw, 3.8rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "30px" : "50px",
+                        lineHeight: isMobile ? "30px" : "70px",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                         "&::after": {
                           content: '""',
@@ -1224,27 +1267,31 @@ const WordsOrImage = ({
                       component="h4"
                       sx={{
                         fontSize: isMobile
-                          ? "1.4rem"
+                          ? "2.7rem"
                           : isTablet
-                            ? "2rem"
-                            : "clamp(3rem, 4vw, 5rem)",
+                          ? "2rem"
+                          : "clamp(3rem, 4vw, 5rem)",
                         fontWeight: language === "te" ? 400 : 700,
                         fontFamily: getFontFamily(language),
-                        lineHeight: isMobile ? "30px" : "50px",
+                        lineHeight: isMobile ? "1.4" : "50px",
                         //background: "#FFF0BD",
-                        color:
-                          isTranscriptCorrect === true
-                            ? "green"
-                            : isTranscriptCorrect === false
-                              ? "red" // todo: need to change to red
-                              : "#333F61",
+                        color: skipAnswerColor
+                          ? "#333F61"
+                          : isTranscriptCorrect === true
+                          ? "green"
+                          : isTranscriptCorrect === false
+                          ? "red"
+                          : "#333F61",
                         display: isMobile ? "flex" : undefined,
                         flexDirection: isMobile ? "column" : undefined,
                         alignItems: isMobile ? "center" : undefined,
+                        textAlign: "center",
                         width: isMobile ? "100%" : undefined,
                       }}
                     >
-                      {words}
+                      {words
+                        ? words.charAt(0).toUpperCase() + words.slice(1)
+                        : ""}
                       {/* Show multilingual box only for English */}
                       {isTranscriptCorrect !== null && language === "en" && (
                         <AudioTooltipModal
@@ -1326,6 +1373,9 @@ const WordsOrImage = ({
           sx={{
             display: "flex",
             justifyContent: "center",
+            alignItems: "center",
+            minHeight: "22vh",
+            marginBottom: "auto",
             mt: isMobile ? 2 : 0,
           }}
         >
@@ -1350,14 +1400,14 @@ const WordsOrImage = ({
                   }
                 >
                   <SpeakButton size={isMobile ? "small" : "medium"} />
-                  {showPointer && pointerTarget === "mic" && (
+                  {showPointer && pointerTarget === "mic" && !isRecording && (
                     <span
                       style={{
                         position: "absolute",
-                        top: "100%",
+                        top: isMobile ? "calc(100% + 18px)" : "100%",
                         left: "20%",
                         transform: "translateX(-50%)",
-                        fontSize: "40px",
+                        fontSize: isMobile ? "32px" : "40px",
                         pointerEvents: "none",
                         animation: "pointerBounce 1.5s ease-in-out infinite",
                         filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
@@ -1396,22 +1446,25 @@ const WordsOrImage = ({
                     }
                   >
                     <StopButton size={isMobile ? "small" : "medium"} />
-                    {showPointer && pointerTarget === "stop" && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          top: "100%",
-                          left: "20%",
-                          transform: "translateX(-50%)",
-                          fontSize: "40px",
-                          pointerEvents: "none",
-                          animation: "pointerBounce 1.5s ease-in-out infinite",
-                          filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-                        }}
-                      >
-                        👆
-                      </span>
-                    )}
+                    {showPointer &&
+                      pointerTarget === "stop" &&
+                      !isRecording && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: "100%",
+                            left: "20%",
+                            transform: "translateX(-50%)",
+                            fontSize: "40px",
+                            pointerEvents: "none",
+                            animation:
+                              "pointerBounce 1.5s ease-in-out infinite",
+                            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                          }}
+                        >
+                          👆
+                        </span>
+                      )}
                   </Box>
                   <Box
                     style={{
@@ -1514,7 +1567,7 @@ const WordsOrImage = ({
                           }
                           //setIsPlaying(true);
                         }}
-                      //disabled={!recordedAudioBlob}
+                        //disabled={!recordedAudioBlob}
                       >
                         <img
                           src={listenImg2}

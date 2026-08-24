@@ -7,7 +7,7 @@ import { LevelSelector } from "../LevelSelector";
 import { TryAgain } from "../TryAgain";
 import { LetterGamePreview } from "./LetterGamePreview";
 import { LetterHuntGameCore, type LetterHuntQuestion } from "./LetterHuntGameCore";
-import { ArrowLeft, RotateCcw, TrendingUp, Globe } from "lucide-react";
+import { ArrowLeft, RotateCcw, TrendingUp, Globe, Clock } from "lucide-react";
 import { useLearningProgress } from "../../hooks/useLearningProgress";
 import { type LetterQuestion } from "../../utils/gameDataGenerators";
 import { memoryGameDataLoader } from "../../utils/memoryGameDataLoader";
@@ -16,6 +16,7 @@ import { Language, getNativeLanguageName } from "../../constants/languages";
 import { sessionManager } from "../../utils/sessionManager";
 import { sessionTelemetryManager } from "../../utils/sessionTelemetryManager";
 import { trackingAssessmentService, QuestionSummary } from "../../utils/trackingAssessmentService";
+import { getUiStrings } from "../../../../../constants/strings";
 
 // Extended question interface for multilingual support
 interface MultilingualLetterQuestion extends LetterHuntQuestion {
@@ -41,9 +42,10 @@ interface LetterGameProps {
   sub_apply_level?: number; // Optional: Sub apply level (1, 2, or 3 - the level within the Apply step)
   onA3Pass?: () => void; // Optional: callback when A3 passes and sessionResult is "Pass"
   skipPreview?: boolean; // Optional: if true, skip the game preview/demo
+  title?: string; // Optional: localized game title, defaults to 'Letter Recognition'
 }
 
-export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, confidentLetters, sub_session_id,sessionId, sub_milestone_level, apply_level, sub_apply_level, onA3Pass, skipPreview = false }: LetterGameProps) {
+export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disableNavigation = false, onLevelComplete, isShowcase = false, onLevel1Failure, onLevelFailure, customLetters, confidentLetters, sub_session_id,sessionId, sub_milestone_level, apply_level, sub_apply_level, onA3Pass, skipPreview = false, title = 'Letter Recognition' }: LetterGameProps) {
   const navigate = useNavigate();
   const params = useParams<{ level?: string }>();
   const { level: urlLevel } = params || {};
@@ -994,7 +996,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           setForcePreview(true);
           setShowPreview(true);
         }}
-        gameTitle="Letter Recognition"
+        gameTitle={title}
         gameKey={gameKey}
         unlockAll={true}
       />
@@ -1084,6 +1086,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
         onPlayAgain={resetGame}
         onBackToHub={onBack}
         hasNextLevel={shouldShowContinue ? true : hasNextLevelInRange}
+        selectedLanguage={selectedLanguage || 'en'}
         onNextLevel={() => {
           // If Apply step is complete, call onLevelComplete to trigger redirect
           if (shouldShowContinue && onLevelComplete) {
@@ -1145,7 +1148,7 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
           // (handled in the level completion logic around line 699)
           // The "Next Level" button is for transitioning TO the next level, not completing it
         }}
-        continueButtonText={shouldShowContinue ? "Continue" : undefined}
+        continueButtonText={shouldShowContinue ? getUiStrings(selectedLanguage || 'en').COMMON_CONTINUE : undefined}
       />
     );
   }
@@ -1170,38 +1173,19 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
   }
 
   return (
-    <div className="h-screen  p-3 sm:p-0.5 md:p-1 lg:p-2 xl:p-4 overflow-hidden flex flex-col">
-      <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col min-h-0">
+    <div className="h-full bg-gradient-cool rounded-[20px] p-2 sm:p-3 md:p-4 overflow-hidden flex flex-col">
+      <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 overflow-hidden">
         {/* Header */}
-        <div className="flex flex-row items-center justify-center mb-0 gap-0 sm:gap-0.5 md:gap-1 flex-shrink-0">
-          {/* Back button removed - using justify-center instead of justify-between */}
+        <div className="flex flex-row items-center justify-center mb-2 sm:mb-3 flex-shrink-0">
           <div className="text-center flex-1">
-            <h1 className="text-[16.5px] md:text-[20px] font-bold text-black drop-shadow-lg leading-tight pb-2">
-              Letter Recognition
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1">
+              {title}
             </h1>
-            {/* <div className="hidden sm:flex items-center justify-center gap-1.5 text-white/80 text-sm sm:text-base md:text-lg mt-0.5">
-              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span>
-                {selectedLevel !== null && selectedLevel !== gameProgress.currentLevel ? 
-                  `Level ${selectedLevel}` : 
-                  `Level ${currentLevel}`
-                }
-              </span>
-            </div> */}
           </div>
-          
-          {/* <Button 
-            variant="outline" 
-            onClick={resetGame}
-            className="bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2"
-          >
-            <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Reset</span>
-          </Button> */}
         </div>
 
         {/* Main Content Card */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
           {/* Game Core Component */}
           <LetterHuntGameCore
             questions={currentDisplayedQuestion ? [currentDisplayedQuestion] : questions}

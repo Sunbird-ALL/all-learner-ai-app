@@ -586,11 +586,11 @@ const barakhadiCharts = {
       "षू",
       "षृ",
       "षे",
-      "ষৈ",
-      "ষো",
-      "ষৌ",
-      "ষং",
-      "ষঃ",
+      "षै",
+      "षो",
+      "षौ",
+      "षं",
+      "षः",
     ],
     स: [
       "स",
@@ -4878,7 +4878,7 @@ const Barakhadi = ({
     padding: "0px",
     textAlign: "center",
     overflow: "hidden",
-    height: "100%",
+    height: "72dvh",
     paddingTop: "22px",
     width: "100%",
     borderRadius: "20px",
@@ -4910,7 +4910,7 @@ const Barakhadi = ({
     border: "1px dashed #ff9800",
     padding: "15px",
     borderRadius: "10px",
-    marginBottom: "15px",
+    marginBottom: isMobile ? "5px" : "15px",
     boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
     zIndex: 1000,
     background: "#FFF9ED",
@@ -4966,7 +4966,7 @@ const Barakhadi = ({
   };
 
   const tableStyle = {
-    marginTop: "50px",
+    marginTop: isMobile ? "20px" : "50px",
     borderCollapse: "collapse",
     width: isMobile ? "max-content" : "100%",
     tableLayout: "fixed",
@@ -4982,8 +4982,8 @@ const Barakhadi = ({
     ...(isMobile
       ? {
           minWidth: "58px",
-          height: "45px",
-          minHeight: "45px",
+          height: "52px",
+          minHeight: "52px",
           boxSizing: "border-box",
         }
       : {}),
@@ -5005,8 +5005,8 @@ const Barakhadi = ({
     : {};
 
   const circleStyle = {
-    width: lang === "te" ? "28px" : "22px",
-    height: lang === "te" ? "28px" : "22px",
+    width: isMobile ? "29px" : lang === "te" ? "28px" : "29px",
+    height: isMobile ? "29px" : lang === "te" ? "28px" : "29px",
     borderRadius: "50%",
     background: "#2c3e50",
     color: "#fff",
@@ -5045,7 +5045,7 @@ const Barakhadi = ({
   const textInputStyle = {
     border: "1px solid orange",
     borderRadius: "10px",
-    height: isMobile ? "38px" : "50px",
+    height: isMobile ? "44px" : "50px",
     width: isMobile ? "50%" : "65%",
     display: "flex",
     alignItems: "center",
@@ -5057,6 +5057,7 @@ const Barakhadi = ({
     background:
       word === targetWord ? "#E8F5E8" : isWordWrong ? "#FFE8E8" : "#FFFFFF",
     paddingLeft: isMobile ? "17px" : "20px",
+    paddingBottom: isMobile ? "8px" : "0",
     overflow: "hidden",
     whiteSpace: "nowrap",
     transition: "background 0.3s ease, color 0.3s ease",
@@ -5070,6 +5071,26 @@ const Barakhadi = ({
     justifyContent: "flex-end",
     gap: "6px",
     width: "45%",
+  };
+
+  const modalOverlayBase = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    zIndex: 11000,
+  };
+
+  const closeButtonBase = {
+    position: "absolute",
+    top: "15px",
+    right: "15px",
+    background: "white",
+    border: "none",
+    borderRadius: "50%",
+    cursor: "pointer",
   };
 
   return (
@@ -5115,16 +5136,10 @@ const Barakhadi = ({
         {open && (
           <div
             style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
+              ...modalOverlayBase,
               height: "90vh",
               backgroundColor: "rgba(0,0,0,0.7)",
-              display: "flex",
-              alignItems: "center",
               justifyContent: "center",
-              zIndex: 11000,
             }}
           >
             <div
@@ -5144,16 +5159,11 @@ const Barakhadi = ({
               <button
                 onClick={() => setOpen(false)}
                 style={{
-                  position: "absolute",
-                  top: "-10px",
-                  right: "-10px",
-                  background: "white",
-                  border: "none",
-                  borderRadius: "50%",
+                  ...closeButtonBase,
                   width: "30px",
                   height: "30px",
                   fontWeight: "bold",
-                  cursor: "pointer",
+                  zIndex: 100000,
                 }}
               >
                 ×
@@ -5204,18 +5214,14 @@ const Barakhadi = ({
         {showFullChart && (
           <div
             style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
+              ...modalOverlayBase,
               height: "85%",
               backgroundColor: "rgba(0,0,0,0.5)",
-              display: "flex",
               justifyContent: "center",
               alignItems: "flex-start",
               zIndex: 10000,
               margin: isMobile ? "0px" : "20px",
-              overflow: "auto",
+              overflow: isMobile ? "hidden" : "auto",
             }}
           >
             <div
@@ -5229,18 +5235,23 @@ const Barakhadi = ({
                 margin: "0 auto",
                 position: "relative",
                 minHeight: "auto",
+                ...(isMobile
+                  ? {
+                      display: "flex",
+                      flexDirection: "column",
+                      maxHeight: "100%",
+                      height: "100%",
+                    }
+                  : {}),
               }}
             >
               <img
                 src={closebuttonImg}
                 alt="Close"
                 style={{
-                  position: "absolute",
-                  top: "15px",
-                  right: "15px",
+                  ...closeButtonBase,
                   width: "32px",
                   height: "32px",
-                  cursor: "pointer",
                   zIndex: 10,
                 }}
                 onClick={() => setShowFullChart(false)}
@@ -5265,6 +5276,12 @@ const Barakhadi = ({
                 style={{
                   width: "100%",
                   overflowX: "auto",
+                  ...(isMobile
+                    ? {
+                        flex: 1,
+                        overflowY: "auto",
+                      }
+                    : {}),
                 }}
               >
                 <table
@@ -5315,8 +5332,15 @@ const Barakhadi = ({
                               alignItems: "center",
                               justifyContent: "center",
                               margin: "auto",
-                              fontSize: lang === "te" ? "28px" : "18px",
+                              fontSize: isMobile
+                                ? lang === "te"
+                                  ? "18px"
+                                  : "14px"
+                                : lang === "te"
+                                ? "28px"
+                                : "18px",
                               fontFamily: getFontFamily(lang),
+                              lineHeight: "1",
                             }}
                           >
                             {v}
@@ -5354,8 +5378,15 @@ const Barakhadi = ({
                                 alignItems: "center",
                                 justifyContent: "center",
                                 margin: "auto",
-                                fontSize: lang === "te" ? "28px" : "18px",
+                                fontSize: isMobile
+                                  ? lang === "te"
+                                    ? "18px"
+                                    : "14px"
+                                  : lang === "te"
+                                  ? "28px"
+                                  : "18px",
                                 fontFamily: getFontFamily(lang),
+                                lineHeight: "1",
                               }}
                             >
                               {consonant}
@@ -5416,7 +5447,7 @@ const Barakhadi = ({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "space-between",
-              height: "105px",
+              height: isMobile ? "111px" : "105px",
               padding: "15px 20px",
             }}
           >
@@ -5588,14 +5619,19 @@ const Barakhadi = ({
 
           <div
             className="barakhadiContent"
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: isMobile ? "100%" : "auto", width: "100%" }}
           >
             <div
               style={{
                 position: "relative",
-                paddingLeft: isMobile ? "45px" : "60px",
-                marginTop: isMobile ? "20px" : "30px",
-                height: isMobile ? "54%" : "100%",
+                paddingLeft: isMobile
+                  ? lang === "te"
+                    ? "52px"
+                    : "48px"
+                  : "60px",
+                paddingBottom: isMobile ? "85px" : "0px",
+                marginTop: isMobile ? "8px" : "30px",
+                height: isMobile ? "54%" : "auto",
                 overflowY: isMobile ? "auto" : "visible",
                 overflowX: isMobile ? "auto" : "visible",
               }}
@@ -5606,8 +5642,12 @@ const Barakhadi = ({
                     key={i}
                     style={{
                       ...leftCircleStyle,
-                      left: "11px",
-                      top: isMobile ? `${i * 45 + 103}px` : `${i * 45 + 36}px`,
+                      left: isMobile
+                        ? lang === "te"
+                          ? "9px"
+                          : "10px"
+                        : "11px",
+                      top: isMobile ? `${i * 45 + 73}px` : `${i * 45 + 36}px`,
                     }}
                   >
                     {v}
@@ -5663,14 +5703,33 @@ const Barakhadi = ({
 
             {/* Bottom button row common to both views */}
             <div
-              style={{
-                marginTop: isMobile ? "16px" : "10px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "20px",
-                padding: "0 20px",
-              }}
+              style={
+                isMobile
+                  ? {
+                      position: "absolute",
+                      bottom: "12px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: "calc(100% - 22px)",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "20px",
+                      padding: "16px 0 8px 0",
+                      background: "#fff",
+                      borderTop: "1px solid #eee",
+                      borderRadius: "0 0 12px 12px",
+                      zIndex: 10,
+                    }
+                  : {
+                      marginTop: "10px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "20px",
+                      padding: "0 20px",
+                    }
+              }
             >
               <div
                 style={{
@@ -5710,36 +5769,44 @@ const Barakhadi = ({
               />
             </div>
           </div>
-          <img
-            src={boyballonflyImg}
-            alt="boy balloon"
-            style={{
-              position: "absolute",
-              top: "1px",
-              right: "12px",
-              width: "60px",
-              zIndex: 1,
-            }}
-          />
+          {!isMobile && (
+            <img
+              src={boyballonflyImg}
+              alt="boy balloon"
+              style={{
+                position: "absolute",
+                top: "1px",
+                right: "12px",
+                width: "60px",
+                zIndex: 1,
+              }}
+            />
+          )}
 
-          <img
-            src={boyImg}
-            alt="boy"
-            style={{
-              position: "absolute",
-              top: "48px",
-              right: "60px",
-              width: "60px",
-            }}
-          />
           <img
             src={bearImg}
             alt="bear"
             style={{
               position: "absolute",
-              bottom: "-50px",
-              right: "0px",
-              width: "clamp(60px, 5vw, 170px)",
+              bottom: isMobile
+                ? lang === "kn" || lang === "te"
+                  ? "-35px"
+                  : "-45px"
+                : "1px",
+              right: isMobile
+                ? lang === "kn" || lang === "te"
+                  ? "5px"
+                  : "10px"
+                : "40px",
+              width: isMobile
+                ? lang === "kn" || lang === "te"
+                  ? "min(12vw, 45px)"
+                  : "15dvw"
+                : lang === "kn" || lang === "te"
+                ? "min(8vw, 80px)"
+                : "9dvw",
+              zIndex: isMobile ? 11 : 1,
+              pointerEvents: "none",
             }}
           />
         </div>

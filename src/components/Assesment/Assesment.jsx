@@ -36,11 +36,7 @@ import {
   getLanguageOrDefault,
 } from "../../utils/constants";
 import { useAlphabetDemo } from "../../context/AlphabetDemoContext";
-import {
-  RoundTick,
-  StartAssessmentButton,
-  SelectLanguageButton,
-} from "../Icons/SvgIcons";
+import { RoundTick, SelectLanguageButton } from "../Icons/SvgIcons";
 import { getFontFamily } from "../../utils/fontUtils";
 import practicebg from "../../assets/images/practice-bg.svg";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
@@ -77,7 +73,6 @@ import desktopLevel5Mobile from "../../assets/images/mobilebglevel5.png";
 import desktopLevel6Mobile from "../../assets/images/mobilebglevel6.png";
 import desktopLevel7Mobile from "../../assets/images/mobilebglevel7.png";
 import desktopLevel8Mobile from "../../assets/images/mobilebglevel8.png";
-import desktopLevel9Mobile from "../../assets/images/mobilebglevel9.png";
 import desktopLevel10Mobile from "../../assets/images/mobilebglevel10.png";
 import rOneImage from "../../assets/R1Back.png";
 import rTwoImage from "../../assets/R2Back.png";
@@ -117,7 +112,7 @@ const theme = createTheme();
 
 export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
   const [selectedLang, setSelectedLang] = useState(lang);
-  const ui = useMemo(() => getUiStrings(lang || "en"), [lang]);
+  const ui = useMemo(() => getUiStrings(selectedLang || "en"), [selectedLang]);
   return (
     <Box
       sx={{
@@ -125,7 +120,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
         justifyContent: "center",
         alignItems: "center",
         width: "100vw",
-        height: "100vh",
+        height: "100dvh",
         position: "fixed",
         background: "rgba(0, 0, 0, 0.5)",
         zIndex: 9999,
@@ -175,7 +170,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                 xs: "clamp(22px, 5.5vw, 30px)",
                 sm: "clamp(28px, 3.5vw, 36px)",
               },
-              fontFamily: getFontFamily(lang),
+              fontFamily: getFontFamily(selectedLang),
               lineHeight: 1.2,
             }}
           >
@@ -353,7 +348,7 @@ export const LanguageModal = ({ lang, setLang, setOpenLangModal }) => {
                 color: "#FFFFFF",
                 fontWeight: 600,
                 fontSize: "20px",
-                fontFamily: getFontFamily(lang),
+                fontFamily: getFontFamily(selectedLang),
                 display: "flex",
                 alignItems: "center",
               }}
@@ -383,7 +378,7 @@ export const MessageDialog = ({
         justifyContent: "center",
         alignItems: "center",
         width: "100vw",
-        height: "100vh",
+        height: "100dvh",
         position: "fixed",
         top: 0,
         left: 0,
@@ -633,7 +628,8 @@ export const ProfileHeader = ({
   vocabCount = 0,
   wordCount = 0,
 }) => {
-  const { setIsAlphabetDemoActive } = useAlphabetDemo();
+  const { setIsAlphabetDemoActive, setIsAlphabetDemoPopupVisible } =
+    useAlphabetDemo();
   const language = lang || getLocalData("lang");
   const ui = useMemo(() => getUiStrings(language || "en"), [language]);
   let username = profileName || getLocalData("profileName");
@@ -712,6 +708,36 @@ export const ProfileHeader = ({
   const chartAudioRef = React.useRef(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
+  // 📱 Mobile demo pointer state — shown after hamburger opens with a delay
+  const [showMobilePointer, setShowMobilePointer] = useState(false);
+
+  // 📱 Mobile demo: animated sequence — Dialog → open hamburger → show pointer
+  useEffect(() => {
+    if (!isMobile) return;
+
+    if (showChartPointer) {
+      // Step 1: Dialog is already visible (controlled by showChartPointer)
+      // Step 2: Open hamburger after 3.5s
+      const t1 = setTimeout(() => {
+        setMenuOpen(true);
+      }, 3500);
+
+      // Step 3: Show hand pointer after 4.5s
+      const t2 = setTimeout(() => {
+        setShowMobilePointer(true);
+      }, 4500);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    } else {
+      // Demo ended — reset everything
+      setMenuOpen(false);
+      setShowMobilePointer(false);
+    }
+  }, [isMobile, showChartPointer]);
+
   useEffect(() => {
     const rawMilestone = getLocalData("getMilestone");
 
@@ -762,12 +788,31 @@ export const ProfileHeader = ({
         setIsAudioPlaying(true);
       };
 
-      audio.onended = () => {
-        setShowChartPointer(false); // 👈 demo finished
-        setIsAudioPlaying(false);
-        chartAudioRef.current = null;
+      const closeMobileUi = () => {
+        setMenuOpen(false);
+        setShowMobilePointer(false);
+      };
+      const endAlphabetDemo = () => {
+        setShowChartPointer(false);
         setIsAlphabetDemoActive(false);
         globalThis.dispatchEvent(new Event("alphabetDemoStop"));
+      };
+
+      audio.onended = () => {
+        setIsAudioPlaying(false);
+        chartAudioRef.current = null;
+
+        if (isMobile) {
+          // 📱 Mobile: close hamburger & pointer 500ms BEFORE transitioning screens
+          setTimeout(closeMobileUi, 2500);
+
+          // Then end demo and move to next screen after full 3s
+          setTimeout(endAlphabetDemo, 3000);
+        } else {
+          setShowChartPointer(false);
+          setIsAlphabetDemoActive(false);
+          globalThis.dispatchEvent(new Event("alphabetDemoStop"));
+        }
       };
 
       audio.onerror = () => {
@@ -928,29 +973,12 @@ export const ProfileHeader = ({
     };
   }, []);
 
-  const getAlphabetTooltipText = () => {
-    const texts = {
-      en: {
-        title: "📚 Alphabet Chart",
-        desc: "If you need help with an alphabet or syllable, check the chart here.",
-      },
-      te: {
-        title: "📚 అక్షరమాల చార్ట్",
-        desc: "మీకు ఏదైనా అక్షరం లేదా అక్షర సమూహంతో సహాయం కావాలా? అయితే, ఇక్కడ ఉన్న పట్టికను చూడండి.",
-      },
-      kn: {
-        title: "📚 ವರ್ಣಮಾಲೆ ಚಾರ್ಟ್‌",
-        desc: "ನಿಮಗೆ ಅಕ್ಷರಗಳು ಅಥವಾ ಗುಣಿತಾಕ್ಷರಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಲು ಸಹಾಯ ಬೇಕಾದರೆ, ಇಲ್ಲಿರುವ ಚಾರ್ಟ್‌ ನೋಡಿ.",
-      },
-      hi: {
-        title: "📚 वर्णमाला चार्ट",
-        desc: "यदि आपको किसी वर्णमाला या सिलेबल के लिए सहायता चाहिए, तो यहाँ चार्ट देखें।",
-      },
-    };
-
-    return texts[lang] || texts.en;
-  };
-  const tooltipText = getAlphabetTooltipText();
+  // Publish demo-popup visibility so the F1 loader (LetterTrain/LetterHunt) can
+  // hide itself only once the popup is actually on screen.
+  useEffect(() => {
+    setIsAlphabetDemoPopupVisible(showChartPointer);
+    return () => setIsAlphabetDemoPopupVisible(false);
+  }, [showChartPointer, setIsAlphabetDemoPopupVisible]);
 
   const handleProfileBack = () => {
     try {
@@ -979,6 +1007,23 @@ export const ProfileHeader = ({
       end({});
       navigate("/login");
     }
+  };
+
+  // Mobile menu logout: iframe -> ask parent to run logout handshake, standalone -> local logout
+  const handleMenuLogout = () => {
+    if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+      try {
+        globalThis.parent.postMessage(
+          { type: "REQUEST_LOGOUT" },
+          globalThis?.location?.ancestorOrigins?.[0] ||
+            globalThis.parent.location.origin
+        );
+      } catch (error) {
+        console.error("REQUEST_LOGOUT postMessage failed:", error);
+      }
+      return;
+    }
+    handleLogout();
   };
 
   return (
@@ -1382,6 +1427,7 @@ export const ProfileHeader = ({
                           setMenuOpen(false);
                           handleAlphabetChartOpen();
                         }}
+                        sx={{ position: "relative" }}
                       >
                         <MenuBookIcon sx={{ mr: 1, color: "#EE6931" }} />
                         <ListItemText
@@ -1393,31 +1439,68 @@ export const ProfileHeader = ({
                             color: "#333F61",
                           }}
                         />
+                        {/* 📱 Animated hand pointer — only visible after hamburger opens */}
+                        {showMobilePointer && (
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              right: 12,
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              pointerEvents: "none",
+                              animation:
+                                "mobilePointerFadeIn 0.4s ease-out forwards, mobileChartPoint 1.5s ease-in-out 0.4s infinite",
+                              "@keyframes mobilePointerFadeIn": {
+                                from: {
+                                  opacity: 0,
+                                  transform:
+                                    "translateY(-50%) translateX(10px)",
+                                },
+                                to: {
+                                  opacity: 1,
+                                  transform: "translateY(-50%) translateX(0)",
+                                },
+                              },
+                              "@keyframes mobileChartPoint": {
+                                "0%, 100%": {
+                                  transform: "translateY(-50%) translateX(0)",
+                                  opacity: 1,
+                                },
+                                "50%": {
+                                  transform:
+                                    "translateY(-50%) translateX(-6px)",
+                                  opacity: 0.7,
+                                },
+                              },
+                            }}
+                          >
+                            <span style={{ fontSize: "22px" }}>👈</span>
+                          </Box>
+                        )}
                       </ListItemButton>
                     </>
                   )}
-                  {process.env.REACT_APP_IS_APP_IFRAME !== "true" && (
-                    <>
-                      <Divider />
-                      <ListItemButton
-                        onClick={() => {
-                          setMenuOpen(false);
-                          handleLogout();
+                  {/* Logout: iframe -> parent handshake, standalone -> local */}
+                  <>
+                    <Divider />
+                    <ListItemButton
+                      onClick={() => {
+                        setMenuOpen(false);
+                        handleMenuLogout();
+                      }}
+                    >
+                      <LogoutIcon sx={{ mr: 1 }} />
+                      <ListItemText
+                        primary={ui.ASSESSMENT_LOGOUT}
+                        primaryTypographyProps={{
+                          fontFamily: "Quicksand",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                          color: "#333F61",
                         }}
-                      >
-                        <LogoutIcon sx={{ mr: 1 }} />
-                        <ListItemText
-                          primary={ui.ASSESSMENT_LOGOUT}
-                          primaryTypographyProps={{
-                            fontFamily: "Quicksand",
-                            fontWeight: 600,
-                            fontSize: "14px",
-                            color: "#333F61",
-                          }}
-                        />
-                      </ListItemButton>
-                    </>
-                  )}
+                      />
+                    </ListItemButton>
+                  </>
                 </List>
               </Box>
             </Collapse>
@@ -1510,67 +1593,6 @@ export const ProfileHeader = ({
                     )}
                   </Box>
                 </CustomTooltip>
-                {showChartPointer && (
-                  <Dialog
-                    open
-                    PaperProps={{
-                      sx: {
-                        borderRadius: 3,
-                        p: 4,
-                        maxWidth: 600, // ⬆️ wider dialog
-                        // zIndex: 6000,
-                      },
-                    }}
-                  >
-                    <Box>
-                      {/* Header */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          mb: 2,
-                        }}
-                      >
-                        <Typography
-                          fontWeight={700}
-                          fontSize="22px" // ⬆️ bigger header
-                          lineHeight={1.3}
-                        >
-                          {tooltipText.title}
-                        </Typography>
-
-                        <IconButton
-                          size="medium"
-                          onClick={() => {
-                            setShowChartPointer(false);
-                            if (chartAudioRef.current) {
-                              chartAudioRef.current.pause();
-                              chartAudioRef.current.currentTime = 0;
-                              chartAudioRef.current = null;
-                            }
-                            setIsAudioPlaying(false);
-                            setIsAlphabetDemoActive(false);
-                            globalThis.dispatchEvent(
-                              new Event("alphabetDemoStop")
-                            );
-                          }}
-                        >
-                          <CloseIcon fontSize="medium" />
-                        </IconButton>
-                      </Box>
-
-                      {/* Description */}
-                      <Typography
-                        fontSize="18px" // ⬆️ bigger description
-                        lineHeight={1.7}
-                        color="text.secondary"
-                      >
-                        {tooltipText.desc}
-                      </Typography>
-                    </Box>
-                  </Dialog>
-                )}
               </>
             )}
 
@@ -1666,32 +1688,84 @@ export const ProfileHeader = ({
                 />
               </IconButton>
             </CustomTooltip>
-            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" &&
-              process.env.REACT_APP_IS_APP_IFRAME !== "true" && (
-                <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
-                  <IconButton
-                    onClick={handleLogout}
-                    sx={{
-                      mr: { xs: "5px", sm: "10px" },
-                      padding: isMobile ? "6px" : "8px",
-                      backgroundColor: "rgba(255, 255, 255, 0.7)",
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      },
-                    }}
-                  >
-                    <img
-                      className="logout-img"
-                      style={{ height: 25, width: 25 }}
-                      src={LogoutImg}
-                      alt="Logout"
-                    />
-                  </IconButton>
-                </CustomTooltip>
-              )}
+            {process.env.REACT_APP_IS_IN_APP_AUTHORISATION === "true" && (
+              <CustomTooltip title={ui.ASSESSMENT_LOGOUT}>
+                <IconButton
+                  onClick={handleMenuLogout}
+                  sx={{
+                    mr: { xs: "5px", sm: "10px" },
+                    padding: isMobile ? "6px" : "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    },
+                  }}
+                >
+                  <img
+                    className="logout-img"
+                    style={{ height: 25, width: 25 }}
+                    src={LogoutImg}
+                    alt="Logout"
+                  />
+                </IconButton>
+              </CustomTooltip>
+            )}
           </Box>
         )}
       </Box>
+      {/* Alphabet chart demo popup — rendered here (outside the desktop-only
+          header branch) so it shows on mobile too. */}
+      {["B", "m1", "m2", "m3"].includes(milestoneLevel) && showChartPointer && (
+        <Dialog
+          open
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              p: 4,
+              maxWidth: 600, // ⬆️ wider dialog
+              // zIndex: 6000,
+            },
+          }}
+        >
+          <Box>
+            {/* Header */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 2,
+              }}
+            >
+              <Typography fontWeight={700} fontSize="22px" lineHeight={1.3}>
+                {ui.ASSESSMENT_ALPHABET_CHART_TOOLTIP_TITLE}
+              </Typography>
+
+              <IconButton
+                size="medium"
+                onClick={() => {
+                  setShowChartPointer(false);
+                  if (chartAudioRef.current) {
+                    chartAudioRef.current.pause();
+                    chartAudioRef.current.currentTime = 0;
+                    chartAudioRef.current = null;
+                  }
+                  setIsAudioPlaying(false);
+                  setIsAlphabetDemoActive(false);
+                  globalThis.dispatchEvent(new Event("alphabetDemoStop"));
+                }}
+              >
+                <CloseIcon fontSize="medium" />
+              </IconButton>
+            </Box>
+
+            {/* Description */}
+            <Typography fontSize="18px" lineHeight={1.7} color="text.secondary">
+              {ui.ASSESSMENT_ALPHABET_CHART_TOOLTIP_DESC}
+            </Typography>
+          </Box>
+        </Dialog>
+      )}
       <AlphabetChartPreview
         open={openAlphabetPreview}
         onClose={() => setOpenAlphabetPreview(false)}
@@ -1741,38 +1815,6 @@ const Assesment = ({ discoverStart }) => {
   const nativeLang = getLocalData("nativeLang");
   const rStepNo = getLocalData("rStepZero");
   const rFlows = String(getLocalData("rFlow"));
-
-  const getAssessmentText = () => {
-    const texts = {
-      en: {
-        testSkills: "Let's test your language skills",
-        goodSkills: "You have good language skills",
-        discoverLevel: "Take the assessment to discover your level",
-        completeLevel: (level) =>
-          `Take the assessment to complete Level ${level}.`,
-        startAssessment: "Start Assessment",
-      },
-      te: {
-        testSkills: "మీ భాషా నైపుణ్యాలను పరీక్షించుకుందాం",
-        goodSkills: "మీకు మంచి భాషా నైపుణ్యాలు ఉన్నాయి",
-        discoverLevel: "మీ స్థాయిని తెలుసుకోవడానికి మూల్యాంకనాన్ని చేయండి.",
-        completeLevel: (level) =>
-          `Level ${level} పూర్తి చేయడానికి మూల్యాంకనాన్ని చేయండి.`,
-        startAssessment: "మూల్యాంకనాన్ని ప్రారంభించండి",
-      },
-      kn: {
-        testSkills: "Let's test your language skills",
-        goodSkills: "You have good language skills",
-        discoverLevel: "Take the assessment to discover your level",
-        completeLevel: (level) =>
-          `Take the assessment to complete Level ${level}.`,
-        startAssessment: "Start Assessment",
-      },
-    };
-
-    return texts[lang] || texts.en;
-  };
-  const assessmentText = getAssessmentText();
 
   const handleWordClick = () => {
     setShowModal(true);
@@ -2025,7 +2067,7 @@ const Assesment = ({ discoverStart }) => {
     if (!username && !profileName && !TOKEN && level === 0) {
       // alert("please add username in query param");
       setOpenMessageDialog({
-        message: "please add username in query param",
+        message: ui.ASSESSMENT_NO_USERNAME_QUERY_PARAM,
         isError: true,
       });
       return;
@@ -2076,7 +2118,7 @@ const Assesment = ({ discoverStart }) => {
     desktopLevel6Mobile,
     desktopLevel7Mobile,
     desktopLevel8Mobile,
-    desktopLevel9Mobile,
+    desktopLevel9Mobile: desktopLevel9,
     desktopLevel10Mobile,
   };
 
@@ -2159,10 +2201,12 @@ const Assesment = ({ discoverStart }) => {
 
   const sectionStyle = {
     width: "100vw",
-    height: "100vh",
+    height: "100dvh",
+    minHeight: "-webkit-fill-available",
     backgroundImage: `url(${getBackgroundImage()})`,
-    backgroundSize: "cover",
-    backgroundPosition: isMobile ? "37% center" : "center",
+    backgroundSize: isMobile ? "cover" : "100% 100%",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: isMobile ? "35% bottom" : "center",
     position: "relative",
   };
 
@@ -2175,7 +2219,7 @@ const Assesment = ({ discoverStart }) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "100dvh",
           gap: 2,
           px: 3,
           textAlign: "center",
@@ -2238,9 +2282,9 @@ const Assesment = ({ discoverStart }) => {
             <Box
               sx={{
                 position: "absolute",
-                bottom: { xs: 40, sm: 60 },
+                bottom: { xs: 24, sm: 60 },
                 right: { xs: "-24px", sm: 0 },
-                width: "237px",
+                width: { xs: "200px", sm: "237px" },
                 height: "112px",
                 background: "rgba(255, 255, 255, 0.2)",
                 borderRadius: "20px 0px 0px 20px",
@@ -2270,6 +2314,9 @@ const Assesment = ({ discoverStart }) => {
                     fontFamily: getFontFamily(lang),
                     lineHeight: "25px",
                     textShadow: "#000 1px 0 10px",
+                    padding: "0 12px",
+                    textAlign: "center",
+                    display: "block",
                   }}
                 >
                   {shouldShowF3
@@ -2333,7 +2380,7 @@ const Assesment = ({ discoverStart }) => {
                     fontFamily: getFontFamily(lang),
                   }}
                 >
-                  Please wait, we are fetching details for you…
+                  {ui.LOADING_FETCHING_DETAILS}
                 </Typography>
               </>
             ) : (
@@ -2395,35 +2442,31 @@ const Assesment = ({ discoverStart }) => {
                     }}
                     onClick={handleRedirect}
                   >
-                    {lang === "te" ? (
-                      <Box
-                        sx={{
-                          background: "#EDB530",
-                          border: "2px solid #322020",
-                          borderRadius: "9px",
-                          padding: "12px 24px",
-                          minWidth: "218px",
-                          height: "60px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                    <Box
+                      sx={{
+                        background: "#EDB530",
+                        border: "2px solid #322020",
+                        borderRadius: "9px",
+                        padding: "12px 24px",
+                        minWidth: "218px",
+                        height: "60px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "#322020",
+                          fontWeight: 600,
+                          fontSize: "20px",
+                          fontFamily: getFontFamily(lang),
                         }}
                       >
-                        <span
-                          style={{
-                            color: "#322020",
-                            fontWeight: 600,
-                            fontSize: "20px",
-                            fontFamily: getFontFamily(lang),
-                          }}
-                        >
-                          {assessmentText.startAssessment}
-                        </span>
-                      </Box>
-                    ) : (
-                      <StartAssessmentButton />
-                    )}
+                        {ui.ASSESSMENT_START_ASSESSMENT}
+                      </span>
+                    </Box>
                   </Box>
                 </Box>
               </>

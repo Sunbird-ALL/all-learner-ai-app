@@ -4,6 +4,7 @@ import { CheckCircle } from "lucide-react";
 import { Language } from "../../constants/languages";
 import { ClockwiseTimer } from "../ClockwiseTimer";
 import { ContinueButton } from "./ContinueButton";
+import { getUiStrings } from "../../../../../constants/strings";
 
 export interface MemoryQuestion {
   sequence: string[];
@@ -69,56 +70,7 @@ export function MemoryGameCore({
   className = ''
 }: MemoryGameCoreProps) {
   const optionsRef = useRef<HTMLDivElement>(null);
-
-  // Get localized text
-  const getLocalizedText = (key: string) => {
-    const texts = {
-      whatWasSequence: {
-        en: 'What was the sequence?',
-        te: 'క్రమం ఏమిటి?',
-        kn: 'ಅನುಕ್ರಮ ಏನು?',
-        mr: 'क्रम काय होता?'
-      },
-      clickLetters: {
-        en: 'Click letters below...',
-        te: 'క్రింద అక్షరాలను క్లిక్ చేయండి...',
-        kn: 'ಕೆಳಗೆ ಅಕ್ಷರಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ...',
-        mr: 'खाली अक्षरांवर क्लिक करा...'
-      },
-      removeLast: {
-        en: 'Remove Last',
-        te: 'చివరిది తొలగించు',
-        kn: 'ಕೊನೆಯದನ್ನು ತೆಗೆದುಹಾಕಿ',
-        mr: 'शेवटचे काढा'
-      },
-      checkSequence: {
-        en: 'Check Sequence',
-        te: 'క్రమం తనిఖీ చేయండి',
-        kn: 'ಅನುಕ್ರಮವನ್ನು ಪರಿಶೀಲಿಸಿ',
-        mr: 'क्रम तपासा'
-      },
-      check: {
-        en: 'Check',
-        te: 'తనిఖీ',
-        kn: 'ಪರಿಶೀಲಿಸಿ',
-        mr: 'तपासा'
-      },
-      correct: {
-        en: '🎉 Correct!',
-        te: '🎉 సరైనది!',
-        kn: '🎉 ಸರಿಯಿದೆ!',
-        mr: '🎉 बरोबर!'
-      },
-      wrong: {
-        en: '😢 Oops! Wrong!',
-        te: '😢 అయ్యో! తప్పు!',
-        kn: '😢 ಅಯ್ಯೋ! ತಪ್ಪು!',
-        mr: '😢 अरेच्या! चुकीचे!'
-      }
-    };
-    
-    return texts[key as keyof typeof texts]?.[selectedLanguage] || texts[key as keyof typeof texts]?.en || '';
-  };
+  const ui = getUiStrings(selectedLanguage);
 
   return (
     <div className={`flex-1 flex flex-col justify-start px-1 sm:px-2 min-h-0 ${className}`}>
@@ -170,7 +122,7 @@ export function MemoryGameCore({
           <div className="mb-2 sm:mb-3">
             <div className="min-h-[45px] sm:min-h-[50px] p-2 border-2 border-dashed border-warning/50 rounded-xl bg-warning/5 flex justify-center items-center gap-1 flex-wrap">
               {userInput.length === 0 ? (
-                <p className="text-muted-foreground text-xs sm:text-sm">{getLocalizedText('clickLetters')}</p>
+                <p className="text-muted-foreground text-xs sm:text-sm">{ui.MEMORY_CLICK_LETTERS}</p>
               ) : (
                 userInput.map((letter, index) => (
                   <div
@@ -281,7 +233,7 @@ export function MemoryGameCore({
                 disabled={userInput.length === 0 || disabled}
                 className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2"
               >
-                {getLocalizedText('removeLast')}
+                {ui.MEMORY_REMOVE_LAST}
               </Button>
             )}
             
@@ -294,8 +246,8 @@ export function MemoryGameCore({
                 className="animate-bounce-in text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2"
               >
                 <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
-                <span className="hidden sm:inline">{getLocalizedText('checkSequence')}</span>
-                <span className="sm:hidden">{getLocalizedText('check')}</span>
+                <span className="hidden sm:inline">{ui.MEMORY_CHECK_SEQUENCE}</span>
+                <span className="sm:hidden">{ui.MEMORY_CHECK}</span>
               </Button>
             )}
           </div>
@@ -311,12 +263,12 @@ export function MemoryGameCore({
             {isCorrect ? (
               <div className="text-success">
                 <p className="text-lg sm:text-xl font-bold">
-                  {getLocalizedText('correct')}
+                  {ui.FEEDBACK_CORRECT}
                 </p>
               </div>
             ) : (
               <div className="text-error">
-                <p className="text-lg sm:text-xl font-bold">{getLocalizedText('wrong')}</p>
+                <p className="text-lg sm:text-xl font-bold">{ui.FEEDBACK_WRONG}</p>
               </div>
             )}
             

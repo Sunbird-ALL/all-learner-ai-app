@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import MainLayout from "../Layout/MainLayout";
+import { useAlphabetDemo } from "../../context/AlphabetDemoContext";
 import {
   getLocalData,
   setLocalData,
   practiceSteps,
 } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import { levelGetContent } from "../../data/levelContent";
 import {
   addLesson,
@@ -69,6 +71,7 @@ const LetterHuntMechanicsContent = ({
   customLetters, // Optional: Custom letters to use for Letter Hunt (from F1/F2 config)
   confidentLetters, // Optional: Letters user is confident with (appear less frequently)
 }) => {
+  const { isAlphabetDemoPopupVisible } = useAlphabetDemo();
   // Store the current level being played for failure handling
   const [currentGameLevel, setCurrentGameLevel] = useState(1);
   const [isGameComplete, setIsGameComplete] = useState(false);
@@ -1204,6 +1207,7 @@ const LetterHuntMechanicsContent = ({
   // Use getLocalData("lang") as the primary source for language
   // This ensures the main app's language setting takes precedence over the library's selectedLanguage
   const lang = getLocalData("lang") || "en";
+  const ui = getUiStrings(lang);
   const initialLanguage =
     lang === "en"
       ? "en"
@@ -1243,7 +1247,7 @@ const LetterHuntMechanicsContent = ({
         setStartShowCase={setStartShowCase}
       >
         <div style={{ padding: "20px", textAlign: "center" }}>
-          <p>Loading game...</p>
+          <p>{ui.LOADING_GAME}</p>
         </div>
       </MainLayout>
     );
@@ -1266,6 +1270,13 @@ const LetterHuntMechanicsContent = ({
       showTimer={showTimer}
       startShowCase={startShowCase}
       setStartShowCase={setStartShowCase}
+      cardContentStyle={{
+        height: { xs: "100%", md: "calc(100vh - 260px)" },
+        maxHeight: {
+          xs: "calc(100dvh - 90px)",
+          md: "calc(100vh - 260px)",
+        },
+      }}
     >
       <div
         style={{
@@ -1283,14 +1294,17 @@ const LetterHuntMechanicsContent = ({
         <LanguageProvider initialLanguage={initialLanguage}>
           <AudioLanguageProvider initialLanguage={initialAudioLanguage}>
             {isAlphabetDemoActive ? (
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                height="60vh"
-              >
-                <CircularProgress size={60} thickness={4.5} />
-              </Box>
+              // Hide the loader once the demo popup is visible; show it otherwise.
+              isAlphabetDemoPopupVisible ? null : (
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  height="60vh"
+                >
+                  <CircularProgress size={60} thickness={4.5} />
+                </Box>
+              )
             ) : (
               <div
                 style={{
@@ -1306,6 +1320,7 @@ const LetterHuntMechanicsContent = ({
                 className="letter-hunt-wrapper"
               >
                 <LetterGame
+                  title={ui.PRACTICE_LETTER_RECOGNITION}
                   onBack={handleGameBack}
                   startLevel={level || 1}
                   endLevel={endLevel}

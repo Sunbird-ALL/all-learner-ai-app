@@ -512,7 +512,7 @@ const FluencyP3 = ({
           alt="Beardance"
           style={{
             position: "absolute",
-            bottom: isMobile ? -30 : -42,
+            bottom: isMobile ? "0px" : "-42px",
             left: "50%",
             transform: "translateX(-50%)",
             height: isMobile ? "100px" : "200px",
@@ -534,7 +534,7 @@ const FluencyP3 = ({
           alt="Beardance"
           style={{
             position: "absolute",
-            bottom: isMobile ? -30 : -42,
+            bottom: isMobile ? "0px" : "-42px",
             left: "50%",
             transform: "translateX(-50%)",
             height: isMobile ? "100px" : "200px",
@@ -646,29 +646,34 @@ const FluencyP3 = ({
         )}
         <div
           style={{
-            width: "95%",
-            minHeight: isMobile ? "70vh" : "560px",
-            height: "auto",
+            width: isMobile ? "calc(100% - 20px)" : "90%",
+            maxWidth: isMobile ? "none" : "1200px",
+            minHeight: isMobile ? "unset" : "560px",
+            height: isMobile ? "calc(100dvh - 280px)" : "auto",
+            maxHeight: isMobile ? "calc(100dvh - 280px)" : "none",
             background: "#fff",
             borderRadius: "12px",
             boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: isMobile ? "0 0 16px 0" : "0 0 10px 0",
+            padding: isMobile ? "0 10px 16px 10px" : "0 0 10px 0",
             marginBottom: isMobile ? "30px" : undefined,
+            marginLeft: isMobile ? "10px" : "auto",
+            marginRight: isMobile ? "10px" : "auto",
             position: "relative",
-            overflow: "visible",
+            overflow: "hidden",
+            boxSizing: "border-box",
           }}
         >
           <img
             src={hintimg}
             alt="hint"
             style={{
-              width: isMobile ? "30px" : "50px",
-              height: "50px",
+              width: isMobile ? "40px" : "50px",
+              height: isMobile ? "40px" : "50px",
               position: "absolute",
-              top: "20px",
+              top: isMobile ? "30px" : "20px",
               left: "10px",
               cursor: "pointer",
               zIndex: 1000,
@@ -680,8 +685,9 @@ const FluencyP3 = ({
             src={headerImg}
             alt="header"
             style={{
-              width: isMobile ? "100%" : "100%",
-              marginLeft: "0",
+              width: isMobile ? "calc(100% + 20px)" : "100%",
+              // marginLeft: isMobile ? "-10px" : "0",
+              // marginRight: isMobile ? "-10px" : "0",
               display: "block",
               borderRadius: "12px 12px 0 0",
             }}
@@ -739,7 +745,7 @@ const FluencyP3 = ({
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "stretch",
-                  gap: isMobile ? "6px" : "15px",
+                  gap: isMobile ? "9px" : "15px",
                   flexWrap: isMobile ? "wrap" : "nowrap",
                   marginBottom: isMobile ? "5px" : "8px",
                 }}
@@ -831,7 +837,7 @@ const FluencyP3 = ({
           ) : showWordAfterYes ? (
             <div
               style={{
-                marginTop: isMobile ? "100px" : "10px",
+                marginTop: isMobile ? "20px" : "10px",
                 textAlign: "center",
                 flex: 1,
                 position: "relative",
@@ -839,15 +845,18 @@ const FluencyP3 = ({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                justifyContent: "center",
+                paddingBottom: isMobile ? "20px" : "40px",
               }}
             >
               <div
                 style={{
+                  flex: isMobile ? 1 : undefined,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "20px",
-                  marginBottom: isMobile ? "30px" : "60px",
+                  marginBottom: isMobile ? "0px" : "60px",
                 }}
               >
                 <img
@@ -929,37 +938,59 @@ const FluencyP3 = ({
           ) : !showFinalScreen && !showContent ? (
             <div
               style={{
-                marginTop: isMobile ? "50px" : "40px",
-                width: isMobile ? "92%" : "80%",
-                maxWidth: isMobile ? "none" : "500px",
-                minHeight: isMobile ? "72px" : "100px",
-                height: "auto",
-                border: "1px dashed rgba(241, 153, 32, 1)",
-                borderRadius: "18px",
-                background: "rgba(255, 102, 0, 0.05)",
+                flex: isMobile ? 1 : undefined,
                 display: "flex",
+                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: isMobile ? "10px 12px" : "20px",
-                overflow: "hidden",
+                width: "100%",
+                boxSizing: "border-box",
               }}
             >
-              <CircularTimer
-                key={resetTimer ? `timer-${Date.now()}` : "timer"}
-                duration={3}
-                paused={parentModalOpen}
-                onComplete={() => {
-                  if (parentModalOpen) return;
-                  userResponsesRef.current = { q1: null, q2: null };
-                  setReadingSpeed("Slow");
-                  setStartTime(Date.now());
-                  setShowContent(true);
-                  setResetTimer(false);
+              <div
+                style={{
+                  marginTop: isMobile ? "0px" : "40px",
+                  width: isMobile ? "92%" : "80%",
+                  maxWidth: isMobile ? "none" : "500px",
+                  minHeight: isMobile ? "72px" : "100px",
+                  height: "auto",
+                  border: "1px dashed rgba(241, 153, 32, 1)",
+                  borderRadius: "18px",
+                  background: "rgba(255, 102, 0, 0.05)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: isMobile ? "10px 12px" : "20px",
+                  overflow: "hidden",
                 }}
-              />
+              >
+                <CircularTimer
+                  key={resetTimer ? `timer-${Date.now()}` : "timer"}
+                  duration={3}
+                  paused={parentModalOpen}
+                  onComplete={() => {
+                    if (parentModalOpen) return;
+                    userResponsesRef.current = { q1: null, q2: null };
+                    setReadingSpeed("Slow");
+                    setStartTime(Date.now());
+                    setShowContent(true);
+                    setResetTimer(false);
+                  }}
+                />
+              </div>
             </div>
           ) : !showFinalScreen ? (
-            <>
+            <div
+              style={{
+                flex: isMobile ? 1 : undefined,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                boxSizing: "border-box",
+              }}
+            >
               <div
                 style={{
                   width: isMobile ? "92%" : "90%",
@@ -968,7 +999,7 @@ const FluencyP3 = ({
                   flexDirection: "row",
                   alignItems: "flex-start",
                   gap: isMobile ? 0 : "24px",
-                  marginTop: isMobile ? "20px" : "40px",
+                  marginTop: isMobile ? "0px" : "40px",
                   marginBottom: isMobile ? "10px" : "20px",
                 }}
               >
@@ -978,7 +1009,7 @@ const FluencyP3 = ({
                     width: isMobile ? "100%" : undefined,
                     minHeight: isMobile ? "72px" : "100px",
                     height: "auto",
-                    marginTop: isMobile ? "40px" : "0px",
+                    marginTop: "0px",
                     border: "1px dashed rgba(241, 153, 32, 1)",
                     borderRadius: "18px",
                     background: "rgba(255, 102, 0, 0.05)",
@@ -1027,11 +1058,16 @@ const FluencyP3 = ({
                   />
                 </div>
               )}
-            </>
+            </div>
           ) : (
             <div
               style={{
-                marginTop: "40px",
+                flex: isMobile ? 1 : undefined,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: isMobile ? "0px" : "40px",
                 paddingBottom: isMobile ? "16px" : "40px",
                 textAlign: "center",
                 width: "100%",

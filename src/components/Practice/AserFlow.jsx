@@ -1,61 +1,39 @@
-import React, { useState, useEffect, useRef } from "react";
+import { Box } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Confetti from "react-confetti";
-import { nextimg as nextImg } from "../../utils/imageAudioLinks";
-import MainLayout from "../Layout/MainLayout";
-import SafeYouTubePlayer from "../SafeYouTubePlayer";
-import {
-  practiceSteps,
-  WordRedCircle,
-  StopButton,
-  SpeakButton,
-  ListenButton,
-  NextButtonRound,
-  RetryIcon,
-  getLocalData,
-  setLocalData,
-  sendTestRigScore,
-} from "../../utils/constants";
-import { phoneticMatch } from "../../utils/phoneticUtils";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
-import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
-import Joyride from "react-joyride";
-import LanguageModalNew from "../../utils/LanguageModal";
-import {
-  fetchASROutput,
-  handleTextEvaluation,
-  callTelemetryDiscovery,
-} from "../../utils/apiUtil";
-import AudioTooltipModal from "./AudioTooltipModal";
-import { doubleMetaphone } from "double-metaphone";
-import correctSound from "../../assets/correct.wav";
+import { useNavigate } from "react-router-dom";
 import wrongSound from "../../assets/audio/wrong.wav";
-import {
-  addLesson,
-  addPointer,
-  fetchUserPoints,
-  createLearnerProgress,
-} from "../../services/orchestration/orchestrationService";
-import {
-  fetchGetSetResult,
-  callEngagementPredictor,
-  clearInteractions,
-} from "../../services/learnerAi/learnerAiService";
+import listenBearGif from "../../assets/beardances.gif";
+import bubbleImg from "../../assets/bubble.png";
+import correctSound from "../../assets/correct.wav";
+import hintimg from "../../assets/hintsicon.svg";
 import {
   fetchAssessmentData,
   fetchPaginatedContent,
 } from "../../services/content/contentService";
-import { useNavigate } from "react-router-dom";
+import {
+  callEngagementPredictor,
+  clearInteractions,
+  fetchGetSetResult,
+  updateLearnerProfile,
+} from "../../services/learnerAi/learnerAiService";
+import {
+  addLesson,
+  addPointer,
+} from "../../services/orchestration/orchestrationService";
 import { uniqueId } from "../../services/utilService";
-import { updateLearnerProfile } from "../../services/learnerAi/learnerAiService";
-import bubbleImg from "../../assets/bubble.png";
-import { Box } from "@mui/material";
-import listenBearGif from "../../assets/beardances.gif";
-import hintimg from "../../assets/hintsicon.svg";
-import { MessageDialog } from "../Assesment/Assesment";
+import { callTelemetryDiscovery } from "../../utils/apiUtil";
+import {
+  getLocalData,
+  ListenButton,
+  sendTestRigScore,
+  setLocalData,
+} from "../../utils/constants";
 import { DISCOVERY_SET_FLOW_STORAGE } from "../../utils/discoverSetFlow";
+import { nextimg as nextImg } from "../../utils/imageAudioLinks";
+import { MessageDialog } from "../Assesment/Assesment";
+import MainLayout from "../Layout/MainLayout";
+import SafeYouTubePlayer from "../SafeYouTubePlayer";
 
 const AserFlow = ({
   // setVoiceText,
@@ -77,7 +55,7 @@ const AserFlow = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   // disableScreen,
   isDemo,
@@ -99,6 +77,7 @@ const AserFlow = ({
   hideContentDuringDemo = false,
   blockProgression = false,
   hideProgress = false,
+  showSpeakerPointer = false,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedLetter, setSelectedLetter] = useState("");
@@ -199,11 +178,11 @@ const AserFlow = ({
         if (!isDemo) {
           await addLesson({
             sessionId,
-            milestone: `practice`,
+            milestone: `discovery`,
             lesson: "0",
-            progress: 0,
+            progress: 100,
             language: lang,
-            milestoneLevel: "B",
+            milestoneLevel: "m0",
           });
         }
 
@@ -537,7 +516,9 @@ const AserFlow = ({
       <div
         style={{
           width: "100%",
-          margin: "10px 0",
+          height: isMobile ? "100%" : "auto",
+          margin: isMobile ? "0" : "70px 0 10px 0",
+          paddingBottom: isMobile ? "0px" : "65px",
           background: "#fff",
           display: "flex",
           flexDirection: "column",
@@ -611,7 +592,7 @@ const AserFlow = ({
             width: "50px",
             height: "50px",
             position: "absolute",
-            top: "20px",
+            top: isMobile ? "5px" : "20px",
             left: "10px",
             cursor: "pointer",
             zIndex: 1000,
@@ -684,7 +665,7 @@ const AserFlow = ({
           style={{
             position: "relative",
             width: "100%",
-            height: isMobile ? "270px" : "350px",
+            height: isMobile ? "270px" : "min(280px, 32vh)",
             //background: "#fff",
             borderRadius: "20px",
             //boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
@@ -695,36 +676,36 @@ const AserFlow = ({
           }}
         >
           {questionLetters?.map((char, index) => {
-            const bubbleSize = isMobile ? "60px" : "100px";
+            const bubbleSize = isMobile ? "60px" : "min(100px, 11vh)";
             const positions = isMobile
               ? [
-                { top: "18%", left: "16%" },  // 0
-                { top: "71%", left: "14%" },  // 1
-                { top: "46%", left: "27%" },  // 2
-                { top: "48%", left: "54%" },  // 3
-                { top: "18%", left: "62%" },  // 4
-                { top: "47%", left: "78%" },  // 5
-                { top: "23%", left: "84%" },  // 6
-                { top: "72%", left: "82%" },  // 7
-                { top: "24%", left: "39%" },  // 8
-                { top: "72%", left: "47%" },  // 9
-                { top: "89%", left: "64%" },  // 10
-                { top: "89%", left: "30%" },  // 11
-              ]
+                  { top: "18%", left: "16%" }, // 0
+                  { top: "71%", left: "14%" }, // 1
+                  { top: "46%", left: "27%" }, // 2
+                  { top: "48%", left: "54%" }, // 3
+                  { top: "18%", left: "62%" }, // 4
+                  { top: "47%", left: "78%" }, // 5
+                  { top: "23%", left: "84%" }, // 6
+                  { top: "72%", left: "82%" }, // 7
+                  { top: "24%", left: "39%" }, // 8
+                  { top: "72%", left: "47%" }, // 9
+                  { top: "89%", left: "64%" }, // 10
+                  { top: "89%", left: "30%" }, // 11
+                ]
               : [
-                { top: "20%", left: "20%" },
-                { top: "70%", left: "15%" },
-                { top: "48%", left: "30%" },
-                { top: "48%", left: "53%" },
-                { top: "18%", left: "62%" },
-                { top: "52%", left: "73%" },
-                { top: "20%", left: "80%" },
-                { top: "73%", left: "85%" },
-                { top: "20%", left: "40%" },
-                { top: "75%", left: "43%" },
-                { top: "79%", left: "61%" },
-                { top: "83%", left: "30%" },
-              ];
+                  { top: "20%", left: "20%" },
+                  { top: "70%", left: "15%" },
+                  { top: "48%", left: "30%" },
+                  { top: "48%", left: "53%" },
+                  { top: "18%", left: "62%" },
+                  { top: "52%", left: "73%" },
+                  { top: "20%", left: "80%" },
+                  { top: "73%", left: "85%" },
+                  { top: "20%", left: "40%" },
+                  { top: "75%", left: "43%" },
+                  { top: "79%", left: "61%" },
+                  { top: "98%", left: "30%" },
+                ];
 
             const pos = positions[index % positions.length];
 
@@ -738,12 +719,15 @@ const AserFlow = ({
                 }}
                 style={{
                   position: "absolute",
-                  top: isMobile ? `calc(${pos.top} - 50px)` : pos.top,
+                  top: pos.top,
                   left: pos.left,
                   transform: "translate(-50%, -50%)",
                   cursor: disableBubbles ? "not-allowed" : "pointer",
                   textAlign: "center",
-                  zIndex: 99999,
+                  zIndex:
+                    isDemo && char === correctLetter && !disableBubbles
+                      ? 999999
+                      : 1,
                   opacity: disableBubbles ? 0.5 : 1,
                   pointerEvents: disableBubbles ? "none" : "auto",
                 }}
@@ -772,11 +756,11 @@ const AserFlow = ({
                       )
                         ? "drop-shadow(0 0 10px #08a169ff)"
                         : ansSelectionStatus.some(
-                          (item) =>
-                            item.text === char && item.status === false
-                        )
-                          ? "drop-shadow(0 0 10px #d31818ff)"
-                          : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
+                            (item) =>
+                              item.text === char && item.status === false
+                          )
+                        ? "drop-shadow(0 0 10px #d31818ff)"
+                        : "drop-shadow(0 3px 8px rgba(0,0,0,0.3))",
                       transition: "filter 0.3s ease",
                     }}
                   />
@@ -803,7 +787,7 @@ const AserFlow = ({
                       top: "50%",
                       left: "50%",
                       transform: "translate(-50%, -50%)",
-                      fontSize: isMobile ? "38px" : "68px",
+                      fontSize: isMobile ? "38px" : "min(68px, 7.5vh)",
                       fontWeight: "800",
                       fontFamily: "Quicksand",
                       color: "#333F61",
@@ -814,26 +798,6 @@ const AserFlow = ({
                   >
                     {char}
                   </span>
-
-                  {/* Pointer under bubble for demo - show only for correct bubble in demo mode */}
-                  {isDemo && char === correctLetter && !disableBubbles && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "calc(100% + 20px)",
-                        left: "0%",
-                        rotate: "180deg",
-                        transform: "translateX(-50%)",
-                        zIndex: 10001,
-                        fontSize: "48px",
-                        animation: "pointDown 1.5s ease-in-out infinite",
-                        pointerEvents: "none",
-                        filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
-                      }}
-                    >
-                      👇
-                    </div>
-                  )}
                 </div>
               </div>
             );
@@ -855,8 +819,8 @@ const AserFlow = ({
           <Box
             sx={{
               position: "relative",
-              width: isMobile ? "70px" : "90px",
-              height: isMobile ? "70px" : "90px",
+              width: isMobile ? "70px" : "min(90px, 11vh)",
+              height: isMobile ? "70px" : "min(90px, 11vh)",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -874,8 +838,16 @@ const AserFlow = ({
             <Box
               sx={{
                 position: "absolute",
-                width: isAudioPlaying ? "0px" : (isMobile ? "70px" : "90px"),
-                height: isAudioPlaying ? "0px" : (isMobile ? "70px" : "90px"),
+                width: isAudioPlaying
+                  ? "0px"
+                  : isMobile
+                  ? "70px"
+                  : "min(90px, 11vh)",
+                height: isAudioPlaying
+                  ? "0px"
+                  : isMobile
+                  ? "70px"
+                  : "min(90px, 11vh)",
                 backgroundColor: "#A856FF",
                 borderRadius: "50%",
                 animation: isAudioPlaying
@@ -904,6 +876,32 @@ const AserFlow = ({
             >
               <ListenButton height={50} width={50} />
             </Box>
+            {(showSpeakerPointer || (isDemo && !disableBubbles)) && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "3px",
+                  zIndex: 10000,
+                  pointerEvents: "none",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: isMobile ? "40px" : "64px",
+                    animation:
+                      "pointToButton 1.5s ease-in-out infinite, bounce 1s ease-in-out infinite",
+                    filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))",
+                  }}
+                >
+                  👇
+                </div>
+              </div>
+            )}
           </Box>
           {/* Show next button only after completing all items (hide in demo mode) */}
           {(() => {
@@ -918,36 +916,36 @@ const AserFlow = ({
             });
             return shouldShowNext;
           })() && (
-              <img
-                src={nextImg}
-                alt="next"
-                role="button"
-                tabIndex={0}
-                style={{
-                  width: "50px",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                  opacity: hideContentDuringDemo ? 0 : 1,
-                  visibility: hideContentDuringDemo ? "hidden" : "visible",
-                  transition: "opacity 0.3s ease",
-                  zIndex: 10001,
-                  position: "relative",
-                }}
-                onClick={() => {
-                  console.log("AserFlow - Next button clicked after completion");
-                  // Handle navigation when next button is clicked after completion
-                  handleNext?.();
-                  if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
-                    navigate("/");
-                  } else {
-                    navigate("/discover-start");
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
-                }}
-              />
-            )}
+            <img
+              src={nextImg}
+              alt="next"
+              role="button"
+              tabIndex={0}
+              style={{
+                width: "50px",
+                cursor: "pointer",
+                marginLeft: "10px",
+                opacity: hideContentDuringDemo ? 0 : 1,
+                visibility: hideContentDuringDemo ? "hidden" : "visible",
+                transition: "opacity 0.3s ease",
+                zIndex: 10001,
+                position: "relative",
+              }}
+              onClick={() => {
+                console.log("AserFlow - Next button clicked after completion");
+                // Handle navigation when next button is clicked after completion
+                handleNext?.();
+                if (process.env.REACT_APP_IS_APP_IFRAME === "true") {
+                  navigate("/");
+                } else {
+                  navigate("/discover-start");
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
+              }}
+            />
+          )}
           <img
             src={listenBearGif}
             alt="bear"
@@ -955,11 +953,11 @@ const AserFlow = ({
               position: "absolute",
               zIndex: "9999",
               objectFit: "contain",
-              width: isMobile ? "120px" : "230px",
+              width: isMobile ? "120px" : "min(230px, 30vh)",
               maxHeight: "none",
-              bottom: isMobile ? "-15px" : "40px",
+              bottom: isMobile ? "-15px" : "min(40px, 5vh)",
               maxWidth: "none",
-              height: isMobile ? "110px" : "auto",
+              height: isMobile ? "95px" : "auto",
               left: isMobile ? "auto" : "-20px",
               right: isMobile ? "calc(50% + 45px)" : "auto",
               opacity: hideContentDuringDemo ? 0 : 1,

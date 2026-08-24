@@ -835,11 +835,8 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     if (wn > 0) setHighlightedCardIndex((prev) => (prev + 1) % wn);
 
     if (newCount >= 3) {
-      // Demo complete — transition to completion after narration
+      // Final step. Completion screen shows after the narration ends (see effect).
       setCurrentStepIndex(2);
-      setTimeout(() => {
-        setPreviewPhase("completion");
-      }, 3000);
     }
   };
 
@@ -1066,10 +1063,15 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
       currentNarration !== lastPlayedNarrationRef.current
     ) {
       lastPlayedNarrationRef.current = currentNarration;
+      const isFinalNarration =
+        viewMode !== "alphabet" && syllableClickCount >= 3;
 
       // Small delay to ensure UI has updated
       const timer = setTimeout(() => {
-        playNarration(currentNarration);
+        playNarration(currentNarration).then(() => {
+          // Go to completion only after the narration finishes (no cut-off).
+          if (isFinalNarration) setPreviewPhase("completion");
+        });
       }, 300);
 
       return () => {

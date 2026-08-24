@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LetterHuntMechanics from "../../components/Practice/LetterHuntMechanics";
+import { getUiStrings } from "../../constants/strings";
+import { getLocalData } from "../../utils/constants";
 
 /**
  * DEMO ROUTE - Letter Hunt Game Demo (Practice View)
@@ -39,6 +41,8 @@ const LetterHuntDemo = () => {
     console.log("Game completed!");
   };
 
+  const ui = getUiStrings(getLocalData("lang"));
+
   // Error boundary - if component fails to render, show error
   try {
     // Mock props to match Practice.jsx structure
@@ -47,7 +51,7 @@ const LetterHuntDemo = () => {
         page={page}
         setPage={setPage}
         level={initialLevel}
-        header="Letter Recognition"
+        header={ui.PRACTICE_LETTER_RECOGNITION}
         points={0}
         steps={10}
         currentStep={1}
@@ -68,11 +72,12 @@ const LetterHuntDemo = () => {
     );
   } catch (error) {
     console.error("LetterHuntDemo render error:", error);
+    const ui = getUiStrings(localStorage.getItem("selectedLanguage"));
     return (
       <div style={{ padding: "20px", textAlign: "center" }}>
-        <h2>Error loading game</h2>
+        <h2>{ui.GAME_ERROR}</h2>
         <p>{error.message}</p>
-        <button onClick={handleBack}>Go Back</button>
+        <button onClick={handleBack}>{ui.COMMON_BACK}</button>
       </div>
     );
   }

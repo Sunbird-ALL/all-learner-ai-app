@@ -1,6 +1,8 @@
 import MainLayout from "../Layout/MainLayout";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { getLocalData, setLocalData } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
+import { getFontFamily } from "../../utils/fontUtils";
 import {
   AssesmentCompletePlane,
   AverageMood,
@@ -23,6 +25,8 @@ import { fetchUserPoints } from "../../services/orchestration/orchestrationServi
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
 
 const AssesmentEnd = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [shake, setShake] = useState(true);
   const [level, setLevel] = useState("");
   const [previousLevel, setPreviousLevel] = useState("");
@@ -31,6 +35,7 @@ const AssesmentEnd = () => {
   const [vocabCount, setVocabCount] = useState(0);
   const [wordCount, setWordCount] = useState(0);
   const lang = getLocalData("lang");
+  const ui = getUiStrings(lang);
   const hasFetchedData = useRef(false);
 
   useEffect(() => {
@@ -97,8 +102,9 @@ const AssesmentEnd = () => {
     width: "100vw",
     height: "100vh",
     backgroundImage: `url(${desktopLevel5})`,
-    backgroundSize: "contain", // Cover the entire viewport
-    backgroundRepeat: "round", // Center the image
+    backgroundSize: isMobile ? "cover" : "contain", // Cover the entire viewport
+    backgroundRepeat: isMobile ? "no-repeat" : "round", // Center the image
+    backgroundPosition: isMobile ? "center" : "initial",
     position: "relative",
   };
 
@@ -110,21 +116,58 @@ const AssesmentEnd = () => {
       <ProfileHeader
         {...{ level: newLevel, points, wordCount, vocabCount, lang }}
       />
-      <Box sx={{ position: "absolute", top: 5, left: 0 }}>
-        <Box sx={{ position: "relative" }} className="plane">
+      <Box
+        sx={
+          isMobile
+            ? {
+                position: "absolute",
+                top: "30%",
+                left: "50%",
+                transformOrigin: "center center",
+                animation: "mobileFloat 4s ease-in-out infinite",
+                "@keyframes mobileFloat": {
+                  "0%": {
+                    transform:
+                      "translate(-50%, -50%) scale(0.58) translateY(0px) rotate(-1deg)",
+                  },
+                  "50%": {
+                    transform:
+                      "translate(-50%, -50%) scale(0.58) translateY(-12px) rotate(1deg)",
+                  },
+                  "100%": {
+                    transform:
+                      "translate(-50%, -50%) scale(0.58) translateY(0px) rotate(-1deg)",
+                  },
+                },
+              }
+            : {
+                position: "absolute",
+                top: 5,
+                left: 0,
+              }
+        }
+      >
+        <Box sx={{ position: "relative" }} className={isMobile ? "" : "plane"}>
           <AssesmentCompletePlane />
-          <Box sx={{ position: "absolute", bottom: 135, left: 120 }}>
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 129,
+              left: 115,
+              transform: "rotate(-5deg)",
+            }}
+          >
             <span
               style={{
                 color: "#00B359",
                 fontWeight: 700,
                 fontSize: "22px",
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
                 lineHeight: "32.5px",
                 letterSpacing: "2%",
               }}
             >
-              {newLevel === previousLevel ? "Amost There.!" : `Hurray.!`}
+              {newLevel === previousLevel ? ui.ALMOST_THERE : ui.HURRAY}
             </span>
           </Box>
           <Box
@@ -132,62 +175,24 @@ const AssesmentEnd = () => {
               position: "absolute",
               bottom: 105,
               left: 40,
-              transform: "rotate(-12deg)",
+              transform: "rotate(-5deg)",
             }}
           >
             <span
               style={{
                 color: "#183346",
                 fontWeight: 700,
-                fontSize: "18px",
-                fontFamily: "Quicksand",
+                fontSize: "15px",
+                fontFamily: getFontFamily(lang),
                 lineHeight: "30px",
               }}
             >
               {newLevel === previousLevel
-                ? "more"
-                : `Level ${previousLevel || ""}`}
-            </span>
-          </Box>
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: 110,
-              left: 105,
-              // transform: "rotate(-2deg)",
-            }}
-          >
-            <span
-              style={{
-                color: "#183346",
-                fontWeight: 700,
-                fontSize: "18px",
-                fontFamily: "Quicksand",
-                lineHeight: "30px",
-              }}
-            >
-              {newLevel === previousLevel ? "practice" : `completed`}
-            </span>
-          </Box>
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: newLevel === previousLevel ? 115 : 125,
-              left: newLevel === previousLevel ? 190 : 200,
-              transform:
-                newLevel === previousLevel ? "rotate(-5deg)" : "rotate(-18deg)",
-            }}
-          >
-            <span
-              style={{
-                color: "#183346",
-                fontWeight: 700,
-                fontSize: "18px",
-                fontFamily: "Quicksand",
-                lineHeight: "30px",
-              }}
-            >
-              {newLevel === previousLevel ? "required" : `successfully`}
+                ? ui.ASSESSMENT_END_MORE_PRACTICE
+                : ui.ASSESSMENT_END_LEVEL_COMPLETED.replace(
+                    "{level}",
+                    previousLevel || ""
+                  )}
             </span>
           </Box>
         </Box>
@@ -241,7 +246,7 @@ const AssesmentEnd = () => {
           </Box> */}
         </Box>
         <Box
-          mr={8}
+          mr={isMobile ? 2 : 8}
           sx={{
             display: "flex",
           }}
@@ -292,10 +297,10 @@ const AssesmentEnd = () => {
                 color: "#FFFFFF",
                 fontWeight: 600,
                 fontSize: "20px",
-                fontFamily: "Quicksand",
+                fontFamily: getFontFamily(lang),
               }}
             >
-              {"Continue"}
+              {ui.COMMON_CONTINUE}
             </span>
           </Box>
         </Box>
@@ -346,7 +351,7 @@ const AssesmentEnd = () => {
             textAlign: "center",
           }}
         >
-          {newLevel === previousLevel ? `Almost There!!!` : `Hurray!!!`}
+          {newLevel === previousLevel ? ui.ALMOST_THERE : ui.HURRAY}
         </Typography>
         <Box mt={1}>
           <span
@@ -354,14 +359,17 @@ const AssesmentEnd = () => {
               color: "#50507D",
               fontWeight: 600,
               fontSize: "30px",
-              fontFamily: "Quicksand",
+              fontFamily: getFontFamily(lang),
               lineHeight: "37.5px",
               letterSpacing: "2%",
             }}
           >
             {newLevel === previousLevel
-              ? `Some more practice required to complete ${previousLevel}`
-              : `You completed Level ${previousLevel} successfully`}
+              ? ui.ASSESSMENT_END_MORE_PRACTICE
+              : ui.ASSESSMENT_END_LEVEL_COMPLETED.replace(
+                  "{level}",
+                  previousLevel || ""
+                )}
           </span>
         </Box>
         {/* <Box display="flex" mt={2}>
@@ -411,11 +419,14 @@ const AssesmentEnd = () => {
               color: "#5C5C84",
               fontWeight: 400,
               fontSize: "26px",
-              fontFamily: "Quicksand",
+              fontFamily: getFontFamily(lang),
               lineHeight: "28.5px",
             }}
           >
-            {`Rate your experience for Level ${previousLevel}`}
+            {ui.ASSESSMENT_END_RATE_EXPERIENCE.replace(
+              "{level}",
+              previousLevel || ""
+            )}
           </span>
         </Box>
         <Box display="flex" mt={2}>

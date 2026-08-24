@@ -662,7 +662,10 @@ const Practice = () => {
           stepName = step.fullName;
         }
         setOpenMessageDialog({
-          message: `You have successfully completed ${stepName} `,
+          message: ui.PRACTICE_MESSAGE_STEP_COMPLETE.replace(
+            "{stepName}",
+            stepName
+          ),
         });
       }, 1200);
     }
@@ -684,7 +687,7 @@ const Practice = () => {
   useEffect(() => {
     if (voiceText === "error") {
       setOpenMessageDialog({
-        message: "Sorry I couldn't hear a voice. Could you please speak again?",
+        message: ui.VOICE_COULD_NOT_HEAR_AGAIN,
         isError: true,
       });
       setVoiceText("");
@@ -692,7 +695,7 @@ const Practice = () => {
     }
     if (voiceText === "profanity") {
       setOpenMessageDialog({
-        message: `Please speak appropriately.`,
+        message: ui.VOICE_PROMPT_SPEAK_APPROPRIATELY,
         severity: "warning",
         isError: true,
       });
@@ -2236,7 +2239,7 @@ const Practice = () => {
                 try {
                   await addLesson({
                     sessionId,
-                    milestone: milestoneType,
+                    milestone: "practice",
                     lesson: "0",
                     progress: 0,
                     language: lang,
@@ -2254,7 +2257,7 @@ const Practice = () => {
                 try {
                   await addLesson({
                     sessionId,
-                    milestone: milestoneType,
+                    milestone: "practice",
                     lesson: "0",
                     progress: 0,
                     language: lang,
@@ -2263,15 +2266,14 @@ const Practice = () => {
                 } catch (e) {
                   // catch error
                 }
-                gameOver({ link: "/assesment-end" }, true);
-                setLocalData("wordWall", true);
+                gameOver({ link: "/_practice", wordWall: true }, true);
                 return; // Exit to show feedback screen
               }
 
               try {
                 await addLesson({
                   sessionId,
-                  milestone: milestoneType,
+                  milestone: "practice",
                   lesson: "0",
                   progress: 0,
                   language: lang,
@@ -3706,7 +3708,7 @@ const Practice = () => {
                         : "clamp(1.6rem, 2.5vw, 3.8rem)",
                     fontWeight: lang === "te" ? 400 : 700,
                     fontFamily: getFontFamily(lang),
-                    lineHeight: "50px",
+                    lineHeight: { xs: 1.4, md: "4.5rem" },
                     background: "#FFF0BD",
                     color: color,
                   }}
@@ -3734,7 +3736,7 @@ const Practice = () => {
                       : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
-                  lineHeight: "50px",
+                  lineHeight: { xs: 1.4, md: "4.5rem" },
                 }}
               >
                 {i === 0 ? word[i].toUpperCase() : word[i]}
@@ -3763,7 +3765,7 @@ const Practice = () => {
                       : "clamp(1.6rem, 2.5vw, 3.8rem)",
                   fontWeight: 700,
                   fontFamily: getFontFamily(lang),
-                  lineHeight: "50px",
+                  lineHeight: { xs: 1.4, md: "4.5rem" },
                   background: "#FFF0BD",
                 }}
               >
@@ -3785,7 +3787,7 @@ const Practice = () => {
                     : "clamp(1.6rem, 2.5vw, 3.8rem)",
                 fontWeight: 700,
                 fontFamily: getFontFamily(lang),
-                lineHeight: "50px",
+                lineHeight: { xs: 1.5, sm: 2, md: 1.5 },
               }}
               key={index}
             >

@@ -557,23 +557,6 @@ export function LetterGamePreview({
     return (
       <div className="h-screen bg-gradient-cool p-2 sm:p-3 md:p-4 overflow-hidden flex flex-col">
         <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 overflow-hidden">
-          {!hideHeader && (
-            <div className="flex items-center justify-between mb-3 flex-shrink-0">
-              <Button
-                onClick={handleBack}
-                className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/20 text-sm px-3 py-2"
-              >
-                <ArrowLeft className="h-3 w-3 mr-1" />
-                {contentLanguage === "en"
-                  ? "Back"
-                  : contentLanguage === "te"
-                  ? "వెనుకకు"
-                  : contentLanguage === "kn"
-                  ? "ಹಿಂದಕ್ಕೆ"
-                  : "मागे"}
-              </Button>
-            </div>
-          )}
           <CountdownTimer
             initialCount={3}
             onComplete={handleCountdownComplete}
@@ -616,6 +599,8 @@ export function LetterGamePreview({
                       ? "స్థాయి"
                       : contentLanguage === "kn"
                       ? "ಮಟ್ಟ"
+                      : contentLanguage === "hi"
+                      ? "स्तर"
                       : "पातळी"}{" "}
                     {level} • {difficulty.toLowerCase()} • {estimatedTime}
                   </span>
@@ -625,10 +610,10 @@ export function LetterGamePreview({
           )}
 
           {/* Main Content Card */}
-          <Card className="flex-1 p-3 sm:p-4 md:p-5 bg-white/95 backdrop-blur-sm shadow-floating overflow-hidden flex flex-col rounded-2xl min-h-0">
+          <Card className="flex-1 p-3 sm:p-4 md:p-[clamp(10px,2vh,20px)] bg-white/95 backdrop-blur-sm shadow-floating overflow-hidden flex flex-col rounded-2xl min-h-0">
             {/* How to Play Section - Centered */}
-            <div className="flex flex-col items-center mb-1.5 sm:mb-2 px-2">
-              <div className="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1.5">
+            <div className="flex flex-col items-center mb-[clamp(4px,1vh,8px)] px-2">
+              <div className="flex items-center gap-1 sm:gap-1.5 mb-[clamp(2px,0.5vh,6px)]">
                 <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Sparkles className="h-1.5 w-1.5 sm:h-2 sm:w-2 md:h-2.5 md:w-2.5 text-white" />
                 </div>
@@ -693,6 +678,8 @@ export function LetterGamePreview({
                   ? "డెమో స్కిప్ చేయండి"
                   : contentLanguage === "kn"
                   ? "ಡೆಮೊವನ್ನು ಸ್ಕಿಪ್ ಮಾಡಿ"
+                  : contentLanguage === "hi"
+                  ? "डेमो छोड़ें"
                   : "डेमो वगळा"}
               </Button>
 
@@ -708,6 +695,8 @@ export function LetterGamePreview({
                   ? "గేమ్ ప్రారంభించండి"
                   : contentLanguage === "kn"
                   ? "ಆಟವನ್ನು ಪ್ರಾರಂಭಿಸಿ"
+                  : contentLanguage === "hi"
+                  ? "खेल शुरू करें"
                   : "गेम सुरू करा"}
               </Button>
             </div>

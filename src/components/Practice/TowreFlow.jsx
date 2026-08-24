@@ -27,6 +27,7 @@ import booksStackImg from "../../assets/totalWord.svg";
 import reportPandaImg from "../../assets/pandaa.svg";
 import reportImg from "../../assets/reportImg.svg";
 import { setLocalData, getLocalData } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import { getFontFamily } from "../../utils/fontUtils";
 import { useNavigate, useLocation } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
@@ -617,6 +618,7 @@ const CombinedReportPage = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const location = useLocation();
+  const ui = getUiStrings(getLocalData("lang") || "en");
   const wordCount = transcript.trim().split(/\s+/).length;
   //const wordsPerMinute = Math.round((wordCount / totalSec) * 60);
   const totalWordsInCurrentSets = (currentWordSetIndex + 1) * 12;
@@ -636,7 +638,8 @@ const CombinedReportPage = ({
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         borderRadius: "20px",
-        width: "100%",
+        width: isMobile ? "92%" : "90%",
+        boxSizing: "border-box",
         //maxWidth: "1100px",
         //height: "470px",
         position: "relative",
@@ -664,7 +667,7 @@ const CombinedReportPage = ({
           fontWeight: "700",
         }}
       >
-        Well done!
+        {ui.TOWRE_RESULT_WELL_DONE}
       </h2>
       <p
         style={{
@@ -675,7 +678,7 @@ const CombinedReportPage = ({
           marginBottom: "25px",
         }}
       >
-        You're reading faster.
+        {ui.TOWRE_RESULT_READING_FASTER}
       </p>
 
       {browserUnsupported && (
@@ -693,9 +696,7 @@ const CombinedReportPage = ({
             width: "100%",
           }}
         >
-          ⚠️ Speech recognition is not supported in your browser, so words could
-          not be scored automatically. Please use Google Chrome or Microsoft
-          Edge for accurate results.
+          {ui.TOWRE_SCORE_UNAVAILABLE_WARNING}
         </div>
       )}
 
@@ -703,7 +704,7 @@ const CombinedReportPage = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: "50px",
+          gap: isMobile ? "15px" : "50px",
           marginBottom: "20px",
         }}
       >
@@ -725,7 +726,7 @@ const CombinedReportPage = ({
           <div
             style={{ color: "#333F61", fontSize: isMobile ? "18px" : "20px" }}
           >
-            Words Per Minute
+            {ui.TOWRE_RESULT_WORDS_PER_MINUTE}
           </div>
         </div>
 
@@ -747,7 +748,7 @@ const CombinedReportPage = ({
           <div
             style={{ color: "#333F61", fontSize: isMobile ? "18px" : "20px" }}
           >
-            New Words Learnt
+            {ui.TOWRE_RESULT_NEW_WORDS_LEARNT}
           </div>
         </div>
 
@@ -769,7 +770,7 @@ const CombinedReportPage = ({
           <div
             style={{ color: "#333F61", fontSize: isMobile ? "18px" : "20px" }}
           >
-            Total Words Learnt
+            {ui.TOWRE_RESULT_TOTAL_WORDS_LEARNT}
           </div>
         </div>
       </div>
@@ -948,6 +949,8 @@ const CombinedReportPage = ({
           borderRadius: "24px",
           p: isMobile ? 2 : 4,
           width: isMobile ? "95%" : "90%",
+          maxHeight: isMobile ? "calc(100vh - 40px)" : "calc(100vh - 80px)",
+          boxSizing: "border-box",
           //maxWidth: "1200px",
           boxShadow: "0px 4px 20px rgba(0,0,0,0.1)",
           position: "relative",
@@ -966,11 +969,13 @@ const CombinedReportPage = ({
           }}
         >
           <Box sx={statStyles.attempted}>
-            Attempted Words: {attemptedWordsCount}
+            {ui.TOWRE_ATTEMPTED_WORDS}: {attemptedWordsCount}
           </Box>
-          <Box sx={statStyles.correct}>Correct Words: {correctWordsCount}</Box>
+          <Box sx={statStyles.correct}>
+            {ui.TOWRE_CORRECT_WORDS}: {correctWordsCount}
+          </Box>
           <Box sx={statStyles.unattempted}>
-            Unattempted Words: {unattemptedWordsCount}
+            {ui.TOWRE_UNATTEMPTED_WORDS}: {unattemptedWordsCount}
           </Box>
         </Box>
 
@@ -1027,7 +1032,8 @@ const CombinedReportPage = ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: isMobile ? "0px" : "0px",
+        padding: showWordList ? (isMobile ? "20px 0px" : "40px 0px") : "0px",
+        boxSizing: "border-box",
         alignContent: "center",
         overflowX: "hidden",
         overflowY: "hidden",
@@ -1037,6 +1043,8 @@ const CombinedReportPage = ({
     </div>
   );
 };
+const lang = getLocalData("lang");
+const ui = getUiStrings(lang || "en");
 
 const TowreFlow = ({
   setVoiceText,
@@ -1083,9 +1091,7 @@ const TowreFlow = ({
 }) => {
   const [activeSet, setActiveSet] = useState(0);
   const [currentWordSetIndex, setCurrentWordSetIndex] = useState(0);
-  const [message, setMessage] = useState(
-    "Look at the words.\nYou'll read them soon — left to right, top to bottom"
-  );
+  const [message, setMessage] = useState(null);
   const [showCountdown, setShowCountdown] = useState(false);
   const [count, setCount] = useState(3);
   const [showFinalWords, setShowFinalWords] = useState(false);
@@ -1110,7 +1116,6 @@ const TowreFlow = ({
   const [transcript, setTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
   const [listening, setListening] = useState(false);
-  const lang = getLocalData("lang");
 
   // Map language codes to browser Speech Recognition format
   // Memoize to prevent function recreation on every render
@@ -1149,6 +1154,7 @@ const TowreFlow = ({
         console.log("✅ Speech recognition started (onstart event)");
         setListening(true);
         recognitionStartedRef.current = true;
+        isRecognitionActiveRef.current = true;
       };
 
       recognitionRef.current.onresult = (event) => {
@@ -1191,13 +1197,20 @@ const TowreFlow = ({
       recognitionRef.current.onend = () => {
         console.log("ℹ️ Speech recognition ended");
         setListening(false);
+        isRecognitionActiveRef.current = false;
 
         // Auto-restart if we should be listening
         // Use refs to avoid stale closure issues
         if (shouldBeListeningRef.current) {
+          // Android needs more time for audio hardware to fully release between sessions
+          const restartDelay = /Android/i.test(navigator.userAgent) ? 500 : 100;
           setTimeout(() => {
             // Check current state via refs
-            if (shouldBeListeningRef.current && recognitionRef.current) {
+            if (
+              shouldBeListeningRef.current &&
+              recognitionRef.current &&
+              !isRecognitionActiveRef.current
+            ) {
               try {
                 recognitionRef.current.start();
                 console.log("🔄 Auto-restarting speech recognition");
@@ -1209,7 +1222,7 @@ const TowreFlow = ({
                 );
               }
             }
-          }, 100);
+          }, restartDelay);
         }
       };
     }
@@ -1258,6 +1271,18 @@ const TowreFlow = ({
     () => allWordSets[currentWordSetIndex],
     [allWordSets, currentWordSetIndex]
   );
+  const displayedWordSet = useMemo(() => {
+    if (!currentWordSet) return [];
+    if (isMobile) {
+      const flatWords = currentWordSet.flat();
+      const mobileRows = [];
+      for (let i = 0; i < flatWords.length; i += 3) {
+        mobileRows.push(flatWords.slice(i, i + 3));
+      }
+      return mobileRows;
+    }
+    return currentWordSet;
+  }, [currentWordSet, isMobile]);
   const transcriptRef = useRef("");
   const location = useLocation();
   background = "linear-gradient(45deg, #FF730E 30%, #FFB951 90%)";
@@ -1308,6 +1333,8 @@ const TowreFlow = ({
   // Track listening state changes and auto-restart if it stops unexpectedly
   const shouldBeListeningRef = useRef(false);
   const recognitionStartedRef = useRef(false);
+  // Tracks actual SR running state synchronously (not stale React state)
+  const isRecognitionActiveRef = useRef(false);
   const retryCountRef = useRef(0);
   const maxRetries = 3;
   const retryTimeoutRef = useRef(null);
@@ -1429,9 +1456,10 @@ const TowreFlow = ({
       // Debounce restart attempts to avoid rapid-fire restarts during re-renders
       restartDebounceRef.current = setTimeout(() => {
         // Double-check conditions after debounce delay
+        // Use isRecognitionActiveRef (not stale React state) to avoid duplicate start
         if (
           shouldBeListeningRef.current &&
-          !listening &&
+          !isRecognitionActiveRef.current &&
           showFinalWords &&
           !showResults &&
           !isRestartingRef.current
@@ -1449,11 +1477,11 @@ const TowreFlow = ({
               shouldBeListeningRef.current &&
               attemptNumber <= maxRetries
             ) {
-              // Check listening state right before attempting restart
-              // If already listening, don't restart
-              if (listening) {
+              // Check actual SR running state right before attempting restart
+              // Use ref (not stale React state) to avoid calling .start() when already running
+              if (isRecognitionActiveRef.current) {
                 console.log(
-                  "ℹ️ Recognition already listening, skipping restart"
+                  "ℹ️ Recognition already active (ref check), skipping restart"
                 );
                 isRestartingRef.current = false;
                 retryCountRef.current = 0;
@@ -1553,9 +1581,7 @@ const TowreFlow = ({
     setIsStarted(false);
     setActiveSet(0);
     setCurrentWordSetIndex(0);
-    setMessage(
-      "Look at the words.\nYou'll read them soon — left to right, top to bottom"
-    );
+    setMessage(ui.TOWRE_MSG_LOOK_AT_WORDS);
     setShowCountdown(false);
     setCount(3);
     setShowFinalWords(false);
@@ -1606,9 +1632,7 @@ const TowreFlow = ({
     );
     if (!browserSupportsSpeechRecognition) {
       console.error("❌ Speech recognition is not supported in this browser!");
-      setBrowserWarning(
-        "Your browser may not support speech recognition. For best results, please use Google Chrome or Microsoft Edge."
-      );
+      setBrowserWarning(ui.TOWRE_BROWSER_SPEECH_WARNING);
     }
   }, [browserSupportsSpeechRecognition]);
 
@@ -1657,25 +1681,21 @@ const TowreFlow = ({
 
   const handleNext = () => {
     if (activeSet === 0) {
-      setMessage("Here come your next words!");
+      setMessage(ui.TOWRE_MSG_NEXT_WORDS_SHORT);
       setActiveSet(1);
     } else if (activeSet === 1) {
-      setMessage("Great job! Here come your next words.");
+      setMessage(ui.TOWRE_MSG_NEXT_WORDS_GREAT);
       setActiveSet(2);
     } else if (activeSet === 2) {
-      setMessage(
-        "You'll go to the next set of words, when you click the button below."
-      );
+      setMessage(ui.TOWRE_MSG_NEXT_SET_HINT);
       setActiveSet(3);
     } else if (activeSet === 3) {
-      setMessage(
-        "If you are not able to speak a word, You can move to the next word."
-      );
+      setMessage(ui.TOWRE_MSG_SKIP_WORD_HINT);
       setActiveSet(4);
     } else if (activeSet === 4) {
       isMobile
-        ? setMessage("Are You Ready? You'll have 45 seconds.")
-        : setMessage("Are You Ready?⏱️ You'll have 45 seconds.");
+        ? setMessage(ui.TOWRE_MSG_READY_SECONDS)
+        : setMessage(ui.TOWRE_MSG_READY_SECONDS_ICON);
       setActiveSet(5);
     } else if (activeSet === 5) {
       startCountdown();
@@ -1686,7 +1706,7 @@ const TowreFlow = ({
     if (currentWordSetIndex < allWordSets.length - 1) {
       setCurrentWordSetIndex(currentWordSetIndex + 1);
       setActiveSet(0);
-      setMessage("Read the words out\nloud one by one!\nStart from top left");
+      setMessage(ui.TOWRE_MSG_READ_WORDS);
     } else {
       const endTime = Date.now();
       const elapsedSeconds = (endTime - startTime) / 1000;
@@ -1740,28 +1760,33 @@ const TowreFlow = ({
             return;
           }
 
-          // Check microphone permission
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-              audio: true,
-            });
-            stream.getTracks().forEach((track) => track.stop()); // Stop immediately, we just needed permission
-            console.log("✅ Microphone permission granted");
-          } catch (error) {
-            console.error("❌ Microphone permission denied or error:", error);
-            reportError({
-              type: "audio_error",
-              action: "towre_mic_permission_denied",
-              message: error?.message || "Microphone permission denied",
-            });
-            alert(
-              "Microphone access is required for speech recognition. Please allow microphone access and try again."
-            );
-            return;
-          }
+          const isAndroid = /Android/i.test(navigator.userAgent);
 
-          // Start audio recording
-          await startAudioRecording();
+          if (isAndroid) {
+            // On Android Chrome, the getUserMedia permission check opens and immediately
+            // closes the mic. If SR starts too soon after, the audio hardware hasn't
+            // fully released and SR captures silence → ends with no results.
+            // Skip the getUserMedia check on Android — SR will request mic permission itself.
+          } else {
+            // Check microphone permission on non-Android
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+              });
+              stream.getTracks().forEach((track) => track.stop());
+              console.log("✅ Microphone permission granted");
+            } catch (error) {
+              console.error("❌ Microphone permission denied or error:", error);
+              reportError({
+                type: "audio_error",
+                action: "towre_mic_permission_denied",
+                message: error?.message || "Microphone permission denied",
+              });
+              alert(ui.TOWRE_MIC_ACCESS_REQUIRED);
+              return;
+            }
+            await startAudioRecording();
+          }
 
           // Reset transcript before starting
           resetTranscript();
@@ -1800,8 +1825,12 @@ const TowreFlow = ({
             resetTranscript();
             transcriptRef.current = "";
 
-            // Start recognition with a small delay to ensure clean state
-            await new Promise((resolve) => setTimeout(resolve, 200));
+            // On Android, use a longer delay — the audio system needs more time
+            // to be ready after the component mounts or after a previous mic session.
+            const startDelay = /Android/i.test(navigator.userAgent)
+              ? 1500
+              : 200;
+            await new Promise((resolve) => setTimeout(resolve, startDelay));
 
             if (recognitionRef.current) {
               recognitionRef.current.lang = getBrowserLanguage(lang);
@@ -1831,7 +1860,7 @@ const TowreFlow = ({
     setCurrentWordSetIndex(0);
     setShowFinalWords(false);
     setActiveSet(0);
-    setMessage("Read the words out\nloud one by one!\nStart from top left");
+    setMessage(ui.TOWRE_MSG_READ_WORDS);
     setCompletedAllSets(false);
     setShowResults(false);
     setTimer(45);
@@ -2103,6 +2132,33 @@ const TowreFlow = ({
       mediaRecorderRef.current.state !== "inactive"
     ) {
       mediaRecorderRef.current.stop();
+    } else if (!mediaRecorderRef.current) {
+      // Android SR-only path — no MediaRecorder, score directly from transcript.
+      // Defer so the caller's setLoading(true) runs first, then we set it back to false.
+      setTimeout(() => {
+        const transcripts = transcriptRef.current || "";
+        setTranscripts(transcripts);
+        const transcriptWords = normalize(transcripts).filter(
+          (w) => w && w.trim().length > 0
+        );
+        const transcriptPhonetics = new Set(
+          transcriptWords.map(getPhonetic).filter((ph) => ph && ph.length > 0)
+        );
+        allWords.forEach((word) => {
+          const lower = word?.title?.toLowerCase()?.trim();
+          if (!lower || lower.length === 0) {
+            word.isCorrect = false;
+            return;
+          }
+          const wordPhonetic = getPhonetic(lower);
+          const hasValidPhonetic = wordPhonetic && wordPhonetic.length > 0;
+          word.isCorrect =
+            transcriptWords.includes(lower) ||
+            (hasValidPhonetic && transcriptPhonetics.has(wordPhonetic));
+        });
+        setLoading(false);
+        setCompleted(true);
+      }, 100);
     }
   };
 
@@ -2196,10 +2252,10 @@ const TowreFlow = ({
                       color: "#1d3557",
                     }}
                   >
-                    Get ready to read the words!
+                    {ui.TOWRE_COUNTDOWN_READY}
                   </div>
                   <div style={{ fontSize: 16, color: "#444", marginTop: 6 }}>
-                    Read the words out loud as fast as you can in 45 seconds.
+                    {ui.TOWRE_COUNTDOWN_INSTRUCTION}
                   </div>
                 </div>
 
@@ -2209,10 +2265,10 @@ const TowreFlow = ({
                   <div
                     style={{
                       position: "absolute",
-                      bottom: isMobile ? 150 : 116,
-                      right: isMobile ? 140 : 237,
-                      width: isMobile ? 150 : 183,
-                      height: isMobile ? 100 : 120,
+                      bottom: isMobile ? 95 : 116,
+                      right: isMobile ? 125 : 237,
+                      width: isMobile ? 120 : 183,
+                      height: isMobile ? 80 : 120,
                     }}
                   >
                     <img
@@ -2231,15 +2287,15 @@ const TowreFlow = ({
                     >
                       <div
                         style={{
-                          fontSize: isMobile ? 12 : 14,
+                          fontSize: isMobile ? 11 : 14,
                           fontWeight: "bold",
                         }}
                       >
-                        Starts In
+                        {ui.TOWRE_COUNTDOWN_STARTS_IN}
                       </div>
                       <div
                         style={{
-                          fontSize: isMobile ? 24 : 28,
+                          fontSize: isMobile ? 22 : 28,
                           fontWeight: "bold",
                           color: "#ff6e00",
                         }}
@@ -2253,9 +2309,9 @@ const TowreFlow = ({
                     src={pandaTimerImg}
                     alt="panda"
                     style={{
-                      height: isMobile ? 150 : 180,
+                      height: isMobile ? 130 : 180,
                       position: "absolute",
-                      right: 100,
+                      right: isMobile ? 10 : 100,
                       bottom: 20,
                     }}
                   />
@@ -2275,10 +2331,10 @@ const TowreFlow = ({
                 <h2
                   style={{ fontSize: 28, color: "#1d3557", marginBottom: 20 }}
                 >
-                  Activity Completed!
+                  {ui.TOWRE_COMPLETED_TITLE}
                 </h2>
                 <p style={{ fontSize: 18, marginBottom: 30 }}>
-                  You've gone through all the word sets.
+                  {ui.TOWRE_COMPLETED_SUBTITLE}
                 </p>
                 <button
                   onClick={() => setShowResults(true)}
@@ -2293,7 +2349,7 @@ const TowreFlow = ({
                     cursor: "pointer",
                   }}
                 >
-                  View Results
+                  {ui.TOWRE_VIEW_RESULTS}
                 </button>
               </div>
             ) : showFinalWords && !loading ? (
@@ -2355,14 +2411,14 @@ const TowreFlow = ({
                       fontSize: isMobile ? 12 : 14,
                     }}
                   >
-                    Recording
+                    {ui.TOWRE_RECORDING}
                   </span>
                 </div>
 
                 <div
                   style={{ display: "flex", flexDirection: "column", gap: 10 }}
                 >
-                  {currentWordSet.map((row, rowIndex) => (
+                  {displayedWordSet.map((row, rowIndex) => (
                     <div
                       key={rowIndex}
                       style={{
@@ -2378,8 +2434,8 @@ const TowreFlow = ({
                           key={colIndex}
                           style={{
                             position: "relative",
-                            width: isMobile ? 65 : 180,
-                            height: 85,
+                            width: isMobile ? 105 : 180,
+                            height: isMobile ? 50 : 85,
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
@@ -2393,7 +2449,7 @@ const TowreFlow = ({
                             style={{
                               width: "100%",
                               height: "100%",
-                              objectFit: "contain",
+                              objectFit: isMobile ? "fill" : "contain",
                               opacity: 1,
                             }}
                           />
@@ -2473,7 +2529,7 @@ const TowreFlow = ({
                       fontSize: isMobile ? 11 : 14,
                     }}
                   >
-                    Recording
+                    {ui.TOWRE_RECORDING}
                   </span>
                 </div>
 
@@ -2509,21 +2565,21 @@ const TowreFlow = ({
                 <div
                   style={{ display: "flex", flexDirection: "column", gap: 10 }}
                 >
-                  {currentWordSet.map((row, rowIndex) => (
+                  {displayedWordSet.map((row, rowIndex) => (
                     <div
                       key={rowIndex}
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        gap: 6,
-                        marginLeft: "40px",
-                        marginRight: "40px",
+                        gap: isMobile ? 7 : 6,
+                        marginLeft: isMobile ? "2px" : "40px",
+                        marginRight: isMobile ? "2px" : "40px",
                         position: "relative",
                       }}
                     >
                       {row.map((wordObj, colIndex) => {
                         const isActive =
-                          activeSet < currentWordSet.length &&
+                          activeSet < displayedWordSet.length &&
                           rowIndex === activeSet;
                         const boxImage = isActive ? activeboxImg : boxImg;
 
@@ -2532,8 +2588,8 @@ const TowreFlow = ({
                             key={colIndex}
                             style={{
                               position: "relative",
-                              width: isMobile ? 120 : 180,
-                              height: isMobile ? 65 : 100,
+                              width: isMobile ? 105 : 180,
+                              height: isMobile ? 50 : 100,
                               display: "flex",
                               justifyContent: "center",
                               alignItems: "center",
@@ -2569,7 +2625,7 @@ const TowreFlow = ({
                               style={{
                                 width: "100%",
                                 height: "100%",
-                                objectFit: "contain",
+                                objectFit: isMobile ? "fill" : "contain",
                                 opacity: 1,
                               }}
                             />
@@ -2581,10 +2637,10 @@ const TowreFlow = ({
                                 fontSize:
                                   lang === "te"
                                     ? isMobile
-                                      ? 13
+                                      ? 14
                                       : 24
                                     : isMobile
-                                    ? 11
+                                    ? 12
                                     : 20,
                                 fontFamily: getFontFamily(lang),
                               }}
@@ -2611,10 +2667,10 @@ const TowreFlow = ({
                   <div
                     style={{
                       position: "relative",
-                      width: isMobile ? "220px" : "250px",
-                      height: isMobile ? "220px" : "180px",
+                      width: "clamp(180px, 22vw, 250px)",
+                      height: "clamp(160px, 20vw, 200px)",
                       marginRight: 10,
-                      transform: "translateY(-40%)",
+                      transform: "translateY(-15%)",
                     }}
                   >
                     <img
@@ -2628,23 +2684,20 @@ const TowreFlow = ({
                       }}
                     />
 
-                    {/* Hide arrow for this specific message */}
-                    {message !==
-                      "You'll go to the next set of words when you click the button below." &&
-                      message !==
-                        "If you are not able to speak a word, You can move to the next word." && (
-                        <img
-                          src={arrowImg}
-                          alt="arrow"
-                          style={{
-                            width: isMobile ? "50px" : "80px",
-                            position: "absolute",
-                            top: "15px",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                          }}
-                        />
-                      )}
+                    {/* Hide arrow when showing next-set or skip-word hints */}
+                    {activeSet !== 3 && activeSet !== 4 && (
+                      <img
+                        src={arrowImg}
+                        alt="arrow"
+                        style={{
+                          width: "clamp(40px, 7vw, 80px)",
+                          position: "absolute",
+                          top: "25px",
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                        }}
+                      />
+                    )}
 
                     <div
                       style={{
@@ -2654,13 +2707,16 @@ const TowreFlow = ({
                         transform: "translate(-50%, -50%)",
                         width: "80%",
                         textAlign: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "8px",
                       }}
                     >
                       <div
                         style={{
                           whiteSpace: "pre-line",
-                          fontSize: isMobile ? "11px" : "14px",
-                          marginBottom: "15px",
+                          fontSize: "clamp(11px, 1.4vw, 14px)",
                           lineHeight: "1.5",
                           color: "#333F61",
                           fontFamily: "Quicksand",
@@ -2670,67 +2726,21 @@ const TowreFlow = ({
                         {message}
                       </div>
 
-                      {message ===
-                      "You'll go to the next set of words\nwhen you click the button below." ? (
-                        <div
-                          style={{
-                            position: "absolute",
-                            bottom: -30,
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                        >
-                          {/* <img
-            src={handImg}
-            alt="hand"
-            style={{
-              width: 40,
-              height: 40,
-              filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))",
-              transform: "rotate(-30deg)",
-            }}
-          /> */}
-                          <button
-                            onClick={handleNext}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              padding: 0,
-                              cursor: "pointer",
-                            }}
-                          >
-                            <img
-                              src={Assets.startNewButtonImg}
-                              alt="next"
-                              style={{ width: isMobile ? "30px" : 60 }}
-                            />
-                          </button>
-                        </div>
-                      ) : message ===
-                        "Are You Ready?⏱️ You'll have 45 seconds." ? (
+                      <button
+                        onClick={activeSet === 5 ? startCountdown : handleNext}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          padding: 0,
+                          cursor: "pointer",
+                        }}
+                      >
                         <img
                           src={Assets.startNewButtonImg}
-                          alt="start"
-                          style={{
-                            width: isMobile ? "30px" : "60px",
-                            cursor: "pointer",
-                          }}
-                          onClick={startCountdown}
+                          alt={activeSet === 5 ? "start" : "next"}
+                          style={{ height: "clamp(28px, 4vw, 45px)" }}
                         />
-                      ) : (
-                        <img
-                          src={Assets.startNewButtonImg}
-                          alt="next"
-                          style={{
-                            height: isMobile ? "30px" : "45px",
-                            cursor: "pointer",
-                          }}
-                          onClick={handleNext}
-                        />
-                      )}
+                      </button>
                     </div>
                   </div>
 
@@ -2739,48 +2749,11 @@ const TowreFlow = ({
                     src={pandaImg}
                     alt="panda"
                     style={{
-                      height: isMobile ? 120 : 150,
+                      height: "clamp(100px, 14vw, 155px)",
                       marginBottom: "-15px",
                     }}
                   />
                 </div>
-                {message ===
-                  "You'll go to the next set of words\nwhen you click the button below." && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: 5,
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      zIndex: 10,
-                    }}
-                  >
-                    <img
-                      src={handImg}
-                      alt="hand"
-                      style={{
-                        width: 30,
-                        height: 30,
-                        filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))",
-                        transform: "rotate(0deg)",
-                      }}
-                    />
-                    <button
-                      onClick={handleNext}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                        cursor: "pointer",
-                      }}
-                    >
-                      <img src={nextImg} alt="next" style={{ width: 40 }} />
-                    </button>
-                  </div>
-                )}
               </>
             )}
           </div>
@@ -2815,10 +2788,11 @@ const TowreFlow = ({
               backgroundSize: "cover",
               backgroundPosition: "center",
               borderRadius: 20,
-              padding: "0 20px",
+              padding: "clamp(16px, 4dvh, 40px) 20px",
               position: "relative",
-              overflow: "hidden",
-              height: isMobile ? "100%" : "530px",
+              overflowX: "hidden",
+              height: isMobile ? "100%" : "auto",
+              minHeight: isMobile ? "unset" : "clamp(320px, 70dvh, 600px)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -2843,31 +2817,32 @@ const TowreFlow = ({
               style={{
                 textAlign: "center",
                 zIndex: 1,
-                display: isMobile ? "flex" : "block",
-                flexDirection: isMobile ? "column" : "initial",
-                alignItems: isMobile ? "center" : "initial",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "clamp(4px, 1dvh, 10px)",
               }}
             >
               <h2
                 style={{
                   fontFamily: "Quicksand",
                   fontWeight: 1200,
-                  fontSize: isMobile ? "44px" : "64px",
-                  lineHeight: isMobile ? "50px" : "70px",
+                  fontSize: "clamp(28px, min(5vw, 7dvh), 56px)",
+                  lineHeight: 1.1,
                   textAlign: "center",
                   color: "#FF9050",
-                  marginBottom: "20px",
+                  marginBottom: "clamp(4px, 1dvh, 10px)",
                 }}
               >
-                Towre Flow
+                {ui.TOWRE_SCREEN_TITLE}
               </h2>
               <img
                 src={Assets.birthdayBoxImg}
                 alt="Birthday Box"
                 style={{
-                  maxWidth: isMobile ? "160px" : "240px",
+                  maxWidth: "clamp(90px, min(18vw, 26dvh), 220px)",
                   width: "100%",
-                  marginBottom: "10px",
+                  marginBottom: "clamp(2px, 0.5dvh, 6px)",
                 }}
               />
               {browserWarning && (
@@ -2877,8 +2852,8 @@ const TowreFlow = ({
                     border: "1px solid #ffc107",
                     borderRadius: 10,
                     padding: "10px 18px",
-                    marginBottom: 16,
-                    fontSize: isMobile ? "11px" : "13px",
+                    marginBottom: 8,
+                    fontSize: "clamp(11px, 1.2vw, 13px)",
                     color: "#856404",
                     textAlign: "center",
                     fontFamily: "Quicksand",
@@ -2892,7 +2867,7 @@ const TowreFlow = ({
                 src={Assets.startButtonImg}
                 alt="Start Button"
                 style={{
-                  maxWidth: isMobile ? "150px" : "220px",
+                  maxWidth: "clamp(110px, min(16vw, 22dvh), 210px)",
                   width: "100%",
                   cursor: "pointer",
                 }}

@@ -1,44 +1,6 @@
 import { Card, Button } from "@mui/material";
 import { ArrowLeft, Gamepad2, RotateCcw, Sparkles, Trophy } from "lucide-react";
-
-const completionMessages = {
-  en: {
-    title: "Demo Complete!",
-    subtitle: "You're ready to start speaking!",
-    message:
-      "Great job! You've learned how to record and listen to your voice. Now it's time to practice with real sentences!",
-    startGame: "Start Speaking",
-    replayDemo: "Replay Demo",
-    back: "Back",
-  },
-  te: {
-    title: "డెమో పూర్తయింది!",
-    subtitle: "మీరు మాట్లాడటం ప్రారంభించడానికి సిద్ధంగా ఉన్నారు!",
-    message:
-      "బాగా చేసారు! మీరు మీ గొంతును రికార్డ్ చేయడం మరియు వినడం ఎలా చేయాలో నేర్చుకున్నారు. ఇప్పుడు నిజమైన వాక్యాలతో అభ్యసించే సమయం!",
-    startGame: "మాట్లాడటం ప్రారంభించండి",
-    replayDemo: "డెమోను మళ్లీ ప్లే చేయండి",
-    back: "వెనుకకు",
-  },
-  kn: {
-    title: "ಡೆಮೊ ಪೂರ್ಣಗೊಂಡಿದೆ!",
-    subtitle: "ನೀವು ಮಾತನಾಡಲು ಪ್ರಾರಂಭಿಸಲು ಸಿದ್ಧರಾಗಿದ್ದೀರಿ!",
-    message:
-      "ಅದ್ಭುತ! ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡುವುದು ಮತ್ತು ಕೇಳುವುದು ಹೇಗೆ ಎಂದು ನೀವು ಕಲಿತಿದ್ದೀರಿ. ಈಗ ನೈಜ ವಾಕ್ಯಗಳೊಂದಿಗೆ ಅಭ್ಯಾಸ ಮಾಡುವ ಸಮಯ!",
-    startGame: "ಮಾತನಾಡಲು ಪ್ರಾರಂಭಿಸಿ",
-    replayDemo: "ಡೆಮೊವನ್ನು ಮರು ಪ್ಲೇ ಮಾಡಿ",
-    back: "ಹಿಂದಕ್ಕೆ",
-  },
-  mr: {
-    title: "डेमो पूर्ण झाला!",
-    subtitle: "तुम्ही बोलणे सुरू करण्यास तयार आहात!",
-    message:
-      "छान केलं! तुम्ही तुमचा आवाज रेकॉर्ड कसा करायचा आणि ऐकायचा हे शिकलात. आता खऱ्या वाक्यांसह सराव करण्याची वेळ आली आहे!",
-    startGame: "बोलणे सुरू करा",
-    replayDemo: "डेमो पुन्हा प्ले करा",
-    back: "मागे",
-  },
-};
+import { getUiStrings } from "../../constants/strings";
 
 const DemoCompletionScreen = ({
   language = "en",
@@ -47,7 +9,7 @@ const DemoCompletionScreen = ({
   onBack,
   hideHeader = false,
 }) => {
-  const messages = completionMessages[language] || completionMessages.en;
+  const ui = getUiStrings(language);
 
   return (
     <div
@@ -95,7 +57,7 @@ const DemoCompletionScreen = ({
               <ArrowLeft
                 style={{ height: "12px", width: "12px", marginRight: "4px" }}
               />
-              {messages.back}
+              {ui.COMMON_BACK}
             </Button>
           </div>
         )}
@@ -202,7 +164,7 @@ const DemoCompletionScreen = ({
                   margin: 0,
                 }}
               >
-                {messages.title}
+                {ui.DEMO_COMPLETE}
               </h1>
               <Sparkles
                 style={{ width: "32px", height: "32px", color: "#F59E0B" }}
@@ -218,7 +180,7 @@ const DemoCompletionScreen = ({
                 margin: 0,
               }}
             >
-              {messages.subtitle}
+              {ui.DEMO_COMPLETION_SUBTITLE}
             </p>
 
             {/* Message */}
@@ -239,7 +201,7 @@ const DemoCompletionScreen = ({
                   lineHeight: "1.6",
                 }}
               >
-                {messages.message}
+                {ui.DEMO_COMPLETION_MESSAGE}
               </p>
             </div>
 
@@ -264,7 +226,7 @@ const DemoCompletionScreen = ({
                 }}
               >
                 <RotateCcw style={{ width: "20px", height: "20px" }} />
-                {messages.replayDemo}
+                {ui.DEMO_COMPLETION_REPLAY}
               </Button>
 
               <Button
@@ -288,7 +250,7 @@ const DemoCompletionScreen = ({
                 }}
               >
                 <Gamepad2 style={{ width: "24px", height: "24px" }} />
-                {messages.startGame}
+                {ui.DEMO_COMPLETION_START_GAME}
               </Button>
             </div>
           </div>

@@ -65,8 +65,8 @@ const SpeedSelector = ({
         ...(!horizontal && floated
           ? {
               position: "absolute",
-              right: "20px",
-              top: "59%",
+              right: "90px",
+              top: "53%",
               transform: "translateY(-50%)",
             }
           : {}),

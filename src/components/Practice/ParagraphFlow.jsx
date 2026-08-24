@@ -162,9 +162,11 @@ const styles = `
       margin-right: auto !important;
       width: 85% !important;
       max-width: 100% !important;
+      flex-shrink: 0 !important;
     }
     .pf-book-section .scale-transition img {
-      height: 35vh !important;
+      max-height: 25vh !important;
+      height: auto !important;
       width: 100% !important;
       object-fit: contain !important;
     }
@@ -195,8 +197,8 @@ const styles = `
       margin-top: 12px !important;
       margin-bottom: 8px !important;
       flex-shrink: 0 !important;
-      width: 40px !important;
-      height: 40px !important;
+      width: 50px !important;
+      height: 50px !important;
       padding: 0 !important;
     }
     .pf-next-btn {
@@ -226,8 +228,8 @@ const styles = `
       max-height: none !important;
     }
     .pf-bear-dance {
-      width: 150px !important;
-      max-height: 200px !important;
+      width: 100px !important;
+      max-height: 150px !important;
       object-fit: contain !important;
     }
     .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition {
@@ -270,10 +272,15 @@ const styles = `
       font-size: 22px !important;
       margin: 10px 20px !important;
       text-align: center !important;
-      line-height: 1.4 !important;
+      line-height: 1.6 !important;
     }
     .slow-transition:not(.pf-outer-container):not(.pf-highlighted-section) .scale-transition > img {
       margin: 20px 5px 5px !important;
+    }
+    .pf-graph-img {
+      width: 180px !important;
+      height: 40px !important;
+      top: -20px !important;
     }
   }
 `;
@@ -1180,6 +1187,7 @@ const ParagraphFlow = ({
           padding: "20px",
           boxSizing: "border-box",
           position: "relative",
+          overflowY: "clip",
         }}
       >
         {/* Hint Icon */}
@@ -1403,18 +1411,25 @@ const ParagraphFlow = ({
               position: "relative",
               transition: "all 0.4s ease",
             }}
-            onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")}
-            onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.1)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             {isSpeaking && (
               <img
                 src={graphImg}
                 alt="Graph"
+                className="pf-graph-img"
                 style={{
                   position: "absolute",
-                  top: "-20px",
-                  width: "200px",
-                  height: "39px",
+                  top: "-30px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "280px",
+                  height: "60px",
+                  maxWidth: "none",
+                  maxHeight: "none",
                   marginBottom: "10px",
                   transition: "all 0.5s ease",
                 }}
@@ -1523,7 +1538,7 @@ const ParagraphFlow = ({
                 left: "22%",
                 top: "30%",
                 transform: "translate(-100%, -50%)",
-                width: "50px",
+                width: "70px",
                 cursor: "pointer",
                 opacity: isPlayingAudio ? 0.8 : 1,
                 transition: "all 0.3s ease",

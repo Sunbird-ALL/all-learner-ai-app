@@ -6,6 +6,7 @@ import {
   setLocalData,
   practiceSteps,
 } from "../../utils/constants";
+import { getUiStrings } from "../../constants/strings";
 import { levelGetContent } from "../../data/levelContent";
 import { addLesson } from "../../services/orchestration/orchestrationService";
 import { getF3FlowStep, advanceF3Flow, F3_FLOW } from "../../RFlow/F3";
@@ -71,6 +72,7 @@ const MemoryChallengeMechanicsContent = ({
   const [sessionInitialized, setSessionInitialized] = useState(false);
   const navigate = useNavigate();
   const lang = getLocalData("lang") || "en";
+  const ui = getUiStrings(lang);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -548,7 +550,7 @@ const MemoryChallengeMechanicsContent = ({
         wordCount={wordCount}
       >
         <div style={{ padding: "20px", textAlign: "center" }}>
-          <p>Loading game...</p>
+          <p>{ui.LOADING_GAME}</p>
         </div>
       </MainLayout>
     );
@@ -606,6 +608,9 @@ const MemoryChallengeMechanicsContent = ({
           vocabCount={vocabCount}
           wordCount={wordCount}
           handleBack={handleBack}
+          cardContentStyle={{
+            height: { xs: "100%", md: "70vh" },
+          }}
         >
           <div
             style={{
@@ -664,6 +669,10 @@ const MemoryChallengeMechanicsContent = ({
           vocabCount={vocabCount}
           wordCount={wordCount}
           handleBack={handleBack}
+          showTimer={false}
+          cardContentStyle={{
+            height: { xs: "100%", md: "70vh" },
+          }}
         >
           <div
             style={{
@@ -686,6 +695,7 @@ const MemoryChallengeMechanicsContent = ({
               onPlayAgain={resetGame}
               onBackToHub={handleGameBack}
               hasNextLevel={hasMoreLevels || isAllLevelsComplete}
+              selectedLanguage={initialLanguage}
               onNextLevel={async () => {
                 // Clear completion state
                 setIsGameComplete(false);
@@ -779,10 +789,10 @@ const MemoryChallengeMechanicsContent = ({
               }}
               continueButtonText={
                 hasMoreLevels
-                  ? "Next Level"
+                  ? ui.SUCCESS_NEXT_LEVEL
                   : isAllLevelsComplete
-                  ? "Continue"
-                  : "Play Again"
+                  ? ui.COMMON_CONTINUE
+                  : ui.PLAY_AGAIN
               }
             />
           </div>
@@ -812,6 +822,7 @@ const MemoryChallengeMechanicsContent = ({
       vocabCount={vocabCount}
       wordCount={wordCount}
       handleBack={handleBack}
+      showTimer={false}
       cardContentStyle={{
         height: { xs: "100%", md: "calc(100vh - 260px)" },
         maxHeight: {
@@ -865,54 +876,18 @@ const MemoryChallengeMechanicsContent = ({
                   flexShrink: 0,
                 }}
               >
-                <button
-                  onClick={handleGameBack}
-                  style={{
-                    background: "rgba(255, 255, 255, 0.2)",
-                    backdropFilter: "blur(4px)",
-                    color: "white",
-                    border: "1px solid rgba(255, 255, 255, 0.3)",
-                    borderRadius: "0.375rem",
-                    padding: "0.375rem 0.625rem",
-                    fontSize: "0.75rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
-                    cursor: "pointer",
-                  }}
-                >
-                  <span>←</span>
-                  <span>Back</span>
-                </button>
-
                 <div style={{ textAlign: "center", flex: 1 }}>
                   <h1
                     style={{
-                      fontSize: "0.875rem",
+                      fontSize: "1rem",
                       fontWeight: "bold",
                       color: "white",
                       textShadow: "0 2px 4px rgba(0,0,0,0.3)",
                       margin: 0,
                     }}
                   >
-                    Memory Challenge
+                    {ui.PRACTICE_MEMORY_CHALLENGE}
                   </h1>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "0.375rem",
-                      color: "rgba(255, 255, 255, 0.8)",
-                      fontSize: "0.625rem",
-                      marginTop: "0.125rem",
-                    }}
-                  >
-                    <span>↑</span>
-                    <span>
-                      Level {currentGameLevel} / {endLevel || 3}
-                    </span>
-                  </div>
                 </div>
 
                 {/* Spacer to balance layout */}
@@ -928,7 +903,7 @@ const MemoryChallengeMechanicsContent = ({
                   borderRadius: "0.5rem",
                   padding: "0.75rem 1rem",
                   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  overflow: "hidden",
+                  overflow: "clip",
                   display: "flex",
                   flexDirection: "column",
                   minHeight: 0,
@@ -1054,7 +1029,7 @@ const MemoryChallengeMechanicsContent = ({
                             fontSize: "0.75rem",
                           }}
                         >
-                          Time Up!
+                          {ui.MEMORY_TIME_UP}
                         </div>
                       </div>
                     </div>
@@ -1068,7 +1043,6 @@ const MemoryChallengeMechanicsContent = ({
                     display: "flex",
                     flexDirection: "column",
                     minHeight: 0,
-                    overflow: isMobile ? "hidden" : "auto",
                   }}
                 >
                   {currentSequence && (
