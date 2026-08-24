@@ -76,6 +76,13 @@ export function DemoCompletionScreen({
       startGame: 'गेम सुरू करा',
       replayDemo: 'डेमो पुन्हा खेळा',
       back: 'मागे'
+    },
+    hi: {
+      title: 'डेमो पूर्ण हुआ!',
+      description: 'आपने डेमो पूरा कर लिया है। खेलने के लिए तैयार हैं?',
+      startGame: 'खेल शुरू करें',
+      replayDemo: 'डेमो फिर से खेलें',
+      back: 'वापस'
     }
   };
 
