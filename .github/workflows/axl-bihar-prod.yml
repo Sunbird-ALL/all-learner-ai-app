@@ -1,4 +1,4 @@
-name: ALL AXL Bihar Prod Deployments (Bihar-prod)
+name: ALL AXL Bihar Prod Deployment (Bihar-prod)
 
 on:
   push:
