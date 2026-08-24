@@ -3,7 +3,7 @@ name: ALL AXL UAT Deployment (UAT)
 on:
   push:
     branches:
-      - all-3.0.6-hotfix
+      - all-3.0.7
 
 jobs:
   deploy:
@@ -102,6 +102,7 @@ jobs:
           REACT_APP_BUILD_NUMBER: ${{ github.run_number }}
           REACT_APP_COMMIT_ID: ${{ github.sha }}
           PUBLIC_URL: ${{ vars.PUBLIC_URL }}
+          REACT_APP_BRANCH_NAME: ${{ github.ref_name }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
 

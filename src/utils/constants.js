@@ -855,7 +855,7 @@ export const levelConfig = {
   15: { color: "#00C7E2" },
 };
 
-const AllLanguages = [
+export const AllLanguages = [
   { name: "English", lang: "en", symbol: "A" },
   { name: "தமிழ்", lang: "ta", symbol: "இ" },
   { name: "हिंदी", lang: "hi", symbol: "क" },
@@ -863,6 +863,7 @@ const AllLanguages = [
   { name: "తెలుగు", lang: "te", symbol: "ఈ" },
   { name: "ગુજરાતી", lang: "gu", symbol: "ક" },
   { name: "ଓଡିଆ", lang: "or", symbol: "କ" },
+  { name: "नेपाली", lang: "ne", symbol: "न" },
 ];
 
 const appLanguages = process.env.REACT_APP_LANGUAGES
@@ -966,6 +967,7 @@ const BROWSER_LANGUAGE_MAP = {
   ta: "ta-IN",
   gu: "gu-IN",
   or: "or-IN",
+  ne: "ne-NP",
 };
 
 export const getBrowserLanguage = (langCode) => {

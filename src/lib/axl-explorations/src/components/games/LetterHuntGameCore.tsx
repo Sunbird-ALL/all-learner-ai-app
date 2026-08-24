@@ -12,6 +12,7 @@ import { ContinueButton } from "./ContinueButton";
 import { englishAudioManager } from "../../utils/englishAudioManager";
 import { playSuccessSound, attachSlowLoadToast } from "../../utils/audioUtils";
 import { hindiAudioManager } from "../../utils/hindiAudioManager";
+import { nepaliAudioManager } from "../../utils/nepaliAudioManager";
 import { getFontFamilyByLang } from "../../../../../utils/fontUtils";
 
 // Core question interface for Letter Hunt
@@ -177,14 +178,16 @@ export function LetterHuntGameCore({
         te: 'ఇది',
         kn: 'ಇದು',
         mr: 'हे',
-        hi: 'यह'
+        hi: 'यह',
+        ne: 'यो हो'
       },
       tryAgain: {
         en: 'try again',
         te: 'మళ్లీ ప్రయత్నించండి',
         kn: 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
         mr: 'आहे, पुन्हा प्रयत्न करा',
-        hi: 'है, फिर कोशिश करें'
+        hi: 'है, फिर कोशिश करें',
+        ne: 'छ, फेरि प्रयास गर्नुहोस्'
       }
     };
     // Determine language with shared helper (ensures consistent fallback)
@@ -241,6 +244,44 @@ export function LetterHuntGameCore({
       }
       if (language === 'hi') {
         const audioUrl = hindiAudioManager.getAudioUrl(text);
+        const audio = new Audio(audioUrl);
+        activeAudioRefs.current.add(audio);
+        attachSlowLoadToast(audio);
+
+        audio.onloadeddata = () => {
+          if (isAudioStoppedRef.current) {
+            resolve();
+            return;
+          }
+          audio.play().then(() => {
+            audio.onended = () => {
+              activeAudioRefs.current.delete(audio);
+              resolve();
+            };
+          }).catch(() => {
+            activeAudioRefs.current.delete(audio);
+            // Fallback to TTS
+            if (!isAudioStoppedRef.current) {
+              playTTSAudio(text, language).then(() => resolve());
+            } else {
+              resolve();
+            }
+          });
+        };
+
+        audio.onerror = () => {
+          activeAudioRefs.current.delete(audio);
+          // Fallback to TTS
+          if (!isAudioStoppedRef.current) {
+            playTTSAudio(text, language).then(() => resolve());
+          } else {
+            resolve();
+          }
+        };
+        return;
+      }
+      if (language === 'ne') {
+        const audioUrl = nepaliAudioManager.getAudioUrl(text);
         const audio = new Audio(audioUrl);
         activeAudioRefs.current.add(audio);
         attachSlowLoadToast(audio);
@@ -434,6 +475,18 @@ export function LetterHuntGameCore({
         case 'kn':
           utterance.lang = 'kn-IN';
           utterance.rate = 0.6; // Slower for Kannada
+          utterance.pitch = 0.9;
+          utterance.volume = 0.9;
+          break;
+        case 'hi':
+          utterance.lang = 'hi-IN';
+          utterance.rate = 0.6; // Slower for Hindi
+          utterance.pitch = 0.9;
+          utterance.volume = 0.9;
+          break;
+        case 'ne':
+          utterance.lang = 'ne-NP';
+          utterance.rate = 0.6; // Slower for Nepali
           utterance.pitch = 0.9;
           utterance.volume = 0.9;
           break;
@@ -881,7 +934,9 @@ export function LetterHuntGameCore({
                             ? '🎉 बरोबर!'
                             : selectedLanguage === 'hi'
                               ? '🎉 सही है।'
-                              : '🎉 Correct!'}
+                              : selectedLanguage === 'ne'
+                                ? '🎉 सही छ!'
+                                : '🎉 Correct!'}
                     </p>
                   </div>
                 ) : (
@@ -898,7 +953,9 @@ export function LetterHuntGameCore({
                               ? `${emoji} अरेच्या! चुकीचे!`
                               : selectedLanguage === 'hi'
                                 ? `${emoji} ओह! गलत!`
-                                : `${emoji} Oops! Wrong!`;
+                                : selectedLanguage === 'ne'
+                                  ? `${emoji} ओहो! गलत!`
+                                  : `${emoji} Oops! Wrong!`;
                       })()}
                     </p>
                   </div>

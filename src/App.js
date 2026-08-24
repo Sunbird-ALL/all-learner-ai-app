@@ -17,7 +17,13 @@ import {
   end,
   error as logTelemetryError,
   initialize,
+  interrupt,
+  fireSessionEnd,
 } from "./services/telemetryService";
+import {
+  recordInterruptStart,
+  recordInterruptEnd,
+} from "./services/sessionManager";
 import { logoutUser } from "./services/orchestration/orchestrationService";
 import { reportError } from "./utils/errorReporter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -176,18 +182,33 @@ const App = () => {
       console.error("Telemetry SDK failed to load:", err)
     );
 
-    const handleBeforeUnload = (event) => {
+    // Fire END + SUMMARY then flush all queued events before page closes
+    const handleBeforeUnload = () => {
+      fireSessionEnd();
       window.telemetry &&
         window.telemetry.syncEvents &&
         window.telemetry.syncEvents();
     };
 
-    // Add the event listener
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    // Track idle time — INTERRUPT when tab goes to background
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        interrupt({
+          type: "background",
+          pageid: localStorage.getItem("currentStep") || "",
+        });
+        recordInterruptStart();
+      } else {
+        recordInterruptEnd();
+      }
+    };
 
-    // Cleanup the event listener on component unmount
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -207,7 +228,7 @@ const App = () => {
         mode: process.env.REACT_APP_MODE,
         authToken: apiToken,
         did: localStorage.getItem("deviceId") || "",
-        uid: localStorage.getItem("virtualId") || apiToken || "anonymous",
+        uid: apiToken, // apiToken only — backend detokenises to user ID
         channel: process.env.REACT_APP_CHANNEL,
         env: process.env.REACT_APP_ENV,
         pdata: {
@@ -507,7 +528,9 @@ const App = () => {
             padding: "2px 6px",
           }}
         >
-          Build #{process.env.REACT_APP_BUILD_NUMBER} &middot;{" "}
+          v{process.env.REACT_APP_VER} &middot; Build #
+          {process.env.REACT_APP_BUILD_NUMBER} &middot;{" "}
+          {process.env.REACT_APP_BRANCH_NAME || "dev"} &middot;{" "}
           {process.env.REACT_APP_COMMIT_ID?.substring(0, 7) || "dev"}
         </span>
       )}

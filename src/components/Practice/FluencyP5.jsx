@@ -248,6 +248,7 @@ const FluencyP5 = ({
       hi: "hi", // Hindi
       gu: "gu", // Gujarati
       or: "or", // Odia
+      ne: "ne", // Nepali
     };
     return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
   };

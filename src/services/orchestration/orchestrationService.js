@@ -3,6 +3,7 @@ import { getLocalData } from "../../utils/constants";
 import config from "../../utils/urlConstants.json";
 import { getVirtualId } from "../userservice/userService";
 import { reportError } from "../../utils/errorReporter";
+import { audit } from "../telemetryService";
 
 const API_BASE_URL_ORCHESTRATION =
   process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST;
@@ -213,6 +214,23 @@ export const createLearnerProgress = async (
       requestBody,
       getHeaders()
     );
+
+    // Fire AUDIT when milestone level actually changes — only when there is a new level
+    if (milestoneLevel) {
+      const previousLevel = localStorage.getItem("milestone") || "";
+      const newLevel = String(milestoneLevel).toLowerCase();
+      if (newLevel && newLevel !== previousLevel) {
+        audit({
+          props: ["milestoneLevel"],
+          state: newLevel,
+          prevstate: previousLevel,
+          objectId: localStorage.getItem("apiToken") || "",
+          objectType: "Learner",
+        });
+        localStorage.setItem("milestone", newLevel);
+      }
+    }
+
     return response.data;
   } catch (error) {
     console.error("Error creating learner progress:", error);
