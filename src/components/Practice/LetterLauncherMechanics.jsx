@@ -192,6 +192,8 @@ const LetterLauncherMechanicsContent = ({
       ? "mr"
       : lang === "hi"
       ? "hi"
+      : lang === "ne"
+      ? "ne"
       : "en";
   const initialAudioLanguage = initialLanguage;
 
@@ -302,18 +304,20 @@ const LetterLauncherMechanicsContent = ({
       initialLanguage === "te" ||
       initialLanguage === "mr" ||
       initialLanguage === "kn" ||
-      initialLanguage === "hi"
+      initialLanguage === "hi" ||
+      initialLanguage === "ne"
         ? initialLanguage
         : "en";
 
     if (contentType === "letter" || contentType === "syllable") {
-      // For Telugu, Kannada, and Marathi, use exact level mapping
+      // For Telugu, Kannada, Marathi, and Nepali, use exact level mapping
       if (
         supportedLanguage === "te" ||
         supportedLanguage === "kn" ||
         supportedLanguage === "mr" ||
         supportedLanguage === "en" ||
-        supportedLanguage === "hi"
+        supportedLanguage === "hi" ||
+        supportedLanguage === "ne"
       ) {
         const levelKey = effectiveLevel.toString();
         letters = memoryGameDataLoader.getLettersByLevel(
