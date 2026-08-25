@@ -837,7 +837,7 @@ export function LetterHuntGameCore({
       )}
 
       {/* Game Area */}
-      <div className="flex-1 flex flex-col justify-center px-0 py-0 min-h-[45vh] overflow-y-auto">
+      <div className="flex-1 flex flex-col justify-center px-0 py-0 min-h-[40vh] overflow-y-auto">
         {/* Top Section - Audio */}
         {showSpeaker && (
           <div className="text-center flex-shrink-0 mb-[clamp(4px,1vh,16px)]">
