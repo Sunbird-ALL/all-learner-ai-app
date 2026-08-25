@@ -6518,7 +6518,7 @@ export const dataNe = [
         id: 33,
         title: "Letter",
         letter: "छ",
-        word: "आउँछ",
+        word: "आउँछन्",
         image: getAssetUrl(s3Assets.आउछImg),
         audio: getAssetAudioUrl(s3Assets.आउछAudio),
         singleAudio: getAssetAudioUrl(s3Assets.आउछAudio),
