@@ -7,6 +7,10 @@ import beardanceImg from "../../assets/beardance.svg";
 import { nextimg as nextImg } from "../../utils/imageAudioLinks";
 import listenImg from "../../assets/listenImg.svg";
 import LanguageHint from "../../assets/laguagehint.svg";
+import LanguageHintTa from "../../assets/laguagehint_ta.svg";
+import LanguageHintTe from "../../assets/laguagehint_te.svg";
+import LanguageHintHi from "../../assets/laguagehint_hi.svg";
+import LanguageHintNe from "../../assets/laguagehint_ne.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
 import SpeedSelector from "../../utils/SpeedSelector";
 import MainLayout from "../Layout/MainLayout";
@@ -188,6 +192,16 @@ const FluencyP2 = ({
     return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
   };
   const multilingualLangCode = getMultilingualLangCode();
+
+  // Per-language hint box image (only languages we have artwork for get a hint box)
+  const languageHintImages = {
+    kn: LanguageHint,
+    ta: LanguageHintTa,
+    te: LanguageHintTe,
+    hi: LanguageHintHi,
+    ne: LanguageHintNe,
+  };
+  const languageHintImage = languageHintImages[multilingualLangCode] || null;
 
   const sentencesData = [
     {
@@ -744,7 +758,8 @@ const FluencyP2 = ({
 
         {showFinalState &&
           hoveredWord &&
-          currentSentence?.hints[hoveredWord] && (
+          currentSentence?.hints[hoveredWord] &&
+          languageHintImage && (
             <div
               style={{
                 position: "absolute",
@@ -756,7 +771,7 @@ const FluencyP2 = ({
               }}
             >
               <img
-                src={LanguageHint}
+                src={languageHintImage}
                 alt="language hint"
                 style={{
                   width: "190px",

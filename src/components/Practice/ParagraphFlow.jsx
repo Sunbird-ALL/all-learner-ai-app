@@ -13,6 +13,10 @@ import listenImg from "../../assets/listenImg.svg";
 import listenbear from "../../assets/listenbear.gif";
 import bookpageImg from "../../assets/bookimageone.svg";
 import multilingualImg from "../../assets/multilingual.svg";
+import multilingualImgTa from "../../assets/laguagehint_ta.svg";
+import multilingualImgTe from "../../assets/laguagehint_te.svg";
+import multilingualImgHi from "../../assets/laguagehint_hi.svg";
+import multilingualImgNe from "../../assets/laguagehint_ne.svg";
 import backgroundImg from "../../assets/starsandclouds.png";
 import meterImg from "../../assets/meterimg.svg";
 import tortoiseImg from "../../assets/tortoiseImg.svg";
@@ -309,6 +313,7 @@ const ParagraphFlow = ({
   const [showConfetti, setShowConfetti] = useState(false);
   const [showHighlighted, setShowHighlighted] = useState(false);
   const [hoveredWord, setHoveredWord] = useState(null);
+  const [hoveredWordAudio, setHoveredWordAudio] = useState("");
   const [multilingualPosition, setMultilingualPosition] = useState({
     x: 0,
     y: 0,
@@ -359,17 +364,30 @@ const ParagraphFlow = ({
   };
   const multilingualLangCode = getMultilingualLangCode();
 
+  // Per-language hint box image (only languages we have artwork for get a hint box)
+  const languageHintImages = {
+    kn: multilingualImg,
+    ta: multilingualImgTa,
+    te: multilingualImgTe,
+    hi: multilingualImgHi,
+    ne: multilingualImgNe,
+  };
+  const languageHintImage = languageHintImages[multilingualLangCode] || null;
+
   const paragraphPages = [
     {
       page: 1,
       bookImage: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${contentSourceData?.imagePath}`,
       highlightedText: contentSourceData?.contentSourceData?.[0]?.text || "",
-      keywords: Object.entries(parentWords || {}).map(([word, data]) => ({
-        word,
-        audio: `${
-          process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL
-        }/multilingual_audios/${data?.[multilingualLangCode]?.audio_url || ""}`,
-      })),
+      keywords: Object.entries(parentWords || {}).map(([word, data]) => {
+        const audioUrl = data?.[multilingualLangCode]?.audio_url;
+        return {
+          word,
+          audio: audioUrl
+            ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${audioUrl}`
+            : "",
+        };
+      }),
     },
   ];
 
@@ -693,6 +711,8 @@ const ParagraphFlow = ({
       (k) => k.word.toLowerCase() === word.toLowerCase().replace(/[.,!?;]/g, "")
     );
 
+    setHoveredWordAudio(keywordData?.audio || "");
+
     if (keywordData && keywordData.audio) {
       console.log(
         "Playing keyword audio:",
@@ -707,6 +727,7 @@ const ParagraphFlow = ({
   // ✅ Handle word leave
   const handleWordLeave = () => {
     setHoveredWord(null);
+    setHoveredWordAudio("");
     if (audio && !isPlayingAudio) {
       audio.pause();
       audio.currentTime = 0;
@@ -1509,23 +1530,26 @@ const ParagraphFlow = ({
               </div>
 
               {/* Multilingual Image - appears below hovered word */}
-              {hoveredWord && !isPlayingAudio && (
-                <img
-                  src={multilingualImg}
-                  alt="Multilingual"
-                  style={{
-                    position: "absolute",
-                    left: `${multilingualPosition.x}px`,
-                    top: `${multilingualPosition.y}px`,
-                    transform: "translateX(-50%)",
-                    width: "190px",
-                    height: "80px",
-                    zIndex: 1000,
-                    pointerEvents: "none",
-                    transition: "all 0.3s ease",
-                  }}
-                />
-              )}
+              {hoveredWord &&
+                !isPlayingAudio &&
+                hoveredWordAudio &&
+                languageHintImage && (
+                  <img
+                    src={languageHintImage}
+                    alt="Multilingual"
+                    style={{
+                      position: "absolute",
+                      left: `${multilingualPosition.x}px`,
+                      top: `${multilingualPosition.y}px`,
+                      transform: "translateX(-50%)",
+                      width: "190px",
+                      height: "80px",
+                      zIndex: 1000,
+                      pointerEvents: "none",
+                      transition: "all 0.3s ease",
+                    }}
+                  />
+                )}
             </div>
 
             {/* Listen Icon - Now works as play/pause for speech synthesis */}
