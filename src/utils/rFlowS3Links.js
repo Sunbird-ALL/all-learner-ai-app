@@ -3766,3 +3766,5 @@ export const हातAudio = "0b385f44-5351-4434-9fb3-e330f1ce5dec.wav";
 export const शरीरAudio = "bde6cc67-6f65-46a6-9b11-42ff0a798338.wav";
 export const फूलImg = "b4b12346-464d-4311-af0f-d89daba1b77d.png";
 export const फूल2Audio = "b4b12346-464d-4311-af0f-d89daba1b77d.wav";
+export const घर4Audio = "04fbd34b-17b5-4b27-832f-6e8f50ad86ab.wav";
+export const शहर4Audio = "5636ca83-0d2c-4210-a2e3-c6d10796bf1c.wav";
