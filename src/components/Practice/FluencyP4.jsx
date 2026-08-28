@@ -551,11 +551,7 @@ const FluencyP4 = ({
   const playWordAudio = (audio) => {
     if (!audio || !audioRef.current) return;
 
-    if (!audioRef.current.paused) {
-      console.log("Already playing, skipping...");
-      return;
-    }
-
+    audioRef.current.pause();
     audioRef.current.src = audio;
     audioRef.current.currentTime = 0;
     audioRef.current
