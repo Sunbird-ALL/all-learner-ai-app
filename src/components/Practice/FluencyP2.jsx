@@ -296,11 +296,7 @@ const FluencyP2 = ({
 
     if (!audio || !audioRefs.current) return;
 
-    if (!audioRefs.current.paused) {
-      console.log("Already playing, skipping...");
-      return;
-    }
-
+    audioRefs.current.pause();
     audioRefs.current.src = audio;
     audioRefs.current.currentTime = 0;
     audioRefs.current
