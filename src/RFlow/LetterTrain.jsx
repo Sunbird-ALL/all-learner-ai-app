@@ -19,9 +19,9 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   setLocalData,
 } from "../utils/constants";
+import { RetryIcon } from "../components/Icons/SvgIcons";
 import { getFontFamily } from "../utils/fontUtils";
 import { getUiStrings } from "../constants/strings";
 import { useNavigate } from "react-router-dom";
