@@ -24,16 +24,15 @@ import bookImg from "../../assets/bookimg.svg";
 
 import {
   practiceSteps,
-  WordRedCircle,
   StopButton,
   SpeakButton,
   ListenButton,
   NextButtonRound,
-  RetryIcon,
   getLocalData,
   setLocalData,
   getBrowserLanguage,
 } from "../../utils/constants";
+import { WordRedCircle, RetryIcon } from "../Icons/SvgIcons";
 import { getFontFamily } from "../../utils/fontUtils";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {

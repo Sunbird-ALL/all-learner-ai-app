@@ -14,10 +14,10 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   setLocalData,
   getBrowserLanguage,
 } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 // import Play from "../../assets/playButton.svg";
 import { getUiStrings } from "../../constants/strings";
 import { phoneticMatch } from "../../utils/phoneticUtils";

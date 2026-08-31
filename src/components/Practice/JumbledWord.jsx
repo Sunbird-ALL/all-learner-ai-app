@@ -20,13 +20,12 @@ import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
 import {
   practiceSteps,
   getLocalData,
-  WordRedCircle,
   StopButton,
   SpeakButton,
   ListenButton,
   NextButtonRound,
-  RetryIconn,
 } from "../../utils/constants";
+import { WordRedCircle, RetryIcon } from "../Icons/SvgIcons";
 import {
   level13,
   level14,

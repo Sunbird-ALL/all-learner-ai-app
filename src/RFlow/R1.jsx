@@ -17,10 +17,10 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   setLocalData,
   sendTestRigScore,
 } from "../utils/constants";
+import { RetryIcon } from "../components/Icons/SvgIcons";
 import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telemetryService";
