@@ -12,6 +12,10 @@ import tortoiseImg from "../../assets/TurtleCircle.gif";
 import rocketImg from "../../assets/RocketCircle.gif";
 import dogImg from "../../assets/dogimg.svg";
 import langhint from "../../assets/laguagehint.svg";
+import langhintTa from "../../assets/laguagehint_ta.svg";
+import langhintTe from "../../assets/laguagehint_te.svg";
+import langhintHi from "../../assets/laguagehint_hi.svg";
+import langhintNe from "../../assets/laguagehint_ne.svg";
 import paraudio from "../../assets/parrotR1KanAudio.wav";
 import MainLayout from "../Layout/MainLayout";
 import SafeYouTubePlayer from "../SafeYouTubePlayer";
@@ -20,16 +24,15 @@ import bookImg from "../../assets/bookimg.svg";
 
 import {
   practiceSteps,
-  WordRedCircle,
   StopButton,
   SpeakButton,
   ListenButton,
   NextButtonRound,
-  RetryIcon,
   getLocalData,
   setLocalData,
   getBrowserLanguage,
 } from "../../utils/constants";
+import { WordRedCircle, RetryIcon } from "../Icons/SvgIcons";
 import { getFontFamily } from "../../utils/fontUtils";
 import { phoneticMatch } from "../../utils/phoneticUtils";
 import SpeechRecognition, {
@@ -406,6 +409,16 @@ const FluencyP4 = ({
   };
   const multilingualLangCode = getMultilingualLangCode();
 
+  // Per-language hint box image (only languages we have artwork for get a hint box)
+  const languageHintImages = {
+    kn: langhint,
+    ta: langhintTa,
+    te: langhintTe,
+    hi: langhintHi,
+    ne: langhintNe,
+  };
+  const languageHintImage = languageHintImages[multilingualLangCode] || null;
+
   const buildSentencesData = (apiData) => {
     return apiData?.map((item, index) => {
       const sentence = item?.contentSourceData[0].text;
@@ -537,11 +550,7 @@ const FluencyP4 = ({
   const playWordAudio = (audio) => {
     if (!audio || !audioRef.current) return;
 
-    if (!audioRef.current.paused) {
-      console.log("Already playing, skipping...");
-      return;
-    }
-
+    audioRef.current.pause();
     audioRef.current.src = audio;
     audioRef.current.currentTime = 0;
     audioRef.current
@@ -567,7 +576,7 @@ const FluencyP4 = ({
     setHoveredWord(word);
     setHoverPosition(position);
 
-    if (word) {
+    if (word && currentSentence.hints[word]) {
       playWordAudio(
         `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/multilingual_audios/${currentSentence.hints[word]}`
       );
@@ -821,28 +830,30 @@ const FluencyP4 = ({
                 lang={lang}
               />
 
-              {hoveredWord && currentSentence?.hints[hoveredWord] && (
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "-80px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    zIndex: 1000,
-                    pointerEvents: "none",
-                  }}
-                >
-                  <img
-                    src={langhint}
-                    alt="language hint"
+              {hoveredWord &&
+                currentSentence?.hints[hoveredWord] &&
+                languageHintImage && (
+                  <div
                     style={{
-                      width: "190px",
-                      height: "140px",
-                      userSelect: "none",
+                      position: "absolute",
+                      bottom: "-80px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      zIndex: 1000,
+                      pointerEvents: "none",
                     }}
-                  />
-                </div>
-              )}
+                  >
+                    <img
+                      src={languageHintImage}
+                      alt="language hint"
+                      style={{
+                        width: "190px",
+                        height: "140px",
+                        userSelect: "none",
+                      }}
+                    />
+                  </div>
+                )}
             </div>
 
             <div style={{ textAlign: "center" }}>

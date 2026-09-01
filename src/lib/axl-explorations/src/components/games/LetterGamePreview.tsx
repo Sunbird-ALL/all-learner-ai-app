@@ -625,6 +625,8 @@ export function LetterGamePreview({
                       ? "స్థాయి"
                       : contentLanguage === "kn"
                       ? "ಮಟ್ಟ"
+                      : contentLanguage === "hi"
+                      ? "स्तर"
                       : "पातळी"}{" "}
                     {level} • {difficulty.toLowerCase()} • {estimatedTime}
                   </span>
@@ -702,6 +704,8 @@ export function LetterGamePreview({
                   ? "డెమో స్కిప్ చేయండి"
                   : contentLanguage === "kn"
                   ? "ಡೆಮೊವನ್ನು ಸ್ಕಿಪ್ ಮಾಡಿ"
+                  : contentLanguage === "hi"
+                  ? "डेमो छोड़ें"
                   : "डेमो वगळा"}
               </Button>
 
@@ -717,6 +721,8 @@ export function LetterGamePreview({
                   ? "గేమ్ ప్రారంభించండి"
                   : contentLanguage === "kn"
                   ? "ಆಟವನ್ನು ಪ್ರಾರಂಭಿಸಿ"
+                  : contentLanguage === "hi"
+                  ? "खेल शुरू करें"
                   : "गेम सुरू करा"}
               </Button>
             </div>

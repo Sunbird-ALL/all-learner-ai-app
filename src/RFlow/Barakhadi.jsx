@@ -18,10 +18,10 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   setLocalData,
   sendTestRigScore,
 } from "../utils/constants";
+import { RetryIcon } from "../components/Icons/SvgIcons";
 import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import { response } from "../services/telemetryService";
@@ -4496,9 +4496,9 @@ export const wordData = {
       image: "f3f64869-053d-47b8-be27-52761fa5f69c.png",
     },
     {
-      text: "गाड़ी",
+      text: "लुगा",
       audio: "f5c82b02-e0e1-4453-b579-53cae6239f6d.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.गाड़ीAudio),
+      segmentedAudio: getAssetAudioUrl(s3Assets.लुगाAudio),
       image: "f5c82b02-e0e1-4453-b579-53cae6239f6d.png",
     },
     {
@@ -4730,9 +4730,9 @@ export const wordData = {
       image: "1fcfa12a-3600-4cfc-ac86-2c5befda9cad.png",
     },
     {
-      text: "राविबार",
+      text: "रविवार",
       audio: "ad6a289d-b68c-47db-9a73-2e927db1db82.wav",
-      segmentedAudio: getAssetAudioUrl(s3Assets.राविबारAudio),
+      segmentedAudio: getAssetAudioUrl(s3Assets.रविवारAudio),
       image: "ad6a289d-b68c-47db-9a73-2e927db1db82.png",
     },
     {
@@ -5139,55 +5139,55 @@ export const HindiGunithas = hiGunithasData.map(([audioId, imageId]) => ({
 
 const neGunithasData = [
   [
-    "b97601ed-f3c9-4e14-aba2-6111fb50ef97",
+    "26e62cff-100d-480e-9ec1-2d783afb1471",
     "d25d0564-4600-43f6-aecf-22e47bc2e8ea",
   ],
   [
-    "56a5ee11-6ea9-4f25-97c0-c86a3a112f8a",
+    "19ff2329-04a8-4b47-af8d-a344a0336e79",
     "67f596fd-41a3-4a52-9e84-217403a51405",
   ],
   [
-    "f381bdc5-b123-4f37-a642-e935563d66c1",
+    "703b3152-9cdf-4168-98b9-fa8c33b52aec",
     "21abd708-67a7-4ea0-ac33-008e8c11b4e3",
   ],
   [
-    "c170474a-03e5-48be-a6aa-b8221f15d416",
+    "4c9ed479-1839-48dc-89ef-5a4a8095004d",
     "188a1a01-6276-4766-beaa-af8106429194",
   ],
   [
-    "55bdbd35-e49f-4bfb-be4e-9fd8e5d3ad99",
+    "0438a0f2-0058-4be0-9b60-2d03b3ba4158",
     "f9fb6dbf-0e2f-4d46-a72d-2e1149b5e39e",
   ],
   [
-    "1c14c46a-18a3-405f-bc49-66b408654a61",
+    "accb7f7d-870e-47e1-938a-997299482df8",
     "94bb18cd-f831-4b3b-957d-79370f360868",
   ],
   [
-    "fc0202ba-b95c-44c4-8a4d-11cd5e1e21c8",
+    "c7c43f20-f90b-43cc-896a-10c547d2784c",
     "a6437b62-fe2e-496b-abdb-0025fcdf431e",
   ],
   [
-    "6c713899-af8b-4137-82cf-03668b2500f5",
+    "59a0507d-5b9c-4a0f-b86d-00d0b04a64dd",
     "5aeeaf34-5753-44cb-a96e-039e17265f60",
   ],
   [
-    "d34511a9-42d3-49e1-b900-91ae48c6c4db",
+    "889d68c9-2ddb-463d-add3-2670fbf0e423",
     "0bb11734-632f-4f7a-994d-fb328302ca25",
   ],
   [
-    "28f589e1-c2ac-47a5-8a7c-fd0d9c8f0446",
+    "47fa41c0-3b44-4d02-bda1-ef7dc0708567",
     "0be39b00-8fd1-4786-bda1-0763a4db9681",
   ],
   [
-    "9c03c953-08f8-4a8b-a832-89e27f02a942",
+    "5cdc1ef1-42ef-4b12-8be5-914f2d7b70b0",
     "a8ba18e2-1b33-4bd8-bafe-f485a429c457",
   ],
   [
-    "2d6bbc66-3a02-4e75-9b1c-4a3a05e8478b",
+    "8796ac7c-d2a4-4a5d-95a2-8b42bcd459fe",
     "76435667-9511-4c4f-a7fa-0441824cdb01",
   ],
   [
-    "3e54fe8a-331b-4f3c-b802-5ed832a03b9d",
+    "81d552bb-601b-456e-a2ef-1876d12ac977",
     "0957b704-322e-44f8-9b2e-ac12d4f44940",
   ],
 ];
