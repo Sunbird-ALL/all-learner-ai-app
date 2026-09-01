@@ -818,8 +818,8 @@ export function LetterHuntGameCore({
 
   const Container: any = useContainer === 'card' ? Card : 'div';
   const containerClass = useContainer === 'card'
-    ? `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 bg-white/95 backdrop-blur-sm shadow-floating overflow-y-auto flex flex-col relative ${className}`
-    : `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 overflow-y-auto flex flex-col relative ${className}`;
+    ? `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 bg-white/95 backdrop-blur-sm shadow-floating overflow-hidden flex flex-col relative ${className}`
+    : `flex-1 p-4 sm:p-0.5 md:p-1 lg:p-2 overflow-hidden flex flex-col relative ${className}`;
 
   return (
     <Container className={containerClass}>
@@ -837,7 +837,7 @@ export function LetterHuntGameCore({
       )}
 
       {/* Game Area */}
-      <div className="flex-1 flex flex-col justify-center px-0 py-0 min-h-[40vh] overflow-y-auto">
+      <div className="flex-1 flex flex-col justify-center px-0 py-0 min-h-0">
         {/* Top Section - Audio */}
         {showSpeaker && (
           <div className="text-center flex-shrink-0 mb-[clamp(4px,1vh,16px)]">
