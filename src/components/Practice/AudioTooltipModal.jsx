@@ -4,8 +4,6 @@ import { useMediaQuery, Box } from "@mui/material";
 // Shared tooltip dimension constants (border-box sizing)
 const TOOLTIP_GAP = 12; // gap between trigger and tooltip (marginTop)
 const TOOLTIP_HEIGHT = 50; // height (border-box: includes padding & border)
-const TOOLTIP_SHADOW = 10; // clearance for box-shadow spread
-const TOOLTIP_RESERVED = `${TOOLTIP_GAP + TOOLTIP_HEIGHT + TOOLTIP_SHADOW}px`; // 72px
 
 const AudioTooltipModal = ({ audioSrc, description, children }) => {
   const [showModal, setShowModal] = useState(false);
@@ -62,8 +60,6 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
       style={{
         position: "relative",
         display: "inline-block",
-        marginBottom: showModal ? TOOLTIP_RESERVED : "0px",
-        transition: "margin-bottom 0.40s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
       onMouseEnter={() => !isTouchDevice && setShowModal(true)}
       onMouseLeave={() => !isTouchDevice && setShowModal(false)}
