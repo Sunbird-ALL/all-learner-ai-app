@@ -651,6 +651,7 @@ export const SubmitButton = (props) => (
 // LevelBeginner removed — was dead code (never used)
 
 // SVG icon components extracted to src/components/Icons/SvgIcons.jsx
+export { RetryIcon } from "../components/Icons/SvgIcons";
 
 export function getParameter(key, location) {
   if (key) {
