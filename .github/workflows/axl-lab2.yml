@@ -3,7 +3,7 @@ name: ALL AXL Lab2 Deployment (Lab2)
 on:
   push:
     branches:
-      - all-3.0.6-hotfix
+      - all-3.0.6-hotfix_
 
 jobs:
   deploy:
