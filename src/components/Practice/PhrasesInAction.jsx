@@ -21,12 +21,12 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   ListenButton,
   StopButton,
   setLocalData,
   getBrowserLanguage,
 } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 import {
   fetchASROutput,
   handleTextEvaluation,
