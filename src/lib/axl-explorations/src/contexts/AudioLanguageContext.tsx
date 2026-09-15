@@ -21,7 +21,7 @@ export function AudioLanguageProvider({
 
   useEffect(() => {
     const savedAudioLanguage = localStorage.getItem('selectedAudioLanguage') as Language;
-    if (savedAudioLanguage && ['en', 'te', 'mr', 'kn', 'hi'].includes(savedAudioLanguage)) {
+    if (savedAudioLanguage && ['en', 'te', 'mr', 'kn', 'hi', 'ne'].includes(savedAudioLanguage)) {
       setSelectedAudioLanguage(savedAudioLanguage);
     }
   }, []);

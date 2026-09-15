@@ -5125,6 +5125,1394 @@ const soundMatchContent = {
       },
     ],
   },
+  ne: {
+    1: [
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.गरमImg),
+            text: "गरम",
+            audio: getAssetAudioUrl(s3Assets.गरमAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पढ़Img),
+            text: "पढ़",
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+          },
+          {
+            img: getAssetUrl(s3Assets.घर2Img),
+            text: "घर",
+            audio: getAssetAudioUrl(s3Assets.घर2Audio),
+          },
+        ],
+        correctWord: "घर",
+        audio: getAssetAudioUrl(s3Assets.घर2Audio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.गरमImg),
+            text: "गरम",
+            audio: getAssetAudioUrl(s3Assets.गरमAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.समय2Img),
+            text: "समय",
+            audio: getAssetAudioUrl(s3Assets.समय2Audio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पढ़Img),
+            text: "पढ़",
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+          },
+        ],
+        correctWord: "पढ़",
+        audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.रथImg),
+            text: "रथ",
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.कोदोImg),
+            text: "कोदो",
+            audio: getAssetAudioUrl(s3Assets.कोदोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खरायोImg),
+            text: "खरायो",
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+          },
+        ],
+        correctWord: "रथ",
+        audio: getAssetAudioUrl(s3Assets.रथAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.कमिलाImg),
+            text: "कमिला",
+            audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खरायोImg),
+            text: "खरायो",
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.समय2Img),
+            text: "समय",
+            audio: getAssetAudioUrl(s3Assets.समय2Audio),
+          },
+        ],
+        correctWord: "समय",
+        audio: getAssetAudioUrl(s3Assets.समय2Audio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पुतलीImg),
+            text: "पुतली",
+            audio: getAssetAudioUrl(s3Assets.पुतलीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.गरमImg),
+            text: "गरम",
+            audio: getAssetAudioUrl(s3Assets.गरमAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पशुImg),
+            text: "पशु",
+            audio: getAssetAudioUrl(s3Assets.पशुAudio),
+          },
+        ],
+        correctWord: "गरम",
+        audio: getAssetAudioUrl(s3Assets.गरमAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.किताबImg),
+            text: "किताब",
+            audio: getAssetAudioUrl(s3Assets.किताबAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खुकुरीImg),
+            text: "खुकुरी",
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.रथImg),
+            text: "रथ",
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+          },
+        ],
+        correctWord: "किताब",
+        audio: getAssetAudioUrl(s3Assets.किताबAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.कमिलाImg),
+            text: "कमिला",
+            audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पढ़Img),
+            text: "पढ़",
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+          },
+          {
+            img: getAssetUrl(s3Assets.लुगाImg),
+            text: "लुगा",
+            audio: getAssetAudioUrl(s3Assets.लुगाAudio),
+          },
+        ],
+        correctWord: "लुगा",
+        audio: getAssetAudioUrl(s3Assets.लुगाAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.साँपImg),
+            text: "साँप",
+            audio: getAssetAudioUrl(s3Assets.साँपAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.कोदोImg),
+            text: "कोदो",
+            audio: getAssetAudioUrl(s3Assets.कोदोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.लुगाImg),
+            text: "लुगा",
+            audio: getAssetAudioUrl(s3Assets.लुगाAudio),
+          },
+        ],
+        correctWord: "कोदो",
+        audio: getAssetAudioUrl(s3Assets.कोदोAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.खरायोImg),
+            text: "खरायो",
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.रथImg),
+            text: "रथ",
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मकैImg),
+            text: "मकै",
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+          },
+        ],
+        correctWord: "खरायो",
+        audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.साँपImg),
+            text: "साँप",
+            audio: getAssetAudioUrl(s3Assets.साँपAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पुतलीImg),
+            text: "पुतली",
+            audio: getAssetAudioUrl(s3Assets.पुतलीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.कमिलाImg),
+            text: "कमिला",
+            audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+          },
+        ],
+        correctWord: "पुतली",
+        audio: getAssetAudioUrl(s3Assets.पुतलीAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.रथImg),
+            text: "रथ",
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खरायोImg),
+            text: "खरायो",
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मकैImg),
+            text: "मकै",
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+          },
+        ],
+        correctWord: "मकै",
+        audio: getAssetAudioUrl(s3Assets.मकैAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.खुकुरीImg),
+            text: "खुकुरी",
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खरायोImg),
+            text: "खरायो",
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पशुImg),
+            text: "पशु",
+            audio: getAssetAudioUrl(s3Assets.पशुAudio),
+          },
+        ],
+        correctWord: "पशु",
+        audio: getAssetAudioUrl(s3Assets.पशुAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पढ़Img),
+            text: "पढ़",
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मकैImg),
+            text: "मकै",
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.साँपImg),
+            text: "साँप",
+            audio: getAssetAudioUrl(s3Assets.साँपAudio),
+          },
+        ],
+        correctWord: "साँप",
+        audio: getAssetAudioUrl(s3Assets.साँपAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.खुकुरीImg),
+            text: "खुकुरी",
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मकैImg),
+            text: "मकै",
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.लुगाImg),
+            text: "लुगा",
+            audio: getAssetAudioUrl(s3Assets.लुगाAudio),
+          },
+        ],
+        correctWord: "खुकुरी",
+        audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पुतलीImg2),
+            text: "पुतली",
+            audio: getAssetAudioUrl(s3Assets.पुतलीAudio2),
+          },
+          {
+            img: getAssetUrl(s3Assets.गरमImg),
+            text: "गरम",
+            audio: getAssetAudioUrl(s3Assets.गरमAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खरायोImg),
+            text: "खरायो",
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+          },
+        ],
+        correctWord: "पुतली",
+        audio: getAssetAudioUrl(s3Assets.पुतलीAudio2),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.साँपImg),
+            text: "साँप",
+            audio: getAssetAudioUrl(s3Assets.साँपAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खुकुरीImg),
+            text: "खुकुरी",
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.गिलासImg),
+            text: "गिलास",
+            audio: getAssetAudioUrl(s3Assets.गिलासAudio),
+          },
+        ],
+        correctWord: "गिलास",
+        audio: getAssetAudioUrl(s3Assets.गिलासAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.रथImg),
+            text: "रथ",
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.कमिलाImg),
+            text: "कमिला",
+            audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पढ़Img),
+            text: "पढ़",
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+          },
+        ],
+        correctWord: "कमिला",
+        audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.गुलाबImg),
+            text: "गुलाब",
+            audio: getAssetAudioUrl(s3Assets.गुलाबAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खुकुरीImg),
+            text: "खुकुरी",
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.रथImg),
+            text: "रथ",
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+          },
+        ],
+        correctWord: "गुलाब",
+        audio: getAssetAudioUrl(s3Assets.गुलाबAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.चितुवाImg),
+            text: "चितुवा",
+            audio: getAssetAudioUrl(s3Assets.चितुवाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.गुलाबImg),
+            text: "गुलाब",
+            audio: getAssetAudioUrl(s3Assets.गुलाबAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खरायोImg),
+            text: "खरायो",
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+          },
+        ],
+        correctWord: "चितुवा",
+        audio: getAssetAudioUrl(s3Assets.चितुवाAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.समय2Img),
+            text: "समय",
+            audio: getAssetAudioUrl(s3Assets.समय2Audio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मकैImg),
+            text: "मकै",
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.युवतीImg),
+            text: "युवती",
+            audio: getAssetAudioUrl(s3Assets.युवतीAudio),
+          },
+        ],
+        correctWord: "युवती",
+        audio: getAssetAudioUrl(s3Assets.युवतीAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+    ],
+    2: [
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.उल्लूImg),
+            text: "उल्लू",
+            audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.माझीImg),
+            text: "माझी",
+            audio: getAssetAudioUrl(s3Assets.माझीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.आमाImg),
+            text: "आमा",
+            audio: getAssetAudioUrl(s3Assets.आमाAudio),
+          },
+        ],
+        correctWord: "आमा",
+        audio: getAssetAudioUrl(s3Assets.आमाAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.उल्लूImg),
+            text: "उल्लू",
+            audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.शून्यImg),
+            text: "शून्य",
+            audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.माझीImg),
+            text: "माझी",
+            audio: getAssetAudioUrl(s3Assets.माझीAudio),
+          },
+        ],
+        correctWord: "माझी",
+        audio: getAssetAudioUrl(s3Assets.माझीAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.अन्नImg),
+            text: "अन्न",
+            audio: getAssetAudioUrl(s3Assets.अन्नAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.बटुकाImg),
+            text: "बटुका",
+            audio: getAssetAudioUrl(s3Assets.बटुकाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.लुगाफाटाImg),
+            text: "लुगाफाटा",
+            audio: getAssetAudioUrl(s3Assets.लुगाफाटाAudio),
+          },
+        ],
+        correctWord: "बटुका",
+        audio: getAssetAudioUrl(s3Assets.बटुकाAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.अन्नImg),
+            text: "अन्न",
+            audio: getAssetAudioUrl(s3Assets.अन्नAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.शून्यImg),
+            text: "शून्य",
+            audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.बन्दकोपीImg),
+            text: "बन्दकोपी",
+            audio: getAssetAudioUrl(s3Assets.बन्दकोपीAudio),
+          },
+        ],
+        correctWord: "अन्न",
+        audio: getAssetAudioUrl(s3Assets.अन्नAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.सुगाImg),
+            text: "सुगा",
+            audio: getAssetAudioUrl(s3Assets.सुगाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.उल्लूImg),
+            text: "उल्लू",
+            audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.आमाImg),
+            text: "आमा",
+            audio: getAssetAudioUrl(s3Assets.आमाAudio),
+          },
+        ],
+        correctWord: "उल्लू",
+        audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.परिवारImg),
+            text: "परिवार",
+            audio: getAssetAudioUrl(s3Assets.परिवारAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.क्रिसमसImg),
+            text: "क्रिसमस",
+            audio: getAssetAudioUrl(s3Assets.क्रिसमसAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.लुगाफाटाImg),
+            text: "लुगाफाटा",
+            audio: getAssetAudioUrl(s3Assets.लुगाफाटाAudio),
+          },
+        ],
+        correctWord: "क्रिसमस",
+        audio: getAssetAudioUrl(s3Assets.क्रिसमसAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.सुगाImg),
+            text: "सुगा",
+            audio: getAssetAudioUrl(s3Assets.सुगाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.प्रकृतिImg),
+            text: "प्रकृति",
+            audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पढ्नेImg),
+            text: "पढ्ने",
+            audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+          },
+        ],
+        correctWord: "सुगा",
+        audio: getAssetAudioUrl(s3Assets.सुगाAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.लुगाफाटाImg),
+            text: "लुगाफाटा",
+            audio: getAssetAudioUrl(s3Assets.लुगाफाटाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.शून्यImg),
+            text: "शून्य",
+            audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.अन्नImg),
+            text: "अन्न",
+            audio: getAssetAudioUrl(s3Assets.अन्नAudio),
+          },
+        ],
+        correctWord: "लुगाफाटा",
+        audio: getAssetAudioUrl(s3Assets.लुगाफाटाAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.प्रकृतिImg),
+            text: "प्रकृति",
+            audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.फुलेकाImg),
+            text: "फुलेका",
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.सुगाImg),
+            text: "सुगा",
+            audio: getAssetAudioUrl(s3Assets.सुगाAudio),
+          },
+        ],
+        correctWord: "फुलेका",
+        audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पोखियोImg),
+            text: "पोखियो",
+            audio: getAssetAudioUrl(s3Assets.पोखियोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.बटुकाImg),
+            text: "बटुका",
+            audio: getAssetAudioUrl(s3Assets.बटुकाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पक्षीImg),
+            text: "पक्षी",
+            audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+          },
+        ],
+        correctWord: "पोखियो",
+        audio: getAssetAudioUrl(s3Assets.पोखियोAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.प्रकृतिImg),
+            text: "प्रकृति",
+            audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पक्षीImg),
+            text: "पक्षी",
+            audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पुस्तकालयImg),
+            text: "पुस्तकालय",
+            audio: getAssetAudioUrl(s3Assets.पुस्तकालयAudio),
+          },
+        ],
+        correctWord: "पक्षी",
+        audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.बटुकाImg),
+            text: "बटुका",
+            audio: getAssetAudioUrl(s3Assets.बटुकाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.फुलेकाImg),
+            text: "फुलेका",
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.परिवारImg),
+            text: "परिवार",
+            audio: getAssetAudioUrl(s3Assets.परिवारAudio),
+          },
+        ],
+        correctWord: "परिवार",
+        audio: getAssetAudioUrl(s3Assets.परिवारAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.मुस्कानImg),
+            text: "मुस्कान",
+            audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.फुलेकाImg),
+            text: "फुलेका",
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.प्रकृतिImg),
+            text: "प्रकृति",
+            audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+          },
+        ],
+        correctWord: "प्रकृति",
+        audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.माझीImg),
+            text: "माझी",
+            audio: getAssetAudioUrl(s3Assets.माझीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पक्षीImg),
+            text: "पक्षी",
+            audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मुस्कानImg),
+            text: "मुस्कान",
+            audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+          },
+        ],
+        correctWord: "मुस्कान",
+        audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.बन्दकोपीImg),
+            text: "बन्दकोपी",
+            audio: getAssetAudioUrl(s3Assets.बन्दकोपीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पक्षीImg),
+            text: "पक्षी",
+            audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पढ्नेImg),
+            text: "पढ्ने",
+            audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+          },
+        ],
+        correctWord: "बन्दकोपी",
+        audio: getAssetAudioUrl(s3Assets.बन्दकोपीAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पुस्तकालयImg),
+            text: "पुस्तकालय",
+            audio: getAssetAudioUrl(s3Assets.पुस्तकालयAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.उल्लूImg),
+            text: "उल्लू",
+            audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.फुलेकाImg),
+            text: "फुलेका",
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+          },
+        ],
+        correctWord: "पुस्तकालय",
+        audio: getAssetAudioUrl(s3Assets.पुस्तकालयAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पढ्नेImg),
+            text: "पढ्ने",
+            audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मुस्कानImg),
+            text: "मुस्कान",
+            audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.टाउकोमाImg),
+            text: "टाउकोमा",
+            audio: getAssetAudioUrl(s3Assets.टाउकोमाAudio),
+          },
+        ],
+        correctWord: "टाउकोमा",
+        audio: getAssetAudioUrl(s3Assets.टाउकोमाAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.टाउकोमाImg),
+            text: "टाउकोमा",
+            audio: getAssetAudioUrl(s3Assets.टाउकोमाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पुस्तकालयImg),
+            text: "पुस्तकालय",
+            audio: getAssetAudioUrl(s3Assets.पुस्तकालयAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.स्वादImg),
+            text: "स्वाद",
+            audio: getAssetAudioUrl(s3Assets.स्वादAudio),
+          },
+        ],
+        correctWord: "स्वाद",
+        audio: getAssetAudioUrl(s3Assets.स्वादAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.शून्यImg),
+            text: "शून्य",
+            audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मुस्कानImg),
+            text: "मुस्कान",
+            audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.क्रिसमसImg),
+            text: "क्रिसमस",
+            audio: getAssetAudioUrl(s3Assets.क्रिसमसAudio),
+          },
+        ],
+        correctWord: "शून्य",
+        audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पढ्नेImg),
+            text: "पढ्ने",
+            audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.टाउकोमाImg),
+            text: "टाउकोमा",
+            audio: getAssetAudioUrl(s3Assets.टाउकोमाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.फुलेकाImg),
+            text: "फुलेका",
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+          },
+        ],
+        correctWord: "पढ्ने",
+        audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+    ],
+    3: [
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.खुल्लामैदानImg),
+            text: "खुल्ला मैदान",
+            audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.तातोचियाImg),
+            text: "तातो चिया",
+            audio: getAssetAudioUrl(s3Assets.तातोचियाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खालीसड़कImg),
+            text: "खाली सड़क",
+            audio: getAssetAudioUrl(s3Assets.खालीसड़कAudio),
+          },
+        ],
+        correctWord: "खाली सड़क",
+        audio: getAssetAudioUrl(s3Assets.खालीसड़कAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.खुल्लामैदानImg),
+            text: "खुल्ला मैदान",
+            audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.भागलिनुImg),
+            text: "भाग लिनु",
+            audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.तातोचियाImg),
+            text: "तातो चिया",
+            audio: getAssetAudioUrl(s3Assets.तातोचियाAudio),
+          },
+        ],
+        correctWord: "तातो चिया",
+        audio: getAssetAudioUrl(s3Assets.तातोचियाAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.मेलाकोरमाइलोImg),
+            text: "मेलाको रमाइलो",
+            audio: getAssetAudioUrl(s3Assets.मेलाकोरमाइलोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.सानोघरImg),
+            text: "सानो घर",
+            audio: getAssetAudioUrl(s3Assets.सानोघरAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.हरियोसागसब्जीImg),
+            text: "हरियो सागसब्जी",
+            audio: getAssetAudioUrl(s3Assets.हरियोसागसब्जीAudio),
+          },
+        ],
+        correctWord: "सानो घर",
+        audio: getAssetAudioUrl(s3Assets.सानोघरAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.मेलाकोरमाइलोImg),
+            text: "मेलाको रमाइलो",
+            audio: getAssetAudioUrl(s3Assets.मेलाकोरमाइलोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.भागलिनुImg),
+            text: "भाग लिनु",
+            audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.हरियोघाँसImg),
+            text: "हरियो घाँस",
+            audio: getAssetAudioUrl(s3Assets.हरियोघाँसAudio),
+          },
+        ],
+        correctWord: "मेलाको रमाइलो",
+        audio: getAssetAudioUrl(s3Assets.मेलाकोरमाइलोAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.रातोगुलाबImg),
+            text: "रातो गुलाब",
+            audio: getAssetAudioUrl(s3Assets.रातोगुलाबAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खुल्लामैदानImg),
+            text: "खुल्ला मैदान",
+            audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खालीसड़कImg),
+            text: "खाली सड़क",
+            audio: getAssetAudioUrl(s3Assets.खालीसड़कAudio),
+          },
+        ],
+        correctWord: "खुल्ला मैदान",
+        audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.हरियोझोलाImg),
+            text: "हरियो झोला",
+            audio: getAssetAudioUrl(s3Assets.हरियोझोलाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.ठुलोहात्तीImg),
+            text: "ठुलो हात्ती",
+            audio: getAssetAudioUrl(s3Assets.ठुलोहात्तीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.हरियोसागसब्जीImg),
+            text: "हरियो सागसब्जी",
+            audio: getAssetAudioUrl(s3Assets.हरियोसागसब्जीAudio),
+          },
+        ],
+        correctWord: "ठुलो हात्ती",
+        audio: getAssetAudioUrl(s3Assets.ठुलोहात्तीAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.रातोगुलाबImg),
+            text: "रातो गुलाब",
+            audio: getAssetAudioUrl(s3Assets.रातोगुलाबAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.हँसिलोकेटोImg),
+            text: "हँसिलो केटो",
+            audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पक्ड़ेरलानुImg),
+            text: "पक्ड़ेर लानु",
+            audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+          },
+        ],
+        correctWord: "रातो गुलाब",
+        audio: getAssetAudioUrl(s3Assets.रातोगुलाबAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.हरियोसागसब्जीImg),
+            text: "हरियो सागसब्जी",
+            audio: getAssetAudioUrl(s3Assets.हरियोसागसब्जीAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.भागलिनुImg),
+            text: "भाग लिनु",
+            audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.मेलाकोरमाइलोImg),
+            text: "मेलाको रमाइलो",
+            audio: getAssetAudioUrl(s3Assets.मेलाकोरमाइलोAudio),
+          },
+        ],
+        correctWord: "हरियो सागसब्जी",
+        audio: getAssetAudioUrl(s3Assets.हरियोसागसब्जीAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.हँसिलोकेटोImg),
+            text: "हँसिलो केटो",
+            audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.गोलीसमात्नुImg),
+            text: "गोली समात्नु",
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.रातोगुलाबImg),
+            text: "रातो गुलाब",
+            audio: getAssetAudioUrl(s3Assets.रातोगुलाबAudio),
+          },
+        ],
+        correctWord: "गोली समात्नु",
+        audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.ठूलोरूखImg),
+            text: "ठूलो रूख",
+            audio: getAssetAudioUrl(s3Assets.ठूलोरूखAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.सानोघरImg),
+            text: "सानो घर",
+            audio: getAssetAudioUrl(s3Assets.सानोघरAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खानापकाउनुImg),
+            text: "खाना पकाउनु",
+            audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+          },
+        ],
+        correctWord: "ठूलो रूख",
+        audio: getAssetAudioUrl(s3Assets.ठूलोरूखAudio),
+        flowName: "S1",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.हँसिलोकेटोImg),
+            text: "हँसिलो केटो",
+            audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खानापकाउनुImg),
+            text: "खाना पकाउनु",
+            audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पानीकोबोतलImg),
+            text: "पानीको बोतल",
+            audio: getAssetAudioUrl(s3Assets.पानीकोबोतलAudio),
+          },
+        ],
+        correctWord: "खाना पकाउनु",
+        audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.सानोघरImg),
+            text: "सानो घर",
+            audio: getAssetAudioUrl(s3Assets.सानोघरAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.गोलीसमात्नुImg),
+            text: "गोली समात्नु",
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.हरियोझोलाImg),
+            text: "हरियो झोला",
+            audio: getAssetAudioUrl(s3Assets.हरियोझोलाAudio),
+          },
+        ],
+        correctWord: "हरियो झोला",
+        audio: getAssetAudioUrl(s3Assets.हरियोझोलाAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.फलखानुImg),
+            text: "फल खानु",
+            audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.गोलीसमात्नुImg),
+            text: "गोली समात्नु",
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.हँसिलोकेटोImg),
+            text: "हँसिलो केटो",
+            audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+          },
+        ],
+        correctWord: "हँसिलो केटो",
+        audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.तातोचियाImg),
+            text: "तातो चिया",
+            audio: getAssetAudioUrl(s3Assets.तातोचियाAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खानापकाउनुImg),
+            text: "खाना पकाउनु",
+            audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.फलखानुImg),
+            text: "फल खानु",
+            audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+          },
+        ],
+        correctWord: "फल खानु",
+        audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.हरियोघाँसImg),
+            text: "हरियो घाँस",
+            audio: getAssetAudioUrl(s3Assets.हरियोघाँसAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खानापकाउनुImg),
+            text: "खाना पकाउनु",
+            audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पक्ड़ेरलानुImg),
+            text: "पक्ड़ेर लानु",
+            audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+          },
+        ],
+        correctWord: "हरियो घाँस",
+        audio: getAssetAudioUrl(s3Assets.हरियोघाँसAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पानीकोबोतलImg),
+            text: "पानीको बोतल",
+            audio: getAssetAudioUrl(s3Assets.पानीकोबोतलAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खुल्लामैदानImg),
+            text: "खुल्ला मैदान",
+            audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.गोलीसमात्नुImg),
+            text: "गोली समात्नु",
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+          },
+        ],
+        correctWord: "पानीको बोतल",
+        audio: getAssetAudioUrl(s3Assets.पानीकोबोतलAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पक्ड़ेरलानुImg),
+            text: "पक्ड़ेर लानु",
+            audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.फलखानुImg),
+            text: "फल खानु",
+            audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.कालोकुकुरImg),
+            text: "कालो कुकुर",
+            audio: getAssetAudioUrl(s3Assets.कालोकुकुरAudio),
+          },
+        ],
+        correctWord: "कालो कुकुर",
+        audio: getAssetAudioUrl(s3Assets.कालोकुकुरAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.कालोकुकुरImg),
+            text: "कालो कुकुर",
+            audio: getAssetAudioUrl(s3Assets.कालोकुकुरAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.पानीकोबोतलImg),
+            text: "पानीको बोतल",
+            audio: getAssetAudioUrl(s3Assets.पानीकोबोतलAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.खेल्नेसमयImg),
+            text: "खेल्ने समय",
+            audio: getAssetAudioUrl(s3Assets.खेल्नेसमयAudio),
+          },
+        ],
+        correctWord: "खेल्ने समय",
+        audio: getAssetAudioUrl(s3Assets.खेल्नेसमयAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.भागलिनुImg),
+            text: "भाग लिनु",
+            audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.फलखानुImg),
+            text: "फल खानु",
+            audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.ठुलोहात्तीImg),
+            text: "ठुलो हात्ती",
+            audio: getAssetAudioUrl(s3Assets.ठुलोहात्तीAudio),
+          },
+        ],
+        correctWord: "भाग लिनु",
+        audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+      {
+        allwords: [
+          {
+            img: getAssetUrl(s3Assets.पक्ड़ेरलानुImg),
+            text: "पक्ड़ेर लानु",
+            audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.कालोकुकुरImg),
+            text: "कालो कुकुर",
+            audio: getAssetAudioUrl(s3Assets.कालोकुकुरAudio),
+          },
+          {
+            img: getAssetUrl(s3Assets.गोलीसमात्नुImg),
+            text: "गोली समात्नु",
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+          },
+        ],
+        correctWord: "पक्ड़ेर लानु",
+        audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+        flowName: "S2",
+        type: "soundMatch",
+      },
+    ],
+  },
 };
 
 // Sound Hunt (Picture words) - Read the word and choose the right sound
@@ -9333,6 +10721,1154 @@ const pictureWordsContent = {
           },
           {
             audio: getAssetAudioUrl(s3Assets.मलकमजAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+    ],
+  },
+  ne: {
+    1: [
+      {
+        word: "घर",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.गरमAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.घरAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "पढ़",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.गरमAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.समयAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "रथ",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.कोदोAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "समय",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.समयAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "गरम",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पुतलीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गरमAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पशुAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "किताब",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.किताबAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "लुगा",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.लुगाAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "कोदो",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.साँपAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.कोदोAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.लुगाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "खरायो",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "पुतली",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.साँपAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पुतलीAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "मकै",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "पशु",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पशुAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "साँप",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.साँपAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "खुकुरी",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.लुगाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "पुतली",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पुतलीAudio2),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गरमAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "गिलास",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.साँपAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गिलासAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "कमिला",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.कमिलाAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ़Audio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "गुलाब",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.गुलाबAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खुकुरीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.रथAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "चितुवा",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.चितुवाAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गुलाबAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खरायोAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "युवती",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.समयAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मकैAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.युवतीAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+    ],
+    2: [
+      {
+        word: "आमा",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.माझीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.आमाAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "माझी",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.माझीAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "बटुका",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.अन्नAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.बटुकाAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.लुगाफाटाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "अन्न",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.अन्नAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.बन्दकोपीAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "उल्लू",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.सुगाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.आमाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "क्रिसमस",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.परिवारAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.क्रिसमसAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.लुगाफाटाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "सुगा",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.सुगाAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "लुगाफाटा",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.लुगाफाटाAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.अन्नAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "फुलेका",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.सुगाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "पोखियो",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पोखियोAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.बटुकाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "पक्षी",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पुस्तकालयAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "परिवार",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.बटुकाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.परिवारAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "प्रकृति",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.प्रकृतिAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "मुस्कान",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.माझीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "बन्दकोपी",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.बन्दकोपीAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पक्षीAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "पुस्तकालय",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पुस्तकालयAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.उल्लूAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "टाउकोमा",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.टाउकोमाAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "स्वाद",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.टाउकोमाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पुस्तकालयAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.स्वादAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "शून्य",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.शून्यAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मुस्कानAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.क्रिसमसAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "पढ्ने",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पढ्नेAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.टाउकोमाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.फुलेकाAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+    ],
+    3: [
+      {
+        word: "खाली सड़क",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.तातोचियाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खालीसड़कAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "तातो चिया",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.तातोचियाAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "सानो घर",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.मेलाकोरमाइलोAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.सानोघरAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.हरियोसागसब्जीAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "मेलाको रमाइलो",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.मेलाकोरमाइलोAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.हरियोघाँसAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "खुल्ला मैदान",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.रातोगुलाबAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खालीसड़कAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "ठुलो हात्ती",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.हरियोझोलाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.ठुलोहात्तीAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.हरियोसागसब्जीAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "रातो गुलाब",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.रातोगुलाबAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "हरियो सागसब्जी",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.हरियोसागसब्जीAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.मेलाकोरमाइलोAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "गोली समात्नु",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.रातोगुलाबAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "ठूलो रूख",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.ठूलोरूखAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.सानोघरAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S1",
+        type: "pictureWords",
+      },
+      {
+        word: "खाना पकाउनु",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पानीकोबोतलAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "हरियो झोला",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.सानोघरAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.हरियोझोलाAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "हँसिलो केटो",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.हँसिलोकेटोAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "फल खानु",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.तातोचियाAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "हरियो घाँस",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.हरियोघाँसAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खानापकाउनुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "पानीको बोतल",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पानीकोबोतलAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खुल्लामैदानAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "कालो कुकुर",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.कालोकुकुरAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "खेल्ने समय",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.कालोकुकुरAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.पानीकोबोतलAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.खेल्नेसमयAudio),
+            isCorrect: true,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "भाग लिनु",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.भागलिनुAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.फलखानुAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.ठुलोहात्तीAudio),
+            isCorrect: false,
+          },
+        ],
+        flowName: "S2",
+        type: "pictureWords",
+      },
+      {
+        word: "पक्ड़ेर लानु",
+        audioOptions: [
+          {
+            audio: getAssetAudioUrl(s3Assets.पक्ड़ेरलानुAudio),
+            isCorrect: true,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.कालोकुकुरAudio),
+            isCorrect: false,
+          },
+          {
+            audio: getAssetAudioUrl(s3Assets.गोलीसमात्नुAudio),
             isCorrect: false,
           },
         ],

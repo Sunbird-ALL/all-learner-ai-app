@@ -19,6 +19,7 @@ import {
   dataHi as letterDataHi,
   dataTe as letterDataTe,
   dataKn as letterDataKn,
+  dataNe as letterDataNe,
 } from "../../RFlow/LetterTrain";
 
 import {
@@ -26,6 +27,7 @@ import {
   TeluguGunithas,
   KannadaGunithas,
   HindiGunithas,
+  NepaliGunithas,
 } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
 import { interact } from "../../services/telemetryService";
@@ -384,6 +386,58 @@ const HINDI_ORDER = [
   "ज्ञ",
 ];
 
+const NEPALI_ORDER = [
+  "अ",
+  "आ",
+  "इ",
+  "ई",
+  "उ",
+  "ऊ",
+  "ऋ",
+  "ए",
+  "ऐ",
+  "ओ",
+  "औ",
+  "अं",
+  "अः",
+  "क",
+  "ख",
+  "ग",
+  "घ",
+  "ङ",
+  "च",
+  "छ",
+  "ज",
+  "झ",
+  "ञ",
+  "ट",
+  "ठ",
+  "ड",
+  "ढ",
+  "ण",
+  "त",
+  "थ",
+  "द",
+  "ध",
+  "न",
+  "प",
+  "फ",
+  "ब",
+  "भ",
+  "म",
+  "य",
+  "र",
+  "ल",
+  "व",
+  "श",
+  "ष",
+  "स",
+  "ह",
+  "क्ष",
+  "त्र",
+  "ज्ञ",
+];
+
 const TELUGU_ORDER = [
   "అ",
   "ఆ",
@@ -500,11 +554,13 @@ const buildOrderMap = (order) =>
   }, {});
 
 export const HINDI_ORDER_MAP = buildOrderMap(HINDI_ORDER);
+export const NEPALI_ORDER_MAP = buildOrderMap(NEPALI_ORDER);
 export const TELUGU_ORDER_MAP = buildOrderMap(TELUGU_ORDER);
 export const KANNADA_ORDER_MAP = buildOrderMap(KANNADA_ORDER);
 
 const ORDER_MAPS = {
   hi: HINDI_ORDER_MAP,
+  ne: NEPALI_ORDER_MAP,
   te: TELUGU_ORDER_MAP,
   kn: KANNADA_ORDER_MAP,
 };
@@ -562,6 +618,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
     if (lang === "te") return letterDataTe;
     if (lang === "kn") return letterDataKn;
     if (lang === "en") return letterDataEn;
+    if (lang === "ne") return letterDataNe;
     return []; // Return empty array for unsupported languages (like "ta")
   }, [lang]);
 
@@ -592,6 +649,8 @@ const AlphabetChart = ({ open, onClose, lang }) => {
       gunithaSource = KannadaGunithas;
     } else if (activeLang === "hi") {
       gunithaSource = HindiGunithas;
+    } else if (activeLang === "ne") {
+      gunithaSource = NepaliGunithas;
     }
 
     const gunithaItems = gunithaSource
@@ -732,6 +791,7 @@ const AlphabetChart = ({ open, onClose, lang }) => {
       te: { alphabet: "అక్షరమాల", syllable: "గుణింతాలు" },
       kn: { alphabet: "ಅಕ್ಷರಮಾಲೆ", syllable: "ಗುಣಿತಾಕ್ಷರ" },
       ta: { alphabet: "எழுத்துக்கள்", syllable: "சொற்கள்" },
+      ne: { alphabet: "वर्णमाला", syllable: "मात्रा" },
     };
 
     return labels[lang]?.[type] || labels.en[type];
