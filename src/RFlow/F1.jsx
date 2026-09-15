@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import R0 from "./R0";
 import { getLocalData, setLocalData, practiceSteps } from "../utils/constants";
 import { levelGetContent } from "../data/levelContent";
+import {
+  impression as telemetryImpression,
+  assess as telemetryAssess,
+} from "../services/telemetryService";
 
 /**
  * F1 Flow sequence:
@@ -119,21 +123,70 @@ const F1 = ({
 
   const currentFlowStep = F1_FLOW[currentFlowIndex];
   const isLastStep = currentFlowIndex === F1_FLOW.length - 1;
+  const stepStartTsRef = useRef(Date.now());
 
-  // Save flow index to localStorage
+  // Save flow index and fire IMPRESSION (start) whenever step changes
   useEffect(() => {
     setLocalData("f1FlowIndex", currentFlowIndex);
+    if (currentFlowStep) {
+      const stepId = `F1_${currentFlowStep.type}${currentFlowStep.step}`;
+      localStorage.setItem("currentStep", stepId);
+      stepStartTsRef.current = Date.now();
+      telemetryImpression(
+        {
+          pageid: stepId,
+          subtype: "start",
+          uri: window.location.pathname,
+          visits: [
+            { objid: stepId, objtype: "Step", section: "", duration: 0 },
+          ],
+        },
+        "ET"
+      );
+    }
   }, [currentFlowIndex]);
 
   // Handle completion of current step
-  const handleStepComplete = () => {
+  const handleStepComplete = (result = {}) => {
+    // Fire IMPRESSION (end) + ASSESS before advancing
+    if (currentFlowStep) {
+      const stepId = `F1_${currentFlowStep.type}${currentFlowStep.step}`;
+      const durationMs = Date.now() - stepStartTsRef.current;
+      const pass = result.pass !== undefined ? result.pass : true;
+      telemetryImpression(
+        {
+          pageid: stepId,
+          subtype: "end",
+          uri: window.location.pathname,
+          visits: [
+            {
+              objid: stepId,
+              objtype: "Step",
+              section: result.mechanic || "",
+              duration: durationMs,
+            },
+          ],
+        },
+        "ET"
+      );
+      telemetryAssess({
+        item: {
+          id: stepId,
+          type: result.mechanic || "letterTrain",
+          maxscore: 1,
+        },
+        pass,
+        score: pass ? 100 : 0,
+        resvalues: [{ attempts: result.attempts || 1 }],
+        duration: durationMs,
+      });
+    }
+
     if (isLastStep) {
       // Flow complete - mark F1 as complete to trigger letter hunt
       setLocalData("f1FlowIndex", null); // Reset flow
       setLocalData("f1FlowComplete", "true"); // Mark F1 as complete
       setLocalData("rStepZero", null); // Clear rStepZero to prevent showing R1
-      // Don't navigate away - let Practice.jsx handle showing letter hunt
-      // Practice.jsx will detect f1FlowComplete and show letter hunt
     } else {
       // Move to next step
       setCurrentFlowIndex((prev) => prev + 1);

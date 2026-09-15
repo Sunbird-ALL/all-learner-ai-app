@@ -19,7 +19,10 @@ import useSound from "use-sound";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
 import config from "../../utils/urlConstants.json";
 import { MessageDialog } from "../Assesment/Assesment";
-import { Log } from "../../services/telemetryService";
+import {
+  Log,
+  impression as telemetryImpression,
+} from "../../services/telemetryService";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import {
   addLesson,
@@ -75,6 +78,8 @@ const SpeakSentenceComponent = () => {
   const [questionsReady, setQuestionsReady] = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [pendingLetterHuntNav, setPendingLetterHuntNav] = useState(false);
+  // Guard: fire discovery IMPRESSION only once even if effect re-runs
+  const impressionFiredRef = useRef(false);
 
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
   const sessionId = getLocalData("sessionId");
@@ -86,6 +91,30 @@ const SpeakSentenceComponent = () => {
     callConfetti();
     window.telemetry?.syncEvents && window.telemetry.syncEvents();
   };
+
+  // Fire IMPRESSION once when discovery sentences screen first loads
+  useEffect(() => {
+    if (impressionFiredRef.current) return;
+    impressionFiredRef.current = true;
+    localStorage.setItem("currentStep", "discovery");
+    telemetryImpression(
+      {
+        pageid: "discovery",
+        subtype: "start",
+        uri: "/discover",
+        visits: [
+          {
+            objid: "discovery",
+            objtype: "DiscoveryFlow",
+            section: "sentences",
+            duration: 0,
+          },
+        ],
+      },
+      "ET"
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (questions?.length) setAssesmentcount(assesmentCount + 1);
@@ -155,7 +184,11 @@ const SpeakSentenceComponent = () => {
     if (resolved.type === "terminal") {
       if (
         resolved.towre &&
-        (lang === "te" || lang === "en" || lang === "kn" || lang === "hi")
+        (lang === "te" ||
+          lang === "en" ||
+          lang === "kn" ||
+          lang === "hi" ||
+          lang === "ne")
       ) {
         navigate("/towre-flow");
       } else {

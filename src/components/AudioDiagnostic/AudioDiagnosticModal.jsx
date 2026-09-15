@@ -332,6 +332,7 @@ const AudioDiagnosticModal = ({ show, onClose }) => {
       ka: "kn-IN",
       kn: "kn-IN",
       en: "en-US",
+      ne: "ne-NP",
     };
 
     // Set language for speech synthesis

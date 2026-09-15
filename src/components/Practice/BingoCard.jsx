@@ -14,10 +14,10 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   setLocalData,
   getBrowserLanguage,
 } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 // import Play from "../../assets/playButton.svg";
 import { getUiStrings } from "../../constants/strings";
 import { phoneticMatch } from "../../utils/phoneticUtils";
@@ -675,6 +675,27 @@ const BingoCard = ({
     केतकी: ["केत", "की"],
     फिरकनी: ["फिर", "कनी"],
     बारिश: ["बा", "रिश"],
+
+    नेपाली: ["ने", "पाली"],
+    बिरालो: ["बि", "रालो"],
+    माझी: ["मा", "झी"],
+    बेलुका: ["बे", "लुका"],
+    चौबीस: ["चौ", "बीस"],
+    झोला: ["झो", "ला"],
+    बटुका: ["बटु", "का"],
+    गाड़ी: ["गा", "ड़ी"],
+    लुगाफाटा: ["लुगा", "फाटा"],
+    खानेकुरा: ["खाने", "कुरा"],
+    बोटबिरुवा: ["बोट", "बिरुवा"],
+    बत्ती: ["ब", "त्ती"],
+    पक्षी: ["प", "क्षी"],
+    नदीनाला: ["नदी", "नाला"],
+    विद्यालय: ["विद्या", "लय"],
+    परिवार: ["परि", "वार"],
+    पुस्तकालय: ["पुस्त", "कालय"],
+    फूलबारी: ["फूल", "बारी"],
+    बातचित: ["बात", "चित"],
+    छात्रा: ["छा", "त्रा"],
   };
 
   useEffect(() => {

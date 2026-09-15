@@ -21,12 +21,12 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   ListenButton,
   StopButton,
   setLocalData,
   getBrowserLanguage,
 } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 import {
   fetchASROutput,
   handleTextEvaluation,
@@ -102,6 +102,7 @@ const PhrasesInAction = ({
       hi: "क", // Hindi (from AllLanguages)
       gu: "ક", // Gujarati (from AllLanguages)
       or: "କ", // Odia (from AllLanguages)
+      ne: "न", // Nepali (from AllLanguages)
     };
     return langSymbolMap[nativeLang] || "ಕ"; // Default to Kannada if not found
   };
@@ -119,6 +120,7 @@ const PhrasesInAction = ({
       hi: "hi", // Hindi
       gu: "gu", // Gujarati
       or: "or", // Odia
+      ne: "ne", // Nepali
     };
     return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
   };
