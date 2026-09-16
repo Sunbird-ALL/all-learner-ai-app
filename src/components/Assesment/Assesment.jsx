@@ -998,13 +998,20 @@ export const ProfileHeader = ({
   };
 
   const handleLogout = async () => {
+    // END first: logout and the storage clear both drop the token it needs.
+    // Guarded separately so a telemetry failure still leaves the token retired,
+    // and the finally clears storage and redirects whatever fails above.
+    try {
+      end({});
+    } catch (error) {
+      console.error("Telemetry end event failed:", error);
+    }
     try {
       await logoutUser();
     } catch (error) {
       console.error("Logout failed, but proceeding with local logout");
     } finally {
       localStorage.clear();
-      end({});
       navigate("/login");
     }
   };
