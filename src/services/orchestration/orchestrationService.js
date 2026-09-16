@@ -10,6 +10,9 @@ const API_BASE_URL_ORCHESTRATION =
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
 
+// axl-login-service. Set only on embedded (iframe) builds.
+const API_AXL_LOGIN_HOST = process.env.REACT_APP_AXL_LOGIN_SERVICE_HOST;
+
 const getHeaders = () => {
   const token = localStorage.getItem("apiToken");
   return {
@@ -321,6 +324,23 @@ export const logoutUser = async () => {
     const token = localStorage.getItem("apiToken");
 
     if (!token) return;
+
+    // Embedded under AXL the token is issued by axl-login-service, so
+    // api/virtualId/logout 404s on it. Retire it where it was created.
+    if (process.env.REACT_APP_IS_APP_IFRAME === "true" && API_AXL_LOGIN_HOST) {
+      const response = await axios.post(
+        `${API_AXL_LOGIN_HOST}/${config.URLS.AXL_STUDENT_LOGOUT}`,
+        {},
+        {
+          // verifyToken reads x-auth-token, not Authorization.
+          headers: {
+            "x-auth-token": token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    }
 
     const response = await axios.post(
       `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_LOGOUT}`,

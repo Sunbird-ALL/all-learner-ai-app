@@ -4,6 +4,7 @@
         "GET_USER_CHECK": "api/student/login",
         "GET_VIRTUAL_ID": "api/virtualId/generateVirtualID",
         "GET_LOGOUT": "api/virtualId/logout",
+        "AXL_STUDENT_LOGOUT": "api/v1/student/logout",
         "GET_MILESTONE": "scores/getMilestone",
         "GET_POINTER": "api/pointer/getPoints",
         "GET_ASSESSMENT": "v1/content/getAssessment",
