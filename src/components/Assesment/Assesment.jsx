@@ -999,8 +999,9 @@ export const ProfileHeader = ({
 
   const handleLogout = async () => {
     // END first: logout and the storage clear both drop the token it needs.
-    end({});
+    // The finally runs either way, so a failure never strands the learner.
     try {
+      end({});
       await logoutUser();
     } catch (error) {
       console.error("Logout failed, but proceeding with local logout");
