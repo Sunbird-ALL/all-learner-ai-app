@@ -464,11 +464,7 @@ const App = () => {
       if (!replyPort) {
         console.warn("LOGOUT received without reply port; ack will be skipped");
       }
-      try {
-        await logoutUser();
-      } catch (error) {
-        console.error("Logout API failed:", error);
-      }
+      // END first: logoutUser() invalidates the token telemetry posts with.
       try {
         end({});
         // Flush the SDK queue and wait ~1s so the XHR lands before
@@ -477,6 +473,11 @@ const App = () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (error) {
         console.error("Telemetry end event failed:", error);
+      }
+      try {
+        await logoutUser();
+      } catch (error) {
+        console.error("Logout API failed:", error);
       }
       try {
         sessionStorage.clear();

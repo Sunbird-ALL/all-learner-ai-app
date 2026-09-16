@@ -998,13 +998,14 @@ export const ProfileHeader = ({
   };
 
   const handleLogout = async () => {
+    // END first: logout and the storage clear both drop the token it needs.
+    end({});
     try {
       await logoutUser();
     } catch (error) {
       console.error("Logout failed, but proceeding with local logout");
     } finally {
       localStorage.clear();
-      end({});
       navigate("/login");
     }
   };
