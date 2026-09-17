@@ -21,7 +21,7 @@ const languageMap = {
 };
 
 // Default language codes (fallback if env variable is not set)
-const defaultLanguageCodes = ["ka", "tn", "te", "hi"];
+const defaultLanguageCodes = ["ka", "tn", "te", "hi", "ne"];
 // const defaultLanguageCodes = ["kn", "te"];
 
 // Get languages from environment variable or use defaults

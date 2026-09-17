@@ -62,8 +62,8 @@ const AudioTooltipModal = ({ audioSrc, description, children }) => {
       style={{
         position: "relative",
         display: "inline-block",
-        marginBottom: showModal ? TOOLTIP_RESERVED : "0px",
-        transition: "margin-bottom 0.40s cubic-bezier(0.16, 1, 0.3, 1)",
+        marginTop: TOOLTIP_RESERVED,
+        marginBottom: TOOLTIP_RESERVED,
       }}
       onMouseEnter={() => !isTouchDevice && setShowModal(true)}
       onMouseLeave={() => !isTouchDevice && setShowModal(false)}

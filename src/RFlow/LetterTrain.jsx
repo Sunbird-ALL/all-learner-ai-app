@@ -19,9 +19,9 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   setLocalData,
 } from "../utils/constants";
+import { RetryIcon } from "../components/Icons/SvgIcons";
 import { getFontFamily } from "../utils/fontUtils";
 import { getUiStrings } from "../constants/strings";
 import { useNavigate } from "react-router-dom";
@@ -7140,9 +7140,9 @@ export const dataNe = [
         letter: "र",
         word: "घर",
         image: getAssetUrl(s3Assets.घर3Img),
-        audio: getAssetAudioUrl(s3Assets.घर3Audio),
-        singleAudio: getAssetAudioUrl(s3Assets.घर3Audio),
-        alaphabetChartAudio: getAssetAudioUrl(s3Assets.घर3Audio),
+        audio: getAssetAudioUrl(s3Assets.घर4Audio),
+        singleAudio: getAssetAudioUrl(s3Assets.घर4Audio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.घर4Audio),
       },
     ],
   },
@@ -7340,9 +7340,9 @@ export const dataNe = [
         letter: "ह",
         word: "शहर",
         image: getAssetUrl(s3Assets.शहर3Img),
-        audio: getAssetAudioUrl(s3Assets.शहर3Audio),
-        singleAudio: getAssetAudioUrl(s3Assets.शहर3Audio),
-        alaphabetChartAudio: getAssetAudioUrl(s3Assets.शहर3Audio),
+        audio: getAssetAudioUrl(s3Assets.शहर4Audio),
+        singleAudio: getAssetAudioUrl(s3Assets.शहर4Audio),
+        alaphabetChartAudio: getAssetAudioUrl(s3Assets.शहर4Audio),
       },
       {
         id: 103,

@@ -1071,7 +1071,7 @@ const Mechanics7 = ({
                   padding: isMobile ? "10px 15px" : "10px 70px",
                   marginBottom: "16px",
                   width: isMobile ? "220px" : "400px",
-                  height: isMobile ? "100px" : "150px",
+                  minHeight: isMobile ? "100px" : "150px",
                 }}
               >
                 <Box

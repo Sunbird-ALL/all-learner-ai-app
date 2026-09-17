@@ -12,8 +12,8 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
 } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 import { getUiStrings } from "../../constants/strings";
 import MainLayout from "../Layout/MainLayout";
 import {
