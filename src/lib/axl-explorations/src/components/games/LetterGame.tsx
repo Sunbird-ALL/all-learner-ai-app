@@ -156,8 +156,8 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
   // Since selectedLanguage can never be 'hi' (LanguageContext blocks it), this is safe
   const getLanguageLetters = (language: Language): string[] => {
     // Ensure only supported languages are passed (fallback to 'en' if somehow 'hi' is passed)
-    const supportedLanguage = (language === 'en' || language === 'te' || language === 'mr' || language === 'kn') 
-      ? language 
+    const supportedLanguage = (language === 'en' || language === 'te' || language === 'mr' || language === 'kn')
+      ? language
       : 'en';
     return memoryGameDataLoader.getAllLetters(supportedLanguage);
   };
@@ -214,13 +214,13 @@ export function LetterGame({ onBack, initialLevel, startLevel, endLevel, disable
       
       // Ensure only supported languages are passed (memoryGameDataLoader doesn't support 'hi')
       // Since selectedLanguage can never be 'hi' (LanguageContext blocks it), this is a safety check
-      const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' | 'hi' = 
-        (language === 'en' || language === 'te' || language === 'mr' || language === 'kn' || language === 'hi') 
-          ? language 
+      const supportedLanguage: 'en' | 'te' | 'mr' | 'kn' | 'hi' | 'ne' =
+        (language === 'en' || language === 'te' || language === 'mr' || language === 'kn' || language === 'hi' || language === 'ne')
+          ? language
           : 'en';
-      
-      // For Telugu, Kannada, and Marathi, use exact level mapping
-      if (supportedLanguage === 'te' || supportedLanguage === 'kn' || supportedLanguage === 'mr' || supportedLanguage === 'en' || supportedLanguage === 'hi') {
+
+      // For Telugu, Kannada, Marathi, and Nepali, use exact level mapping
+      if (supportedLanguage === 'te' || supportedLanguage === 'kn' || supportedLanguage === 'mr' || supportedLanguage === 'en' || supportedLanguage === 'hi' || supportedLanguage === 'ne') {
         const levelKey = level.toString();
         return memoryGameDataLoader.getLettersByLevel(supportedLanguage, levelKey);
       }

@@ -6,7 +6,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Confetti from "react-confetti";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 import LevelCompleteAudio from "../../assets/audio/levelComplete.wav";
@@ -18,6 +18,7 @@ import { getUiStrings } from "../../constants/strings";
 import { LetsStart } from "../Icons/SvgIcons";
 import usePreloadAudio from "../../hooks/usePreloadAudio";
 import { getFetchMilestoneDetails } from "../../services/learnerAi/learnerAiService";
+import { Log, audit as telemetryAudit } from "../../services/telemetryService";
 
 const sectionStyle = {
   backgroundImage: `url(${textureImage})`,
@@ -42,6 +43,8 @@ const SpeakSentenceComponent = () => {
   const lang = getLocalData("lang");
   const ui = getUiStrings(lang || "en");
   const levelCompleteAudioSrc = usePreloadAudio(LevelCompleteAudio);
+  // Guard: fire telemetry only once even if effect re-runs
+  const telemetryFiredRef = useRef(false);
 
   useEffect(() => {
     (async () => {
@@ -49,13 +52,43 @@ const SpeakSentenceComponent = () => {
         let audio = new Audio(levelCompleteAudioSrc);
         audio.play();
       }
-      const virtualId = getLocalData("virtualId");
       const lang = getLocalData("lang");
       try {
         const getMilestoneDetails = await getFetchMilestoneDetails(lang);
         const { data } = getMilestoneDetails;
         setLevel(data.milestone_level);
         setLocalData("userLevel", data.milestone_level?.replace("m", ""));
+
+        // Fire telemetry once — discovery placement result
+        if (!telemetryFiredRef.current && data.milestone_level) {
+          telemetryFiredRef.current = true;
+          const newLevel = data.milestone_level;
+          // AUDIT: state change from "unplaced" → placed level
+          telemetryAudit({
+            props: ["milestoneLevel"],
+            state: newLevel,
+            prevstate: "unplaced",
+            objectId: localStorage.getItem("apiToken") || "",
+            objectType: "Learner",
+          });
+          // LOG: placement detail for dashboard filter
+          Log(
+            {
+              type: "discovery_placement",
+              level: "INFO",
+              message: "discovery_complete",
+              params: [
+                { placedLevel: newLevel },
+                { language: lang || "" },
+                { ts: Date.now() },
+              ],
+            },
+            "discover-end",
+            "ET"
+          );
+          // Keep milestone in sync for subsequent cdata
+          localStorage.setItem("milestone", newLevel);
+        }
       } catch (error) {
         console.error(
           "Error fetching milestone details on DiscoverEnd:",

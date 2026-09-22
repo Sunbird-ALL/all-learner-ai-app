@@ -248,6 +248,7 @@ const FluencyP5 = ({
       hi: "hi", // Hindi
       gu: "gu", // Gujarati
       or: "or", // Odia
+      ne: "ne", // Nepali
     };
     return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
   };
@@ -520,10 +521,7 @@ const FluencyP5 = ({
   const playWordAudio = (audio) => {
     if (!audio || !audioRefs.current) return;
 
-    if (!audioRefs.current.paused) {
-      return;
-    }
-
+    audioRefs.current.pause();
     audioRefs.current.src = audio;
     audioRefs.current.currentTime = 0;
     audioRefs.current
