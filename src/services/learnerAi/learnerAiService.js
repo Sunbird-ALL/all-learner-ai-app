@@ -7,6 +7,48 @@ import {
   endGetSetResultRequest,
 } from "./getSetResultLoading";
 import { reportError } from "../../utils/errorReporter";
+import { assess as telemetryAssess } from "../telemetryService";
+
+/**
+ * Fire ASSESS telemetry for a getSetResult API response.
+ * Captures the pass/fail verdict from the AI backend for every step evaluation.
+ * Called internally after fetchGetSetResult and getSetResultPractice succeed.
+ *
+ * @param {object} responseData - raw API response
+ * @param {string} mechanism    - mechanic or contentType string for item.type
+ */
+const fireAssessFromGetSetResult = (responseData, mechanism) => {
+  try {
+    const data = responseData?.data || responseData || {};
+    const pass = data.sessionResult === "pass";
+    const score = Math.round(data.percentage || 0);
+    const stepId =
+      localStorage.getItem("currentStep") || mechanism || "unknown";
+    const prevLevel = data.previous_level || "";
+    const currLevel = data.currentLevel || data.milestone_level || "";
+
+    telemetryAssess({
+      item: {
+        id: stepId,
+        type: mechanism || "getSetResult",
+        maxscore: 1,
+      },
+      pass,
+      score,
+      resvalues: [
+        {
+          sessionResult: data.sessionResult || "unknown",
+          currentLevel: currLevel,
+          previousLevel: prevLevel,
+          contentType: data.contentType || mechanism || "",
+        },
+      ],
+      duration: 0,
+    });
+  } catch (e) {
+    console.warn("telemetry assess failed in getSetResult:", e);
+  }
+};
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
 
@@ -174,6 +216,8 @@ export const fetchGetSetResult = async (
       body,
       getHeaders()
     );
+    // Fire ASSESS with the backend's pass/fail verdict
+    fireAssessFromGetSetResult(response.data, body.contentType);
     return response.data;
   } catch (error) {
     console.error("Error in getSetResult:", error);
@@ -213,6 +257,11 @@ export const getSetResultPractice = async ({
         is_mechanics: mechanism && mechanism?.id ? true : false,
       },
       getHeaders()
+    );
+    // Fire ASSESS with the backend's pass/fail verdict
+    fireAssessFromGetSetResult(
+      response.data,
+      mechanism?.id || currentContentType
     );
     return response.data;
   } catch (error) {

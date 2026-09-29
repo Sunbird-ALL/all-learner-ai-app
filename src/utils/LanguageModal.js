@@ -17,10 +17,11 @@ const languageMap = {
   gu: { lang: "Gujarati", text: "gu", icon: "ક" },
   hi: { lang: "Hindi", text: "hi", icon: "क" },
   or: { lang: "Odia", text: "or", icon: "କ" },
+  ne: { lang: "Nepali", text: "ne", icon: "न" },
 };
 
 // Default language codes (fallback if env variable is not set)
-const defaultLanguageCodes = ["ka", "tn", "te", "hi"];
+const defaultLanguageCodes = ["ka", "tn", "te", "hi", "ne"];
 // const defaultLanguageCodes = ["kn", "te"];
 
 // Get languages from environment variable or use defaults

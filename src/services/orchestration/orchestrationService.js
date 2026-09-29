@@ -3,9 +3,13 @@ import { getLocalData } from "../../utils/constants";
 import config from "../../utils/urlConstants.json";
 import { getVirtualId } from "../userservice/userService";
 import { reportError } from "../../utils/errorReporter";
+import { audit } from "../telemetryService";
 
 const API_BASE_URL_ORCHESTRATION =
   process.env.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST;
+
+// AXL authentication service — issues the session token and clears it on logout.
+const API_BASE_URL_AXL_AUTH = process.env.REACT_APP_AXL_AUTH_HOST;
 
 const API_LEARNER_AI_APP_HOST = process.env.REACT_APP_LEARNER_AI_APP_HOST;
 
@@ -213,6 +217,23 @@ export const createLearnerProgress = async (
       requestBody,
       getHeaders()
     );
+
+    // Fire AUDIT when milestone level actually changes — only when there is a new level
+    if (milestoneLevel) {
+      const previousLevel = localStorage.getItem("milestone") || "";
+      const newLevel = String(milestoneLevel).toLowerCase();
+      if (newLevel && newLevel !== previousLevel) {
+        audit({
+          props: ["milestoneLevel"],
+          state: newLevel,
+          prevstate: previousLevel,
+          objectId: localStorage.getItem("apiToken") || "",
+          objectType: "Learner",
+        });
+        localStorage.setItem("milestone", newLevel);
+      }
+    }
+
     return response.data;
   } catch (error) {
     console.error("Error creating learner progress:", error);
@@ -304,12 +325,24 @@ export const logoutUser = async () => {
 
     if (!token) return;
 
+    // Virtual-id logout, replaced by the AXL authentication service below.
+    // const response = await axios.post(
+    //   `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_LOGOUT}`,
+    //   { token },
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+    // The service reads the token from x-auth-token, not from the body.
     const response = await axios.post(
-      `${API_BASE_URL_ORCHESTRATION}/${config.URLS.GET_LOGOUT}`,
-      { token },
+      `${API_BASE_URL_AXL_AUTH}/${config.URLS.AXL_AUTH_LOGOUT}`,
+      {},
       {
         headers: {
           "Content-Type": "application/json",
+          "x-auth-token": token,
         },
       }
     );

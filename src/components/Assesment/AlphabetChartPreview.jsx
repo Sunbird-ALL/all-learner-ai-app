@@ -20,6 +20,7 @@ import {
   dataHi as letterDataHi,
   dataTe as letterDataTe,
   dataKn as letterDataKn,
+  dataNe as letterDataNe,
 } from "../../RFlow/LetterTrain";
 import { wordData } from "../../RFlow/Barakhadi";
 import { getAssetAudioUrl, getAssetUrl } from "../../utils/rFlowS3Links";
@@ -170,6 +171,42 @@ const demoInstructions = {
     completion: {
       title: "डेमो पूर्ण!",
       description: "आप वर्णमाला चार्ट खोजने के लिए तैयार हैं!",
+    },
+  },
+  ne: {
+    title: "वर्णमाला चार्ट",
+    description: "आवाजका साथ अक्षर र शब्द सिक्नुहोस्!",
+    howToPlay: "कसरी प्रयोग गर्ने",
+    alphabetLabel: "वर्णमाला",
+    syllableLabel: "मात्रा",
+    steps: ["वर्णमाला सिक्नुहोस्", "मात्रा सिक्नुहोस्", "पूर्ण!"],
+    alphabetInstruction1:
+      "ध्वनि सुन्नको लागि कुनै पनि अक्षर कार्डमा क्लिक गर्नुहोस्",
+    alphabetInstruction2: "धेरै राम्रो! अरू अक्षर कार्डहरूमा क्लिक गर्नुहोस्",
+    alphabetInstruction3:
+      "उत्कृष्ट! अब मात्रा सिक्छौं। माथि मात्रा टगलमा क्लिक गर्नुहोस्",
+    syllableInstruction1:
+      "अब ध्वनि सुन्नको लागि कुनै पनि मात्रा कार्डमा क्लिक गर्नुहोस्",
+    syllableInstruction2: "धेरै राम्रो! अरू मात्रा कार्डहरूमा क्लिक गर्नुहोस्",
+    syllableInstruction3:
+      "उत्कृष्ट! तपाईंले वर्णमाला चार्ट प्रयोग गर्न सिक्नुभयो!",
+    alphabetNarration1:
+      "ध्वनि सुन्नको लागि कुनै पनि अक्षर कार्डमा क्लिक गर्नुहोस्",
+    alphabetNarration2: "धेरै राम्रो! अरू अक्षर कार्डहरूमा क्लिक गर्नुहोस्",
+    alphabetNarration3:
+      "उत्कृष्ट! अब मात्रा सिक्छौं। माथि मात्रा टगलमा क्लिक गर्नुहोस्",
+    syllableNarration1:
+      "अब ध्वनि सुन्नको लागि कुनै पनि मात्रा कार्डमा क्लिक गर्नुहोस्",
+    syllableNarration2: "धेरै राम्रो! अरू मात्रा कार्डहरूमा क्लिक गर्नुहोस्",
+    syllableNarration3:
+      "उत्कृष्ट! तपाईंले वर्णमाला चार्ट प्रयोग गर्न सिक्नुभयो!",
+    noCardsMessage: "यस खण्डमा कुनै कार्ड उपलब्ध छैन।",
+    startButton: "अन्वेषण सुरू गर्नुहोस्",
+    skipDemo: "डेमो छोड्नुहोस्",
+    replayDemo: "डेमो फेरि चलाउनुहोस्",
+    completion: {
+      title: "डेमो पूर्ण!",
+      description: "तपाईं वर्णमाला चार्ट अन्वेषण गर्न तयार हुनुहुन्छ!",
     },
   },
   mr: {
@@ -681,6 +718,7 @@ const AlphabetChartPreview = ({ open, onClose, lang, onStartExploring }) => {
     if (lang === "te") return letterDataTe;
     if (lang === "kn") return letterDataKn;
     if (lang === "en") return letterDataEn;
+    if (lang === "ne") return letterDataNe;
     return [];
   }, [lang]);
 
