@@ -22,9 +22,9 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   setLocalData,
 } from "../utils/constants";
+import { RetryIcon } from "../components/Icons/SvgIcons";
 import { getFontFamily } from "../utils/fontUtils";
 import { useNavigate } from "react-router-dom";
 import correctTick from "../assets/correctTick.svg";
@@ -6607,7 +6607,7 @@ const R2 = ({
   isDiscover,
   progressData,
   showProgress,
-  playTeacherAudio = () => { },
+  playTeacherAudio = () => {},
   callUpdateLearner,
   disableScreen,
   isShowCase,
@@ -7037,15 +7037,15 @@ const R2 = ({
                                   position: "absolute",
                                   ...(handPhase === "audio"
                                     ? {
-                                      bottom: "40px",
-                                      left: "-30px",
-                                      transform: "rotate(-120deg)",
-                                    }
+                                        bottom: "40px",
+                                        left: "-30px",
+                                        transform: "rotate(-120deg)",
+                                      }
                                     : {
-                                      bottom: "-50px",
-                                      left: "-30px",
-                                      transform: "rotate(-120deg)",
-                                    }),
+                                        bottom: "-50px",
+                                        left: "-30px",
+                                        transform: "rotate(-120deg)",
+                                      }),
                                   height: isMobile ? "70px" : "80px",
                                   zIndex: "9999",
                                   transition: "all 0.3s ease",

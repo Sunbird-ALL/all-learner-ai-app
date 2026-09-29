@@ -615,6 +615,15 @@ function VoiceAnalyser(props) {
 
       response(
         {
+          // object — identifies the content being practised (enables content difficulty dashboard)
+          object: {
+            id: contentId || originalText || "",
+            type:
+              contentType && contentType.toLowerCase() === "word"
+                ? "Word"
+                : "Letter",
+            ver: "1.0",
+          },
           // Required
           target:
             process.env.REACT_APP_CAPTURE_AUDIO === "true"

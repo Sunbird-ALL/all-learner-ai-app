@@ -175,6 +175,7 @@ const WordsOrImage = ({
       hi: "क", // Hindi (from AllLanguages)
       gu: "ક", // Gujarati (from AllLanguages)
       or: "କ", // Odia (from AllLanguages)
+      ne: "न", // Nepali (from AllLanguages)
     };
     return langSymbolMap[nativeLang] || "ಕ"; // Default to Kannada if not found
   };
@@ -192,6 +193,7 @@ const WordsOrImage = ({
       hi: "hi", // Hindi
       gu: "gu", // Gujarati
       or: "or", // Odia
+      ne: "ne", // Nepali
     };
     return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
   };

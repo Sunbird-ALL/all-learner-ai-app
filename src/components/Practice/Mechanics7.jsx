@@ -145,6 +145,7 @@ const Mechanics7 = ({
       hi: "hi", // Hindi
       gu: "gu", // Gujarati
       or: "or", // Odia
+      ne: "ne", // Nepali
     };
     return langCodeMap[nativeLang] || "kn"; // Default to Kannada if not found
   };
@@ -161,6 +162,7 @@ const Mechanics7 = ({
       hi: "क",
       gu: "ક",
       or: "କ",
+      ne: "न",
     };
     return langSymbolMap[nativeLang] || "ಕ";
   };
@@ -1069,7 +1071,7 @@ const Mechanics7 = ({
                   padding: isMobile ? "10px 15px" : "10px 70px",
                   marginBottom: "16px",
                   width: isMobile ? "220px" : "400px",
-                  height: isMobile ? "100px" : "150px",
+                  minHeight: isMobile ? "100px" : "150px",
                 }}
               >
                 <Box

@@ -5,7 +5,7 @@ import { WifiOff } from 'lucide-react';
 import React from 'react';
 
 const AUDIO_LANGUAGE_STORAGE_KEY = 'selectedAudioLanguage';
-const VALID_LANGUAGES: Language[] = ['en', 'te', 'mr', 'kn', 'hi'];
+const VALID_LANGUAGES: Language[] = ['en', 'te', 'mr', 'kn', 'hi', 'ne'];
 
 interface PlaybackOptions {
   exactLanguage?: boolean;
@@ -306,10 +306,11 @@ export const playTTS = (text: string, language?: Language): Promise<void> => {
 
     const resolvedLanguage = resolveAudioLanguage(language);
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = resolvedLanguage === 'te' ? 'te-IN' : 
-                    resolvedLanguage === 'kn' ? 'kn-IN' : 
-                    resolvedLanguage === 'mr' ? 'mr-IN' : 
-                    resolvedLanguage === 'hi' ? 'hi-IN' : 'en-US';
+    utterance.lang = resolvedLanguage === 'te' ? 'te-IN' :
+                    resolvedLanguage === 'kn' ? 'kn-IN' :
+                    resolvedLanguage === 'mr' ? 'mr-IN' :
+                    resolvedLanguage === 'hi' ? 'hi-IN' :
+                    resolvedLanguage === 'ne' ? 'ne-NP' : 'en-US';
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
     

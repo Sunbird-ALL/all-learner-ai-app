@@ -20,11 +20,11 @@ import {
 } from "../../utils/levelData";
 import {
   ListenButton,
-  RetryIcon,
   SpeakButton,
   StopButton,
   NextButtonRound,
 } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 import RecordVoiceVisualizer from "../../utils/RecordVoiceVisualizer";
 import { Box, CircularProgress } from "@mui/material";
 import correctSound from "../../assets/correct.wav";

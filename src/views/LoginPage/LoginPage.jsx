@@ -21,7 +21,7 @@ import {
 import "./LoginPage.css";
 import { setLocalData } from "../../utils/constants";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
-import { initialize } from "../../services/telemetryService";
+import { initialize, Log } from "../../services/telemetryService";
 import { reportError } from "../../utils/errorReporter";
 import { startEvent } from "../../services/callTelemetryIntract";
 import LanguageModalNew from "../../utils/LanguageModal";
@@ -114,18 +114,22 @@ const LoginPage = () => {
     details?.message === "Registered successfully";
 
   const setupUserSession = async (token, uname) => {
+    // Store apiToken FIRST — telemetryService reads it as uid
     localStorage.setItem("apiToken", token);
     setLocalData("profileName", uname);
 
     const fp = await FingerprintJS.load();
     const { visitorId } = await fp.get();
+    // Persist device fingerprint so other files can reference it
+    localStorage.setItem("deviceId", visitorId);
 
     await initialize({
       context: {
         mode: process.env.REACT_APP_MODE,
         authToken: token,
-        did: localStorage.getItem("deviceId") || visitorId,
-        uid: uname || "anonymous",
+        did: visitorId,
+        // uid: apiToken — backend detokenises to numeric user ID (privacy)
+        uid: token,
         channel: process.env.REACT_APP_CHANNEL,
         env: process.env.REACT_APP_ENV,
         pdata: {
@@ -148,6 +152,18 @@ const LoginPage = () => {
       config: {},
       metadata: {},
     });
+
+    // Fire login linkage LOG event — records deviceId for session correlation
+    Log(
+      {
+        type: "user_login",
+        level: "INFO",
+        message: "user_identified",
+        params: [{ deviceId: visitorId }, { loginTs: Date.now() }],
+      },
+      "login-screen",
+      "ET"
+    );
 
     if (!ranonce.current) {
       if (!localStorage.getItem("contentSessionId")) {

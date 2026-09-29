@@ -4,6 +4,7 @@ import { teluguAudioManager } from './teluguAudioManager';
 import { kannadaAudioManager } from './kannadaAudioManager';
 import { marathiAudioManager } from './marathiAudioManager';
 import { hindiAudioManager } from './hindiAudioManager';
+import { nepaliAudioManager } from './nepaliAudioManager';
 import { showSlowLoadToast } from './audioUtils';
 
 // Resolve the correct audio manager for a language (defaults to English).
@@ -19,6 +20,8 @@ function getAudioManager(language: Language) {
       return marathiAudioManager;
     case 'hi':
       return hindiAudioManager;
+    case 'ne':
+      return nepaliAudioManager;
     default:
       return englishAudioManager;
   }
@@ -34,6 +37,8 @@ function getTtsLang(language: Language): string {
     ? 'mr-IN'
     : language === 'hi'
     ? 'hi-IN'
+    : language === 'ne'
+    ? 'ne-NP'
     : 'en-US';
 }
 

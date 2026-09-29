@@ -3,7 +3,7 @@ name: ALL AXL Lab1 Deployment (Lab1)
 on:
   push:
     branches:
-      - all-3.0.6-hotfix
+      - axl-lab1
 
 jobs:
   deploy:
@@ -63,6 +63,7 @@ jobs:
           REACT_APP_LANGUAGE: ${{ vars.REACT_APP_LANGUAGE }}
           REACT_APP_TELEMETRY_MODE: ${{ vars.REACT_APP_TELEMETRY_MODE }}
           REACT_APP_VIRTUAL_ID_HOST: ${{ vars.REACT_APP_VIRTUAL_ID_HOST }}
+          REACT_APP_AXL_AUTH_HOST: ${{ vars.REACT_APP_AXL_AUTH_HOST }}
           REACT_APP_LEARNER_AI_ORCHESTRATION_HOST: ${{ vars.REACT_APP_LEARNER_AI_ORCHESTRATION_HOST }}
           REACT_APP_LEARNER_AI_APP_HOST: ${{ vars.REACT_APP_LEARNER_AI_APP_HOST }}
           REACT_APP_CONTENT_SERVICE_APP_HOST: ${{ vars.REACT_APP_CONTENT_SERVICE_APP_HOST }}
@@ -101,6 +102,7 @@ jobs:
           REACT_APP_MIN_SCREEN_HEIGHT: ${{ vars.REACT_APP_MIN_SCREEN_HEIGHT }}
           REACT_APP_BUILD_NUMBER: ${{ github.run_number }}
           REACT_APP_COMMIT_ID: ${{ github.sha }}
+          REACT_APP_BRANCH_NAME: ${{ github.ref_name }}
           PUBLIC_URL: ${{ vars.PUBLIC_URL }}
           CI: false # Disabling CI to not treat warnings as errors
         run: npm run build
