@@ -1,5 +1,5 @@
 // Shared language constants and types
-export type Language = 'en' | 'te' | 'mr' | 'kn' | 'hi';
+export type Language = 'en' | 'te' | 'mr' | 'kn' | 'hi' | 'ne';
 
 export interface LanguageOption {
   code: Language;
@@ -13,11 +13,12 @@ export const LANGUAGES: LanguageOption[] = [
   { code: 'te', name: 'Telugu', nativeName: 'తెలుగు', flag: '🇮🇳' },
   { code: 'mr', name: 'Marathi', nativeName: 'मराठी', flag: '🇮🇳' },
   { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', flag: '🇮🇳' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳' }
+  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳' },
+  { code: 'ne', name: 'Nepali', nativeName: 'नेपाली', flag: '🇮🇳' }
 ];
 
-// Content languages (for game content) - excludes Hindi as it's only for audio instructions
-export const CONTENT_LANGUAGES: LanguageOption[] = LANGUAGES.filter(lang => lang.code !== 'hi');
+// Content languages (for game content) - excludes Hindi and Nepali as they're only for audio instructions
+export const CONTENT_LANGUAGES: LanguageOption[] = LANGUAGES.filter(lang => lang.code !== 'hi' && lang.code !== 'ne');
 
 // Audio languages (for audio instructions) - includes all languages
 export const AUDIO_LANGUAGES: LanguageOption[] = LANGUAGES;

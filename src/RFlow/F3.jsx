@@ -1,4 +1,11 @@
 import { getLocalData, setLocalData } from "../utils/constants";
+import {
+  impression as telemetryImpression,
+  assess as telemetryAssess,
+} from "../services/telemetryService";
+
+// Track step start time for F3 duration calculation
+let f3StepStartTs = Date.now();
 
 /**
  * F3 Flow sequence:
@@ -79,4 +86,62 @@ export const advanceF3Flow = () => {
  */
 export const resetF3Flow = () => {
   setLocalData("f3FlowIndex", null);
+};
+
+/**
+ * Fire IMPRESSION (start) for the current F3 step.
+ * Call from Practice.jsx when rendering a new F3 step.
+ */
+export const fireF3StepStart = (stepIndex) => {
+  const step = F3_FLOW[stepIndex];
+  if (!step) return;
+  const stepId = `F3_${step.type}${step.step}`;
+  localStorage.setItem("currentStep", stepId);
+  f3StepStartTs = Date.now();
+  telemetryImpression(
+    {
+      pageid: stepId,
+      subtype: "start",
+      uri: window.location.pathname,
+      visits: [{ objid: stepId, objtype: "Step", section: "", duration: 0 }],
+    },
+    "ET"
+  );
+};
+
+/**
+ * Fire IMPRESSION (end) + ASSESS for a F3 step, then optionally advance.
+ * Call from Practice.jsx at every F3 step pass/fail decision point.
+ */
+export const completeF3StepWithTelemetry = (stepIndex, result = {}) => {
+  const step = F3_FLOW[stepIndex];
+  if (!step) return;
+  const stepId = `F3_${step.type}${step.step}`;
+  const durationMs = Date.now() - f3StepStartTs;
+  const pass = result.pass !== undefined ? result.pass : true;
+  const mechanic = result.mechanic || "letterLauncher";
+
+  telemetryImpression(
+    {
+      pageid: stepId,
+      subtype: "end",
+      uri: window.location.pathname,
+      visits: [
+        {
+          objid: stepId,
+          objtype: "Step",
+          section: mechanic,
+          duration: durationMs,
+        },
+      ],
+    },
+    "ET"
+  );
+  telemetryAssess({
+    item: { id: stepId, type: mechanic, maxscore: 1 },
+    pass,
+    score: pass ? 100 : 0,
+    resvalues: [{ attempts: result.attempts || 1 }],
+    duration: durationMs,
+  });
 };

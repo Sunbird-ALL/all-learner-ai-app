@@ -29,9 +29,9 @@ import {
   practiceSteps,
   getLocalData,
   NextButtonRound,
-  RetryIcon,
   setLocalData,
 } from "../../utils/constants";
+import { RetryIcon } from "../Icons/SvgIcons";
 import VoiceAnalyser from "../../utils/VoiceAnalyser";
 import {
   fetchASROutput,

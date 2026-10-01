@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLocalData, setLocalData, practiceSteps } from "../utils/constants";
 import { levelGetContent } from "../data/levelContent";
+import {
+  impression as telemetryImpression,
+  assess as telemetryAssess,
+} from "../services/telemetryService";
 
 /**
  * F2 Flow sequence:
@@ -118,20 +122,68 @@ const F2 = ({
 
   const currentFlowStep = F2_FLOW[currentFlowIndex];
   const isLastStep = currentFlowIndex === F2_FLOW.length - 1;
+  const stepStartTsRef = useRef(Date.now());
 
-  // Save flow index to localStorage
+  // Save flow index and fire IMPRESSION (start) on each step change
   useEffect(() => {
     setLocalData("f2FlowIndex", currentFlowIndex);
+    if (currentFlowStep) {
+      const stepId = `F2_${currentFlowStep.type}${currentFlowStep.step}`;
+      localStorage.setItem("currentStep", stepId);
+      stepStartTsRef.current = Date.now();
+      telemetryImpression(
+        {
+          pageid: stepId,
+          subtype: "start",
+          uri: window.location.pathname,
+          visits: [
+            { objid: stepId, objtype: "Step", section: "", duration: 0 },
+          ],
+        },
+        "ET"
+      );
+    }
   }, [currentFlowIndex]);
 
   // Handle completion of current step
-  const handleStepComplete = () => {
+  const handleStepComplete = (result = {}) => {
+    if (currentFlowStep) {
+      const stepId = `F2_${currentFlowStep.type}${currentFlowStep.step}`;
+      const durationMs = Date.now() - stepStartTsRef.current;
+      const pass = result.pass !== undefined ? result.pass : true;
+      telemetryImpression(
+        {
+          pageid: stepId,
+          subtype: "end",
+          uri: window.location.pathname,
+          visits: [
+            {
+              objid: stepId,
+              objtype: "Step",
+              section: result.mechanic || "",
+              duration: durationMs,
+            },
+          ],
+        },
+        "ET"
+      );
+      telemetryAssess({
+        item: {
+          id: stepId,
+          type: result.mechanic || "letterTrain",
+          maxscore: 1,
+        },
+        pass,
+        score: pass ? 100 : 0,
+        resvalues: [{ attempts: result.attempts || 1 }],
+        duration: durationMs,
+      });
+    }
+
     if (isLastStep) {
-      // Flow complete - mark F2 as complete
-      setLocalData("f2FlowIndex", null); // Reset flow
-      setLocalData("f2FlowComplete", "true"); // Mark F2 as complete
+      setLocalData("f2FlowIndex", null);
+      setLocalData("f2FlowComplete", "true");
     } else {
-      // Move to next step
       setCurrentFlowIndex((prev) => prev + 1);
     }
   };
