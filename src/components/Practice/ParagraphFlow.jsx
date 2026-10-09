@@ -306,6 +306,7 @@ const ParagraphFlow = ({
   vocabCount,
   wordCount,
   contentSourceData,
+  contentId,
   parentWords,
 }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -327,6 +328,7 @@ const ParagraphFlow = ({
   const textContainerRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const timeoutRef = useRef([]);
+  const paragraphAudioRef = useRef(null);
   const speechSynthesisRef = useRef(null);
   const utteranceRef = useRef(null);
   const wordMapRef = useRef([]);
@@ -344,6 +346,7 @@ const ParagraphFlow = ({
   const [open, setOpen] = useState(false);
   const correctPracticeWords = getLocalData("correctPracticeWords");
   const sessionId = getLocalData("sessionId");
+  const lang = getLocalData("lang");
   console.log("audios", parentWords);
 
   // Get multilingual language code for audio (maps nativeLang to multilingual object keys)
@@ -379,6 +382,9 @@ const ParagraphFlow = ({
       page: 1,
       bookImage: `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/mechanics_images/${contentSourceData?.imagePath}`,
       highlightedText: contentSourceData?.contentSourceData?.[0]?.text || "",
+      audio: contentId
+        ? `${process.env.REACT_APP_AWS_S3_BUCKET_CONTENT_URL}/all-audio-files/${lang}/${contentId}.wav`
+        : "",
       keywords: Object.entries(parentWords || {}).map(([word, data]) => {
         const audioUrl = data?.[multilingualLangCode]?.audio_url;
         return {
@@ -552,139 +558,35 @@ const ParagraphFlow = ({
     }
   };
 
-  // ✅ Create speech synthesis utterance (like first example)
-  const createUtterance = (text) => {
-    if (!("speechSynthesis" in window)) {
-      console.error("Speech synthesis not supported");
-      return null;
+  const stopParagraphAudio = () => {
+    if (paragraphAudioRef.current) {
+      paragraphAudioRef.current.pause();
+      paragraphAudioRef.current.currentTime = 0;
     }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-
-    // Set properties
-    utterance.rate = 1.0;
-
-    // Choose voice
-    const voices = speechSynthesis.getVoices();
-    const defaultVoice =
-      voices.find((v) => v.default) ||
-      voices.find((v) => v.lang?.toLowerCase().startsWith("en")) ||
-      voices[0];
-    if (defaultVoice) {
-      utterance.voice = defaultVoice;
-    }
-
-    // Event handlers
-    utterance.onstart = () => {
-      setIsPlayingAudio(true);
-      setCurrentHighlightedWord(-1);
-    };
-
-    utterance.onend = () => {
-      setIsPlayingAudio(false);
-      clearHighlight();
-      setCurrentHighlightedWord(-1);
-    };
-
-    utterance.onerror = (e) => {
-      console.error("Speech synthesis error:", e);
-      setIsPlayingAudio(false);
-      clearHighlight();
-      setCurrentHighlightedWord(-1);
-    };
-
-    utterance.onboundary = (e) => {
-      if (e.name === "word" && typeof e.charIndex === "number") {
-        highlightAtCharIndex(e.charIndex);
-      }
-    };
-
-    return utterance;
+    setIsPlayingAudio(false);
   };
-
-  // ✅ Improved handleListenClick function using Speech Synthesis API
   const handleListenClick = () => {
     if (isPlayingAudio) {
-      // Stop speech synthesis
-      if (speechSynthesisRef.current) {
-        speechSynthesisRef.current.cancel();
-      }
-      setIsPlayingAudio(false);
-      clearHighlight();
+      stopParagraphAudio();
       return;
     }
-
-    // Prepare text mapping
-    prepareTextMapping();
-
-    // Create and speak utterance
-    const utterance = createUtterance(paragraphData.highlightedText);
-    if (utterance) {
-      utteranceRef.current = utterance;
-      speechSynthesisRef.current = window.speechSynthesis;
-      speechSynthesisRef.current.speak(utterance);
-    } else {
-      // Fallback to audio file if speech synthesis fails
-      playAudioFallback();
+    if (!paragraphData.audio) return;
+    if (audio) audio.pause();
+    if (paragraphAudioRef.current?.src !== paragraphData.audio) {
+      const paragraphAudio = new Audio(paragraphData.audio);
+      paragraphAudio.addEventListener("ended", () => setIsPlayingAudio(false));
+      paragraphAudio.addEventListener("error", () => setIsPlayingAudio(false));
+      paragraphAudioRef.current = paragraphAudio;
     }
-  };
-
-  // ✅ Fallback to audio file with word highlighting
-  const playAudioFallback = () => {
-    if (!paragraphData.audio) {
-      console.error("No audio available");
-      return;
-    }
-
+    paragraphAudioRef.current.currentTime = 0;
     setIsPlayingAudio(true);
-    clearHighlight();
-
-    const audioElement = new Audio(paragraphData.audio);
-    setAudio(audioElement);
-
-    // Prepare word timing (approximate)
-    const wordMap = prepareTextMapping();
-    const totalDuration = 20000;
-    const wordDuration = totalDuration / wordMap.length;
-
-    // Start highlighting when audio begins
-    audioElement.addEventListener("play", () => {
-      let currentWordIndex = -1;
-
-      const highlightNextWord = () => {
-        currentWordIndex++;
-        if (currentWordIndex < wordMap.length) {
-          setCurrentHighlightedWord(currentWordIndex);
-          timeoutRef.current.push(setTimeout(highlightNextWord, wordDuration));
-        } else {
-          setIsPlayingAudio(false);
-          clearHighlight();
-        }
-      };
-
-      // Clear any existing timeouts
-      clearAllTimeouts();
-      highlightNextWord();
-    });
-
-    audioElement.addEventListener("ended", () => {
-      setIsPlayingAudio(false);
-      clearHighlight();
-      clearAllTimeouts();
-    });
-
-    audioElement.addEventListener("error", (e) => {
-      console.error("Audio error:", e);
-      setIsPlayingAudio(false);
-      clearHighlight();
-      clearAllTimeouts();
-    });
-
-    audioElement.play().catch((error) => {
+    paragraphAudioRef.current.play().catch((error) => {
       console.error("Audio play failed:", error);
       setIsPlayingAudio(false);
     });
   };
+
+  useEffect(() => () => paragraphAudioRef.current?.pause(), []);
 
   // ✅ Clear all timeouts
   const clearAllTimeouts = () => {
@@ -941,10 +843,7 @@ const ParagraphFlow = ({
   };
 
   const handleNextClick = () => {
-    if (speechSynthesisRef.current) {
-      speechSynthesisRef.current.cancel();
-    }
-    setIsPlayingAudio(false);
+    stopParagraphAudio();
     clearHighlight();
     setTimeout(() => {
       //calculateReadingSpeed();
@@ -1552,7 +1451,7 @@ const ParagraphFlow = ({
                 )}
             </div>
 
-            {/* Listen Icon - Now works as play/pause for speech synthesis */}
+            {/* Listen Icon - plays the S3 paragraph audio */}
             <img
               src={listenImg}
               alt="Listen"
